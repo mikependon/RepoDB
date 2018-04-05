@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A31A38C8-603E-4499-A5C1-4A6366864EA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RepoDb</RootNamespace>
+    <AssemblyName>RepoDb</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
+    <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
+    <Compile Include="EventArguments\ExecutionEventArgs.cs" />
+    <Compile Include="EventHandlers\CancellableExecutionEventHandler.cs" />
+    <Compile Include="EventHandlers\CancelledExecutionEventHandler.cs" />
+    <Compile Include="EventHandlers\ExecutionEventHandler.cs" />
+    <Compile Include="EventNotifier.cs" />
+    <Compile Include="OrQueryGroup.cs" />
+    <Compile Include="Attributes\IgnoreAttribute.cs" />
+    <Compile Include="Attributes\MapAttribute.cs" />
+    <Compile Include="Attributes\PrimaryAttribute.cs" />
+    <Compile Include="Attributes\TextAttribute.cs" />
+    <Compile Include="BaseRepository.cs" />
+    <Compile Include="DataEntity.cs" />
+    <Compile Include="DbRepository.cs" />
+    <Compile Include="Enumerations\Conjunction.cs" />
+    <Compile Include="Enumerations\Order.cs" />
+    <Compile Include="Enumerations\Command.cs" />
+    <Compile Include="Enumerations\Operation.cs" />
+    <Compile Include="Exceptions\DuplicateTypeMapException.cs" />
+    <Compile Include="Exceptions\EntityNotBulkInsertableException.cs" />
+    <Compile Include="Exceptions\EntityNotInsertableException.cs" />
+    <Compile Include="Exceptions\EntityNotMergeableException.cs" />
+    <Compile Include="Exceptions\EntityNotUpdateableException.cs" />
+    <Compile Include="Exceptions\EntityNotDeletableException.cs" />
+    <Compile Include="Exceptions\EntityNotQueryableException.cs" />
+    <Compile Include="Extensions\DataEntityExtension.cs" />
+    <Compile Include="Extensions\DataReaderExtension.cs" />
+    <Compile Include="Extensions\DbCommandExtension.cs" />
+    <Compile Include="Extensions\DbConnectionExtension.cs" />
+    <Compile Include="Extensions\ObjectExtension.cs" />
+    <Compile Include="Extensions\PropertyInfoExtension.cs" />
+    <Compile Include="Extensions\QueryFieldExtension.cs" />
+    <Compile Include="Extensions\QueryGroupExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Interfaces\IFieldValue.cs" />
+    <Compile Include="Interfaces\IQueryGroup.cs" />
+    <Compile Include="OrderField.cs" />
+    <Compile Include="Field.cs" />
+    <Compile Include="Interfaces\IOrderField.cs" />
+    <Compile Include="Interfaces\IQueryBuilder.cs" />
+    <Compile Include="Interfaces\IBaseRepository.cs" />
+    <Compile Include="Interfaces\IDataEntity.cs" />
+    <Compile Include="Interfaces\IDbRepository.cs" />
+    <Compile Include="Interfaces\IField.cs" />
+    <Compile Include="Interfaces\IQueryField.cs" />
+    <Compile Include="Interfaces\ITypeMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryBuilder.cs" />
+    <Compile Include="AndQueryGroup.cs" />
+    <Compile Include="QueryGroup.cs" />
+    <Compile Include="QueryField.cs" />
+    <Compile Include="TypeMap.cs" />
+    <Compile Include="TypeMapper.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
