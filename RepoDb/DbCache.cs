@@ -7,12 +7,15 @@ namespace RepoDb
 {
     public sealed class DbCache : ICache
     {
+        private static object _syncLock = new object();
         private readonly IList<ICacheItem> _list;
 
-        internal DbCache()
+        public DbCache()
         {
             _list = new List<ICacheItem>();
         }
+
+        public int MinutesLifespan { get; }
 
         public void Clear()
         {
@@ -37,14 +40,19 @@ namespace RepoDb
 
         public void Set(string key, object value)
         {
-            var cacheItem = GetItem(key);
-            if (cacheItem == null)
+            lock (_syncLock)
             {
-                _list.Add(new DbCacheItem(key, value));
-            }
-            else
-            {
-                ((DbCacheItem)cacheItem).Value = value;
+                var item = GetItem(key);
+                if (item == null)
+                {
+                    _list.Add(new DbCacheItem(key, value));
+                }
+                else
+                {
+                    var cacheItem = (DbCacheItem)item;
+                    cacheItem.Value = value;
+                    cacheItem.Timestamp = DateTime.UtcNow;
+                }
             }
         }
 

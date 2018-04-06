@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using RepoDb.Exceptions;
 using RepoDb.EventArguments;
+using System.Text;
 
 namespace RepoDb
 {
