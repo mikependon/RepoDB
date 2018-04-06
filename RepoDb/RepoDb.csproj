@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbCacheItem.cs" />
+    <Compile Include="DbCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
     <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
     <Compile Include="EventArguments\ExecutionEventArgs.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="EventHandlers\CancelledExecutionEventHandler.cs" />
     <Compile Include="EventHandlers\ExecutionEventHandler.cs" />
     <Compile Include="EventNotifier.cs" />
+    <Compile Include="Interfaces\ICache.cs" />
+    <Compile Include="Interfaces\ICacheItem.cs" />
     <Compile Include="OrQueryGroup.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\MapAttribute.cs" />

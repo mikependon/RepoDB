@@ -31,49 +31,53 @@ namespace RepoDb
 
         // Query
 
-        public IEnumerable<TEntity> Query(IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query(IDbTransaction transaction = null, string cacheKey = null)
         {
-            return DbRepository.Query<TEntity>(transaction: transaction);
+            return DbRepository.Query<TEntity>(transaction: transaction,
+                cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                cacheKey: cacheKey);
         }
 
         // Query
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(transaction: transaction);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 transaction: transaction);
@@ -269,6 +273,7 @@ namespace RepoDb
         }
 
         // ExecuteNonQueryAsync
+
         public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, int?
             commandTimeout = null, IDbTransaction transaction = null)
         {
@@ -280,6 +285,7 @@ namespace RepoDb
         }
 
         // ExecuteScalar
+
         public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
@@ -291,6 +297,7 @@ namespace RepoDb
         }
 
         // ExecuteScalarAsync
+
         public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {

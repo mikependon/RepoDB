@@ -15,23 +15,23 @@ namespace RepoDb.Interfaces
         
         // Query
 
-        IEnumerable<TEntity> Query(IDbTransaction transaction = null);
+        IEnumerable<TEntity> Query(IDbTransaction transaction = null, string cacheKey = null);
 
-        IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null);
+        IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, string cacheKey = null);
 
-        IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+        IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null);
 
-        IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null);
+        IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null);
 
         // QueryAsync
 
-        Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null);
+        Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, string cacheKey = null);
 
-        Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null);
+        Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, string cacheKey = null);
 
-        Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+        Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null);
 
-        Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null);
+        Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null);
 
         // Insert
 

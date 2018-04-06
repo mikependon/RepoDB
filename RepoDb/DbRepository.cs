@@ -18,15 +18,26 @@ namespace RepoDb
         private readonly int? _commandTimeout;
 
         public DbRepository(string connectionString)
-            : this(connectionString, null)
+            : this(connectionString, null, null)
         {
         }
 
         public DbRepository(string connectionString, int? commandTimeout)
+            : this(connectionString, commandTimeout, null)
         {
+        }
+
+        public DbRepository(string connectionString, int? commandTimeout, ICache cache = null)
+        {
+            // Fields
             _connectionString = connectionString;
             _commandTimeout = commandTimeout;
+
+            // Properties
+            Cache = (cache ?? new DbCache());
         }
+
+        // CreateConnection
 
         public TDbConnection CreateConnection()
         {
@@ -35,7 +46,12 @@ namespace RepoDb
             return connection;
         }
 
+        // DbCache
+
+        public ICache Cache { get; }
+
         // GuardQueryable
+
         private void GuardQueryable<TEntity>()
             where TEntity : IDataEntity
         {
@@ -46,14 +62,16 @@ namespace RepoDb
         }
 
         // Query
-        public IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null)
+
+        public IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Query<TEntity>(where: (object)null,
-                transaction: transaction);
+            return Query<TEntity>(where: (IQueryGroup)null,
+                transaction: transaction,
+                cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             if (where is QueryField)
@@ -73,17 +91,30 @@ namespace RepoDb
             }
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Query<TEntity>(where: new QueryGroup(where),
+            return Query<TEntity>(where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
                 transaction: transaction);
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = Cache?.Get(cacheKey);
+                if (item != null)
+                {
+                    return (IEnumerable<TEntity>)item;
+                }
+            }
+
+            // Check
             GuardQueryable<TEntity>();
+
+            // Variables
             var commandText = DataEntityExtension.GetSelectStatement<TEntity>(where);
             var param = where?.AsObject();
             var eventArgs = new CancellableExecutionEventArgs(commandText, param);
@@ -105,6 +136,12 @@ namespace RepoDb
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
+            // Set Cache
+            if (cacheKey != null)
+            {
+                Cache?.Set(cacheKey, result);
+            }
+
             // After Execution
             EventNotifier.OnAfterQueryExecution(this, new ExecutionEventArgs(commandText, result));
 
@@ -113,38 +150,44 @@ namespace RepoDb
         }
         
         // QueryAsync
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null)
+
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
-                Query<TEntity>(transaction: transaction));
+                Query<TEntity>(transaction: transaction,
+                    cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction));
+                    transaction: transaction,
+                    cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction));
+                    transaction: transaction,
+                    cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction));
+                    transaction: transaction,
+                    cacheKey: cacheKey));
         }
 
         // GuardInsertable
+
         private void GuardInsertable<TEntity>()
             where TEntity : IDataEntity
         {
@@ -155,6 +198,7 @@ namespace RepoDb
         }
 
         // GuardBulkInsert
+
         private void GuardBulkInsert<TEntity>()
             where TEntity : IDataEntity
         {
@@ -165,10 +209,14 @@ namespace RepoDb
         }
 
         // Insert
+
         public object Insert<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Check
             GuardInsertable<TEntity>();
+
+            // Variables
             var commandText = DataEntityExtension.GetInsertStatement<TEntity>();
             var eventArgs = new CancellableExecutionEventArgs(commandText, entity);
 
@@ -206,6 +254,7 @@ namespace RepoDb
         }
 
         // GuardUpdateable
+
         private void GuardUpdateable<TEntity>()
             where TEntity : IDataEntity
         {
@@ -216,6 +265,7 @@ namespace RepoDb
         }
 
         // Update
+
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -237,15 +287,18 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Update(entity: entity
-                , where: new QueryGroup(where)
-                , transaction: transaction);
+            return Update(entity: entity,
+                where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
+                transaction: transaction);
         }
 
         public int Update<TEntity>(TEntity entity, IQueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Check
             GuardUpdateable<TEntity>();
+
+            // Variables
             var commandText = DataEntityExtension.GetUpdateStatement<TEntity>(where);
             var param = entity?.AsObject(where);
             var eventArgs = new CancellableExecutionEventArgs(commandText, param);
@@ -311,6 +364,7 @@ namespace RepoDb
         }
 
         // GuardDeletable
+
         private void GuardDeletable<TEntity>()
             where TEntity : IDataEntity
         {
@@ -321,6 +375,7 @@ namespace RepoDb
         }
 
         // Delete
+
         public int Delete<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -331,14 +386,17 @@ namespace RepoDb
         public int Delete<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Delete<TEntity>(where: new QueryGroup(where),
+            return Delete<TEntity>(where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
                 transaction: transaction);
         }
 
         public int Delete<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Check
             GuardDeletable<TEntity>();
+
+            // Variables
             var commandText = DataEntityExtension.GetDeleteStatement<TEntity>(where);
             var param = where?.AsObject();
             var eventArgs = new CancellableExecutionEventArgs(commandText, param);
@@ -392,6 +450,7 @@ namespace RepoDb
         }
 
         // GuardMergeable
+
         private void GuardMergeable<TEntity>()
             where TEntity : IDataEntity
         {
@@ -402,6 +461,7 @@ namespace RepoDb
         }
 
         // Merge
+
         public int Merge<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -413,7 +473,10 @@ namespace RepoDb
         public int Merge<TEntity>(TEntity entity, IEnumerable<IField> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Check
             GuardMergeable<TEntity>();
+
+            // Variables
             var commandText = DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
             var eventArgs = new CancellableExecutionEventArgs(commandText, entity);
 
@@ -460,11 +523,15 @@ namespace RepoDb
         }
 
         // BulkInsert
+
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Check
             GuardInsertable<TEntity>();
             GuardBulkInsert<TEntity>();
+
+            // Variables
             using (var connection = (transaction?.Connection ?? CreateConnection()).EnsureOpen())
             {
                 var table = entities.AsDataTable<TEntity>(connection);
@@ -504,6 +571,7 @@ namespace RepoDb
         }
 
         // ExecuteReader
+
         public IEnumerable<TEntity> ExecuteReader<TEntity>(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -522,6 +590,7 @@ namespace RepoDb
         }
 
         // ExecuteReaderAsync
+
         public Task<IEnumerable<TEntity>> ExecuteReaderAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -535,6 +604,7 @@ namespace RepoDb
         }
 
         // ExecuteNonQuery
+
         public int ExecuteNonQuery(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
@@ -552,6 +622,7 @@ namespace RepoDb
         }
 
         // ExecuteNonQueryAsync
+
         public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
@@ -564,6 +635,7 @@ namespace RepoDb
         }
 
         // ExecuteScalar
+
         public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
@@ -581,6 +653,7 @@ namespace RepoDb
         }
 
         // ExecuteScalarAsync
+
         public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {

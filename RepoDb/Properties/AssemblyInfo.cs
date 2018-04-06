@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RepoDb")]
 [assembly: AssemblyDescription("A dynamic ORM library used to create an Entity-Based Repositories when accessing data from the database.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Ørsted")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RepoDb")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
