@@ -19,23 +19,29 @@ namespace RepoDb
         private readonly int? _commandTimeout;
 
         public DbRepository(string connectionString)
-            : this(connectionString, null, null)
+            : this(connectionString, null, null, null)
         {
         }
 
         public DbRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null)
+            : this(connectionString, commandTimeout, null, null)
         {
         }
 
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache = null)
+        public DbRepository(string connectionString, int? commandTimeout, ICache cache)
+            : this(connectionString, commandTimeout, cache, null)
+        {
+        }
+
+        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
         {
             // Fields
             _connectionString = connectionString;
             _commandTimeout = commandTimeout;
 
             // Properties
-            Cache = (cache ?? new DbCache());
+            Cache = (cache ?? new MemoryCache());
+            Trace = trace;
         }
 
         // CreateConnection
@@ -50,6 +56,9 @@ namespace RepoDb
         // DbCache
 
         public ICache Cache { get; }
+
+        // Trace
+        public ITrace Trace { get; }
 
         // GuardQueryable
 
@@ -118,33 +127,43 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetSelectStatement<TEntity>(where);
             var param = where?.AsObject();
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeQueryExecution(this, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (Trace != null)
             {
-                EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs(commandText, param));
-                return null;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                Trace.BeforeQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Query");
+                    }
+                    return null;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             var result = ExecuteReader<TEntity>(commandText: commandText,
-                param: where?.AsObject(),
+                param: param,
                 commandType: DataEntityExtension.GetCommandType<TEntity>(),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterQuery(new TraceLog(commandText, param, result));
+            }
 
             // Set Cache
             if (cacheKey != null)
             {
                 Cache?.Set(cacheKey, result);
             }
-
-            // After Execution
-            EventNotifier.OnAfterQueryExecution(this, new ExecutionEventArgs(commandText, result));
 
             // Result
             return result;
@@ -219,17 +238,24 @@ namespace RepoDb
 
             // Variables
             var commandText = DataEntityExtension.GetInsertStatement<TEntity>();
-            var eventArgs = new CancellableExecutionEventArgs(commandText, entity);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeInsertExecution(this, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (Trace != null)
             {
-                EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs(commandText, entity));
-                return null;
+                cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
+                Trace.BeforeInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Insert");
+                    }
+                    return null;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
@@ -239,7 +265,10 @@ namespace RepoDb
                 transaction: transaction);
 
             // After Execution
-            EventNotifier.OnAfterInsertExecution(this, new ExecutionEventArgs(commandText, result));
+            if (Trace != null)
+            {
+                Trace.AfterInsert(new TraceLog(commandText, entity, result));
+            }
 
             // Result
             return result;
@@ -302,27 +331,37 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetUpdateStatement<TEntity>(where);
             var param = entity?.AsObject(where);
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeUpdateExecution(this, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (Trace != null)
             {
-                EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs(commandText, param));
-                return 0;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                Trace.BeforeUpdate(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Update");
+                    }
+                    return 0;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
-                param: param,
+                param: entity,
                 commandType: DataEntityExtension.GetCommandType<TEntity>(),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
             // After Execution
-            EventNotifier.OnAfterUpdateExecution(this, new ExecutionEventArgs(commandText, result));
+            if (Trace != null)
+            {
+                Trace.AfterUpdate(new TraceLog(commandText, entity, result));
+            }
 
             // Result
             return result;
@@ -400,17 +439,24 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetDeleteStatement<TEntity>(where);
             var param = where?.AsObject();
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeDeleteExecution(this, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (Trace != null)
             {
-                EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs(commandText, param));
-                return 0;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                Trace.BeforeDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Delete");
+                    }
+                    return 0;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
@@ -419,7 +465,10 @@ namespace RepoDb
                 commandTimeout: _commandTimeout);
 
             // After Execution
-            EventNotifier.OnAfterDeleteExecution(this, new ExecutionEventArgs(commandText, result));
+            if (Trace != null)
+            {
+                Trace.AfterDelete(new TraceLog(commandText, param, result));
+            }
 
             // Result
             return result;
@@ -479,17 +528,24 @@ namespace RepoDb
 
             // Variables
             var commandText = DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
-            var eventArgs = new CancellableExecutionEventArgs(commandText, entity);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeMergeExecution(this, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (Trace != null)
             {
-                EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs(commandText, entity));
-                return 0;
+                cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
+                Trace.BeforeMerge(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("Merge");
+                    }
+                    return 0;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
@@ -499,7 +555,10 @@ namespace RepoDb
                 transaction: transaction);
 
             // After Execution
-            EventNotifier.OnAfterMergeExecution(this, new ExecutionEventArgs(commandText, result));
+            if (Trace != null)
+            {
+                Trace.AfterMerge(new TraceLog(commandText, entity, result));
+            }
 
             // Result
             return result;
@@ -535,18 +594,23 @@ namespace RepoDb
             // Variables
             using (var connection = (transaction?.Connection ?? CreateConnection()).EnsureOpen())
             {
-                var table = entities.AsDataTable<TEntity>(connection);
-                var eventArgs = new CancellableExecutionEventArgs(null, table);
+                var cancellableTraceLog = (CancellableTraceLog)null;
 
                 // Before Execution
-                EventNotifier.OnBeforeQueryExecution(this, eventArgs);
-
-                // Cancel Execution
-                if (eventArgs.IsCancelled)
+                if (Trace != null)
                 {
-                    EventNotifier.OnCancelledExecution(this, new CancelledExecutionEventArgs("BulkInsert", entities));
-                    return 0;
+                    cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                    Trace.BeforeBulkInsert(cancellableTraceLog);
+                    if (cancellableTraceLog.IsCancelled)
+                    {
+                        if (cancellableTraceLog.IsThrowException)
+                        {
+                            throw new CancelledExecutionException("BulkInsert");
+                        }
+                        return 0;
+                    }
                 }
+                var table = entities.AsDataTable<TEntity>(connection);
 
                 // Actual Execution
                 var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
@@ -555,7 +619,10 @@ namespace RepoDb
                 sqlBulkCopy.WriteToServer(table);
 
                 // After Execution
-                EventNotifier.OnAfterBulkInsertExecution(this, new ExecutionEventArgs(null, result));
+                if (Trace != null)
+                {
+                    Trace.AfterBulkInsert(new TraceLog("BulkInsert", table, result));
+                }
 
                 // Result
                 return result;
@@ -582,7 +649,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: _commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: Trace);
             if (transaction == null)
             {
                 connection.Dispose();
@@ -614,7 +682,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: _commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: Trace);
             if (transaction == null)
             {
                 connection.Dispose();
@@ -645,7 +714,8 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: _commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: Trace);
             if (transaction == null)
             {
                 connection.Dispose();

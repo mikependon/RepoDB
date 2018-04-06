@@ -9,10 +9,22 @@ namespace RepoDb.Interfaces
         where TEntity : DataEntity
         where TDbConnection : DbConnection
     {
+        // CreateConnection
+
         TDbConnection CreateConnection();
 
+        // DbRepository
+
         IDbRepository<TDbConnection> DbRepository { get; }
-        
+
+        // Cache
+
+        ICache Cache { get; }
+
+        // Trace
+
+        ITrace Trace { get; }
+
         // Query
 
         IEnumerable<TEntity> Query(IDbTransaction transaction = null, string cacheKey = null);

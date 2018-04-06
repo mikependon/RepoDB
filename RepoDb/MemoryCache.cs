@@ -5,17 +5,15 @@ using System.Linq;
 
 namespace RepoDb
 {
-    public sealed class DbCache : ICache
+    public class MemoryCache : ICache
     {
         private static object _syncLock = new object();
         private readonly IList<ICacheItem> _list;
 
-        public DbCache()
+        internal MemoryCache()
         {
             _list = new List<ICacheItem>();
         }
-
-        public int MinutesLifespan { get; }
 
         public void Clear()
         {

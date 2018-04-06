@@ -1,9 +1,11 @@
 ﻿using RepoDb.EventArguments;
 using RepoDb.EventHandlers;
+using System;
 
 namespace RepoDb
 {
-    public static class EventNotifier
+    [Obsolete]
+    internal static class EventNotifier
     {
         // Before Events
         public static event CancellableExecutionEventHandler BeforeQueryExecution;

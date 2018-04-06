@@ -1,6 +1,8 @@
 ﻿using RepoDb.EventArguments;
+using System;
 
 namespace RepoDb.EventHandlers
 {
-    public delegate void ExecutionEventHandler(object sender, ExecutionEventArgs e);
+    [Obsolete]
+    internal delegate void ExecutionEventHandler(object sender, ExecutionEventArgs e);
 }

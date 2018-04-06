@@ -2,7 +2,8 @@
 
 namespace RepoDb.EventArguments
 {
-    public class ExecutionEventArgs : EventArgs
+    [Obsolete]
+    internal class ExecutionEventArgs : EventArgs
     {
         public ExecutionEventArgs(string statement, object parameter)
         {

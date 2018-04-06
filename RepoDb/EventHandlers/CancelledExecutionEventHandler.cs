@@ -1,6 +1,8 @@
 ﻿using RepoDb.EventArguments;
+using System;
 
 namespace RepoDb.EventHandlers
 {
-    public delegate void CancelledExecutionEventHandler(object sender, CancelledExecutionEventArgs e);
+    [Obsolete]
+    internal delegate void CancelledExecutionEventHandler(object sender, CancelledExecutionEventArgs e);
 }

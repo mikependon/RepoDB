@@ -16,6 +16,10 @@ namespace RepoDb.Interfaces
 
         ICache Cache { get; }
 
+        // Trace
+
+        ITrace Trace { get; }
+
         // Query
 
         IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, string cacheKey = null)

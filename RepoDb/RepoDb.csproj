@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbCacheItem.cs" />
-    <Compile Include="DbCache.cs" />
+    <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
     <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
     <Compile Include="EventArguments\ExecutionEventArgs.cs" />
@@ -53,8 +53,12 @@
     <Compile Include="EventHandlers\CancelledExecutionEventHandler.cs" />
     <Compile Include="EventHandlers\ExecutionEventHandler.cs" />
     <Compile Include="EventNotifier.cs" />
+    <Compile Include="Exceptions\CancelledExecutionException.cs" />
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Interfaces\ICacheItem.cs" />
+    <Compile Include="Interfaces\ITrace.cs" />
+    <Compile Include="Interfaces\ICancellableTraceLog.cs" />
+    <Compile Include="Interfaces\ITraceLog.cs" />
     <Compile Include="OrQueryGroup.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\MapAttribute.cs" />
@@ -101,6 +105,8 @@
     <Compile Include="AndQueryGroup.cs" />
     <Compile Include="QueryGroup.cs" />
     <Compile Include="QueryField.cs" />
+    <Compile Include="CancellableTraceLog.cs" />
+    <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMap.cs" />
     <Compile Include="TypeMapper.cs" />
   </ItemGroup>

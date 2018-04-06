@@ -1,6 +1,9 @@
-﻿namespace RepoDb.EventArguments
+﻿using System;
+
+namespace RepoDb.EventArguments
 {
-    public class CancelledExecutionEventArgs : ExecutionEventArgs
+    [Obsolete]
+    internal class CancelledExecutionEventArgs : ExecutionEventArgs
     {
         public CancelledExecutionEventArgs(string statement, object parameter)
             : base(statement, parameter)

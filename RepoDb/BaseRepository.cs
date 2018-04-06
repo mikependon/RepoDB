@@ -13,21 +13,48 @@ namespace RepoDb
         private readonly DbRepository<TDbConnection> _dbRepository;
 
         public BaseRepository(string connectionString)
-            : this(connectionString, null)
+            : this(connectionString, null, null, null)
         {
         }
 
         public BaseRepository(string connectionString, int? commandTimeout)
+            : this(connectionString, commandTimeout, null, null)
         {
-            _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout);
         }
+
+        public BaseRepository(string connectionString, int? commandTimeout, ICache cache)
+            : this(connectionString, commandTimeout, cache, null)
+        {
+        }
+
+        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
+        {
+            // Fields
+            Cache = cache;
+            Trace = trace;
+
+            // Repository
+            _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout, Cache, Trace);
+        }
+
+        // CreateConnection
 
         public TDbConnection CreateConnection()
         {
             return DbRepository.CreateConnection();
         }
 
+        // DbRepository
+
         public IDbRepository<TDbConnection> DbRepository => _dbRepository;
+
+        // DbCache
+
+        public ICache Cache { get; }
+
+        // Trace
+
+        public ITrace Trace { get; }
 
         // Query
 

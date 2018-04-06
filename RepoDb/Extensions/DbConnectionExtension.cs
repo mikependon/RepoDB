@@ -1,5 +1,6 @@
 ﻿using RepoDb.EventArguments;
 using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -48,20 +49,28 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
             where TEntity : DataEntity
         {
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeExecuteReaderExecution(connection, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (trace != null)
             {
-                EventNotifier.OnCancelledExecution(connection, new CancelledExecutionEventArgs(commandText, param));
-                return null;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeExecuteReader(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("ExecuteReader");
+                    }
+                    return null;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -77,7 +86,10 @@ namespace RepoDb.Extensions
                     }
 
                     // After Execution
-                    EventNotifier.OnAfterExecuteReaderExecution(connection, new ExecutionEventArgs(commandText, list));
+                    if (trace != null)
+                    {
+                        trace.AfterExecuteReader(new TraceLog(commandText, param, list));
+                    }
 
                     // Result
                     return list;
@@ -91,7 +103,8 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
@@ -100,7 +113,8 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction));
+                    transaction: transaction,
+                    trace: trace));
         }
 
         // ExecuteReaderEx
@@ -109,19 +123,27 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeExecuteReaderExExecution(connection, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (trace != null)
             {
-                EventNotifier.OnCancelledExecution(connection, new CancelledExecutionEventArgs(commandText, param));
-                return null;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeExecuteReaderEx(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("ExecuteReaderEx");
+                    }
+                    return null;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -137,7 +159,10 @@ namespace RepoDb.Extensions
                     }
 
                     // After Execution
-                    EventNotifier.OnAfterExecuteReaderExExecution(connection, new ExecutionEventArgs(commandText, list));
+                    if (trace != null)
+                    {
+                        trace.AfterExecuteReaderEx(new TraceLog(commandText, param, list));
+                    }
 
                     // Result
                     return list;
@@ -151,7 +176,8 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
             return Task.Factory.StartNew<IEnumerable<object>>(() =>
                 ExecuteReaderEx(connection: connection,
@@ -159,7 +185,8 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction));
+                    transaction: transaction,
+                    trace: trace));
         }
 
         // ExecuteNonQuery
@@ -168,19 +195,27 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeExecuteNonQueryExecution(connection, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (trace != null)
             {
-                EventNotifier.OnCancelledExecution(connection, new CancelledExecutionEventArgs(commandText, param));
-                return 0;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeExecuteNonQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("ExecuteNonQuery");
+                    }
+                    return 0;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -189,7 +224,10 @@ namespace RepoDb.Extensions
                 var result = command.ExecuteNonQuery();
 
                 // After Execution
-                EventNotifier.OnAfterExecuteNonQueryExecution(connection, new ExecutionEventArgs(commandText, result));
+                if (trace != null)
+                {
+                    trace.AfterExecuteNonQuery(new TraceLog(commandText, param, result));
+                }
 
                 // Result
                 return result;
@@ -202,7 +240,8 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
             return Task.Factory.StartNew<int>(() =>
                 ExecuteNonQuery(connection: connection,
@@ -210,7 +249,8 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction));
+                    transaction: transaction,
+                    trace: trace));
         }
 
         // ExecuteScalar
@@ -219,19 +259,27 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
-            var eventArgs = new CancellableExecutionEventArgs(commandText, param);
+            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
-            EventNotifier.OnBeforeExecuteScalarExecution(connection, eventArgs);
-
-            // Cancel Execution
-            if (eventArgs.IsCancelled)
+            if (trace != null)
             {
-                EventNotifier.OnCancelledExecution(connection, new CancelledExecutionEventArgs(commandText, param));
-                return null;
+                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeExecuteScalar(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("ExecuteScalar");
+                    }
+                    return null;
+                }
             }
+            commandText = (cancellableTraceLog?.Statement ?? commandText);
+            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -240,7 +288,10 @@ namespace RepoDb.Extensions
                 var result = command.ExecuteScalar();
 
                 // After Execution
-                EventNotifier.OnAfterExecuteScalarExecution(connection, new ExecutionEventArgs(commandText, result));
+                if (trace != null)
+                {
+                    trace.AfterExecuteScalar(new TraceLog(commandText, param, result));
+                }
 
                 // Result
                 return result;
@@ -253,7 +304,8 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
             return Task.Factory.StartNew<object>(() =>
                 ExecuteScalarAsync(connection: connection,
@@ -261,7 +313,8 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction));
+                    transaction: transaction,
+                    trace: trace));
         }
     }
 }
