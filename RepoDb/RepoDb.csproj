@@ -48,6 +48,7 @@
     <Compile Include="DbCacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
+    <Compile Include="Interfaces\IStatementBuilder.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
     <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="QueryGroup.cs" />
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
+    <Compile Include="SqlDbStatementBuilder.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMap.cs" />
     <Compile Include="TypeMapper.cs" />

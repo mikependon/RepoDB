@@ -6,6 +6,21 @@ namespace RepoDb.Interfaces
     internal interface IQueryBuilder<TEntity>
         where TEntity : IDataEntity
     {
+        // Custom Methods
+        string GetString();
+
+        // Trim
+
+        IQueryBuilder<TEntity> Trim();
+
+        IQueryBuilder<TEntity> Space();
+
+        IQueryBuilder<TEntity> NewLine();
+
+        IQueryBuilder<TEntity> WriteText(string text);
+
+        // Basic Methods
+
         // Select (SELECT)
         IQueryBuilder<TEntity> Select();
 
@@ -17,6 +32,18 @@ namespace RepoDb.Interfaces
 
         // Insert (INSERT)
         IQueryBuilder<TEntity> Insert();
+
+        // Into (INTO)
+        IQueryBuilder<TEntity> Into();
+
+        // Values (VALUES)
+        IQueryBuilder<TEntity> Values();
+
+        // As (AS)
+        IQueryBuilder<TEntity> As();
+
+        // Set (SET)
+        IQueryBuilder<TEntity> Set();
 
         // Merge (MERGE)
         IQueryBuilder<TEntity> Merge(string alias);
@@ -31,7 +58,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Join();
 
         // Name ([dbo].[Name])
-        IQueryBuilder<TEntity> Name();
+        IQueryBuilder<TEntity> Table();
 
         // Using (USING)
         IQueryBuilder<TEntity> Using(string alias);
@@ -52,7 +79,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> On();
 
         // Where ([Field1] = @Field1)
-        IQueryBuilder<TEntity> Where(IEnumerable<IQueryField> queryFields);
+        IQueryBuilder<TEntity> Where(IQueryGroup queryGroup);
 
         // OrderBy (ORDER BY)
         IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> fields);

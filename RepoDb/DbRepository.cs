@@ -136,6 +136,14 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
+            var builder = new SqlDbStatementBuilder();
+            var statement = builder.CreateQuery<TEntity>(where);
+            statement = builder.CreateDelete<TEntity>(where);
+            statement = builder.CreateInsert<TEntity>();
+            statement = builder.CreateUpdate<TEntity>(where);
+
+            throw new NotImplementedException("Start here the next day.");
+
             // Get Cache
             if (cacheKey != null)
             {

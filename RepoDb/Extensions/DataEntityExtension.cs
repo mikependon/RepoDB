@@ -408,7 +408,7 @@ namespace RepoDb.Extensions
             statement.AppendLine(");");
             if (primary != null)
             {
-                var result = primary.IsIdentity() ? "CONVERT(INT, SCOPE_IDENTITY())" : $"@{primary.Name}";
+                var result = primary.IsIdentity() ? "SCOPE_IDENTITY()" : $"@{primary.Name}";
                 statement.AppendLine("SELECT");
                 statement.AppendLine(result);
                 statement.AppendLine("AS [Result]");
