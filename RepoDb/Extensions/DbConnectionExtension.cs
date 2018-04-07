@@ -1,9 +1,9 @@
-﻿using RepoDb.EventArguments;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb.Extensions
@@ -59,13 +59,13 @@ namespace RepoDb.Extensions
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteReader(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("ExecuteReader");
+                        throw new CancelledExecutionException(Constant.ExecuteReader);
                     }
                     return null;
                 }
@@ -89,7 +89,7 @@ namespace RepoDb.Extensions
                     // After Execution
                     if (trace != null)
                     {
-                        trace.AfterExecuteReader(new TraceLog(commandText, param, list));
+                        trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list));
                     }
 
                     // Result
@@ -132,13 +132,13 @@ namespace RepoDb.Extensions
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteReaderEx(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("ExecuteReaderEx");
+                        throw new CancelledExecutionException(Constant.ExecuteReaderEx);
                     }
                     return null;
                 }
@@ -162,7 +162,7 @@ namespace RepoDb.Extensions
                     // After Execution
                     if (trace != null)
                     {
-                        trace.AfterExecuteReaderEx(new TraceLog(commandText, param, list));
+                        trace.AfterExecuteReaderEx(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list));
                     }
 
                     // Result
@@ -204,13 +204,13 @@ namespace RepoDb.Extensions
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteNonQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("ExecuteNonQuery");
+                        throw new CancelledExecutionException(Constant.ExecuteNonQuery);
                     }
                     return 0;
                 }
@@ -227,7 +227,7 @@ namespace RepoDb.Extensions
                 // After Execution
                 if (trace != null)
                 {
-                    trace.AfterExecuteNonQuery(new TraceLog(commandText, param, result));
+                    trace.AfterExecuteNonQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
                 }
 
                 // Result
@@ -268,13 +268,13 @@ namespace RepoDb.Extensions
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteScalar(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException("ExecuteScalar");
+                        throw new CancelledExecutionException(Constant.ExecuteScalar);
                     }
                     return null;
                 }
@@ -295,7 +295,7 @@ namespace RepoDb.Extensions
                 // After Execution
                 if (trace != null)
                 {
-                    trace.AfterExecuteScalar(new TraceLog(commandText, param, result));
+                    trace.AfterExecuteScalar(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
                 }
 
                 // Result

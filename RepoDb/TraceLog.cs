@@ -1,16 +1,19 @@
 ﻿using RepoDb.Interfaces;
+using System.Reflection;
 
 namespace RepoDb
 {
     public class TraceLog : ITraceLog
     {
-        internal TraceLog(string statement, object parameter, object result)
+        internal TraceLog(MethodBase method, string statement, object parameter, object result)
         {
+            Method = method;
             Statement = statement;
             Parameter = parameter;
             Result = result;
         }
 
+        public MethodBase Method { get; }
 
         public object Result { get; }
 

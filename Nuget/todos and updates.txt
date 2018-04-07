@@ -3,5 +3,6 @@ v1.0.6
 - Support dynamic object for QueryGroup
 - MemoryCache (ICache) object
 - Trace (ITrace) object
+- Added Constant class
 
 [SOON]

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constant.cs" />
     <Compile Include="DbCacheItem.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />

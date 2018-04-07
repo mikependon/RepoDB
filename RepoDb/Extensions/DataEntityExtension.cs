@@ -76,11 +76,11 @@ namespace RepoDb.Extensions
                 type.GetProperties()
                     .FirstOrDefault(
                         property =>
-                            string.Equals(property.Name, "Id", StringComparison.InvariantCultureIgnoreCase)) ??
+                            string.Equals(property.Name, Constant.Id, StringComparison.InvariantCultureIgnoreCase)) ??
                 type.GetProperties()
                     .FirstOrDefault(
                         property =>
-                            string.Equals(property.Name, $"{GetMappedName(type)}Id", StringComparison.InvariantCultureIgnoreCase));
+                            string.Equals(property.Name, $"{GetMappedName(type)}{Constant.Id}", StringComparison.InvariantCultureIgnoreCase));
         }
 
         internal static PropertyInfo GetPrimaryProperty<T>()
@@ -133,7 +133,6 @@ namespace RepoDb.Extensions
         // AsObject
         internal static object AsObject(this IDataEntity dataEntity, IQueryGroup queryGroup)
         {
-            // TODO: Must consider the groupings here
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             dataEntity.GetType()
                 .GetProperties()
@@ -164,22 +163,22 @@ namespace RepoDb.Extensions
         internal static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection)
             where T : IDataEntity
         {
-            //var properties = typeof(T).GetProperties().ToList();
-            //var table = new DataTable(GetMappedName(typeof(T)));
-            //properties.ForEach(property =>
-            //{
-            //    table.Columns.Add(property.AsDataColumn());
-            //});
-            //entities.ToList().ForEach(entity =>
-            //{
-            //    var row = table.NewRow();
-            //    properties.ForEach(property =>
-            //    {
-            //        row[property.Name] = property.GetValue(entity);
-            //    });
-            //    table.Rows.Add(row);
-            //});
-            //return table;
+            /*var properties = typeof(T).GetProperties().ToList();
+            var table = new DataTable(GetMappedName(typeof(T)));
+            properties.ForEach(property =>
+            {
+                table.Columns.Add(property.AsDataColumn());
+            });
+            entities.ToList().ForEach(entity =>
+            {
+                var row = table.NewRow();
+                properties.ForEach(property =>
+                {
+                    row[property.Name] = property.GetValue(entity);
+                });
+                table.Rows.Add(row);
+            });
+            return table;*/
             var mappedName = GetMappedName<T>();
             var table = new DataTable(mappedName);
             using (var command = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
@@ -189,8 +188,8 @@ namespace RepoDb.Extensions
                     var schemaTable = reader.GetSchemaTable();
                     foreach (DataRow row in schemaTable.Rows)
                     {
-                        var columnName = Convert.ToString(row["ColumnName"]);
-                        var dataType = Type.GetType(Convert.ToString(row["DataType"]));
+                        var columnName = Convert.ToString(row[Constant.ColumnName]);
+                        var dataType = Type.GetType(Convert.ToString(row[Constant.DataType]));
                         table.Columns.Add(new DataColumn(columnName, dataType));
                     }
                 }

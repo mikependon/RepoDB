@@ -69,7 +69,7 @@ namespace RepoDb.Extensions
         // AsParameterAsField
         internal static string AsParameterAsField(this PropertyInfo property)
         {
-            return $"@{property.Name} AS [{property.Name}]";
+            return $"@{property.Name} {Constant.As.ToUpper()} [{property.Name}]";
         }
 
         // AsFieldAndParameter

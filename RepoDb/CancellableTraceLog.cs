@@ -1,11 +1,12 @@
 ﻿using RepoDb.Interfaces;
+using System.Reflection;
 
 namespace RepoDb
 {
     public sealed class CancellableTraceLog : TraceLog, ICancellableTraceLog
     {
-        internal CancellableTraceLog(string statement, object parameter, object result)
-            : base(statement, parameter, result)
+        internal CancellableTraceLog(MethodBase method, string statement, object parameter, object result)
+            : base(method, statement, parameter, result)
         {
         }
 

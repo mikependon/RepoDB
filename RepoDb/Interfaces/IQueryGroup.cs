@@ -5,9 +5,11 @@ namespace RepoDb.Interfaces
 {
     public interface IQueryGroup
     {
+        // Properties
         Conjunction Conjunction { get; }
         IEnumerable<IQueryField> QueryFields { get; }
         IEnumerable<IQueryGroup> QueryGroups { get; }
+        // Methods
         IEnumerable<IQueryField> GetAllQueryFields();
         IQueryGroup FixParameters();
         string GetString();
