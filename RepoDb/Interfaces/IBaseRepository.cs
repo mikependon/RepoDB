@@ -29,9 +29,9 @@ namespace RepoDb.Interfaces
 
         IEnumerable<TEntity> Query(IDbTransaction transaction = null, string cacheKey = null);
 
-        IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, string cacheKey = null);
-
         IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null);
+
+        IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, string cacheKey = null);
 
         IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null);
 
@@ -39,9 +39,9 @@ namespace RepoDb.Interfaces
 
         Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, string cacheKey = null);
 
-        Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, string cacheKey = null);
-
         Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null);
+
+        Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, string cacheKey = null);
 
         Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null);
 
@@ -57,9 +57,9 @@ namespace RepoDb.Interfaces
 
         int Update(TEntity entity, IDbTransaction transaction = null);
 
-        int Update(TEntity entity, object where, IDbTransaction transaction = null);
-
         int Update(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        int Update(TEntity entity, object where, IDbTransaction transaction = null);
 
         int Update(TEntity entity, IQueryGroup where, IDbTransaction transaction = null);
 
@@ -67,25 +67,25 @@ namespace RepoDb.Interfaces
 
         Task<int> UpdateAsync(TEntity entity, IDbTransaction transaction = null);
 
-        Task<int> UpdateAsync(TEntity entity, object where, IDbTransaction transaction = null);
-
         Task<int> UpdateAsync(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        Task<int> UpdateAsync(TEntity entity, object where, IDbTransaction transaction = null);
 
         Task<int> UpdateAsync(TEntity entity, IQueryGroup where, IDbTransaction transaction = null);
 
         // Delete
 
-        int Delete(object where, IDbTransaction transaction = null);
-
         int Delete(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        int Delete(object where, IDbTransaction transaction = null);
 
         int Delete(IQueryGroup where, IDbTransaction transaction = null);
 
         // DeleteAsync
 
-        Task<int> DeleteAsync(object where, IDbTransaction transaction = null);
-
         Task<int> DeleteAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        Task<int> DeleteAsync(object where, IDbTransaction transaction = null);
 
         Task<int> DeleteAsync(IQueryGroup where, IDbTransaction transaction = null);
 

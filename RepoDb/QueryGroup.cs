@@ -125,19 +125,6 @@ namespace RepoDb
             {
                 throw new ArgumentNullException($"Parameter '{Constant.Obj.ToLower()}' cannot be null.");
             }
-            /*
-            var person = repository.Query<Person>(new
-            {
-                Id = new { Operation = Operation.GreaterThan, Value = 15 },
-                new
-                {
-                    Address = "Minnesota",
-                    Age = new { Operation = Operation.LessThan, Value = 26 },
-                    LastUpdatedDate = new { Operation = Operation.GreaterThanOrEqual, Value = DateTime.UtcNow.Date.AddDays(-3) }
-                },
-                Conjuction = Conjuction.And
-            };
-            */
             var queryFields = new List<IQueryField>();
             var queryGroups = new List<IQueryGroup>();
             var conjunction = Conjunction.And;
@@ -146,7 +133,6 @@ namespace RepoDb
             properties.ForEach(property =>
             {
                 var fieldName = property.Name;
-                // Check for the reserve keywords (Conjunction, SubGroups)
                 if (!reserves.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase))
                 {
                     var value = property.GetValue(obj);
@@ -161,7 +147,7 @@ namespace RepoDb
                     }
                     else if (string.Equals(fieldName, Constant.SubGroups, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        queryGroups.Add(QueryGroup.Parse(property.GetValue(obj)));
+                        queryGroups.Add(Parse(property.GetValue(obj)));
                     }
                 }
             });
