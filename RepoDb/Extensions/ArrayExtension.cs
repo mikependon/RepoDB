@@ -5,7 +5,7 @@ namespace RepoDb.Extensions
 {
     public static class ArrayExtension
     {
-        internal static object[] ToObjects(this Array array)
+        internal static IEnumerable<object> AsEnumerable(this Array array)
         {
             var objects = new List<object>();
             if (array != null)
@@ -15,7 +15,7 @@ namespace RepoDb.Extensions
                     objects.Add(obj);
                 }
             }
-            return objects.ToArray();
+            return objects;
         }
     }
 }

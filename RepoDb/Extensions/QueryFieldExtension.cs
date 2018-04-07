@@ -24,12 +24,6 @@ namespace RepoDb.Extensions
             return $"[{queryField.Field.Name}]";
         }
 
-        // AsBetweenParameter
-        internal static string AsBetweenParameter(this IQueryField queryField)
-        {
-            return $"@{queryField.Parameter.Name}_{Constant.LeftValue} {Constant.And.ToUpper()} @{queryField.Parameter.Name}_{Constant.RightValue}";
-        }
-
         // AsParameter
         internal static string AsParameter(this IQueryField queryField)
         {
@@ -40,6 +34,24 @@ namespace RepoDb.Extensions
         internal static string AsParameterAsField(this IQueryField queryField)
         {
             return $"@{queryField.Parameter.Name} AS [{queryField.Field.Name}]";
+        }
+
+        // AsBetweenParameter
+        internal static string AsBetweenParameter(this IQueryField queryField)
+        {
+            return $"@{queryField.Parameter.Name}_{Constant.LeftValue} {Constant.And.ToUpper()} @{queryField.Parameter.Name}_{Constant.RightValue}";
+        }
+
+        // AsInParameter
+        internal static string AsInParameter(this IQueryField queryField)
+        {
+            var values = ((Array)queryField.Parameter.Value)?.AsEnumerable().ToList();
+            var parameters = new List<string>();
+            for (var i = 0; i < values.Count; i++)
+            {
+                parameters.Add($"@{queryField.Parameter.Name}_{Constant.In}_{i}");
+            }
+            return $"({parameters.Join(", ")})";
         }
 
         // AsFieldAndParameter
@@ -63,6 +75,10 @@ namespace RepoDb.Extensions
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
                     return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsBetweenParameter()}";
+                }
+                else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+                {
+                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsInParameter()}";
                 }
                 else
                 {

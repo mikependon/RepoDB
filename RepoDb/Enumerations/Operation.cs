@@ -13,6 +13,8 @@ namespace RepoDb.Enumerations
         [Text("LIKE")] Like,
         [Text("NOT LIKE")] NotLike,
         [Text("BETWEEN")] Between,
-        [Text("NOT BETWEEN")] NotBetween
+        [Text("NOT BETWEEN")] NotBetween,
+        [Text("IN")] In,
+        [Text("NOT IN")] NotIn
     }
 }

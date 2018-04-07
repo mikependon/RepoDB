@@ -14,6 +14,7 @@
         public static readonly string ExecuteReaderEx = "ExecuteReaderEx";
         public static readonly string ExecuteScalar = "ExecuteScalar";
         public static readonly string Id = "Id";
+        public static readonly string In = "In";
         public static readonly string Insert = "Insert";
         public static readonly string LeftValue = "LeftValue";
         public static readonly string Merge = "Merge";

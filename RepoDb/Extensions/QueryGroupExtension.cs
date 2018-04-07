@@ -29,16 +29,28 @@ namespace RepoDb.Extensions
                     {
                         var leftParameterName = $"{queryField.Parameter.Name}_{Constant.LeftValue}";
                         var rightParameterName = $"{queryField.Parameter.Name}_{Constant.RightValue}";
-                        var values = (queryField.Parameter.Value as Array)?.ToObjects();
+                        var values = (queryField.Parameter.Value as Array)?.AsEnumerable().ToList();
                         if (!expandObject.ContainsKey(leftParameterName))
                         {
-                            var leftValue = values.Length > 0 ? values[0] : null;
+                            var leftValue = values.Count > 0 ? values[0] : null;
                             expandObject.Add(leftParameterName, leftValue);
                         }
                         if (!expandObject.ContainsKey(rightParameterName))
                         {
-                            var rightValue = values.Length > 1 ? values[1] : null;
+                            var rightValue = values.Count > 1 ? values[1] : null;
                             expandObject.Add(rightParameterName, rightValue);
+                        }
+                    }
+                    else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+                    {
+                        var values = (queryField.Parameter.Value as Array)?.AsEnumerable().ToList();
+                        for (var i = 0; i < values.Count; i++)
+                        {
+                            var parameterName = $"{queryField.Parameter.Name}_{Constant.In}_{i}";
+                            if (!expandObject.ContainsKey(parameterName))
+                            {
+                                expandObject.Add(parameterName, values[i]);
+                            }
                         }
                     }
                     else
