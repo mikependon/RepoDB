@@ -41,11 +41,11 @@ namespace RepoDb.Extensions
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
-                return $"({queryField.AsField()} IS NULL)";
+                return $"{queryField.AsField()} IS NULL";
             }
             else if (queryField.Operation == Operation.NotEqual && queryField.Parameter.Value == null)
             {
-                return $"({queryField.AsField()} IS NOT NULL)";
+                return $"{queryField.AsField()} IS NOT NULL";
             }
             else
             {
@@ -54,7 +54,7 @@ namespace RepoDb.Extensions
                     .GetMembers()
                     .First(member => string.Equals(member.Name, queryField.Operation.ToString(), StringComparison.InvariantCultureIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();
-                return $"({queryField.AsField()} {textAttribute.Text} {queryField.AsParameter()})";
+                return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsParameter()}";
             }
         }
 

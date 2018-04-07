@@ -4,5 +4,10 @@ v1.0.6
 - MemoryCache (ICache) object
 - Trace (ITrace) object
 - Added Constant class
+- Added support for NOT LIKE (Operation.NotLike)
 
-[SOON]
+[TODO]
+- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
+- Support of Between
+- Optimize Query Builder
+- Injectable Query Builder

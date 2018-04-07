@@ -61,6 +61,18 @@ namespace RepoDb
         // Trace
         public ITrace Trace { get; }
 
+        // GuardPrimaryKey
+        private PropertyInfo GetAndGuardPrimaryKey<TEntity>()
+            where TEntity : IDataEntity
+        {
+            var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            if (primaryKey == null)
+            {
+                throw new PrimaryFieldNotFoundException(DataEntityExtension.GetMappedName<TEntity>());
+            }
+            return primaryKey;
+        }
+
         // GuardQueryable
 
         private void GuardQueryable<TEntity>()
@@ -86,7 +98,8 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             return Query<TEntity>(where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
-                transaction: transaction);
+                transaction: transaction,
+                cacheKey: cacheKey);
         }
 
         public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, string cacheKey = null)
@@ -94,18 +107,31 @@ namespace RepoDb
         {
             if (where is QueryField)
             {
-                return Query<TEntity>(where: where.ToQueryFields(),
-                    transaction: transaction);
+                return Query<TEntity>(where: ((IQueryField)where).AsEnumerable(),
+                    transaction: transaction,
+                    cacheKey: cacheKey);
             }
             else if (where is IQueryGroup)
             {
                 return Query<TEntity>(where: (IQueryGroup)where,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cacheKey: cacheKey);
             }
             else
             {
-                return Query<TEntity>(where: QueryGroup.Parse(where),
-                    transaction: transaction);
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    return Query<TEntity>(where: QueryGroup.Parse(where),
+                        transaction: transaction,
+                        cacheKey: cacheKey);
+                }
+                else
+                {
+                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
+                    return Query<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                        transaction: transaction,
+                        cacheKey: cacheKey);
+                }
             }
         }
 
@@ -288,7 +314,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(entity: entity,
                 where: primary?.AsQueryField(entity).AsEnumerable(),
                 transaction: transaction);
@@ -305,10 +331,10 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            if (where is QueryField)
+            if (where is IQueryField)
             {
                 return Update<TEntity>(entity: entity,
-                    where: where.ToQueryFields(),
+                    where: ((IQueryField)where).AsEnumerable(),
                     transaction: transaction);
             }
             else if (where is IQueryGroup)
@@ -319,9 +345,19 @@ namespace RepoDb
             }
             else
             {
-                return Update<TEntity>(entity: entity,
-                    where: QueryGroup.Parse(where),
-                    transaction: transaction);
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    return Update<TEntity>(entity: entity,
+                        where: QueryGroup.Parse(where),
+                        transaction: transaction);
+                }
+                else
+                {
+                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
+                    return Update<TEntity>(entity: entity,
+                        where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                        transaction: transaction);
+                }
             }
         }
 
@@ -430,7 +466,7 @@ namespace RepoDb
         {
             if (where is QueryField)
             {
-                return Delete<TEntity>(where: where.ToQueryFields(),
+                return Delete<TEntity>(where: ((IQueryField)where).AsEnumerable(),
                     transaction: transaction);
             }
             else if (where is IQueryGroup)
@@ -438,10 +474,25 @@ namespace RepoDb
                 return Delete<TEntity>(where: (IQueryGroup)where,
                     transaction: transaction);
             }
+            else if (where is TEntity)
+            {
+                var primaryKey = GetAndGuardPrimaryKey<TEntity>();
+                return Delete<TEntity>(where: new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable(),
+                    transaction: transaction);
+            }
             else
             {
-                return Delete<TEntity>(where: QueryGroup.Parse(where),
-                    transaction: transaction);
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    return Delete<TEntity>(where: QueryGroup.Parse(where),
+                        transaction: transaction);
+                }
+                else
+                {
+                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
+                    return Delete<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                        transaction: transaction);
+                }
             }
         }
 

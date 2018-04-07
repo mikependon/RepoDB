@@ -20,7 +20,7 @@
         public static readonly string Object = "Object";
         public static readonly string Operation = "Operation";
         public static readonly string Query = "Query";
-        public static readonly string SubGroups = "SubGroups";
+        public static readonly string QueryGroups = "QueryGroups";
         public static readonly string Update = "Update";
         public static readonly string Value = "Value";
     }

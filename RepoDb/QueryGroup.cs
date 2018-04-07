@@ -128,7 +128,7 @@ namespace RepoDb
             var queryFields = new List<IQueryField>();
             var queryGroups = new List<IQueryGroup>();
             var conjunction = Conjunction.And;
-            var reserves = new[] { Constant.Conjunction, Constant.SubGroups };
+            var reserves = new[] { Constant.Conjunction, Constant.QueryGroups };
             var properties = obj.GetType().GetProperties().ToList();
             properties.ForEach(property =>
             {
@@ -145,9 +145,20 @@ namespace RepoDb
                     {
                         conjunction = (Conjunction)property.GetValue(obj);
                     }
-                    else if (string.Equals(fieldName, Constant.SubGroups, StringComparison.InvariantCultureIgnoreCase))
+                    else if (string.Equals(fieldName, Constant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        queryGroups.Add(Parse(property.GetValue(obj)));
+                        var value = property.GetValue(obj);
+                        if (value is Array)
+                        {
+                            Array.ForEach<object>((object[])value, (item) =>
+                            {
+                                queryGroups.Add(Parse(item));
+                            });
+                        }
+                        else
+                        {
+                            queryGroups.Add(Parse(value));
+                        }
                     }
                 }
             });
