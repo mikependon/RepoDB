@@ -12,6 +12,7 @@ namespace RepoDb.Enumerations
         [Text(">=")] GreaterThanOrEqual,
         [Text("LIKE")] Like,
         [Text("NOT LIKE")] NotLike,
-        [Text("BETWEEN")] Between
+        [Text("BETWEEN")] Between,
+        [Text("NOT BETWEEN")] NotBetween
     }
 }

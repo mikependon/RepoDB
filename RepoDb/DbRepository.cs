@@ -7,8 +7,6 @@ using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using System.Linq;
 using RepoDb.Exceptions;
-using RepoDb.EventArguments;
-using System.Text;
 using System.Reflection;
 
 namespace RepoDb
@@ -152,7 +150,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetSelectStatement<TEntity>(where);
+            var commandText = DataEntityExtension.GetQueryStatement<TEntity>(where);
             var param = where?.AsObject();
 
             // Before Execution

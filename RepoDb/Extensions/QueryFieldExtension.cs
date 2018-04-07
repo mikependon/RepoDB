@@ -24,6 +24,12 @@ namespace RepoDb.Extensions
             return $"[{queryField.Field.Name}]";
         }
 
+        // AsBetweenParameter
+        internal static string AsBetweenParameter(this IQueryField queryField)
+        {
+            return $"@{queryField.Parameter.Name}_{Constant.LeftValue} {Constant.And.ToUpper()} @{queryField.Parameter.Name}_{Constant.RightValue}";
+        }
+
         // AsParameter
         internal static string AsParameter(this IQueryField queryField)
         {
@@ -54,7 +60,14 @@ namespace RepoDb.Extensions
                     .GetMembers()
                     .First(member => string.Equals(member.Name, queryField.Operation.ToString(), StringComparison.InvariantCultureIgnoreCase))
                     .GetCustomAttribute<TextAttribute>();
-                return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsParameter()}";
+                if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
+                {
+                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsBetweenParameter()}";
+                }
+                else
+                {
+                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsParameter()}";
+                }
             }
         }
 

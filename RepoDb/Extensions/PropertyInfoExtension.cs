@@ -69,13 +69,13 @@ namespace RepoDb.Extensions
         // AsParameterAsField
         internal static string AsParameterAsField(this PropertyInfo property)
         {
-            return $"@{property.Name} {Constant.As.ToUpper()} [{property.Name}]";
+            return $"{AsParameter(property)} {Constant.As.ToUpper()} {AsField(property)}";
         }
 
         // AsFieldAndParameter
         internal static string AsFieldAndParameter(this PropertyInfo property)
         {
-            return $"[{property.Name}] = @{property.Name}";
+            return $"{AsField(property)} = {AsParameter(property)}";
         }
 
         /* IEnumerable<PropertyInfo> */

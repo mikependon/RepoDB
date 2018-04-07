@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using System;
 using System.Dynamic;
 using System.Linq;
+using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
@@ -24,9 +25,28 @@ namespace RepoDb.Extensions
             {
                 queryFields.ToList().ForEach(queryField =>
                 {
-                    if (!expandObject.ContainsKey(queryField.Parameter.Name))
+                    if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                     {
-                        expandObject.Add(queryField.Parameter.Name, queryField.Parameter.Value);
+                        var leftParameterName = $"{queryField.Parameter.Name}_{Constant.LeftValue}";
+                        var rightParameterName = $"{queryField.Parameter.Name}_{Constant.RightValue}";
+                        var values = (queryField.Parameter.Value as Array)?.ToObjects();
+                        if (!expandObject.ContainsKey(leftParameterName))
+                        {
+                            var leftValue = values.Length > 0 ? values[0] : null;
+                            expandObject.Add(leftParameterName, leftValue);
+                        }
+                        if (!expandObject.ContainsKey(rightParameterName))
+                        {
+                            var rightValue = values.Length > 1 ? values[1] : null;
+                            expandObject.Add(rightParameterName, rightValue);
+                        }
+                    }
+                    else
+                    {
+                        if (!expandObject.ContainsKey(queryField.Parameter.Name))
+                        {
+                            expandObject.Add(queryField.Parameter.Name, queryField.Parameter.Value);
+                        }
                     }
                 });
             }

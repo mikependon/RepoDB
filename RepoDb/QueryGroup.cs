@@ -106,7 +106,7 @@ namespace RepoDb
                             StringComparison.InvariantCultureIgnoreCase))
                         {
                             var fieldValue = ((Parameter)cQueryField.Parameter);
-                            fieldValue.Name = $"{cQueryField.Parameter.Name}{c}";
+                            fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
                     secondList.RemoveAll(queryField => string.Equals(iQueryField.Field.Name, queryField.Field.Name,

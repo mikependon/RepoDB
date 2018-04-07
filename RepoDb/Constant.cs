@@ -15,12 +15,14 @@
         public static readonly string ExecuteScalar = "ExecuteScalar";
         public static readonly string Id = "Id";
         public static readonly string Insert = "Insert";
+        public static readonly string LeftValue = "LeftValue";
         public static readonly string Merge = "Merge";
         public static readonly string Obj = "Obj";
         public static readonly string Object = "Object";
         public static readonly string Operation = "Operation";
         public static readonly string Query = "Query";
         public static readonly string QueryGroups = "QueryGroups";
+        public static readonly string RightValue = "RightValue";
         public static readonly string Update = "Update";
         public static readonly string Value = "Value";
     }

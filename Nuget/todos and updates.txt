@@ -5,9 +5,11 @@ v1.0.6
 - Trace (ITrace) object
 - Added Constant class
 - Added support for NOT LIKE (Operation.NotLike)
+- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
+- Support of BETWEEN and NOT BETWEEN
 
 [TODO]
-- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
-- Support of Between
+- Support TOP and ORDER BY
 - Optimize Query Builder
 - Injectable Query Builder
+- Support In

@@ -163,22 +163,6 @@ namespace RepoDb.Extensions
         internal static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection)
             where T : IDataEntity
         {
-            /*var properties = typeof(T).GetProperties().ToList();
-            var table = new DataTable(GetMappedName(typeof(T)));
-            properties.ForEach(property =>
-            {
-                table.Columns.Add(property.AsDataColumn());
-            });
-            entities.ToList().ForEach(entity =>
-            {
-                var row = table.NewRow();
-                properties.ForEach(property =>
-                {
-                    row[property.Name] = property.GetValue(entity);
-                });
-                table.Rows.Add(row);
-            });
-            return table;*/
             var mappedName = GetMappedName<T>();
             var table = new DataTable(mappedName);
             using (var command = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
@@ -321,9 +305,9 @@ namespace RepoDb.Extensions
             return IsMergeable(dataEntity.GetType());
         }
 
-        // GetSelectStatement
+        // GetQueryStatement
 
-        private static string GetSelectStatement(Type type, IQueryGroup where)
+        private static string GetQueryStatement(Type type, IQueryGroup where)
         {
             var statement = new StringBuilder();
             statement.AppendLine("SELECT");
@@ -339,15 +323,15 @@ namespace RepoDb.Extensions
             return statement.ToString();
         }
 
-        internal static string GetSelectStatement<T>(IQueryGroup where)
+        internal static string GetQueryStatement<T>(IQueryGroup where)
             where T : IDataEntity
         {
-            return GetSelectStatement(typeof(T), where);
+            return GetQueryStatement(typeof(T), where);
         }
 
-        internal static string GetSelectStatement(this IDataEntity dataEntity, IQueryGroup where)
+        internal static string GetQueryStatement(this IDataEntity dataEntity, IQueryGroup where)
         {
-            return GetSelectStatement(dataEntity.GetType(), where);
+            return GetQueryStatement(dataEntity.GetType(), where);
         }
 
         // GetUpdateStatement

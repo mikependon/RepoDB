@@ -47,6 +47,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="DbCacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
+    <Compile Include="Extensions\ArrayExtension.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
     <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
