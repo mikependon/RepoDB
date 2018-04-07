@@ -11,10 +11,11 @@ namespace RepoDb
             Result = result;
         }
 
-        public object Parameter { get; }
-
-        public string Statement { get; }
 
         public object Result { get; }
+
+        public object Parameter { get; set; }
+
+        public string Statement { get; set; }
     }
 }

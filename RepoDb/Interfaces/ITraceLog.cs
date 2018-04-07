@@ -2,8 +2,8 @@
 {
     public interface ITraceLog
     {
-        object Parameter { get; }
-        string Statement { get; }
         object Result { get; }
+        object Parameter { get; set; }
+        string Statement { get; set; }
     }
 }

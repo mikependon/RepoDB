@@ -73,7 +73,14 @@ namespace RepoDb.Extensions
         internal static PropertyInfo GetPrimaryProperty(Type type)
         {
             return GetPropertyByAttribute(type, typeof(PrimaryAttribute)) ??
-                type.GetProperties().FirstOrDefault(property => string.Equals(property.Name, "Id", StringComparison.InvariantCultureIgnoreCase));
+                type.GetProperties()
+                    .FirstOrDefault(
+                        property =>
+                            string.Equals(property.Name, "Id", StringComparison.InvariantCultureIgnoreCase)) ??
+                type.GetProperties()
+                    .FirstOrDefault(
+                        property =>
+                            string.Equals(property.Name, $"{GetMappedName(type)}Id", StringComparison.InvariantCultureIgnoreCase));
         }
 
         internal static PropertyInfo GetPrimaryProperty<T>()

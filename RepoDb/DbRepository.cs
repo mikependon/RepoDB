@@ -127,12 +127,11 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetSelectStatement<TEntity>(where);
             var param = where?.AsObject();
-            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
             if (Trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 Trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -142,9 +141,9 @@ namespace RepoDb
                     }
                     return null;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             var result = ExecuteReader<TEntity>(commandText: commandText,
@@ -154,13 +153,13 @@ namespace RepoDb
                 transaction: transaction);
 
             // After Execution
-            if (Trace != null)
+            if (Trace != null && result != null && result.Any())
             {
                 Trace.AfterQuery(new TraceLog(commandText, param, result));
             }
 
             // Set Cache
-            if (cacheKey != null)
+            if (cacheKey != null && result != null && result.Any())
             {
                 Cache?.Set(cacheKey, result);
             }
@@ -238,12 +237,11 @@ namespace RepoDb
 
             // Variables
             var commandText = DataEntityExtension.GetInsertStatement<TEntity>();
-            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
             if (Trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 Trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -253,9 +251,9 @@ namespace RepoDb
                     }
                     return null;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
@@ -331,12 +329,11 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetUpdateStatement<TEntity>(where);
             var param = entity?.AsObject(where);
-            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
             if (Trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 Trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -346,9 +343,9 @@ namespace RepoDb
                     }
                     return 0;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
@@ -439,12 +436,11 @@ namespace RepoDb
             // Variables
             var commandText = DataEntityExtension.GetDeleteStatement<TEntity>(where);
             var param = where?.AsObject();
-            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
             if (Trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 Trace.BeforeDelete(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -454,9 +450,9 @@ namespace RepoDb
                     }
                     return 0;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
@@ -528,12 +524,11 @@ namespace RepoDb
 
             // Variables
             var commandText = DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
-            var cancellableTraceLog = (CancellableTraceLog)null;
 
             // Before Execution
             if (Trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 Trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -543,9 +538,9 @@ namespace RepoDb
                     }
                     return 0;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            entity = (cancellableTraceLog?.Parameter as TEntity ?? entity);
 
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
@@ -594,12 +589,10 @@ namespace RepoDb
             // Variables
             using (var connection = (transaction?.Connection ?? CreateConnection()).EnsureOpen())
             {
-                var cancellableTraceLog = (CancellableTraceLog)null;
-
                 // Before Execution
                 if (Trace != null)
                 {
-                    cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
+                    var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
                     Trace.BeforeBulkInsert(cancellableTraceLog);
                     if (cancellableTraceLog.IsCancelled)
                     {

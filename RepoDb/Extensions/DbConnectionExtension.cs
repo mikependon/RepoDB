@@ -1,6 +1,7 @@
 ﻿using RepoDb.EventArguments;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -286,6 +287,10 @@ namespace RepoDb.Extensions
             {
                 command.CreateParameters(param);
                 var result = command.ExecuteScalar();
+                if (result == DBNull.Value)
+                {
+                    result = null;
+                }
 
                 // After Execution
                 if (trace != null)
