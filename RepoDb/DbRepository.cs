@@ -216,17 +216,6 @@ namespace RepoDb
             }
         }
 
-        // GuardBulkInsert
-
-        private void GuardBulkInsert<TEntity>()
-            where TEntity : IDataEntity
-        {
-            if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
-            {
-                throw new EntityNotBulkInsertableException(DataEntityExtension.GetMappedName<TEntity>());
-            }
-        }
-
         // Insert
 
         public object Insert<TEntity>(TEntity entity, IDbTransaction transaction = null)
@@ -575,6 +564,17 @@ namespace RepoDb
                 Merge<TEntity>(entity: entity,
                     qualifiers: qualifiers,
                     transaction: transaction));
+        }
+
+        // GuardBulkInsert
+
+        private void GuardBulkInsert<TEntity>()
+            where TEntity : IDataEntity
+        {
+            if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
+            {
+                throw new EntityNotBulkInsertableException(DataEntityExtension.GetMappedName<TEntity>());
+            }
         }
 
         // BulkInsert
