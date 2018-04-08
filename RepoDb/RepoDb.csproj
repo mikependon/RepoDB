@@ -53,13 +53,6 @@
     <Compile Include="Interfaces\IStatementBuilder.cs" />
     <Compile Include="Interfaces\IStatementBuilderMap.cs" />
     <Compile Include="MemoryCache.cs" />
-    <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
-    <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
-    <Compile Include="EventArguments\ExecutionEventArgs.cs" />
-    <Compile Include="EventHandlers\CancellableExecutionEventHandler.cs" />
-    <Compile Include="EventHandlers\CancelledExecutionEventHandler.cs" />
-    <Compile Include="EventHandlers\ExecutionEventHandler.cs" />
-    <Compile Include="EventNotifier.cs" />
     <Compile Include="Exceptions\CancelledExecutionException.cs" />
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Interfaces\ICacheItem.cs" />
