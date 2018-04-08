@@ -13,4 +13,5 @@ v1.0.6
 
 [TODO]
 - Support TOP and ORDER BY
+	- Order.Ascending and Order.Descending
 - Support ObjectMapper

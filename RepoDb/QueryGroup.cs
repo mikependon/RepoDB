@@ -29,14 +29,20 @@ namespace RepoDb
         public IEnumerable<IQueryGroup> QueryGroups { get; }
 
         // Methods
-        public string GetString()
+        public string GetConjunctionText()
         {
-            var groupList = new List<string>();
             var textAttribute = Conjunction
                 .GetType()
                 .GetMembers()
                 .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 .GetCustomAttribute<TextAttribute>();
+            return textAttribute.Text;
+        }
+
+        public string GetString()
+        {
+            var groupList = new List<string>();
+            var conjunction = GetConjunctionText();
             if (QueryFields != null && QueryFields.Any())
             {
                 var fieldList = new List<string>();
@@ -44,7 +50,7 @@ namespace RepoDb
                 {
                     fieldList.Add(queryField.AsFieldAndParameter());
                 });
-                groupList.Add(fieldList.Join($" {textAttribute.Text} "));
+                groupList.Add(fieldList.Join($" {conjunction} "));
             }
             if (QueryGroups != null && QueryGroups.Any())
             {
@@ -53,9 +59,9 @@ namespace RepoDb
                 {
                     fieldList.Add(queryGroup.GetString());
                 });
-                groupList.Add(fieldList.Join($" {textAttribute.Text} "));
+                groupList.Add(fieldList.Join($" {conjunction} "));
             }
-            return $"({groupList.Join($" {textAttribute.Text } ")})";
+            return $"({groupList.Join($" {conjunction} ")})";
         }
 
         public IEnumerable<IQueryField> GetAllQueryFields()

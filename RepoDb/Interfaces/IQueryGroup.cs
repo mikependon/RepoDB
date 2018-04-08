@@ -12,6 +12,7 @@ namespace RepoDb.Interfaces
         // Methods
         IEnumerable<IQueryField> GetAllQueryFields();
         IQueryGroup FixParameters();
+        string GetConjunctionText();
         string GetString();
     }
 }

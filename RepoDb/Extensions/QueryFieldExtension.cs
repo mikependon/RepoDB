@@ -67,22 +67,18 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var textAttribute = queryField.Operation
-                    .GetType()
-                    .GetMembers()
-                    .First(member => string.Equals(member.Name, queryField.Operation.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                    .GetCustomAttribute<TextAttribute>();
+                var operationText = queryField.GetOperationText();
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsBetweenParameter()}";
+                    return $"{queryField.AsField()} {operationText} {queryField.AsBetweenParameter()}";
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsInParameter()}";
+                    return $"{queryField.AsField()} {operationText} {queryField.AsInParameter()}";
                 }
                 else
                 {
-                    return $"{queryField.AsField()} {textAttribute.Text} {queryField.AsParameter()}";
+                    return $"{queryField.AsField()} {operationText} {queryField.AsParameter()}";
                 }
             }
         }

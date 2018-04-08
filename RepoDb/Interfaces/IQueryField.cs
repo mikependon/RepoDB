@@ -7,5 +7,6 @@ namespace RepoDb.Interfaces
         IField Field { get; }
         Operation Operation { get; }
         IParameter Parameter { get; }
+        string GetOperationText();
     }
 }
