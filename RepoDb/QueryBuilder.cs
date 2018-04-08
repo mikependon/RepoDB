@@ -11,9 +11,7 @@ namespace RepoDb
         where TEntity : IDataEntity
     {
         private string _statement;
-
-        public QueryBuilder() { }
-
+        
         public override string ToString()
         {
             return GetString();
@@ -67,9 +65,9 @@ namespace RepoDb
             return this.Append(";");
         }
 
-        public IQueryBuilder<TEntity> Fields()
+        public IQueryBuilder<TEntity> Fields(Command command)
         {
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)?.ToList();
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
             return this.Append($"{properties?.AsFields().Join(", ")}");
         }
 
@@ -81,6 +79,11 @@ namespace RepoDb
         public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
             return this.Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
+        }
+
+        public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
+        {
+            return this.Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         public IQueryBuilder<TEntity> From()
@@ -113,9 +116,9 @@ namespace RepoDb
             return this.Append("VALUES");
         }
 
-        public IQueryBuilder<TEntity> As()
+        public IQueryBuilder<TEntity> As(string alias)
         {
-            return this.Append("AS");
+            return this.Append($"AS {alias}");
         }
 
         public IQueryBuilder<TEntity> Set()
@@ -133,7 +136,7 @@ namespace RepoDb
             throw new NotImplementedException();
         }
 
-        public IQueryBuilder<TEntity> Merge(string alias)
+        public IQueryBuilder<TEntity> Merge()
         {
             return this.Append("MERGE");
         }
@@ -148,15 +151,16 @@ namespace RepoDb
             return this.Append("ORDER BY");
         }
 
-        public IQueryBuilder<TEntity> Parameters()
+        public IQueryBuilder<TEntity> Parameters(Command command)
         {
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)?.ToList();
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
             return this.Append($"{properties?.AsParameters().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> ParametersAsFields(Command command)
         {
-            throw new NotImplementedException();
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
+            return this.Append($"{properties?.AsParametersAsFields().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> Select()
@@ -174,7 +178,7 @@ namespace RepoDb
             return this.Append("UPDATE");
         }
 
-        public IQueryBuilder<TEntity> Using(string alias)
+        public IQueryBuilder<TEntity> Using()
         {
             return this.Append("USING");
         }
@@ -207,6 +211,36 @@ namespace RepoDb
         public IQueryBuilder<TEntity> On()
         {
             return this.Append("ON");
+        }
+
+        public IQueryBuilder<TEntity> In()
+        {
+            return this.Append("IN");
+        }
+
+        public IQueryBuilder<TEntity> Between()
+        {
+            return this.Append("BETWEEN");
+        }
+
+        public IQueryBuilder<TEntity> When()
+        {
+            return this.Append("WHEN");
+        }
+
+        public IQueryBuilder<TEntity> Not()
+        {
+            return this.Append("NOT");
+        }
+
+        public IQueryBuilder<TEntity> Matched()
+        {
+            return this.Append("MATCHED");
+        }
+
+        public IQueryBuilder<TEntity> Then()
+        {
+            return this.Append("THEN");
         }
     }
 }

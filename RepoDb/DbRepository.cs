@@ -33,6 +33,11 @@ namespace RepoDb
         }
 
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
+            : this(connectionString, commandTimeout, cache, trace, null)
+        {
+        }
+
+        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
         {
             // Fields
             _connectionString = connectionString;
@@ -41,6 +46,7 @@ namespace RepoDb
             // Properties
             Cache = (cache ?? new MemoryCache());
             Trace = trace;
+            StatementBuilder = (statementBuilder ?? new SqlDbStatementBuilder());
         }
 
         // CreateConnection
@@ -59,6 +65,9 @@ namespace RepoDb
         // Trace
         public ITrace Trace { get; }
 
+        // QueryBuilder
+        public IStatementBuilder StatementBuilder { get; }
+
         // GuardPrimaryKey
         private PropertyInfo GetAndGuardPrimaryKey<TEntity>()
             where TEntity : IDataEntity
@@ -66,7 +75,7 @@ namespace RepoDb
             var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (primaryKey == null)
             {
-                throw new PrimaryFieldNotFoundException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>()})");
             }
             return primaryKey;
         }
@@ -136,15 +145,6 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            //var builder = new SqlDbStatementBuilder();
-            //var statement = builder.CreateQuery<TEntity>(where);
-            //statement = builder.CreateDelete<TEntity>(where);
-            //statement = builder.CreateInsert<TEntity>();
-            //statement = builder.CreateUpdate<TEntity>(where);
-            //statement = builder.CreateMerge<TEntity>(where);
-
-            //throw new NotImplementedException("Start here the next day.");
-
             // Get Cache
             if (cacheKey != null)
             {
@@ -159,7 +159,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetQueryStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateQuery<TEntity>(where); // DataEntityExtension.GetQueryStatement<TEntity>(where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -259,7 +259,7 @@ namespace RepoDb
             GuardInsertable<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetInsertStatement<TEntity>();
+            var commandText = StatementBuilder.CreateInsert<TEntity>(); // DataEntityExtension.GetInsertStatement<TEntity>();
             var param = entity?.AsObject();
 
             // Before Execution
@@ -375,7 +375,7 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetUpdateStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateUpdate<TEntity>(where); // DataEntityExtension.GetUpdateStatement<TEntity>(where);
             var param = entity?.AsObject(where);
 
             // Before Execution
@@ -510,7 +510,7 @@ namespace RepoDb
             GuardDeletable<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetDeleteStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateDelete<TEntity>(where); // DataEntityExtension.GetDeleteStatement<TEntity>(where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -598,9 +598,10 @@ namespace RepoDb
         {
             // Check
             GuardMergeable<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>();
 
             // Variables
-            var commandText = DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
+            var commandText = StatementBuilder.CreateMerge<TEntity>(qualifiers); // DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
             var param = entity?.AsObject();
 
             // Before Execution

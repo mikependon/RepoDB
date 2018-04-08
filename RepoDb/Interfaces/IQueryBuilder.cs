@@ -9,8 +9,6 @@ namespace RepoDb.Interfaces
         // Custom Methods
         string GetString();
 
-        // Trim
-
         IQueryBuilder<TEntity> Trim();
 
         IQueryBuilder<TEntity> Space();
@@ -40,13 +38,13 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Values();
 
         // As (AS)
-        IQueryBuilder<TEntity> As();
+        IQueryBuilder<TEntity> As(string alias);
 
         // Set (SET)
         IQueryBuilder<TEntity> Set();
 
         // Merge (MERGE)
-        IQueryBuilder<TEntity> Merge(string alias);
+        IQueryBuilder<TEntity> Merge();
 
         // Top (TOP)
         IQueryBuilder<TEntity> Top(int value);
@@ -61,7 +59,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Table();
 
         // Using (USING)
-        IQueryBuilder<TEntity> Using(string alias);
+        IQueryBuilder<TEntity> Using();
 
         // And (AND)
         IQueryBuilder<TEntity> And();
@@ -78,6 +76,24 @@ namespace RepoDb.Interfaces
         // On (ON)
         IQueryBuilder<TEntity> On();
 
+        // In
+        IQueryBuilder<TEntity> In();
+
+        // Between
+        IQueryBuilder<TEntity> Between();
+
+        // When
+        IQueryBuilder<TEntity> When();
+
+        // Not
+        IQueryBuilder<TEntity> Not();
+
+        // Matched
+        IQueryBuilder<TEntity> Matched();
+
+        // Then
+        IQueryBuilder<TEntity> Then();
+
         // Where ([Field1] = @Field1)
         IQueryBuilder<TEntity> Where(IQueryGroup queryGroup);
 
@@ -91,16 +107,19 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> HavingCount(IQueryField queryField);
 
         // Fields ([Id], [Name])
-        IQueryBuilder<TEntity> Fields();
+        IQueryBuilder<TEntity> Fields(Command command);
 
         // Parameters (@Id, @Name)
-        IQueryBuilder<TEntity> Parameters();
+        IQueryBuilder<TEntity> Parameters(Command command);
 
         // Parameters (@Id AS [Id], @Name AS [Name])
         IQueryBuilder<TEntity> ParametersAsFields(Command command);
 
         // Parameters ([Id] = @Id, [Name] = @Name)
         IQueryBuilder<TEntity> FieldsAndParameters(Command command);
+
+        // FieldsAndAliasFields ([Id] = T.[Id], [Name] = T.[Name])
+        IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias);
 
         // JoinQualifiers (S.[Id] = T.[Id], S.[Name] = T.[Name])
         IQueryBuilder<TEntity> JoinQualifiers(string leftAlias, string rightAlias);

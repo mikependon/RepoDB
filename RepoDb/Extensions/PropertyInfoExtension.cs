@@ -78,6 +78,12 @@ namespace RepoDb.Extensions
             return $"{AsField(property)} = {AsParameter(property)}";
         }
 
+        // AsFieldAndAliasField
+        internal static string AsFieldAndAliasField(this PropertyInfo property, string alias)
+        {
+            return $"{AsField(property)} = {alias}.{AsField(property)}";
+        }
+
         /* IEnumerable<PropertyInfo> */
 
         // AsFields
@@ -102,6 +108,12 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties.Select(property => property.AsFieldAndParameter());
+        }
+
+        // AsFieldsAndAliasFields
+        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
+        {
+            return properties.Select(property => property.AsFieldAndAliasField(alias));
         }
     }
 }

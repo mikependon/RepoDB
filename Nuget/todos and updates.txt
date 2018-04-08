@@ -8,9 +8,9 @@ v1.0.6
 - Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
 - Support of Operation.Between and Operation.NotBetween
 - Support Operation.In and Operation.NotIn
+- Optimized Statement Builder (SqlDbStatementBuilder)
+- Injectable Statement Builder
 
 [TODO]
 - Support TOP and ORDER BY
-- Optimize Query Builder
-- Injectable Query Builder
 - Support ObjectMapper

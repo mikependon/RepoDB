@@ -48,6 +48,7 @@
     <Compile Include="DbCacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
+    <Compile Include="Extensions\FieldExtension.cs" />
     <Compile Include="Interfaces\IStatementBuilder.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />

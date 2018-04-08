@@ -1,7 +1,8 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Enumerations;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -31,11 +32,11 @@ namespace RepoDb
                 .Into()
                 .Table()
                 .OpenParen()
-                .Fields()
+                .Fields(Command.Insert)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters()
+                .Parameters(Command.Insert)
                 .CloseParen()
                 .End();
             if (primary != null)
@@ -44,8 +45,7 @@ namespace RepoDb
                 queryBuilder
                     .Select()
                     .WriteText(result)
-                    .As()
-                    .WriteText("[Result]")
+                    .As("[Result]")
                     .End();
             }
             return queryBuilder.GetString();
@@ -54,7 +54,56 @@ namespace RepoDb
         public string CreateMerge<TEntity>(IEnumerable<IField> qualifiers)
             where TEntity : IDataEntity
         {
-            throw new NotImplementedException();
+            var queryBuilder = new QueryBuilder<TEntity>();
+            if (qualifiers == null)
+            {
+                var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                if (primaryKey != null)
+                {
+                    qualifiers = new Field(primaryKey.Name).AsEnumerable();
+                }
+            }
+            queryBuilder
+                // MERGE T USING S
+                .Merge()
+                .Table()
+                .As("T")
+                .Using()
+                .OpenParen()
+                .Select()
+                .ParametersAsFields(Command.None)
+                .CloseParen()
+                .As("S")
+                // QUALIFIERS
+                .On()
+                .OpenParen()
+                .WriteText(qualifiers?
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T"))
+                            .Join($" {Constant.And.ToUpper()} "))
+                .CloseParen()
+                // WHEN NOT MATCHED THEN INSERT VALUES
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .Fields(Command.Insert)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .Parameters(Command.Insert)
+                .CloseParen()
+                // WHEN MATCHED THEN UPDATE SET
+                .When()
+                .Matched()
+                .Then()
+                .Update()
+                .Set()
+                .FieldsAndAliasFields(Command.Update, "S")
+                .End();
+            return queryBuilder.GetString();
         }
 
         public string CreateQuery<TEntity>(IQueryGroup queryGroup)
@@ -63,7 +112,7 @@ namespace RepoDb
             var queryBuilder = new QueryBuilder<TEntity>();
             queryBuilder
                 .Select()
-                .Fields()
+                .Fields(Command.Select)
                 .From()
                 .Table()
                 .Where(queryGroup)
@@ -79,7 +128,7 @@ namespace RepoDb
                 .Update()
                 .Table()
                 .Set()
-                .FieldsAndParameters(Enumerations.Command.Update)
+                .FieldsAndParameters(Command.Update)
                 .Where(queryGroup)
                 .End();
             return queryBuilder.GetString();
