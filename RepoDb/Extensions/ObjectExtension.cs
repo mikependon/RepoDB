@@ -27,5 +27,11 @@ namespace RepoDb.Extensions
             }
             return list;
         }
+
+        // AsOrderFields
+        internal static IEnumerable<IOrderField> AsOrderFields(this object obj)
+        {
+            return OrderField.Parse(obj);
+        }
     }
 }

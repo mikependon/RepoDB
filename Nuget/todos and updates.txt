@@ -13,9 +13,9 @@ v1.0.6
 - Support TOP and ORDER BY
 	- Order.Ascending and Order.Descending
 - Support StatementBuilderMapper, IStatementBuilderMapper, StatementBuilderMap, StatementBuilderMap
+- Support ORDER BY parsing of the dynamic objects
 
 [TODO]
-- Support ORDER BY parsing of the dynamic objects
 - Support Operation.Any and Operation.All
 - Support ObjectMapper
 - Documentation and Benchmark against Dapper and ADO.Net

@@ -99,10 +99,10 @@ namespace RepoDb
             IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Query<TEntity>(top: top,
-                orderFields: orderFields,
-                where: (IQueryGroup)null,
+            return Query<TEntity>(where: (IQueryGroup)null,
                 transaction: transaction,
+                top: top,
+                orderFields: orderFields,
                 cacheKey: cacheKey);
         }
 
@@ -110,10 +110,10 @@ namespace RepoDb
             IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Query<TEntity>(where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
+            return Query<TEntity>(where: where != null ? new QueryGroup(where) : null,
+                transaction: transaction,
                 top: top,
                 orderFields: orderFields,
-                transaction: transaction,
                 cacheKey: cacheKey);
         }
 
@@ -123,18 +123,18 @@ namespace RepoDb
         {
             if (where is QueryField)
             {
-                return Query<TEntity>(where: ((IQueryField)where).AsEnumerable(),
+                return Query<TEntity>(where: new QueryGroup(((IQueryField)where).AsEnumerable()),
+                    transaction: transaction,
                     top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey);
             }
             else if (where is IQueryGroup)
             {
                 return Query<TEntity>(where: (IQueryGroup)where,
+                    transaction: transaction,
                     top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey);
             }
             else
@@ -142,18 +142,18 @@ namespace RepoDb
                 if ((bool)where?.GetType().IsGenericType)
                 {
                     return Query<TEntity>(where: QueryGroup.Parse(where),
+                        transaction: transaction,
                         top: top,
                         orderFields: orderFields,
-                        transaction: transaction,
                         cacheKey: cacheKey);
                 }
                 else
                 {
                     var primaryKey = GetAndGuardPrimaryKey<TEntity>();
                     return Query<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                        transaction: transaction,
                         top: top,
                         orderFields: orderFields,
-                        transaction: transaction,
                         cacheKey: cacheKey);
                 }
             }
@@ -222,53 +222,53 @@ namespace RepoDb
             // Result
             return result;
         }
-        
+
         // QueryAsync
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
-                Query<TEntity>(top: top,
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(transaction: transaction,
+                    top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null,
             int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
+            return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
+                    transaction: transaction,
                     top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null,
             int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
+            return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
+                    transaction: transaction,
                     top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey));
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null,
             int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
+            return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
+                    transaction: transaction,
                     top: top,
                     orderFields: orderFields,
-                    transaction: transaction,
                     cacheKey: cacheKey));
         }
 
@@ -355,8 +355,8 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             var primary = GetAndGuardPrimaryKey<TEntity>();
-            return Update<TEntity>(entity: entity,
-                where: primary?.AsQueryField(entity).AsEnumerable(),
+            return Update(entity: entity,
+                where: new QueryGroup(primary?.AsQueryField(entity).AsEnumerable()),
                 transaction: transaction);
         }
 
@@ -364,7 +364,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             return Update(entity: entity,
-                where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
+                where: where != null ? new QueryGroup(where) : null,
                 transaction: transaction);
         }
 
@@ -373,13 +373,13 @@ namespace RepoDb
         {
             if (where is IQueryField)
             {
-                return Update<TEntity>(entity: entity,
-                    where: ((IQueryField)where).AsEnumerable(),
+                return Update(entity: entity,
+                    where: new QueryGroup(((IQueryField)where).AsEnumerable()),
                     transaction: transaction);
             }
             else if (where is IQueryGroup)
             {
-                return Update<TEntity>(entity: entity,
+                return Update(entity: entity,
                     where: (IQueryGroup)where,
                     transaction: transaction);
             }
@@ -387,15 +387,15 @@ namespace RepoDb
             {
                 if ((bool)where?.GetType().IsGenericType)
                 {
-                    return Update<TEntity>(entity: entity,
+                    return Update(entity: entity,
                         where: QueryGroup.Parse(where),
                         transaction: transaction);
                 }
                 else
                 {
                     var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    return Update<TEntity>(entity: entity,
-                        where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                    return Update(entity: entity,
+                        where: new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable()),
                         transaction: transaction);
                 }
             }
@@ -449,7 +449,7 @@ namespace RepoDb
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Update(entity: entity,
                     transaction: transaction));
         }
@@ -457,7 +457,7 @@ namespace RepoDb
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Update(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -466,7 +466,7 @@ namespace RepoDb
         public Task<int> UpdateAsync<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Update(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -475,7 +475,7 @@ namespace RepoDb
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IQueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Update(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -497,7 +497,7 @@ namespace RepoDb
         public int Delete<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Delete<TEntity>(where: where != null ? new QueryGroup(where) : (IQueryGroup)null,
+            return Delete<TEntity>(where: where != null ? new QueryGroup(where) : null,
                 transaction: transaction);
         }
 
@@ -506,7 +506,7 @@ namespace RepoDb
         {
             if (where is QueryField)
             {
-                return Delete<TEntity>(where: ((IQueryField)where).AsEnumerable(),
+                return Delete<TEntity>(where: new QueryGroup(((IQueryField)where).AsEnumerable()),
                     transaction: transaction);
             }
             else if (where is IQueryGroup)
@@ -517,7 +517,7 @@ namespace RepoDb
             else if (where is TEntity)
             {
                 var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                return Delete<TEntity>(where: new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable(),
+                return Delete<TEntity>(where: new QueryGroup(new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable()),
                     transaction: transaction);
             }
             else
@@ -530,7 +530,7 @@ namespace RepoDb
                 else
                 {
                     var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    return Delete<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
+                    return Delete<TEntity>(where: new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable()),
                         transaction: transaction);
                 }
             }
@@ -584,7 +584,7 @@ namespace RepoDb
         public Task<int> DeleteAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -592,7 +592,7 @@ namespace RepoDb
         public Task<int> DeleteAsync<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -600,7 +600,7 @@ namespace RepoDb
         public Task<int> DeleteAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<int>(() =>
+            return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
