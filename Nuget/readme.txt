@@ -5,38 +5,22 @@ A dynamic ORM library used to create an Entity-Based Repositories when accessing
 Please visit nuget.org for the documentation and package.
 Link: https://www.nuget.org/packages/RepoDb
 
-Updates(v1.0.5):
-- EntityNotBulkInsertableException supported when calling BulkInsert with non SqlConnection connection object
-- BulkInsert optimization - ordering the columns based on the DB Table ordering (not on DataEntity properties ordering)
-- Initial implementation for complex query (QueryGroup)
-	- Added QueryGroup (IQueryGroup)
-	- Added Conjuctions for QueryGroup(s)
-	- Added OrQueryGroup
-	- Added AndQueryGroup
-- Supported IFieldValue interface for QueryField - to support the QueryGroup parameterized approach
-- Renamed QueryField.Value to QueryField.Parameter (with Name and Value properties) and change its Type from object to IParameter
-- In QueryFields, if the Operation is '=' and the parameter Value is equals to NULL then we compose ([Field] IS NULL) string statement
-	- Solves the problem of: WHERE (SomeDate IS NULL)
-	- We also did the same thing for != (SomeDate IS NOT NULL)
-- Used the '<>' instead of '!=' in InEquality comparer
-- Supported EventNotifier (Tracing and Debugging purposes).
-	- You can listen on the following events to see the Statement and Object passed before DB executions
-		- BeforeQueryExecution
-		- AfterQueryExecution
-		- BeforeUpdateExecution
-		- AfterUpdateExecution
-		- BeforeDeleteExecution
-		- AfterDeleteExecution
-		- BeforeMergeExecution
-		- AfterMergeExecution
-		- BeforeInsertExecution
-		- AfterInsertExecution
-		- BeforeBulkInsertExecution
-		- AfterBulkInsertExecution
-		- BeforeExecuteNonQueryExecution
-		- AfterExecuteNonQueryExecution
-		- BeforeExecuteReaderExecution
-		- AfterExecuteReaderExecution
-		- BeforeExecuteScalarExecution
-		- AfterExecuteScalarExecution
-		- CancelledExecution
+Updates (v1.0.6):
+- Support dynamic query objects for QueryGroup
+- MemoryCache (ICache) object
+- Trace (ITrace) object
+- Added Constant class
+- Added support for Operation.Like and Operation.NotLike
+- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
+- Support of Operation.Between and Operation.NotBetween
+- Support Operation.In and Operation.NotIn
+- Optimized Statement Builder (SqlDbStatementBuilder)
+- Injectable Statement Builder
+- Support TOP and ORDER BY
+	- Order.Ascending and Order.Descending
+- Support StatementBuilderMapper, IStatementBuilderMapper, StatementBuilderMap, StatementBuilderMap
+- Support ORDER BY parsing of the dynamic objects
+- Added support for the new Operation.Any and Operation.All
+
+Removed:
+- EventNotifier class has been obsoleted by the Trace class
