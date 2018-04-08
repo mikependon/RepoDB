@@ -45,7 +45,7 @@ namespace RepoDb.Extensions
         // AsInParameter
         internal static string AsInParameter(this IQueryField queryField)
         {
-            var values = ((Array)queryField.Parameter.Value)?.AsEnumerable().ToList();
+            var values = ((Array)queryField.Parameter.Value)?.OfType<object>().ToList();
             var parameters = new List<string>();
             for (var i = 0; i < values.Count; i++)
             {

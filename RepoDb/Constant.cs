@@ -21,6 +21,7 @@
         public static readonly string Obj = "Obj";
         public static readonly string Object = "Object";
         public static readonly string Operation = "Operation";
+        public static readonly string Or = "Or";
         public static readonly string Query = "Query";
         public static readonly string QueryGroups = "QueryGroups";
         public static readonly string RightValue = "RightValue";

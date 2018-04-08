@@ -60,20 +60,16 @@ namespace RepoDb
             var valueProperty = properties
                 .FirstOrDefault(
                     property => string.Equals(property.Name, Constant.Value, StringComparison.InvariantCultureIgnoreCase));
-            var operation = Operation.Equal;
-            var parameterValue = (object)null;
-            if (operationProperty != null)
+            if (operationProperty == null || operationProperty?.PropertyType != typeof(Operation))
             {
-                if (operationProperty.PropertyType != typeof(Operation))
-                {
-                    throw new InvalidOperationException($"The '{Constant.Operation}' property must be a type of '{typeof(Operation).FullName}'.");
-                }
-                operation = (Operation)operationProperty.GetValue(value);
+                throw new InvalidOperationException($"The '{Constant.Operation}' property must be a type of '{typeof(Operation).FullName}'.");
             }
-            if (valueProperty != null)
+            if (valueProperty == null)
             {
-                parameterValue = valueProperty.GetValue(value);
+                throw new InvalidOperationException($"The '{Constant.Value.ToLower()}' is missing for '{fieldName}' field.");
             }
+            var operation = (Operation)operationProperty.GetValue(value);
+            var parameterValue = valueProperty.GetValue(value);
             return new QueryField(fieldName, operation, parameterValue);
         }
     }
