@@ -26,30 +26,38 @@ namespace RepoDb.Interfaces
 
         // Query
 
-        IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null,
+            int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         // QueryAsync
 
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null,
+            int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         // Insert

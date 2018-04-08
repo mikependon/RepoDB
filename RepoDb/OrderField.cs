@@ -1,5 +1,9 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Interfaces;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -12,5 +16,14 @@ namespace RepoDb
         }
 
         public Order Order { get; set; }
+
+        public string GetOrderText()
+        {
+            var textAttribute = typeof(Order)
+                .GetMembers()
+                .First(member => string.Equals(member.Name, Order.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                .GetCustomAttribute<TextAttribute>();
+            return textAttribute.Text;
+        }
     }
 }

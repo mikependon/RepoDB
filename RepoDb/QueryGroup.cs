@@ -31,8 +31,7 @@ namespace RepoDb
         // Methods
         public string GetConjunctionText()
         {
-            var textAttribute = Conjunction
-                .GetType()
+            var textAttribute = typeof(Conjunction)
                 .GetMembers()
                 .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 .GetCustomAttribute<TextAttribute>();

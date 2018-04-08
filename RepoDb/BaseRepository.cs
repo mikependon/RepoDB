@@ -68,56 +68,85 @@ namespace RepoDb
 
         // Query
 
-        public IEnumerable<TEntity> Query(IDbTransaction transaction = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query(IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
-            return DbRepository.Query<TEntity>(transaction: transaction,
+            return DbRepository.Query<TEntity>(
+                transaction: transaction,
+                top: top,
+                orderFields: orderFields,
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, int? top = 0, 
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 transaction: transaction,
+                top: top,
+                orderFields: orderFields,
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0, 
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 transaction: transaction,
+                top: top,
+                orderFields: orderFields,
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query(IQueryGroup where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 transaction: transaction,
+                top: top,
+                orderFields: orderFields,
                 cacheKey: cacheKey);
         }
 
         // Query
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, int? top = 0, 
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
-            return DbRepository.QueryAsync<TEntity>(transaction: transaction);
+            return DbRepository.QueryAsync<TEntity>(transaction: transaction,
+                top: top,
+                orderFields: orderFields,
+                cacheKey: cacheKey);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, int? top = 0, 
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                top: top,
+                orderFields: orderFields,
+                cacheKey: cacheKey);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                top: top,
+                orderFields: orderFields,
+                cacheKey: cacheKey);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync(IQueryGroup where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                transaction: transaction);
+                transaction: transaction,
+                top: top,
+                orderFields: orderFields,
+                cacheKey: cacheKey);
         }
 
         // Insert

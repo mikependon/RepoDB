@@ -37,6 +37,9 @@ namespace RepoDb.Interfaces
         // Values (VALUES)
         IQueryBuilder<TEntity> Values();
 
+        // Order (ORDER BY)
+        IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderFields = null, string alias = null);
+
         // As (AS)
         IQueryBuilder<TEntity> As(string alias);
 
@@ -47,7 +50,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Merge();
 
         // Top (TOP)
-        IQueryBuilder<TEntity> Top(int value);
+        IQueryBuilder<TEntity> Top(int? rows = 0);
 
         // From (FROM)
         IQueryBuilder<TEntity> From();
@@ -96,9 +99,6 @@ namespace RepoDb.Interfaces
 
         // Where ([Field1] = @Field1)
         IQueryBuilder<TEntity> Where(IQueryGroup queryGroup);
-
-        // OrderBy (ORDER BY)
-        IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> fields);
 
         // GroupBy (GROUP BY)
         IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields);

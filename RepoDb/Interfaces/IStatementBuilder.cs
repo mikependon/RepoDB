@@ -10,7 +10,7 @@ namespace RepoDb.Interfaces
             where TEntity : IDataEntity;
         string CreateMerge<TEntity>(IEnumerable<IField> qualifiers)
             where TEntity : IDataEntity;
-        string CreateQuery<TEntity>(IQueryGroup queryGroup)
+        string CreateQuery<TEntity>(IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderFields = null)
             where TEntity : IDataEntity;
         string CreateUpdate<TEntity>(IQueryGroup queryGroup)
             where TEntity : IDataEntity;

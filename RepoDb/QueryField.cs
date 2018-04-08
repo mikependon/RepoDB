@@ -33,8 +33,7 @@ namespace RepoDb
 
         public string GetOperationText()
         {
-            var textAttribute = Operation
-                .GetType()
+            var textAttribute = typeof(Operation)
                 .GetMembers()
                 .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 .GetCustomAttribute<TextAttribute>();

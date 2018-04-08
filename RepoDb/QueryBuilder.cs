@@ -44,7 +44,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> WriteText(string text)
         {
-            return this.Append(text);
+            return Append(text);
         }
 
         private IQueryBuilder<TEntity> Append(string value)
@@ -57,38 +57,38 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Delete()
         {
-            return this.Append("DELETE");
+            return Append("DELETE");
         }
 
         public IQueryBuilder<TEntity> End()
         {
-            return this.Append(";");
+            return Append(";");
         }
 
         public IQueryBuilder<TEntity> Fields(Command command)
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
-            return this.Append($"{properties?.AsFields().Join(", ")}");
+            return Append($"{properties?.AsFields().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> Field(IField field)
         {
-            return this.Append($"[{field.Name}]");
+            return Append($"[{field.Name}]");
         }
 
         public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
-            return this.Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
+            return Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
         }
 
         public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
-            return this.Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
+            return Append(DataEntityExtension.GetPropertiesFor<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         public IQueryBuilder<TEntity> From()
         {
-            return this.Append("FROM");
+            return Append("FROM");
         }
 
         public IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
@@ -103,32 +103,39 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Insert()
         {
-            return this.Append("INSERT");
+            return Append("INSERT");
         }
 
         public IQueryBuilder<TEntity> Into()
         {
-            return this.Append("INTO");
+            return Append("INTO");
         }
 
         public IQueryBuilder<TEntity> Values()
         {
-            return this.Append("VALUES");
+            return Append("VALUES");
+        }
+
+        public IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderFields = null, string alias = null)
+        {
+            return (orderFields != null && orderFields.Any()) ?
+                Append($"ORDER BY {orderFields.Select(orderField => orderField.AsField()).Join(", ")}") :
+                this;
         }
 
         public IQueryBuilder<TEntity> As(string alias)
         {
-            return this.Append($"AS {alias}");
+            return Append($"AS {alias}");
         }
 
         public IQueryBuilder<TEntity> Set()
         {
-            return this.Append("SET");
+            return Append("SET");
         }
 
         public IQueryBuilder<TEntity> Join()
         {
-            return this.Append("JOIN");
+            return Append("JOIN");
         }
 
         public IQueryBuilder<TEntity> JoinQualifiers(string leftAlias, string rightAlias)
@@ -138,109 +145,104 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Merge()
         {
-            return this.Append("MERGE");
+            return Append("MERGE");
         }
 
         public IQueryBuilder<TEntity> Table()
         {
-            return this.Append($"{DataEntityExtension.GetMappedName<TEntity>()}");
-        }
-
-        public IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> fields)
-        {
-            return this.Append("ORDER BY");
+            return Append($"{DataEntityExtension.GetMappedName<TEntity>()}");
         }
 
         public IQueryBuilder<TEntity> Parameters(Command command)
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
-            return this.Append($"{properties?.AsParameters().Join(", ")}");
+            return Append($"{properties?.AsParameters().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> ParametersAsFields(Command command)
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.ToList();
-            return this.Append($"{properties?.AsParametersAsFields().Join(", ")}");
+            return Append($"{properties?.AsParametersAsFields().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> Select()
         {
-            return this.Append("SELECT");
+            return Append("SELECT");
         }
 
-        public IQueryBuilder<TEntity> Top(int rows)
+        public IQueryBuilder<TEntity> Top(int? rows = 0)
         {
-            return this.Append($"TOP ({rows})");
+            return rows > 0 ? Append($"TOP ({rows})") : this;
         }
 
         public IQueryBuilder<TEntity> Update()
         {
-            return this.Append("UPDATE");
+            return Append("UPDATE");
         }
 
         public IQueryBuilder<TEntity> Using()
         {
-            return this.Append("USING");
+            return Append("USING");
         }
 
         public IQueryBuilder<TEntity> Where(IQueryGroup queryGroup)
         {
-            return this.Append($"WHERE {queryGroup.GetString()}");
+            return (queryGroup != null) ? Append($"WHERE {queryGroup.GetString()}") : this;
         }
 
         public IQueryBuilder<TEntity> And()
         {
-            return this.Append("AND");
+            return Append("AND");
         }
 
         public IQueryBuilder<TEntity> Or()
         {
-            return this.Append("OR");
+            return Append("OR");
         }
 
         public IQueryBuilder<TEntity> OpenParen()
         {
-            return this.Append("(");
+            return Append("(");
         }
 
         public IQueryBuilder<TEntity> CloseParen()
         {
-            return this.Append(")");
+            return Append(")");
         }
 
         public IQueryBuilder<TEntity> On()
         {
-            return this.Append("ON");
+            return Append("ON");
         }
 
         public IQueryBuilder<TEntity> In()
         {
-            return this.Append("IN");
+            return Append("IN");
         }
 
         public IQueryBuilder<TEntity> Between()
         {
-            return this.Append("BETWEEN");
+            return Append("BETWEEN");
         }
 
         public IQueryBuilder<TEntity> When()
         {
-            return this.Append("WHEN");
+            return Append("WHEN");
         }
 
         public IQueryBuilder<TEntity> Not()
         {
-            return this.Append("NOT");
+            return Append("NOT");
         }
 
         public IQueryBuilder<TEntity> Matched()
         {
-            return this.Append("MATCHED");
+            return Append("MATCHED");
         }
 
         public IQueryBuilder<TEntity> Then()
         {
-            return this.Append("THEN");
+            return Append("THEN");
         }
     }
 }

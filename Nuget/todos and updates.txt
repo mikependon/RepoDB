@@ -10,8 +10,9 @@ v1.0.6
 - Support Operation.In and Operation.NotIn
 - Optimized Statement Builder (SqlDbStatementBuilder)
 - Injectable Statement Builder
-
-[TODO]
 - Support TOP and ORDER BY
 	- Order.Ascending and Order.Descending
+
+[TODO]
+- Support ORDER BY parsing of the dynamic objects
 - Support ObjectMapper
