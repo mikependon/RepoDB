@@ -13,25 +13,31 @@ namespace RepoDb
         private readonly DbRepository<TDbConnection> _dbRepository;
 
         public BaseRepository(string connectionString)
-            : this(connectionString, null, null, null)
+            : this(connectionString, null, null, null, null)
         {
         }
 
         public BaseRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null)
+            : this(connectionString, commandTimeout, null, null, null)
         {
         }
 
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null)
+            : this(connectionString, commandTimeout, cache, null, null)
         {
         }
 
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
+            : this(connectionString, commandTimeout, cache, trace, null)
+        {
+        }
+
+        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
         {
             // Fields
-            Cache = cache;
+            Cache = (cache ?? new MemoryCache());
             Trace = trace;
+            StatementBuilder = (statementBuilder ?? new SqlDbStatementBuilder());
 
             // Repository
             _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout, Cache, Trace);
@@ -55,6 +61,10 @@ namespace RepoDb
         // Trace
 
         public ITrace Trace { get; }
+
+        // StatementBuilder
+
+        public IStatementBuilder StatementBuilder { get; }
 
         // Query
 

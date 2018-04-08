@@ -18,17 +18,17 @@ namespace RepoDb
         private readonly int? _commandTimeout;
 
         public DbRepository(string connectionString)
-            : this(connectionString, null, null, null)
+            : this(connectionString, null, null, null, null)
         {
         }
 
         public DbRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null)
+            : this(connectionString, commandTimeout, null, null, null)
         {
         }
 
         public DbRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null)
+            : this(connectionString, commandTimeout, cache, null, null)
         {
         }
 
@@ -159,7 +159,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateQuery<TEntity>(where); // DataEntityExtension.GetQueryStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateQuery<TEntity>(where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -259,7 +259,7 @@ namespace RepoDb
             GuardInsertable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateInsert<TEntity>(); // DataEntityExtension.GetInsertStatement<TEntity>();
+            var commandText = StatementBuilder.CreateInsert<TEntity>();
             var param = entity?.AsObject();
 
             // Before Execution
@@ -375,7 +375,7 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateUpdate<TEntity>(where); // DataEntityExtension.GetUpdateStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateUpdate<TEntity>(where);
             var param = entity?.AsObject(where);
 
             // Before Execution
@@ -510,7 +510,7 @@ namespace RepoDb
             GuardDeletable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateDelete<TEntity>(where); // DataEntityExtension.GetDeleteStatement<TEntity>(where);
+            var commandText = StatementBuilder.CreateDelete<TEntity>(where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -601,7 +601,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateMerge<TEntity>(qualifiers); // DataEntityExtension.GetMergeStatement<TEntity>(qualifiers);
+            var commandText = StatementBuilder.CreateMerge<TEntity>(qualifiers);
             var param = entity?.AsObject();
 
             // Before Execution

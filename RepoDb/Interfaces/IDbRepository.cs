@@ -20,6 +20,10 @@ namespace RepoDb.Interfaces
 
         ITrace Trace { get; }
 
+        // StatementBuilder
+
+        IStatementBuilder StatementBuilder { get; }
+
         // Query
 
         IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, string cacheKey = null)
