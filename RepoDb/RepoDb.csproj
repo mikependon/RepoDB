@@ -51,6 +51,7 @@
     <Compile Include="Extensions\OrderFieldExtension.cs" />
     <Compile Include="Extensions\FieldExtension.cs" />
     <Compile Include="Interfaces\IStatementBuilder.cs" />
+    <Compile Include="Interfaces\IStatementBuilderMap.cs" />
     <Compile Include="MemoryCache.cs" />
     <Compile Include="EventArguments\CancellableExecutionEventArgs.cs" />
     <Compile Include="EventArguments\CancelledExecutionEventArgs.cs" />
@@ -113,6 +114,8 @@
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="SqlDbStatementBuilder.cs" />
+    <Compile Include="StatementBuilderMap.cs" />
+    <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMap.cs" />
     <Compile Include="TypeMapper.cs" />

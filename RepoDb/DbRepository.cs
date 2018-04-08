@@ -46,7 +46,9 @@ namespace RepoDb
             // Properties
             Cache = (cache ?? new MemoryCache());
             Trace = trace;
-            StatementBuilder = (statementBuilder ?? new SqlDbStatementBuilder());
+            StatementBuilder = (statementBuilder ??
+                StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ??
+                new SqlDbStatementBuilder());
         }
 
         // CreateConnection
