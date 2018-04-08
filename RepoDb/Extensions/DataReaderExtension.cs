@@ -3,40 +3,52 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
     public static class DataReaderExtension
     {
-        internal static T ToType<T>(this IDataReader reader)
+        internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
         {
-            var obj = Activator.CreateInstance<T>();
-            var properties = typeof (T).GetProperties().ToList();
+            var properties = typeof(T).GetProperties().ToList();
+            var dictionary = new Dictionary<int, PropertyInfo>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var property =
-                    properties.FirstOrDefault(
-                        p => string.Equals(p.Name, reader.GetName(i), StringComparison.InvariantCultureIgnoreCase));
-                var value = reader.GetValue(i);
-                property?.SetValue(obj, value != DBNull.Value ? value : null);
+                var property = properties.FirstOrDefault(p => p.Name.ToLower() == reader.GetName(i).ToLower());
+                if (property != null)
+                {
+                    dictionary.Add(i, property);
+                }
             }
-            return obj;
-        }
-
-        internal static T ToDataEntity<T>(this IDataReader reader)
-            where T : DataEntity
-        {
-            return ToType<T>(reader);
-        }
-
-        internal static object ToObject(this IDataReader reader)
-        {
-            var expandoObject = new ExpandoObject() as IDictionary<string, object>;
-            for (var i = 0; i < reader.FieldCount; i++)
+            var list = new List<T>();
+            while (reader.Read())
             {
-                expandoObject.Add(reader.GetName(i), reader.GetValue(i));
+                var obj = Activator.CreateInstance<T>();
+                foreach (var kvp in dictionary)
+                {
+                    var value = reader.IsDBNull(kvp.Key) ? null : reader[kvp.Key];
+                    kvp.Value.SetValue(obj, value);
+                }
+                list.Add(obj);
             }
-            return expandoObject;
+            return list;
+        }
+
+        internal static IEnumerable<object> AsObjects(this IDataReader reader)
+        {
+            var list = new List<object>();
+            while (reader.Read())
+            {
+                var obj = new ExpandoObject() as IDictionary<string, object>;
+                for (var i = 0; i < reader.FieldCount; i++)
+                {
+                    var value = reader.IsDBNull(i) ? null : reader[i];
+                    obj.Add(reader.GetName(i), value);
+                }
+                list.Add(obj);
+            }
+            return list;
         }
     }
 }

@@ -79,12 +79,7 @@ namespace RepoDb.Extensions
                 command.CreateParameters(param);
                 using (var reader = command.ExecuteReader())
                 {
-                    var list = new List<TEntity>();
-                    while (reader.Read())
-                    {
-                        var obj = reader.ToDataEntity<TEntity>();
-                        list.Add(obj);
-                    }
+                    var list = reader.AsEnumerable<TEntity>();
 
                     // After Execution
                     if (trace != null)
@@ -152,12 +147,7 @@ namespace RepoDb.Extensions
                 command.CreateParameters(param);
                 using (var reader = command.ExecuteReader())
                 {
-                    var list = new List<object>();
-                    while (reader.Read())
-                    {
-                        var obj = reader.ToObject();
-                        list.Add(obj);
-                    }
+                    var list = reader.AsObjects();
 
                     // After Execution
                     if (trace != null)

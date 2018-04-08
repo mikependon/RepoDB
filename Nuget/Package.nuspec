@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
