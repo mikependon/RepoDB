@@ -69,8 +69,18 @@ namespace RepoDb
                 throw new InvalidOperationException($"The '{Constant.Value.ToLower()}' is missing for '{fieldName}' field.");
             }
             var operation = (Operation)operationProperty.GetValue(value);
-            var parameterValue = valueProperty.GetValue(value);
-            return new QueryField(fieldName, operation, parameterValue);
+            value = valueProperty.GetValue(value);
+            if (value == null)
+            {
+                throw new InvalidOperationException($"The field '{Constant.Value}' for property '{fieldName}' should not be null.");
+            }
+            var isForArrayOperation = operation == Operation.Between || operation == Operation.NotBetween ||
+                operation == Operation.In || operation == Operation.NotIn;
+            if (value.GetType().IsGenericType || (!value.GetType().IsArray && isForArrayOperation))
+            {
+                throw new InvalidOperationException($"Invalid value for property '{fieldName} ({operation.ToString()})'.");
+            }
+            return new QueryField(fieldName, operation, value);
         }
     }
 }

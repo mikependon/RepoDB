@@ -29,7 +29,7 @@ namespace RepoDb
 
         // Static Methods
 
-        public static IEnumerable<IOrderField> Parse(object obj)
+        public static new IEnumerable<IOrderField> Parse(object obj)
         {
             if (obj == null)
             {

@@ -15,6 +15,8 @@ namespace RepoDb.Enumerations
         [Text("BETWEEN")] Between,
         [Text("NOT BETWEEN")] NotBetween,
         [Text("IN")] In,
-        [Text("NOT IN")] NotIn
+        [Text("NOT IN")] NotIn,
+        [Text("AND")] All,
+        [Text("OR")] Any
     }
 }

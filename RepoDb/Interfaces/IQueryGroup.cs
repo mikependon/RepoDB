@@ -11,7 +11,7 @@ namespace RepoDb.Interfaces
         IEnumerable<IQueryGroup> QueryGroups { get; }
         // Methods
         IEnumerable<IQueryField> GetAllQueryFields();
-        IQueryGroup FixParameters();
+        IQueryGroup Fix();
         string GetConjunctionText();
         string GetString();
     }

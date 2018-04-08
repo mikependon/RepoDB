@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
         // AsObject
         internal static object AsObject(this IQueryGroup queryGroup)
         {
-            queryGroup?.FixParameters();
+            queryGroup?.Fix();
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             var queryFields = queryGroup?.GetAllQueryFields();
             if (queryFields!=null && queryFields.Any())
@@ -29,7 +29,18 @@ namespace RepoDb.Extensions
                     {
                         var leftParameterName = $"{queryField.Parameter.Name}_{Constant.LeftValue}";
                         var rightParameterName = $"{queryField.Parameter.Name}_{Constant.RightValue}";
-                        var values = (queryField.Parameter.Value as Array)?.AsEnumerable().ToList();
+                        var values = new List<object>();
+                        if (queryField.Parameter.Value != null)
+                        {
+                            if (queryField.Parameter.Value is Array)
+                            {
+                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                            }
+                            else
+                            {
+                                values.Add(queryField.Parameter.Value);
+                            }
+                        }
                         if (!expandObject.ContainsKey(leftParameterName))
                         {
                             var leftValue = values.Count > 0 ? values[0] : null;
@@ -43,7 +54,18 @@ namespace RepoDb.Extensions
                     }
                     else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                     {
-                        var values = (queryField.Parameter.Value as Array)?.AsEnumerable().ToList();
+                        var values = new List<object>();
+                        if (queryField.Parameter.Value != null)
+                        {
+                            if (queryField.Parameter.Value is Array)
+                            {
+                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                            }
+                            else
+                            {
+                                values.Add(queryField.Parameter.Value);
+                            }
+                        }
                         for (var i = 0; i < values.Count; i++)
                         {
                             var parameterName = $"{queryField.Parameter.Name}_{Constant.In}_{i}";

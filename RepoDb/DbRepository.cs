@@ -522,17 +522,8 @@ namespace RepoDb
             }
             else
             {
-                if ((bool)where?.GetType().IsGenericType)
-                {
-                    return Delete<TEntity>(where: QueryGroup.Parse(where),
-                        transaction: transaction);
-                }
-                else
-                {
-                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    return Delete<TEntity>(where: new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable()),
-                        transaction: transaction);
-                }
+                return Delete<TEntity>(where: QueryGroup.Parse(where),
+                    transaction: transaction);
             }
         }
 

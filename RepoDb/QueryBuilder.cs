@@ -187,7 +187,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Where(IQueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append($"WHERE {queryGroup.FixParameters().GetString()}") : this;
+            return (queryGroup != null) ? Append($"WHERE {queryGroup.Fix().GetString()}") : this;
         }
 
         public IQueryBuilder<TEntity> And()

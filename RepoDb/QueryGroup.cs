@@ -85,7 +85,7 @@ namespace RepoDb
             return queryFields;
         }
 
-        public IQueryGroup FixParameters()
+        public IQueryGroup Fix()
         {
             if (_isFixed)
             {
@@ -133,37 +133,114 @@ namespace RepoDb
             var queryFields = new List<IQueryField>();
             var queryGroups = new List<IQueryGroup>();
             var conjunction = Conjunction.And;
-            var reserves = new[] { Constant.Conjunction, Constant.QueryGroups };
             var properties = obj.GetType().GetProperties().ToList();
             properties.ForEach(property =>
             {
                 var fieldName = property.Name;
-                if (!reserves.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase))
+                if (string.Equals(fieldName, Constant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    conjunction = (Conjunction)property.GetValue(obj);
+                }
+                else if (string.Equals(fieldName, Constant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var value = property.GetValue(obj);
-                    var type = value?.GetType();
-                    queryFields.Add(type.IsGenericType ? QueryField.Parse(fieldName, value) : new QueryField(fieldName, value));
+                    if (value is Array)
+                    {
+                        Array.ForEach((object[])value, (item) =>
+                        {
+                            queryGroups.Add(Parse(item));
+                        });
+                    }
+                    else
+                    {
+                        queryGroups.Add(Parse(value));
+                    }
                 }
                 else
                 {
-                    if (string.Equals(fieldName, Constant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
+                    var value = property.GetValue(obj);
+                    var type = value?.GetType();
+                    if ((bool)type?.IsGenericType)
                     {
-                        conjunction = (Conjunction)property.GetValue(obj);
-                    }
-                    else if (string.Equals(fieldName, Constant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var value = property.GetValue(obj);
-                        if (value is Array)
+                        var operationProperty = type
+                            .GetProperties()
+                            .FirstOrDefault(
+                                p => string.Equals(p.Name, Constant.Operation, StringComparison.InvariantCultureIgnoreCase));
+                        var valueProperty = type
+                            .GetProperties()
+                            .FirstOrDefault(
+                                p => string.Equals(p.Name, Constant.Value, StringComparison.InvariantCultureIgnoreCase));
+                        if (operationProperty == null || operationProperty?.PropertyType != typeof(Operation))
                         {
-                            Array.ForEach<object>((object[])value, (item) =>
+                            throw new InvalidOperationException($"The '{Constant.Operation}' property must be a type of '{typeof(Operation).FullName}'.");
+                        }
+                        if (valueProperty == null)
+                        {
+                            throw new InvalidOperationException($"The field '{Constant.Value}' is not specified for '{fieldName}' field.");
+                        }
+                        var operation = (Operation)operationProperty.GetValue(value);
+                        value = valueProperty.GetValue(value);
+                        if (value == null)
+                        {
+                            throw new InvalidOperationException($"The field '{Constant.Value}' for property '{fieldName}' should not be null.");
+                        }
+                        if (operation == Operation.All || operation == Operation.Any)
+                        {
+                            if (value.GetType().IsArray)
                             {
-                                queryGroups.Add(Parse(item));
-                            });
+                                var qfs = new List<IQueryField>();
+                                ((Array)value).AsEnumerable().ToList().ForEach(underlyingValue =>
+                                {
+                                    qfs.Add(QueryField.Parse(fieldName, underlyingValue));
+                                });
+                                var queryGroup = new QueryGroup(qfs, null, operation == Operation.All ? Conjunction.And : Conjunction.Or);
+                                queryGroups.Add(queryGroup);
+                            }
+                            else
+                            {
+                                queryFields.Add(QueryField.Parse(fieldName, value));
+                            }
                         }
                         else
                         {
-                            queryGroups.Add(Parse(value));
+                            var invalidValue = false;
+                            if (value.GetType().IsGenericType)
+                            {
+                                invalidValue = true;
+                            }
+                            else
+                            {
+                                if (operation== Operation.Between || operation==Operation.NotBetween ||
+                                    operation == Operation.In || operation == Operation.NotIn)
+                                {
+                                    if (value.GetType().IsArray)
+                                    {
+                                        var values = ((Array)value).AsEnumerable().ToList();
+                                        if (values.Count != 2)
+                                        {
+                                            invalidValue = true;
+                                        }
+                                        else
+                                        {
+                                            invalidValue = values.Any(v => v == null || (bool)v?.GetType().IsGenericType);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        invalidValue = true;
+                                    }
+                                }
+                            }
+                            if (invalidValue)
+                            {
+                                throw new InvalidOperationException($"Invalid value for field '{valueProperty.Name} ({operation.ToString()})'.");
+                            }
+                            queryFields.Add(new QueryField(fieldName, operation, value));
                         }
+                    }
+                    else
+                    {
+                        queryFields.Add(new QueryField(fieldName, value));
                     }
                 }
             });

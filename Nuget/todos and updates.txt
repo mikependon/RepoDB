@@ -14,8 +14,11 @@ v1.0.6
 	- Order.Ascending and Order.Descending
 - Support StatementBuilderMapper, IStatementBuilderMapper, StatementBuilderMap, StatementBuilderMap
 - Support ORDER BY parsing of the dynamic objects
+- Support Operation.Any and Operation.All
+
+[REMOVED]
+- EventNotifier class has been obsolete by the Trace class
 
 [TODO]
-- Support Operation.Any and Operation.All
 - Support ObjectMapper
 - Documentation and Benchmark against Dapper and ADO.Net
