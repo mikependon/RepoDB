@@ -206,7 +206,7 @@ namespace RepoDb
                 transaction: transaction);
 
             // After Execution
-            if (Trace != null && result != null && result.Any())
+            if (Trace != null)
             {
                 Trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
             }
