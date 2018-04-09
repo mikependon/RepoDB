@@ -106,7 +106,7 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        public string CreateQuery<TEntity>(IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderFields = null)
+        public string CreateQuery<TEntity>(IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
             where TEntity : IDataEntity
         {
             var queryBuilder = new QueryBuilder<TEntity>();
@@ -117,7 +117,7 @@ namespace RepoDb
                 .From()
                 .Table()
                 .Where(queryGroup)
-                .Order(orderFields)
+                .Order(orderBy)
                 .End();
             return queryBuilder.GetString();
         }

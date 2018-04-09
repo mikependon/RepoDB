@@ -1,24 +1,14 @@
 [UPDATES]
-v1.0.6
-- Support dynamic query objects for QueryGroup
-- MemoryCache (ICache) object
-- Trace (ITrace) object
-- Added Constant class
-- Added support for Operation.NotLike (Operation.NotLike)
-- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
-- Support of Operation.Between and Operation.NotBetween
-- Support Operation.In and Operation.NotIn
-- Optimized Statement Builder (SqlDbStatementBuilder)
-- Injectable Statement Builder
-- Support TOP and ORDER BY
-	- Order.Ascending and Order.Descending
-- Support StatementBuilderMapper, IStatementBuilderMapper, StatementBuilderMap, StatementBuilderMap
-- Support ORDER BY parsing of the dynamic objects
-- Support Operation.Any and Operation.All
-
-[REMOVED]
-- EventNotifier class has been obsolete by the Trace class
+v1.0.8
+- Fix the bug found when injecting the IStatementBuilder at the BaseRepository.
+- Renamed argument name 'orderFields' to 'orderBy'.
+- Renamed 'ExecuteReaderEx' to 'ExecuteReader' under Connection object.
+- Added 'Remove' on the ICache
+- Renamed ICache 'Set' method to 'Add'
+- Renamed 'DbCacheItem' to 'CacheItem'
+- Remove the 'sealed' keyword at CacheItem to make inheritable
 
 [TODO]
+- Optimized the mapping for SqlBulkCopy for 'BulkInsert'
 - Support ObjectMapper
 - Documentation and Benchmark against Dapper and ADO.Net

@@ -4,13 +4,14 @@ using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
 using System.Linq;
+using System.Text;
 
 namespace RepoDb
 {
     internal class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
         where TEntity : IDataEntity
     {
-        private string _statement;
+        private StringBuilder _stringBuilder = new StringBuilder();
         
         public override string ToString()
         {
@@ -21,24 +22,18 @@ namespace RepoDb
 
         public string GetString()
         {
-            return _statement.ToString();
-        }
-
-        public IQueryBuilder<TEntity> Trim()
-        {
-            _statement = _statement.Trim();
-            return this;
+            return _stringBuilder.ToString();
         }
 
         public IQueryBuilder<TEntity> Space()
         {
-            _statement = $"{_statement} ";
+            Append(" ");
             return this;
         }
 
         public IQueryBuilder<TEntity> NewLine()
         {
-            _statement = $"{_statement}\n";
+            Append("\n");
             return this;
         }
 
@@ -49,7 +44,7 @@ namespace RepoDb
 
         private IQueryBuilder<TEntity> Append(string value)
         {
-            _statement = !string.IsNullOrEmpty(_statement) ? $"{_statement} {value}" : value;
+            _stringBuilder.Append(_stringBuilder.Length > 0 ? $" {value}" : value);
             return this;
         }
 
@@ -116,10 +111,10 @@ namespace RepoDb
             return Append("VALUES");
         }
 
-        public IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderFields = null, string alias = null)
+        public IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderBy = null, string alias = null)
         {
-            return (orderFields != null && orderFields.Any()) ?
-                Append($"ORDER BY {orderFields.Select(orderField => orderField.AsField()).Join(", ")}") :
+            return (orderBy != null && orderBy.Any()) ?
+                Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :
                 this;
         }
 

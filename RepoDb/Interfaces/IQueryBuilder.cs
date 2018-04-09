@@ -9,8 +9,6 @@ namespace RepoDb.Interfaces
         // Custom Methods
         string GetString();
 
-        IQueryBuilder<TEntity> Trim();
-
         IQueryBuilder<TEntity> Space();
 
         IQueryBuilder<TEntity> NewLine();
@@ -38,7 +36,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Values();
 
         // Order (ORDER BY)
-        IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderFields = null, string alias = null);
+        IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderBy = null, string alias = null);
 
         // As (AS)
         IQueryBuilder<TEntity> As(string alias);

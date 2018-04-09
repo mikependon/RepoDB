@@ -8,16 +8,51 @@ namespace RepoDb
     public class MemoryCache : ICache
     {
         private static object _syncLock = new object();
-        private readonly IList<ICacheItem> _list;
+        private readonly IList<ICacheItem> _cacheList;
 
         internal MemoryCache()
         {
-            _list = new List<ICacheItem>();
+            _cacheList = new List<ICacheItem>();
+        }
+
+        public void Add(string key, object value)
+        {
+            lock (_syncLock)
+            {
+                var item = GetItem(key);
+                if (item == null)
+                {
+                    _cacheList.Add(new CacheItem(key, value));
+                }
+                else
+                {
+                    var cacheItem = (CacheItem)item;
+                    cacheItem.Value = value;
+                    cacheItem.Timestamp = DateTime.UtcNow;
+                }
+            }
+        }
+
+        public void Add(ICacheItem item)
+        {
+            lock (_syncLock)
+            {
+                var cache = GetItem(item.Key);
+                if (cache == null)
+                {
+                    _cacheList.Add(item);
+                }
+                else
+                {
+                    cache.Value = item.Value;
+                    cache.Timestamp = DateTime.UtcNow;
+                }
+            }
         }
 
         public void Clear()
         {
-            _list.Clear();
+            _cacheList.Clear();
         }
 
         public object Get(string key)
@@ -28,7 +63,13 @@ namespace RepoDb
 
         public IEnumerable<ICacheItem> GetAll()
         {
-            return _list;
+            return _cacheList;
+        }
+
+        private ICacheItem GetItem(string key)
+        {
+            return _cacheList.FirstOrDefault(cacheItem =>
+                string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
         }
 
         public bool Has(string key)
@@ -36,27 +77,13 @@ namespace RepoDb
             return GetItem(key) != null;
         }
 
-        public void Set(string key, object value)
+        public void Remove(string key)
         {
-            lock (_syncLock)
+            var item = GetItem(key);
+            if (item != null)
             {
-                var item = GetItem(key);
-                if (item == null)
-                {
-                    _list.Add(new DbCacheItem(key, value));
-                }
-                else
-                {
-                    var cacheItem = (DbCacheItem)item;
-                    cacheItem.Value = value;
-                    cacheItem.Timestamp = DateTime.UtcNow;
-                }
+                _cacheList.Remove(item);
             }
-        }
-
-        private ICacheItem GetItem(string key)
-        {
-            return _list.FirstOrDefault(ci => string.Equals(ci.Key, key, StringComparison.CurrentCulture));
         }
     }
 }

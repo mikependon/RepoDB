@@ -96,29 +96,29 @@ namespace RepoDb
         // Query
 
         public IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(where: (IQueryGroup)null,
                 transaction: transaction,
                 top: top,
-                orderFields: orderFields,
+                orderBy: orderBy,
                 cacheKey: cacheKey);
         }
 
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0, 
-            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(where: where != null ? new QueryGroup(where) : null,
                 transaction: transaction,
                 top: top,
-                orderFields: orderFields,
+                orderBy: orderBy,
                 cacheKey: cacheKey);
         }
 
         public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0, 
-            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             if (where is QueryField)
@@ -126,7 +126,7 @@ namespace RepoDb
                 return Query<TEntity>(where: new QueryGroup(((IQueryField)where).AsEnumerable()),
                     transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey);
             }
             else if (where is IQueryGroup)
@@ -134,7 +134,7 @@ namespace RepoDb
                 return Query<TEntity>(where: (IQueryGroup)where,
                     transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey);
             }
             else
@@ -144,7 +144,7 @@ namespace RepoDb
                     return Query<TEntity>(where: QueryGroup.Parse(where),
                         transaction: transaction,
                         top: top,
-                        orderFields: orderFields,
+                        orderBy: orderBy,
                         cacheKey: cacheKey);
                 }
                 else
@@ -153,14 +153,14 @@ namespace RepoDb
                     return Query<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
                         transaction: transaction,
                         top: top,
-                        orderFields: orderFields,
+                        orderBy: orderBy,
                         cacheKey: cacheKey);
                 }
             }
         }
 
         public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, int? top = 0, 
-            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             // Get Cache
@@ -180,7 +180,7 @@ namespace RepoDb
             var commandType = DataEntityExtension.GetCommandType<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>() : 
-                StatementBuilder.CreateQuery<TEntity>(where, top, orderFields);
+                StatementBuilder.CreateQuery<TEntity>(where, top, orderBy);
             var param = where?.AsObject();
 
             // Before Execution
@@ -216,7 +216,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null && result != null && result.Any())
             {
-                Cache?.Set(cacheKey, result);
+                Cache?.Add(cacheKey, result);
             }
 
             // Result
@@ -226,49 +226,49 @@ namespace RepoDb
         // QueryAsync
 
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey));
         }
 
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey));
         }
 
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey));
         }
 
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderFields = null, string cacheKey = null)
+            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     transaction: transaction,
                     top: top,
-                    orderFields: orderFields,
+                    orderBy: orderBy,
                     cacheKey: cacheKey));
         }
 

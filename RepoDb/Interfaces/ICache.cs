@@ -4,10 +4,12 @@ namespace RepoDb.Interfaces
 {
     public interface ICache
     {
+        void Add(string key, object value);
+        void Add(ICacheItem item);
         void Clear();
-        IEnumerable<ICacheItem> GetAll();
         object Get(string key);
-        void Set(string key, object value);
+        IEnumerable<ICacheItem> GetAll();
         bool Has(string key);
+        void Remove(string key);
     }
 }

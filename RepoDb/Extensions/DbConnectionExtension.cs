@@ -113,12 +113,12 @@ namespace RepoDb.Extensions
                     trace: trace));
         }
 
-        // ExecuteReaderEx
-        public static IEnumerable<object> ExecuteReaderEx(this IDbConnection connection,
+        // ExecuteReader
+        public static IEnumerable<object> ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
-            CommandType? commandType = null,
             int? commandTimeout = null,
+            CommandType? commandType = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
@@ -161,21 +161,21 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteReaderExAsync
-        public static Task<IEnumerable<object>> ExecuteReaderExAsync(this IDbConnection connection,
+        // ExecuteReaderAsync
+        public static Task<IEnumerable<object>> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
-            CommandType? commandType = null,
             int? commandTimeout = null,
+            CommandType? commandType = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             return Task.Factory.StartNew<IEnumerable<object>>(() =>
-                ExecuteReaderEx(connection: connection,
+                ExecuteReader(connection: connection,
                     commandText: commandText,
                     param: param,
-                    commandType: commandType,
                     commandTimeout: commandTimeout,
+                    commandType: commandType,
                     transaction: transaction,
                     trace: trace));
         }
