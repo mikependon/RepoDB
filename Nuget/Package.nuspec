@@ -2,30 +2,21 @@
 <package >
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dynamic ORM library used to create an Entity-Based Repositories when accessing data from the database.</description>
     <releaseNotes>
 		[UPDATES]
-		- Support dynamic query objects for QueryGroup
-		- MemoryCache (ICache) object
-		- Trace (ITrace) object
-		- Added Constant class
-		- Added support for Operation.Like and Operation.NotLike
-		- Allow Querying, Deleting, Updating by PrimaryKey (when the value is passed in the method of 'where' argument)
-		- Support of Operation.Between and Operation.NotBetween
-		- Support Operation.In and Operation.NotIn
-		- Optimized Statement Builder (SqlDbStatementBuilder)
-		- Injectable Statement Builder
-		- Support TOP and ORDER BY
-			- Order.Ascending and Order.Descending
-		- Support StatementBuilderMapper, IStatementBuilderMapper, StatementBuilderMap, StatementBuilderMap
-		- Support ORDER BY parsing of the dynamic objects
-		- Added support for the new Operation.Any and Operation.All
-		[REMOVED]
-		- EventNotifier class has been obsolete by the Trace class
+		v1.0.8
+		- Fix the bug found when injecting the IStatementBuilder at the BaseRepository.
+		- Renamed argument name 'orderFields' to 'orderBy'.
+		- Renamed 'ExecuteReaderEx' to 'ExecuteReader' under Connection object.
+		- Added 'Remove' on the ICache
+		- Renamed ICache 'Set' method to 'Add'
+		- Renamed 'DbCacheItem' to 'CacheItem'
+		- Remove the 'sealed' keyword at 'CacheItem' to make it inheritable
 	</releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>

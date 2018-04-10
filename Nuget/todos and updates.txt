@@ -1,12 +1,7 @@
 [UPDATES]
-v1.0.8
-- Fix the bug found when injecting the IStatementBuilder at the BaseRepository.
-- Renamed argument name 'orderFields' to 'orderBy'.
-- Renamed 'ExecuteReaderEx' to 'ExecuteReader' under Connection object.
-- Added 'Remove' on the ICache
-- Renamed ICache 'Set' method to 'Add'
-- Renamed 'DbCacheItem' to 'CacheItem'
-- Remove the 'sealed' keyword at CacheItem to make inheritable
+v1.0.9
+- Renamed ICache.Has to ICache.Contains
+- Removed ICache.GetAll and implement the IEnumerable interface instead
 
 [TODO]
 - Optimized the mapping for SqlBulkCopy for 'BulkInsert'

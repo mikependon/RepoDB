@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using RepoDb.Interfaces;
 using System.Linq;
+using System.Collections;
 
 namespace RepoDb
 {
@@ -55,26 +56,31 @@ namespace RepoDb
             _cacheList.Clear();
         }
 
+        public bool Contains(string key)
+        {
+            return GetItem(key) != null;
+        }
+
         public object Get(string key)
         {
             var cacheItem = GetItem(key);
             return cacheItem?.Value;
         }
 
-        public IEnumerable<ICacheItem> GetAll()
+        public IEnumerator<ICacheItem> GetEnumerator()
         {
-            return _cacheList;
+            return _cacheList.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _cacheList.GetEnumerator();
         }
 
         private ICacheItem GetItem(string key)
         {
             return _cacheList.FirstOrDefault(cacheItem =>
                 string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
-        }
-
-        public bool Has(string key)
-        {
-            return GetItem(key) != null;
         }
 
         public void Remove(string key)
