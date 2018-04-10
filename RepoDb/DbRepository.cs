@@ -717,12 +717,16 @@ namespace RepoDb
                         return 0;
                     }
                 }
-                var table = entities.AsDataTable<TEntity>(connection);
+                var table = entities.AsDataTable(connection);
 
                 // Actual Execution
                 var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
                 var result = entities.Count();
                 sqlBulkCopy.DestinationTableName = table.TableName;
+                foreach(var column in table.Columns.OfType<DataColumn>())
+                {
+                    sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                }
                 sqlBulkCopy.WriteToServer(table);
 
                 // After Execution

@@ -165,6 +165,8 @@ namespace RepoDb.Extensions
         {
             var mappedName = GetMappedName<T>();
             var table = new DataTable(mappedName);
+            var properties = typeof(T).GetProperties();
+            var dict = new Dictionary<DataColumn, PropertyInfo>();
             using (var command = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
             {
                 using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
@@ -174,24 +176,25 @@ namespace RepoDb.Extensions
                     {
                         var columnName = Convert.ToString(row[Constant.ColumnName]);
                         var dataType = Type.GetType(Convert.ToString(row[Constant.DataType]));
-                        table.Columns.Add(new DataColumn(columnName, dataType));
+                        var dataColumn = new DataColumn(columnName, dataType);
+                        var property = properties.FirstOrDefault(p =>
+                            string.Equals(columnName, p.Name, StringComparison.InvariantCultureIgnoreCase));
+                        table.Columns.Add(dataColumn);
+                        dict.Add(dataColumn, property);
                     }
                 }
             }
-            var entityType = typeof(T);
-            var properties = entityType.GetProperties();
             entities?.ToList().ForEach(entity =>
             {
                 var row = table.NewRow();
-                foreach (DataColumn column in table.Columns)
+                foreach (var kvp in dict)
                 {
-                    var property = properties.FirstOrDefault(p => string.Equals(column.ColumnName, p.Name, StringComparison.InvariantCultureIgnoreCase));
                     var value = (object)null;
-                    if (property != null)
+                    if (kvp.Value != null)
                     {
-                        value = property.GetValue(entity);
+                        value = kvp.Value.GetValue(entity);
                     }
-                    row[column] = value ?? DBNull.Value;
+                    row[kvp.Key] = value ?? DBNull.Value;
                 }
                 table.Rows.Add(row);
             });
