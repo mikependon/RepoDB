@@ -51,7 +51,7 @@ namespace RepoDb
                 new SqlDbStatementBuilder());
         }
 
-        // CreateConnection
+        // CreateConnection (TDbConnection)
 
         public TDbConnection CreateConnection()
         {
