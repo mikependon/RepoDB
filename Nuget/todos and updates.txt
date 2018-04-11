@@ -6,4 +6,6 @@ v1.0.9
 
 [TODO]
 - Support ObjectMapper
-- Documentation and Benchmark against Dapper and ADO.Net
+- MemoryCache Flush
+- Reflection.Emit
+- Documentation

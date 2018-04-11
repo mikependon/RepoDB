@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RepoDb</id>
+    <version>1.0.9</version>
+    <authors>Michael Pendon</authors>
+    <owners>mikependon</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.</description>
+    <releaseNotes>
+		Updates (v1.0.9):
+		- Renamed ICache.Has to ICache.Contains
+		- Removed ICache.GetAll and implement the IEnumerable interface instead
+		- Optimized the mapping for SqlBulkCopy for 'BulkInsert'
+	</releaseNotes>
+    <copyright>Copyright © 2018</copyright>
+    <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>
+  </metadata>
+  <files>
+	<file src="readme.txt" target="" />
+	<file src="RepoDb.dll" target="lib\RepoDb\RepoDb.dll" />
+  </files>
+</package>
