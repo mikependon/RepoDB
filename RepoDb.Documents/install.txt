@@ -1,0 +1,5 @@
+1. Navigate to the folder where the Nuget.exe resides
+2. Open command prompt and change directory to the folder above
+3. Type "nuget spec" to create a Package.nuspec
+4. Update the spec file
+5. Create a package by typing "nuget pack Package.nuspec"
