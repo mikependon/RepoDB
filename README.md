@@ -1,4 +1,4 @@
-RepoDb
+## RepoDb
 
 A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
 
