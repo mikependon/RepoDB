@@ -1,9 +1,9 @@
 # RepoDb
-A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data	 from the database.
+A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
 
 ## Class Entity
 
-It is required that you have your entity classes inherited the `RepoDb.DataEntity` class. It is also advisable that you must create an explicit interface that implements the `IDataEntity` interface. See example below.
+It is required that you have your entity classes inherited the `RepoDb.DataEntity` class. It is also advisable that you must create an explicit interface that implements the `RepoDb.Interfaces.IDataEntity` interface. See example below.
 
 Entity Interface:
 ```
@@ -26,21 +26,38 @@ public class Stock : DataEntity, IStock
 	public DateTime CreatedDate { get; set; }
 }
 ```
-By default, `RepoDb` is using the class name as the default mapped object in the database. This means that your class `Stock` above is automatically mapped to `[dbo].[Stock]` object from your database.
+By default, `RepoDb` is using the class name as the default mapped object in the database. This means that the `Stock` class above is automatically be mapped to `[dbo].[Stock]` database object.
 
-### Map  Attribute
+### Map Class Attribute
 
-You can change the target mapped object by specifying the `Map` attribute on the class level. See sample below.
+You can change the target mapped object by specifying the `RepoDb.Attributes.Map` attribute on the class level. See sample below.
 ```
 [Map("[dbo].[StockTable]", CommandType.Text)]
 public class Stock : DataEntity, IStock
 ```
-Above class `Stock` is being mapped at `[dbo].[StockTable]` of your database. This attribute has second parameter called `commandType` of `System.Data` namespace.
+Above class `Stock` is forcely mapped to `[dbo].[StockTable]` of your database. This attribute has second parameter called `commandType` of `System.Data` namespace.
 
 If you specify the `CommandType` parameter, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
 
+The `CommandType` parameter is not supported if being used at field-level.
+
+### Map Field Attribute
 TODO: [Soon to be supported]
-At the field level,
+
+By default, at the field-level, the entity class property is map to the database object field based on the equation of the name. If the `Map` attribute is defined, it will force your entity class property to be mapped directly to the table field based on the name defined at the `Map` attribute. See sample below:
+```
+[Map("[dbo].[StockTable]", CommandType.Text)]
+public class Stock : DataEntity, IStock
+{
+	[Map("StockId")]
+	public int Id { get; set; }
+	[Map("SecurityName")]
+	public string Name { get; set; }
+	...
+	public DateTime CreatedDate { get; set; }
+}
+```
+On the sample class above named `Stock`, the property `Id` is mapped to `StockId` field and the property `Name` is mapped to `SecurityName` field.
 
 ### Primary Attribute
 
