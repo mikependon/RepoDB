@@ -225,7 +225,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 		Motto = "Do not be evil.",
 		UpdatedDate = DateTime.UtcNow
 	};
-	var result = connection.ExecuteNonQuery<Stock>("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
+	var result = connection.ExecuteNonQuery("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
 }
 ```
 
@@ -248,7 +248,7 @@ var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
 {
 	var param = new { Name = "GOOGL" };
-	var id = connection.ExecuteNonQuery<Stock>("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
+	var id = connection.ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 }
 ```
 
@@ -265,7 +265,7 @@ Below are the objects useful for composing the expression tree.
  - **Conjunction** - an enumeration that holds the value whether the expression is on `And` or `Or` operation.
  - **Operation** - an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
 
-TODO
+TODO: To be continued by Michael Pendon
 
 ## Operations
 
