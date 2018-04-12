@@ -6,7 +6,7 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 Link: https://www.nuget.org/packages/RepoDb
 
 ### Documentation
-Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation.md
+Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation.md (in-progress)
 
 ### Goal
 
@@ -15,7 +15,7 @@ We will simplify and help the database activities simple. We aim to let .Net dev
 ### Notes
 
  - We will always be FREE!
- - We will keep RepoDb as simple as possible
+ - We will keep it simple as possible (KISS principle)
  - We will make it fast as possible
  - We will never make complex implementations (specially for Queries and Methods)
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
