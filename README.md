@@ -23,6 +23,7 @@ We will simplify and help the database activities simple. We aim to let .Net dev
  
 ### Todos
 
+ - Add ExecutionTime (Timespan) property in the TraceLog class.
  - Cache CommadType in Repository Level
  - Entity Property Caching
  - Support Inline-Update
