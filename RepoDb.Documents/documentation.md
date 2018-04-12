@@ -557,7 +557,7 @@ Below is the way on how to call the operation.
 ```
 var stockRepository = new StockRepository(connectionString);
 var param = new { Name = "GOOGL" };
-var result = stockRepository .ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
+var result = stockRepository.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
 ```
 
 ## ExecuteNonQuery Operation
@@ -581,7 +581,7 @@ var param = new
 	Motto = "Do not be evil.",
 	UpdatedDate = DateTime.UtcNow
 };
-var result = stockRepository .ExecuteNonQuery("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
+var result = stockRepository.ExecuteNonQuery("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
 ```
 
 ## ExecuteScalar Operation
@@ -600,5 +600,5 @@ Below is the way on how to call the operation.
 ```
 var stockRepository = new StockRepository(connectionString);
 var param = new { Name = "GOOGL" };
-var id = stockRepository .ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
+var id = stockRepository.ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 ```
