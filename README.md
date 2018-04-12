@@ -23,6 +23,7 @@ We aim to let .Net developers avoid writing more SQL Statements in the applicati
  
 ### Todos
 
+ - Documentation: Cache, Trace, StatementBuilder
  - Add ExecutionTime (Timespan) property in the TraceLog class.
  - Cache CommadType in Repository Level
  - Entity Property Caching
