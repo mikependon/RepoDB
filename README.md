@@ -26,7 +26,7 @@ We will simplify and help the database activities simple. We aim to let .Net dev
  - Add ExecutionTime (Timespan) property in the TraceLog class.
  - Cache CommadType in Repository Level
  - Entity Property Caching
- - Support Inline-Update
+ - Support Column-Based Update using Dynamics
  - Support BatchQuery Operation
  - Support Field-Level Mapping
  - Cache SQL Statement Building
