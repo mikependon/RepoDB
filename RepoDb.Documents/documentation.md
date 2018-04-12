@@ -84,7 +84,7 @@ Currently, the library is only using the `None`, `Select`, `Insert`, `Update`, `
 
 ## Repository
 
-The library contains two base repository objects, the `BaseRepository<TEntity, TDbConnection` and `DbRepository<TDbConnection>`. The latter is the heart of the `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
+The library contains two base repository objects, the `BaseRepository<TEntity, TDbConnection>` and `DbRepository<TDbConnection>`. The latter is the heart of the `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
 
 This mean that the `BaseRepository` is only abstracting the operations of the `DbRepository` object in all areas.
 
