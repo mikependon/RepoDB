@@ -20,9 +20,11 @@ We will simplify and make your queries simple. We hope to let you avoid writing 
  
 ### Todos
 
- - Entity Property Caching
  - Cache CommadType in Repository Level
- - Cache SQL Statement Building
- - MemoryCache Flush
- - Support ObjectMapper
+ - Entity Property Caching
  - Reflection.Emit (SqlDataReader to Objects)
+ - Cache SQL Statement Building
+ - Support ObjectMapper
+ - Support Multi-Mapping for Class-Level
+ - Support Field-Level Mapping
+ - MemoryCache Flush
