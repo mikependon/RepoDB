@@ -26,6 +26,7 @@ We will simplify and help the database activities simple. We aim to let .Net dev
  - Cache CommadType in Repository Level
  - Entity Property Caching
  - Support Inline-Update
+ - Support BatchQuery Operation
  - Support Field-Level Mapping
  - Cache SQL Statement Building
  - Reflection.Emit (SqlDataReader to Objects)
