@@ -336,7 +336,8 @@ Explicity way:
 ```
 var stocks = stockRepository.Query(
 	new QueryGroup(
-		new [] {
+		new []
+		{
 			new QueryField("Id", 1),
 			new QueryField("Id", Operation.Equal, "AAPL")
 		}
@@ -387,7 +388,8 @@ Explicit way:
 ```
 var stocks = stockRepository.Query(
 	new QueryGroup(
-		new [] {
+		new []
+		{
 			new QueryField("Id", Operation.GreaterThanOrEqual, 50),
 			new QueryField("Id", Operation.LessThanOrEqual, 100)
 		}
@@ -395,11 +397,7 @@ var stocks = stockRepository.Query(
 ```
 or
 ```
-var stocks = stockRepository.Query(
-	new QueryGroup(
-		new QueryField("Id", Operation.Between, new [] { 50, 100 }).AsEnumerable()
-	)
-);
+var stocks = stockRepository.Query(new QueryGroup(new QueryField("Id", Operation.Between, new [] { 50, 100 }).AsEnumerable()));
 ```
 **Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
