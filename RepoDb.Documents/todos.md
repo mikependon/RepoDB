@@ -4,7 +4,10 @@
 - Optimized the mapping for SqlBulkCopy for 'BulkInsert'
 
 ## TODO
-- Support ObjectMapper
+- Property Cache
+- Cache Commad Type in Repository Level
+- Cache SQL Statement Building
 - MemoryCache Flush
+- Support ObjectMapper
 - Reflection.Emit
 - Documentation

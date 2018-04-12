@@ -600,5 +600,5 @@ Below is the way on how to call the operation.
 ```
 var stockRepository = new StockRepository(connectionString);
 var param = new { Name = "GOOGL" };
-var id = stockRepository .ExecuteNonQuery("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
+var id = stockRepository .ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 ```
