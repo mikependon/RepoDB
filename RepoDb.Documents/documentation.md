@@ -279,6 +279,27 @@ The `QueryGroup` object is very important to group an expression in `RepoDb` (im
  - **queryFields** - the list of `IQueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
  - **queryGroups** - the list of child `IQueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
  - **conjunction** - the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
+ 
+ Below is the pseudocodes on how to create a query groups driven expressions.
+
+ ```
+ var tree = new QueryGroup(new QueryField[] { ... }, new QueryGroup[] { ... }, Conjunction.And);
+ ```
+ Below is the actual explicit code composition of `QueryGroup` if you are querying a `Stock` data where `Name` has `A` character `OR` (the `DateInserted` is between yesterday and today's date `AND` the `IsActive` flag is `true`.
+ ```
+ var tree = new QueryGroup(
+ 	new QueryField("Id", Operation.Like, "%A%).AsEnumerable(),
+	new QueryGroup(
+		new []
+		{
+			new QueryField("DateInserted", Operation.Between, new [] { DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1) }),
+			new QueryField("IsActive", true }),
+		}
+	).AsEnumerable(),
+	Conjunction.Or
+ );
+ ```
+ By default, the `QueryGroup` conjunction is `Conjunction.And`. You can explicitly set it by passing the `Conjunction.Or` value.
 
 ## Operations
 
