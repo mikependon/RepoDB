@@ -194,7 +194,7 @@ namespace RepoDb.Extensions
                     {
                         value = kvp.Value.GetValue(entity);
                     }
-                    row[kvp.Key] = value ?? DBNull.Value;
+                    row[kvp.Key] = value == DBNull.Value ? null : value;
                 }
                 table.Rows.Add(row);
             });
