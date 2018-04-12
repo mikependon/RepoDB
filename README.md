@@ -10,7 +10,7 @@ Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/document
 
 ### Goal
 
-We will simplify and help the database activities simple. We aim to let .Net developers avoid writing more SQL Statements in the application. We believe that as a .Net developers, we should only focus on .Net development and not on writing repetitive SQL Statements, unless you are working closely in SQL Server Management Studio.
+We aim to let .Net developers avoid writing more SQL Statements in the application. We believe that as a .Net developers, we should only focus on .Net development and not on writing repetitive SQL Statements, unless you are working closely in SQL Server Management Studio.
 
 ### Notes
 
