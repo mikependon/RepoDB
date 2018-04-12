@@ -10,13 +10,16 @@ Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/document
 
 ### Goal
 
-We will simplify and make your queries simple. We hope to let you avoid writing more SQL Statements in .Net applications as you go along the way. As a .Net developers, one should focus .Net development, unless you are closely working in SQL Server Management Studio.
+We will simplify and help the database activities simple. We aim to let .Net developers avoid writing more SQL Statements in the application. We believe that as a .Net developers, we should only focus on .Net development and not on writing repetitive SQL Statements, unless you are working closely in SQL Server Management Studio.
 
 ### Notes
 
+ - We will always be FREE!
  - We will keep RepoDb as simple as possible
- - We will never make complex queries and methods (we will avoid developing JOINs until it is needed by the community)
- - We will never do try-catch inside the library
+ - We will make it fast as possible
+ - We will never make complex implementations (specially for Queries and Methods)
+ - We will avoid developing complex JOINs (until it is needed and requested by the community)
+ - We will never ever do try-catch inside the library
  
 ### Todos
 
