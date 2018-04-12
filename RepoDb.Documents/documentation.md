@@ -3,7 +3,7 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 
 ## Class Entity
 
-It is required that you have your entity classes inherited the `RepoDb.DataEntity` class. It is also advisable that you must create an explicit interface that implements the `RepoDb.Interfaces.IDataEntity` interface. See example below.
+It is required that the entity classes inherit the `RepoDb.DataEntity` class. It is also advisable (not required) that an explicit interface must be implemented in the entity classes. The interfaces must implement the `RepoDb.Interfaces.IDataEntity` interface in order to be considered as a contracted data entity. See example below.
 
 Entity Interface:
 ```
@@ -26,25 +26,25 @@ public class Stock : DataEntity, IStock
 	public DateTime CreatedDate { get; set; }
 }
 ```
-By default, `RepoDb` is using the class name as the default mapped object in the database. This means that the `Stock` class above is automatically be mapped to `[dbo].[Stock]` database object.
+By default, `RepoDb` is using the class name as the default mapped object in the database. The class above named `Stock` is automatically be mapped to `[dbo].[Stock]` database object.
 
 ### Map Class Attribute
 
-You can change the target mapped object by specifying the `RepoDb.Attributes.Map` attribute on the class level. See sample below.
+The class name mappings can be changed by specifying the `RepoDb.Attributes.Map` attribute on the class level. See sample below.
 ```
 [Map("[dbo].[StockTable]", CommandType.Text)]
 public class Stock : DataEntity, IStock
 ```
-Above class `Stock` is forcely mapped to `[dbo].[StockTable]` of your database. This attribute has second parameter called `commandType` of `System.Data` namespace.
+Above class `Stock` is forcely mapped to `[dbo].[StockTable]` of the database.
 
-If you specify the `CommandType` parameter, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
+The `Map` attribute has second parameter called `commandType` of `System.Data` namespace. If the `CommandType` parameter is defined, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
 
-The `CommandType` parameter is not supported if being used at field-level.
+**Note:** The `commandType` parameter is ignored if implemented at the field-level.
 
 ### Map Field Attribute
 TODO: [Soon to be supported]
 
-By default, at the field-level, the entity class property is map to the database object field based on the equation of the name. If the `Map` attribute is defined, it will force your entity class property to be mapped directly to the table field based on the name defined at the `Map` attribute. See sample below:
+By default, at the field-level, the entity class `property` is mapped to the database object `field` based on the equality of the name (case-insensitive). If the `Map` attribute is defined, it will force your entity class `property` to be mapped directly to the table `field` based on the name defined at the `Map` attribute. See sample below:
 ```
 [Map("[dbo].[StockTable]", CommandType.Text)]
 public class Stock : DataEntity, IStock
@@ -61,24 +61,24 @@ On the sample class above named `Stock`, the property `Id` is mapped to `StockId
 
 ### Primary Attribute
 
-The `Primary` attribute is necessary in order for the `RepoDb` to identity which property of you class signify as the primary column of your mapped object. See sample below.
+The `Primary` attribute is used in order to define which property of the data entity class is the primary key. See sample below.
 ```
 [Primary]
 public int Id { get; set; }
 ```
-This attribute accepts a `System.Boolean`  parameter that tells whether the primary property is an identity column or not. If sets to `true`, the value of the `Id` column of the newly added record from the database will be returned after calling an `Insert` operation.
+This attribute accepts a `System.Boolean` parameter that tells whether the primary property is an identity column. If sets to `true`, the value of the identity column of the newly added record from the database will be returned during `Insert` operation.
 
-By default, `RepoDb` has a built-in mechanism when identifying the primary key. If the `Primary` attribute is defined, the first occurrence will automatically be qualified as the primary property.
+By default, the library has built-in mechanism on identifying the primary key. If the `Primary` attribute is defined, the first occurrence will automatically be qualified as the primary property.
 
-If the `Primary` attribute is not defined, then `RepoDb` will do the following identification.
+If the `Primary` attribute is not defined, then the following identifications will be used.
 
   - Search for `Id` property. If present, this automatically overrule the mechanism.
-  - If there is no `Id` property from the class, the class name plus the word `Id` will be evaluated. This means that on your `Stock` class, the property `StockId` will be identified.
-  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. This means that on your `Map("[dbo].[StockTable]")` mapping, the `StockTableId` will be evalulated.
+  - If there is no `Id` property from the class, the class name plus the word `Id` will be evaluated. This means that the `Stock` class, the property `StockId` will be identified.
+  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. On the above mappings, `Map("[dbo].[StockTable]")`, the `StockTableId` will be evalulated.
 
 ### Ignore Attribute
 
-This attribute is necessary to command `RepoDb` which properties of your entity class is being ignored in certain operations. It accepts an argument `RepoDb.Enumerations.Command` enumeration. The following are the values of the `Command` operation.
+The `Ignore` attribute is necessary to command the library which property of your entity class is being ignored in certain operations. It accepts an argument of `RepoDb.Enumerations.Command` enumeration. The following are the values of this enumeration.
 
  - None
  - Select
@@ -95,7 +95,7 @@ Below is a way on how to marked the property `Id` to be ignored during `Update` 
 [Ignore(Command.Update)]
 public int Id { get; set; }
 ```
-On the other hand, you can also cast multiple ignore commands on a single property. Below is the sample on how to marked the `CreatedDate` property to be ignored during `Insert` and `Update` operation. *(This is applicable to a property with default values from the database)*
+On the other hand, this attribute can also be used for multiple ignore commands on a single property. Below is the sample on how to marked the `CreatedDate` property to be ignored during `Insert` and `Update` operation. *(This is advisable only to a property with default values from the database)*
 ```
 [Ignore(Command.Insert | Command.Update)]
 public int CreatedDate { get; set; }
