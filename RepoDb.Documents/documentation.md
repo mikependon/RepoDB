@@ -303,11 +303,11 @@ All operations mentioned above has its corresponding asynchronous operation. Usu
 
 This operation is used to query a data from the database and returns an `IEnumerable<TEntity>` object. Below are the parameters.
 
-  -- **where** - an expression to used to filter the data.
-  -- **transaction** - the transaction object to be used when querying a data.
-  -- **top** - the value used to return certain number of rows from the database.
-  -- **orderBy** - the list of fields to be used to sort the data during querying.
-  -- **cacheKey** - the key of the cache to check.
+  - **where** - an expression to used to filter the data.
+  - **transaction** - the transaction object to be used when querying a data.
+  - **top** - the value used to return certain number of rows from the database.
+  - **orderBy** - the list of fields to be used to sort the data during querying.
+  - **cacheKey** - the key of the cache to check.
 
 Below is a sample on how to query a data.
 ```
@@ -407,8 +407,8 @@ var stocks = stockRepository.Query(
 
 This operation is used to insert a record in the database. It returns an object valued by the `PrimaryKey` column. If the `PrimaryKey` column is identity, this operation will return the newly added identity column value. Below are the parameters:
 
- -- **entity** - the entity object to be inserted.
- -- **transaction** - the transaction object to be used when inserting a data.
+ - **entity** - the entity object to be inserted.
+ - **transaction** - the transaction object to be used when inserting a data.
 
 Below is a sample on how to insert a data.
 ```
@@ -425,9 +425,9 @@ repository.Insert(stock);
 
 This operation is used to update an existing record from the database. It returns an `int` value indicating the number of rows affected by the updates. Below are the parameters:
 
- -- **entity** - the entity object to be updated.
- -- **where** - an expression to used when updating a record.
- -- **transaction** - the transaction object to be used when updating a data.
+ - **entity** - the entity object to be updated.
+ - **where** - an expression to used when updating a record.
+ - **transaction** - the transaction object to be used when updating a data.
 
 Below is a sample on how to update a data.
 ```
@@ -460,8 +460,8 @@ new
 
 This operation is used to delete an existing record from the database. It returns an `int` value indicating the number of rows affected by the delete. Below are the parameters:
 
- -- **where** - an expression to used when deleting a record.
- -- **transaction** - the transaction object to be used when deleting a data.
+ - **where** - an expression to used when deleting a record.
+ - **transaction** - the transaction object to be used when deleting a data.
 
 Below is a sample on how to delete a data.
 ```
@@ -487,9 +487,9 @@ var affectedRows = stockRepository.Delete(new { Name = "GOOGL" });
 
 This operation is used to merge an entity from the existing record from the database. It returns an `int` value indicating the number of rows affected by the merge. Below are the parameters:
 
- -- **entity** - the entity object to be merged.
- -- **qualifiers** - the list of fields to be used as a qualifiers when merging a record.
- -- **transaction** - the transaction object to be used when merging a data.
+ - **entity** - the entity object to be merged.
+ - **qualifiers** - the list of fields to be used as a qualifiers when merging a record.
+ - **transaction** - the transaction object to be used when merging a data.
 
 Below is a sample on how to merge a data.
 ```
@@ -517,8 +517,8 @@ Please also note that merging is a process of updating and inserting. If the dat
 
 This operation is used to bulk-insert the entities to the database. It returns an `int` value indicating the number of rows affected by the bulk-inserting. Below are the parameters:
 
- -- **entities** - the list of entities to be inserted.
- -- **transaction** - the transaction object to be used when doing bulk-insert.
+ - **entities** - the list of entities to be inserted.
+ - **transaction** - the transaction object to be used when doing bulk-insert.
 
 Below is a sample on how to do bulk-insert.
 ```
