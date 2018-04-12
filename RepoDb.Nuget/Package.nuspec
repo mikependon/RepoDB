@@ -17,7 +17,7 @@
     <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>
   </metadata>
   <files>
-	<file src="readme.txt" target="" />
+	<file src="readme.txt" target="lib\RepoDb\readme.txt" />
 	<file src="RepoDb.dll" target="lib\RepoDb\RepoDb.dll" />
   </files>
 </package>
