@@ -44,7 +44,7 @@ The `Map` attribute has second parameter called `commandType` of `System.Data` n
 ### Map Field Attribute
 [Soon to be supported above v1.0.9]
 
-By default, at the field-level, the entity class `property` is mapped to the database object `field` based on the equality of the name (case-insensitive). If the `Map` attribute is defined, it will force your entity class `property` to be mapped directly to the table `field` based on the name defined at the `Map` attribute. See sample below:
+By default, at the field-level, the entity class `property` is mapped to the database object `field` based on the equality of the name (case-insensitive). If the `Map` attribute is defined, it will force the entity class `property` to be mapped directly to the table `field` based on the name defined at the `Map` attribute. See sample below:
 ```
 [Map("[dbo].[StockTable]", CommandType.Text)]
 public class Stock : DataEntity, IStock
@@ -78,7 +78,7 @@ If the `Primary` attribute is not defined, then the following identifications wi
 
 ### Ignore Attribute
 
-The `Ignore` attribute is necessary to command the library which property of your entity class is being ignored in certain operations. It accepts an argument of `RepoDb.Enumerations.Command` enumeration. The following are the values of this enumeration.
+The `Ignore` attribute is necessary to command the library which property of the entity class is being ignored in certain operations. It accepts an argument of `RepoDb.Enumerations.Command` enumeration. The following are the values of this enumeration.
 
  - None
  - Select
@@ -276,7 +276,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ## Expression Tree
 
-The expression is tree is very important for you to be able to maximize the usage of the library. Expression tree defines the best way possible of doing an expression by composing it via dynamic objects or static object called `IQueryGroup`.
+The expression tree defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.Interfaces.IQueryGroup` objects.
 
 Certain operations uses expression tree to compose the SQL Statement on the fly prior the execution back to the database.
 
@@ -289,55 +289,83 @@ Below are the objects useful for composing the expression tree.
  - **Conjunction** - an enumeration that holds the value whether the expression is on `And` or `Or` operation.
  - **Operation** - an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
 
-There are two ways of building Expression Trees, you can compose it explicitly by using `IQueryGroup` objects or you can also compose it via `dynamic` objects.
+There are two ways of building the expression trees, the explicit way by using `IQueryGroup` objects and dynamic way by using `dynamic` objects.
 
 ### QueryGroup
 
-The `QueryGroup` object is very important to group an expression in `RepoDb` (implements `RepoDb.Interfaces.IQueryGroup`). Below are the constructor parameters.
+The `QueryGroup` object is very important to group an expression (implements `RepoDb.Interfaces.IQueryGroup`). Below are the constructor parameters.
 
  - **queryFields** - the list of `IQueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
  - **queryGroups** - the list of child `IQueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
  - **conjunction** - the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
  
- Below is the pseudo-codes on how to create a query groups driven expressions.
+Below is the pseudo-codes on how to create a query groups driven expressions.
 
- ```
- var tree = new QueryGroup(new QueryField[] { ... }, new QueryGroup[] { ... }, Conjunction.And);
- ```
- Below is the actual explicit code composition of `QueryGroup` if you are querying a `Stock` data where `Name` has `A` character `OR` (the `DateInserted` is between yesterday and today's date `AND` the `IsActive` flag is `true`.
- ```
- var tree = new QueryGroup(
- 	new QueryField("Id", Operation.Like, "%A%).AsEnumerable(),
+Explicit way:
+```
+var tree = new QueryGroup(new QueryField[] { ... }, new QueryGroup[] { ... }, Conjunction.And);
+```
+Dynamic way:
+```
+var tree = new {
+	Conjunction = Conjunction.And,
+	Field1 = "Field1",
+	Field2 = "Field2",
+	QueryGroups = new []
+	{
+		new { .... }
+	}
+};
+```
+Below are the actual code-compositions when querying a `Stock` data where (`Name` has `A` character) `OR` (the `DateInserted` is between `Date1` and `Date2` variables `AND` the `IsActive` flag is `true`.
+
+Explicit way:
+```
+var tree = new QueryGroup(
+	new QueryField("Id", Operation.Like, "%A%").AsEnumerable(),
 	new QueryGroup(
 		new []
 		{
-			new QueryField("DateInserted", Operation.Between, new [] { DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1) }),
+			new QueryField("DateInserted", Operation.Between, new [] { Date1, Date2 }),
 			new QueryField("IsActive", true }),
 		}
 	).AsEnumerable(),
 	Conjunction.Or
- );
- ```
- The expression above will return a SQL Statement below.
- ```
- WHERE
- (
- 	[Id] LIKE @Id
+);
+```
+Dynamic way:
+```
+var tree = {
+	Conjunction = Conjunction.Or,
+	Id = new { Operation = Operation.Like, Value = "%A%" },
+	QueryGroups = new {
+		DateInserted = new { Operation = Operation.Between, Value = new [] { Date1, Date2 } },
+		IsActive = true
+	}
+};
+```
+The expressions above will return a SQL Statement below.
+```
+WHERE
+(
+	[Id] LIKE @Id
 	OR
- 	(
+	(
 		([DateInserted] BETWEEN @DateInserted_1 AND @DateInserted_2)
 		AND
 		([IsActive] = @IsActive)
 	)
 );
- ```
- By default, the `QueryGroup` conjunction is `Conjunction.And`. You can explicitly set it by passing the `Conjunction.Or` value.
+```
+where the values of the following fields are (`@Id` like `%A%`, `@DateInserted_1` = `Date1`, `@DateInserted_2` = `Date2`, `@IsActive` = `true`).
+
+By default, the `QueryGroup` conjunction is `Conjunction.And`. It can be explicitly set it by passing the `Conjunction.Or` value to the `Conjunction` field (dynamic way) or parameter (explicit way).
 
 TODO: By Michael Pendon
 
 ## Operations
 
-The repository consist of different operations to manipulate the data from your database. Below are the list of the common operations widely used.
+The repositories contain different operations to manipulate the data from the database. Below are the list of common operations widely used.
 
  - **Query** - used to query a record from the database. It uses the `SELECT` command of SQL.
  - **Insert** - used to insert a record in the database. It uses the `INSERT` command of SQL.
@@ -345,17 +373,18 @@ The repository consist of different operations to manipulate the data from your 
  - **Delete** - used to delete a record in the database. It uses the `DELETE` command of SQL.
  - **Merge** - used to merge a record in the database. It uses the `MERGE` command of SQL.
  - **BulkInsert** - used to bulk-insert the records in the database.
+ - **BatchQuery** - [soon to be supported] used to query a record from the database by batch. It uses the `SELECT` in combination of `ROW_NUMBER` and `ORDER` command of SQL.
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
  - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database.
 
-On the other hand, the library has extension methods on the `IDbConnection` object level that you  can used to execute. Below are the 3 common methods wide used.
+On the other hand, the library has extension methods on the `IDbConnection` object level that can be used to execute. Below are the 3 common connection extension methods widely used.
 
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
  - **ExecuteNonQuery** - used to execute a non-executable query in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database.
 
-All operations mentioned above has its corresponding asynchronous operation. Usually, the asynchronous operation is only appended by `Async` keyword. Below are the list of asynchronous operations.
+All operations mentioned above has its own corresponding asynchronous operation. Usually, the asynchronous operation is only appended by `Async` keyword. Below are the list of asynchronous operations.
 
   - **QueryAsync**
   - **InsertAsync**
@@ -363,6 +392,7 @@ All operations mentioned above has its corresponding asynchronous operation. Usu
   - **DeleteAsync**
   - **MergeAsync**
   - **BulkInsertAsync**
+  - **BatchQueryAsync** [soon to be supported]
   - **ExecuteReaderAsync**
   - **ExecuteNonQueryAsync**
   - **ExecuteScalar**
@@ -382,7 +412,7 @@ Below is a sample on how to query a data.
 var stockRepository = new StockRepository(connectionString);
 var stocks = stockRepository.Query();
 ```
-Above snippet will return all the `Stock` records from the database. You can filter the data using the `where` parameter. See sample below.
+Above snippet will return all the `Stock` records from the database. The data can filtered using the `where` parameter. See sample below.
 
 Implicit way:
 ```
@@ -394,9 +424,11 @@ var stocks = stockRepository.Query(new { Id = 1 });
 ```
 Explicity way:
 ```
-var stocks = stockRepository.Query(new QueryGroup(new QueryField("Id", 1).AsEnumerable()));
+var stocks = stockRepository.Query(
+	new QueryGroup(new QueryField("Id", 1).AsEnumerable())
+);
 ```
-Below is the sample if you wish to query with multiple columns.
+Below is the sample on how to query with multiple columns.
 ```
 var stocks = stockRepository.Query(new { Id = 1, Name = "AAPL" });
 ```
@@ -406,66 +438,72 @@ var stocks = stockRepository.Query(
 	new QueryGroup(
 		new []
 		{
-			new QueryField("Id", 1),
-			new QueryField("Id", Operation.Equal, "AAPL")
+			new QueryField("Id", Operation.Equal, 1),
+			new QueryField("Name", Operation.Equal, "AAPL")
 		}
 	));
 ```
-There are scenarios that you would like query some records with `Id` greater than 50 and less than 100. You can only achieve it using `expression tree` and `explicit` way.
-
-See sample expressions below.
+When querying a data where `Id` field is greater than 50 and less than 100. See sample expressions below.
 
 Dynamic way:
 ```
 var stocks = stockRepository.Query(
-	new
-	{
-		Id = new { Operation = Operation.Between, Value = new int[] { 50, 100 } }
-	});
+new
+{
+	Id = new { Operation = Operation.Between, Value = new int[] { 50, 100 } }
+});
 ```
 or
 
 ```
 var stocks = stockRepository.Query(
-	new
+new
+{
+	QueryGroups = new[]
 	{
-		QueryGroups = new[]
+		new
+		{ 
+			Id = { Operation = Operation.GreaterThanOrEqual, Value = 50 }
+		},
+		new
 		{
-			new { Id = { Operation = Operation.GreaterThanOrEqual, Value = 50 } },
-			new { Id = { Operation = Operation.LessThanOrEqual, Value = 100 } }
+			Id = { Operation = Operation.LessThanOrEqual, Value = 100 }
 		}
-	});
+	}
+});
 ```
 or
 ```
 var stocks = stockRepository.Query(
-	new
+new
+{
+	Id = new
 	{
-		Id = new
+		Operation = Operation.All,
+		Value = new object[]
 		{
-			Operation = Operation.All,
-			Value = new object[]
-			{
-				new { Operation = Operation.GreaterThanOrEqual, Value = 50 },
-				new { Operation = Operation.LessThanOrEqual, Value = 100 }
-			} 
-		}
-	});
+			new { Operation = Operation.GreaterThanOrEqual, Value = 50 },
+			new { Operation = Operation.LessThanOrEqual, Value = 100 }
+		} 
+	}
+});
 ```
 Explicit way:
 ```
 var stocks = stockRepository.Query(
-	new QueryGroup(
-		new []
-		{
-			new QueryField("Id", Operation.GreaterThanOrEqual, 50),
-			new QueryField("Id", Operation.LessThanOrEqual, 100)
-		}
-	));
+new QueryGroup(
+	new []
+	{
+		new QueryField("Id", Operation.GreaterThanOrEqual, 50),
+		new QueryField("Id", Operation.LessThanOrEqual, 100)
+	}
+));
 ```
 or
 ```
-var stocks = stockRepository.Query(new QueryGroup(new QueryField("Id", Operation.Between, new [] { 50, 100 }).AsEnumerable()));
+var stocks = stockRepository.Query(new QueryGroup(
+	new QueryField("Id", Operation.Between, new [] { 50, 100 }).AsEnumerable()
+));
 ```
 **Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
@@ -488,10 +526,10 @@ Below is a sample on how to insert a data.
 ```
 var stockRepository = new StockRepository(connectionString);
 var stock = new Stock()
-	{
-		Name = "GOOGL",
-		CreatedDate = DateTime.UtcNow
-	};
+{
+	Name = "GOOGL",
+	CreatedDate = DateTime.UtcNow
+};
 repository.Insert(stock);
 ```
 
@@ -514,8 +552,7 @@ if (stock != null)
 	var affectedRows = repository.Update(stock);
 }
 ```
-TODO: [Soon to be supported]
-Dynamic way:
+Dynamic way (column-based update) [Soon to be supported]:
 ```
 var stockRepository = new StockRepository(connectionString);
 var affectedRows = stockRepository.Update(
@@ -556,7 +593,7 @@ Dynamic way:
 var stockRepository = new StockRepository(connectionString);
 var affectedRows = stockRepository.Delete(new { Name = "GOOGL" });
 ```
-**Note**:  Deleting a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
+**Note**: Deleting a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
 ## Merge Operation
 
@@ -618,7 +655,7 @@ var affectedRows = stockRepository.BulkInsert(entities);
 
 ## ExecuteReader Operation
 
-This connection extension method is very important if you wish to execute a query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
 
 Below are the parameters:
 
@@ -637,7 +674,7 @@ var result = stockRepository.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] W
 
 ## ExecuteNonQuery Operation
 
-This connection extension method is used to execute a non-queryable query statement. It returns an `int` that holds the number of affected rows during the execution.
+This connection extension method is used to execute a non-queryable SQL statement query. It returns an `int` that holds the number of affected rows during the execution.
 
 Below are the parameters:
 
@@ -661,7 +698,7 @@ var result = stockRepository.ExecuteNonQuery("UPDATE [dbo].[Stock] SET Motto = @
 
 ## ExecuteScalar Operation
 
-This connection extension method is used to execute a query statement that returns single value.
+This connection extension method is used to execute a query statement that returns a single value.
 
 Below are the parameters:
 
