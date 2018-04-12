@@ -41,7 +41,7 @@ If you specify the `CommandType` parameter, the library will then use the class 
 
 ### Primary Attribute
 
-The `Primary` attribute is necessary in order for the `RepoDb` to identity which property of you class signify as the primary column of your mapped object. See sample below.
+The `Primary` attribute is necessary in order for the `RepoDb` to identity which property of your class signify as the primary column of your mapped object. See sample below.
 ```
 [Primary]
 public int Id { get; set; }
