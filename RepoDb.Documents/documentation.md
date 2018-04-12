@@ -1,5 +1,5 @@
 # RepoDb
-A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
+A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data	 from the database.
 
 ## Class Entity
 
@@ -41,7 +41,7 @@ If you specify the `CommandType` parameter, the library will then use the class 
 
 ### Primary Attribute
 
-The `Primary` attribute is necessary in order for the `RepoDb` to identity which property of your class signify as the primary column of your mapped object. See sample below.
+The `Primary` attribute is necessary in order for the `RepoDb` to identity which property of you class signify as the primary column of your mapped object. See sample below.
 ```
 [Primary]
 public int Id { get; set; }
@@ -147,6 +147,126 @@ public SharedRepository : DbRepository<SqlConnection>, ISharedRepository
 }
 ```
 
+## Creating a Connection
+
+The repository object is used to create a connection object  for the caller to be able to used to manually manipulate the data.
+
+ - **CreateConnection** - returns a connection object.
+
+Below is the way on how to create a connection.
+```
+var stockRepository = new StockRepository(connectionString);
+var connection = stockRepository.CreateConnection();
+```
+The library has created certain extension methods on the connection object. Below are the list of extension methods.
+
+ - **EnsureOpen** - used to ensure that the connection is open. Returns the instance of the connection object.
+ - **ExecuteReader** - used to read certain records from the database in fast-forward access.
+ - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
+ - **ExecuteScalar** - used to execute a command that returns a single-object value from the database. 
+
+### EnsureOpen
+
+This operation is used to ensure that the current connection object is open. The underlying call of the method is the `IDbConnection.Open` method. It returns a connection object instance (self instance).
+
+Below is the way on how to use the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	...
+}
+```
+
+### ExecuteReader
+
+This connection extension method is very important if you wish to execute a query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution. It could be an entity class or a dynamic object.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+ - **trace** - the trace object to be used on this operation.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GOOGL" };
+	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
+}
+```
+
+### ExecuteNonQuery
+
+This connection extension method is used to execute a non-queryable query statement. It returns an `int` that holds the number of affected rows during the execution.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+ - **trace** - the trace object to be used on this operation.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new
+	{
+		Name = "GOOGL",
+		Motto = "Do not be evil.",
+		UpdatedDate = DateTime.UtcNow
+	};
+	var result = connection.ExecuteNonQuery<Stock>("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
+}
+```
+
+### ExecuteScalar
+
+This connection extension method is used to execute a query statement that returns single value.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+ - **trace** - the trace object to be used on this operation.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GOOGL" };
+	var id = connection.ExecuteNonQuery<Stock>("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
+}
+```
+
+## Expression Tree
+
+The expression is tree is very important for you to be able to maximize the usage of the library. Expression tree defines the best way possible of doing an expression by composing it via dynamic objects or static object called `IQueryGroup`.
+
+Certain operations uses expression tree to compose the SQL Statement on the fly prior the execution back to the database.
+
+Below are the objects useful for composing the expression tree.
+
+ - **QueryGroup** - used to group an expression.
+ - **QueryField** - holds the field/value pair values of the expressions.
+ - **Conjunction** - an enumeration that holds the value whether the expression is on `And` or `Or` operation.
+ - **Operation** - an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
+
+TODO
+
 ## Operations
 
 The repository consist of different operations to manipulate the data from your database. Below are the list of the common operations widely used.
@@ -158,7 +278,7 @@ The repository consist of different operations to manipulate the data from your 
  - **Merge** - used to merge a record in the database. It uses the `MERGE` command of SQL.
  - **BulkInsert** - used to bulk-insert the records in the database.
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
- - **ExecuteNonQuery** - used to execute a non-executable query in the database.
+ - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database.
 
 On the other hand, the library has extension methods on the `IDbConnection` object level that you  can used to execute. Below are the 3 common methods wide used.
@@ -179,19 +299,15 @@ All operations mentioned above has its corresponding asynchronous operation. Usu
   - **ExecuteNonQueryAsync**
   - **ExecuteScalar**
 
-## Expression Tree
-
-TODO:
-
 ## Query Operation
 
 This operation is used to query a data from the database and returns an `IEnumerable<TEntity>` object. Below are the parameters.
 
   -- **where** - an expression to used to filter the data.
-  -- **transaction** - a transaction object to used when querying a data.
-  -- **top** - a value used to return certain number of rows from the database.
-  -- **orderBy** - a list of fields to be used to sort the data during querying.
-  -- **cacheKey** - a key of the cache to check.
+  -- **transaction** - the transaction object to be used when querying a data.
+  -- **top** - the value used to return certain number of rows from the database.
+  -- **orderBy** - the list of fields to be used to sort the data during querying.
+  -- **cacheKey** - the key of the cache to check.
 
 Below is a sample on how to query a data.
 ```
@@ -284,4 +400,205 @@ var stocks = stockRepository.Query(
 		new QueryField("Id", Operation.Between, new [] { 50, 100 }).AsEnumerable()
 	)
 );
+```
+**Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
+
+## Insert Operation
+
+This operation is used to insert a record in the database. It returns an object valued by the `PrimaryKey` column. If the `PrimaryKey` column is identity, this operation will return the newly added identity column value. Below are the parameters:
+
+  -- **entity** - the entity object to be inserted.
+  -- **transaction** - the transaction object to be used when inserting a data.
+
+Below is a sample on how to insert a data.
+```
+var stockRepository = new StockRepository(connectionString);
+var stock = new Stock()
+	{
+		Name = "GOOGL",
+		CreatedDate = DateTime.UtcNow
+	};
+repository.Insert(stock);
+```
+
+## Update Operation
+
+This operation is used to update an existing record from the database. It returns an `int` value indicating the number of rows affected by the updates. Below are the parameters:
+
+  -- **entity** - the entity object to be updated.
+  -- **where** - an expression to used when updating a record.
+  -- **transaction** - the transaction object to be used when updating a data.
+
+Below is a sample on how to update a data.
+```
+var stockRepository = new StockRepository(connectionString);
+var stock = stockRepository.Query(new { Name = "GOOGL" }).FirstOrDefault();
+if (stock != null)
+{
+	stock.Motto = "Do not be evil.";
+	stock.UpdateDate = DateTime.UtcNow;
+	var affectedRows = repository.Update(stock);
+}
+```
+Dynamic way (soon to be supported above 1.0.9 version):
+```
+var stockRepository = new StockRepository(connectionString);
+var affectedRows = stockRepository.Update(
+new
+{
+	Motto = "Do not be evil."
+	UpdatedDate = DateTime.UtcNow
+},
+new
+{
+	Name = "GOOGL"
+});
+```
+**Note**:  Updating a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
+
+## Delete Operation
+
+This operation is used to delete an existing record from the database. It returns an `int` value indicating the number of rows affected by the delete. Below are the parameters:
+
+  -- **where** - an expression to used when deleting a record.
+  -- **transaction** - the transaction object to be used when deleting a data.
+
+Below is a sample on how to delete a data.
+```
+var stockRepository = new StockRepository(connectionString);
+var stock = stockRepository.Query(new { Name = "GOOGL" }).FirstOrDefault();
+if (stock != null)
+{
+	var affectedRows = stockRepository.Delete(stock);
+}
+```
+or by `PrimaryKey`
+```
+var affectedRows = stockRepository.Delete(stock.Id);
+```
+Dynamic way:
+```
+var stockRepository = new StockRepository(connectionString);
+var affectedRows = stockRepository.Delete(new { Name = "GOOGL" });
+```
+**Note**:  Deleting a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
+
+## Merge Operation
+
+This operation is used to merge an entity from the existing record from the database. It returns an `int` value indicating the number of rows affected by the merge. Below are the parameters:
+
+  -- **entity** - the entity object to be merged.
+  -- **qualifiers** - the list of fields to be used as a qualifiers when merging a record.
+  -- **transaction** - the transaction object to be used when merging a data.
+
+Below is a sample on how to merge a data.
+```
+var stockRepository = new StockRepository(connectionString);
+var stock = stockRepository.Query(1);
+stock.Motto = "Do not be evil all the time.";
+UpdatedDate = DateTime.UtcNow;
+stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
+```
+or by creating a new entity with existing qualifier value.
+```
+var stock = new Stock()
+{
+	Name = "GOOGL"
+	Motto = "Do not be evil all the time.",
+	UpdatedDate = DateTime.UtcNow
+};
+stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
+```
+**Note**:  If the `qualifiers` are not defined, the library will automatically used the `PrimaryKey` as the default qualifier. If however the `PrimaryKey` is not defined in the entity, a `PrimaryFieldNotFoundException` will be thrown back to the caller.
+
+Please also note that merging is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
+
+## BulkInsert Operation
+
+This operation is used to bulk-insert the entities to the database. It returns an `int` value indicating the number of rows affected by the bulk-inserting. Below are the parameters:
+
+  -- **entities** - the list of entities to be inserted.
+  -- **transaction** - the transaction object to be used when doing bulk-insert.
+
+Below is a sample on how to do bulk-insert.
+```
+var stockRepository = new StockRepository(connectionString);
+var entities = new List<Stock>();
+entities.Add(new Stock()
+{
+	Name = "GOOGL"
+	Motto = "Do not be evil all the time.",
+	CreatedDate = DateTime.UtcNow,
+	UpdatedDate = DateTime.UtcNow
+});
+entities.Add(new Stock()
+{
+	Name = "MSFT"
+	Motto = "Make it all easy.",
+	CreatedDate = DateTime.UtcNow,
+	UpdatedDate = DateTime.UtcNow
+});
+var affectedRows = stockRepository.BulkInsert(entities);
+```
+
+## ExecuteReader Operation
+
+This connection extension method is very important if you wish to execute a query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution. It could be an entity class or a dynamic object.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+var param = new { Name = "GOOGL" };
+var result = stockRepository .ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
+```
+
+## ExecuteNonQuery Operation
+
+This connection extension method is used to execute a non-queryable query statement. It returns an `int` that holds the number of affected rows during the execution.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+var param = new
+{
+	Name = "GOOGL",
+	Motto = "Do not be evil.",
+	UpdatedDate = DateTime.UtcNow
+};
+var result = stockRepository .ExecuteNonQuery("UPDATE [dbo].[Stock] SET Motto = @Motto, UpdatedDate = @UpdatedDate WHERE Name = @Name;", param);
+```
+
+## ExecuteScalar Operation
+
+This connection extension method is used to execute a query statement that returns single value.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+
+Below is the way on how to call the operation.
+```
+var stockRepository = new StockRepository(connectionString);
+var param = new { Name = "GOOGL" };
+var id = stockRepository .ExecuteNonQuery("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 ```
