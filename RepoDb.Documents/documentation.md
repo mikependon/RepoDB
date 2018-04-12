@@ -42,7 +42,7 @@ The `Map` attribute has second parameter called `commandType` of `System.Data` n
 **Note:** The `commandType` parameter is ignored if implemented at the field-level.
 
 ### Map Field Attribute
-TODO: [Soon to be supported]
+[Soon to be supported above v1.0.9]
 
 By default, at the field-level, the entity class `property` is mapped to the database object `field` based on the equality of the name (case-insensitive). If the `Map` attribute is defined, it will force your entity class `property` to be mapped directly to the table `field` based on the name defined at the `Map` attribute. See sample below:
 ```
@@ -104,21 +104,21 @@ Currently, the library is only using the `None`, `Select`, `Insert`, `Update`, `
 
 ## Repository
 
-The library contains two base repository objects, the `BaseRepository<TEntity, TDbConnection>` and `DbRepository<TDbConnection>`. The latter is the heart of the `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
+The library contains two base repository objects, the `RepoDb.BaseRepository<TEntity, TDbConnection>` and the `RepoDb.DbRepository<TDbConnection>`. The latter is the `heart` of `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
 
-This mean that the `BaseRepository` is only abstracting the operations of the `DbRepository` object in all areas.
+This means that, the `BaseRepository` is only abstracting the operations of the `DbRepository` object in all areas.
 
 Both classes accept the following parameters on there respective constructors.
 
  - **connectionString** - the connection string to connect to.
- - **commandTimeout (optional)** - the command timeout in seconds is being used by the repository to the value of the `DbCommand.CommandTimeout` everytime there is an operation.
+ - **commandTimeout (optional)** - the command timeout in seconds. It is being used to set the value of the `DbCommand.CommandTimeout` object prior to the execution of the operation.
  - **cache (optional)** - the cache object to be used by the repository. By default, the repository is using the `RepoDb.MemoryCache` object.
  - **trace (optional)** - the trace object to be used by the repository. The default is `null`.
  - **statementBuilder (optional)** - the statement builder object to be used by the repository. By default, the repository is using the `RepoDb.SqlDbStatementBuilder` object.
 
 ### Creating a Repository
 
-If you are creating an entity-based repository, then you can inherit from `BaseRepository<TEntity, TDbConnection>` repository. See sample below.
+The class must inherit the `RepoDb.BaseRepository<TEntity, TDbConnection>` object when creating an entity-based repository. See sample below.
 ```
 public StockRepository : BaseRepository<Stock, SqlConnection>
 {
@@ -126,9 +126,11 @@ public StockRepository : BaseRepository<Stock, SqlConnection>
 		: base(connectionString)
 }
 ```
-The class above named `StockRepository` is an entity based repository for an entity `Stock`. It also uses `SqlConnection`  as the database connection object. You can pass any type of database connection here if you are accessing different database like Oracle, PostgreSQL, OleDb databases and others.
+The class above named `StockRepository` is an entity-based repository for an entity `Stock`. It uses the `SqlConnection` object as the database connection provider when accessing the datababase.
 
-On the other hand, if you are creating a shared repository, then you can inherit from `DbRepository<TDbConnection>` repository. See sample below.
+**Note:** Any type of `IDbConnection` type can be passed connection on the second dynamic type of the said repository. It is very useful when accessing different database like Oracle, PostgreSQL, OleDb databases and others.
+
+On the other hand, if a shared repository is being created, then it should inherit from `DbRepository<TDbConnection>` repository. See sample below.
 ```
 public SharedRepository : DbRepository<SqlConnection>
 {
@@ -136,11 +138,11 @@ public SharedRepository : DbRepository<SqlConnection>
 		: base(connectionString)
 }
 ```
-Since there is no entity type defined on the `SharedRepository` above, then all operations of that repository can be used anywhere in the solution by any entities.
+Since using this repository does not limit to a single entity object, then all operations of the said repository can be used anywhere in the solution by any entities.
 
-We also recommend that you should create your own contract interface when creating a repository. With interfaces defined on your repository, you can easily inject it anywhere in your solution if you are using any Dependency Injection library.
+We also recommend that a contracted interface must be implemented when creating a repository, it helps the repository to be easily injectable anywhere in the solution (if an Dependency Injection library is used).
 
-To create an interface for repository, you  should implement the `IBaseRepository<TEntity, TDbConnection>` or `IDbRepository<TDbConnection>` interface on your contract interface. The said interfaces can be found at `RepoDb.Interfaces` namespace. See sample below.
+To create an interface for the repository, it should implement the `RepoDb.Interfaces.IBaseRepository<TEntity, TDbConnection>` or `RepoDb.Interfaces.IDbRepository<TDbConnection>` interface on the contract interface. See sample below.
 ```
 public interface IStockRepository : IBaseRepository<TEntity, TDbConnection>
 {
@@ -152,7 +154,7 @@ public interface ISharedRepository : IDbRepository<TDbConnection>
 	...
 }
 ```
-and implement it on your custom repositories as shown below.
+and implement it on the custom repositories as shown below.
 ```
 public StockRepository : BaseRepository<Stock, SqlConnection>, IStockRepository
 {
@@ -169,11 +171,9 @@ public SharedRepository : DbRepository<SqlConnection>, ISharedRepository
 
 ## Creating a Connection
 
-The repository object is used to create a connection object  for the caller to be able to used to manually manipulate the data.
+The repository object is used to create a connection object (`System.Data.IDbConnection`), allowing the caller to manually manipulate the data with its own.
 
- - **CreateConnection** - returns a connection object.
-
-Below is the way on how to create a connection.
+A method named **CreateConnection** is used to create a new connection object. Below is the way on how to create a connection.
 ```
 var stockRepository = new StockRepository(connectionString);
 var connection = stockRepository.CreateConnection();
@@ -187,7 +187,7 @@ The library has created certain extension methods on the connection object. Belo
 
 ### EnsureOpen
 
-This operation is used to ensure that the current connection object is open. The underlying call of the method is the `IDbConnection.Open` method. It returns a connection object instance (self instance).
+This operation is used to ensure that the current connection object is open. The underlying call of the method is the `IDbConnection.Open` method. It returns the connection object instance (self instance).
 
 Below is the way on how to use the operation.
 ```
@@ -200,7 +200,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ### ExecuteReader
 
-This connection extension method is very important if you wish to execute a query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
 
 Below are the parameters:
 
@@ -217,13 +217,13 @@ var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
 {
 	var param = new { Name = "GOOGL" };
-	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
+	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
 }
 ```
 
 ### ExecuteNonQuery
 
-This connection extension method is used to execute a non-queryable query statement. It returns an `int` that holds the number of affected rows during the execution.
+This connection extension method is used to execute a non-queryable SQL statement. It returns an `int` that holds the number of affected rows during the execution.
 
 Below are the parameters:
 
@@ -251,7 +251,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ### ExecuteScalar
 
-This connection extension method is used to execute a query statement that returns single value.
+This connection extension method is used to execute a query statement that returns single value (of type `System.Object`).
 
 Below are the parameters:
 
@@ -271,6 +271,8 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 	var id = connection.ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 }
 ```
+
+**Note:** All repositories operations are using these connection extension methods underneath on every execution.
 
 ## Expression Tree
 
