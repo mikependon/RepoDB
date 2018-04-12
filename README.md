@@ -22,9 +22,10 @@ We will simplify and make your queries simple. We hope to let you avoid writing 
 
  - Cache CommadType in Repository Level
  - Entity Property Caching
- - Reflection.Emit (SqlDataReader to Objects)
+ - Support Inline-Update
+ - Support Field-Level Mapping
  - Cache SQL Statement Building
+ - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
- - Support Field-Level Mapping
  - MemoryCache Flush
