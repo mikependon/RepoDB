@@ -280,7 +280,7 @@ The `QueryGroup` object is very important to group an expression in `RepoDb` (im
  - **queryGroups** - the list of child `IQueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
  - **conjunction** - the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
  
- Below is the pseudocodes on how to create a query groups driven expressions.
+ Below is the pseudo-codes on how to create a query groups driven expressions.
 
  ```
  var tree = new QueryGroup(new QueryField[] { ... }, new QueryGroup[] { ... }, Conjunction.And);
@@ -292,14 +292,29 @@ The `QueryGroup` object is very important to group an expression in `RepoDb` (im
 	new QueryGroup(
 		new []
 		{
-			new QueryField("DateInserted", Operation.Between, new [] { DateTime.UtcNow.Date, DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1) }),
+			new QueryField("DateInserted", Operation.Between, new [] { DateTime.UtcNow.Date.AddDays(-1), DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1) }),
 			new QueryField("IsActive", true }),
 		}
 	).AsEnumerable(),
 	Conjunction.Or
  );
  ```
+ The expression above will return a SQL Statement below.
+ ```
+ WHERE
+ (
+ 	[Id] LIKE @Id
+	OR
+ 	(
+		([DateInserted] BETWEEN @DateInserted_1 AND @DateInserted_2)
+		AND
+		([IsActive] = @IsActive)
+	)
+);
+ ```
  By default, the `QueryGroup` conjunction is `Conjunction.And`. You can explicitly set it by passing the `Conjunction.Or` value.
+
+TODO: By Michael Pendon
 
 ## Operations
 
