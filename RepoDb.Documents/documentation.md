@@ -303,17 +303,51 @@ Below is the pseudo-codes on how to create a query groups driven expressions.
 
 Explicit way:
 ```
-var tree = new QueryGroup(new QueryField[] { ... }, new QueryGroup[] { ... }, Conjunction.And);
+var tree = new QueryGroup(
+	new QueryField[]
+	{
+		// List of QueryFields
+	},
+	new QueryGroup[]
+	{
+		// List of QueryGroups
+		new QueryGroup(
+			new QueryField[]
+			{
+				// List of QueryFields
+			},
+			new QueryGroup[]
+			{
+				// List of QueryGroups
+				...
+				...
+				...
+			}
+			Conjunction.Or
+		)
+	},
+	Conjunction.And
+);
 ```
 Dynamic way:
 ```
-var tree = new {
+var tree = new
+{
 	Conjunction = Conjunction.And,
-	Field1 = "Field1",
-	Field2 = "Field2",
+	Field1 = "Field1", // QueryField
+	Field2 = "Field2", // QueryField
 	QueryGroups = new []
 	{
-		new { .... }
+		new
+		{
+			Conjunction = Conjunction.Or,
+			Field3 = "Field3", // QueryField
+			Field4 = "Field4",
+			QueryGroups = new object[]
+			{
+				...
+			}
+		}
 	}
 };
 ```
@@ -361,9 +395,242 @@ where the values of the following fields are (`@Id` like `%A%`, `@DateInserted_1
 
 By default, the `QueryGroup` conjunction is `Conjunction.And`. It can be explicitly set it by passing the `Conjunction.Or` value to the `Conjunction` field (dynamic way) or parameter (explicit way).
 
-TODO: By Michael Pendon
+### Operation.Equal
 
-## Operations
+Part of the expression tree used to determine the `equality` of the field and data. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Name = "GOOGL" });
+```
+or
+```
+var result = stockRepository.Query(new { Name = new { Operation = Operation.Equal, Value = "GOOGL" } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Name", Operation.Equal, "GOOGL" });
+```
+
+### Operation.NotEqual
+
+Part of the expression tree used to determine the `inequality` of the field and data. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Name = new { Operation = Operation.NotEqual, Value = "GOOGL" } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Name", Operation.NotEqual, "GOOGL" });
+```
+
+### Operation.LessThan
+
+Part of the expression tree used to determine whether the field value is `less than` of the defined value. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.LessThan, Value = 100 } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.LessThan, 100 });
+```
+
+### Operation.GreaterThan
+
+Part of the expression tree used to determine whether the field value is `greater than` of the defined value. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.GreaterThan, Value = 0 } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.GreaterThan, 0 });
+```
+
+### Operation.LessThanOrEqual
+
+Part of the expression tree used to determine whether the field value is `less than or equal` of the defined value. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.LessThanOrEqual, Value = 100 } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.LessThanOrEqual, 100 });
+```
+
+### Operation.GreaterThanOrEqual
+
+Part of the expression tree used to determine whether the field value is `greater than or equal` of the defined value. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 0 } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.GreaterThanOrEqual, 0 });
+```
+
+### Operation.Like
+
+Part of the expression tree used to determine whether the field is `identitical` to a given value. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Name = new { Operation = Operation.Like, Value = "AP%" } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Name", Operation.Like, "AP%" });
+```
+
+Above snippets will return all `Stock` records from the database where name is starting at `AP` value.
+
+### Operation.NotLike
+
+Part of the expression tree used to determine whether the field is `not identitical` to a given value. An opposite of `Operation.Like`. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Name = new { Operation = Operation.NotLike, Value = "AP%" } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Name", Operation.NotLike, "AP%" });
+```
+
+Above snippets will return all `Stock` records from the database where name is **not** starting at `AP` value.
+
+### Operation.Between
+
+Part of the expression tree used to determine whether the field value is `between` 2 given values. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { CreatedDate = new { Operation = Operation.Between, Value = new [] { Date1, Date2 } } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("CreatedDate", Operation.Between, new [] { Date1, Date2 } });
+```
+
+### Operation.NotBetween
+
+Part of the expression tree used to determine whether the field value is `not between` 2 given values. An opposite of `Operation.Between`. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { CreatedDate = new { Operation = Operation.NotBetween, Value = new [] { Date1, Date2 } } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("CreatedDate", Operation.NotBetween, new [] { Date1, Date2 } });
+```
+
+**Note:**: For both `Operation.Between` and `Operation.NotBetween`. The `value` argument must be of type `System.Array` or `IEnumerable`, otherwise an exception is thrown. If the values of `value` argument is more than 2 values, then only the first 2 values will be used by this operation.
+
+### Operation.In
+
+Part of the expression tree used to determine whether the field value is `in` given values. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.In, Value = new [] { 1, 2, 3, 4 } } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.In, new [] { 1, 2, 3, 4 } });
+```
+
+### Operation.In
+
+Part of the expression tree used to determine whether the field value is `not in` given values. An opposite of `Operation.In`. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new { Id = new { Operation = Operation.NotIn, Value = new [] { 1, 2, 3, 4 } } });
+```
+Explicit way:
+```
+var result = stockRepository.Query(new QueryField("Id", Operation.NotIn, new [] { 1, 2, 3, 4 } });
+```
+
+**Note:**: For both `Operation.In` and `Operation.NotIn`. The `value` argument must be of type `System.Array` or `IEnumerable`, otherwise an exception is thrown.
+
+### Operation.All
+
+Part of the expression tree used to determine whether `all` the field values satisfied the criteria. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new
+{
+	Name = new
+	{
+		Operation = Operation.All, // Works as AND
+		Value = new object[]
+		{
+			new { Operation = Operation.Like, Value = "MS%" },
+			new { Operation = Operation.NotEqual, Value = "GOOGL" },
+			new { Operation = Operation.NotIn, Value = new string[] { "FB", "AMZN" } }
+		}
+	}
+});
+```
+Explicit way:
+```
+var result = stockRepository.Query(
+	new QueryField[]
+	{
+		new QueryField("Name", Operation.Like, "MS%"),
+		new QueryField("Name", Operation.NotEqual, "GOOGL%"),
+		new QueryField("Name", Operation.NotIn, new string[] { "FB", "AMZN" })
+	});
+```
+The `Operation.All` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `IQueryField` in the `IQueryGroup` object will do the same when calling it explicitly.
+
+
+### Operation.Any
+
+Part of the expression tree used to determine whether `any` of the field values satisfied the criteria. See sample below.
+
+Dynamic way:
+```
+var result = stockRepository.Query(new
+{
+	Name = new
+	{
+		Operation = Operation.Any, // Works as OR
+		Value = new object[]
+		{
+			new { Operation = Operation.Like, Value = "MS%" },
+			new { Operation = Operation.Like, Value = "GO%" },
+			new { Operation = Operation.In, Value = new string[] { "FB", "AMZN" } }
+		}
+	}
+});
+```
+Explicit way:
+```
+var result = stockRepository.Query(
+	new QueryField[]
+	{
+		new QueryField("Name", Operation.Like, "MS%"),
+		new QueryField("Name", Operation.Like, "GO%"),
+		new QueryField("Name", Operation.In, new string[] { "FB", "AMZN" })
+	},
+	null, // List of QueryGroups
+	Conjunction.Or);
+```
+The `Operation.Any` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `IQueryField` in the `IQueryGroup` object will do the same when calling it explicitly.
+
+## Repository Operations
 
 The repositories contain different operations to manipulate the data from the database. Below are the list of common operations widely used.
 
