@@ -509,11 +509,54 @@ var stocks = stockRepository.Query(new QueryGroup(
 
 ### Ordering
 
-TODO: By Michael Pendon
+An ordering is the way of sorting the result of your query in `ascending` or `descending` order, depending on the qualifier fields. Below is a sample snippet that returns the `Stock` records ordered by `ParentId` field in ascending manner and `Name` field is in `descending` manner.
+
+Dynamic way:
+```
+var orderBy = new
+{
+	ParentId = Order.Ascending,
+	Name = Order.Descending
+};
+var stocks = stockRepository.Query(new { ParentId = 1 }, orderBy: OrderField.Parse(orderBy));
+```
+Explicit way:
+```
+var orderBy = new []
+{
+	new OrderField("ParentId", Order.Ascending),
+	new OrderField("Name", Order.Descending)
+};
+var stocks = stockRepository.Query(new { ParentId = 1 }, orderBy: orderBy);
+```
+The `RepodDb.OrderField` is an object that is being used to order a query result. The `Parse` method is used to convert the `dynamic` object to become an `OrderField` instances.
+
+**Note:** When composing a dynamic ordering object, the value of the properties should be equal to `RepoDb.Interfaces.Order` values (`Ascending` or `Descending`). Otherwise, an exception will be thrown during `Parse` operation.
 
 ### Top
 
-TODO: By Michael Pendon
+A top parameter is used to limit the result when querying a data from the database. Below is a sample way on how to use the top parameter.
+
+Dynamic way:
+```
+var orderBy = new
+{
+	ParentId = Order.Ascending,
+	Name = Order.Descending
+};
+var stocks = stockRepository.Query(new { ParentId = 1 }, orderBy: OrderField.Parse(orderBy), top: 100);
+```
+Explicit way:
+```
+var orderBy = new []
+{
+	new OrderField("ParentId", Order.Ascending),
+	new OrderField("Name", Order.Descending)
+};
+var stocks = stockRepository.Query(new { ParentId = 1 }, orderBy: orderBy, top: 100);
+```
+
+**Note:** Top value should not be less than `1`, otherwise the parameter is ignored.
 
 ## Insert Operation
 
