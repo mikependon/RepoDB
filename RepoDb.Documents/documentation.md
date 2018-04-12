@@ -363,7 +363,7 @@ var stocks = stockRepository.Query(
 		QueryGroups = new[]
 		{
 			new { Id = { Operation = Operation.GreaterThanOrEqual, Value = 50 } },
-			new { Id = { Operation = Operation.LessThanOrEqual, Value = 50 } }
+			new { Id = { Operation = Operation.LessThanOrEqual, Value = 100 } }
 		}
 	});
 ```
