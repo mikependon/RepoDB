@@ -37,7 +37,10 @@ public class Stock : DataEntity, IStock
 ```
 Above class `Stock` is being mapped at `[dbo].[StockTable]` of your database. This attribute has second parameter called `commandType` of `System.Data` namespace.
 
-If you specify the `CommandType` parameter, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx). 
+If you specify the `CommandType` parameter, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
+
+TODO: [Soon to be supported]
+At the field level,
 
 ### Primary Attribute
 
@@ -54,7 +57,7 @@ If the `Primary` attribute is not defined, then `RepoDb` will do the following i
 
   - Search for `Id` property. If present, this automatically overrule the mechanism.
   - If there is no `Id` property from the class, the class name plus the word `Id` will be evaluated. This means that on your `Stock` class, the property `StockId` will be identified.
-  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. This means that on your `Map("[dbo].[StockTable]` mapping, the `StockTableId` will be evalulated.
+  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. This means that on your `Map("[dbo].[StockTable]")` mapping, the `StockTableId` will be evalulated.
 
 ### Ignore Attribute
 
@@ -261,11 +264,21 @@ Certain operations uses expression tree to compose the SQL Statement on the fly 
 Below are the objects useful for composing the expression tree.
 
  - **QueryGroup** - used to group an expression.
+ - **AndQueryGroup** - used to group an expression with `AND` conjunction.
+ - **OrQueryGroup** - used to group an expression with `OR` conjunction.
  - **QueryField** - holds the field/value pair values of the expressions.
  - **Conjunction** - an enumeration that holds the value whether the expression is on `And` or `Or` operation.
  - **Operation** - an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
 
-TODO: To be continued by Michael Pendon
+There are two ways of building Expression Trees, you can compose it explicitly by using `IQueryGroup` objects or you can also compose it via `dynamic` objects.
+
+### QueryGroup
+
+The `QueryGroup` object is very important to group an expression in `RepoDb` (implements `RepoDb.Interfaces.IQueryGroup`). Below are the constructor parameters.
+
+ - **queryFields** - the list of `IQueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
+ - **queryGroups** - the list of child `IQueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
+ - **conjunction** - the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
 
 ## Operations
 
@@ -401,6 +414,14 @@ var stocks = stockRepository.Query(new QueryGroup(new QueryField("Id", Operation
 ```
 **Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
+### Ordering
+
+TODO: By Michael Pendon
+
+### Top
+
+TODO: By Michael Pendon
+
 ## Insert Operation
 
 This operation is used to insert a record in the database. It returns an object valued by the `PrimaryKey` column. If the `PrimaryKey` column is identity, this operation will return the newly added identity column value. Below are the parameters:
@@ -438,7 +459,8 @@ if (stock != null)
 	var affectedRows = repository.Update(stock);
 }
 ```
-Dynamic way (soon to be supported above 1.0.9 version):
+TODO: [Soon to be supported]
+Dynamic way:
 ```
 var stockRepository = new StockRepository(connectionString);
 var affectedRows = stockRepository.Update(
