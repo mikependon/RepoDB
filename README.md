@@ -23,6 +23,7 @@ We aim to let .Net developers avoid writing more SQL Statements in the applicati
  
 ### Todos
 
+ - Add the currently used IStatementBuilder on the IStatementBuilder methods.
  - Documentation: Cache, Trace, StatementBuilder
  - Add ExecutionTime (Timespan) property in the TraceLog class.
  - Cache CommadType in Repository Level
