@@ -274,6 +274,19 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 **Note:** All repositories operations are using these connection extension methods underneath on every execution.
 
+## Transaction
+
+The transactions works as-is as `ADO.Net` transactions. It can be created by calling the `CreateConnection` method of the repository object and call the underlying `BeginTransaction` method of the transaction object. Below is the sample way on how to create a transaction.
+```
+var stockRepository = new StockRepository(connectionString);
+var connection = stockRepository.CreateConnection().EnsureOpen();
+var transaction = connection.BeginTransaction();
+... call the repository operations here and pass the transaction
+transaction.Commit();
+transaction.Dispose();
+connection.Dispose();
+```
+
 ## Expression Tree
 
 The expression tree defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.Interfaces.IQueryGroup` objects.
