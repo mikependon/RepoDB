@@ -1132,3 +1132,37 @@ The snippets above declared a variable named `cacheKey`. The value of this varia
 First, it wil query the data from the database where the `Name` is started at `A`. Then, the operation will cache the result into the `Cache` object with the given key at the variable named `cacheKey` (valued `Stocks_Starts_At_A`).
 
 The next time the query is executed, the repository automatically returns the cached item if the same key is passed.
+
+### Injecting a Cache object
+
+The library supports a cache object injection in the repository level. By default, the repository is using the `RepoDb.MemoryCache` object. One can override it by creating a class and implements the `RepoDb.Interfaces.ICache` interface, and passed it to the `cache` argument of the repository constructor.
+
+Below is the way on how to inject a cache object.
+```
+// Create a class that implements the ICache
+public class FileCache : ICache
+{
+	public void Add(string key, object value)
+        {
+	}
+	
+	public void Clear()
+        {
+	}
+	
+	public object Get(string key)
+        {
+	}
+	
+	... Implement all the other ICache methods here.
+	... Since this is a FileCache object, one should
+	... create a logic to save the cache item as File
+}
+
+// Injecting a Cache
+var fileCache = new FileCache();
+var stockRepository = new BaseRepository<Stock, SqlConnection>(connectionString, cache: fileCache);
+```
+The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library `cache manager` object. Then, upon creating a stock repository, the `fileCache` variable is being passed as cache parameter. This signals the repository to use the `FileCache` object as the `Cache` object of the `Query` operation.
+
+**Note:** The caller can active a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hit by the debugger if placed inside `Add` method of the `FileCache` object.
