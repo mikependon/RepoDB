@@ -1073,3 +1073,62 @@ var stockRepository = new StockRepository(connectionString);
 var param = new { Name = "GOOGL" };
 var id = stockRepository.ExecuteScalar("SELECT [Id] FROM [dbo].[Stock] Name = @Name;", param);
 ```
+
+## Caching
+
+The library supports caching when querying a data from the database. A cache is only working on `Query` operation of the repository. It can be access through the repository `Cache` property (implements `RepoDb.Interfaces.ICache` interface).
+
+A cache key is important in order for the caching to cache the object. It should be unique to every cache item.
+
+Below are the methods of `ICache` object.
+
+ - **Add** - accepts an `item` or a `key` and `value` pair parameters. It adds an item to the `Cache` object. If an item is already existing, the item will be overriden.
+ - **Clear** - clear all items from the cache.
+ - **Contains** - accepts a `key` parameter. Checks whether the `Cache` object contains an item with the defined key.
+ - **Get** - accepts a `key` parameter. Returns a cached item object.
+ - **GetEnumerator** - returns an enumerator for `IEnumerable<ICacheItem>` objects. It contains all the cached items from the `Cache` object.
+ - **Remove** - accepts a `key` parameter. Removes an entry from the `Cache` object.
+
+One important object when manipulating a cache is the `CacheItem` object (implements `RepoDb.Interfaces.ICacheItem`). It acts as the cache item entry for the cache object.
+
+Below are the constructor arguments of the `ICacheItem` object.
+
+ - **key** - the key of the cache.
+ - **value** - the value object of the cache.
+
+Below are the properties of `ICacheItem` object.
+
+ - **Key** - the key of the cache. It returns a `System.String` type.
+ - **Value** - the cached object of the item. It returns a `System.Object` type. It can be casted back to a defined object type.
+ - **Timestamp** - the time of the cache last refreshed. It returns a `System.DateTime` object.
+
+The repository caching operation is of the `pseudo` below.
+```
+Query::
+VAR item = null
+IF ($cacheKey is not null) THEN
+	set $item = get value from cache where the key equals to $cacheKey
+	IF ($item is not null) THEN
+		RETURN item
+	END IF
+END IF
+VAR $result = query the data from the database
+IF ($result is not null AND $cacheKey is not null) THEN
+	Add cache item where:
+		Key = $cacheKey
+		Value = $result
+END IF
+RETURN $result
+```
+
+Below is the way on how to query and cache the `Stock` data from the database with caching enabled.
+```
+var stockRepository = new StockRepository(connectionString);
+var cacheKey = "Stocks_Starts_At_A";
+var result = stockRepository.Query(new { Name = new { Operation = Operation.Like, Value = "A%" } }, cacheKey: cacheKey);
+```
+The snippets above declared a variable named `cacheKey`. The value of this variable acts as the key value of the items to be cached by the repository.
+
+First, it wil query the data from the database where the `Name` is started at `A`. Then, the operation will cache the result into the `Cache` object with the given key at the variable named `cacheKey` (valued `Stocks_Starts_At_A`).
+
+The next time the query is executed, the repository automatically returns the cached item if the same key is passed.
