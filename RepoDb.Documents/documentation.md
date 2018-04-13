@@ -1163,6 +1163,8 @@ public class FileCache : ICache
 var fileCache = new FileCache();
 var stockRepository = new BaseRepository<Stock, SqlConnection>(connectionString, cache: fileCache);
 ```
-The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library `cache manager` object. Then, upon creating a stock repository, the `fileCache` variable is being passed as cache parameter. This signals the repository to use the `FileCache` object as the `Cache` object of the `Query` operation.
+The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library cache manager object.
 
-**Note:** The caller can active a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hit by the debugger if placed inside `Add` method of the `FileCache` object.
+Upon creating a stock repository, the `fileCache` variable is being passed as a `cache` parameter. This signals the repository to use the `FileCache` class as the cache manager object of the `Query` operation.
+
+**Note:** The caller can activate a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hit by the debugger if it is placed inside `Add` method of the `FileCache` class.
