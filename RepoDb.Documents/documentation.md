@@ -1,4 +1,4 @@
-# RepoDb
+# RepoDb (version 1.0.9)
 A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
 
 ## Class Entity
