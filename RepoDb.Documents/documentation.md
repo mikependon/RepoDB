@@ -321,6 +321,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 	transaction.Dispose();
 }
 ```
+The code snippets above will first insert a `Stock` record in the database and will return the newly added `StockId`. It will be followed by inserting the `Trade` record with the parent `StockId` as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.
 
 ## Expression Tree
 
