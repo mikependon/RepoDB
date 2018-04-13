@@ -14,7 +14,6 @@ We aim to let .Net developers avoid writing more SQL Statements in the applicati
 
 ### Notes
 
- - We will always be FREE!
  - We will keep it simple as possible (KISS principle)
  - We will make it fast as possible
  - We will never make complex implementations (specially for Queries and Methods)
