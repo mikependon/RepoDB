@@ -23,8 +23,8 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Todos
 
- - Add the currently used IStatementBuilder on the IStatementBuilder methods.
- - Documentation: Cache, Trace, StatementBuilder
+ - Documentation: Cache, Trace, StatementBuilder, Transaction
+ - Add the currently used IStatementBuilder on the IStatementBuilder methods
  - Add ExecutionTime (Timespan) property in the TraceLog class.
  - Cache CommadType in Repository Level
  - Entity Property Caching
