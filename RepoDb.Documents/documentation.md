@@ -276,7 +276,9 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ## Transaction
 
-The transactions works as-is as `ADO.Net` transactions. It can be created by calling the `CreateConnection` method of the repository object and call the underlying `BeginTransaction` method of the transaction object. Below is the sample way on how to create a transaction.
+A transaction object works completely the same as it was with `ADO.Net`. The library only abstracted `ADO.Net` including the transaction objects.
+
+Transactions can be created by calling the `BeginTransaction` method of the `Connection` object. See the sample below.
 ```
 var stockRepository = new StockRepository(connectionString);
 var connection = stockRepository.CreateConnection().EnsureOpen();
@@ -285,6 +287,39 @@ var transaction = connection.BeginTransaction();
 transaction.Commit();
 transaction.Dispose();
 connection.Dispose();
+```
+Every operation of the repository accepts a transaction object as an argument. Once passed, the transaction will become a part of the execution context. See below on how to commit a transaction context with multiple operations.
+```
+var stockRepository = new StockRepository(connectionString);
+var tradeRepository = new TradeRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var transaction = connection.BeginTransaction();
+	try
+	{
+		var stock = new Stock()
+		{
+			Name = "GOOGL",
+			CreatedDate = DateTime.UtcNow
+		};
+		var stockId = Convert.ToInt32(stockRepository.Insert(stock, transaction: transaction));
+		var trade = new Trade()
+		{
+			StockId = stockId,
+			Value = 1040.80
+			TransactionDate = DateTime.UtcNow,
+			CreatedDate = DateTime.UtcNow
+		};
+		var tradeId = Convert.ToInt32(tradeRepository.Insert(trade, transaction: transaction));
+		transaction.Commit();
+	}
+	catch (Exception ex)
+	{
+		transaction.Rollback();
+		Log.Information(ex);
+	}
+	transaction.Dispose();
+}
 ```
 
 ## Expression Tree
