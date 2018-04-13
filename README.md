@@ -6,7 +6,7 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 Link: https://www.nuget.org/packages/RepoDb
 
 ### Documentation
-Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation.md (in-progress)
+Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_v1.0.9.md (in-progress)
 
 ### Goal
 
