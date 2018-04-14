@@ -47,4 +47,4 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Todos
 
- - Documentation: Trace, StatementBuilder, InlineUpdate
+ - Documentation: Trace, StatementBuilder, InlineUpdate, BatchQuery
