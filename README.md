@@ -20,7 +20,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
  
-## Next Version
+### Next Version
 
  - 
  
