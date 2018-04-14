@@ -35,10 +35,12 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Added PrimaryPropertyCache object
  - Entity Primary Property Caching
  - Support Column-Based Update (or `Inline Updates`) using Dynamics
+ - Added MapCache object
+ - Cache Map on every calls
+ - Support BatchQuery Operation
  
 ### Features
 
- - Support BatchQuery Operation - in progress (4/14/2018)
  - Support Field-Level Mapping
  - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
