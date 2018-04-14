@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
@@ -20,7 +19,8 @@ namespace RepoDb
             where TEntity : IDataEntity
         {
             var value = (IEnumerable<PropertyInfo>)null;
-            var key = $"{MapNameCache.Get<TEntity>()}.{command.ToString()}";
+            // var key = $"{MapNameCache.Get<TEntity>()}.{command.ToString()}"; // Will fail if there is multiple same mapping
+            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             if (_cache.ContainsKey(key))
             {
                 value = _cache[key];
