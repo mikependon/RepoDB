@@ -27,6 +27,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Add ExecutionTime (Timespan) property in the TraceLog class
  - Added CommandTypeCache object
  - Cache CommadType on every calls
+ - Removed the Create, Drop, Alter, Execute command enum values (until being supported)
  
 ### Features
 
