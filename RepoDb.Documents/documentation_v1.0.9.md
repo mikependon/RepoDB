@@ -442,7 +442,7 @@ WHERE
 ```
 where the values of the following fields are (`@Id` like `%A%`, `@DateInserted_1` = `Date1`, `@DateInserted_2` = `Date2`, `@IsActive` = `true`).
 
-By default, the `QueryGroup` conjunction is `Conjunction.And`. It can be explicitly set it by passing the `Conjunction.Or` value to the `Conjunction` field (dynamic way) or parameter (explicit way).
+By default, the `QueryGroup` conjunction is `Conjunction.And`. It can be set explicitly by passing the `RepoDb.Enumerations.Conjunction` value on the `Conjunction` field (dynamic way) or parameter (explicit way).
 
 ### Operation.Equal
 
