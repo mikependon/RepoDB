@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
     <Compile Include="MapCache.cs" />
     <Compile Include="PrimaryPropertyCache.cs" />
     <Compile Include="PropertyCache.cs" />
