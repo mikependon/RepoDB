@@ -1,19 +1,24 @@
 ﻿using System;
-using System.Data;
 using System.Collections.Generic;
+using System.Reflection;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
 
 namespace RepoDb
 {
-    public static class CommandTypeCache
+    public static class PrimaryPropertyCache
     {
-        private static readonly IDictionary<Type, CommandType> _cache = new Dictionary<Type, CommandType>();
+        private static readonly IDictionary<Type, PropertyInfo> _cache;
 
-        public static CommandType Get<TEntity>()
+        static PrimaryPropertyCache()
+        {
+            _cache = new Dictionary<Type, PropertyInfo>();
+        }
+
+        public static PropertyInfo Get<TEntity>()
             where TEntity : IDataEntity
         {
-            var value = CommandType.Text;
+            var value = (PropertyInfo)null;
             var key = typeof(TEntity);
             if (_cache.ContainsKey(key))
             {
@@ -21,7 +26,7 @@ namespace RepoDb
             }
             else
             {
-                value = DataEntityExtension.GetCommandType<TEntity>();
+                value = DataEntityExtension.GetPrimaryProperty<TEntity>();
                 _cache.Add(key, value);
             }
             return value;

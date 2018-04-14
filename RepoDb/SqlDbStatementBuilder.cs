@@ -27,7 +27,7 @@ namespace RepoDb
         public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryPropertyCache.Get<TEntity>();
             queryBuilder
                 .Clear()
                 .Insert()
@@ -59,7 +59,7 @@ namespace RepoDb
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             if (qualifiers == null)
             {
-                var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var primaryKey = PrimaryPropertyCache.Get<TEntity>();
                 if (primaryKey != null)
                 {
                     qualifiers = new Field(primaryKey.Name).AsEnumerable();

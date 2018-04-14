@@ -74,7 +74,7 @@ namespace RepoDb
         private PropertyInfo GetAndGuardPrimaryKey<TEntity>()
             where TEntity : IDataEntity
         {
-            var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primaryKey = PrimaryPropertyCache.Get<TEntity>();
             if (primaryKey == null)
             {
                 throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({MapNameCache.Get<TEntity>()})");

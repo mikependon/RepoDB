@@ -6,28 +6,23 @@ namespace RepoDb
 {
     public static class QueryBuilderCache
     {
-        private static readonly IDictionary<Type, object> _cache;
-
-        static QueryBuilderCache()
-        {
-            _cache = new Dictionary<Type, object>();
-        }
+        private static readonly IDictionary<Type, object> _cache = new Dictionary<Type, object>();
 
         public static IQueryBuilder<TEntity> Get<TEntity>(bool createNew = true)
             where TEntity : IDataEntity
         {
-            var queryBuilder = (IQueryBuilder<TEntity>)null;
-            var type = typeof(TEntity);
-            if (_cache.ContainsKey(type))
+            var value = (IQueryBuilder<TEntity>)null;
+            var key = typeof(TEntity);
+            if (_cache.ContainsKey(key))
             {
-                queryBuilder = (IQueryBuilder<TEntity>)_cache[type];
+                value = (IQueryBuilder<TEntity>)_cache[key];
             }
             else
             {
-                queryBuilder = new QueryBuilder<TEntity>();
-                _cache.Add(type, queryBuilder);
+                value = new QueryBuilder<TEntity>();
+                _cache.Add(key, value);
             }
-            return queryBuilder;
+            return value;
         }
     }
 }

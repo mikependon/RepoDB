@@ -7,28 +7,23 @@ namespace RepoDb
 {
     public static class MapNameCache
     {
-        private static readonly IDictionary<Type, string> _cache;
-
-        static MapNameCache()
-        {
-            _cache = new Dictionary<Type, string>();
-        }
+        private static readonly IDictionary<Type, string> _cache = new Dictionary<Type, string>();
 
         public static string Get<TEntity>()
             where TEntity : IDataEntity
         {
-            var mappedName = (string)null;
-            var type = typeof(TEntity);
-            if (_cache.ContainsKey(type))
+            var value = (string)null;
+            var key = typeof(TEntity);
+            if (_cache.ContainsKey(key))
             {
-                mappedName = _cache[type];
+                value = _cache[key];
             }
             else
             {
-                mappedName = DataEntityExtension.GetMappedName<TEntity>();
-                _cache.Add(type, mappedName);
+                value = DataEntityExtension.GetMappedName<TEntity>();
+                _cache.Add(key, value);
             }
-            return mappedName;
+            return value;
         }
     }
 }
