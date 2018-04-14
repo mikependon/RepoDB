@@ -42,7 +42,7 @@ namespace RepoDb
                 new SqlDbStatementBuilder());
 
             // Repository
-            _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout, 
+            _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout,
                 Cache, Trace, StatementBuilder);
         }
 
@@ -69,6 +69,76 @@ namespace RepoDb
 
         public IStatementBuilder StatementBuilder { get; }
 
+        // BatchQuery
+
+        public IEnumerable<TEntity> BatchQuery(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQuery<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        public IEnumerable<TEntity> BatchQuery(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQuery<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        public IEnumerable<TEntity> BatchQuery(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQuery<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        // BatchQueryAsync
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQueryAsync<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQueryAsync<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQueryAsync<TEntity>(
+                where: where,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
         // Query
 
         public IEnumerable<TEntity> Query(IDbTransaction transaction = null, int? top = 0,
@@ -81,7 +151,7 @@ namespace RepoDb
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, int? top = 0, 
+        public IEnumerable<TEntity> Query(object where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
@@ -91,7 +161,7 @@ namespace RepoDb
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0, 
+        public IEnumerable<TEntity> Query(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
         {
             return DbRepository.Query<TEntity>(where: where,
@@ -113,7 +183,7 @@ namespace RepoDb
 
         // Query
 
-        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync(IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(transaction: transaction,
@@ -122,7 +192,7 @@ namespace RepoDb
                 cacheKey: cacheKey);
         }
 
-        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync(object where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
@@ -178,6 +248,14 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        public int InlineUpdate(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdate<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
         public int InlineUpdate(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return DbRepository.InlineUpdate<TEntity>(entity: entity,
@@ -189,6 +267,14 @@ namespace RepoDb
         // InlineUpdateAsync
 
         public Task<int> InlineUpdateAsync(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdateAsync<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        public Task<int> InlineUpdateAsync(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return DbRepository.InlineUpdateAsync<TEntity>(entity: entity,
                 where: where,

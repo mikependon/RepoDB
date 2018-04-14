@@ -93,6 +93,67 @@ namespace RepoDb
             }
         }
 
+        // BatchQuery
+
+        public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TEntity> BatchQuery<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
+        // BatchQueryAsync
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                BatchQuery<TEntity>(where: where,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    transaction: transaction));
+        }
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                BatchQuery<TEntity>(where: where,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    transaction: transaction));
+        }
+
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                BatchQuery<TEntity>(where: where,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    transaction: transaction));
+        }
+
         // Query
 
         public IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
@@ -121,42 +182,32 @@ namespace RepoDb
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
+            var queryGroup = (IQueryGroup)null;
             if (where is QueryField)
             {
-                return Query<TEntity>(where: new QueryGroup(((IQueryField)where).AsEnumerable()),
-                    transaction: transaction,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey);
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
             }
             else if (where is IQueryGroup)
             {
-                return Query<TEntity>(where: (IQueryGroup)where,
-                    transaction: transaction,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey);
+                queryGroup = (IQueryGroup)where;
             }
             else
             {
                 if ((bool)where?.GetType().IsGenericType)
                 {
-                    return Query<TEntity>(where: QueryGroup.Parse(where),
-                        transaction: transaction,
-                        top: top,
-                        orderBy: orderBy,
-                        cacheKey: cacheKey);
+                    queryGroup = QueryGroup.Parse(where);
                 }
                 else
                 {
                     var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    return Query<TEntity>(where: new QueryField(primaryKey.Name, where).AsEnumerable(),
-                        transaction: transaction,
-                        top: top,
-                        orderBy: orderBy,
-                        cacheKey: cacheKey);
+                    queryGroup = new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable());
                 }
             }
+            return Query<TEntity>(where: queryGroup,
+                transaction: transaction,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey);
         }
 
         public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, int? top = 0,
@@ -362,9 +413,30 @@ namespace RepoDb
         public int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            var queryGroup = (where as IQueryGroup) ?? QueryGroup.Parse(where);
+            var queryGroup = (IQueryGroup)null;
+            if (where is IQueryField)
+            {
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
+            }
+            else if (where is IQueryGroup)
+            {
+                queryGroup = (IQueryGroup)where;
+            }
+            else
+            {
+                queryGroup = QueryGroup.Parse(where);
+            }
             return InlineUpdate<TEntity>(entity: entity,
                 where: queryGroup,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        public int InlineUpdate<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return InlineUpdate<TEntity>(entity: entity,
+                where: new QueryGroup(where),
                 overrideIgnore: overrideIgnore,
                 transaction: transaction);
         }
@@ -430,6 +502,16 @@ namespace RepoDb
                     transaction: transaction));
         }
 
+        public Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineUpdate<TEntity>(entity: entity,
+                    where: where,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
         public Task<int> InlineUpdateAsync<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -462,34 +544,30 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            var queryGroup = (IQueryGroup)null;
             if (where is IQueryField)
             {
-                return Update(entity: entity,
-                    where: new QueryGroup(((IQueryField)where).AsEnumerable()),
-                    transaction: transaction);
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
             }
             else if (where is IQueryGroup)
             {
-                return Update(entity: entity,
-                    where: (IQueryGroup)where,
-                    transaction: transaction);
+                queryGroup = (IQueryGroup)where;
             }
             else
             {
                 if ((bool)where?.GetType().IsGenericType)
                 {
-                    return Update(entity: entity,
-                        where: QueryGroup.Parse(where),
-                        transaction: transaction);
+                    queryGroup = QueryGroup.Parse(where);
                 }
                 else
                 {
                     var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    return Update(entity: entity,
-                        where: new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable()),
-                        transaction: transaction);
+                    queryGroup = new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable());
                 }
             }
+            return Update(entity: entity,
+                    where: queryGroup,
+                    transaction: transaction);
         }
 
         public int Update<TEntity>(TEntity entity, IQueryGroup where, IDbTransaction transaction = null)
@@ -600,27 +678,26 @@ namespace RepoDb
         public int Delete<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            var queryGroup = (IQueryGroup)null;
             if (where is QueryField)
             {
-                return Delete<TEntity>(where: new QueryGroup(((IQueryField)where).AsEnumerable()),
-                    transaction: transaction);
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
             }
             else if (where is IQueryGroup)
             {
-                return Delete<TEntity>(where: (IQueryGroup)where,
-                    transaction: transaction);
+                queryGroup = (IQueryGroup)where;
             }
             else if (where is TEntity)
             {
                 var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                return Delete<TEntity>(where: new QueryGroup(new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable()),
-                    transaction: transaction);
+                queryGroup = new QueryGroup(new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable());
             }
             else
             {
-                return Delete<TEntity>(where: QueryGroup.Parse(where),
-                    transaction: transaction);
+                queryGroup = QueryGroup.Parse(where);
             }
+            return Delete<TEntity>(where: queryGroup,
+                    transaction: transaction);
         }
 
         public int Delete<TEntity>(IQueryGroup where, IDbTransaction transaction = null)

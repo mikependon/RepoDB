@@ -24,6 +24,34 @@ namespace RepoDb.Interfaces
 
         IStatementBuilder StatementBuilder { get; }
 
+        // BatchQuery
+
+        IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        IEnumerable<TEntity> BatchQuery<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        // BatchQueryAsync
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
         // Query
 
         IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
@@ -75,12 +103,18 @@ namespace RepoDb.Interfaces
         int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
+        int InlineUpdate<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
         int InlineUpdate<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // InlineUpdateAsync
 
         Task<int> InlineUpdateAsync<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         Task<int> InlineUpdateAsync<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)

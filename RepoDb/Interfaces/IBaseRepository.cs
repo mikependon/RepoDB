@@ -29,6 +29,28 @@ namespace RepoDb.Interfaces
 
         IStatementBuilder StatementBuilder { get; }
 
+        // BatchQuery
+
+        IEnumerable<TEntity> BatchQuery(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
+        IEnumerable<TEntity> BatchQuery(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
+        IEnumerable<TEntity> BatchQuery(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
+        // BatchQueryAsync
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
+        Task<IEnumerable<TEntity>> BatchQueryAsync(IQueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+
         // Query
 
         IEnumerable<TEntity> Query(IDbTransaction transaction = null, int? top = 0,
@@ -69,11 +91,15 @@ namespace RepoDb.Interfaces
 
         int InlineUpdate(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null);
 
+        int InlineUpdate(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
         int InlineUpdate(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null);
 
         // InlineUpdateAsync
 
         Task<int> InlineUpdateAsync(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
+        Task<int> InlineUpdateAsync(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null);
 
         Task<int> InlineUpdateAsync(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null);
 
