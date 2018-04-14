@@ -2,9 +2,9 @@
 
 namespace RepoDb.Exceptions
 {
-    public class EntityNotQueryableException : Exception
+    public class EntityNotBatchQueryableException : Exception
     {
-        public EntityNotQueryableException(string name)
-            : base($"Cannot Query: {name}") { }
+        public EntityNotBatchQueryableException(string name)
+            : base($"Cannot BatchQuery: {name}") { }
     }
 }

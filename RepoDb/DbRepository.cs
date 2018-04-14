@@ -89,7 +89,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsBatchQueryble<TEntity>())
             {
-                throw new EntityNotQueryableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotBatchQueryableException(MapNameCache.Get<TEntity>());
             }
         }
 
