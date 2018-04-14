@@ -20,11 +20,14 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
  
-### Todos
+## Next Version
 
- - Documentation: Trace, StatementBuilder
- - Add the currently used IStatementBuilder on the IStatementBuilder methods
- - Add ExecutionTime (Timespan) property in the TraceLog class.
+ - 
+ 
+### Features
+
+ - Add the currently used IStatementBuilder on the IStatementBuilder methods - in progress (4/14/2018)
+ - Add ExecutionTime (Timespan) property in the TraceLog class - in progress (4/14/2018)
  - Cache CommadType in Repository Level
  - Entity Property Caching
  - Support Column-Based Update using Dynamics
@@ -35,3 +38,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
+ 
+### Todos
+
+ - Documentation: Trace, StatementBuilder
