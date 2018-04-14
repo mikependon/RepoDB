@@ -37,7 +37,6 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Support Column-Based Update using Dynamics
  - Support BatchQuery Operation
  - Support Field-Level Mapping
- - Cache SQL Statement Building
  - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
