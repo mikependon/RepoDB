@@ -24,20 +24,20 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 
  - Added the currently used IQueryBuilder on the IStatementBuilder methods
  - Added QueryBuilderCache object
- - Add ExecutionTime (Timespan) property in the TraceLog class
+ - Added ExecutionTime (Timespan) property in the TraceLog class
  - Added CommandTypeCache object
- - Cache CommadType on every calls
+ - Cached the CommadType on every calls
  - Removed the Create, Drop, Alter, Execute command enum values (until being supported)
  - Added MapNameCache object
  - Cache MapName on every calls
  - Added PropertyCache object
- - Entity Property Caching
+ - Supported Entity Property Caching
  - Added PrimaryPropertyCache object
- - Entity Primary Property Caching
+ - Supported Entity Primary Property Caching
  - Support Column-Based Update (or `Inline Updates`) using Dynamics
  - Added MapCache object
- - Cache Map on every calls
- - Support BatchQuery Operation
+ - Cached the Map on every calls
+ - Supported BatchQuery Operation
  
 ### Features
 
