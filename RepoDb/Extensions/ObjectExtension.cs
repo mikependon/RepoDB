@@ -7,8 +7,30 @@ namespace RepoDb.Extensions
 {
     public static class ObjectExtension
     {
-        // ToQueryFields
-        internal static IEnumerable<IQueryField> ToQueryFields(this object obj)
+        // AsObject
+        internal static object Merge(this object obj, IQueryGroup queryGroup)
+        {
+            var expandObject = new ExpandoObject() as IDictionary<string, object>;
+            obj?.GetType()
+                .GetProperties()
+                .ToList()
+                .ForEach(property =>
+                {
+                    expandObject[property.Name] = property.GetValue(obj);
+                });
+            var queryGroupExpandObject = queryGroup?.AsObject() as ExpandoObject as IDictionary<string, object>;
+            if (queryGroupExpandObject != null)
+            {
+                foreach(var kvp in queryGroupExpandObject)
+                {
+                    expandObject[kvp.Key] = kvp.Value;
+                }
+            }
+            return (ExpandoObject)expandObject;
+        }
+
+        // AsQueryFields
+        public static IEnumerable<IQueryField> AsQueryFields(this object obj)
         {
             var list = new List<IQueryField>();
             var expandoObject = obj as ExpandoObject;
@@ -28,8 +50,14 @@ namespace RepoDb.Extensions
             return list;
         }
 
+        // AsFields
+        public static IEnumerable<IField> AsFields(this object obj)
+        {
+            return Field.Parse(obj);
+        }
+
         // AsOrderFields
-        internal static IEnumerable<IOrderField> AsOrderFields(this object obj)
+        public static IEnumerable<IOrderField> AsOrderFields(this object obj)
         {
             return OrderField.Parse(obj);
         }

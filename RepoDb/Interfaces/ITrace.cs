@@ -4,6 +4,7 @@
     {
         // Before
         void BeforeQuery(ICancellableTraceLog log);
+        void BeforeInlineUpdate(ICancellableTraceLog log);
         void BeforeUpdate(ICancellableTraceLog log);
         void BeforeDelete(ICancellableTraceLog log);
         void BeforeMerge(ICancellableTraceLog log);
@@ -16,6 +17,7 @@
         
         // After
         void AfterQuery(ITraceLog log);
+        void AfterInlineUpdate(ITraceLog log);
         void AfterUpdate(ITraceLog log);
         void AfterDelete(ITraceLog log);
         void AfterMerge(ITraceLog log);

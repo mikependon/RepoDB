@@ -168,6 +168,42 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        // InlineUpdate
+
+        public int InlineUpdate(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdate<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        public int InlineUpdate(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdate<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        // InlineUpdateAsync
+
+        public Task<int> InlineUpdateAsync(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdateAsync<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        public Task<int> InlineUpdateAsync(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineUpdateAsync<TEntity>(entity: entity,
+                where: where,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
         // Update
 
         public int Update(TEntity entity, IDbTransaction transaction = null)
@@ -197,7 +233,7 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // Update
+        // UpdateAsync
 
         public Task<int> UpdateAsync(TEntity entity, IDbTransaction transaction = null)
         {

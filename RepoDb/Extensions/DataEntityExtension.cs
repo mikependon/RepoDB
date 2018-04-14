@@ -4,7 +4,6 @@ using System.Data;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
@@ -21,13 +20,13 @@ namespace RepoDb.Extensions
                 .Where(property => !property.IsIgnored(command));
         }
 
-        internal static IEnumerable<PropertyInfo> GetPropertiesFor<T>(Command command)
+        public static IEnumerable<PropertyInfo> GetPropertiesFor<T>(Command command)
             where T : IDataEntity
         {
             return GetPropertiesFor(typeof(T), command);
         }
 
-        internal static IEnumerable<PropertyInfo> GetPropertiesFor(this IDataEntity dataEntity, Command command)
+        public static IEnumerable<PropertyInfo> GetPropertiesFor(this IDataEntity dataEntity, Command command)
         {
             return GetPropertiesFor(dataEntity.GetType(), command);
         }
@@ -39,13 +38,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType ?? CommandType.Text;
         }
 
-        internal static CommandType GetCommandType<T>()
+        public static CommandType GetCommandType<T>()
             where T : IDataEntity
         {
             return GetCommandType(typeof(T));
         }
 
-        internal static CommandType GetCommandType(this IDataEntity dataEntity)
+        public static CommandType GetCommandType(this IDataEntity dataEntity)
         {
             return GetCommandType(dataEntity.GetType());
         }
@@ -58,13 +57,13 @@ namespace RepoDb.Extensions
                 .FirstOrDefault(property => property.GetCustomAttribute(attributeType) != null);
         }
 
-        internal static PropertyInfo GetPropertyByAttribute<T>(Type attributeType)
+        public static PropertyInfo GetPropertyByAttribute<T>(Type attributeType)
             where T : IDataEntity
         {
             return GetPropertyByAttribute(typeof(T), attributeType);
         }
 
-        internal static PropertyInfo GetPropertyByAttribute(this IDataEntity dataEntity, Type attributeType)
+        public static PropertyInfo GetPropertyByAttribute(this IDataEntity dataEntity, Type attributeType)
         {
             return GetPropertyByAttribute(dataEntity.GetType(), attributeType);
         }
@@ -83,13 +82,13 @@ namespace RepoDb.Extensions
                             string.Equals(property.Name, $"{type.Name}{Constant.Id}", StringComparison.InvariantCultureIgnoreCase));
         }
 
-        internal static PropertyInfo GetPrimaryProperty<T>()
+        public static PropertyInfo GetPrimaryProperty<T>()
             where T : IDataEntity
         {
             return GetPrimaryProperty(typeof(T));
         }
 
-        internal static PropertyInfo GetPrimaryProperty(this IDataEntity dataEntity)
+        public static PropertyInfo GetPrimaryProperty(this IDataEntity dataEntity)
         {
             return GetPrimaryProperty(dataEntity.GetType());
         }
@@ -101,13 +100,13 @@ namespace RepoDb.Extensions
             return property != null ? property.IsIdentity() ? property : null : null;
         }
 
-        internal static PropertyInfo GetIdentityProperty<T>()
+        public static PropertyInfo GetIdentityProperty<T>()
             where T : IDataEntity
         {
             return GetPrimaryProperty(typeof(T));
         }
 
-        internal static PropertyInfo GetIdentityProperty(this IDataEntity dataEntity)
+        public static PropertyInfo GetIdentityProperty(this IDataEntity dataEntity)
         {
             return GetPrimaryProperty(dataEntity.GetType());
         }
@@ -119,19 +118,19 @@ namespace RepoDb.Extensions
             return attribute?.Name ?? type.Name;
         }
 
-        internal static string GetMappedName<T>()
+        public static string GetMappedName<T>()
             where T : IDataEntity
         {
             return GetMappedName(typeof(T));
         }
 
-        internal static string GetMappedName(this IDataEntity dataEntity)
+        public static string GetMappedName(this IDataEntity dataEntity)
         {
             return GetMappedName(dataEntity.GetType());
         }
 
         // AsObject
-        internal static object AsObject(this IDataEntity dataEntity, IQueryGroup queryGroup)
+        public static object AsObject(this IDataEntity dataEntity, IQueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             dataEntity.GetType()
@@ -141,26 +140,24 @@ namespace RepoDb.Extensions
                 {
                     expandObject[property.Name] = property.GetValue(dataEntity);
                 });
-            if (queryGroup != null)
-            {
-                queryGroup
-                    .GetAllQueryFields()?
-                    .ToList()
-                    .ForEach(queryField =>
-                    {
-                        expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
-                    });
-            }
+            queryGroup?
+                .Fix()
+                .GetAllQueryFields()?
+                .ToList()
+                .ForEach(queryField =>
+                {
+                    expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
+                });
             return (ExpandoObject)expandObject;
         }
 
-        internal static object AsObject(this IDataEntity dataEntity)
+        public static object AsObject(this IDataEntity dataEntity)
         {
             return AsObject(dataEntity, null);
         }
 
         // AsDataTable
-        internal static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection)
+        public static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection)
             where T : IDataEntity
         {
             var mappedName = GetMappedName<T>();
@@ -199,16 +196,16 @@ namespace RepoDb.Extensions
         // IsQueryble
         internal static bool IsQueryable(Type type)
         {
-            return true; // Always return true for Query
+            return true;
         }
 
-        internal static bool IsQueryable<T>()
+        public static bool IsQueryable<T>()
             where T : IDataEntity
         {
             return IsQueryable(typeof(T));
         }
 
-        internal static bool IsQueryable(this IDataEntity dataEntity)
+        public static bool IsQueryable(this IDataEntity dataEntity)
         {
             return IsQueryable(dataEntity.GetType());
         }
@@ -220,13 +217,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
-        internal static bool InInsertable<T>()
+        public static bool InInsertable<T>()
             where T : IDataEntity
         {
             return InInsertable(typeof(T));
         }
 
-        internal static bool InInsertable(this IDataEntity dataEntity)
+        public static bool InInsertable(this IDataEntity dataEntity)
         {
             return InInsertable(dataEntity.GetType());
         }
@@ -238,13 +235,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
-        internal static bool IsUpdateable<T>()
+        public static bool IsUpdateable<T>()
             where T : IDataEntity
         {
             return IsUpdateable(typeof(T));
         }
 
-        internal static bool IsUpdateable(this IDataEntity dataEntity)
+        public static bool IsUpdateable(this IDataEntity dataEntity)
         {
             return IsUpdateable(dataEntity.GetType());
         }
@@ -256,13 +253,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
-        internal static bool IsDeletable<T>()
+        public static bool IsDeletable<T>()
             where T : IDataEntity
         {
             return IsDeletable(typeof(T));
         }
 
-        internal static bool IsDeletable(this IDataEntity dataEntity)
+        public static bool IsDeletable(this IDataEntity dataEntity)
         {
             return IsDeletable(dataEntity.GetType());
         }
@@ -274,13 +271,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
-        internal static bool IsInsertable<T>()
+        public static bool IsInsertable<T>()
             where T : IDataEntity
         {
             return IsInsertable(typeof(T));
         }
 
-        internal static bool IsInsertable(this IDataEntity dataEntity)
+        public static bool IsInsertable(this IDataEntity dataEntity)
         {
             return IsInsertable(dataEntity.GetType());
         }
@@ -292,13 +289,13 @@ namespace RepoDb.Extensions
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
-        internal static bool IsMergeable<T>()
+        public static bool IsMergeable<T>()
             where T : IDataEntity
         {
             return IsMergeable(typeof(T));
         }
 
-        internal static bool IsMergeable(this IDataEntity dataEntity)
+        public static bool IsMergeable(this IDataEntity dataEntity)
         {
             return IsMergeable(dataEntity.GetType());
         }

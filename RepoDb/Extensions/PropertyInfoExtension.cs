@@ -11,7 +11,7 @@ namespace RepoDb.Extensions
     public static class PropertyInfoExtension
     {
         // ToEnumerable
-        internal static IEnumerable<PropertyInfo> ToEnumerable(this PropertyInfo property)
+        internal static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
         {
             return property != null ? new[] { property } : null;
         }
@@ -89,31 +89,31 @@ namespace RepoDb.Extensions
         // AsFields
         internal static IEnumerable<string> AsFields(this IEnumerable<PropertyInfo> properties)
         {
-            return properties.Select(property => property.AsField());
+            return properties?.Select(property => property.AsField());
         }
 
         // AsParameters
         internal static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
         {
-            return properties.Select(property => property.AsParameter());
+            return properties?.Select(property => property.AsParameter());
         }
 
         // AsParametersAsFields
         internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
         {
-            return properties.Select(property => property.AsParameterAsField());
+            return properties?.Select(property => property.AsParameterAsField());
         }
 
         // AsFieldsAndParameters
         internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
         {
-            return properties.Select(property => property.AsFieldAndParameter());
+            return properties?.Select(property => property.AsFieldAndParameter());
         }
 
         // AsFieldsAndAliasFields
         internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
         {
-            return properties.Select(property => property.AsFieldAndAliasField(alias));
+            return properties?.Select(property => property.AsFieldAndAliasField(alias));
         }
     }
 }

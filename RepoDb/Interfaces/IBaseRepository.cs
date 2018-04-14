@@ -65,6 +65,18 @@ namespace RepoDb.Interfaces
 
         Task<object> InsertAsync(TEntity entity, IDbTransaction transaction = null);
 
+        // InlineUpdate
+
+        int InlineUpdate(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
+        int InlineUpdate(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
+        // InlineUpdateAsync
+
+        Task<int> InlineUpdateAsync(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
+        Task<int> InlineUpdateAsync(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null);
+
         // Update
 
         int Update(TEntity entity, IDbTransaction transaction = null);

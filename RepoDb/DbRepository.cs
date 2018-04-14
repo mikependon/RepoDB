@@ -357,6 +357,89 @@ namespace RepoDb
             }
         }
 
+        // InlineUpdate
+
+        public int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (where as IQueryGroup) ?? QueryGroup.Parse(where);
+            return InlineUpdate<TEntity>(entity: entity,
+                where: queryGroup,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        public int InlineUpdate<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardUpdateable<TEntity>();
+
+            // Variables
+            var commandText = StatementBuilder.CreateInlineUpdate(QueryBuilderCache.Get<TEntity>(),
+                entity.AsFields(), where, overrideIgnore);
+            var param = entity?.Merge(where);
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                Trace.BeforeInlineUpdate(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.Update);
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQuery(commandText: commandText,
+                param: param,
+                commandType: CommandTypeCache.Get<TEntity>(),
+                commandTimeout: _commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterInlineUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // InlineUpdateAsync
+
+        public Task<int> InlineUpdateAsync<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineUpdate<TEntity>(entity: entity,
+                    where: where,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
+        public Task<int> InlineUpdateAsync<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineUpdate<TEntity>(entity: entity,
+                    where: where,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
         // Update
 
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
@@ -423,7 +506,7 @@ namespace RepoDb
             if (Trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                Trace.BeforeUpdate(cancellableTraceLog);
+                Trace.BeforeInlineUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -458,6 +541,7 @@ namespace RepoDb
         }
 
         // UpdateAsync
+
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {

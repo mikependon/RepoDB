@@ -3,6 +3,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace RepoDb
 {
@@ -10,7 +11,7 @@ namespace RepoDb
     {
         public SqlDbStatementBuilder() {}
 
-        public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
+        public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -19,12 +20,40 @@ namespace RepoDb
                 .Delete()
                 .From()
                 .Table()
-                .Where(queryGroup)
+                .Where(where)
                 .End();
             return queryBuilder.GetString();
         }
 
-        public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
+        public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields,
+            IQueryGroup where, bool? overrideIgnore = false)
+            where TEntity : IDataEntity
+        {
+            if (overrideIgnore == false)
+            {
+                var properties = PropertyCache.Get<TEntity>(Command.Update);
+                var matches = fields?.Where(field =>
+                    properties?.FirstOrDefault(property =>
+                        field.Name.Equals(property.Name, StringComparison.InvariantCultureIgnoreCase)) == null);
+                if (matches?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The following columns ({matches.Select(field => field.AsField()).Join(", ")}) are not updatable.");
+                }
+            }
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .Update()
+                .Table()
+                .Set()
+                .FieldsAndParameters(fields)
+                .Where(where)
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder)
+            where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = PrimaryPropertyCache.Get<TEntity>();
@@ -109,7 +138,7 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
+        public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int? top = 0, IEnumerable<IOrderField> orderBy = null)
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -120,13 +149,13 @@ namespace RepoDb
                 .Fields(Command.Select)
                 .From()
                 .Table()
-                .Where(queryGroup)
+                .Where(where)
                 .OrderBy(orderBy)
                 .End();
             return queryBuilder.GetString();
         }
 
-        public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
+        public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -136,7 +165,7 @@ namespace RepoDb
                 .Table()
                 .Set()
                 .FieldsAndParameters(Command.Update)
-                .Where(queryGroup)
+                .Where(where)
                 .End();
             return queryBuilder.GetString();
         }

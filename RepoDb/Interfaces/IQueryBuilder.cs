@@ -110,17 +110,32 @@ namespace RepoDb.Interfaces
         // Fields ([Id], [Name])
         IQueryBuilder<TEntity> Fields(Command command);
 
+        // Fields ([Id], [Name])
+        IQueryBuilder<TEntity> Fields(IEnumerable<IField> fields);
+
         // Parameters (@Id, @Name)
         IQueryBuilder<TEntity> Parameters(Command command);
+
+        // Parameters (@Id, @Name)
+        IQueryBuilder<TEntity> Parameters(IEnumerable<IField> fields);
 
         // Parameters (@Id AS [Id], @Name AS [Name])
         IQueryBuilder<TEntity> ParametersAsFields(Command command);
 
+        // Parameters (@Id AS [Id], @Name AS [Name])
+        IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<IField> fields);
+
         // Parameters ([Id] = @Id, [Name] = @Name)
         IQueryBuilder<TEntity> FieldsAndParameters(Command command);
 
+        // Parameters ([Id] = @Id, [Name] = @Name)
+        IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<IField> fields);
+
         // FieldsAndAliasFields ([Id] = T.[Id], [Name] = T.[Name])
         IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias);
+
+        // FieldsAndAliasFields ([Id] = T.[Id], [Name] = T.[Name])
+        IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias);
 
         // JoinQualifiers (S.[Id] = T.[Id], S.[Name] = T.[Name])
         IQueryBuilder<TEntity> JoinQualifiers(string leftAlias, string rightAlias);

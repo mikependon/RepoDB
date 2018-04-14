@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Dynamic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using RepoDb.Attributes;
 using RepoDb.Interfaces;
-using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
@@ -24,6 +18,24 @@ namespace RepoDb.Extensions
             return $"[{field.Name}]";
         }
 
+        // AsParameter
+        internal static string AsParameter(this IField field)
+        {
+            return $"@{field.Name}";
+        }
+
+        // AsParameterAsField
+        internal static string AsParameterAsField(this IField field)
+        {
+            return $"{AsParameter(field)} {Constant.As.ToUpper()} {AsField(field)}";
+        }
+
+        // AsFieldAndParameter
+        internal static string AsFieldAndParameter(this IField field)
+        {
+            return $"{AsField(field)} = {AsParameter(field)}";
+        }
+
         // AsJoinQualifier
         internal static string AsJoinQualifier(this IField field, string leftAlias, string rightAlias)
         {
@@ -35,6 +47,39 @@ namespace RepoDb.Extensions
         {
             return $"{AsField(field)} = {alias}.{AsField(field)}";
         }
+
+        /* IEnumerable<PropertyInfo> */
+
+        // AsFields
+        internal static IEnumerable<string> AsFields(this IEnumerable<IField> fields)
+        {
+            return fields?.Select(field => field.AsField());
+        }
+
+        // AsParameters
+        internal static IEnumerable<string> AsParameters(this IEnumerable<IField> fields)
+        {
+            return fields?.Select(field => field.AsParameter());
+        }
+
+        // AsParametersAsFields
+        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<IField> fields)
+        {
+            return fields?.Select(field => field.AsParameterAsField());
+        }
+
+        // AsFieldsAndParameters
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<IField> fields)
+        {
+            return fields?.Select(field => field.AsFieldAndParameter());
+        }
+
+        // AsFieldsAndAliasFields
+        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<IField> fields, string alias)
+        {
+            return fields?.Select(field => field.AsFieldAndAliasField(alias));
+        }
     }
 }
+ 
  

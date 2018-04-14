@@ -210,7 +210,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                if (operation== Operation.Between || operation==Operation.NotBetween ||
+                                if (operation == Operation.Between || operation == Operation.NotBetween ||
                                     operation == Operation.In || operation == Operation.NotIn)
                                 {
                                     if (value.GetType().IsArray)

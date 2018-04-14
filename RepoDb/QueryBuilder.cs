@@ -66,15 +66,20 @@ namespace RepoDb
             return Append(";");
         }
 
+        public IQueryBuilder<TEntity> Field(IField field)
+        {
+            return Append(field?.AsField());
+        }
+
         public IQueryBuilder<TEntity> Fields(Command command)
         {
             var properties = PropertyCache.Get<TEntity>(command).ToList();
-            return Append($"{properties?.AsFields().Join(", ")}");
+            return Append(properties?.AsFields().Join(", "));
         }
 
-        public IQueryBuilder<TEntity> Field(IField field)
+        public IQueryBuilder<TEntity> Fields(IEnumerable<IField> fields)
         {
-            return Append($"[{field.Name}]");
+            return Append(fields?.Select(f => f.AsField()).Join(", "));
         }
 
         public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
@@ -82,9 +87,19 @@ namespace RepoDb
             return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
         }
 
+        public IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<IField> fields)
+        {
+            return Append(fields?.AsFieldsAndParameters().Join(", "));
+        }
+
         public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
             return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
+        }
+
+        public IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias)
+        {
+            return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         public IQueryBuilder<TEntity> From()
@@ -157,13 +172,23 @@ namespace RepoDb
         public IQueryBuilder<TEntity> Parameters(Command command)
         {
             var properties = PropertyCache.Get<TEntity>(command)?.ToList();
-            return Append($"{properties?.AsParameters().Join(", ")}");
+            return Append(properties?.AsParameters().Join(", "));
+        }
+
+        public IQueryBuilder<TEntity> Parameters(IEnumerable<IField> fields)
+        {
+            return Append(fields?.AsParameters().Join(", "));
         }
 
         public IQueryBuilder<TEntity> ParametersAsFields(Command command)
         {
             var properties = PropertyCache.Get<TEntity>(command)?.ToList();
-            return Append($"{properties?.AsParametersAsFields().Join(", ")}");
+            return Append(properties?.AsParametersAsFields().Join(", "));
+        }
+
+        public IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<IField> fields)
+        {
+            return Append(fields?.AsParametersAsFields().Join(", "));
         }
 
         public IQueryBuilder<TEntity> Select()
