@@ -10,7 +10,7 @@ namespace RepoDb
     {
         private static readonly IDictionary<string, IEnumerable<PropertyInfo>> _cache = new Dictionary<string, IEnumerable<PropertyInfo>>();
 
-        public static IEnumerable<PropertyInfo> GetFor<TEntity>(Command command)
+        public static IEnumerable<PropertyInfo> Get<TEntity>(Command command)
             where TEntity : IDataEntity
         {
             var value = (IEnumerable<PropertyInfo>)null;

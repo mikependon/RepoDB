@@ -68,7 +68,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Fields(Command command)
         {
-            var properties = PropertyCache.GetFor<TEntity>(command).ToList();
+            var properties = PropertyCache.Get<TEntity>(command).ToList();
             return Append($"{properties?.AsFields().Join(", ")}");
         }
 
@@ -79,12 +79,12 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
-            return Append(PropertyCache.GetFor<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
+            return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
         }
 
         public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
-            return Append(PropertyCache.GetFor<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
+            return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         public IQueryBuilder<TEntity> From()
@@ -156,13 +156,13 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Parameters(Command command)
         {
-            var properties = PropertyCache.GetFor<TEntity>(command)?.ToList();
+            var properties = PropertyCache.Get<TEntity>(command)?.ToList();
             return Append($"{properties?.AsParameters().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> ParametersAsFields(Command command)
         {
-            var properties = PropertyCache.GetFor<TEntity>(command)?.ToList();
+            var properties = PropertyCache.Get<TEntity>(command)?.ToList();
             return Append($"{properties?.AsParametersAsFields().Join(", ")}");
         }
 
