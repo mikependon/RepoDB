@@ -54,12 +54,10 @@ namespace RepoDb.Extensions
             ITrace trace = null)
             where TEntity : DataEntity
         {
-            var cancellableTraceLog = (CancellableTraceLog)null;
-
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteReader(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -69,9 +67,12 @@ namespace RepoDb.Extensions
                     }
                     return null;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -84,7 +85,8 @@ namespace RepoDb.Extensions
                     // After Execution
                     if (trace != null)
                     {
-                        trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list));
+                        trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list,
+                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
                     }
 
                     // Result
@@ -122,12 +124,10 @@ namespace RepoDb.Extensions
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var cancellableTraceLog = (CancellableTraceLog)null;
-
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteReaderEx(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -137,9 +137,12 @@ namespace RepoDb.Extensions
                     }
                     return null;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -152,7 +155,8 @@ namespace RepoDb.Extensions
                     // After Execution
                     if (trace != null)
                     {
-                        trace.AfterExecuteReaderEx(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list));
+                        trace.AfterExecuteReaderEx(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list,
+                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
                     }
 
                     // Result
@@ -189,12 +193,10 @@ namespace RepoDb.Extensions
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var cancellableTraceLog = (CancellableTraceLog)null;
-
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteNonQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -204,9 +206,12 @@ namespace RepoDb.Extensions
                     }
                     return 0;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -217,7 +222,8 @@ namespace RepoDb.Extensions
                 // After Execution
                 if (trace != null)
                 {
-                    trace.AfterExecuteNonQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                    trace.AfterExecuteNonQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 
                 // Result
@@ -253,12 +259,10 @@ namespace RepoDb.Extensions
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            var cancellableTraceLog = (CancellableTraceLog)null;
-
             // Before Execution
             if (trace != null)
             {
-                cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 trace.BeforeExecuteScalar(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -268,9 +272,12 @@ namespace RepoDb.Extensions
                     }
                     return null;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-            commandText = (cancellableTraceLog?.Statement ?? commandText);
-            param = (cancellableTraceLog?.Parameter ?? param);
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
@@ -285,7 +292,8 @@ namespace RepoDb.Extensions
                 // After Execution
                 if (trace != null)
                 {
-                    trace.AfterExecuteScalar(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                    trace.AfterExecuteScalar(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 
                 // Result

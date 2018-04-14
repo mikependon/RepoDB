@@ -6,7 +6,7 @@ namespace RepoDb
     public sealed class CancellableTraceLog : TraceLog, ICancellableTraceLog
     {
         internal CancellableTraceLog(MethodBase method, string statement, object parameter, object result)
-            : base(method, statement, parameter, result)
+            : base(method, statement, parameter, result, null)
         {
         }
 

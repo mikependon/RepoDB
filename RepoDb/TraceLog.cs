@@ -1,16 +1,21 @@
 ﻿using RepoDb.Interfaces;
+using System;
 using System.Reflection;
 
 namespace RepoDb
 {
     public class TraceLog : ITraceLog
     {
-        internal TraceLog(MethodBase method, string statement, object parameter, object result)
+        internal TraceLog(MethodBase method, string statement, object parameter, object result, TimeSpan? executionTime)
         {
             Method = method;
             Statement = statement;
             Parameter = parameter;
             Result = result;
+            if (executionTime != null && executionTime.HasValue)
+            {
+                ExecuteTime = executionTime.Value;
+            }
         }
 
         public MethodBase Method { get; }
@@ -20,5 +25,7 @@ namespace RepoDb
         public object Parameter { get; set; }
 
         public string Statement { get; set; }
+
+        public TimeSpan ExecuteTime { get; }
     }
 }

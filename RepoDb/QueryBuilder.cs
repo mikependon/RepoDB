@@ -8,10 +8,10 @@ using System.Text;
 
 namespace RepoDb
 {
-    internal class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
+    public class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
         where TEntity : IDataEntity
     {
-        private StringBuilder _stringBuilder = new StringBuilder();
+        private readonly StringBuilder _stringBuilder = new StringBuilder();
         
         public override string ToString()
         {
@@ -111,7 +111,7 @@ namespace RepoDb
             return Append("VALUES");
         }
 
-        public IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderBy = null, string alias = null)
+        public IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> orderBy = null, string alias = null)
         {
             return (orderBy != null && orderBy.Any()) ?
                 Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :

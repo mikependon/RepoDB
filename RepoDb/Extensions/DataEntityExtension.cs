@@ -189,12 +189,7 @@ namespace RepoDb.Extensions
                 var row = table.NewRow();
                 foreach (var kvp in dict)
                 {
-                    var value = (object)null;
-                    if (kvp.Value != null)
-                    {
-                        value = kvp.Value.GetValue(entity);
-                    }
-                    row[kvp.Key] = value == DBNull.Value ? null : value;
+                    row[kvp.Key] = kvp.Value?.GetValue(entity) ?? DBNull.Value;
                 }
                 table.Rows.Add(row);
             });

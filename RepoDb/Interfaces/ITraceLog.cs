@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace RepoDb.Interfaces
 {
@@ -8,5 +9,6 @@ namespace RepoDb.Interfaces
         object Result { get; }
         object Parameter { get; set; }
         string Statement { get; set; }
+        TimeSpan ExecuteTime { get; }
     }
 }

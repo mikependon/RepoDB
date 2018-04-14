@@ -10,10 +10,10 @@ namespace RepoDb
     {
         public SqlDbStatementBuilder() {}
 
-        public string CreateDelete<TEntity>(IQueryGroup queryGroup)
+        public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
             where TEntity : IDataEntity
         {
-            var queryBuilder = new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Delete()
                 .From()
@@ -23,9 +23,9 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        public string CreateInsert<TEntity>() where TEntity : IDataEntity
+        public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
         {
-            var queryBuilder = new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             queryBuilder
                 .Insert()
@@ -51,10 +51,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        public string CreateMerge<TEntity>(IEnumerable<IField> qualifiers)
+        public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers)
             where TEntity : IDataEntity
         {
-            var queryBuilder = new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             if (qualifiers == null)
             {
                 var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
@@ -106,10 +106,10 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
-        public string CreateQuery<TEntity>(IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
+        public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
             where TEntity : IDataEntity
         {
-            var queryBuilder = new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Select()
                 .Top(top)
@@ -117,15 +117,15 @@ namespace RepoDb
                 .From()
                 .Table()
                 .Where(queryGroup)
-                .Order(orderBy)
+                .OrderBy(orderBy)
                 .End();
             return queryBuilder.GetString();
         }
 
-        public string CreateUpdate<TEntity>(IQueryGroup queryGroup)
+        public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
             where TEntity : IDataEntity
         {
-            var queryBuilder = new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Update()
                 .Table()

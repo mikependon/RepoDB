@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RepoDb.Interfaces
 {
-    internal interface IQueryBuilder<TEntity>
+    public interface IQueryBuilder<TEntity>
         where TEntity : IDataEntity
     {
         // Custom Methods
@@ -36,7 +36,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Values();
 
         // Order (ORDER BY)
-        IQueryBuilder<TEntity> Order(IEnumerable<IOrderField> orderBy = null, string alias = null);
+        IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> orderBy = null, string alias = null);
 
         // As (AS)
         IQueryBuilder<TEntity> As(string alias);

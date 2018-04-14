@@ -67,7 +67,7 @@ namespace RepoDb
         // Trace
         public ITrace Trace { get; }
 
-        // QueryBuilder
+        // StamentBuilder
         public IStatementBuilder StatementBuilder { get; }
 
         // GuardPrimaryKey
@@ -106,7 +106,7 @@ namespace RepoDb
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
@@ -117,7 +117,7 @@ namespace RepoDb
                 cacheKey: cacheKey);
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
@@ -159,7 +159,7 @@ namespace RepoDb
             }
         }
 
-        public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, int? top = 0,
             IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity
         {
@@ -179,8 +179,8 @@ namespace RepoDb
             // Variables
             var commandType = DataEntityExtension.GetCommandType<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>() : 
-                StatementBuilder.CreateQuery<TEntity>(where, top, orderBy);
+                DataEntityExtension.GetMappedName<TEntity>() :
+                StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
             // Before Execution
@@ -200,6 +200,9 @@ namespace RepoDb
                 param = (cancellableTraceLog?.Parameter ?? param);
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Actual Execution
             var result = ExecuteReader<TEntity>(commandText: commandText,
                 param: param,
@@ -210,7 +213,8 @@ namespace RepoDb
             // After Execution
             if (Trace != null)
             {
-                Trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                Trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Set Cache
@@ -292,7 +296,7 @@ namespace RepoDb
             GuardInsertable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateInsert<TEntity>();
+            var commandText = StatementBuilder.CreateInsert(QueryBuilderCache.Get<TEntity>());
             var param = entity?.AsObject();
 
             // Before Execution
@@ -312,6 +316,9 @@ namespace RepoDb
                 param = (cancellableTraceLog?.Parameter ?? param);
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
@@ -322,7 +329,8 @@ namespace RepoDb
             // After Execution
             if (Trace != null)
             {
-                Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Result
@@ -408,7 +416,7 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateUpdate<TEntity>(where);
+            var commandText = StatementBuilder.CreateUpdate(QueryBuilderCache.Get<TEntity>(), where);
             var param = entity?.AsObject(where);
 
             // Before Execution
@@ -428,6 +436,9 @@ namespace RepoDb
                 param = (cancellableTraceLog?.Parameter ?? param);
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
@@ -438,7 +449,8 @@ namespace RepoDb
             // After Execution
             if (Trace != null)
             {
-                Trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                Trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Result
@@ -534,7 +546,7 @@ namespace RepoDb
             GuardDeletable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateDelete<TEntity>(where);
+            var commandText = StatementBuilder.CreateDelete(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -554,6 +566,9 @@ namespace RepoDb
                 param = (cancellableTraceLog?.Parameter ?? param);
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
@@ -563,7 +578,8 @@ namespace RepoDb
             // After Execution
             if (Trace != null)
             {
-                Trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                Trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Result
@@ -625,7 +641,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateMerge<TEntity>(qualifiers);
+            var commandText = StatementBuilder.CreateMerge(QueryBuilderCache.Get<TEntity>(), qualifiers);
             var param = entity?.AsObject();
 
             // Before Execution
@@ -645,6 +661,9 @@ namespace RepoDb
                 param = (cancellableTraceLog?.Parameter ?? param);
             }
 
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
@@ -655,7 +674,8 @@ namespace RepoDb
             // After Execution
             if (Trace != null)
             {
-                Trace.AfterMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result));
+                Trace.AfterMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
             // Result
@@ -717,13 +737,18 @@ namespace RepoDb
                         return 0;
                     }
                 }
+
+                // Convert to table
                 var table = entities.AsDataTable(connection);
+
+                // Before Execution Time
+                var beforeExecutionTime = DateTime.UtcNow;
 
                 // Actual Execution
                 var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
                 var result = entities.Count();
                 sqlBulkCopy.DestinationTableName = table.TableName;
-                foreach(var column in table.Columns.OfType<DataColumn>())
+                foreach (var column in table.Columns.OfType<DataColumn>())
                 {
                     sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
                 }
@@ -732,7 +757,8 @@ namespace RepoDb
                 // After Execution
                 if (Trace != null)
                 {
-                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), Constant.BulkInsert, table, result));
+                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), Constant.BulkInsert, table, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 
                 // Result

@@ -4,15 +4,15 @@ namespace RepoDb.Interfaces
 {
     public interface IStatementBuilder
     {
-        string CreateDelete<TEntity>(IQueryGroup queryGroup)
+        string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
             where TEntity : IDataEntity;
-        string CreateInsert<TEntity>()
+        string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder)
             where TEntity : IDataEntity;
-        string CreateMerge<TEntity>(IEnumerable<IField> qualifiers)
+        string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers)
             where TEntity : IDataEntity;
-        string CreateQuery<TEntity>(IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
+        string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null)
             where TEntity : IDataEntity;
-        string CreateUpdate<TEntity>(IQueryGroup queryGroup)
+        string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup)
             where TEntity : IDataEntity;
     }
 }
