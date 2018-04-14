@@ -177,7 +177,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandType = DataEntityExtension.GetCommandType<TEntity>();
+            var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>() :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
@@ -322,7 +322,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -442,7 +442,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -572,7 +572,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(),
                 commandTimeout: _commandTimeout);
 
             // After Execution
@@ -667,7 +667,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 

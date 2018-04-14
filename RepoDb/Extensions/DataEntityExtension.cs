@@ -302,5 +302,18 @@ namespace RepoDb.Extensions
         {
             return IsMergeable(dataEntity.GetType());
         }
+
+        // GetValue
+        public static object GetValue(this IDataEntity dataEntity, string property)
+        {
+            return dataEntity?.GetType()
+                .GetProperty(property)
+                .GetValue(dataEntity);
+        }
+
+        public static T GetValue<T>(this IDataEntity dataEntity, string property)
+        {
+            return (T)GetValue(dataEntity, property);
+        }
     }
 }
