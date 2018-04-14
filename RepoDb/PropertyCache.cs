@@ -8,18 +8,12 @@ namespace RepoDb
 {
     public static class PropertyCache
     {
-        private static readonly IDictionary<string, IEnumerable<PropertyInfo>> _cache;
-
-        static PropertyCache()
-        {
-            _cache = new Dictionary<string, IEnumerable<PropertyInfo>>();
-        }
+        private static readonly IDictionary<string, IEnumerable<PropertyInfo>> _cache = new Dictionary<string, IEnumerable<PropertyInfo>>();
 
         public static IEnumerable<PropertyInfo> GetFor<TEntity>(Command command)
             where TEntity : IDataEntity
         {
             var value = (IEnumerable<PropertyInfo>)null;
-            // var key = $"{MapNameCache.Get<TEntity>()}.{command.ToString()}"; // Will fail if there is multiple same mapping
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             if (_cache.ContainsKey(key))
             {

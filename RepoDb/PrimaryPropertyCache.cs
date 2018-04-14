@@ -8,12 +8,7 @@ namespace RepoDb
 {
     public static class PrimaryPropertyCache
     {
-        private static readonly IDictionary<Type, PropertyInfo> _cache;
-
-        static PrimaryPropertyCache()
-        {
-            _cache = new Dictionary<Type, PropertyInfo>();
-        }
+        private static readonly IDictionary<Type, PropertyInfo> _cache = new Dictionary<Type, PropertyInfo>();
 
         public static PropertyInfo Get<TEntity>()
             where TEntity : IDataEntity
