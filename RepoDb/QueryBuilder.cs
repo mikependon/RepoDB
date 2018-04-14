@@ -25,6 +25,12 @@ namespace RepoDb
             return _stringBuilder.ToString();
         }
 
+        public IQueryBuilder<TEntity> Clear()
+        {
+            _stringBuilder.Clear();
+            return this;
+        }
+
         public IQueryBuilder<TEntity> Space()
         {
             Append(" ");

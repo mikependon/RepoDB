@@ -17,6 +17,9 @@ namespace RepoDb.Interfaces
 
         // Basic Methods
 
+        // Clear
+        IQueryBuilder<TEntity> Clear();
+
         // Select (SELECT)
         IQueryBuilder<TEntity> Select();
 

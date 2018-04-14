@@ -15,6 +15,7 @@ namespace RepoDb
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
+                .Clear()
                 .Delete()
                 .From()
                 .Table()
@@ -28,6 +29,7 @@ namespace RepoDb
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             queryBuilder
+                .Clear()
                 .Insert()
                 .Into()
                 .Table()
@@ -64,6 +66,7 @@ namespace RepoDb
                 }
             }
             queryBuilder
+                .Clear()
                 // MERGE T USING S
                 .Merge()
                 .Table()
@@ -111,6 +114,7 @@ namespace RepoDb
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
+                .Clear()
                 .Select()
                 .Top(top)
                 .Fields(Command.Select)
@@ -127,6 +131,7 @@ namespace RepoDb
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
+                .Clear()
                 .Update()
                 .Table()
                 .Set()
