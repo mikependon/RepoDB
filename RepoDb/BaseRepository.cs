@@ -71,8 +71,18 @@ namespace RepoDb
 
         // BatchQuery
 
+        public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQuery<TEntity>(
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
         public IEnumerable<TEntity> BatchQuery(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
                 where: where,
@@ -83,7 +93,7 @@ namespace RepoDb
         }
 
         public IEnumerable<TEntity> BatchQuery(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
                 where: where,
@@ -94,7 +104,7 @@ namespace RepoDb
         }
 
         public IEnumerable<TEntity> BatchQuery(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
                 where: where,
@@ -106,8 +116,18 @@ namespace RepoDb
 
         // BatchQueryAsync
 
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        {
+            return DbRepository.BatchQueryAsync<TEntity>(
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
         public Task<IEnumerable<TEntity>> BatchQueryAsync(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
                 where: where,
@@ -118,7 +138,7 @@ namespace RepoDb
         }
 
         public Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
                 where: where,
@@ -129,7 +149,7 @@ namespace RepoDb
         }
 
         public Task<IEnumerable<TEntity>> BatchQueryAsync(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
                 where: where,

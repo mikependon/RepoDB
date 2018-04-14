@@ -12,7 +12,7 @@ namespace RepoDb
         where TEntity : IDataEntity
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
-        
+
         public override string ToString()
         {
             return GetString();
@@ -139,9 +139,14 @@ namespace RepoDb
                 this;
         }
 
-        public IQueryBuilder<TEntity> As(string alias)
+        public IQueryBuilder<TEntity> As(string alias = null)
         {
-            return Append($"AS {alias}");
+            return string.IsNullOrEmpty(alias) ? Append($"AS") : Append($"AS {alias}");
+        }
+
+        public IQueryBuilder<TEntity> With()
+        {
+            return Append("WITH");
         }
 
         public IQueryBuilder<TEntity> Set()
@@ -214,6 +219,16 @@ namespace RepoDb
         public IQueryBuilder<TEntity> Where(IQueryGroup queryGroup)
         {
             return (queryGroup != null) ? Append($"WHERE {queryGroup.Fix().GetString()}") : this;
+        }
+
+        public IQueryBuilder<TEntity> RowNumber()
+        {
+            return Append("ROW_NUMBER()");
+        }
+
+        public IQueryBuilder<TEntity> Over()
+        {
+            return Append("OVER");
         }
 
         public IQueryBuilder<TEntity> And()

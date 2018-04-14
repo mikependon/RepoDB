@@ -3,6 +3,7 @@
     public interface ITrace
     {
         // Before
+        void BeforeBatchQuery(ICancellableTraceLog log);
         void BeforeQuery(ICancellableTraceLog log);
         void BeforeInlineUpdate(ICancellableTraceLog log);
         void BeforeUpdate(ICancellableTraceLog log);
@@ -14,8 +15,9 @@
         void BeforeExecuteReader(ICancellableTraceLog log);
         void BeforeExecuteReaderEx(ICancellableTraceLog log);
         void BeforeExecuteScalar(ICancellableTraceLog log);
-        
+
         // After
+        void AfterBatchQuery(ITraceLog log);
         void AfterQuery(ITraceLog log);
         void AfterInlineUpdate(ITraceLog log);
         void AfterUpdate(ITraceLog log);

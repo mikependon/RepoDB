@@ -42,7 +42,10 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> orderBy = null, string alias = null);
 
         // As (AS)
-        IQueryBuilder<TEntity> As(string alias);
+        IQueryBuilder<TEntity> As(string alias = null);
+
+        // With (WITH)
+        IQueryBuilder<TEntity> With();
 
         // Set (SET)
         IQueryBuilder<TEntity> Set();
@@ -100,6 +103,12 @@ namespace RepoDb.Interfaces
 
         // Where ([Field1] = @Field1)
         IQueryBuilder<TEntity> Where(IQueryGroup queryGroup);
+
+        // RowNumber (ROW_NUMBER())
+        IQueryBuilder<TEntity> RowNumber();
+
+        // Over (OVER)
+        IQueryBuilder<TEntity> Over();
 
         // GroupBy (GROUP BY)
         IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields);

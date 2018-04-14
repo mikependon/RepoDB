@@ -9,7 +9,39 @@ namespace RepoDb
 {
     public sealed class SqlDbStatementBuilder : IStatementBuilder
     {
-        public SqlDbStatementBuilder() {}
+        public SqlDbStatementBuilder() { }
+
+        public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderBy)
+            where TEntity : IDataEntity
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .With()
+                .WriteText("CTE")
+                .As()
+                .OpenParen()
+                .Select()
+                .RowNumber()
+                .Over()
+                .OpenParen()
+                .OrderBy(orderBy)
+                .CloseParen()
+                .As("[RowNumber],")
+                .Fields(Command.Select)
+                .From()
+                .Table()
+                .Where(where)
+                .CloseParen()
+                .Select()
+                .Fields(Command.Select)
+                .From()
+                .WriteText("CTE")
+                .WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
+                .OrderBy(orderBy)
+                .End();
+            return queryBuilder.GetString();
+        }
 
         public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity

@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using System.Reflection;
 using RepoDb.Interfaces;
-using RepoDb.Extensions;
+using RepoDb.Attributes;
 
 namespace RepoDb
 {
-    public static class PrimaryPropertyCache
+    public static class MapCache
     {
-        private static readonly IDictionary<Type, PropertyInfo> _cache = new Dictionary<Type, PropertyInfo>();
+        private static readonly IDictionary<Type, MapAttribute> _cache = new Dictionary<Type, MapAttribute>();
 
-        public static PropertyInfo Get<TEntity>()
+        public static MapAttribute Get<TEntity>()
             where TEntity : IDataEntity
         {
             return Get(typeof(TEntity));
         }
 
-        public static PropertyInfo Get(Type type)
+        internal static MapAttribute Get(Type type)
         {
-            var value = (PropertyInfo)null;
+            var value = (MapAttribute)null;
             if (_cache.ContainsKey(type))
             {
                 value = _cache[type];
             }
             else
             {
-                value = DataEntityExtension.GetPrimaryProperty(type);
+                value = type.GetCustomAttribute<MapAttribute>();
                 _cache.Add(type, value);
             }
             return value;

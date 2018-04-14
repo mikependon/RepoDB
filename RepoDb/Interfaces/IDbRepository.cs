@@ -26,30 +26,38 @@ namespace RepoDb.Interfaces
 
         // BatchQuery
 
+        IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
         IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         IEnumerable<TEntity> BatchQuery<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // BatchQueryAsync
 
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
         Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // Query

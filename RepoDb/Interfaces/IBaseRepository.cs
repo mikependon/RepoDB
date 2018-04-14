@@ -31,25 +31,31 @@ namespace RepoDb.Interfaces
 
         // BatchQuery
 
+        IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
+
         IEnumerable<TEntity> BatchQuery(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         IEnumerable<TEntity> BatchQuery(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         IEnumerable<TEntity> BatchQuery(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         // BatchQueryAsync
 
+        Task<IEnumerable<TEntity>> BatchQueryAsync(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
+
         Task<IEnumerable<TEntity>> BatchQueryAsync(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         Task<IEnumerable<TEntity>> BatchQueryAsync(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null);
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null);
 
         // Query
 

@@ -4,6 +4,7 @@
     {
         public static readonly string And = "And";
         public static readonly string As = "As";
+        public static readonly string BatchQuery = "BatchQuery";
         public static readonly string BulkInsert = "BulkInsert";
         public static readonly string ColumnName = "ColumnName";
         public static readonly string Conjunction = "Conjunction";
@@ -15,6 +16,7 @@
         public static readonly string ExecuteScalar = "ExecuteScalar";
         public static readonly string Id = "Id";
         public static readonly string In = "In";
+        public static readonly string InlineUpdate = "InlineUpdate";
         public static readonly string Insert = "Insert";
         public static readonly string LeftValue = "LeftValue";
         public static readonly string Merge = "Merge";

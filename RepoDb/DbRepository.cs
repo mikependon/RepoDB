@@ -82,12 +82,12 @@ namespace RepoDb
             return primaryKey;
         }
 
-        // GuardQueryable
+        // GuardBatchQueryable
 
-        private void GuardQueryable<TEntity>()
+        private void GuardBatchQueryable<TEntity>()
             where TEntity : IDataEntity
         {
-            if (!DataEntityExtension.IsQueryable<TEntity>())
+            if (!DataEntityExtension.IsBatchQueryble<TEntity>())
             {
                 throw new EntityNotQueryableException(MapNameCache.Get<TEntity>());
             }
@@ -95,31 +95,116 @@ namespace RepoDb
 
         // BatchQuery
 
-        public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            throw new NotImplementedException();
+            return BatchQuery<TEntity>(where: (IQueryGroup)null,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
+        }
+
+        public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (IQueryGroup)null;
+            if (where is IQueryField)
+            {
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
+            }
+            else if (where is IQueryGroup)
+            {
+                queryGroup = (IQueryGroup)where;
+            }
+            else
+            {
+                queryGroup = QueryGroup.Parse(where);
+            }
+            return BatchQuery<TEntity>(where: queryGroup,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
         }
 
         public IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            throw new NotImplementedException();
+            return BatchQuery<TEntity>(where: new QueryGroup(where),
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                transaction: transaction);
         }
 
         public IEnumerable<TEntity> BatchQuery<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            throw new NotImplementedException();
+            // Check
+            GuardBatchQueryable<TEntity>();
+
+            // Variables
+            var commandText = StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
+            var param = where?.AsObject();
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                Trace.BeforeBatchQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.BatchQuery);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteReader<TEntity>(commandText: commandText,
+                param: param,
+                commandType: CommandTypeCache.Get<TEntity>(),
+                commandTimeout: _commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterBatchQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
         }
 
         // BatchQueryAsync
 
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                BatchQuery<TEntity>(page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    transaction: transaction));
+        }
+
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -131,7 +216,7 @@ namespace RepoDb
         }
 
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -143,7 +228,7 @@ namespace RepoDb
         }
 
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy = null, IDbTransaction transaction = null)
+            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -152,6 +237,17 @@ namespace RepoDb
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     transaction: transaction));
+        }
+
+        // GuardQueryable
+
+        private void GuardQueryable<TEntity>()
+            where TEntity : IDataEntity
+        {
+            if (!DataEntityExtension.IsQueryable<TEntity>())
+            {
+                throw new EntityNotQueryableException(MapNameCache.Get<TEntity>());
+            }
         }
 
         // Query
@@ -461,7 +557,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Update);
+                        throw new CancelledExecutionException(Constant.InlineUpdate);
                     }
                     return 0;
                 }

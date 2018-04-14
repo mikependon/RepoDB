@@ -4,6 +4,8 @@ namespace RepoDb.Interfaces
 {
     public interface IStatementBuilder
     {
+        string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderby)
+            where TEntity : IDataEntity;
         string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity;
         string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false)
