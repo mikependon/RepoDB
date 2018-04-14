@@ -23,11 +23,11 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 ### Next Version (v1.0.10)
 
  - Added the currently used IQueryBuilder on the IStatementBuilder methods
+ - Add ExecutionTime (Timespan) property in the TraceLog class
  
 ### Features
 
- - Add ExecutionTime (Timespan) property in the TraceLog class - in progress (4/14/2018)
- - Cache CommadType in Repository Level
+ - Cache CommadType in Repository Level - in progress (4/14/2018)
  - Entity Property Caching
  - Support Column-Based Update using Dynamics
  - Support BatchQuery Operation
