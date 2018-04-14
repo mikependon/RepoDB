@@ -9,10 +9,10 @@ namespace RepoDb.Enumerations
         Select = 2,
         Insert = 4,
         Update = 8,
-        Delete = 16,
-        Create = 32,
+        Delete = 16
+        /*Create = 32,
         Drop = 64,
         Alter = 128,
-        Execute = 256
+        Execute = 256*/
     }
 }
