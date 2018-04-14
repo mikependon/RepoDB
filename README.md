@@ -26,7 +26,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Features
 
- - Add the currently used IStatementBuilder on the IStatementBuilder methods - in progress (4/14/2018)
+ - Add the currently used IQueryBuilder on the IStatementBuilder methods - in progress (4/14/2018)
  - Add ExecutionTime (Timespan) property in the TraceLog class - in progress (4/14/2018)
  - Cache CommadType in Repository Level
  - Entity Property Caching
