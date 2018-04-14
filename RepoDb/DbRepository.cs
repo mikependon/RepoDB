@@ -77,7 +77,7 @@ namespace RepoDb
             var primaryKey = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (primaryKey == null)
             {
-                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>()})");
+                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({MapNameCache.Get<TEntity>()})");
             }
             return primaryKey;
         }
@@ -89,7 +89,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
-                throw new EntityNotQueryableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotQueryableException(MapNameCache.Get<TEntity>());
             }
         }
 
@@ -179,7 +179,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>() :
+                MapNameCache.Get<TEntity>() :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
@@ -283,7 +283,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInsertable<TEntity>())
             {
-                throw new EntityNotInsertableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotInsertableException(MapNameCache.Get<TEntity>());
             }
         }
 
@@ -353,7 +353,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsUpdateable<TEntity>())
             {
-                throw new EntityNotUpdateableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotUpdateableException(MapNameCache.Get<TEntity>());
             }
         }
 
@@ -500,7 +500,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
             {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotDeletableException(MapNameCache.Get<TEntity>());
             }
         }
 
@@ -619,7 +619,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsMergeable<TEntity>())
             {
-                throw new EntityNotMergeableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotMergeableException(MapNameCache.Get<TEntity>());
             }
         }
 
@@ -707,7 +707,7 @@ namespace RepoDb
         {
             if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
             {
-                throw new EntityNotBulkInsertableException(DataEntityExtension.GetMappedName<TEntity>());
+                throw new EntityNotBulkInsertableException(MapNameCache.Get<TEntity>());
             }
         }
 

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapNameCache.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />

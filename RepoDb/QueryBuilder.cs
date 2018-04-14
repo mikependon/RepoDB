@@ -145,7 +145,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Table()
         {
-            return Append($"{DataEntityExtension.GetMappedName<TEntity>()}");
+            return Append($"{MapNameCache.Get<TEntity>()}");
         }
 
         public IQueryBuilder<TEntity> Parameters(Command command)

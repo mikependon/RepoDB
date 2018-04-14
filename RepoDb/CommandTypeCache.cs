@@ -8,11 +8,11 @@ namespace RepoDb
 {
     public static class CommandTypeCache
     {
-        private static readonly IDictionary<Type, CommandType> _commandTypes;
+        private static readonly IDictionary<Type, CommandType> _cache;
 
         static CommandTypeCache()
         {
-            _commandTypes = new Dictionary<Type, CommandType>();
+            _cache = new Dictionary<Type, CommandType>();
         }
 
         public static CommandType Get<TEntity>()
@@ -20,14 +20,14 @@ namespace RepoDb
         {
             var commandType = CommandType.Text;
             var type = typeof(TEntity);
-            if (_commandTypes.ContainsKey(type))
+            if (_cache.ContainsKey(type))
             {
-                commandType = _commandTypes[type];
+                commandType = _cache[type];
             }
             else
             {
                 commandType = DataEntityExtension.GetCommandType<TEntity>();
-                _commandTypes.Add(type, commandType);
+                _cache.Add(type, commandType);
             }
             return commandType;
         }
