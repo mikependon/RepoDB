@@ -23,11 +23,14 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 ### Next Version (v1.0.10)
 
  - Added the currently used IQueryBuilder on the IStatementBuilder methods
+ - Added QueryBuilderCache object
  - Add ExecutionTime (Timespan) property in the TraceLog class
+ - Added CommandTypeCache object
+ - Cache CommadType on every calls
  
 ### Features
 
- - Cache CommadType in Repository Level - in progress (4/14/2018)
+ - Cache MapName - in progress (4/14/2018)
  - Entity Property Caching
  - Support Column-Based Update using Dynamics
  - Support BatchQuery Operation
