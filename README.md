@@ -28,11 +28,12 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Added CommandTypeCache object
  - Cache CommadType on every calls
  - Removed the Create, Drop, Alter, Execute command enum values (until being supported)
+ - Added MapNameCache object
+ - Cache MapName on every calls
  
 ### Features
 
- - Cache MapName - in progress (4/14/2018)
- - Entity Property Caching
+ - Entity Property Caching - in progress (4/14/2018)
  - Support Column-Based Update using Dynamics
  - Support BatchQuery Operation
  - Support Field-Level Mapping
