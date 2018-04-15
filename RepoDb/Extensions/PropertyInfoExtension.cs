@@ -46,31 +46,31 @@ namespace RepoDb.Extensions
         // AsQueryField
         public static IQueryField AsQueryField(this PropertyInfo property, object entity)
         {
-            return new QueryField(property.Name, property.GetValue(entity));
+            return new QueryField(property.GetMappedName(), property.GetValue(entity));
         }
 
         // AsDataColumn
         public static DataColumn AsDataColumn(this PropertyInfo property)
         {
-            return new DataColumn(property.Name, property.PropertyType);
+            return new DataColumn(property.GetMappedName(), property.PropertyType);
         }
 
         // AsJoinQualifier
         public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.[{property.Name}] = {rightAlias}.[{property.Name}]";
+            return $"{leftAlias}.[{property.GetMappedName()}] = {rightAlias}.[{property.GetMappedName()}]";
         }
 
         // AsField
         public static string AsField(this PropertyInfo property)
         {
-            return $"[{property.Name}]";
+            return $"[{property.GetMappedName()}]";
         }
 
         // AsParameter
         public static string AsParameter(this PropertyInfo property)
         {
-            return $"@{property.Name}";
+            return $"@{property.GetMappedName()}";
         }
 
         // AsParameterAsField

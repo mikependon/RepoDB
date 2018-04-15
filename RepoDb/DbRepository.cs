@@ -74,12 +74,12 @@ namespace RepoDb
         private PropertyInfo GetAndGuardPrimaryKey<TEntity>()
             where TEntity : IDataEntity
         {
-            var primaryKey = PrimaryPropertyCache.Get<TEntity>();
-            if (primaryKey == null)
+            var property = PrimaryPropertyCache.Get<TEntity>();
+            if (property == null)
             {
                 throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({ClassMapNameCache.Get<TEntity>()})");
             }
-            return primaryKey;
+            return property;
         }
 
         // GuardBatchQueryable
@@ -623,9 +623,9 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            var primary = GetAndGuardPrimaryKey<TEntity>();
+            var property = GetAndGuardPrimaryKey<TEntity>();
             return Update(entity: entity,
-                where: new QueryGroup(primary?.AsQueryField(entity).AsEnumerable()),
+                where: new QueryGroup(property.AsQueryField(entity).AsEnumerable()),
                 transaction: transaction);
         }
 
@@ -657,8 +657,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    queryGroup = new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable());
+                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
             return Update(entity: entity,
@@ -785,8 +785,8 @@ namespace RepoDb
             }
             else if (where is TEntity)
             {
-                var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                queryGroup = new QueryGroup(new QueryField(primaryKey.Name, primaryKey.GetValue(where)).AsEnumerable());
+                var property = GetAndGuardPrimaryKey<TEntity>();
+                queryGroup = new QueryGroup(property.AsQueryField(where).AsEnumerable());
             }
             else
             {

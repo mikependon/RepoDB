@@ -15,7 +15,8 @@ namespace RepoDb.Extensions
         // AsUnquoted
         public static string AsUnquoted(this string value)
         {
-            return Regex.Replace(value, @"[\[\]']+", "");
+            var v = value?.IndexOf(".") >= 0 ? value.Split(".".ToCharArray()).Last() : value;
+            return Regex.Replace(v, @"[\[\]']+", "");
         }
 
         // AsEnumerable

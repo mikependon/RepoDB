@@ -71,15 +71,36 @@ namespace RepoDb.Extensions
         // GetPrimaryProperty
         internal static PropertyInfo GetPrimaryProperty(Type type)
         {
-            return GetPropertyByAttribute(type, typeof(PrimaryAttribute)) ??
-                type.GetProperties()
-                    .FirstOrDefault(
-                        property =>
-                            string.Equals(property.Name, Constant.Id, StringComparison.InvariantCultureIgnoreCase)) ??
-                type.GetProperties()
-                    .FirstOrDefault(
-                        property =>
-                            string.Equals(property.Name, $"{type.Name}{Constant.Id}", StringComparison.InvariantCultureIgnoreCase));
+            // Primary Attribute
+            var property = GetPropertyByAttribute(type, typeof(PrimaryAttribute));
+            if (property != null)
+            {
+                return property;
+            }
+
+            // Id Property
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == Constant.Id.ToLower());
+            if (property != null)
+            {
+                return property;
+            }
+
+            // Type.Name + Id
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{Constant.Id}".ToLower());
+            if (property != null)
+            {
+                return property;
+            }
+
+            // Mapping.Name + Id
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type).AsUnquoted()}{Constant.Id}".ToLower());
+            if (property != null)
+            {
+                return property;
+            }
+
+            // Not found
+            return null;
         }
 
         public static PropertyInfo GetPrimaryProperty<T>()

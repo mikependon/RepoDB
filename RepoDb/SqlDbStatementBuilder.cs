@@ -63,13 +63,15 @@ namespace RepoDb
         {
             if (overrideIgnore == false)
             {
-                var properties = PropertyCache.Get<TEntity>(Command.Update);
-                var matches = fields?.Where(field =>
+                var properties = PropertyCache.Get<TEntity>(Command.Update)
+                    .Select(property => property.GetMappedName());
+                var unmatches = fields?.Where(field =>
                     properties?.FirstOrDefault(property =>
-                        field.Name.Equals(property.Name, StringComparison.InvariantCultureIgnoreCase)) == null);
-                if (matches?.Count() > 0)
+                        field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatches?.Count() > 0)
                 {
-                    throw new InvalidOperationException($"The following columns ({matches.Select(field => field.AsField()).Join(", ")}) are not updatable.");
+                    throw new InvalidOperationException($"The following columns ({unmatches.Select(field => field.AsField()).Join(", ")}) " +
+                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>()}).");
                 }
             }
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -104,7 +106,7 @@ namespace RepoDb
                 .End();
             if (primary != null)
             {
-                var result = primary.IsIdentity() ? "SCOPE_IDENTITY()" : $"@{primary.Name}";
+                var result = primary.IsIdentity() ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
                 queryBuilder
                     .Select()
                     .WriteText(result)

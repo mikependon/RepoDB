@@ -133,8 +133,7 @@ namespace RepoDb
             var queryFields = new List<IQueryField>();
             var queryGroups = new List<IQueryGroup>();
             var conjunction = Conjunction.And;
-            var properties = obj.GetType().GetProperties().ToList();
-            properties.ForEach(property =>
+            obj.GetType().GetProperties().ToList().ForEach(property =>
             {
                 var fieldName = property.Name;
                 if (string.Equals(fieldName, Constant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
@@ -160,29 +159,35 @@ namespace RepoDb
                 {
                     var value = property.GetValue(obj);
                     var type = value?.GetType();
-                    if ((bool)type?.IsGenericType)
+                    if (type?.IsGenericType == false && type?.IsClass == false)
+                    {
+                        queryFields.Add(new QueryField(fieldName, value));
+                    }
+                    else
                     {
                         var operationProperty = type
                             .GetProperties()
-                            .FirstOrDefault(
-                                p => string.Equals(p.Name, Constant.Operation, StringComparison.InvariantCultureIgnoreCase));
+                            .FirstOrDefault(p => p.Name.ToLower() == Constant.Operation.ToLower());
                         var valueProperty = type
                             .GetProperties()
-                            .FirstOrDefault(
-                                p => string.Equals(p.Name, Constant.Value, StringComparison.InvariantCultureIgnoreCase));
-                        if (operationProperty == null || operationProperty?.PropertyType != typeof(Operation))
+                            .FirstOrDefault(p => p.Name.ToLower() == Constant.Value.ToLower());
+                        if (operationProperty == null)
                         {
-                            throw new InvalidOperationException($"The '{Constant.Operation}' property must be a type of '{typeof(Operation).FullName}'.");
+                            throw new InvalidOperationException($"Operation property must be present.");
+                        }
+                        if (operationProperty.PropertyType != typeof(Operation))
+                        {
+                            throw new InvalidOperationException($"Operation property must be of type '{typeof(Operation).FullName}'.");
                         }
                         if (valueProperty == null)
                         {
-                            throw new InvalidOperationException($"The field '{Constant.Value}' is not specified for '{fieldName}' field.");
+                            throw new InvalidOperationException($"Value property must be present.");
                         }
                         var operation = (Operation)operationProperty.GetValue(value);
                         value = valueProperty.GetValue(value);
                         if (value == null)
                         {
-                            throw new InvalidOperationException($"The field '{Constant.Value}' for property '{fieldName}' should not be null.");
+                            throw new InvalidOperationException($"Value property must not be null.");
                         }
                         if (operation == Operation.All || operation == Operation.Any)
                         {
@@ -203,48 +208,71 @@ namespace RepoDb
                         }
                         else
                         {
-                            var invalidValue = false;
-                            if (value.GetType().IsGenericType)
+                            if (operation == Operation.Between || operation == Operation.NotBetween)
                             {
-                                invalidValue = true;
+                                ValidateBetweenOperations(fieldName, operation, value);
+                            }
+                            else if (operation == Operation.In || operation == Operation.NotIn)
+                            {
+                                ValidateInOperations(fieldName, operation, value);
                             }
                             else
                             {
-                                if (operation == Operation.Between || operation == Operation.NotBetween ||
-                                    operation == Operation.In || operation == Operation.NotIn)
-                                {
-                                    if (value.GetType().IsArray)
-                                    {
-                                        var values = ((Array)value).AsEnumerable().ToList();
-                                        if (values.Count != 2)
-                                        {
-                                            invalidValue = true;
-                                        }
-                                        else
-                                        {
-                                            invalidValue = values.Any(v => v == null || (bool)v?.GetType().IsGenericType);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        invalidValue = true;
-                                    }
-                                }
-                            }
-                            if (invalidValue)
-                            {
-                                throw new InvalidOperationException($"Invalid value for field '{valueProperty.Name} ({operation.ToString()})'.");
+                                ValidateOtherOperations(fieldName, operation, value);
                             }
                             queryFields.Add(new QueryField(fieldName, operation, value));
                         }
                     }
-                    else
-                    {
-                        queryFields.Add(new QueryField(fieldName, value));
-                    }
                 }
             });
             return new QueryGroup(queryFields, queryGroups, conjunction);
+        }
+
+        private static void ValidateBetweenOperations(string fieldName, Operation operation, object value)
+        {
+            if (value.GetType().IsArray)
+            {
+                var values = ((Array)value).AsEnumerable().ToList();
+                if (values.Count != 2)
+                {
+                    throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). The count should be 2.");
+                }
+                else
+                {
+                    if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                    {
+                        throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
+                    }
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). Expecting an array values.");
+            }
+        }
+
+        private static void ValidateInOperations(string fieldName, Operation operation, object value)
+        {
+            if (value.GetType().IsArray)
+            {
+                var values = ((Array)value).AsEnumerable().ToList();
+                if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                {
+                    throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). Expecting an array values.");
+            }
+        }
+
+        private static void ValidateOtherOperations(string fieldName, Operation operation, object value)
+        {
+            if (value.GetType().IsGenericType)
+            {
+                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
+            }
         }
     }
 }
