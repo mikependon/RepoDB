@@ -2,17 +2,34 @@
 <package >
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.</description>
     <releaseNotes>
-		Updates (v1.0.9):
-		- Renamed ICache.Has to ICache.Contains
-		- Removed ICache.GetAll and implement the IEnumerable interface instead
-		- Optimized the mapping for SqlBulkCopy for 'BulkInsert'
-	</releaseNotes>
+      Updates (v1.0.10):
+      - Support Column-Based Update using Dynamics (new Repository.InlineUpdate operation)
+      - Supported BatchQuery Operation
+      - Supported Field-Level Mappings
+      - Added the currently used IQueryBuilder on the IStatementBuilder methods
+      - Added QueryBuilderCache object
+      - Added ExecutionTime (Timespan) property in the TraceLog class
+      - Added CommandTypeCache object
+      - Cached the CommadType on every calls
+      - Removed the Create, Drop, Alter, Execute Command Enum Values (until being supported)
+      - Added ClassMapNameCache object
+      - Cache Map.Name on every calls
+      - Added PropertyCache object
+      - Supported Entity Property Caching
+      - Added PrimaryPropertyCache object
+      - Supported Entity Primary Property Caching
+      - Added ClassMapCache object
+      - Cached the Map attribute on every calls
+      Fixes:
+      - Issue 2: Operation.In Exception is Thrown for Array Values
+      - Issue 1: Class Entity Map Attribute PrimaryKey Identification
+    </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>
   </metadata>

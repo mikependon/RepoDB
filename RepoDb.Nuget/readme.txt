@@ -6,11 +6,11 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 Link: https://www.nuget.org/packages/RepoDb
 
 ### Documentation
-Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation.md (in-progress)
+Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_v1.0.10.md (in-progress)
 
 ### Goal
 
-We aim to let .Net developers avoid writing more SQL Statements in the application. We believe that as a .Net developers, we should only focus on .Net development and not on writing repetitive SQL Statements, unless you are working closely in SQL Server Management Studio.
+We aim to let .Net developers limit the implementation of SQL Statements within the application. We believe that as a .Net developer, one should only focus on .Net and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
 
 ### Notes
 
@@ -19,3 +19,33 @@ We aim to let .Net developers avoid writing more SQL Statements in the applicati
  - We will never make complex implementations (specially for Queries and Methods)
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
+
+### Features
+
+ - BatchQuery/BatchQueryAsync
+ - Query/QueryAsync
+ - Insert/InsertAsync
+ - Delete/DeleteAsync
+ - Update/UpdateAsync
+ - InlineUpdate/InlineUpdateAsync
+ - Merge/MergeAsync
+ - BulkInsert/BulkInsertAsync
+ - Transaction
+ - Asynchronous Operations
+ - Type Mapping
+ - Field Mapping
+ - Expression Tree
+ - Caching
+ - Tracing
+ - SQL Builder
+
+### Next Release
+
+ - Reflection.Emit (SqlDataReader to Objects)
+ - Support ObjectMapper
+ - Support Multi-Mapping for Class-Level
+ - MemoryCache Flush
+ 
+### Todos
+
+ - Documentation: Trace, StatementBuilder, InlineUpdate, BatchQuery, Field Mapping

@@ -11,9 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Tests", "RepoDb.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Documents", "RepoDb.Documents", "{4912DE3A-8A56-4ACF-8515-6A7A022158F5}"
 	ProjectSection(SolutionItems) = preProject
-		RepoDb.Documents\documentation.md = RepoDb.Documents\documentation.md
-		RepoDb.Documents\install.txt = RepoDb.Documents\install.txt
-		RepoDb.Documents\todos.md = RepoDb.Documents\todos.md
+		RepoDb.Documents\documentation_v1.0.10.md = RepoDb.Documents\documentation_v1.0.10.md
+		RepoDb.Documents\documentation_v1.0.9.md = RepoDb.Documents\documentation_v1.0.9.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{45B62C42-5ECA-42B6-B8F1-7809AB961959}"
