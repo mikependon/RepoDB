@@ -22,22 +22,22 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Next Version (v1.0.10)
 
+ - Support Column-Based Update using Dynamics (new **Repository.InlineUpdate** operation)
+ - Supported **BatchQuery** Operation
  - Added the currently used IQueryBuilder on the IStatementBuilder methods
  - Added QueryBuilderCache object
  - Added ExecutionTime (Timespan) property in the TraceLog class
  - Added CommandTypeCache object
  - Cached the CommadType on every calls
  - Removed the Create, Drop, Alter, Execute command enum values (until being supported)
- - Added MapNameCache object
- - Cache MapName on every calls
+ - Added ClassMapNameCache object
+ - Cache Map.Name on every calls
  - Added PropertyCache object
  - Supported Entity Property Caching
  - Added PrimaryPropertyCache object
  - Supported Entity Primary Property Caching
- - Support Column-Based Update (or `Inline Updates`) using Dynamics
- - Added MapCache object
- - Cached the Map on every calls
- - Supported BatchQuery Operation
+ - Added ClassMapCache object
+ - Cached the Map attribute on every calls
  
 ### Features
 
