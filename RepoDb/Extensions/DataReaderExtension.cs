@@ -1,4 +1,7 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
+using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -10,12 +13,13 @@ namespace RepoDb.Extensions
     public static class DataReaderExtension
     {
         internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
+            where T : IDataEntity
         {
-            var properties = typeof(T).GetProperties().ToList();
+            var properties = PropertyCache.Get<T>(Command.None); // typeof(T).GetProperties().ToList();
             var dictionary = new Dictionary<int, PropertyInfo>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var property = properties.FirstOrDefault(p => p.Name.ToLower() == reader.GetName(i).ToLower());
+                var property = properties.FirstOrDefault(p => p.GetMappedName().ToLower() == reader.GetName(i).ToLower());
                 if (property != null)
                 {
                     dictionary.Add(i, property);

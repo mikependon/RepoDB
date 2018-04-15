@@ -10,76 +10,83 @@ namespace RepoDb.Extensions
 {
     public static class PropertyInfoExtension
     {
-        // ToEnumerable
-        internal static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
+        // AsEnumerable
+        public static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
         {
             return property != null ? new[] { property } : null;
         }
 
+        // GetMappedName
+        public static string GetMappedName(this PropertyInfo property)
+        {
+            var attribute = property.GetCustomAttribute(typeof(MapAttribute)) as MapAttribute;
+            return (attribute?.Name ?? property.Name);
+        }
+
         // IsIgnored
-        internal static bool IsIgnored(this PropertyInfo property, Command command)
+        public static bool IsIgnored(this PropertyInfo property, Command command)
         {
             var ignore = property.GetCustomAttribute<IgnoreAttribute>();
             return (ignore != null && (ignore.Command & command) == command && ignore.Command != Command.None);
         }
 
         // IsPrimary
-        internal static bool IsPrimary(this PropertyInfo property)
+        public static bool IsPrimary(this PropertyInfo property)
         {
             return (property.GetCustomAttribute<PrimaryAttribute>() != null);
         }
 
         // IsIdentity
-        internal static bool IsIdentity(this PropertyInfo property)
+        public static bool IsIdentity(this PropertyInfo property)
         {
             var primary = property.GetCustomAttribute<PrimaryAttribute>();
             return (primary?.IsIdentity).HasValue;
         }
 
         // AsQueryField
-        internal static IQueryField AsQueryField(this PropertyInfo property, object entity)
+        public static IQueryField AsQueryField(this PropertyInfo property, object entity)
         {
             return new QueryField(property.Name, property.GetValue(entity));
         }
 
         // AsDataColumn
-        internal static DataColumn AsDataColumn(this PropertyInfo property)
+        public static DataColumn AsDataColumn(this PropertyInfo property)
         {
             return new DataColumn(property.Name, property.PropertyType);
         }
 
         // AsJoinQualifier
-        internal static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
+        public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
         {
             return $"{leftAlias}.[{property.Name}] = {rightAlias}.[{property.Name}]";
         }
 
         // AsField
-        internal static string AsField(this PropertyInfo property)
+        public static string AsField(this PropertyInfo property)
         {
             return $"[{property.Name}]";
         }
 
         // AsParameter
-        internal static string AsParameter(this PropertyInfo property)
+        public static string AsParameter(this PropertyInfo property)
         {
             return $"@{property.Name}";
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this PropertyInfo property)
+        public static string AsParameterAsField(this PropertyInfo property)
         {
             return $"{AsParameter(property)} {Constant.As.ToUpper()} {AsField(property)}";
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this PropertyInfo property)
+        public static string AsFieldAndParameter(this PropertyInfo property)
         {
             return $"{AsField(property)} = {AsParameter(property)}";
         }
 
         // AsFieldAndAliasField
-        internal static string AsFieldAndAliasField(this PropertyInfo property, string alias)
+        public static string AsFieldAndAliasField(this PropertyInfo property, string alias)
         {
             return $"{AsField(property)} = {alias}.{AsField(property)}";
         }
@@ -87,31 +94,31 @@ namespace RepoDb.Extensions
         /* IEnumerable<PropertyInfo> */
 
         // AsFields
-        internal static IEnumerable<string> AsFields(this IEnumerable<PropertyInfo> properties)
+        public static IEnumerable<string> AsFields(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsField());
         }
 
         // AsParameters
-        internal static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
+        public static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameter());
         }
 
         // AsParametersAsFields
-        internal static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
+        public static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameterAsField());
         }
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
+        public static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsFieldAndParameter());
         }
 
         // AsFieldsAndAliasFields
-        internal static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
+        public static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
         {
             return properties?.Select(property => property.AsFieldAndAliasField(alias));
         }

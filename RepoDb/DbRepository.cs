@@ -77,7 +77,7 @@ namespace RepoDb
             var primaryKey = PrimaryPropertyCache.Get<TEntity>();
             if (primaryKey == null)
             {
-                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({MapNameCache.Get<TEntity>()})");
+                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({ClassMapNameCache.Get<TEntity>()})");
             }
             return primaryKey;
         }
@@ -89,7 +89,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsBatchQueryble<TEntity>())
             {
-                throw new EntityNotBatchQueryableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -246,7 +246,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
-                throw new EntityNotQueryableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotQueryableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -295,8 +295,8 @@ namespace RepoDb
                 }
                 else
                 {
-                    var primaryKey = GetAndGuardPrimaryKey<TEntity>();
-                    queryGroup = new QueryGroup(new QueryField(primaryKey.Name, where).AsEnumerable());
+                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
             return Query<TEntity>(where: queryGroup,
@@ -326,7 +326,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                MapNameCache.Get<TEntity>() :
+                ClassMapNameCache.Get<TEntity>() :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
@@ -430,7 +430,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInsertable<TEntity>())
             {
-                throw new EntityNotInsertableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotInsertableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -449,7 +449,7 @@ namespace RepoDb
             // Before Execution
             if (Trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 Trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -500,7 +500,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsUpdateable<TEntity>())
             {
-                throw new EntityNotUpdateableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotUpdateableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -758,7 +758,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
             {
-                throw new EntityNotDeletableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotDeletableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -876,7 +876,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsMergeable<TEntity>())
             {
-                throw new EntityNotMergeableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotMergeableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 
@@ -904,7 +904,7 @@ namespace RepoDb
             // Before Execution
             if (Trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
                 Trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -964,7 +964,7 @@ namespace RepoDb
         {
             if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
             {
-                throw new EntityNotBulkInsertableException(MapNameCache.Get<TEntity>());
+                throw new EntityNotBulkInsertableException(ClassMapNameCache.Get<TEntity>());
             }
         }
 

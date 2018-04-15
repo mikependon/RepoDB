@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
         // GetCommandType
         internal static CommandType GetCommandType(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute?.CommandType ?? CommandType.Text;
         }
 
@@ -114,7 +114,7 @@ namespace RepoDb.Extensions
         // GetMappedName
         internal static string GetMappedName(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute?.Name ?? type.Name;
         }
 
@@ -138,7 +138,7 @@ namespace RepoDb.Extensions
                 .ToList()
                 .ForEach(property =>
                 {
-                    expandObject[property.Name] = property.GetValue(dataEntity);
+                    expandObject[property.GetMappedName()] = property.GetValue(dataEntity);
                 });
             queryGroup?
                 .Fix()
@@ -175,7 +175,9 @@ namespace RepoDb.Extensions
                         var dataType = Type.GetType(Convert.ToString(row[Constant.DataType]));
                         var dataColumn = new DataColumn(columnName, dataType);
                         var property = properties.FirstOrDefault(p =>
-                            string.Equals(columnName, p.Name, StringComparison.InvariantCultureIgnoreCase));
+                        {
+                            return columnName.ToLower() == p.GetMappedName().ToLower();
+                        });
                         table.Columns.Add(dataColumn);
                         dict.Add(dataColumn, property);
                     }
@@ -213,7 +215,7 @@ namespace RepoDb.Extensions
         // IsBatchQueryble
         internal static bool IsBatchQueryble(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute == null ? true : attribute.CommandType == CommandType.Text;
         }
 
@@ -231,7 +233,7 @@ namespace RepoDb.Extensions
         // InInsertable
         internal static bool InInsertable(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
@@ -249,7 +251,7 @@ namespace RepoDb.Extensions
         // IsUpdateable
         internal static bool IsUpdateable(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 
@@ -267,7 +269,7 @@ namespace RepoDb.Extensions
         // IsDeletable
         internal static bool IsDeletable(Type type)
         {
-            var attribute = MapCache.Get(type);
+            var attribute = ClassMapCache.Get(type);
             return attribute?.CommandType != CommandType.StoredProcedure;
         }
 

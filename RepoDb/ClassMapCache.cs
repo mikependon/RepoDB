@@ -6,7 +6,7 @@ using RepoDb.Attributes;
 
 namespace RepoDb
 {
-    public static class MapCache
+    public static class ClassMapCache
     {
         private static readonly IDictionary<Type, MapAttribute> _cache = new Dictionary<Type, MapAttribute>();
 

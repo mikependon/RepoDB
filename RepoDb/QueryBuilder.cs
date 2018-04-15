@@ -73,8 +73,8 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Fields(Command command)
         {
-            var properties = PropertyCache.Get<TEntity>(command).ToList();
-            return Append(properties?.AsFields().Join(", "));
+            var fields = PropertyMapNameCache.Get<TEntity>(command).ToList();
+            return Append(fields?.AsFields().Join(", "));
         }
 
         public IQueryBuilder<TEntity> Fields(IEnumerable<IField> fields)
@@ -84,7 +84,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
-            return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
+            return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
         }
 
         public IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<IField> fields)
@@ -94,7 +94,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
-            return Append(PropertyCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
+            return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         public IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias)
@@ -171,12 +171,12 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Table()
         {
-            return Append($"{MapNameCache.Get<TEntity>()}");
+            return Append($"{ClassMapNameCache.Get<TEntity>()}");
         }
 
         public IQueryBuilder<TEntity> Parameters(Command command)
         {
-            var properties = PropertyCache.Get<TEntity>(command)?.ToList();
+            var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
             return Append(properties?.AsParameters().Join(", "));
         }
 
@@ -187,7 +187,7 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> ParametersAsFields(Command command)
         {
-            var properties = PropertyCache.Get<TEntity>(command)?.ToList();
+            var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
             return Append(properties?.AsParametersAsFields().Join(", "));
         }
 

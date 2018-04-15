@@ -5,7 +5,7 @@ using RepoDb.Extensions;
 
 namespace RepoDb
 {
-    public static class MapNameCache
+    public static class ClassMapNameCache
     {
         private static readonly IDictionary<Type, string> _cache = new Dictionary<Type, string>();
 

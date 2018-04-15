@@ -45,10 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
-    <Compile Include="MapCache.cs" />
+    <Compile Include="ClassMapCache.cs" />
+    <Compile Include="PropertyMapNameCache.cs" />
     <Compile Include="PrimaryPropertyCache.cs" />
     <Compile Include="PropertyCache.cs" />
-    <Compile Include="MapNameCache.cs" />
+    <Compile Include="ClassMapNameCache.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
