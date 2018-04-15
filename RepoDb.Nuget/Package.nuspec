@@ -1,12 +1,16 @@
-<?xml version="1.0"?>
-<package >
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
     <version>1.0.10</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <title>RepoDb</title>
     <description>A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.</description>
+    <language>en-US</language>
+    <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
+    <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
       Updates (v1.0.10):
       - Support Column-Based Update using Dynamics (new Repository.InlineUpdate operation)
@@ -34,7 +38,7 @@
     <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>
   </metadata>
   <files>
-	<file src="readme.txt" target="lib\RepoDb\readme.txt" />
-	<file src="RepoDb.dll" target="lib\RepoDb\RepoDb.dll" />
+	  <file src="readme.txt" target="lib\RepoDb\readme.txt" />
+	  <file src="RepoDb.dll" target="lib\RepoDb\RepoDb.dll" />
   </files>
 </package>
