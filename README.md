@@ -19,8 +19,27 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - We will never make complex implementations (specially for Queries and Methods)
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
- 
+
 ### Features
+
+ - BatchQuery/BatchQueryAsync
+ - Query/QueryAsync
+ - Insert/InsertAsync
+ - Delete/DeleteAsync
+ - Update/UpdateAsync
+ - InlineUpdate/InlineUpdateAsync
+ - Merge/MergeAsync
+ - BulkInsert/BulkInsertAsync
+ - Transaction
+ - Asynchronous Operations
+ - Type Mapping
+ - Field Mapping
+ - Expression Tree
+ - Caching
+ - Tracing
+ - SQL Builder
+
+### Next Release
 
  - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
