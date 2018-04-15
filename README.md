@@ -20,26 +20,6 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
  
-### Next Version (v1.0.10)
-
- - Support Column-Based Update using Dynamics (new **Repository.InlineUpdate** operation)
- - Supported **BatchQuery** Operation
- - Supported **Field-Level Mappings**
- - Added the currently used IQueryBuilder on the IStatementBuilder methods
- - Added QueryBuilderCache object
- - Added ExecutionTime (Timespan) property in the TraceLog class
- - Added CommandTypeCache object
- - Cached the CommadType on every calls
- - Removed the Create, Drop, Alter, Execute command enum values (until being supported)
- - Added ClassMapNameCache object
- - Cache Map.Name on every calls
- - Added PropertyCache object
- - Supported Entity Property Caching
- - Added PrimaryPropertyCache object
- - Supported Entity Primary Property Caching
- - Added ClassMapCache object
- - Cached the Map attribute on every calls
- 
 ### Features
 
  - Reflection.Emit (SqlDataReader to Objects)
@@ -49,4 +29,4 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Todos
 
- - Documentation: Trace, StatementBuilder, InlineUpdate, BatchQuery
+ - Documentation: Trace, StatementBuilder, InlineUpdate, BatchQuery, Field Mapping
