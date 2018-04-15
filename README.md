@@ -24,6 +24,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 
  - Support Column-Based Update using Dynamics (new **Repository.InlineUpdate** operation)
  - Supported **BatchQuery** Operation
+ - Supported **Field-Level Mappings**
  - Added the currently used IQueryBuilder on the IStatementBuilder methods
  - Added QueryBuilderCache object
  - Added ExecutionTime (Timespan) property in the TraceLog class
@@ -41,7 +42,6 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  
 ### Features
 
- - Support Field-Level Mapping
  - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
