@@ -30,6 +30,9 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - InlineUpdate/InlineUpdateAsync
  - Merge/MergeAsync
  - BulkInsert/BulkInsertAsync
+ - ExecuteReader/ExecuteReaderAsync
+ - ExecuteNonQuery/ExecuteNonQueryAsync
+ - ExecuteScalar/ExecuteScalarAsync
  - Transaction
  - Asynchronous Operations
  - Type Mapping
