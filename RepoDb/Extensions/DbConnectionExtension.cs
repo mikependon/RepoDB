@@ -3,6 +3,7 @@ using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -80,6 +81,8 @@ namespace RepoDb.Extensions
                 command.CreateParameters(param);
                 using (var reader = command.ExecuteReader())
                 {
+                    //var mapper = new Reflection.DbDataReaderMapper<TEntity>((DbDataReader)reader);
+                    //var list = mapper.AsEnumerable();
                     var list = reader.AsEnumerable<TEntity>();
 
                     // After Execution

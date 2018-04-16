@@ -114,6 +114,7 @@
     <Compile Include="QueryGroup.cs" />
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
+    <Compile Include="Reflection\DataReaderTypeMapper.cs" />
     <Compile Include="SqlDbStatementBuilder.cs" />
     <Compile Include="StatementBuilderMap.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
