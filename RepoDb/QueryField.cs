@@ -95,12 +95,9 @@ namespace RepoDb
                 {
                     throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). The count should be 2.");
                 }
-                else
+                if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
                 {
-                    if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
-                    {
-                        throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
-                    }
+                    throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
                 }
             }
             else

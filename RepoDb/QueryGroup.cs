@@ -159,16 +159,16 @@ namespace RepoDb
                 {
                     var value = property.GetValue(obj);
                     var type = value?.GetType();
-                    if (type?.IsGenericType == false && type?.IsClass == false)
+                    if (type?.IsGenericType == false)
                     {
                         queryFields.Add(new QueryField(fieldName, value));
                     }
                     else
                     {
-                        var operationProperty = type
+                        var operationProperty = type?
                             .GetProperties()
                             .FirstOrDefault(p => p.Name.ToLower() == Constant.Operation.ToLower());
-                        var valueProperty = type
+                        var valueProperty = type?
                             .GetProperties()
                             .FirstOrDefault(p => p.Name.ToLower() == Constant.Value.ToLower());
                         if (operationProperty == null)
