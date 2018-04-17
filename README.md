@@ -44,7 +44,6 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 
 ### Next Release
 
- - Reflection.Emit (SqlDataReader to Objects)
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
