@@ -12,14 +12,14 @@ namespace RepoDb.Reflection
 {
     public static class DbDataReaderMapper
     {
-        private delegate TEntity MapEntityDelegage<TEntity>(DbDataReader dataReader)
+        private delegate TEntity MapEntityDataReaderDelegate<TEntity>(DbDataReader dataReader)
             where TEntity : IDataEntity;
         private static Dictionary<Type, Delegate> _caches = new Dictionary<Type, Delegate>();
 
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
-            var @delegate = (MapEntityDelegage<TEntity>)Get<TEntity>();
+            var @delegate = (MapEntityDataReaderDelegate<TEntity>)Get<TEntity>();
             var list = new List<TEntity>();
             while (reader.Read())
             {
@@ -100,7 +100,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ret);
 
             // Create a delegate
-            return dynamicMethod.CreateDelegate(typeof(MapEntityDelegage<TEntity>));
+            return dynamicMethod.CreateDelegate(typeof(MapEntityDataReaderDelegate<TEntity>));
         }
     }
 }
