@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,27 +12,7 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      Updates (v1.0.10):
-      - Support Column-Based Update using Dynamics (new Repository.InlineUpdate operation)
-      - Supported BatchQuery Operation
-      - Supported Field-Level Mappings
-      - Added the currently used IQueryBuilder on the IStatementBuilder methods
-      - Added QueryBuilderCache object
-      - Added ExecutionTime (Timespan) property in the TraceLog class
-      - Added CommandTypeCache object
-      - Cached the CommadType on every calls
-      - Removed the Create, Drop, Alter, Execute Command Enum Values (until being supported)
-      - Added ClassMapNameCache object
-      - Cache Map.Name on every calls
-      - Added PropertyCache object
-      - Supported Entity Property Caching
-      - Added PrimaryPropertyCache object
-      - Supported Entity Primary Property Caching
-      - Added ClassMapCache object
-      - Cached the Map attribute on every calls
-      Fixes:
-      - Issue 2: Operation.In Exception is Thrown for Array Values
-      - Issue 1: Class Entity Map Attribute PrimaryKey Identification
+      Reflection (IL Emitting)
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>sql sqlserver database db repository dbrepository structured repo repodb sql orm micro-orm .net </tags>

@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Documents", "RepoDb.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{45B62C42-5ECA-42B6-B8F1-7809AB961959}"
 	ProjectSection(SolutionItems) = preProject
+		RepoDb.Nuget\documentation.md = RepoDb.Nuget\documentation.md
 		RepoDb.Nuget\nuget.exe = RepoDb.Nuget\nuget.exe
 		RepoDb.Nuget\Package.nuspec = RepoDb.Nuget\Package.nuspec
 		RepoDb.Nuget\readme.txt = RepoDb.Nuget\readme.txt
