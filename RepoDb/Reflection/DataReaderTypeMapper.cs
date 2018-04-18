@@ -5,15 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace RepoDb.Reflection
 {
     public static class DbDataReaderMapper
     {
-        private delegate TEntity MapEntityDataReaderDelegate<TEntity>(DbDataReader dataReader)
-            where TEntity : IDataEntity;
+        private delegate TEntity MapEntityDataReaderDelegate<TEntity>(DbDataReader dataReader) where TEntity : IDataEntity;
         private static Dictionary<Type, Delegate> _caches = new Dictionary<Type, Delegate>();
 
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
@@ -43,52 +41,50 @@ namespace RepoDb.Reflection
         private static Delegate CreateDelegate<TEntity>()
             where TEntity : IDataEntity
         {
-            var executeAssemblyType = Assembly.GetExecutingAssembly().GetType();
             var dataReaderType = typeof(DbDataReader);
             var entityType = typeof(TEntity);
-            var dynamicMethod = new DynamicMethod("DataReaderEntityMapper", entityType, new[] { dataReaderType },
-                executeAssemblyType.Module, true);
+            var converType = typeof(Convert);
+            var stringTypes = new[] { typeof(string) };
+            var objectTypes = new[] { typeof(object) };
+            var readerItemMethod = dataReaderType.GetProperty("Item", stringTypes).GetMethod;
+            var convertToStringMethod = converType.GetMethod($"ToString", objectTypes);
+            var dynamicMethod = new DynamicMethod("EntityMapper", entityType, new[] { dataReaderType });
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
-            ilGenerator.DeclareLocal(typeof(TEntity));
+            var entity = ilGenerator.DeclareLocal(entityType);
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
-            ilGenerator.Emit(OpCodes.Stloc_0);
+            ilGenerator.Emit(OpCodes.Stloc, entity);
 
             // Iterate every properties
             PropertyCache.Get<TEntity>(Command.Select)
                 .ToList()
                 .ForEach(property =>
                 {
-                    // Used the first local variable
-                    ilGenerator.Emit(OpCodes.Ldloc_0);
-                    ilGenerator.Emit(OpCodes.Ldarg_0);
+                    // Load the TEntity instance
+                    ilGenerator.Emit(OpCodes.Ldloc, entity);
+                    ilGenerator.Emit(OpCodes.Ldarg, entity);
 
                     // Load the value base on the Mapped Name for the first local variable
                     ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
 
-                    // Get the dataReader[..] method as default
-                    var dataReaderMethod = dataReaderType.GetMethod("get_Item", new[] { typeof(string) });
-
-                    // Call the data reader method
-                    ilGenerator.Emit(OpCodes.Callvirt, dataReaderMethod);
+                    // Call the reader[] method
+                    ilGenerator.Emit(OpCodes.Callvirt, readerItemMethod);
 
                     // Switch which method of Convert are going to used
-                    var converType = typeof(Convert);
-                    var convertMethod = converType.GetMethod($"To{property.PropertyType.Name}", new[] { typeof(object) }) ??
-                                        converType.GetMethod($"ToString", new[] { typeof(object) });
+                    var convertMethod = converType.GetMethod($"To{property.PropertyType.Name}", objectTypes) ?? convertToStringMethod;
 
                     // Call the Convert.Get<Method>
                     ilGenerator.Emit(OpCodes.Call, convertMethod);
 
-                    // Set the entity property
-                    ilGenerator.Emit(OpCodes.Callvirt, entityType.GetMethod($"set_{property.Name}", new[] { property.PropertyType }));
+                    // Set the TEntity property
+                    ilGenerator.Emit(OpCodes.Call, property.SetMethod);
                 });
 
-            // Return the value
-            ilGenerator.Emit(OpCodes.Ldloc_0);
+            // Return the TEntity instance value
+            ilGenerator.Emit(OpCodes.Ldloc, entity);
             ilGenerator.Emit(OpCodes.Ret);
 
             // Create a delegate
