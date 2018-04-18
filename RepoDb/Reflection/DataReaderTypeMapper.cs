@@ -43,7 +43,6 @@ namespace RepoDb.Reflection
         private static Delegate CreateDelegate<TEntity>()
             where TEntity : IDataEntity
         {
-            // Variables
             var executeAssemblyType = Assembly.GetExecutingAssembly().GetType();
             var dataReaderType = typeof(DbDataReader);
             var entityType = typeof(TEntity);
@@ -63,36 +62,29 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    // Reset first
+                    // Used the first local variable
                     ilGenerator.Emit(OpCodes.Ldloc_0);
                     ilGenerator.Emit(OpCodes.Ldarg_0);
 
-                    // Load the value base on the Mapped Name
+                    // Load the value base on the Mapped Name for the first local variable
                     ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
-                    
+
                     // Get the dataReader[..] method as default
                     var dataReaderMethod = dataReaderType.GetMethod("get_Item", new[] { typeof(string) });
 
                     // Call the data reader method
                     ilGenerator.Emit(OpCodes.Callvirt, dataReaderMethod);
 
-                    // Switch based on the type
+                    // Switch which method of Convert are going to used
                     var converType = typeof(Convert);
-                    var convertMethod = converType.GetMethod($"To{property.PropertyType.Name}", new[] { typeof(object) });
+                    var convertMethod = converType.GetMethod($"To{property.PropertyType.Name}", new[] { typeof(object) }) ??
+                                        converType.GetMethod($"ToString", new[] { typeof(object) });
 
-                    if (convertMethod != null)
-                    {
-                        // Call the Convert.Get<Method>
-                        ilGenerator.Emit(OpCodes.Call, convertMethod);
+                    // Call the Convert.Get<Method>
+                    ilGenerator.Emit(OpCodes.Call, convertMethod);
 
-                        // Set the entity property
-                        ilGenerator.Emit(OpCodes.Callvirt, entityType.GetMethod($"set_{property.Name}", new Type[] { property.PropertyType }));
-                    }
-                    else
-                    {
-                        // Missing method, not convertable
-                        throw new MissingMethodException($"Missing method To{property.PropertyType.Name} from type Convert.");
-                    }
+                    // Set the entity property
+                    ilGenerator.Emit(OpCodes.Callvirt, entityType.GetMethod($"set_{property.Name}", new[] { property.PropertyType }));
                 });
 
             // Return the value
