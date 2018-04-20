@@ -12,6 +12,10 @@ Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/document
 
 We aim to let .Net developers limit the implementation of SQL Statements within the application. We believe that as a .Net developer, one should only focus on .Net and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
 
+### Community Address
+
+As of to date, **RepoDb** is a running project. We will soon announce the stable release once we completed the 3 remaining features stated in the Next-Features and the Unit and Regression Tests. In preparation for the future usage, please refer to the documentation stated above. All developers can play around the library, but we advised not to used it for major projects for now.
+
 ### Notes
 
  - We will keep it simple as possible (KISS principle)
@@ -44,6 +48,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
 
 ### Next Release
 
+ - Return IDataReader object when using the IDbConnection.ExecuteReader
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
