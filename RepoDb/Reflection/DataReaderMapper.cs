@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToEntity<TEntity>();
+            var @delegate = DelegateCache.GetDataReaderToEntityMapperDelegate<TEntity>();
             return @delegate(reader);
         }
 
@@ -31,7 +31,7 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToEntity<TEntity>();
+            var @delegate = DelegateCache.GetDataReaderToEntityMapperDelegate<TEntity>();
             var list = new List<TEntity>();
             while (reader.Read())
             {
