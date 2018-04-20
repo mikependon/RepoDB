@@ -1,5 +1,4 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,8 @@ namespace RepoDb.Extensions
         internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
             where T : IDataEntity
         {
-            var properties = PropertyCache.Get<T>(Command.None); // typeof(T).GetProperties().ToList();
+            var properties = PropertyCache.Get<T>(Command.None)
+                .Where(property => property.CanWrite);
             var dictionary = new Dictionary<int, PropertyInfo>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
@@ -31,7 +31,7 @@ namespace RepoDb.Extensions
                 var obj = Activator.CreateInstance<T>();
                 foreach (var kvp in dictionary)
                 {
-                    var value = reader.IsDBNull(kvp.Key) ? null : reader[kvp.Key];
+                    var value = reader.IsDBNull(kvp.Key) ? null : reader.GetValue(kvp.Key);
                     kvp.Value.SetValue(obj, value);
                 }
                 list.Add(obj);

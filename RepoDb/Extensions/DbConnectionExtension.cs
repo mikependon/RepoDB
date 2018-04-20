@@ -81,8 +81,8 @@ namespace RepoDb.Extensions
                 command.CreateParameters(param);
                 using (var reader = command.ExecuteReader())
                 {
-                    var list = Reflection.DbDataReaderMapper.ToEnumerable<TEntity>((DbDataReader)reader);
-                    //var list = reader.AsEnumerable<TEntity>();
+                    var list = Reflection.DataReaderToEntityTypeMapper.ToEnumerable<TEntity>((DbDataReader)reader);
+                    // var list = reader.AsEnumerable<TEntity>();
 
                     // After Execution
                     if (trace != null)
