@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
         /// <returns>An IL emitted Delegate object used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.</returns>
         public static DataReaderToEntityMapperDelegate<TEntity> GetDataReaderToEntityMapperDelegate<TEntity>()
             where TEntity : IDataEntity
-        {//GetDataReaderToEntity
+        {
             var key = typeof(TEntity);
             if (!_createEntityDelegates.ContainsKey(key))
             {
