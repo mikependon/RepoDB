@@ -23,6 +23,22 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - We will never make complex implementations (specially for Queries and Methods)
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
+ 
+### Next Version (1.0.15)
+
+ - Fixed the IL Emitter when mapping DataReader to Null propeprties.
+ - Added ConstructorInfoCache
+ - Added DataReaderMapper
+ - Added DelegateCache
+ - Created DelegateFactory
+ - Added Delegates (DataReaderToEntityMapperDelegate)
+ - Added MethodInfoCache
+ - Added MethodInfoTypes
+ - Created ReflectionFactory
+ - Added TypeArrayCache
+ - Added TypeArrayTypes
+ - Added TypeCache
+ - Added TypeTypes
 
 ### Features
 
