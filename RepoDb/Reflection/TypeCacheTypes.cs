@@ -18,9 +18,17 @@
         /// </summary>
         ExecutingAssemblyType,
         /// <summary>
+        /// An System.Reflection.MethodInfo type.
+        /// </summary>
+        MethodInfo,
+        /// <summary>
         /// An System.Object type.
         /// </summary>
         ObjectType,
+        /// <summary>
+        /// An System.Reflection.PropertyInfo type.
+        /// </summary>
+        PropertyInfo,
         /// <summary>
         /// A System.String type.
         /// </summary>

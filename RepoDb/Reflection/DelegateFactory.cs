@@ -13,12 +13,15 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class DelegateFactory
     {
-        // Delegates
-
+        /// <summary>
+        /// Gets a delegate that is used to convert the System.Data.Common.DbDataReader object to RepoDb.Interfaces.IDataEntity object.
+        /// </summary>
+        /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity object to convert to.</typeparam>
+        /// <returns>An instance of RepoDb.Interfaces.IDataEntity object.</returns>
         public static DataReaderToEntityDelegate<TEntity> GetDataReaderToEntity<TEntity>() where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
-            var dynamicMethod = new DynamicMethod("EntityMapper",
+            var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
                 entityType,
                 TypeArrayCache.Get(TypeArrayCacheTypes.DataReaderTypes),
                 TypeCache.Get(TypeCacheTypes.ExecutingAssemblyType),
@@ -27,6 +30,7 @@ namespace RepoDb.Reflection
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
+            ilGenerator.DeclareLocal(typeof(PropertyInfo));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
@@ -65,12 +69,22 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoCacheTypes.DataReaderGetItemMethod));
             ilGenerator.Emit(OpCodes.Nop);
 
+            // Get the property type
+            var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+            var propertyType = underlyingType ?? property.PropertyType;
+
             // Switch which method of Convert are going to used
-            var convertMethod = MethodInfoCache.GetConvertTo(property.PropertyType) ??
-                    MethodInfoCache.Get(MethodInfoCacheTypes.ConvertToStringMethod);
+            var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ??
+                MethodInfoCache.Get(MethodInfoCacheTypes.ConvertToStringMethod);
 
             // Call the Convert.Get<Method>
             ilGenerator.Emit(OpCodes.Call, convertMethod);
+
+            // Check for nullable based on the underlying type
+            if (underlyingType != null)
+            {
+                // This is a nullable property
+            }
 
             // Set the TEntity property
             ilGenerator.Emit(OpCodes.Call, property.SetMethod);

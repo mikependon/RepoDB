@@ -41,8 +41,12 @@ namespace RepoDb.Reflection
                     return typeof(DbDataReader);
                 case TypeCacheTypes.ExecutingAssemblyType:
                     return Assembly.GetExecutingAssembly().GetType();
+                case TypeCacheTypes.MethodInfo:
+                    return typeof(MethodInfo);
                 case TypeCacheTypes.ObjectType:
                     return typeof(object);
+                case TypeCacheTypes.PropertyInfo:
+                    return typeof(PropertyInfo);
                 case TypeCacheTypes.StringType:
                     return typeof(string);
                 default:

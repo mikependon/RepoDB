@@ -10,6 +10,7 @@
         public static readonly string Conjunction = "Conjunction";
         public static readonly string DataType = "DataType";
         public static readonly string Delete = "Delete";
+        public static readonly string DynamicMethod = "DynamicMethod";
         public static readonly string ExecuteNonQuery = "ExecuteNonQuery";
         public static readonly string ExecuteReader = "ExecuteReader";
         public static readonly string ExecuteReaderEx = "ExecuteReaderEx";

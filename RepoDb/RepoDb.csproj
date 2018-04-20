@@ -124,7 +124,6 @@
     <Compile Include="Reflection\DelegateCache.cs" />
     <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\Delegates.cs" />
-    <Compile Include="Reflection\ReflectionTypeCache.cs" />
     <Compile Include="SqlDbStatementBuilder.cs" />
     <Compile Include="StatementBuilderMap.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
