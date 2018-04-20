@@ -48,6 +48,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
+ - Return IDataReader object when using the IDbConnection.ExecuteReader
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
