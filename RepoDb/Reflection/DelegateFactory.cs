@@ -18,19 +18,18 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity object to convert to.</typeparam>
         /// <returns>An instance of RepoDb.Interfaces.IDataEntity object.</returns>
-        public static DataReaderToEntityDelegate<TEntity> GetDataReaderToEntity<TEntity>() where TEntity : IDataEntity
+        public static DataReaderToEntityMapperDelegate<TEntity> GetDataReaderToEntity<TEntity>() where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
                 entityType,
-                TypeArrayCache.Get(TypeArrayCacheTypes.DataReaderTypes),
-                TypeCache.Get(TypeCacheTypes.ExecutingAssemblyType),
+                TypeArrayCache.Get(TypeArrayTypes.DataReaderTypes),
+                TypeCache.Get(TypeTypes.ExecutingAssemblyType),
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
-            ilGenerator.DeclareLocal(typeof(PropertyInfo));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
@@ -50,7 +49,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ret);
 
             // Create a delegate
-            return (DataReaderToEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToEntityDelegate<TEntity>));
+            return (DataReaderToEntityMapperDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToEntityMapperDelegate<TEntity>));
         }
 
         // Private Methods
@@ -63,11 +62,9 @@ namespace RepoDb.Reflection
 
             // Load the value base on the MappedName
             ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
-            ilGenerator.Emit(OpCodes.Nop);
 
             // Call the reader[] method
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoCacheTypes.DataReaderGetItemMethod));
-            ilGenerator.Emit(OpCodes.Nop);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderGetItemMethod));
 
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -75,7 +72,7 @@ namespace RepoDb.Reflection
 
             // Switch which method of Convert are going to used
             var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ??
-                MethodInfoCache.Get(MethodInfoCacheTypes.ConvertToStringMethod);
+                MethodInfoCache.Get(MethodInfoTypes.ConvertToStringMethod);
 
             // Call the Convert.Get<Method>
             ilGenerator.Emit(OpCodes.Call, convertMethod);
@@ -83,10 +80,15 @@ namespace RepoDb.Reflection
             // Check for nullable based on the underlying type
             if (underlyingType != null)
             {
-                // This is a nullable property
-            }
+                // Get the type of Nullable<T> object
+                var nullableType = TypeCache.Get(TypeTypes.NullableGenericType).MakeGenericType(underlyingType);
+                var constructor = ConstructorInfoCache.Get(nullableType, underlyingType);
 
-            // Set the TEntity property
+                // Create an instance of Nullable<T> object
+                ilGenerator.Emit(OpCodes.Newobj, constructor);
+            }
+            
+            // Call the (Property.Set) or (Property = Value)
             ilGenerator.Emit(OpCodes.Call, property.SetMethod);
         }
     }

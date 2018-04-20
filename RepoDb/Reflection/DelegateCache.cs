@@ -16,7 +16,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
         /// <returns>An IL emitted Delegate object used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.</returns>
-        public static DataReaderToEntityDelegate<TEntity> GetDataReaderToEntity<TEntity>()
+        public static DataReaderToEntityMapperDelegate<TEntity> GetDataReaderToEntity<TEntity>()
             where TEntity : IDataEntity
         {
             var key = typeof(TEntity);
@@ -25,7 +25,7 @@ namespace RepoDb.Reflection
                 var value = DelegateFactory.GetDataReaderToEntity<TEntity>();
                 _createEntityDelegates.Add(key, value);
             }
-            return (DataReaderToEntityDelegate<TEntity>)_createEntityDelegates[key];
+            return (DataReaderToEntityMapperDelegate<TEntity>)_createEntityDelegates[key];
         }
     }
 }

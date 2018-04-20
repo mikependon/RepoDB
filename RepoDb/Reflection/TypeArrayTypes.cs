@@ -3,7 +3,7 @@
     /// <summary>
     /// An array of type of Type being cached.
     /// </summary>
-    public enum TypeArrayCacheTypes : short
+    public enum TypeArrayTypes : short
     {
         /// <summary>
         /// An array of System.Data.Common.DbDataReader types.

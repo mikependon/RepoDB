@@ -10,7 +10,7 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class MethodInfoCache
     {
-        private static readonly IDictionary<MethodInfoCacheTypes, MethodInfo> _cache = new Dictionary<MethodInfoCacheTypes, MethodInfo>();
+        private static readonly IDictionary<MethodInfoTypes, MethodInfo> _cache = new Dictionary<MethodInfoTypes, MethodInfo>();
         private static readonly IDictionary<Type, MethodInfo> _convertToTypeMethodCache = new Dictionary<Type, MethodInfo>();
 
         /// <summary>
@@ -18,11 +18,11 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="type">The type of System.Reflection.MethodInfo to be cached.</param>
         /// <returns>A System.Reflection.MethodInfo object.</returns>
-        public static MethodInfo Get(MethodInfoCacheTypes type)
+        public static MethodInfo Get(MethodInfoTypes type)
         {
             if (!_cache.ContainsKey(type))
             {
-                _cache.Add(type, Create(type));
+                _cache.Add(type, ReflectionFactory.CreateMethod(type));
             }
             return _cache[type];
         }
@@ -36,31 +36,12 @@ namespace RepoDb.Reflection
         {
             if (!_convertToTypeMethodCache.ContainsKey(type))
             {
-                var methodInfo = TypeCache.Get(TypeCacheTypes.ConvertType)
-                        .GetMethod($"To{type.Name}", TypeArrayCache.Get(TypeArrayCacheTypes.ObjectTypes));
+                var methodInfo = TypeCache.Get(TypeTypes.ConvertType)
+                        .GetMethod($"To{type.Name}", TypeArrayCache.Get(TypeArrayTypes.ObjectTypes));
                 _convertToTypeMethodCache.Add(type, methodInfo);
             }
             return _convertToTypeMethodCache[type];
         }
 
-        /// <summary>
-        /// Creates a System.Reflection.MethodInfo object based on type.
-        /// </summary>
-        /// <param name="type">A type of System.Reflection.MethodInfo object.</param>
-        /// <returns>A System.Reflection.MethodInfo object.</returns>
-        public static MethodInfo Create(MethodInfoCacheTypes type)
-        {
-            switch (type)
-            {
-                case MethodInfoCacheTypes.ConvertToStringMethod:
-                    return TypeCache.Get(TypeCacheTypes.ConvertType)
-                        .GetMethod("ToString", TypeArrayCache.Get(TypeArrayCacheTypes.ObjectTypes));
-                case MethodInfoCacheTypes.DataReaderGetItemMethod:
-                    return TypeCache.Get(TypeCacheTypes.DataReaderType)
-                        .GetProperty("Item", TypeArrayCache.Get(TypeArrayCacheTypes.StringTypes)).GetMethod;
-                default:
-                    return null;
-            }
-        }
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// A type of System.Reflection.MethodInfo being cached.
     /// </summary>
-    public enum MethodInfoCacheTypes : short
+    public enum MethodInfoTypes : short
     {
         /// <summary>
         /// A System.Convert.ToString method.
@@ -12,6 +12,10 @@
         /// <summary>
         /// A System.Data.Common.DbDataReader.GetIndexer method.
         /// </summary>
-        DataReaderGetItemMethod
+        DataReaderGetItemMethod,
+        /// <summary>
+        /// A System.Reflection.PropertyInfo.SetValue method.
+        /// </summary>
+        PropertySetValueMethod
     }
 }

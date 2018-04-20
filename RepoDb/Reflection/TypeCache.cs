@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Reflection;
 
 namespace RepoDb.Reflection
 {
@@ -10,48 +8,20 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class TypeCache
     {
-        private static readonly IDictionary<TypeCacheTypes, Type> _cache = new Dictionary<TypeCacheTypes, Type>();
+        private static readonly IDictionary<TypeTypes, Type> _cache = new Dictionary<TypeTypes, Type>();
 
         /// <summary>
         /// Gets the cached Type based on type.
         /// </summary>
         /// <param name="type">The type of Type being cached.</param>
         /// <returns>An Type object.</returns>
-        public static Type Get(TypeCacheTypes type)
+        public static Type Get(TypeTypes type)
         {
             if (!_cache.ContainsKey(type))
             {
-                _cache.Add(type, Create(type));
+                _cache.Add(type, ReflectionFactory.CreateType(type));
             }
             return _cache[type];
-        }
-
-        /// <summary>
-        /// Creates a Type based on type.
-        /// </summary>
-        /// <param name="type">The Type to be created.</param>
-        /// <returns>A type object.</returns>
-        public static Type Create(TypeCacheTypes type)
-        {
-            switch (type)
-            {
-                case TypeCacheTypes.ConvertType:
-                    return typeof(Convert);
-                case TypeCacheTypes.DataReaderType:
-                    return typeof(DbDataReader);
-                case TypeCacheTypes.ExecutingAssemblyType:
-                    return Assembly.GetExecutingAssembly().GetType();
-                case TypeCacheTypes.MethodInfo:
-                    return typeof(MethodInfo);
-                case TypeCacheTypes.ObjectType:
-                    return typeof(object);
-                case TypeCacheTypes.PropertyInfo:
-                    return typeof(PropertyInfo);
-                case TypeCacheTypes.StringType:
-                    return typeof(string);
-                default:
-                    return null;
-            }
         }
     }
 }

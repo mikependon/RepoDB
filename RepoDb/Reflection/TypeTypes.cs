@@ -3,7 +3,7 @@
     /// <summary>
     /// A type of Type being cached.
     /// </summary>
-    public enum TypeCacheTypes : short
+    public enum TypeTypes : short
     {
         /// <summary>
         /// A System.Convert type.
@@ -21,6 +21,10 @@
         /// An System.Reflection.MethodInfo type.
         /// </summary>
         MethodInfo,
+        /// <summary>
+        /// An System.Nullable(GenericType) type.
+        /// </summary>
+        NullableGenericType,
         /// <summary>
         /// An System.Object type.
         /// </summary>

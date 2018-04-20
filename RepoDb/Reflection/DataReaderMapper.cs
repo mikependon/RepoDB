@@ -7,7 +7,7 @@ namespace RepoDb.Reflection
     /// <summary>
     /// A mapper used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
     /// </summary>
-    public static class DataReaderToEntityTypeMapper
+    public static class DataReaderMapper
     {
         /// <summary>
         /// Converts the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
