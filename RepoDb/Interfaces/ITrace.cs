@@ -11,9 +11,9 @@
         void BeforeMerge(ICancellableTraceLog log);
         void BeforeInsert(ICancellableTraceLog log);
         void BeforeBulkInsert(ICancellableTraceLog log);
+        void BeforeExecuteQuery(ICancellableTraceLog log);
         void BeforeExecuteNonQuery(ICancellableTraceLog log);
         void BeforeExecuteReader(ICancellableTraceLog log);
-        void BeforeExecuteReaderEx(ICancellableTraceLog log);
         void BeforeExecuteScalar(ICancellableTraceLog log);
 
         // After
@@ -25,9 +25,9 @@
         void AfterMerge(ITraceLog log);
         void AfterInsert(ITraceLog log);
         void AfterBulkInsert(ITraceLog log);
+        void AfterExecuteQuery(ITraceLog log);
         void AfterExecuteNonQuery(ITraceLog log);
         void AfterExecuteReader(ITraceLog log);
-        void AfterExecuteReaderEx(ITraceLog log);
         void AfterExecuteScalar(ITraceLog log);
     }
 }

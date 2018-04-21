@@ -12,6 +12,7 @@
         public static readonly string Delete = "Delete";
         public static readonly string DynamicMethod = "DynamicMethod";
         public static readonly string ExecuteNonQuery = "ExecuteNonQuery";
+        public static readonly string ExecuteQuery = "ExecuteQuery";
         public static readonly string ExecuteReader = "ExecuteReader";
         public static readonly string ExecuteReaderEx = "ExecuteReaderEx";
         public static readonly string ExecuteScalar = "ExecuteScalar";

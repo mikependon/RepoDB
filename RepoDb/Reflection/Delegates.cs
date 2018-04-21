@@ -1,7 +1,7 @@
 ﻿using RepoDb.Interfaces;
 using System.Data.Common;
 
-namespace RepoDb.Reflection
+namespace RepoDb.Reflection.Delegates
 {
     /// <summary>
     /// A delegate used to map the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.

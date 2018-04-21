@@ -1,4 +1,5 @@
 ﻿using RepoDb.Interfaces;
+using RepoDb.Reflection.Delegates;
 using System;
 using System.Collections.Generic;
 

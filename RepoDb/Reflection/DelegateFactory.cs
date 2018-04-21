@@ -1,6 +1,7 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Reflection.Delegates;
 using System;
 using System.Linq;
 using System.Reflection;

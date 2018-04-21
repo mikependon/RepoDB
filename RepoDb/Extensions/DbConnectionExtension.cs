@@ -1,6 +1,7 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -41,6 +42,56 @@ namespace RepoDb.Extensions
                 connection.Open();
             }
             return connection;
+        }
+
+        // ExecuteQuery
+        public static IEnumerable<object> ExecuteQuery(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null)
+        {
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                trace.BeforeExecuteQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.ExecuteQuery);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
+            {
+                command.CreateParameters(param);
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = reader.AsObjects();
+
+                    // After Execution
+                    if (trace != null)
+                    {
+                        trace.AfterExecuteQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
+                    }
+
+                    // Result
+                    return result;
+                }
+            }
         }
 
         // ExecuteReader
