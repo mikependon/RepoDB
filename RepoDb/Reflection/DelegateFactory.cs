@@ -64,7 +64,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
 
             // Call the reader[] method
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderGetItemMethod));
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringIndexer));
 
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -72,7 +72,7 @@ namespace RepoDb.Reflection
 
             // Switch which method of Convert are going to used
             var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ??
-                MethodInfoCache.Get(MethodInfoTypes.ConvertToStringMethod);
+                MethodInfoCache.Get(MethodInfoTypes.ConvertToString);
 
             // Call the Convert.Get<Method>
             ilGenerator.Emit(OpCodes.Call, convertMethod);

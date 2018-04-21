@@ -8,14 +8,14 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class TypeArrayCache
     {
-        private static readonly IDictionary<TypeTypes, Type[]> _cache = new Dictionary<TypeTypes, Type[]>();
+        private static readonly IDictionary<TypeTypes[], Type[]> _cache = new Dictionary<TypeTypes[], Type[]>();
 
         /// <summary>
         /// Gets the cached array of Types based on type.
         /// </summary>
         /// <param name="type">The type of Types being cached.</param>
         /// <returns>An array of Types.</returns>
-        public static Type[] Get(TypeTypes type)
+        public static Type[] Get(params TypeTypes[] type)
         {
             if (!_cache.ContainsKey(type))
             {
@@ -23,6 +23,5 @@ namespace RepoDb.Reflection
             }
             return _cache[type];
         }
-
     }
 }

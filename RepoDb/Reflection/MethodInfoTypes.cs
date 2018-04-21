@@ -1,4 +1,6 @@
-﻿namespace RepoDb.Reflection
+﻿using RepoDb.Attributes;
+
+namespace RepoDb.Reflection
 {
     /// <summary>
     /// A type of System.Reflection.MethodInfo being cached.
@@ -8,14 +10,17 @@
         /// <summary>
         /// A System.Convert.ToString method.
         /// </summary>
-        ConvertToStringMethod,
+        [CreateMethodInfo(TypeTypes.Convert, "ToString", new[] { typeof(object) })]
+        ConvertToString,
         /// <summary>
-        /// A System.Data.Common.DbDataReader.GetIndexer method.
+        /// A System.Data.Common.DbDataReader.get_Item(int) method.
         /// </summary>
-        DataReaderGetItemMethod,
+        [CreateMethodInfo(TypeTypes.DbDataReader, "get_Item", new[] { typeof(int) })]
+        DataReaderIntIndexer,
         /// <summary>
-        /// A System.Reflection.PropertyInfo.SetValue method.
+        /// A System.Data.Common.DbDataReader.get_Item(string) method.
         /// </summary>
-        PropertySetValueMethod
+        [CreateMethodInfo(TypeTypes.DbDataReader, "get_Item", new[] { typeof(string) })]
+        DataReaderStringIndexer
     }
 }

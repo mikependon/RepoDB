@@ -39,27 +39,18 @@ namespace RepoDb.Reflection
         /// <returns>A System.Reflection.MethodInfo object.</returns>
         public static MethodInfo CreateMethod(MethodInfoTypes type)
         {
-            switch (type)
-            {
-                case MethodInfoTypes.ConvertToStringMethod:
-                    return TypeCache.Get(TypeTypes.Convert)
-                        .GetMethod("ToString", TypeArrayCache.Get(TypeTypes.Object));
-                case MethodInfoTypes.DataReaderGetItemMethod:
-                    return TypeCache.Get(TypeTypes.DbDataReader)
-                        .GetProperty("Item", TypeArrayCache.Get(TypeTypes.String)).GetMethod;
-                case MethodInfoTypes.PropertySetValueMethod:
-                    return TypeCache.Get(TypeTypes.PropertyInfo)
-                        .GetMethod("SetValue", new[] { TypeCache.Get(TypeTypes.Object),
-                            TypeCache.Get(TypeTypes.Object) });
-                default:
-                    return null;
-            }
+            var createMethodInfoAttribute = typeof(MethodInfoTypes)
+                .GetMembers()
+                .First(member => member.Name.ToLower() == type.ToString().ToLower())
+                .GetCustomAttribute<CreateMethodInfoAttribute>();
+            return TypeCache.Get(createMethodInfoAttribute.Type)
+                .GetMethod(createMethodInfoAttribute.MethodName, createMethodInfoAttribute.ReflectedTypes);
         }
 
         /// <summary>
         /// Creates a Type based on type.
         /// </summary>
-        /// <param name="type">The Type to be created.</param>
+        /// <param name="type">The type of Type to be created.</param>
         /// <returns>A type object.</returns>
         public static Type CreateType(TypeTypes type)
         {
@@ -79,16 +70,17 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Creates an array of Types based on the type of passed.
         /// </summary>
-        /// <param name="type">The type of Type array to be created.</param>
+        /// <param name="types">The type of Type array to be created.</param>
         /// <returns>An array of Types.</returns>
         public static Type[] CreateTypes(params TypeTypes[] types)
         {
-            var t = new Type[types.Length];
-            for (var i = 0; i < types.Length; i++)
+            var length = Convert.ToInt32(types?.Length);
+            var convertedTypes = new Type[length];
+            for (var index = 0; index < length; index++)
             {
-                t[i] = TypeCache.Get(types[i]);
+                convertedTypes[index] = TypeCache.Get(types[index]);
             }
-            return t;
+            return convertedTypes;
         }
     }
 }
