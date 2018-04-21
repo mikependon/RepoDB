@@ -84,17 +84,6 @@ namespace RepoDb
             return property;
         }
 
-        // GuardBatchQueryable
-
-        private void GuardBatchQueryable<TEntity>(Command command)
-            where TEntity : IDataEntity
-        {
-            if (!DataEntityExtension.IsBatchQueryble<TEntity>())
-            {
-                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(command));
-            }
-        }
-
         // Count
 
         public int Count<TEntity>(IDbTransaction transaction = null)
@@ -141,7 +130,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>();
+            var commandType = CommandTypeCache.Get<TEntity>(Command.Count);
             var commandText = commandType == CommandType.StoredProcedure ?
                 ClassMapNameCache.Get<TEntity>(Command.Count) :
                 StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
@@ -156,7 +145,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Query);
+                        throw new CancelledExecutionException(Constant.Count);
                     }
                     return default(int);
                 }
@@ -264,7 +253,7 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>();
+            var commandType = CommandTypeCache.Get<TEntity>(Command.CountBig);
             var commandText = commandType == CommandType.StoredProcedure ?
                 ClassMapNameCache.Get<TEntity>(Command.CountBig) :
                 StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
@@ -279,7 +268,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Query);
+                        throw new CancelledExecutionException(Constant.CountBig);
                     }
                     return default(long);
                 }
@@ -341,6 +330,17 @@ namespace RepoDb
                     transaction: transaction));
         }
 
+        // GuardBatchQueryable
+
+        private void GuardBatchQueryable<TEntity>(Command command)
+            where TEntity : IDataEntity
+        {
+            if (!DataEntityExtension.IsBatchQueryble<TEntity>())
+            {
+                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(command));
+            }
+        }
+
         // BatchQuery
 
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
@@ -394,7 +394,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardBatchQueryable<TEntity>(Command.Select);
+            GuardBatchQueryable<TEntity>(Command.BatchQuery);
 
             // Variables
             var commandText = StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
@@ -423,7 +423,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteReader<TEntity>(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.BatchQuery),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -494,7 +494,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
-                throw new EntityNotQueryableException(ClassMapNameCache.Get<TEntity>(Command.Select));
+                throw new EntityNotQueryableException(ClassMapNameCache.Get<TEntity>(Command.Query));
             }
         }
 
@@ -543,7 +543,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Select);
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Query);
                     queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
@@ -572,9 +572,9 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>();
+            var commandType = CommandTypeCache.Get<TEntity>(Command.Query);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Select) :
+                ClassMapNameCache.Get<TEntity>(Command.Query) :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
@@ -717,7 +717,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.Insert),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -741,14 +741,14 @@ namespace RepoDb
                     transaction: transaction));
         }
 
-        // GuardUpdateable
+        // GuardInlineUpdateable
 
-        private void GuardUpdateable<TEntity>()
+        private void GuardInlineUpdateable<TEntity>()
             where TEntity : IDataEntity
         {
-            if (!DataEntityExtension.IsUpdateable<TEntity>())
+            if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
             {
-                throw new EntityNotUpdateableException(ClassMapNameCache.Get<TEntity>(Command.Update));
+                throw new EntityNotInlineUpdateableException(ClassMapNameCache.Get<TEntity>(Command.InlineUpdate));
             }
         }
 
@@ -789,7 +789,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardUpdateable<TEntity>();
+            GuardInlineUpdateable<TEntity>();
 
             // Variables
             var commandText = StatementBuilder.CreateInlineUpdate(QueryBuilderCache.Get<TEntity>(),
@@ -819,7 +819,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.InlineUpdate),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -864,6 +864,17 @@ namespace RepoDb
                     where: where,
                     overrideIgnore: overrideIgnore,
                     transaction: transaction));
+        }
+
+        // GuardUpdateable
+
+        private void GuardUpdateable<TEntity>()
+            where TEntity : IDataEntity
+        {
+            if (!DataEntityExtension.IsUpdateable<TEntity>())
+            {
+                throw new EntityNotUpdateableException(ClassMapNameCache.Get<TEntity>(Command.Update));
+            }
         }
 
         // Update
@@ -947,7 +958,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.Update),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -1077,7 +1088,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.Delete),
                 commandTimeout: _commandTimeout);
 
             // After Execution
@@ -1143,7 +1154,7 @@ namespace RepoDb
         {
             // Check
             GuardMergeable<TEntity>();
-            GetAndGuardPrimaryKey<TEntity>(Command.None);
+            GetAndGuardPrimaryKey<TEntity>(Command.Merge);
 
             // Variables
             var commandText = StatementBuilder.CreateMerge(QueryBuilderCache.Get<TEntity>(), qualifiers);
@@ -1172,7 +1183,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(),
+                commandType: CommandTypeCache.Get<TEntity>(Command.Merge),
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 

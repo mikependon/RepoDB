@@ -28,13 +28,13 @@ namespace RepoDb
                 .OrderBy(orderBy)
                 .CloseParen()
                 .As("[RowNumber],")
-                .Fields(Command.Select)
+                .Fields(Command.BatchQuery)
                 .From()
-                .Table(Command.Select)
+                .Table(Command.BatchQuery)
                 .Where(where)
                 .CloseParen()
                 .Select()
-                .Fields(Command.Select)
+                .Fields(Command.BatchQuery)
                 .From()
                 .WriteText("CTE")
                 .WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
@@ -95,7 +95,7 @@ namespace RepoDb
         {
             if (overrideIgnore == false)
             {
-                var properties = PropertyCache.Get<TEntity>(Command.Update)
+                var properties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
                     .Select(property => property.GetMappedName());
                 var unmatches = fields?.Where(field =>
                     properties?.FirstOrDefault(property =>
@@ -103,14 +103,14 @@ namespace RepoDb
                 if (unmatches?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The following columns ({unmatches.Select(field => field.AsField()).Join(", ")}) " +
-                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.Update)}).");
+                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}).");
                 }
             }
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
                 .Update()
-                .Table(Command.Update)
+                .Table(Command.InlineUpdate)
                 .Set()
                 .FieldsAndParameters(fields)
                 .Where(where)
@@ -212,9 +212,9 @@ namespace RepoDb
                 .Clear()
                 .Select()
                 .Top(top)
-                .Fields(Command.Select)
+                .Fields(Command.Query)
                 .From()
-                .Table(Command.Select)
+                .Table(Command.Query)
                 .Where(where)
                 .OrderBy(orderBy)
                 .End();

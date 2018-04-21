@@ -37,7 +37,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Stloc_0);
 
             // Iterate every properties
-            PropertyCache.Get<TEntity>(Command.Select)
+            PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
                 .ToList()
                 .ForEach(property =>

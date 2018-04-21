@@ -50,6 +50,7 @@
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
     <Compile Include="ClassMapCache.cs" />
     <Compile Include="Exceptions\DataEntityMapException.cs" />
+    <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
     <Compile Include="Interfaces\IDataEntityMap.cs" />
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="PropertyMapNameCache.cs" />

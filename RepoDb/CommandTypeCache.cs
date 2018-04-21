@@ -3,6 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
+using RepoDb.Enumerations;
 
 namespace RepoDb
 {
@@ -10,7 +11,7 @@ namespace RepoDb
     {
         private static readonly IDictionary<Type, CommandType> _cache = new Dictionary<Type, CommandType>();
 
-        public static CommandType Get<TEntity>()
+        public static CommandType Get<TEntity>(Command command)
             where TEntity : IDataEntity
         {
             var value = CommandType.Text;
@@ -21,7 +22,7 @@ namespace RepoDb
             }
             else
             {
-                value = DataEntityExtension.GetCommandType<TEntity>();
+                value = DataEntityExtension.GetCommandType<TEntity>(command);
                 _cache.Add(key, value);
             }
             return value;

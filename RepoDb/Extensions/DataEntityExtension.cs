@@ -32,21 +32,21 @@ namespace RepoDb.Extensions
         }
 
         // GetCommandType
-        internal static CommandType GetCommandType(Type type)
+        internal static CommandType GetCommandType(Type type, Command command)
         {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.CommandType ?? CommandType.Text;
+            return DataEntityMapper.For(type)?.Get(command)?.CommandType ??
+                ClassMapCache.Get(type)?.CommandType ?? CommandType.Text;
         }
 
-        public static CommandType GetCommandType<T>()
+        public static CommandType GetCommandType<T>(Command command)
             where T : IDataEntity
         {
-            return GetCommandType(typeof(T));
+            return GetCommandType(typeof(T), command);
         }
 
-        public static CommandType GetCommandType(this IDataEntity dataEntity)
+        public static CommandType GetCommandType(this IDataEntity dataEntity, Command command)
         {
-            return GetCommandType(dataEntity.GetType());
+            return GetCommandType(dataEntity.GetType(), command);
         }
 
         // GetPropertyByAttribute
@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
             }
 
             // Mapping.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Select).AsUnquoted()}{Constant.Id}".ToLower());
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{Constant.Id}".ToLower());
             if (property != null)
             {
                 return property;
@@ -254,8 +254,7 @@ namespace RepoDb.Extensions
         // InInsertable
         internal static bool InInsertable(Type type)
         {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.CommandType != CommandType.StoredProcedure;
+            return true;
         }
 
         public static bool InInsertable<T>()
@@ -267,6 +266,24 @@ namespace RepoDb.Extensions
         public static bool InInsertable(this IDataEntity dataEntity)
         {
             return InInsertable(dataEntity.GetType());
+        }
+
+        // IsInlineUpdateable
+        internal static bool IsInlineUpdateable(Type type)
+        {
+            var attribute = ClassMapCache.Get(type);
+            return attribute?.CommandType == CommandType.Text;
+        }
+
+        public static bool IsInlineUpdateable<T>()
+            where T : IDataEntity
+        {
+            return IsInlineUpdateable(typeof(T));
+        }
+
+        public static bool IsInlineUpdateable(this IDataEntity dataEntity)
+        {
+            return IsInlineUpdateable(dataEntity.GetType());
         }
 
         // IsUpdateable
