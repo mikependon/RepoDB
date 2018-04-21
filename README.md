@@ -46,6 +46,16 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Tracing
  - SQL Builder
 
+### Next Release
+
+ - IL Emit the conversion of IDataEntity to System.Data.DataTable
+ - Support Multi-Mapping for Class-Level
+ - MemoryCache Flush
+ 
+### Todos
+
+ - Documentation: Count, DbConnection.ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
+
 ### Next Version (1.0.15)
 
  - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
@@ -65,14 +75,4 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Added ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
  - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
  - Supported DataEntityMapper, DataEntityMap
- - Supported the DbRepository.Count and DbRepository.CountBig operation
-
-### Next Release
-
- - IL Emit the conversion of IDataEntity to System.Data.DataTable
- - Support Multi-Mapping for Class-Level
- - MemoryCache Flush
- 
-### Todos
-
- - Documentation: Count, DbConnection.ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
+ - Supported the DbRepository.Count and DbRepository.CountBig operations
