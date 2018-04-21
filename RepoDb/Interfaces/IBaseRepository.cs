@@ -29,6 +29,46 @@ namespace RepoDb.Interfaces
 
         IStatementBuilder StatementBuilder { get; }
 
+        // Count
+
+        int Count(IDbTransaction transaction = null);
+
+        int Count(object where, IDbTransaction transaction = null);
+
+        int Count(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        int Count(IQueryGroup where, IDbTransaction transaction = null);
+
+        // CountAsync
+
+        Task<int> CountAsync(IDbTransaction transaction = null);
+
+        Task<int> CountAsync(object where, IDbTransaction transaction = null);
+
+        Task<int> CountAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        Task<int> CountAsync(IQueryGroup where, IDbTransaction transaction = null);
+
+        // CountBig
+
+        long CountBig(IDbTransaction transaction = null);
+
+        long CountBig(object where, IDbTransaction transaction = null);
+
+        long CountBig(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        long CountBig(IQueryGroup where, IDbTransaction transaction = null);
+
+        // CountBigAsync
+
+        Task<long> CountBigAsync(IDbTransaction transaction = null);
+
+        Task<long> CountBigAsync(object where, IDbTransaction transaction = null);
+
+        Task<long> CountBigAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null);
+
+        Task<long> CountBigAsync(IQueryGroup where, IDbTransaction transaction = null);
+
         // BatchQuery
 
         IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,

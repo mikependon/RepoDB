@@ -6,6 +6,10 @@ namespace RepoDb.Interfaces
     {
         string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderby)
             where TEntity : IDataEntity;
+        string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
+            where TEntity : IDataEntity;
+        string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
+            where TEntity : IDataEntity;
         string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity;
         string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false)

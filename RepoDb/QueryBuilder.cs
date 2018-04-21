@@ -33,14 +33,12 @@ namespace RepoDb
 
         public IQueryBuilder<TEntity> Space()
         {
-            Append(" ");
-            return this;
+            return Append(" ");
         }
 
         public IQueryBuilder<TEntity> NewLine()
         {
-            Append("\n");
-            return this;
+            return Append("\n");
         }
 
         public IQueryBuilder<TEntity> WriteText(string text)
@@ -64,6 +62,16 @@ namespace RepoDb
         public IQueryBuilder<TEntity> End()
         {
             return Append(";");
+        }
+
+        public IQueryBuilder<TEntity> Count()
+        {
+            return Append("COUNT");
+        }
+
+        public IQueryBuilder<TEntity> CountBig()
+        {
+            return Append("COUNT_BIG");
         }
 
         public IQueryBuilder<TEntity> Field(IField field)
@@ -107,14 +115,14 @@ namespace RepoDb
             return Append("FROM");
         }
 
-        public IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
+        public IQueryBuilder<TEntity> GroupBy(IEnumerable<IField> fields)
         {
-            throw new NotImplementedException();
+            return Append($"GROUP BY {fields?.AsFields().Join(", ")}");
         }
 
         public IQueryBuilder<TEntity> HavingCount(IQueryField queryField)
         {
-            throw new NotImplementedException();
+            return Append($"HAVING COUNT({queryField.Field.AsField()}) {queryField.GetOperationText()} {queryField.AsParameter()}");
         }
 
         public IQueryBuilder<TEntity> Insert()
@@ -159,9 +167,9 @@ namespace RepoDb
             return Append("JOIN");
         }
 
-        public IQueryBuilder<TEntity> JoinQualifiers(string leftAlias, string rightAlias)
+        public IQueryBuilder<TEntity> JoinQualifiers(IField field, string leftAlias, string rightAlias)
         {
-            throw new NotImplementedException();
+            return Append(field.AsJoinQualifier(leftAlias, rightAlias));
         }
 
         public IQueryBuilder<TEntity> Merge()

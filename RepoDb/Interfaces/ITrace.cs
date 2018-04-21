@@ -4,6 +4,8 @@
     {
         // Before
         void BeforeBatchQuery(ICancellableTraceLog log);
+        void BeforeCount(ICancellableTraceLog log);
+        void BeforeCountBig(ICancellableTraceLog log);
         void BeforeQuery(ICancellableTraceLog log);
         void BeforeInlineUpdate(ICancellableTraceLog log);
         void BeforeUpdate(ICancellableTraceLog log);
@@ -18,6 +20,8 @@
 
         // After
         void AfterBatchQuery(ITraceLog log);
+        void AfterCount(ITraceLog log);
+        void AfterCountBig(ITraceLog log);
         void AfterQuery(ITraceLog log);
         void AfterInlineUpdate(ITraceLog log);
         void AfterUpdate(ITraceLog log);

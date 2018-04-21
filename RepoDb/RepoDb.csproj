@@ -45,8 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CreateMethodInfoAttribute.cs" />
+    <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
     <Compile Include="ClassMapCache.cs" />
+    <Compile Include="Exceptions\DataEntityMapException.cs" />
+    <Compile Include="Interfaces\IDataEntityMap.cs" />
+    <Compile Include="DataEntityMapper.cs" />
     <Compile Include="PropertyMapNameCache.cs" />
     <Compile Include="PrimaryPropertyCache.cs" />
     <Compile Include="PropertyCache.cs" />
@@ -130,6 +134,7 @@
     <Compile Include="StatementBuilderMap.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />
+    <Compile Include="DataEntityMap.cs" />
     <Compile Include="TypeMap.cs" />
     <Compile Include="TypeMapper.cs" />
   </ItemGroup>

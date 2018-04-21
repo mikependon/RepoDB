@@ -94,6 +94,262 @@ namespace RepoDb
             }
         }
 
+        // Count
+
+        public int Count<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Count<TEntity>(where: (IQueryGroup)null,
+                transaction: transaction);
+        }
+
+        public int Count<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (IQueryGroup)null;
+            if (where is QueryField)
+            {
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
+            }
+            else if (where is IQueryGroup)
+            {
+                queryGroup = (IQueryGroup)where;
+            }
+            else
+            {
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    queryGroup = QueryGroup.Parse(where);
+                }
+                else
+                {
+                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
+                }
+            }
+            return Count<TEntity>(where: queryGroup,
+                transaction: transaction);
+        }
+
+        public int Count<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Count<TEntity>(where: where != null ? new QueryGroup(where) : null,
+                transaction: transaction);
+        }
+
+        public int Count<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardQueryable<TEntity>();
+
+            // Variables
+            var commandType = CommandTypeCache.Get<TEntity>();
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>() :
+                StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
+            var param = where?.AsObject();
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                Trace.BeforeCount(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.Query);
+                    }
+                    return default(int);
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = Convert.ToInt32(ExecuteScalar(commandText: commandText,
+                 param: param,
+                 commandType: commandType,
+                 commandTimeout: _commandTimeout,
+                 transaction: transaction));
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterCount(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // CountAsync
+
+        public Task<int> CountAsync<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(transaction: transaction));
+        }
+
+        public Task<int> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
+        public Task<int> CountAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
+        public Task<int> CountAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
+        // CountBig
+
+        public long CountBig<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return CountBig<TEntity>(where: (IQueryGroup)null,
+                transaction: transaction);
+        }
+
+        public long CountBig<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (IQueryGroup)null;
+            if (where is QueryField)
+            {
+                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
+            }
+            else if (where is IQueryGroup)
+            {
+                queryGroup = (IQueryGroup)where;
+            }
+            else
+            {
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    queryGroup = QueryGroup.Parse(where);
+                }
+                else
+                {
+                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
+                }
+            }
+            return CountBig<TEntity>(where: queryGroup,
+                transaction: transaction);
+        }
+
+        public long CountBig<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return CountBig<TEntity>(where: where != null ? new QueryGroup(where) : null,
+                transaction: transaction);
+        }
+
+        public long CountBig<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardQueryable<TEntity>();
+
+            // Variables
+            var commandType = CommandTypeCache.Get<TEntity>();
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>() :
+                StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
+            var param = where?.AsObject();
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                Trace.BeforeCountBig(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.Query);
+                    }
+                    return default(long);
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
+                 param: param,
+                 commandType: commandType,
+                 commandTimeout: _commandTimeout,
+                 transaction: transaction));
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterCountBig(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // CountBigAsync
+
+        public Task<long> CountBigAsync<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                CountBig<TEntity>(transaction: transaction));
+        }
+
+        public Task<long> CountBigAsync<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                CountBig<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
+        public Task<long> CountBigAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                CountBig<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
+        public Task<long> CountBigAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                CountBig<TEntity>(where: where,
+                    transaction: transaction));
+        }
+
         // BatchQuery
 
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,

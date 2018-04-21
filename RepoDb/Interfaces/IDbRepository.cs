@@ -24,6 +24,62 @@ namespace RepoDb.Interfaces
 
         IStatementBuilder StatementBuilder { get; }
 
+        // Count
+
+        int Count<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        int Count<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        int Count<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        int Count<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        // CountAsync
+
+        Task<int> CountAsync<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<int> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<int> CountAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<int> CountAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        // Count
+
+        long CountBig<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        long CountBig<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        long CountBig<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        long CountBig<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        // CountBigAsync
+
+        Task<long> CountBigAsync<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<long> CountBigAsync<TEntity>(object where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<long> CountBigAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
+        Task<long> CountBigAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+            where TEntity : DataEntity;
+
         // BatchQuery
 
         IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,

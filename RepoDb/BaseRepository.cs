@@ -69,6 +69,106 @@ namespace RepoDb
 
         public IStatementBuilder StatementBuilder { get; }
 
+        // Count
+
+        public int Count(IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(transaction: transaction);
+        }
+
+        public int Count(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public int Count(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public int Count(IQueryGroup where, IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        // CountAsync
+
+        public Task<int> CountAsync(IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(transaction: transaction);
+        }
+
+        public Task<int> CountAsync(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public Task<int> CountAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public Task<int> CountAsync(IQueryGroup where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        // CountBig
+
+        public long CountBig(IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBig<TEntity>(transaction: transaction);
+        }
+
+        public long CountBig(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBig<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public long CountBig(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBig<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public long CountBig(IQueryGroup where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBig<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        // CountBigAsync
+
+        public Task<long> CountBigAsync(IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBigAsync<TEntity>(transaction: transaction);
+        }
+
+        public Task<long> CountBigAsync(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBigAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public Task<long> CountBigAsync(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBigAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        public Task<long> CountBigAsync(IQueryGroup where, IDbTransaction transaction = null)
+        {
+            return DbRepository.CountBigAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
         // BatchQuery
 
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,

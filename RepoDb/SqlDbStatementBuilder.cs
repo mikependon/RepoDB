@@ -43,6 +43,38 @@ namespace RepoDb
             return queryBuilder.GetString();
         }
 
+        public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
+            where TEntity : IDataEntity
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .Select()
+                .Count()
+                .WriteText("(*) AS [Counted]")
+                .From()
+                .Table()
+                .Where(where)
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
+            where TEntity : IDataEntity
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .Select()
+                .CountBig()
+                .WriteText("(*) AS [Counted]")
+                .From()
+                .Table()
+                .Where(where)
+                .End();
+            return queryBuilder.GetString();
+        }
+
         public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
             where TEntity : IDataEntity
         {

@@ -16,6 +16,7 @@
         public static readonly string ExecuteReader = "ExecuteReader";
         public static readonly string ExecuteReaderEx = "ExecuteReaderEx";
         public static readonly string ExecuteScalar = "ExecuteScalar";
+        public static readonly string For = "For";
         public static readonly string Id = "Id";
         public static readonly string In = "In";
         public static readonly string InlineUpdate = "InlineUpdate";

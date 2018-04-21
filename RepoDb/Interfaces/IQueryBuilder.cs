@@ -111,7 +111,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Over();
 
         // GroupBy (GROUP BY)
-        IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields);
+        IQueryBuilder<TEntity> GroupBy(IEnumerable<IField> fields);
 
         // Having (HAVING COUNT(@Field1) > 0)
         IQueryBuilder<TEntity> HavingCount(IQueryField queryField);
@@ -147,7 +147,13 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias);
 
         // JoinQualifiers (S.[Id] = T.[Id], S.[Name] = T.[Name])
-        IQueryBuilder<TEntity> JoinQualifiers(string leftAlias, string rightAlias);
+        IQueryBuilder<TEntity> JoinQualifiers(IField field, string leftAlias, string rightAlias);
+
+        // Count (COUNT)
+        IQueryBuilder<TEntity> Count();
+
+        // Count (COUNT_BIG)
+        IQueryBuilder<TEntity> CountBig();
 
         // End (;)
         IQueryBuilder<TEntity> End();
