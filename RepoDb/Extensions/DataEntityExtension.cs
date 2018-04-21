@@ -216,99 +216,57 @@ namespace RepoDb.Extensions
             return table;
         }
 
-        // IsQueryble
-        internal static bool IsQueryable(Type type)
+        // GetValue
+        public static object GetValue(this IDataEntity dataEntity, string property)
         {
-            return true;
+            return dataEntity?.GetType().GetProperty(property).GetValue(dataEntity);
         }
 
-        public static bool IsQueryable<T>()
+        public static T GetValue<T>(this IDataEntity dataEntity, string property)
+        {
+            return (T)GetValue(dataEntity, property);
+        }
+
+        // IsBatchQueryable
+        internal static bool IsBatchQueryable(Type type)
+        {
+            var commandType = CommandTypeCache.Get(type, Command.BatchQuery);
+            return commandType == CommandType.Text;
+        }
+
+        public static bool IsBatchQueryable<T>()
             where T : IDataEntity
         {
-            return IsQueryable(typeof(T));
+            return IsBatchQueryable(typeof(T));
         }
 
-        public static bool IsQueryable(this IDataEntity dataEntity)
+        public static bool IsBatchQueryable(this IDataEntity dataEntity)
         {
             return IsQueryable(dataEntity.GetType());
         }
 
-        // IsBatchQueryble
-        internal static bool IsBatchQueryble(Type type)
+        // IsCountable
+        internal static bool IsCountable(Type type)
         {
-            var attribute = ClassMapCache.Get(type);
-            return attribute == null ? true : attribute.CommandType == CommandType.Text;
+            var commandType = CommandTypeCache.Get(type, Command.Count);
+            return commandType == CommandType.Text;
         }
 
-        public static bool IsBatchQueryble<T>()
+        public static bool IsCountable<T>()
             where T : IDataEntity
         {
-            return IsBatchQueryble(typeof(T));
+            return IsCountable(typeof(T));
         }
 
-        public static bool IsBatchQueryble(this IDataEntity dataEntity)
+        public static bool IsCountable(this IDataEntity dataEntity)
         {
-            return IsQueryable(dataEntity.GetType());
-        }
-
-        // InInsertable
-        internal static bool InInsertable(Type type)
-        {
-            return true;
-        }
-
-        public static bool InInsertable<T>()
-            where T : IDataEntity
-        {
-            return InInsertable(typeof(T));
-        }
-
-        public static bool InInsertable(this IDataEntity dataEntity)
-        {
-            return InInsertable(dataEntity.GetType());
-        }
-
-        // IsInlineUpdateable
-        internal static bool IsInlineUpdateable(Type type)
-        {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.CommandType == CommandType.Text;
-        }
-
-        public static bool IsInlineUpdateable<T>()
-            where T : IDataEntity
-        {
-            return IsInlineUpdateable(typeof(T));
-        }
-
-        public static bool IsInlineUpdateable(this IDataEntity dataEntity)
-        {
-            return IsInlineUpdateable(dataEntity.GetType());
-        }
-
-        // IsUpdateable
-        internal static bool IsUpdateable(Type type)
-        {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.CommandType != CommandType.StoredProcedure;
-        }
-
-        public static bool IsUpdateable<T>()
-            where T : IDataEntity
-        {
-            return IsUpdateable(typeof(T));
-        }
-
-        public static bool IsUpdateable(this IDataEntity dataEntity)
-        {
-            return IsUpdateable(dataEntity.GetType());
+            return IsCountable(dataEntity.GetType());
         }
 
         // IsDeletable
         internal static bool IsDeletable(Type type)
         {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.CommandType != CommandType.StoredProcedure;
+            return true;
         }
 
         public static bool IsDeletable<T>()
@@ -322,11 +280,28 @@ namespace RepoDb.Extensions
             return IsDeletable(dataEntity.GetType());
         }
 
+        // IsInlineUpdateable
+        internal static bool IsInlineUpdateable(Type type)
+        {
+            var commandType = CommandTypeCache.Get(type, Command.InlineUpdate);
+            return commandType == CommandType.Text;
+        }
+
+        public static bool IsInlineUpdateable<T>()
+            where T : IDataEntity
+        {
+            return IsInlineUpdateable(typeof(T));
+        }
+
+        public static bool IsInlineUpdateable(this IDataEntity dataEntity)
+        {
+            return IsInlineUpdateable(dataEntity.GetType());
+        }
+
         // IsInsertable
         internal static bool IsInsertable(Type type)
         {
-            var attribute = type.GetCustomAttribute<MapAttribute>();
-            return attribute?.CommandType != CommandType.StoredProcedure;
+            return true;
         }
 
         public static bool IsInsertable<T>()
@@ -343,8 +318,8 @@ namespace RepoDb.Extensions
         // IsMergeable
         internal static bool IsMergeable(Type type)
         {
-            var attribute = type.GetCustomAttribute<MapAttribute>();
-            return attribute?.CommandType != CommandType.StoredProcedure;
+            var commandType = CommandTypeCache.Get(type, Command.Merge);
+            return commandType == CommandType.Text;
         }
 
         public static bool IsMergeable<T>()
@@ -358,17 +333,38 @@ namespace RepoDb.Extensions
             return IsMergeable(dataEntity.GetType());
         }
 
-        // GetValue
-        public static object GetValue(this IDataEntity dataEntity, string property)
+        // IsQueryable
+        internal static bool IsQueryable(Type type)
         {
-            return dataEntity?.GetType()
-                .GetProperty(property)
-                .GetValue(dataEntity);
+            return true;
         }
 
-        public static T GetValue<T>(this IDataEntity dataEntity, string property)
+        public static bool IsQueryable<T>()
+            where T : IDataEntity
         {
-            return (T)GetValue(dataEntity, property);
+            return IsQueryable(typeof(T));
+        }
+
+        public static bool IsQueryable(this IDataEntity dataEntity)
+        {
+            return IsQueryable(dataEntity.GetType());
+        }
+
+        // IsUpdateable
+        internal static bool IsUpdateable(Type type)
+        {
+            return true;
+        }
+
+        public static bool IsUpdateable<T>()
+            where T : IDataEntity
+        {
+            return IsUpdateable(typeof(T));
+        }
+
+        public static bool IsUpdateable(this IDataEntity dataEntity)
+        {
+            return IsUpdateable(dataEntity.GetType());
         }
     }
 }

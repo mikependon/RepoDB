@@ -335,7 +335,7 @@ namespace RepoDb
         private void GuardBatchQueryable<TEntity>(Command command)
             where TEntity : IDataEntity
         {
-            if (!DataEntityExtension.IsBatchQueryble<TEntity>())
+            if (!DataEntityExtension.IsBatchQueryable<TEntity>())
             {
                 throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(command));
             }
