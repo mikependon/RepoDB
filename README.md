@@ -25,7 +25,8 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - We will never ever do try-catch inside the library
  
 ### Next Version (1.0.15)
-
+ 
+ - Returned IDataReader object when using the IDbConnection.ExecuteReader
  - Fixed the IL Emitter when mapping DataReader to Null propeprties.
  - Added ConstructorInfoCache
  - Added DataReaderMapper
@@ -64,7 +65,6 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
- - Return IDataReader object when using the IDbConnection.ExecuteReader
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
