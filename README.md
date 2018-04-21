@@ -61,7 +61,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
  - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
  - Added RepoDb.Reflection.ConstructorInfoCache
- - Added RepoDb.Reflection.DataReaderMapper
+ - Added RepoDb.Reflection.DataReaderConverter
  - Added RepoDb.Reflection.DelegateCache
  - Added RepoDb.Reflection.DelegateFactory
  - Added RepoDb.Reflection.MethodInfoCache
