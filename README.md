@@ -65,6 +65,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
+ - Add ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
  - IL Emit the conversion of IDataEntity to System.Data.DataTable
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
