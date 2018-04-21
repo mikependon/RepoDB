@@ -36,8 +36,8 @@ namespace RepoDb.Reflection
         {
             if (!_convertToTypeMethodCache.ContainsKey(type))
             {
-                var methodInfo = TypeCache.Get(TypeTypes.ConvertType)
-                        .GetMethod($"To{type.Name}", TypeArrayCache.Get(TypeArrayTypes.ObjectTypes));
+                var methodInfo = TypeCache.Get(TypeTypes.Convert)
+                        .GetMethod($"To{type.Name}", TypeArrayCache.Get(TypeTypes.Object));
                 _convertToTypeMethodCache.Add(type, methodInfo);
             }
             return _convertToTypeMethodCache[type];

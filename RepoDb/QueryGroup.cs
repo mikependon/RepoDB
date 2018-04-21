@@ -33,7 +33,7 @@ namespace RepoDb
         {
             var textAttribute = typeof(Conjunction)
                 .GetMembers()
-                .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
             return textAttribute.Text;
         }

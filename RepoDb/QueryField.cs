@@ -36,7 +36,7 @@ namespace RepoDb
         {
             var textAttribute = typeof(Operation)
                 .GetMembers()
-                .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                .First(member => member.Name.ToLower() == Operation.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
             return textAttribute.Text;
         }

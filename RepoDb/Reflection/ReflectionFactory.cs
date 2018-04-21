@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using System;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 
 namespace RepoDb.Reflection
@@ -40,15 +42,15 @@ namespace RepoDb.Reflection
             switch (type)
             {
                 case MethodInfoTypes.ConvertToStringMethod:
-                    return TypeCache.Get(TypeTypes.ConvertType)
-                        .GetMethod("ToString", TypeArrayCache.Get(TypeArrayTypes.ObjectTypes));
+                    return TypeCache.Get(TypeTypes.Convert)
+                        .GetMethod("ToString", TypeArrayCache.Get(TypeTypes.Object));
                 case MethodInfoTypes.DataReaderGetItemMethod:
-                    return TypeCache.Get(TypeTypes.DataReaderType)
-                        .GetProperty("Item", TypeArrayCache.Get(TypeArrayTypes.StringTypes)).GetMethod;
+                    return TypeCache.Get(TypeTypes.DbDataReader)
+                        .GetProperty("Item", TypeArrayCache.Get(TypeTypes.String)).GetMethod;
                 case MethodInfoTypes.PropertySetValueMethod:
                     return TypeCache.Get(TypeTypes.PropertyInfo)
-                        .GetMethod("SetValue", new[] { TypeCache.Get(TypeTypes.ObjectType),
-                            TypeCache.Get(TypeTypes.ObjectType) });
+                        .GetMethod("SetValue", new[] { TypeCache.Get(TypeTypes.Object),
+                            TypeCache.Get(TypeTypes.Object) });
                 default:
                     return null;
             }
@@ -63,24 +65,14 @@ namespace RepoDb.Reflection
         {
             switch (type)
             {
-                case TypeTypes.ConvertType:
-                    return typeof(Convert);
-                case TypeTypes.DataReaderType:
+                case TypeTypes.DbDataReader:
                     return typeof(DbDataReader);
-                case TypeTypes.ExecutingAssemblyType:
-                    return Assembly.GetExecutingAssembly().GetType();
-                case TypeTypes.MethodInfo:
-                    return typeof(MethodInfo);
-                case TypeTypes.NullableGenericType:
-                    return typeof(Nullable<>);
-                case TypeTypes.ObjectType:
-                    return typeof(object);
-                case TypeTypes.PropertyInfo:
-                    return typeof(PropertyInfo);
-                case TypeTypes.StringType:
-                    return typeof(string);
                 default:
-                    return null;
+                    var textAttribute = typeof(TypeTypes)
+                        .GetMembers()
+                        .First(member => member.Name.ToLower() == type.ToString().ToLower())
+                        .GetCustomAttribute<TextAttribute>();
+                    return Type.GetType(textAttribute.Text);
             }
         }
 
@@ -89,19 +81,14 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="type">The type of Type array to be created.</param>
         /// <returns>An array of Types.</returns>
-        public static Type[] CreateTypes(TypeArrayTypes type)
+        public static Type[] CreateTypes(params TypeTypes[] types)
         {
-            switch (type)
+            var t = new Type[types.Length];
+            for (var i = 0; i < types.Length; i++)
             {
-                case TypeArrayTypes.DataReaderTypes:
-                    return new[] { TypeCache.Get(TypeTypes.DataReaderType) };
-                case TypeArrayTypes.ObjectTypes:
-                    return new[] { TypeCache.Get(TypeTypes.ObjectType) };
-                case TypeArrayTypes.StringTypes:
-                    return new[] { TypeCache.Get(TypeTypes.StringType) };
-                default:
-                    return null;
+                t[i] = TypeCache.Get(types[i]);
             }
+            return t;
         }
     }
 }

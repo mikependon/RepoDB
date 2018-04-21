@@ -23,8 +23,8 @@ namespace RepoDb.Reflection
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
                 entityType,
-                TypeArrayCache.Get(TypeArrayTypes.DataReaderTypes),
-                TypeCache.Get(TypeTypes.ExecutingAssemblyType),
+                TypeArrayCache.Get(TypeTypes.DbDataReader),
+                TypeCache.Get(TypeTypes.Assembly),
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
@@ -81,7 +81,7 @@ namespace RepoDb.Reflection
             if (underlyingType != null)
             {
                 // Get the type of Nullable<T> object
-                var nullableType = TypeCache.Get(TypeTypes.NullableGenericType).MakeGenericType(underlyingType);
+                var nullableType = TypeCache.Get(TypeTypes.NullableGeneric).MakeGenericType(underlyingType);
                 var constructor = ConstructorInfoCache.Get(nullableType, underlyingType);
 
                 // Create an instance of Nullable<T> object

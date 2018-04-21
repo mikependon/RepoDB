@@ -120,7 +120,6 @@
     <Compile Include="Reflection\TypeArrayCache.cs" />
     <Compile Include="Reflection\MethodInfoCache.cs" />
     <Compile Include="Reflection\TypeCache.cs" />
-    <Compile Include="Reflection\TypeArrayTypes.cs" />
     <Compile Include="Reflection\TypeTypes.cs" />
     <Compile Include="Reflection\DataReaderMapper.cs" />
     <Compile Include="Reflection\DelegateCache.cs" />
