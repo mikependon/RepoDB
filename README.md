@@ -23,7 +23,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - We will never make complex implementations (specially for Queries and Methods)
  - We will avoid developing complex JOINs (until it is needed and requested by the community)
  - We will never ever do try-catch inside the library
- 
+
 ### Next Version (1.0.15)
 
  - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
