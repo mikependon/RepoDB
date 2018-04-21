@@ -25,14 +25,12 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - We will never ever do try-catch inside the library
  
 ### Next Version (1.0.15)
- 
- - Returned IDataReader object when using the IDbConnection.ExecuteReader
- - Fixed the IL Emitter when mapping DataReader to Null propeprties.
+
+ - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
  - Added RepoDb.Reflection.ConstructorInfoCache
  - Added RepoDb.Reflection.DataReaderMapper
  - Added RepoDb.Reflection.DelegateCache
  - Added RepoDb.Reflection.DelegateFactory
- - Added Delegates (DataReaderToEntityMapperDelegate)
  - Added RepoDb.Reflection.MethodInfoCache
  - Added RepoDb.Reflection.MethodInfoTypes
  - Added RepoDb.Reflection.ReflectionFactory
@@ -40,6 +38,11 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Added RepoDb.Reflection.TypeCache
  - Added RepoDb.Reflection.TypeTypes
  - Added RepoDb.Attributes.CreateMethodInfoAttribute
+ - Returned IDataReader object when using the IDbConnection.ExecuteReader
+ - Fixed the IL Emitter when mapping DataReader to Null properties
+ - Added ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
+ - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
+ - Supported ObjectMapper
 
 ### Features
 
@@ -66,7 +69,6 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 ### Next Release
 
  - IL Emit the conversion of IDataEntity to System.Data.DataTable
- - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
  
