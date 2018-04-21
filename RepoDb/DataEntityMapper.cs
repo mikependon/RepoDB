@@ -1,6 +1,5 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Exceptions;
-using RepoDb.Interfaces;
+﻿using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace RepoDb
@@ -10,34 +9,39 @@ namespace RepoDb
     /// </summary>
     public static class DataEntityMapper
     {
-        private static readonly IDictionary<string, DataEntityMap> _cache;
+        private static readonly IDictionary<Type, object> _cache;
         private static readonly object _syncLock;
 
         static DataEntityMapper()
         {
-            _cache = new Dictionary<string, DataEntityMap>();
+            _cache = new Dictionary<Type, object>();
             _syncLock = new object();
         }
 
         /// <summary>
-        /// Add an entity mapping to the mapping collection.
+        /// Create a new entity and database mapping.
         /// </summary>
-        /// <typeparam name="TEntity">The entity to be mapped.</typeparam>
+        /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type where to apply the mapping.</typeparam>
         /// <param name="command">The type of command to be used for mapping.</param>
-        /// <param name="map">The mapping for database object.</param>
-        public static void For<TEntity>(Command command, DataEntityMap map)
+        /// <returns>An instance of RepoDb.DataEntityMapperItem that is used for mapping.</returns>
+        public static DataEntityMapperItem<TEntity> For<TEntity>()
             where TEntity : IDataEntity
         {
-            var type = typeof(TEntity);
-            var key = $"{type.FullName}.{command.ToString()}".ToLower();
+            var key = typeof(TEntity);
+            var value = (DataEntityMapperItem<TEntity>)null;
             lock (_syncLock)
             {
                 if (_cache.ContainsKey(key))
                 {
-                    throw new DuplicateDataEntityMapException<TEntity>(command);
+                    value = (DataEntityMapperItem<TEntity>)_cache[key];
                 }
-                _cache.Add(key, map);
+                else
+                {
+                    value = new DataEntityMapperItem<TEntity>();
+                    _cache.Add(key, value);
+                }
             }
+            return value;
         }
     }
 }

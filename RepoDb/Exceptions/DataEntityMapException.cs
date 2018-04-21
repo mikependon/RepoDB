@@ -8,6 +8,6 @@ namespace RepoDb.Exceptions
         where TEntity : IDataEntity
     {
         public DataEntityMapException(Command command)
-            : base($"{typeof(TEntity).FullName} {Constant.For.ToLower()} {command.ToString()}") { }
+            : base($"{typeof(TEntity).FullName} ({command.ToString().ToUpper()})") { }
     }
 }
