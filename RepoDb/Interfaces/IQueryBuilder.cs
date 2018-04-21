@@ -63,7 +63,7 @@ namespace RepoDb.Interfaces
         IQueryBuilder<TEntity> Join();
 
         // Name ([dbo].[Name])
-        IQueryBuilder<TEntity> Table();
+        IQueryBuilder<TEntity> Table(Command command);
 
         // Using (USING)
         IQueryBuilder<TEntity> Using();

@@ -9,6 +9,7 @@ using System.Linq;
 using RepoDb.Exceptions;
 using System.Reflection;
 using RepoDb.Reflection;
+using RepoDb.Enumerations;
 
 namespace RepoDb
 {
@@ -72,25 +73,25 @@ namespace RepoDb
         public IStatementBuilder StatementBuilder { get; }
 
         // GuardPrimaryKey
-        private PropertyInfo GetAndGuardPrimaryKey<TEntity>()
+        private PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
             where TEntity : IDataEntity
         {
             var property = PrimaryPropertyCache.Get<TEntity>();
             if (property == null)
             {
-                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({ClassMapNameCache.Get<TEntity>()})");
+                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({ClassMapNameCache.Get<TEntity>(command)})");
             }
             return property;
         }
 
         // GuardBatchQueryable
 
-        private void GuardBatchQueryable<TEntity>()
+        private void GuardBatchQueryable<TEntity>(Command command)
             where TEntity : IDataEntity
         {
             if (!DataEntityExtension.IsBatchQueryble<TEntity>())
             {
-                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(command));
             }
         }
 
@@ -121,11 +122,6 @@ namespace RepoDb
                 {
                     queryGroup = QueryGroup.Parse(where);
                 }
-                else
-                {
-                    var property = GetAndGuardPrimaryKey<TEntity>();
-                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
-                }
             }
             return Count<TEntity>(where: queryGroup,
                 transaction: transaction);
@@ -147,7 +143,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>() :
+                ClassMapNameCache.Get<TEntity>(Command.Count) :
                 StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
@@ -249,11 +245,6 @@ namespace RepoDb
                 {
                     queryGroup = QueryGroup.Parse(where);
                 }
-                else
-                {
-                    var property = GetAndGuardPrimaryKey<TEntity>();
-                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
-                }
             }
             return CountBig<TEntity>(where: queryGroup,
                 transaction: transaction);
@@ -275,7 +266,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>() :
+                ClassMapNameCache.Get<TEntity>(Command.CountBig) :
                 StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
@@ -403,7 +394,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardBatchQueryable<TEntity>();
+            GuardBatchQueryable<TEntity>(Command.Select);
 
             // Variables
             var commandText = StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
@@ -503,7 +494,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
-                throw new EntityNotQueryableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotQueryableException(ClassMapNameCache.Get<TEntity>(Command.Select));
             }
         }
 
@@ -552,7 +543,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Select);
                     queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
@@ -583,7 +574,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>();
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>() :
+                ClassMapNameCache.Get<TEntity>(Command.Select) :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
@@ -687,7 +678,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInsertable<TEntity>())
             {
-                throw new EntityNotInsertableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotInsertableException(ClassMapNameCache.Get<TEntity>(Command.Insert));
             }
         }
 
@@ -757,7 +748,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsUpdateable<TEntity>())
             {
-                throw new EntityNotUpdateableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotUpdateableException(ClassMapNameCache.Get<TEntity>(Command.Update));
             }
         }
 
@@ -880,7 +871,7 @@ namespace RepoDb
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            var property = GetAndGuardPrimaryKey<TEntity>();
+            var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
             return Update(entity: entity,
                 where: new QueryGroup(property.AsQueryField(entity).AsEnumerable()),
                 transaction: transaction);
@@ -914,7 +905,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var property = GetAndGuardPrimaryKey<TEntity>();
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
                     queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
@@ -1015,7 +1006,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
             {
-                throw new EntityNotDeletableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotDeletableException(ClassMapNameCache.Get<TEntity>(Command.Delete));
             }
         }
 
@@ -1042,7 +1033,7 @@ namespace RepoDb
             }
             else if (where is TEntity)
             {
-                var property = GetAndGuardPrimaryKey<TEntity>();
+                var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
                 queryGroup = new QueryGroup(property.AsQueryField(where).AsEnumerable());
             }
             else
@@ -1133,7 +1124,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsMergeable<TEntity>())
             {
-                throw new EntityNotMergeableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotMergeableException(ClassMapNameCache.Get<TEntity>(Command.Merge));
             }
         }
 
@@ -1152,7 +1143,7 @@ namespace RepoDb
         {
             // Check
             GuardMergeable<TEntity>();
-            GetAndGuardPrimaryKey<TEntity>();
+            GetAndGuardPrimaryKey<TEntity>(Command.None);
 
             // Variables
             var commandText = StatementBuilder.CreateMerge(QueryBuilderCache.Get<TEntity>(), qualifiers);
@@ -1221,7 +1212,7 @@ namespace RepoDb
         {
             if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
             {
-                throw new EntityNotBulkInsertableException(ClassMapNameCache.Get<TEntity>());
+                throw new EntityNotBulkInsertableException(ClassMapNameCache.Get<TEntity>(Command.BulkInsert));
             }
         }
 
@@ -1253,7 +1244,7 @@ namespace RepoDb
                 }
 
                 // Convert to table
-                var table = entities.AsDataTable(connection);
+                var table = entities.AsDataTable(connection, Command.BulkInsert);
 
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;

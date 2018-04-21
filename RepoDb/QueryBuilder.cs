@@ -177,9 +177,9 @@ namespace RepoDb
             return Append("MERGE");
         }
 
-        public IQueryBuilder<TEntity> Table()
+        public IQueryBuilder<TEntity> Table(Command command)
         {
-            return Append($"{ClassMapNameCache.Get<TEntity>()}");
+            return Append($"{ClassMapNameCache.Get<TEntity>(command)}");
         }
 
         public IQueryBuilder<TEntity> Parameters(Command command)

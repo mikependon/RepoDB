@@ -4,10 +4,9 @@ using System;
 
 namespace RepoDb.Exceptions
 {
-    public class DataEntityMapException<TEntity> : Exception
-        where TEntity : IDataEntity
+    public class DataEntityMapException : Exception
     {
         public DataEntityMapException(Command command)
-            : base($"{typeof(TEntity).FullName} ({command.ToString().ToUpper()})") { }
+            : base(command.ToString().ToUpper()) { }
     }
 }

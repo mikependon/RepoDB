@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
             }
 
             // Mapping.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type).AsUnquoted()}{Constant.Id}".ToLower());
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Select).AsUnquoted()}{Constant.Id}".ToLower());
             if (property != null)
             {
                 return property;
@@ -133,21 +133,21 @@ namespace RepoDb.Extensions
         }
 
         // GetMappedName
-        internal static string GetMappedName(Type type)
+        internal static string GetMappedName(Type type, Command command)
         {
-            var attribute = ClassMapCache.Get(type);
-            return attribute?.Name ?? type.Name;
+            return DataEntityMapper.For(type)?.Get(command)?.Name ??
+                ClassMapCache.Get(type)?.Name ?? type.Name;
         }
 
-        public static string GetMappedName<T>()
+        public static string GetMappedName<T>(Command command)
             where T : IDataEntity
         {
-            return GetMappedName(typeof(T));
+            return GetMappedName(typeof(T), command);
         }
 
-        public static string GetMappedName(this IDataEntity dataEntity)
+        public static string GetMappedName(this IDataEntity dataEntity, Command command)
         {
-            return GetMappedName(dataEntity.GetType());
+            return GetMappedName(dataEntity.GetType(), command);
         }
 
         // AsObject
@@ -178,16 +178,16 @@ namespace RepoDb.Extensions
         }
 
         // AsDataTable
-        public static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection)
+        public static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection, Command command = Command.None)
             where T : IDataEntity
         {
-            var mappedName = GetMappedName<T>();
+            var mappedName = GetMappedName<T>(Command.None);
             var table = new DataTable(mappedName);
-            var properties = typeof(T).GetProperties();
+            var properties = PropertyCache.Get<T>(command);
             var dict = new Dictionary<DataColumn, PropertyInfo>();
-            using (var command = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
+            using (var cmd = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
             {
-                using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
+                using (var reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
                 {
                     var schemaTable = reader.GetSchemaTable();
                     foreach (DataRow row in schemaTable.Rows)

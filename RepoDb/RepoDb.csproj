@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CreateMethodInfoAttribute.cs" />
-    <Compile Include="DataEntityMapperItem.cs" />
+    <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
     <Compile Include="ClassMapCache.cs" />

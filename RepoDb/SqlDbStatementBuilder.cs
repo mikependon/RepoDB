@@ -30,7 +30,7 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .Fields(Command.Select)
                 .From()
-                .Table()
+                .Table(Command.Select)
                 .Where(where)
                 .CloseParen()
                 .Select()
@@ -53,7 +53,7 @@ namespace RepoDb
                 .Count()
                 .WriteText("(*) AS [Counted]")
                 .From()
-                .Table()
+                .Table(Command.Count)
                 .Where(where)
                 .End();
             return queryBuilder.GetString();
@@ -69,7 +69,7 @@ namespace RepoDb
                 .CountBig()
                 .WriteText("(*) AS [Counted]")
                 .From()
-                .Table()
+                .Table(Command.CountBig)
                 .Where(where)
                 .End();
             return queryBuilder.GetString();
@@ -83,7 +83,7 @@ namespace RepoDb
                 .Clear()
                 .Delete()
                 .From()
-                .Table()
+                .Table(Command.Delete)
                 .Where(where)
                 .End();
             return queryBuilder.GetString();
@@ -103,14 +103,14 @@ namespace RepoDb
                 if (unmatches?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The following columns ({unmatches.Select(field => field.AsField()).Join(", ")}) " +
-                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>()}).");
+                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.Update)}).");
                 }
             }
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
                 .Update()
-                .Table()
+                .Table(Command.Update)
                 .Set()
                 .FieldsAndParameters(fields)
                 .Where(where)
@@ -127,7 +127,7 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .Table()
+                .Table(Command.Insert)
                 .OpenParen()
                 .Fields(Command.Insert)
                 .CloseParen()
@@ -164,12 +164,12 @@ namespace RepoDb
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .Table()
+                .Table(Command.Merge) 
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFields(Command.None)
+                .ParametersAsFields(Command.None) // All fields must be included for selection
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -187,11 +187,11 @@ namespace RepoDb
                 .Then()
                 .Insert()
                 .OpenParen()
-                .Fields(Command.Insert)
+                .Fields(Command.Merge)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(Command.Insert)
+                .Parameters(Command.Merge)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -199,7 +199,7 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFields(Command.Update, "S")
+                .FieldsAndAliasFields(Command.Merge, "S")
                 .End();
             return queryBuilder.GetString();
         }
@@ -214,7 +214,7 @@ namespace RepoDb
                 .Top(top)
                 .Fields(Command.Select)
                 .From()
-                .Table()
+                .Table(Command.Select)
                 .Where(where)
                 .OrderBy(orderBy)
                 .End();
@@ -228,7 +228,7 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Update()
-                .Table()
+                .Table(Command.Update)
                 .Set()
                 .FieldsAndParameters(Command.Update)
                 .Where(where)

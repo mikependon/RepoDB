@@ -8,7 +8,7 @@ namespace RepoDb.Interfaces
     public interface IDataEntityMap
     {
         /// <summary>
-        /// Gets the name of database object.
+        /// Gets the name of database object being mapped.
         /// </summary>
         string Name { get; }
 

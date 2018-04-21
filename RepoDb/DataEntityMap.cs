@@ -20,7 +20,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the name of database object.
+        /// Gets the name of database object being mapped.
         /// </summary>
         public string Name { get; }
 
