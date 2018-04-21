@@ -57,7 +57,7 @@ namespace RepoDb.Reflection
             switch (type)
             {
                 case TypeTypes.DbDataReader:
-                    return typeof(DbDataReader);
+                    return typeof(DbDataReader); // TODO: Why is it failing on a literal dynamic approach like below?
                 default:
                     var textAttribute = typeof(TypeTypes)
                         .GetMembers()

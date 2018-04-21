@@ -22,7 +22,7 @@ namespace RepoDb.Attributes
         }
 
         /// <summary>
-        /// he type of object.
+        /// The type of object.
         /// </summary>
         public TypeTypes Type { get; }
 

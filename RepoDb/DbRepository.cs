@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using RepoDb.Exceptions;
 using System.Reflection;
+using RepoDb.Reflection;
 
 namespace RepoDb
 {
@@ -352,10 +353,10 @@ namespace RepoDb
 
             // Actual Execution
             var result = ExecuteReader<TEntity>(commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: _commandTimeout,
-                transaction: transaction);
+                 param: param,
+                 commandType: commandType,
+                 commandTimeout: _commandTimeout,
+                 transaction: transaction);
 
             // After Execution
             if (Trace != null)
@@ -1028,7 +1029,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<int>(() =>
-                BulkInsert<TEntity>(entities: entities,
+                BulkInsert(entities: entities,
                     transaction: transaction));
         }
 
@@ -1039,12 +1040,16 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             var connection = (transaction?.Connection ?? CreateConnection());
-            var result = connection.ExecuteReader<TEntity>(commandText: commandText,
+            var result = (IEnumerable<TEntity>)null;
+            using (var reader = connection.ExecuteReader(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: _commandTimeout,
                 transaction: transaction,
-                trace: Trace);
+                trace: Trace))
+            {
+                result = DataReaderMapper.ToEnumerable<TEntity>((DbDataReader)reader);
+            }
             if (transaction == null)
             {
                 connection.Dispose();
@@ -1058,7 +1063,7 @@ namespace RepoDb
             int? commandTimeout = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
+            return Task.Factory.StartNew(() =>
                 ExecuteReader<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,

@@ -1,9 +1,7 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -46,14 +44,13 @@ namespace RepoDb.Extensions
         }
 
         // ExecuteReader
-        public static IEnumerable<TEntity> ExecuteReader<TEntity>(this IDbConnection connection,
+        public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
-            where TEntity : DataEntity
         {
             // Before Execution
             if (trace != null)
@@ -79,109 +76,31 @@ namespace RepoDb.Extensions
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
                 command.CreateParameters(param);
-                using (var reader = command.ExecuteReader())
+                var reader = command.ExecuteReader();
+                if (trace != null)
                 {
-                    var list = Reflection.DataReaderMapper.ToEnumerable<TEntity>((DbDataReader)reader);
-                    // var list = reader.AsEnumerable<TEntity>();
-
-                    // After Execution
-                    if (trace != null)
-                    {
-                        trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list,
-                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                    }
-
-                    // Result
-                    return list;
+                    trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, reader,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
+                return reader;
             }
         }
 
         // ExecuteReaderAsync
-        public static Task<IEnumerable<TEntity>> ExecuteReaderAsync<TEntity>(this IDbConnection connection,
+        public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
-            where TEntity : DataEntity
         {
-            return Task.Factory.StartNew<IEnumerable<TEntity>>(() =>
-                ExecuteReader<TEntity>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace));
-        }
-
-        // ExecuteReader
-        public static IEnumerable<object> ExecuteReader(this IDbConnection connection,
-            string commandText,
-            object param = null,
-            int? commandTimeout = null,
-            CommandType? commandType = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
-        {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteReaderEx(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(Constant.ExecuteReaderEx);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
-            {
-                command.CreateParameters(param);
-                using (var reader = command.ExecuteReader())
-                {
-                    var list = reader.AsObjects();
-
-                    // After Execution
-                    if (trace != null)
-                    {
-                        trace.AfterExecuteReaderEx(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, list,
-                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                    }
-
-                    // Result
-                    return list;
-                }
-            }
-        }
-
-        // ExecuteReaderAsync
-        public static Task<IEnumerable<object>> ExecuteReaderAsync(this IDbConnection connection,
-            string commandText,
-            object param = null,
-            int? commandTimeout = null,
-            CommandType? commandType = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
-        {
-            return Task.Factory.StartNew<IEnumerable<object>>(() =>
+            return Task.Factory.StartNew(() =>
                 ExecuteReader(connection: connection,
                     commandText: commandText,
                     param: param,
-                    commandTimeout: commandTimeout,
                     commandType: commandType,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace));
         }
