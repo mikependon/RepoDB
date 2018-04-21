@@ -26,7 +26,6 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  
 ### Next Version (1.0.15)
 
- - Supported DbRepository.Count
  - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
  - Added RepoDb.Reflection.ConstructorInfoCache
  - Added RepoDb.Reflection.DataReaderMapper
@@ -43,7 +42,8 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Fixed the IL Emitter when mapping DataReader to Null properties
  - Added ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
  - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
- - Supported ObjectMapper
+ - Supported DataEntityMapper, DataEntityMap
+ - Supported the DbRepository.Count and DbRepository.CountBig
 
 ### Features
 
