@@ -84,6 +84,17 @@ namespace RepoDb
             return property;
         }
 
+        // GuardCountable
+
+        private void GuardCountable<TEntity>()
+            where TEntity : IDataEntity
+        {
+            if (!DataEntityExtension.IsCountable<TEntity>())
+            {
+                throw new EntityNotCountableException(ClassMapNameCache.Get<TEntity>(Command.Count));
+            }
+        }
+
         // Count
 
         public int Count<TEntity>(IDbTransaction transaction = null)
@@ -127,13 +138,10 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardQueryable<TEntity>();
+            GuardCountable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.Count);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Count) :
-                StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
+            var commandText = StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -159,7 +167,7 @@ namespace RepoDb
             // Actual Execution
             var result = Convert.ToInt32(ExecuteScalar(commandText: commandText,
                  param: param,
-                 commandType: commandType,
+                 commandType: CommandTypeCache.Get<TEntity>(Command.Count),
                  commandTimeout: _commandTimeout,
                  transaction: transaction));
 
@@ -207,6 +215,17 @@ namespace RepoDb
                     transaction: transaction));
         }
 
+        // GuardBigCountable
+
+        private void GuardBigCountable<TEntity>()
+            where TEntity : IDataEntity
+        {
+            if (!DataEntityExtension.IsBigCountable<TEntity>())
+            {
+                throw new EntityNotBigCountableException(ClassMapNameCache.Get<TEntity>(Command.CountBig));
+            }
+        }
+
         // CountBig
 
         public long CountBig<TEntity>(IDbTransaction transaction = null)
@@ -250,13 +269,10 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardQueryable<TEntity>();
+            GuardBigCountable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.CountBig);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.CountBig) :
-                StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
+            var commandText = StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -282,7 +298,7 @@ namespace RepoDb
             // Actual Execution
             var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
                  param: param,
-                 commandType: commandType,
+                 commandType: CommandTypeCache.Get<TEntity>(Command.CountBig),
                  commandTimeout: _commandTimeout,
                  transaction: transaction));
 
@@ -332,12 +348,12 @@ namespace RepoDb
 
         // GuardBatchQueryable
 
-        private void GuardBatchQueryable<TEntity>(Command command)
+        private void GuardBatchQueryable<TEntity>()
             where TEntity : IDataEntity
         {
             if (!DataEntityExtension.IsBatchQueryable<TEntity>())
             {
-                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(command));
+                throw new EntityNotBatchQueryableException(ClassMapNameCache.Get<TEntity>(Command.BatchQuery));
             }
         }
 
@@ -394,7 +410,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardBatchQueryable<TEntity>(Command.BatchQuery);
+            GuardBatchQueryable<TEntity>();
 
             // Variables
             var commandText = StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
@@ -691,7 +707,10 @@ namespace RepoDb
             GuardInsertable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateInsert(QueryBuilderCache.Get<TEntity>());
+            var commandType = CommandTypeCache.Get<TEntity>(Command.Insert);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>(Command.Insert) :
+                StatementBuilder.CreateInsert(QueryBuilderCache.Get<TEntity>());
             var param = entity?.AsObject();
 
             // Before Execution
@@ -717,7 +736,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.Insert),
+                commandType: commandType,
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -932,7 +951,10 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateUpdate(QueryBuilderCache.Get<TEntity>(), where);
+            var commandType = CommandTypeCache.Get<TEntity>(Command.Update);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>(Command.Update) :
+                StatementBuilder.CreateUpdate(QueryBuilderCache.Get<TEntity>(), where);
             var param = entity?.AsObject(where);
 
             // Before Execution
@@ -958,7 +980,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.Update),
+                commandType: commandType,
                 commandTimeout: _commandTimeout,
                 transaction: transaction);
 
@@ -1062,7 +1084,10 @@ namespace RepoDb
             GuardDeletable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateDelete(QueryBuilderCache.Get<TEntity>(), where);
+            var commandType = CommandTypeCache.Get<TEntity>(Command.Delete);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>(Command.Delete) :
+                StatementBuilder.CreateDelete(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1088,7 +1113,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.Delete),
+                commandType: commandType,
                 commandTimeout: _commandTimeout);
 
             // After Execution
@@ -1221,7 +1246,8 @@ namespace RepoDb
         private void GuardBulkInsert<TEntity>()
             where TEntity : IDataEntity
         {
-            if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
+            if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection)
+                || !DataEntityExtension.IsBulkInsertable<TEntity>())
             {
                 throw new EntityNotBulkInsertableException(ClassMapNameCache.Get<TEntity>(Command.BulkInsert));
             }
@@ -1233,7 +1259,6 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check
-            GuardInsertable<TEntity>();
             GuardBulkInsert<TEntity>();
 
             // Variables

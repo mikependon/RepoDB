@@ -14,7 +14,7 @@ namespace RepoDb
             where TEntity : IDataEntity
         {
             var value = (string)null;
-            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
+            var key = $"{typeof(TEntity).FullName}.{command.ToString()}".ToLower();
             if (_cache.ContainsKey(key))
             {
                 value = _cache[key];

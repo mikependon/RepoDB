@@ -9,19 +9,20 @@ namespace RepoDb
 {
     public static class CommandTypeCache
     {
-        private static readonly IDictionary<Type, CommandType> _cache = new Dictionary<Type, CommandType>();
+        private static readonly IDictionary<string, CommandType> _cache = new Dictionary<string, CommandType>();
 
         internal static CommandType Get(Type type, Command command)
         {
             var value = CommandType.Text;
-            if (_cache.ContainsKey(type))
+            var key = $"{type.FullName}.{command.ToString()}".ToLower();
+            if (_cache.ContainsKey(key))
             {
-                value = _cache[type];
+                value = _cache[key];
             }
             else
             {
                 value = DataEntityExtension.GetCommandType(type, command);
-                _cache.Add(type, value);
+                _cache.Add(key, value);
             }
             return value;
         }

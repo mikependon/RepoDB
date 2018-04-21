@@ -245,6 +245,42 @@ namespace RepoDb.Extensions
             return IsQueryable(dataEntity.GetType());
         }
 
+        // IsBulkInsertable
+        internal static bool IsBulkInsertable(Type type)
+        {
+            var commandType = CommandTypeCache.Get(type, Command.BulkInsert);
+            return commandType != CommandType.StoredProcedure;
+        }
+
+        public static bool IsBulkInsertable<T>()
+            where T : IDataEntity
+        {
+            return IsBulkInsertable(typeof(T));
+        }
+
+        public static bool IsBulkInsertable(this IDataEntity dataEntity)
+        {
+            return IsQueryable(dataEntity.GetType());
+        }
+
+        // IsBigCountable
+        internal static bool IsBigCountable(Type type)
+        {
+            var commandType = CommandTypeCache.Get(type, Command.Count);
+            return commandType == CommandType.Text;
+        }
+
+        public static bool IsBigCountable<T>()
+            where T : IDataEntity
+        {
+            return IsBigCountable(typeof(T));
+        }
+
+        public static bool IsBigCountable(this IDataEntity dataEntity)
+        {
+            return IsBigCountable(dataEntity.GetType());
+        }
+
         // IsCountable
         internal static bool IsCountable(Type type)
         {
