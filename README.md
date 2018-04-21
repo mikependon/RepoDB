@@ -26,6 +26,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  
 ### Next Version (1.0.15)
 
+ - Supported DbRepository.Count
  - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
  - Added RepoDb.Reflection.ConstructorInfoCache
  - Added RepoDb.Reflection.DataReaderMapper
@@ -68,11 +69,10 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
- - Support DbRepository.Count
  - IL Emit the conversion of IDataEntity to System.Data.DataTable
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
  
 ### Todos
 
- - Documentation: ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
+ - Documentation: Count, DbConnection.ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
