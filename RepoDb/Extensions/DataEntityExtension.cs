@@ -200,7 +200,10 @@ namespace RepoDb.Extensions
                             return columnName.ToLower() == p.GetMappedName().ToLower();
                         });
                         table.Columns.Add(dataColumn);
-                        dict.Add(dataColumn, property);
+                        if (property != null)
+                        {
+                            dict.Add(dataColumn, property);
+                        }
                     }
                 }
             }

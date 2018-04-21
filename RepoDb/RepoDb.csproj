@@ -124,13 +124,14 @@
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="Reflection\ConstructorInfoCache.cs" />
+    <Compile Include="Reflection\DataEntityConverter.cs" />
     <Compile Include="Reflection\MethodInfoTypes.cs" />
     <Compile Include="Reflection\ReflectionFactory.cs" />
     <Compile Include="Reflection\TypeArrayCache.cs" />
     <Compile Include="Reflection\MethodInfoCache.cs" />
     <Compile Include="Reflection\TypeCache.cs" />
     <Compile Include="Reflection\TypeTypes.cs" />
-    <Compile Include="Reflection\DataReaderMapper.cs" />
+    <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="Reflection\DelegateCache.cs" />
     <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\Delegates.cs" />

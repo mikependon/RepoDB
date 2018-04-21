@@ -1280,7 +1280,8 @@ namespace RepoDb
                 }
 
                 // Convert to table
-                var table = entities.AsDataTable(connection, Command.BulkInsert);
+                var table = DataEntityConverter.ToDataTable<TEntity>(entities);
+                //var table = entities.AsDataTable(connection, Command.BulkInsert);
 
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
@@ -1331,7 +1332,7 @@ namespace RepoDb
                 transaction: transaction,
                 trace: Trace))
             {
-                result = DataReaderMapper.ToEnumerable<TEntity>((DbDataReader)reader);
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
             }
             if (transaction == null)
             {

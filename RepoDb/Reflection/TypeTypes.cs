@@ -18,6 +18,16 @@ namespace RepoDb.Reflection
         [Text("System.Convert")]
         Convert,
         /// <summary>
+        /// A System.Data.DataRow type.
+        /// </summary>
+        [Text("System.Data.DataRow")]
+        DataRow,
+        /// <summary>
+        /// A System.Data.DataTable type.
+        /// </summary>
+        [Text("System.Data.DataTable")]
+        DataTable,
+        /// <summary>
         /// A System.Data.Common.DbDataReader type.
         /// </summary>
         [Text("System.Data.Common.DbDataReader")]

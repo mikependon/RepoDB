@@ -7,7 +7,7 @@ namespace RepoDb.Reflection
     /// <summary>
     /// A mapper used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
     /// </summary>
-    public static class DataReaderMapper
+    public static class DataReaderConverter
     {
         /// <summary>
         /// Converts the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
@@ -18,7 +18,7 @@ namespace RepoDb.Reflection
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToEntityMapperDelegate<TEntity>();
+            var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>();
             return @delegate(reader);
         }
 
@@ -31,11 +31,12 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToEntityMapperDelegate<TEntity>();
+            var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>();
             var list = new List<TEntity>();
             while (reader.Read())
             {
-                list.Add(@delegate(reader));
+                var entity = @delegate(reader);
+                list.Add(entity);
             }
             return list;
         }

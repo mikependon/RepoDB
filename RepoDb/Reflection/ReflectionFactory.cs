@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using System;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
@@ -43,8 +44,10 @@ namespace RepoDb.Reflection
                 .GetMembers()
                 .First(member => member.Name.ToLower() == type.ToString().ToLower())
                 .GetCustomAttribute<CreateMethodInfoAttribute>();
-            return TypeCache.Get(createMethodInfoAttribute.Type)
-                .GetMethod(createMethodInfoAttribute.MethodName, createMethodInfoAttribute.ReflectedTypes);
+            var targetType = TypeCache.Get(createMethodInfoAttribute.Type);
+            return createMethodInfoAttribute.ReflectedTypes == null ?
+                targetType?.GetMethod(createMethodInfoAttribute.MethodName) :
+                targetType?.GetMethod(createMethodInfoAttribute.MethodName, createMethodInfoAttribute.ReflectedTypes);
         }
 
         /// <summary>
@@ -56,8 +59,13 @@ namespace RepoDb.Reflection
         {
             switch (type)
             {
+                // TODO: Why is System.Data namespace is failing on a literal dynamic approach like below?
+                case TypeTypes.DataRow:
+                    return typeof(DataRow);
+                case TypeTypes.DataTable:
+                    return typeof(DataTable);
                 case TypeTypes.DbDataReader:
-                    return typeof(DbDataReader); // TODO: Why is it failing on a literal dynamic approach like below?
+                    return typeof(DbDataReader);
                 default:
                     var textAttribute = typeof(TypeTypes)
                         .GetMembers()
