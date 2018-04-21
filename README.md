@@ -28,18 +28,18 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  
  - Returned IDataReader object when using the IDbConnection.ExecuteReader
  - Fixed the IL Emitter when mapping DataReader to Null propeprties.
- - Added ConstructorInfoCache
- - Added DataReaderMapper
- - Added DelegateCache
- - Created DelegateFactory
+ - Added RepoDb.Reflection.ConstructorInfoCache
+ - Added RepoDb.Reflection.DataReaderMapper
+ - Added RepoDb.Reflection.DelegateCache
+ - Added RepoDb.Reflection.DelegateFactory
  - Added Delegates (DataReaderToEntityMapperDelegate)
- - Added MethodInfoCache
- - Added MethodInfoTypes
- - Created ReflectionFactory
- - Added TypeArrayCache
- - Added TypeArrayTypes
- - Added TypeCache
- - Added TypeTypes
+ - Added RepoDb.Reflection.MethodInfoCache
+ - Added RepoDb.Reflection.MethodInfoTypes
+ - Added RepoDb.Reflection.ReflectionFactory
+ - Added RepoDb.Reflection.TypeArrayCache
+ - Added RepoDb.Reflection.TypeCache
+ - Added RepoDb.Reflection.TypeTypes
+ - Added RepoDb.Attributes.CreateMethodInfoAttribute
 
 ### Features
 
@@ -65,6 +65,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
+ - IL Emit the conversion of IDataEntity to System.Data.DataTable
  - Support ObjectMapper
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
