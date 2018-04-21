@@ -68,6 +68,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
+ - Support DbRepository.Count
  - IL Emit the conversion of IDataEntity to System.Data.DataTable
  - Support Multi-Mapping for Class-Level
  - MemoryCache Flush
