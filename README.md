@@ -27,6 +27,8 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 ### Features
 
  - BatchQuery/BatchQueryAsync
+ - Count/CountAsync
+ - CountBig/CountBigAsync
  - Query/QueryAsync
  - Insert/InsertAsync
  - Delete/DeleteAsync
@@ -41,6 +43,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Asynchronous Operations
  - Type Mapping
  - Field Mapping
+ - Multiple Mapping (Person = SELECT FROM Person, DELETE FROM sp_delete_person, UPDATE FROM sp_update_person, etc)
  - Expression Tree
  - Caching
  - Tracing
@@ -49,8 +52,6 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 ### Next Release
 
  - IL Emit the conversion of IDataEntity to System.Data.DataTable
- - Support Multi-Mapping for Class-Level
- - MemoryCache Flush
  
 ### Todos
 
@@ -72,7 +73,8 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Added RepoDb.Attributes.CreateMethodInfoAttribute
  - Returned IDataReader object when using the IDbConnection.ExecuteReader
  - Fixed the IL Emitter when mapping DataReader to Null properties
- - Added ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
+ - Added `ExecuteQuery` to IDbConnection extension (returns an IEnumerable<object>)
  - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
  - Supported DataEntityMapper, DataEntityMap
- - Supported the DbRepository.Count and DbRepository.CountBig operations
+ - Supported the `DbRepository.Count` and `DbRepository.CountBig` operations
+ - Support `Multi-Mapping` for Class-Level
