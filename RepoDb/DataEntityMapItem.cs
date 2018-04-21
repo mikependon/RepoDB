@@ -1,6 +1,7 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -23,6 +24,43 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Validates the entry of the mapping.
+        /// </summary>
+        /// <param name="command">The type of command this mapping is used to.</param>
+        /// <param name="map">The mapping to be used before execution.</param>
+        private void Validate(Command command, IDataEntityMap map)
+        {
+            if (map == null)
+            {
+                throw new NullReferenceException("Map");
+            }
+            var error = false;
+            switch (command)
+            {
+                case Command.BatchQuery:
+                case Command.Count:
+                case Command.CountBig:
+                case Command.InlineUpdate:
+                case Command.Merge:
+                    error = map.CommandType != CommandType.Text;
+                    break;
+                case Command.BulkInsert:
+                    error = map.CommandType == CommandType.StoredProcedure;
+                    break;
+                case Command.Delete:
+                case Command.Insert:
+                case Command.Query:
+                case Command.Update:
+                    error = false;
+                    break;
+            }
+            if (error)
+            {
+                throw new InvalidOperationException($"The command type '{map.CommandType.ToString()}' is not yet supported for '{command.ToString()}'.");
+            }
+        }
+
+        /// <summary>
         /// Set a mapping for the current defined entity.
         /// </summary>
         /// <param name="command">The type of command this mapping is used to.</param>
@@ -42,6 +80,10 @@ namespace RepoDb
         /// <returns>The current instance of RepoDb.DataEntityMapItem that holds the mapping.</returns>
         public DataEntityMapItem Set(Command command, IDataEntityMap map)
         {
+            // Validate
+            Validate(command, map);
+
+            // Check and Add
             lock (_syncLock)
             {
                 if (_cache.ContainsKey(command))
@@ -53,6 +95,8 @@ namespace RepoDb
                     _cache.Add(command, map);
                 }
             }
+
+            // Return
             return this;
         }
 
