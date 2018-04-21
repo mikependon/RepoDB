@@ -65,7 +65,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Added ExecuteQuery to IDbConnection extension (returns an IEnumerable<object>)
  - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
  - Supported DataEntityMapper, DataEntityMap
- - Supported the DbRepository.Count and DbRepository.CountBig
+ - Supported the DbRepository.Count and DbRepository.CountBig operation
 
 ### Next Release
 
