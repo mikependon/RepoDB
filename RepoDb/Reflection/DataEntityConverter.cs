@@ -24,6 +24,7 @@ namespace RepoDb.Reflection
             var @delegate = DelegateCache.GetDataEntityToDataRowDelegate<TEntity>();
             var table = new DataTable(typeof(TEntity).Name);
             PropertyCache.Get<TEntity>(Command.None)?
+                .Where(property => property.CanRead)
                 .ToList()
                 .ForEach(property =>
                 {

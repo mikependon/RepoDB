@@ -46,6 +46,11 @@ namespace RepoDb.Reflection
         /// A System.Data.DataTable.NewRow() method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataTable, "NewRow", null)]
-        DataTableNewRow
+        DataTableNewRow,
+        /// <summary>
+        /// A System.Reflection.PropertyInfo.GetValue() method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.PropertyInfo, "GetValue", new[] { typeof(object) })]
+        PropertyInfoGetValue
     }
 }
