@@ -56,25 +56,3 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 ### Todos
 
  - Documentation: Count, DbConnection.ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
-
-### Next Version (1.0.15)
-
- - Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
- - Added RepoDb.Reflection.ConstructorInfoCache
- - Added RepoDb.Reflection.DataReaderConverter
- - Added RepoDb.Reflection.DelegateCache
- - Added RepoDb.Reflection.DelegateFactory
- - Added RepoDb.Reflection.MethodInfoCache
- - Added RepoDb.Reflection.MethodInfoTypes
- - Added RepoDb.Reflection.ReflectionFactory
- - Added RepoDb.Reflection.TypeArrayCache
- - Added RepoDb.Reflection.TypeCache
- - Added RepoDb.Reflection.TypeTypes
- - Added RepoDb.Attributes.CreateMethodInfoAttribute
- - Returned IDataReader object when using the IDbConnection.ExecuteReader
- - Fixed the IL Emitter when mapping DataReader to Null properties
- - Added `ExecuteQuery` to IDbConnection extension (returns an IEnumerable<object>)
- - Added BeforeExecuteQuery and AfterExecuteQuery trace methods
- - Supported DataEntityMapper, DataEntityMap
- - Supported the `DbRepository.Count` and `DbRepository.CountBig` operations
- - Support `Multi-Mapping` for Class-Level
