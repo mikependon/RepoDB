@@ -56,6 +56,11 @@ namespace RepoDb.Reflection
         /// A System.String type.
         /// </summary>
         [Text("System.String")]
-        String
+        String,
+        /// <summary>
+        /// A System.Type type.
+        /// </summary>
+        [Text("System.Type")]
+        Type
     }
 }

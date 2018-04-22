@@ -1280,8 +1280,8 @@ namespace RepoDb
                 }
 
                 // Convert to table
-                var table = DataEntityConverter.ToDataTable<TEntity>(entities);
-                //var table = entities.AsDataTable(connection, Command.BulkInsert);
+                //var table = DataEntityConverter.ToDataTable<TEntity>(entities);
+                var table = entities.AsDataTable(connection, Command.BulkInsert);
 
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;

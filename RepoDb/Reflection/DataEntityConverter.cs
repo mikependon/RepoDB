@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Reflection
 {
@@ -32,7 +33,7 @@ namespace RepoDb.Reflection
                         property.PropertyType;
                     table.Columns.Add(new DataColumn(property.Name, typeof(string)));
                 });
-            foreach(var entity in entities)
+            foreach (var entity in entities)
             {
                 var row = @delegate(entity, table);
                 table.Rows.Add(row);

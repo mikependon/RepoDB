@@ -51,6 +51,11 @@ namespace RepoDb.Reflection
         /// A System.Reflection.PropertyInfo.GetValue() method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.PropertyInfo, "GetValue", new[] { typeof(object) })]
-        PropertyInfoGetValue
+        PropertyInfoGetValue,
+        /// <summary>
+        /// A System.Type.GetMethod.GetProperty() method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.Type, "GetProperty", new[] { typeof(string) })]
+        TypeGetProperty
     }
 }
