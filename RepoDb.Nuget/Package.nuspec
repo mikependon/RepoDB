@@ -5,7 +5,7 @@
     <version>1.0.15</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <title>RepoDb</title>
     <description>A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.</description>
     <language>en-US</language>

@@ -550,22 +550,22 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // ExecuteReader
-        public IEnumerable<TEntity> ExecuteReader(string commandText, object param = null, CommandType? commandType = null,
+        // ExecuteQuery
+        public IEnumerable<TEntity> ExecuteQuery(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
-            return DbRepository.ExecuteReader<TEntity>(commandText: commandText,
+            return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
-        // ExecuteReaderAsync
-        public Task<IEnumerable<TEntity>> ExecuteReaderAsync(string commandText, object param = null, CommandType? commandType = null,
+        // ExecuteQueryAsync
+        public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
         {
-            return DbRepository.ExecuteReaderAsync<TEntity>(commandText: commandText,
+            return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,

@@ -205,14 +205,14 @@ namespace RepoDb.Interfaces
 
         Task<int> BulkInsertAsync(IEnumerable<TEntity> entities, IDbTransaction transaction = null);
 
-        // ExecuteReader
+        // ExecuteQuery
 
-        IEnumerable<TEntity> ExecuteReader(string commandText, object entity = null, CommandType? commandType = null,
+        IEnumerable<TEntity> ExecuteQuery(string commandText, object entity = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null);
 
-        // ExecuteReaderAsync
+        // ExecuteQueryAsync
 
-        Task<IEnumerable<TEntity>> ExecuteReaderAsync(string commandText, object entity = null, CommandType? commandType = null,
+        Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText, object entity = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null);
 
         // ExecuteNonQuery

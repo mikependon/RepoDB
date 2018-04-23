@@ -437,7 +437,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteReader<TEntity>(commandText: commandText,
+            var result = ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: CommandTypeCache.Get<TEntity>(Command.BatchQuery),
                 commandTimeout: _commandTimeout,
@@ -615,7 +615,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteReader<TEntity>(commandText: commandText,
+            var result = ExecuteQuery<TEntity>(commandText: commandText,
                  param: param,
                  commandType: commandType,
                  commandTimeout: _commandTimeout,
@@ -1317,23 +1317,19 @@ namespace RepoDb
                     transaction: transaction));
         }
 
-        // ExecuteReader
+        // ExecuteQuery
 
-        public IEnumerable<TEntity> ExecuteReader<TEntity>(string commandText, object param = null, CommandType? commandType = null,
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             var connection = (transaction?.Connection ?? CreateConnection());
-            var result = (IEnumerable<TEntity>)null;
-            using (var reader = connection.ExecuteReader(commandText: commandText,
+            var result = connection.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: _commandTimeout,
                 transaction: transaction,
-                trace: Trace))
-            {
-                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
-            }
+                trace: Trace);
             if (transaction == null)
             {
                 connection.Dispose();
@@ -1341,14 +1337,14 @@ namespace RepoDb
             return result;
         }
 
-        // ExecuteReaderAsync
+        // ExecuteQueryAsync
 
-        public Task<IEnumerable<TEntity>> ExecuteReaderAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null,
+        public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null,
             int? commandTimeout = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                ExecuteReader<TEntity>(commandText: commandText,
+                ExecuteQuery<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,

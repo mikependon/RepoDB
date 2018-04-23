@@ -1,8 +1,10 @@
 ﻿using RepoDb.Exceptions;
 using RepoDb.Interfaces;
+using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -92,6 +94,92 @@ namespace RepoDb.Extensions
                     return result;
                 }
             }
+        }
+
+        // ExecuteQueryAsync
+        public static Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null)
+        {
+            return Task.Factory.StartNew(() =>
+                ExecuteQuery(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace));
+        }
+
+        // ExecuteQuery
+        public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null)
+            where TEntity : IDataEntity
+        {
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                trace.BeforeExecuteQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(Constant.ExecuteQuery);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var reader = ExecuteReader(connection, commandText, param, commandType, commandTimeout, transaction, trace))
+            {
+                var result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
+
+                // After Execution
+                if (trace != null)
+                {
+                    trace.AfterExecuteQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
+                }
+
+                // Result
+                return result;
+            }
+        }
+
+        // ExecuteQueryAsync
+        public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null)
+            where TEntity : IDataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                ExecuteQuery<TEntity>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace));
         }
 
         // ExecuteReader
