@@ -207,7 +207,7 @@ The library has created certain extension methods on the connection object. Belo
 
  - **EnsureOpen** - used to ensure that the connection is open. Returns the instance of the connection object.
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
- - **ExecuteQuery** - used to read certain records from the database in fast-forward access, but the result is being converted to an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
+ - **ExecuteQuery** - used to read certain records from the database in fast-forward access, but the result is being converted to an enumerable list of `dynamic` or `RepoDb.Interfaces.IDataEntity` object.
  - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database. 
 
@@ -253,7 +253,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ### ExecuteQuery
 
-This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `dynamic` or `RepoDb.Interfaces.IDataEntity` object.
 
 Below are the parameters:
 
@@ -266,7 +266,7 @@ Below are the parameters:
 
 Below is the way on how to call the operation.
 
-Returning an enumerable of `Dynamic` object.
+Returning an enumerable of `dynamic` object.
 ```
 var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
@@ -382,7 +382,10 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 		transaction.Rollback();
 		Log.Information(ex);
 	}
-	transaction.Dispose();
+	finally
+	{
+		transaction.Dispose();
+	}
 }
 ```
 The code snippets above will first insert a `Stock` record in the database and will return the newly added `StockId`. It will be followed by inserting the `Trade` record with the parent `StockId` as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.
@@ -437,6 +440,20 @@ var tree = new QueryGroup(
 				...
 			}
 			Conjunction.Or
+		),
+		new QueryGroup(
+			new QueryField[]
+			{
+				// List of QueryFields
+			},
+			new QueryGroup[]
+			{
+				// List of QueryGroups
+				...
+				...
+				...
+			}
+			Conjunction.Or
 		)
 	},
 	Conjunction.And
@@ -451,6 +468,16 @@ var tree = new
 	Field2 = "Field2", // QueryField
 	QueryGroups = new []
 	{
+		new
+		{
+			Conjunction = Conjunction.Or,
+			Field3 = "Field3", // QueryField
+			Field4 = "Field4",
+			QueryGroups = new object[]
+			{
+				...
+			}
+		},
 		new
 		{
 			Conjunction = Conjunction.Or,
@@ -752,16 +779,13 @@ The repositories contain different operations to manipulate the data from the da
  - **Update** - used to update a record in the database. It uses the `UPDATE` command of SQL.
  - **Delete** - used to delete a record in the database. It uses the `DELETE` command of SQL.
  - **Merge** - used to merge a record in the database. It uses the `MERGE` command of SQL.
+ - **InlineUpdate** - used to do column-based update of the records in the database. It uses the `UPDATE` command of SQL.
+ - **Count** - used to count all the records in the database. It uses the `SELECT`, `COUNT` command of SQL.
+ - **CountBig** - used to count (big) all the records in the database. It uses the `SELECT`, `COUNT_BIG` command of SQL.
+ - **BatchQuery** - used to query a record from the database by batch. It uses the `SELECT` in combination of `ROW_NUMBER` and `ORDER` command of SQL.
  - **BulkInsert** - used to bulk-insert the records in the database.
- - **BatchQuery** - [soon to be supported] used to query a record from the database by batch. It uses the `SELECT` in combination of `ROW_NUMBER` and `ORDER` command of SQL.
- - **ExecuteReader** - used to read certain records from the database in fast-forward access.
+ - **ExecuteQuery** - used to read certain records from the database in fast-forward access. It returns an enumerable list of `RepoDb.Interfaces.IDataEntity` objects.
  - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
- - **ExecuteScalar** - used to execute a command that returns a single-object value from the database.
-
-On the other hand, the library has extension methods on the `IDbConnection` object level that can be used to execute. Below are the 3 common connection extension methods widely used.
-
- - **ExecuteReader** - used to read certain records from the database in fast-forward access.
- - **ExecuteNonQuery** - used to execute a non-executable query in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database.
 
 All operations mentioned above has its own corresponding asynchronous operation. Usually, the asynchronous operation is only appended by `Async` keyword. Below are the list of asynchronous operations.
@@ -771,9 +795,12 @@ All operations mentioned above has its own corresponding asynchronous operation.
   - **UpdateAsync**
   - **DeleteAsync**
   - **MergeAsync**
+  - **InlineUpdateAsync**
+  - **CountAsync**
+  - **CountBigAsync**
+  - **BatchQueryAsync**
   - **BulkInsertAsync**
-  - **BatchQueryAsync** [soon to be supported]
-  - **ExecuteReaderAsync**
+  - **ExecuteQueryAsync**
   - **ExecuteNonQueryAsync**
   - **ExecuteScalar**
 
