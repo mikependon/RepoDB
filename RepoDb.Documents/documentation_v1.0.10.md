@@ -188,17 +188,26 @@ public SharedRepository : DbRepository<SqlConnection>, ISharedRepository
 
 ## Creating a Connection
 
-The repository object is used to create a connection object (`System.Data.IDbConnection`), allowing the caller to manually manipulate the data with its own.
+The repository object is used to create a connection object (`System.Data.IDbConnection`), allowing the caller to manually manipulate the data with its own. 
 
 A method named **CreateConnection** is used to create a new connection object. Below is the way on how to create a connection.
 ```
 var stockRepository = new StockRepository(connectionString);
 var connection = stockRepository.CreateConnection();
 ```
+On the other hand, the library does support the legacy approach by simply calling the default constructor of a `System.Data.IDbConnection` object. See sample below the legacy approach for opening a SQL database connection.
+```
+using (var connection = new SqlConnection().EnsureOpen())
+{
+	...
+}
+```
+
 The library has created certain extension methods on the connection object. Below are the list of extension methods.
 
  - **EnsureOpen** - used to ensure that the connection is open. Returns the instance of the connection object.
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
+ - **ExecuteQuery** - used to read certain records from the database in fast-forward access, but the result is being converted to an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
  - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database. 
 
@@ -217,7 +226,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ### ExecuteReader
 
-This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns a `System.Data.IDataReader` object.
 
 Below are the parameters:
 
@@ -233,7 +242,45 @@ Below is the way on how to call the operation.
 var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
 {
-	var param = new { Name = "GOOGL" };
+	var param = new { Name = "GA%" };
+	var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Stock] WHERE (Name LIKE @Name);", param);
+	while (reader.Read())
+	{
+		....
+	}
+}
+```
+
+### ExecuteQuery
+
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution. It could be an entity class or a dynamic object.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+ - **trace** - the trace object to be used on this operation.
+
+Below is the way on how to call the operation.
+
+Returning an enumerable of `Dynamic` object.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GA%" };
+	var result = connection.ExecuteReader("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
+}
+```
+Returning an enumerable of `Stock` data entity object. *(this will be supported at version above 1.0.15)*
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GA%" };
 	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
 }
 ```
