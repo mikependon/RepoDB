@@ -39,10 +39,7 @@ Above class `Stock` is forcely mapped to `[dbo].[StockTable]` of the database.
 
 The `Map` attribute has second parameter called `commandType` of `System.Data` namespace. If the `CommandType` parameter is defined, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
 
-**Note:** The `commandType` parameter is ignored if implemented at the field-level.
-
 ### Map Field Attribute
-[Soon to be supported above v1.0.9]
 
 By default, at the field-level, the entity class `property` is mapped to the database object `field` based on the equality of the name (case-insensitive). If the `Map` attribute is defined, it will force the entity class `property` to be mapped directly to the table `field` based on the name defined at the `Map` attribute. See sample below:
 ```
@@ -58,6 +55,8 @@ public class Stock : DataEntity, IStock
 }
 ```
 On the sample class above named `Stock`, the property `Id` is mapped to `StockId` field and the property `Name` is mapped to `SecurityName` field.
+
+**Note:** The `commandType` parameter is ignored if implemented at the field-level.
 
 ### Primary Attribute
 
@@ -81,14 +80,18 @@ If the `Primary` attribute is not defined, then the following identifications wi
 The `Ignore` attribute is necessary to command the library which property of the entity class is being ignored in certain operations. It accepts an argument of `RepoDb.Enumerations.Command` enumeration. The following are the values of this enumeration.
 
  - None
- - Select
+ - Query
  - Insert
  - Update
  - Delete
- - Create
- - Drop
- - Alter
- - Execute
+ - Merge
+ - BatchQuery
+ - InlineUpdate
+ - BulkInsert
+ - Count
+ - CountBig
+
+We have purposely made it to be dependent on `RepoDb.Enumerations.Command`, as we are very keen to making the library adhering the standard of `SOLID` principles. 
 
 Below is a way on how to marked the property `Id` to be ignored during `Update` operation.
 ```
