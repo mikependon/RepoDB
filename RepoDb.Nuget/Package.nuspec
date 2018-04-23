@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.15</version>
+    <version>1.0.16</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -12,25 +12,12 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      Added RepoDb.Reflection.Delegates.DataReaderToEntityMapperDelegate
-      Added RepoDb.Reflection.ConstructorInfoCache
-      Added RepoDb.Reflection.DataReaderConverter
-      Added RepoDb.Reflection.DelegateCache
-      Added RepoDb.Reflection.DelegateFactory
-      Added RepoDb.Reflection.MethodInfoCache
-      Added RepoDb.Reflection.MethodInfoTypes
-      Added RepoDb.Reflection.ReflectionFactory
-      Added RepoDb.Reflection.TypeArrayCache
-      Added RepoDb.Reflection.TypeCache
-      Added RepoDb.Reflection.TypeTypes
-      Added RepoDb.Attributes.CreateMethodInfoAttribute
-      Returned IDataReader object when using the IDbConnection.ExecuteReader
-      Fixed the IL Emitter when mapping DataReader to Null properties
-      Added ExecuteQuery to IDbConnection extension
-      Added BeforeExecuteQuery and AfterExecuteQuery trace methods
-      Supported DataEntityMapper, DataEntityMap
-      Supported the DbRepository.Count and DbRepository.CountBig operations
-      Support Multi-Mapping for Class-Level
+      [Updates]
+      Supported the DbConnection.ExecuteQuery method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
+      IL Emit the conversion of RepoDb.Interfaces.IDataEntity to System.Data.DataTable.
+      IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
+      [Notes]
+      Next version will be the Alpha version of the library.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
