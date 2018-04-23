@@ -3,7 +3,7 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 
 ## Class Entity
 
-An entity class is a DTO object that is being used to feed the operations of the repositories. In `RepoDb`, it is required that the entity classes inherit the `RepoDb.DataEntity` class. See example below.
+An entity class is a DTO that is being used to feed the operations of the repositories. In `RepoDb`, it is required that the entity classes inherit the `RepoDb.DataEntity` class. See example below.
 ```
 public class Stock : DataEntity
 {
