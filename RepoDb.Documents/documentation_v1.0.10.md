@@ -1,11 +1,11 @@
-# RepoDb (version 1.0.10)
+# RepoDb
 A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
 
 ## Class Entity
 
-An entity class is a POCO class that is being used to feed the operations of the repositories. In `RepoDb`, it is required that the entity classes inherit the `RepoDb.DataEntity` class. See example below.
+An entity class is a DTO object that is being used to feed the operations of the repositories. In `RepoDb`, it is required that the entity classes inherit the `RepoDb.DataEntity` class. See example below.
 ```
-public class Stock : DataEntity, IStock
+public class Stock : DataEntity
 {
 	public int Id { get; set; }
 	public string Name { get; set; }
@@ -25,6 +25,13 @@ public interface IStock : IDataEntity
 	string Name { get; set; }
 	...
 	DateTime CreatedDate { get; set; }
+}
+```
+and, implement the interface on your DTO class. See sample below.
+```
+public class Stock : DataEntity, IDataEntity
+{
+	....
 }
 ```
 
@@ -65,11 +72,11 @@ The `Primary` attribute is used in order to define which property of the data en
 [Primary]
 public int Id { get; set; }
 ```
-This attribute accepts a `System.Boolean` parameter that tells whether the primary property is an identity column. If sets to `true`, the value of the identity column of the newly added record from the database will be returned during `Insert` operation.
+This attribute accepts a `System.Boolean` parameter that tells whether the primary property is an identity column. If sets to `true`, the value of the identity column of the newly added record from the database will be returned during `Insert` operation, otherwise, the value of the `Primary` column will be returned.
 
 By default, the library has built-in mechanism on identifying the primary key. If the `Primary` attribute is defined, the first occurrence will automatically be qualified as the primary property.
 
-If the `Primary` attribute is not defined, then the following identifications will be used.
+Else, if the `Primary` attribute is not defined, then the following identifications will be used.
 
   - Search for `Id` property. If present, this automatically overrule the mechanism.
   - If there is no `Id` property from the class, the class name plus the word `Id` will be evaluated. This means that the `Stock` class, the property `StockId` will be identified.
@@ -96,6 +103,8 @@ We have purposely made it to be dependent on `RepoDb.Enumerations.Command`, as w
 Below is a way on how to marked the property `Id` to be ignored during `Update` operation.
 ```
 [Ignore(Command.Update)]
+[Primary(true)]
+[Map("StockId")]
 public int Id { get; set; }
 ```
 On the other hand, this attribute can also be used for multiple ignore commands on a single property. Below is the sample on how to marked the `CreatedDate` property to be ignored during `Insert` and `Update` operation. *(This is advisable only to a property with default values from the database)*
@@ -103,13 +112,12 @@ On the other hand, this attribute can also be used for multiple ignore commands 
 [Ignore(Command.Insert | Command.Update)]
 public int CreatedDate { get; set; }
 ```
-Currently, the library is only using the `None`, `Select`, `Insert`, `Update`, `Delete` commands on its certain operations.
 
 ## Repository
 
-The library contains two base repository objects, the `RepoDb.BaseRepository<TEntity, TDbConnection>` and the `RepoDb.DbRepository<TDbConnection>`. The latter is the `heart` of `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
+A repository is the main course of the library. It contains two base repository objects, the `RepoDb.BaseRepository<TEntity, TDbConnection>` and the `RepoDb.DbRepository<TDbConnection>`. The latter is the **`heart`** of `RepoDb` as it contains all the operations that is being used by all other repositories within or outside the library.
 
-This means that, the `BaseRepository` is only abstracting the operations of the `DbRepository` object in all areas.
+This means that, the `RepoDb.BaseRepository<TEntity, TDbConnection>` is only abstracting the operations of the `RepoDb.DbRepository<TDbConnection>` object in all areas.
 
 Both classes accept the following parameters on there respective constructors.
 
@@ -131,9 +139,9 @@ public StockRepository : BaseRepository<Stock, SqlConnection>
 ```
 The class above named `StockRepository` is an entity-based repository for an entity `Stock`. It uses the `SqlConnection` object as the database connection provider when accessing the datababase.
 
-**Note:** Any type of `IDbConnection` type can be passed connection on the second dynamic type of the said repository. It is very useful when accessing different database like Oracle, PostgreSQL, OleDb databases and others.
+**Note:** Any type of `IDbConnection` type can be passed as the connection on the second dynamic type of the said repository. It is very useful when accessing different database like Oracle, PostgreSQL, OleDb databases and others.
 
-On the other hand, if a shared repository is being created, then it should inherit from `DbRepository<TDbConnection>` repository. See sample below.
+On the other hand, if a shared repository is being created, then it must inherit the `DbRepository<TDbConnection>` repository. See sample below.
 ```
 public SharedRepository : DbRepository<SqlConnection>
 {
@@ -141,9 +149,15 @@ public SharedRepository : DbRepository<SqlConnection>
 		: base(connectionString)
 }
 ```
-Since using this repository does not limit to a single entity object, then all operations of the said repository can be used anywhere in the solution by any entities.
+Since using this shared repository does not limit to a single entity object, then all operations of the said repository can be used anywhere in the solution by all entities. See sample below.
+```
+var repository = new SharedRepository(connectionString);
+var stock = repository.Query<Stock>(new { SecurityName = "GOOGL" }).First();
+var trades = repository.Query<Trade>(new { StockId = stock.Id, TransactionDate = new { Operation = Operation.GreaterThan, Value = DateTime.UtcNow.Date } });
+```
+As you can see on the code snippets above, the `repository` variable is a shared repository object that is being used by both `Stock` and `Trade` entity to get the data from the database.
 
-We also recommend that a contracted interface must be implemented when creating a repository, it helps the repository to be easily injectable anywhere in the solution (if an Dependency Injection library is used).
+We also recommend that a contracted interface must be implemented when creating a repository, it helps the repository to be easily injectable anywhere in the solution (if a Dependency Injection library is used).
 
 To create an interface for the repository, it should implement the `RepoDb.Interfaces.IBaseRepository<TEntity, TDbConnection>` or `RepoDb.Interfaces.IDbRepository<TDbConnection>` interface on the contract interface. See sample below.
 ```
@@ -157,7 +171,7 @@ public interface ISharedRepository : IDbRepository<TDbConnection>
 	...
 }
 ```
-and implement it on the custom repositories as shown below.
+and implement it on the customized repositories as shown below.
 ```
 public StockRepository : BaseRepository<Stock, SqlConnection>, IStockRepository
 {
@@ -174,17 +188,26 @@ public SharedRepository : DbRepository<SqlConnection>, ISharedRepository
 
 ## Creating a Connection
 
-The repository object is used to create a connection object (`System.Data.IDbConnection`), allowing the caller to manually manipulate the data with its own.
+The repository object is used to create a connection object (`System.Data.IDbConnection`), allowing the caller to manually manipulate the data with its own. 
 
 A method named **CreateConnection** is used to create a new connection object. Below is the way on how to create a connection.
 ```
 var stockRepository = new StockRepository(connectionString);
 var connection = stockRepository.CreateConnection();
 ```
+On the other hand, the library does support the legacy approach by simply calling the default constructor of a `System.Data.IDbConnection` object. See sample below the legacy approach for opening a SQL database connection.
+```
+using (var connection = new SqlConnection().EnsureOpen())
+{
+	...
+}
+```
+
 The library has created certain extension methods on the connection object. Below are the list of extension methods.
 
  - **EnsureOpen** - used to ensure that the connection is open. Returns the instance of the connection object.
  - **ExecuteReader** - used to read certain records from the database in fast-forward access.
+ - **ExecuteQuery** - used to read certain records from the database in fast-forward access, but the result is being converted to an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
  - **ExecuteNonQuery** - used to execute a non-queryable query statement in the database.
  - **ExecuteScalar** - used to execute a command that returns a single-object value from the database. 
 
@@ -203,7 +226,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ### ExecuteReader
 
-This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns a `System.Data.IDataReader` object.
 
 Below are the parameters:
 
@@ -219,7 +242,45 @@ Below is the way on how to call the operation.
 var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
 {
-	var param = new { Name = "GOOGL" };
+	var param = new { Name = "GA%" };
+	var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Stock] WHERE (Name LIKE @Name);", param);
+	while (reader.Read())
+	{
+		....
+	}
+}
+```
+
+### ExecuteQuery
+
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `Dynamic` or `RepoDb.Interfaces.IDataEntity` object.
+
+Below are the parameters:
+
+ - **commandText** - the SQL statement to be used for execution.
+ - **param** - the parameters to be used for the execution. It could be an entity class or a dynamic object.
+ - **commandTimeout** - the command timeout in seconds to be used when executing the query in the database.
+ - **commandType** - the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+ - **transaction** - the transaction object be used when executing the command.
+ - **trace** - the trace object to be used on this operation.
+
+Below is the way on how to call the operation.
+
+Returning an enumerable of `Dynamic` object.
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GA%" };
+	var result = connection.ExecuteReader("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
+}
+```
+Returning an enumerable of `Stock` data entity object. *(this will be supported at version above 1.0.15)*
+```
+var stockRepository = new StockRepository(connectionString);
+using (var connection = stockRepository.CreateConnection().EnsureOpen())
+{
+	var param = new { Name = "GA%" };
 	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
 }
 ```

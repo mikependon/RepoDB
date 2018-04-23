@@ -51,8 +51,10 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Next Release
 
- - IL Emit the conversion of IDataEntity to System.Data.DataTable
+ - Support the DbConnection.ExecuteQuery<TEntity> method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
+ - IL Emit the conversion of RepoDb.Interfaces.IDataEntity to System.Data.DataTable
+ - IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
  
 ### Todos
 
- - Documentation: Count, DbConnection.ExecuteQuery, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
+ - Documentation: Count, InlineUpdate, BatchQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
