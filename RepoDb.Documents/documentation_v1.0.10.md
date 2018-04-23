@@ -3,20 +3,7 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 
 ## Class Entity
 
-It is required that the entity classes inherit the `RepoDb.DataEntity` class. It is also advisable (not required) that an explicit interface must be implemented in the entity classes. The interfaces must implement the `RepoDb.Interfaces.IDataEntity` interface in order to be considered as a contracted data entity. See example below.
-
-Entity Interface:
-```
-public interface IStock : IDataEntity
-
-{
-	int Id { get; set; }
-	string Name { get; set; }
-	...
-	DateTime CreatedDate { get; set; }
-}
-```
-Entity Class:
+An entity class is a POCO class that is being used to feed the operations of the repositories. In `RepoDb`, it is required that the entity classes inherit the `RepoDb.DataEntity` class. See example below.
 ```
 public class Stock : DataEntity, IStock
 {
@@ -27,6 +14,19 @@ public class Stock : DataEntity, IStock
 }
 ```
 By default, `RepoDb` is using the class name as the default mapped object in the database. The class above named `Stock` is automatically be mapped to `[dbo].[Stock]` database object.
+
+It is also advisable (not required) that an explicit interface must be implemented in the entity classes. The interfaces must implement the `RepoDb.Interfaces.IDataEntity` interface in order to be considered as a contracted data entity. See example below.
+
+```
+public interface IStock : IDataEntity
+
+{
+	int Id { get; set; }
+	string Name { get; set; }
+	...
+	DateTime CreatedDate { get; set; }
+}
+```
 
 ### Map Class Attribute
 
