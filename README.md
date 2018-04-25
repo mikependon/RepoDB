@@ -61,4 +61,4 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  
 ### Todos
 
- - Documentation: Count, CountBig, InlineUpdate, BatchQuery, Repository.ExecuteQuery, Trace, StatementBuilder, Field Mapping, Object Mapping, Multi-Mapping
+ - Documentation: BatchQuery, Trace, StatementBuilder, Multi-Mapping
