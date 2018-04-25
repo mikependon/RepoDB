@@ -1075,7 +1075,7 @@ stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
 
 Please also note that merging is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
 
-## Inlinepdate Operation
+## InlineUpdate Operation
 
 This operation is used to do a column-based update of an existing record from the database. It returns an `int` value indicating the number of rows affected by the updates. Below are the parameters:
 
@@ -1117,6 +1117,29 @@ entities.Add(new Stock()
 });
 var affectedRows = stockRepository.BulkInsert(entities);
 ```
+
+## Count and CountBig Operation
+
+These operations are used to count the number of records from the database. It returns a value indicating the number of counted rows based on the created expression. Below are the parameters:
+
+ - **where** - an expression to used when counting a record. If left `null`, all records from the database will be counted.
+ - **transaction** - the transaction object to be used when updating a data.
+
+Below is a sample on how to count a data.
+```
+var stockRepository = new StockRepository(connectionString);
+stockRepository.Count();
+```
+The code snippets above will count all the `Stock` records from the database.
+
+Below is the sample way to count a records with expression
+```
+var stockRepository = new StockRepository(connectionString);
+stockRepository.Count(new { Name = new { Operation = Operation.Like, Value = "A%" } });
+```
+Above code snippets will count all the `Stock` records from the database where `Name` is starting with letter `A`.
+
+**Note**: The same operation applies to `CountBig` operation. The only difference is that, `CountBig` is returning a `System.Int64` type and the internal SQL statetement is using the `COUNT_BIG` keyword.
 
 ## ExecuteQuery Operation
 
