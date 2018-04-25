@@ -1075,6 +1075,21 @@ stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
 
 Please also note that merging is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
 
+## Inlinepdate Operation
+
+This operation is used to do a column-based update of an existing record from the database. It returns an `int` value indicating the number of rows affected by the updates. Below are the parameters:
+
+ - **entity** - the dynamically or entity driven data entity object that contains the target fields to be updated.
+ - **where** - an expression to used when updating a record.
+ - **transaction** - the transaction object to be used when updating a data.
+
+Below is a sample on how to update a data.
+```
+var stockRepository = new StockRepository(connectionString);
+stockRepository.InlineUpdate(new { Motto = "Do not be evil." }, new { Name = "GOOGL" });
+```
+The code snippets above will update the `Motto` column of a stock records from the dabatase where the value of `Name` column is equals to `GOOGL`.
+
 ## BulkInsert Operation
 
 This operation is used to bulk-insert the entities to the database. It returns an `int` value indicating the number of rows affected by the bulk-inserting. Below are the parameters:
@@ -1103,9 +1118,9 @@ entities.Add(new Stock()
 var affectedRows = stockRepository.BulkInsert(entities);
 ```
 
-## ExecuteReader Operation
+## ExecuteQuery Operation
 
-This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `object` type as its generic type.
+This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `RepoDb.Interfaces.IDataEntity` type as its generic type.
 
 Below are the parameters:
 
@@ -1119,7 +1134,7 @@ Below is the way on how to call the operation.
 ```
 var stockRepository = new StockRepository(connectionString);
 var param = new { Name = "GOOGL" };
-var result = stockRepository.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
+var result = stockRepository.ExecuteQuery<Stock>("SELECT * FROM [dbo].[Stock] WHERE Name = @Name;", param);
 ```
 
 ## ExecuteNonQuery Operation
