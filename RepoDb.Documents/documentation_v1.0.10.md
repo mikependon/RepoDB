@@ -347,10 +347,20 @@ Transactions can be created by calling the `BeginTransaction` method of the `Con
 var stockRepository = new StockRepository(connectionString);
 var connection = stockRepository.CreateConnection().EnsureOpen();
 var transaction = connection.BeginTransaction();
-... call the repository operations here and pass the transaction
-transaction.Commit();
-transaction.Dispose();
-connection.Dispose();
+try
+{
+     ... call the repository operations here and pass the transaction
+     transaction.Commit();
+}
+catch (ex)
+{
+     Log.Error(ex.Message, ex);
+}
+finally
+{
+     transaction.Dispose();
+     connection.Dispose();
+}
 ```
 Every operation of the repository accepts a transaction object as an argument. Once passed, the transaction will become a part of the execution context. See below on how to commit a transaction context with multiple operations.
 ```
