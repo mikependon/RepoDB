@@ -349,17 +349,18 @@ var connection = stockRepository.CreateConnection().EnsureOpen();
 var transaction = connection.BeginTransaction();
 try
 {
-     ... call the repository operations here and pass the transaction
-     transaction.Commit();
+         ... call the repository operations here and pass the transaction
+         transaction.Commit();
 }
 catch (ex)
 {
-     Log.Error(ex.Message, ex);
+         transaction.Rollback();
+         Log.Error(ex.Message, ex);
 }
 finally
 {
-     transaction.Dispose();
-     connection.Dispose();
+         transaction.Dispose();
+         connection.Dispose();
 }
 ```
 Every operation of the repository accepts a transaction object as an argument. Once passed, the transaction will become a part of the execution context. See below on how to commit a transaction context with multiple operations.
