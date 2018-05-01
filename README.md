@@ -52,6 +52,7 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Version 1.0.16
 
+ - Created a RepoDb.Reflection.ObjectConverter.
  - Supported the DbConnection.ExecuteQuery<TEntity> method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
 
 ### Next Release
