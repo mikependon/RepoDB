@@ -69,6 +69,7 @@ namespace RepoDb.Reflection
             // Call the reader[] method
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringGetIndexer));
 
+            // TODO: Refactor this, a bit slower compared to Dapper
             // Convert the value if it is equals to DbNull
             ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.ObjectConverterDbNullToNull));
 

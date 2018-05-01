@@ -8,11 +8,6 @@ namespace RepoDb.Reflection
     public static class ObjectConverter
     {
         /// <summary>
-        /// Creates a new instance of ObjectConverter class.
-        /// </summary>
-        //public ObjectConverter() { }
-
-        /// <summary>
         /// Converts a value to NULL if the value is equals to System.DBNull.Value, otherwise, returns the object value.
         /// </summary>
         /// <param name="value">The value to be checked for System.DbNull.Value value.</param>

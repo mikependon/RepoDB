@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.16</version>
+    <version>1.0.16-alpha-01</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -13,9 +13,8 @@
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
       [Updates]
-      Supported the DbConnection.ExecuteQuery method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
-      IL Emit the conversion of RepoDb.Interfaces.IDataEntity to System.Data.DataTable.
-      IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
+      Created a RepoDb.Reflection.ObjectConverter.
+      Supported the DbConnection.ExecuteQuery&lt;TEntity&gt; method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
       [Notes]
       Next version will be the Alpha version of the library.
     </releaseNotes>
