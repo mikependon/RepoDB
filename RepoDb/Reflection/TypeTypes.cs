@@ -13,6 +13,11 @@ namespace RepoDb.Reflection
         [Text("System.Reflection.Assembly")]
         Assembly,
         /// <summary>
+        /// A System.Boolean type.
+        /// </summary>
+        [Text("System.Boolean")]
+        Boolean,
+        /// <summary>
         /// A System.Convert type.
         /// </summary>
         [Text("System.Convert")]
@@ -28,10 +33,25 @@ namespace RepoDb.Reflection
         [Text("System.Data.DataTable")]
         DataTable,
         /// <summary>
+        /// A System.DbNull type.
+        /// </summary>
+        [Text("System.DBNull")]
+        DBNull,
+        /// <summary>
+        /// A RepoDb.ReflectionType.ObjectConverter type.
+        /// </summary>
+        [Text("RepoDb.Reflection.ObjectConverter")]
+        ObjectConverter,
+        /// <summary>
         /// A System.Data.Common.DbDataReader type.
         /// </summary>
         [Text("System.Data.Common.DbDataReader")]
         DbDataReader,
+        /// <summary>
+        /// An System.Reflection.FieldInfo type.
+        /// </summary>
+        [Text("System.Reflection.FieldInfo")]
+        FieldInfo,
         /// <summary>
         /// An System.Reflection.MethodInfo type.
         /// </summary>

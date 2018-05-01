@@ -9,7 +9,7 @@ namespace RepoDb.Attributes
     public class CreateMethodInfoAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance RepoDb.Attributes.CreateMethodInfoParamAttribute object.
+        /// Creates a new instance RepoDb.Attributes.CreateMethodInfoAttribute object.
         /// </summary>
         /// <param name="type">The type of object.</param>
         /// <param name="methodName">The name of the method to retrieve.</param>

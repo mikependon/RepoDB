@@ -48,6 +48,16 @@ namespace RepoDb.Reflection
         [CreateMethodInfo(TypeTypes.DataTable, "NewRow", null)]
         DataTableNewRow,
         /// <summary>
+        /// A System.Reflection.FieldInfo.GetValue() method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.FieldInfo, "GetValue", new[] { typeof(object) })]
+        FieldInfoGetValue,
+        /// <summary>
+        /// A RepoDb.Reflection.DbNullConverter.Convert method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.ObjectConverter, "DbNullToNull", new[] { typeof(object) })]
+        ObjectConverterDbNullToNull,
+        /// <summary>
         /// A System.Reflection.PropertyInfo.GetValue() method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.PropertyInfo, "GetValue", new[] { typeof(object) })]

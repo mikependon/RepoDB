@@ -23,6 +23,7 @@ namespace RepoDb.Reflection
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>() where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
+            var objectConverter = TypeCache.Get(TypeTypes.ObjectConverter);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
                 entityType,
                 TypeArrayCache.Get(TypeTypes.DbDataReader),
@@ -67,6 +68,9 @@ namespace RepoDb.Reflection
 
             // Call the reader[] method
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringGetIndexer));
+
+            // Convert the value if it is equals to DbNull
+            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.ObjectConverterDbNullToNull));
 
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
