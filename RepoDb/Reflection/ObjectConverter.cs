@@ -16,5 +16,7 @@ namespace RepoDb.Reflection
         {
             return ReferenceEquals(value, DBNull.Value) ? null : value;
         }
+
+        public static DBNull DBNull => DBNull.Value;
     }
 }

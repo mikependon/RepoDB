@@ -51,6 +51,20 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
+        /// Creates a System.Reflection.FieldInfo object based on type.
+        /// </summary>
+        /// <param name="type">A type of System.Reflection.FieldInfo object.</param>
+        /// <returns>A System.Reflection.FieldInfo object.</returns>
+        public static FieldInfo CreateField(FieldInfoTypes type)
+        {
+            var createFieldInfoAttribute = typeof(FieldInfoTypes)
+                .GetMembers()
+                .First(member => member.Name.ToLower() == type.ToString().ToLower())
+                .GetCustomAttribute<CreateFieldInfoAttribute>();
+            return TypeCache.Get(createFieldInfoAttribute.Type)?.GetField(createFieldInfoAttribute.FieldName);
+        }
+
+        /// <summary>
         /// Creates a Type based on type.
         /// </summary>
         /// <param name="type">The type of Type to be created.</param>

@@ -23,7 +23,6 @@ namespace RepoDb.Reflection
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>() where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
-            var objectConverter = TypeCache.Get(TypeTypes.ObjectConverter);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
                 entityType,
                 TypeArrayCache.Get(TypeTypes.DbDataReader),
@@ -33,10 +32,16 @@ namespace RepoDb.Reflection
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
+            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
+            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.DBNull));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
+
+            // Load the DBNull.Value
+            ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
+            ilGenerator.Emit(OpCodes.Stloc, 2);
 
             // Iterate every properties
             PropertyCache.Get<TEntity>(Command.Query)
@@ -57,9 +62,6 @@ namespace RepoDb.Reflection
 
         private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, PropertyInfo property) where TEntity : IDataEntity
         {
-            // Load the DataEntity instance
-            ilGenerator.Emit(OpCodes.Ldloc, 0);
-
             // Load the data DataReader instance from argument 0
             ilGenerator.Emit(OpCodes.Ldarg, 0);
 
@@ -68,10 +70,22 @@ namespace RepoDb.Reflection
 
             // Call the reader[] method
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringGetIndexer));
+            ilGenerator.Emit(OpCodes.Stloc, 1);
 
-            // TODO: Refactor this, a bit slower compared to Dapper
-            // Convert the value if it is equals to DbNull
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.ObjectConverterDbNullToNull));
+            // Variables for DBNull checking
+            var dbNullEndLabel = ilGenerator.DefineLabel();
+
+            // Load the DataReader[] and DBNull.Value for comparisson
+            ilGenerator.Emit(OpCodes.Ldloc, 1);
+            ilGenerator.Emit(OpCodes.Ldloc, 2);
+
+            // Check for DBNull.Value True equality
+            ilGenerator.Emit(OpCodes.Ceq);
+            ilGenerator.Emit(OpCodes.Brtrue_S, dbNullEndLabel);
+
+            // Load the DataEntity instance
+            ilGenerator.Emit(OpCodes.Ldloc, 0);
+            ilGenerator.Emit(OpCodes.Ldloc, 1);
 
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -95,6 +109,9 @@ namespace RepoDb.Reflection
 
             // Call the (Property.Set) or (Property = Value)
             ilGenerator.Emit(OpCodes.Call, property.SetMethod);
+
+            // End label for DBNull.Value checking
+            ilGenerator.MarkLabel(dbNullEndLabel);
         }
 
         /// <summary>
