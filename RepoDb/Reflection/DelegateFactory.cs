@@ -72,12 +72,12 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringGetIndexer));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
-            // Variables for DBNull checking
-            var dbNullEndLabel = ilGenerator.DefineLabel();
-
             // Load the DataReader[] and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
             ilGenerator.Emit(OpCodes.Ldloc, 2);
+
+            // Variables for DBNull checking
+            var dbNullEndLabel = ilGenerator.DefineLabel();
 
             // Check for DBNull.Value True equality
             ilGenerator.Emit(OpCodes.Ceq);
