@@ -29,8 +29,6 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var underlyingType = Nullable.GetUnderlyingType(property.PropertyType) ??
-                        property.PropertyType;
                     table.Columns.Add(new DataColumn(property.Name, typeof(string)));
                 });
             foreach (var entity in entities)

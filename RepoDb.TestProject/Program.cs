@@ -23,10 +23,10 @@ namespace RepoDb.TestProject
             //    .On(Command.BulkInsert, "[dbo].[Person]");
 
             Console.WriteLine("Started");
-            //TestBulkInsert();
-            var rows = 1500000;
-            TestDapper(rows);
-            TestRepoDbQuery(rows);
+            TestBulkInsert();
+            //var rows = 300000;
+            //TestDapper(rows);
+            //TestRepoDbQuery(rows);
             //TestRepoDbExecuteQuery(rows);
             //TestDapperLoop();
             //TestRepoDbQueryLoop();
@@ -43,7 +43,7 @@ namespace RepoDb.TestProject
         {
             var repository = new PersonRepository(_connectionString);
             var people = (IEnumerable<Person>)null;
-            var rows = 10000;
+            var rows = 500000;
             var now = DateTime.UtcNow;
             Console.WriteLine($"RepoDb.DbRepository.BulkInsert({rows})");
             people = repository.Query(top: rows);

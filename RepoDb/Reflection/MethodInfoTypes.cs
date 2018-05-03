@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using System.Reflection;
 
 namespace RepoDb.Reflection
 {
@@ -45,7 +46,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// A System.Data.DataTable.NewRow() method.
         /// </summary>
-        [CreateMethodInfo(TypeTypes.DataTable, "NewRow", null)]
+        [CreateMethodInfo(TypeTypes.DataTable, "NewRow")]
         DataTableNewRow,
         /// <summary>
         /// A System.Reflection.FieldInfo.GetValue() method.
@@ -53,10 +54,15 @@ namespace RepoDb.Reflection
         [CreateMethodInfo(TypeTypes.FieldInfo, "GetValue", new[] { typeof(object) })]
         FieldInfoGetValue,
         /// <summary>
-        /// A RepoDb.Reflection.DbNullConverter.Convert method.
+        /// A RepoDb.Reflection.DbNullConverter.DbNullToNull method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.ObjectConverter, "DbNullToNull", new[] { typeof(object) })]
         ObjectConverterDbNullToNull,
+        /// <summary>
+        /// A RepoDb.Reflection.DbNullConverter.GetValue method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.ObjectConverter, "GetValue", new[] { typeof(object), typeof(PropertyInfo) })]
+        ObjectConverterGetValue,
         /// <summary>
         /// A System.Reflection.PropertyInfo.GetValue() method.
         /// </summary>
@@ -66,6 +72,11 @@ namespace RepoDb.Reflection
         /// A System.Type.GetMethod.GetProperty() method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Type, "GetProperty", new[] { typeof(string) })]
-        TypeGetProperty
+        TypeGetProperty,
+        /// <summary>
+        /// A System.Type.GetType method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.Type, "GetType")]
+        TypeGetType
     }
 }

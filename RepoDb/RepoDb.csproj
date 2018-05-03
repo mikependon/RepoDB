@@ -129,6 +129,7 @@
     <Compile Include="Reflection\FieldInfoCache.cs" />
     <Compile Include="Reflection\FieldInfoTypes.cs" />
     <Compile Include="Reflection\MethodInfoTypes.cs" />
+    <Compile Include="Reflection\ObjectConverter.cs" />
     <Compile Include="Reflection\ReflectionFactory.cs" />
     <Compile Include="Reflection\TypeArrayCache.cs" />
     <Compile Include="Reflection\MethodInfoCache.cs" />

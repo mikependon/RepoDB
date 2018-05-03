@@ -178,7 +178,7 @@ namespace RepoDb.Extensions
         }
 
         // AsDataTable
-        public static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection, Command command = Command.None)
+        internal static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection, Command command = Command.None)
             where T : IDataEntity
         {
             var mappedName = GetMappedName<T>(Command.None);

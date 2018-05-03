@@ -33,16 +33,11 @@ namespace RepoDb.Reflection
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
             ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.DBNull));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
-
-            // Load the DBNull.Value
-            ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
-            ilGenerator.Emit(OpCodes.Stloc, 2);
-
+            
             // Iterate every properties
             PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
@@ -74,7 +69,7 @@ namespace RepoDb.Reflection
 
             // Load the DataReader[] and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
-            ilGenerator.Emit(OpCodes.Ldloc, 2);
+            ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
 
             // Variables for DBNull checking
             var dbNullEndLabel = ilGenerator.DefineLabel();
@@ -132,14 +127,16 @@ namespace RepoDb.Reflection
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(dataRowType);
-            ilGenerator.DeclareLocal(entityType);
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
+            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Type));
 
-            // Load the DataTable
+            // Get the DataEntity type
+            ilGenerator.Emit(OpCodes.Ldarg, 0);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.TypeGetType));
+            ilGenerator.Emit(OpCodes.Stloc, 1);
+
+            // Create a new DataRow
             ilGenerator.Emit(OpCodes.Ldarg, 1);
-
-            // Invoke the DataTable.NewRow(), and set to location 0
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.DataTableNewRow));
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataTableNewRow));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Iterate every properties
@@ -161,30 +158,24 @@ namespace RepoDb.Reflection
 
         private static void EmitDataEntityToDataRowMapping<TEntity>(ILGenerator ilGenerator, PropertyInfo property) where TEntity : IDataEntity
         {
-            // TODO: Fix the Object Null Reference Exception
+            var propertyName = property.GetMappedName();
 
-            // Load the DataEntity instance
-            ilGenerator.Emit(OpCodes.Ldarg, 0);
-
-            // Get the DataEntity.GetType()
-            ilGenerator.Emit(OpCodes.Ldloc, 1);
-
-            // Get the Type.GetProperty()
-            ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.TypeGetProperty));
-
-            // Call the PropertyInfo.GetValue(object)
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.PropertyInfoGetValue));
-            ilGenerator.Emit(OpCodes.Stloc, 2);
-
-            // Load the DataRow from the location 0
+            // Load the DataRow object
             ilGenerator.Emit(OpCodes.Ldloc, 0);
 
-            // Load the value of property.GetMappedName() stands as the columnname for DataRow indexer
-            ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
+            // Load the target property for DataRow set indexer
+            ilGenerator.Emit(OpCodes.Ldstr, propertyName);
 
-            // Load the value of location 2 for the DataRow indexer value
-            ilGenerator.Emit(OpCodes.Ldloc, 2);
+            // Get the target PropertyInfo
+            ilGenerator.Emit(OpCodes.Ldloc, 1);
+            ilGenerator.Emit(OpCodes.Ldstr, propertyName);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.TypeGetProperty));
+
+            // Load the DataEntity object
+            ilGenerator.Emit(OpCodes.Ldarg, 0);
+
+            // Call the PropertyInfo.GetValue method
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.PropertyInfoGetValue));
 
             // Call the DataRow[..] set indexer
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataRowStringSetIndexer));
