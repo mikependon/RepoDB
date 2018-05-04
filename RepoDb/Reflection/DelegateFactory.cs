@@ -37,7 +37,7 @@ namespace RepoDb.Reflection
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
-            
+
             // Iterate every properties
             PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
@@ -88,9 +88,13 @@ namespace RepoDb.Reflection
 
             // Switch which method of Convert are going to used
             var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ?? MethodInfoCache.Get(MethodInfoTypes.ConvertToString);
-
-            // Call the Convert.Get<Method>
             ilGenerator.Emit(OpCodes.Call, convertMethod);
+
+            // Parse if it is Guid
+            if (propertyType == typeof(Guid))
+            {
+                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
+            }
 
             // Check for nullable based on the underlying type
             if (underlyingType != null)

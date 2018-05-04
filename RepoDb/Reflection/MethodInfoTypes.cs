@@ -54,6 +54,11 @@ namespace RepoDb.Reflection
         [CreateMethodInfo(TypeTypes.FieldInfo, "GetValue", new[] { typeof(object) })]
         FieldInfoGetValue,
         /// <summary>
+        /// A System.Guid.Parse() method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.Guid, "Parse", new[] { typeof(string) })]
+        GuidParse,
+        /// <summary>
         /// A RepoDb.Reflection.DbNullConverter.DbNullToNull method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.ObjectConverter, "DbNullToNull", new[] { typeof(object) })]

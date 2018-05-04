@@ -11,7 +11,7 @@ namespace RepoDb.TestProject
 {
     class Program
     {
-        private static readonly string _connectionString = @"Server=.;Database=RepoDb;Integrated Security=True;";
+        private static readonly string _connectionString = @"Server=.;Database=Test;Integrated Security=True;";
 
         static void Main(string[] args)
         {
@@ -23,10 +23,10 @@ namespace RepoDb.TestProject
             //    .On(Command.BulkInsert, "[dbo].[Person]");
 
             Console.WriteLine("Started");
-            TestBulkInsert();
-            //var rows = 300000;
+            //TestBulkInsert();
+            var rows = 300000;
             //TestDapper(rows);
-            //TestRepoDbQuery(rows);
+            TestRepoDbQuery(rows);
             //TestRepoDbExecuteQuery(rows);
             //TestDapperLoop();
             //TestRepoDbQueryLoop();

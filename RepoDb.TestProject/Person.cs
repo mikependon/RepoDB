@@ -22,14 +22,11 @@ namespace RepoDb.TestProject
         [Map("Worth")]
         public decimal Worth { get; set; }
 
+        public Guid? SsId { get; set; }
+
         public DateTime DateUpdated { get; set; }
 
         [Ignore(Command.Update)]
         public DateTime DateInserted { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
     }
 }

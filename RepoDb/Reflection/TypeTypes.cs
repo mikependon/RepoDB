@@ -53,6 +53,11 @@ namespace RepoDb.Reflection
         [Text("System.Reflection.FieldInfo")]
         FieldInfo,
         /// <summary>
+        /// An System.Guid type.
+        /// </summary>
+        [Text("System.Guid")]
+        Guid,
+        /// <summary>
         /// An System.Reflection.MethodInfo type.
         /// </summary>
         [Text("System.Reflection.MethodInfo")]
