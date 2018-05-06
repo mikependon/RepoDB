@@ -50,15 +50,14 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Tracing
  - SQL Builder
 
-### Version 1.0.17-alpha-03
+### Version 1.0.18-beta
 
- - Created a RepoDb.Reflection.ObjectConverter.
- - Supported the DbConnection.ExecuteQuery<TEntity> method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
  - IL Emit the conversion of RepoDb.Interfaces.IDataEntity to System.Data.DataTable.
+ - IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
  
 ### Next Release
 
- - IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
+ - Finalizing the documentation.
  
 ### Todos
 
