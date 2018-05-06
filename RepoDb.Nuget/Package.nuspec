@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.18-beta-01</version>
+    <version>1.0.17-alpha-03</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -14,7 +14,8 @@
     <releaseNotes>
       [Updates]
       Supported the DbConnection.ExecuteQuery&lt;TEntity&gt; method, to return the IEnumerable list of RepoDb.Interfaces.IDataEntity.
-      IL Emit the conversion of System.Data.DbDataReader to System.Dynamic.DynamicObject when calling the DbConnection.ExecuteQuery method.
+      [Notes]
+      Next version will be the Beta version of the library.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
