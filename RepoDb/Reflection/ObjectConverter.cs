@@ -17,16 +17,5 @@ namespace RepoDb.Reflection
         {
             return ReferenceEquals(value, DBNull.Value) ? null : value;
         }
-
-        /// <summary>
-        /// Gets a property value from an object.
-        /// </summary>
-        /// <param name="obj">An object where to the retrieve the property value.</param>
-        /// <param name="property">The property of the object.</param>
-        /// <returns>A value of the property being held by the object.</returns>
-        public static object GetValue(object obj, PropertyInfo property)
-        {
-            return property.GetMethod.Invoke(obj, null);
-        }
     }
 }

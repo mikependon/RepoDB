@@ -2,6 +2,8 @@
 using RepoDb.Reflection.Delegates;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Dynamic;
 
 namespace RepoDb.Reflection
 {
@@ -10,8 +12,7 @@ namespace RepoDb.Reflection
     /// </summary>
     public static class DelegateCache
     {
-        private static readonly IDictionary<Type, Delegate> _dataReaderToDataEntityDelegateCache = new Dictionary<Type, Delegate>();
-        private static readonly IDictionary<Type, Delegate> _dataEntityToDataRowDelegateCache = new Dictionary<Type, Delegate>();
+        private static readonly IDictionary<string, Delegate> _cache = new Dictionary<string, Delegate>();
 
         /// <summary>
         /// Creates a Delegate for mapping a System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.
@@ -21,14 +22,30 @@ namespace RepoDb.Reflection
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>()
             where TEntity : IDataEntity
         {
-            var key = typeof(TEntity);
-            if (!_dataReaderToDataEntityDelegateCache.ContainsKey(key))
+            var key = $"{typeof(TEntity).FullName}.DataReaderToDataEntity".ToLower();
+            if (!_cache.ContainsKey(key))
             {
                 var value = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>();
-                _dataReaderToDataEntityDelegateCache.Add(key, value);
+                _cache.Add(key, value);
             }
-            return (DataReaderToDataEntityDelegate<TEntity>)_dataReaderToDataEntityDelegateCache[key];
+            return (DataReaderToDataEntityDelegate<TEntity>)_cache[key];
         }
+
+        ///// <summary>
+        ///// Creates a Delegate for mapping a System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject object.
+        ///// </summary>
+        ///// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
+        ///// <returns>An IL emitted Delegate object used to convert the System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject.</returns>
+        //public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
+        //{
+        //    var key = $"{typeof(ExpandoObject).FullName}.DataReaderToExpandoObject".ToLower();
+        //    if (!_cache.ContainsKey(key))
+        //    {
+        //        var value = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
+        //        _cache.Add(key, value);
+        //    }
+        //    return (DataReaderToExpandoObjectDelegate)_cache[key];
+        //}
 
         /// <summary>
         /// Creates a Delegate for mapping a System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.
@@ -38,13 +55,13 @@ namespace RepoDb.Reflection
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>()
             where TEntity : IDataEntity
         {
-            var key = typeof(TEntity);
-            if (!_dataEntityToDataRowDelegateCache.ContainsKey(key))
+            var key = $"{typeof(TEntity).FullName}.DataEntityToDataRow".ToLower();
+            if (!_cache.ContainsKey(key))
             {
                 var value = DelegateFactory.GetDataEntityToDataRowDelegate<TEntity>();
-                _dataEntityToDataRowDelegateCache.Add(key, value);
+                _cache.Add(key, value);
             }
-            return (DataEntityToDataRowDelegate<TEntity>)_dataEntityToDataRowDelegateCache[key];
+            return (DataEntityToDataRowDelegate<TEntity>)_cache[key];
         }
     }
 }

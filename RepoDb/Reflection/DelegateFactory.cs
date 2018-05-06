@@ -3,7 +3,10 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection.Delegates;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -38,7 +41,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
-            // Iterate every properties
+            // Iterate the properties
             PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
                 .ToList()
@@ -114,23 +117,87 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
+        /// Gets a delegate that is used to convert the System.Data.Common.DbDataReader object to RepoDb.Interfaces.IDataEntity object.
+        /// </summary>
+        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
+        /// <returns>An instance of RepoDb.Interfaces.IDataEntity object.</returns>
+        public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
+        {
+            var returnType = TypeCache.Get(TypeTypes.ExpandoObject);
+            var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
+                returnType,
+                TypeArrayCache.Get(TypeTypes.DbDataReader),
+                TypeCache.Get(TypeTypes.Assembly),
+                true);
+            var ilGenerator = dynamicMethod.GetILGenerator();
+
+            // Declare IL Variables
+            ilGenerator.DeclareLocal(returnType);
+            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.String));
+            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
+
+            // Create instance of the object type
+            ilGenerator.Emit(OpCodes.Newobj, returnType.GetConstructor(Type.EmptyTypes));
+            ilGenerator.Emit(OpCodes.Stloc, 0);
+
+            // Iterate the fields
+            for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
+            {
+                EmitDataReaderToExpandoObjectMapping(ilGenerator, ordinal);
+            }
+
+            // Return the TEntity instance value
+            ilGenerator.Emit(OpCodes.Ldloc, 0);
+            ilGenerator.Emit(OpCodes.Ret);
+
+            // Create a delegate
+            return (DataReaderToExpandoObjectDelegate)dynamicMethod.CreateDelegate(typeof(DataReaderToExpandoObjectDelegate));
+        }
+
+        private static void EmitDataReaderToExpandoObjectMapping(ILGenerator ilGenerator, int ordinal)
+        {
+            // Load the data DataReader instance from argument 0
+            ilGenerator.Emit(OpCodes.Ldarg, 0);
+
+            // Get the column name by ordinal
+            ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderGetName));
+            ilGenerator.Emit(OpCodes.Stloc, 1);
+
+            // Call the reader[] method
+            ilGenerator.Emit(OpCodes.Ldarg, 0);
+            ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderIntGetIndexer));
+            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.ObjectConverterDbNullToNull));
+            ilGenerator.Emit(OpCodes.Stloc, 2);
+
+            // Load the object instance
+            ilGenerator.Emit(OpCodes.Ldloc, 0);
+            ilGenerator.Emit(OpCodes.Ldloc, 1);
+            ilGenerator.Emit(OpCodes.Ldloc, 2);
+
+            // Add the value
+            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.DictionaryStringObjectAdd));
+        }
+
+        /// <summary>
         /// Gets a delegate that is used to convert the RepoDb.Interfaces.IDataEntity object to System.Data.DataRow object.
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity object to convert to.</typeparam>
         /// <returns>An instance of System.Data.DataRow object containing the converted values.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>() where TEntity : IDataEntity
         {
-            var dataRowType = TypeCache.Get(TypeTypes.DataRow);
+            var returnType = TypeCache.Get(TypeTypes.DataRow);
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
-                dataRowType,
+                returnType,
                 new Type[] { entityType, TypeCache.Get(TypeTypes.DataTable) },
                 TypeCache.Get(TypeTypes.Assembly),
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
-            ilGenerator.DeclareLocal(dataRowType);
+            ilGenerator.DeclareLocal(returnType);
             ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Type));
 
             // Get the DataEntity type

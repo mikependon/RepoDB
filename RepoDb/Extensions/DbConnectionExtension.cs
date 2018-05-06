@@ -81,7 +81,8 @@ namespace RepoDb.Extensions
                 command.CreateParameters(param);
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = reader.AsObjects();
+                    //var result = reader.AsEnumerable();
+                    var result = DataReaderConverter.ToEnumerable((DbDataReader)reader);
 
                     // After Execution
                     if (trace != null)

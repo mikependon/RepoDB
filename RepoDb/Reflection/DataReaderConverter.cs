@@ -23,7 +23,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the System.Data.Common.DbDataReader to an enumerable RepoDb.Interfaces.IDataEntity.
+        /// Converts the System.Data.Common.DbDataReader to an enumerable of RepoDb.Interfaces.IDataEntity.
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
         /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
@@ -37,6 +37,23 @@ namespace RepoDb.Reflection
             {
                 var entity = @delegate(reader);
                 list.Add(entity);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Converts the System.Data.Common.DbDataReader to an enumerable of System.Dynamic.ExpandoObject.
+        /// </summary>
+        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
+        /// <returns>An array of System.Dynamic.ExpandoObject objects.</returns>
+        public static IEnumerable<object> ToEnumerable(DbDataReader reader)
+        {
+            var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
+            var list = new List<object>();
+            while (reader.Read())
+            {
+                var expandoObject = @delegate(reader);
+                list.Add(expandoObject);
             }
             return list;
         }

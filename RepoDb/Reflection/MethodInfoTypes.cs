@@ -14,6 +14,11 @@ namespace RepoDb.Reflection
         [CreateMethodInfo(TypeTypes.Convert, "ToString", new[] { typeof(object) })]
         ConvertToString,
         /// <summary>
+        /// A System.Data.Common.DbDataReader.GetName(int) method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.DbDataReader, "GetName", new[] { typeof(int) })]
+        DataReaderGetName,
+        /// <summary>
         /// A System.Data.Common.DbDataReader.get_Item(int) method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DbDataReader, "get_Item", new[] { typeof(int) })]
@@ -48,6 +53,11 @@ namespace RepoDb.Reflection
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataTable, "NewRow")]
         DataTableNewRow,
+        /// <summary>
+        /// A System.Collections.Generic.IDictionary`2.Add(string, object) method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.DictionaryStringObject, "Add", new[] { typeof(string), typeof(object) })]
+        DictionaryStringObjectAdd,
         /// <summary>
         /// A System.Reflection.FieldInfo.GetValue() method.
         /// </summary>

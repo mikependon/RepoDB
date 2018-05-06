@@ -39,7 +39,7 @@ namespace RepoDb.Extensions
             return list;
         }
 
-        internal static IEnumerable<object> AsObjects(this IDataReader reader)
+        internal static IEnumerable<object> AsEnumerable(this IDataReader reader)
         {
             var list = new List<object>();
             while (reader.Read())

@@ -1,7 +1,9 @@
 ﻿using RepoDb.Attributes;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -80,6 +82,10 @@ namespace RepoDb.Reflection
                     return typeof(DataTable);
                 case TypeTypes.DbDataReader:
                     return typeof(DbDataReader);
+                case TypeTypes.DictionaryStringObject:
+                    return typeof(IDictionary<string, object>);
+                case TypeTypes.ExpandoObject:
+                    return typeof(ExpandoObject);
                 default:
                     var textAttribute = typeof(TypeTypes)
                         .GetMembers()

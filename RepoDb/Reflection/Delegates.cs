@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 
 namespace RepoDb.Reflection.Delegates
 {
@@ -12,6 +13,13 @@ namespace RepoDb.Reflection.Delegates
     /// <param name="dataReader">An instance of System.Data.Common.DbDataReader to be mapped.</param>
     /// <returns>An instance of RepoDb.Interfaces.IDataEntity object containing the values from the System.Data.Common.DbDataReader object.</returns>
     public delegate TEntity DataReaderToDataEntityDelegate<TEntity>(DbDataReader dataReader) where TEntity : IDataEntity;
+
+    /// <summary>
+    /// A delegate used to map the System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject object.
+    /// </summary>
+    /// <param name="dataReader">An instance of System.Data.Common.DbDataReader to be mapped.</param>
+    /// <returns>An instance of System.Dynamic.ExpandoObject object containing the values from the System.Data.Common.DbDataReader object.</returns>
+    public delegate ExpandoObject DataReaderToExpandoObjectDelegate(DbDataReader dataReader);
 
     /// <summary>
     /// A delegate used to convert the RepoDb.Interfaces.IDataEntity object into System.Data.DataRow object.

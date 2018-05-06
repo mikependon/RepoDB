@@ -33,6 +33,11 @@ namespace RepoDb.Reflection
         [Text("System.Data.DataTable")]
         DataTable,
         /// <summary>
+        /// A System.Collections.Generic.IDictionary`2 type.
+        /// </summary>
+        [Text("System.Collections.Generic.IDictionary`2")]
+        DictionaryStringObject,
+        /// <summary>
         /// A System.DbNull type.
         /// </summary>
         [Text("System.DBNull")]
@@ -47,6 +52,11 @@ namespace RepoDb.Reflection
         /// </summary>
         [Text("System.Data.Common.DbDataReader")]
         DbDataReader,
+        /// <summary>
+        /// An System.Dynamic.ExpandoObject type.
+        /// </summary>
+        [Text("System.Dynamic.ExpandoObject")]
+        ExpandoObject,
         /// <summary>
         /// An System.Reflection.FieldInfo type.
         /// </summary>
