@@ -1,5 +1,5 @@
 ### Documentation
-Click [here](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_v1.0.10.md) for the documentation. (in-progress)
+Click [here](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_release_v1.md) for the documentation. (in-progress)
 
 ### Goal
 

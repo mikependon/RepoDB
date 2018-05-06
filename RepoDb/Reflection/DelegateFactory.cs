@@ -22,8 +22,9 @@ namespace RepoDb.Reflection
         /// Gets a delegate that is used to convert the System.Data.Common.DbDataReader object to RepoDb.Interfaces.IDataEntity object.
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity object to convert to.</typeparam>
+        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
         /// <returns>An instance of RepoDb.Interfaces.IDataEntity object.</returns>
-        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>() where TEntity : IDataEntity
+        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
@@ -47,7 +48,11 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, property);
+                    var ordinal = reader.GetOrdinal(property.GetMappedName());
+                    if (ordinal > 0)
+                    {
+                        EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
+                    }
                 });
 
             // Return the TEntity instance value
@@ -58,28 +63,26 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToDataEntityDelegate<TEntity>));
         }
 
-        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, PropertyInfo property) where TEntity : IDataEntity
+        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property) where TEntity : IDataEntity
         {
             // Load the data DataReader instance from argument 0
             ilGenerator.Emit(OpCodes.Ldarg, 0);
 
-            // Load the value base on the MappedName
-            ilGenerator.Emit(OpCodes.Ldstr, property.GetMappedName());
-
-            // Call the reader[] method
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderStringGetIndexer));
+            // Load the value base on the ordinal
+            ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
+            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderIntGetIndexer));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
-            // Load the DataReader[] and DBNull.Value for comparisson
+            // Load the resulted Value and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
             ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
 
-            // Variables for DBNull checking
-            var dbNullEndLabel = ilGenerator.DefineLabel();
+            // Variables for ending this property emitting
+            var endLabel = ilGenerator.DefineLabel();
 
             // Check for DBNull.Value True equality
             ilGenerator.Emit(OpCodes.Ceq);
-            ilGenerator.Emit(OpCodes.Brtrue_S, dbNullEndLabel);
+            ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
 
             // Load the DataEntity instance
             ilGenerator.Emit(OpCodes.Ldloc, 0);
@@ -113,7 +116,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Call, property.SetMethod);
 
             // End label for DBNull.Value checking
-            ilGenerator.MarkLabel(dbNullEndLabel);
+            ilGenerator.MarkLabel(endLabel);
         }
 
         /// <summary>

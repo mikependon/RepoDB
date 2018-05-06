@@ -18,14 +18,15 @@ namespace RepoDb.Reflection
         /// Creates a Delegate for mapping a System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.
         /// </summary>
         /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
+        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
         /// <returns>An IL emitted Delegate object used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.</returns>
-        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>()
+        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
             var key = $"{typeof(TEntity).FullName}.DataReaderToDataEntity".ToLower();
             if (!_cache.ContainsKey(key))
             {
-                var value = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>();
+                var value = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
                 _cache.Add(key, value);
             }
             return (DataReaderToDataEntityDelegate<TEntity>)_cache[key];

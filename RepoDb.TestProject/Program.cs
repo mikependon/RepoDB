@@ -24,10 +24,10 @@ namespace RepoDb.TestProject
 
             Console.WriteLine("Started");
             //TestBulkInsert();
-            var rows = 1500000;
-            TestDapper(rows);
+            var rows = 1000000;
+            //TestDapper(rows);
             TestRepoDbQuery(rows);
-            TestRepoDbExecuteQuery(rows);
+            //TestRepoDbExecuteQuery(rows);
             //TestDapperLoop();
             //TestRepoDbQueryLoop();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
