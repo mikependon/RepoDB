@@ -1596,10 +1596,10 @@ Mapping a statement builder enables the developer to map the custom statement bu
 
 Let say for example, if the developers created the following repositories:
 
- - StockRepository<SqlConnection>
- - TradeRepository<SqlConnection>
- - SymbolRepository<OracleConnection>
- - CompanyRepository<OleDbConnection>
+ - StockRepository (for SqlConnection)
+ - TradeRepository (for SqlConnection)
+ - SymbolRepository (for OracleConnection)
+ - CompanyRepository (for OleDbConnection)
 
 Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).
 
@@ -1612,7 +1612,6 @@ The developers can now map the following statement builders into the repositorie
 ```
 StatementBuilderMapper.Map(typeof(OracleConnection), new OracleStatementBuilder());
 StatementBuilderMapper.Map(typeof(OleDbConnection), new OleDbStatementBuilder());
-
 ```
 The object `StatementBuilderMapper.Map` is callable everywhere in the application as it was implemented in s static way. Make sure to call it once, or else, an exception will be thrown.
 
