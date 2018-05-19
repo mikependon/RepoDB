@@ -12,6 +12,6 @@ namespace RepoDb.Attributes
             IsIdentity = isIdentity;
         }
 
-        public bool IsIdentity { get; set; }
+        public bool IsIdentity { get; }
     }
 }
