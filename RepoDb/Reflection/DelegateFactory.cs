@@ -3,10 +3,8 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection.Delegates;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -49,7 +47,7 @@ namespace RepoDb.Reflection
                 .ForEach(property =>
                 {
                     var ordinal = reader.GetOrdinal(property.GetMappedName());
-                    if (ordinal > 0)
+                    if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
                     }
@@ -99,6 +97,8 @@ namespace RepoDb.Reflection
             // Parse if it is Guid
             if (propertyType == typeof(Guid))
             {
+                // Create a new instance of Nullable<T> object
+                //ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(TypeCache.Get(TypeTypes.Guid), TypeArrayCache.Get(TypeTypes.String)));
                 ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
             }
 

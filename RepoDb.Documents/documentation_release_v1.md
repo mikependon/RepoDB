@@ -42,7 +42,7 @@ The class name mappings can be changed by specifying the `RepoDb.Attributes.Map`
 [Map("[dbo].[StockTable]", CommandType.Text)]
 public class Stock : DataEntity, IStock
 ```
-Above class `Stock` is forcely mapped to `[dbo].[StockTable]` of the database.
+Above class `Stock` is forcedly mapped to `[dbo].[StockTable]` of the database.
 
 The `Map` attribute has second parameter called `commandType` of `System.Data` namespace. If the `CommandType` parameter is defined, the library will then use the class object to be executed under that command type. See Microsoft documentation [here](https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx).
 
@@ -78,9 +78,9 @@ By default, the library has built-in mechanism on identifying the primary key. I
 
 Else, if the `Primary` attribute is not defined, then the following identifications will be used.
 
-  - Search for `Id` property. If present, this automatically overrule the mechanism.
+  - Search for a property named `Id`. If present, this automatically overrule the mechanism.
   - If there is no `Id` property from the class, the class name plus the word `Id` will be evaluated. This means that the `Stock` class, the property `StockId` will be identified.
-  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. On the above mappings, `Map("[dbo].[StockTable]")`, the `StockTableId` will be evalulated.
+  - If both properties above `Id` and `StockId` is not defined, then the mechanism will evaluate the `Map` attribute mapped object plus the `Id` word. On the above mappings, `Map("[dbo].[StockTable]")`, the `StockTableId` will be evaluated.
 
 ### Ignore Attribute
 
@@ -1152,6 +1152,47 @@ Above code snippets will count all the `Stock` records from the database where `
 
 **Note**: The same operation applies to `CountBig` operation. The only difference is that, `CountBig` is returning a `System.Int64` type and the internal SQL statetement is using the `COUNT_BIG` keyword.
 
+## BatchQuery Operation
+
+This operation is used to batching when querying a data from the database. It returns an enumerable object of `RepoDb.Interfaces.IDataEntity` objects. Below are the parameters:
+
+ - **where** - an expression to used to filter the data.
+ - **page** - a zero-based index that signifies the page number of the batch to query.
+ - **rowsPerBatch** - the number of rows to be returned per batch.
+ - **orderBy** - the list of fields to be used to sort the data during querying.
+ - **transaction** - the transaction object to be used when querying a data.
+
+Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.
+```
+var stockRepository = new StockRepository(connectionString);
+stockRepository.BatchQuery(0, 24);
+```
+Below is the way to query by batch the data with expression.
+```
+var stockRepository = new StockRepository(connectionString);
+stockRepository.BatchQuery(new { Name = { Operation = Operation.Like, Value = "A%" } }, 0, 24);
+```
+Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.
+```
+var scroller = <Any Customimzed Scroller Object>
+var stockRepository = new StockRepository(connectionString);
+var expression = new { Name = { Operation = Operation.Like, Value = "A%" } };
+var page = 0;
+var rowsPerBatch = 24;
+
+scroller.ScrollToEnd += (o, e) =>
+{
+	var result = stockRepository.BatchQuery(expression, page, rowsPerBatch);
+	Process(result);
+	page++;
+};
+
+void Process(IEnumerable<Stock> stocks)
+{
+	// Process the stocks data (display on the page)
+}
+```
+
 ## ExecuteQuery Operation
 
 This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `RepoDb.Interfaces.IDataEntity` type as its generic type.
@@ -1308,3 +1349,98 @@ The snippets above creates a class named `FileCache` that implements the `ICache
 Upon creating a stock repository, the `fileCache` variable is being passed as a `cache` parameter. This signals the repository to use the `FileCache` class as the cache manager object of the `Query` operation.
 
 **Note:** The caller can activate a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hit by the debugger if it is placed inside `Add` method of the `FileCache` class.
+
+## Tracing
+
+One of the unique built-in feature of the library is Tracing. It allows developers to Trace the operations while executing it against the database. With tracing, the developers can able to create it own Trace class and inject in the repository.
+
+### ITrace Interface
+
+This interface is the heart of library's Tracing feature. It resides from `RepoDb.Interfaces` namespace. For the developers to enable tracing, a custom class must be created and must implement this interface and inject in it in the repository.
+
+The `ITrace` interface has the follow trace methods.
+
+ - **AfterBatchQuery** - called after the `Repository.BatchQuery` operation has been executed.
+ - **AfterBulkInsert** - called after the `Repository.BulkInsert` operation has been executed.
+ - **AfterCount** - called after the `Repository.Count` operation has been executed.
+ - **AfterCountBig** - called after the `Repository.CountBig` operation has been executed.
+ - **AfterDelete** - called after the `Repository.Delete` operation has been executed.
+ - **AfterExecuteNonQuery** - called after the `Repository.ExecuteNonQuery` operation has been executed.
+ - **AfterExecuteQuery** - called after the `Repository.ExecuteQuery` operation has been executed.
+ - **AfterExecuteReader** - called after the `Repository.ExecuteReader` operation has been executed.
+ - **AfterExecuteScalar** - called after the `Repository.ExecuteScalar` operation has been executed.
+ - **AfterInlineUpdate** - called after the `Repository.InlineUpdate` operation has been executed.
+ - **AfterInsert** - called after the `Repository.Insert` operation has been executed.
+ - **AfterMerge** - called after the `Repository.Merge` operation has been executed.
+ - **AfterQuery** - called after the `Repository.Query` operation has been executed.
+ - **AfterUpdate** - called after the `Repository.Update` operation has been executed.
+ 
+Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.Interfaces.ITraceLog`.
+ 
+ - **BeforeBatchQuery** - called before the `Repository.BatchQuery` actual execution.
+ - **BeforeBulkInsert** - called before the `Repository.BulkInsert` actual execution.
+ - **BeforeCount** - called before the `Repository.Count` actual execution.
+ - **BeforeCountBig** - called before the `Repository.CountBig` actual execution.
+ - **BeforeDelete** - called before the `Repository.Delete` actual execution.
+ - **BeforeExecuteNonQuery** - called before the `Repository.ExecuteNonQuery` actual execution.
+ - **BeforeExecuteQuery** - called before the `Repository.ExecuteQuery` actual execution.
+ - **BeforeExecuteReader** - called before the `Repository.ExecuteReader` actual execution.
+ - **BeforeExecuteScalar** - called before the `Repository.ExecuteScalar` actual execution.
+ - **BeforeInlineUpdate** - called before the `Repository.InlineUpdate` actual execution.
+ - **BeforeInsert** - called before the `Repository.Insert` actual execution.
+ - **BeforeMerge** - called before the `Repository.Merge` actual execution.
+ - **BeforeQuery** - called before the `Repository.Query` actual execution.
+ - **BeforeUpdate** - called before the `Repository.Update` actual execution.
+ 
+Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.Interfaces.ICancellableTraceLog`.
+
+### ITraceLog
+
+This interface and deriving objects are used by the `RepoDb.Interfaces.ITrace` object as a method argument during the `After` operations.
+
+Below are the properties of `ITraceLog` object.
+
+ - **Method** - a `System.Reflection.MethodBase` object that holds the pointer to the actual method that triggers the execution of the operation.
+ - **Result** - an object that holds the result of the execution.
+ - **Parameter** - an object that defines the parameters used when executing the operation.
+ - **Statement** - the actual query statement used in the execution.
+ - **ExecutionTime** - a `System.Timespan` object that holds the time length of actual execution.
+
+### ICancellableTraceLog
+
+This interface and deriving objects are used by the `RepoDb.Interfaces.ITrace` object as a method argument at the `Before` operations. It inherits the `RepoDb.Interfaces.ITrace` interface.
+
+Below are the properties of `ICancellableTraceLog` object.
+
+ - **IsCanceled** - a property used to identify whether the operation is canceled.
+ - **IsThrowException** - a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type `RepoDb.Exceptions.CanceledExecutionException`.
+
+### Creating a Trace Class
+ 
+Below is a sample customized Trace class that implements the interface.
+```
+public class CustomTrace : ITrace
+{
+	public void AfterBulkInsert(ITraceLog log)
+	{
+		// throw new NotImplementedException();
+	}
+
+	public void AfterDelete(ITraceLog log)
+	{
+		// throw new NotImplementedException();
+	}
+	
+	...
+}
+```
+Below is the way on how to inject a Trace class in the repository.
+```
+var customTrace = new CustomTrace();
+var stockRepository = new StockRepository(connectionString, trace: customTrace);
+```
+Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.
+
+### Canceling an Operation
+
+To cancel an operation, simply call the method named `Cancel` of type `RepoDb.Interfaces.ICancelableTraceLog` in any `Before` operation. When calling this method, by passing `true` in the parameter would enable the debugger to throw an `RepoDb.Exception.CanceledExecutionException` exception object.

@@ -14,7 +14,7 @@ namespace RepoDb
             Result = result;
             if (executionTime != null && executionTime.HasValue)
             {
-                ExecuteTime = executionTime.Value;
+                ExecutionTime = executionTime.Value;
             }
         }
 
@@ -26,6 +26,6 @@ namespace RepoDb
 
         public string Statement { get; set; }
 
-        public TimeSpan ExecuteTime { get; }
+        public TimeSpan ExecutionTime { get; }
     }
 }

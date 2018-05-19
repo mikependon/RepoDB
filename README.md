@@ -61,4 +61,4 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  
 ### Todos
 
- - Documentation: BatchQuery, Trace, StatementBuilder, Multi-Mapping
+ - Documentation: Trace, StatementBuilder, Multi-Mapping

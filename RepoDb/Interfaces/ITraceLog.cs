@@ -9,6 +9,6 @@ namespace RepoDb.Interfaces
         object Result { get; }
         object Parameter { get; set; }
         string Statement { get; set; }
-        TimeSpan ExecuteTime { get; }
+        TimeSpan ExecutionTime { get; }
     }
 }

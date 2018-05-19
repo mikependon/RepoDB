@@ -1,9 +1,9 @@
 ﻿namespace RepoDb.Interfaces
 {
-    public interface ICancellableTraceLog: ITraceLog
+    public interface ICancelableTraceLog: ITraceLog
     {
         void Cancel(bool throwException);
-        bool IsCancelled { get; }
+        bool IsCanceled { get; }
         bool IsThrowException { get; }
     }
 }

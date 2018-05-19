@@ -3,20 +3,20 @@
     public interface ITrace
     {
         // Before
-        void BeforeBatchQuery(ICancellableTraceLog log);
-        void BeforeCount(ICancellableTraceLog log);
-        void BeforeCountBig(ICancellableTraceLog log);
-        void BeforeQuery(ICancellableTraceLog log);
-        void BeforeInlineUpdate(ICancellableTraceLog log);
-        void BeforeUpdate(ICancellableTraceLog log);
-        void BeforeDelete(ICancellableTraceLog log);
-        void BeforeMerge(ICancellableTraceLog log);
-        void BeforeInsert(ICancellableTraceLog log);
-        void BeforeBulkInsert(ICancellableTraceLog log);
-        void BeforeExecuteQuery(ICancellableTraceLog log);
-        void BeforeExecuteNonQuery(ICancellableTraceLog log);
-        void BeforeExecuteReader(ICancellableTraceLog log);
-        void BeforeExecuteScalar(ICancellableTraceLog log);
+        void BeforeBatchQuery(ICancelableTraceLog log);
+        void BeforeCount(ICancelableTraceLog log);
+        void BeforeCountBig(ICancelableTraceLog log);
+        void BeforeQuery(ICancelableTraceLog log);
+        void BeforeInlineUpdate(ICancelableTraceLog log);
+        void BeforeUpdate(ICancelableTraceLog log);
+        void BeforeDelete(ICancelableTraceLog log);
+        void BeforeMerge(ICancelableTraceLog log);
+        void BeforeInsert(ICancelableTraceLog log);
+        void BeforeBulkInsert(ICancelableTraceLog log);
+        void BeforeExecuteQuery(ICancelableTraceLog log);
+        void BeforeExecuteNonQuery(ICancelableTraceLog log);
+        void BeforeExecuteReader(ICancelableTraceLog log);
+        void BeforeExecuteScalar(ICancelableTraceLog log);
 
         // After
         void AfterBatchQuery(ITraceLog log);
