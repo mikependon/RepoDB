@@ -1436,8 +1436,13 @@ public class CustomTrace : ITrace
 ```
 Below is the way on how to inject a Trace class in the repository.
 ```
-var customTrace = new CustomTrace();
-var stockRepository = new StockRepository(connectionString, trace: customTrace);
+public class StockRepository : BaseRepository<Stock, SqlConnection>
+{
+	public StockRepository(string connectionString)
+		: base(connectionString, null, null, new CustomTrace(), null)
+	{
+	}
+}
 ```
 Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.
 
@@ -1576,8 +1581,13 @@ public class OracleStatementBuilder : IStatementBuilder
 ```
 Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below.
 ```
-var oracleStatementBuilder = new OracleStatementBuilder();
-var stockRepository = new StockRepository(connectionString, statementBuilder: oracleStatementBuilder);
+public class StockRepository : BaseRepository<Stock, SqlConnection>
+{
+	public StockRepository(string connectionString)
+		: base(connectionString, null, null, null, new OracleStatementBuilder())
+	{
+	}
+}
 ```
 In the code snippets above, everytime the methods of repository is being called, the `OracleStatementBuilder` corresponding method will be executed.
 
