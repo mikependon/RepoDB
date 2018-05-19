@@ -11,9 +11,50 @@ namespace RepoDb.TestProject
 {
     class Program
     {
-        private static readonly string _connectionString = @"Server=.;Database=RepoDb;Integrated Security=True;";
+        private static readonly string _connectionString = @"Server=.;Database=Inventory;Integrated Security=True;";
 
         static void Main(string[] args)
+        {
+            var connectionString = "Initial Catalog=.;Database=Inventory;Integrated Security=True;";
+            var repository = new DbRepository<SqlConnection>(connectionString, null, null, new InventoryTrace());
+            var customers = repository.Query<CustomerDto>();
+
+            customers.ToList().ForEach(customer =>
+            {
+                // Customer
+                Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
+                // Orders
+                var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
+                orders.ToList().ForEach(order =>
+                {
+                    Console.WriteLine($"   Order: {order.OrderNumber}, " +
+                        $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
+                    // OrderItem
+                    var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
+                    if (orderItem != null)
+                    {
+                        // Product
+                        var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
+                        if (product != null)
+                        {
+                            Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
+                            // Supplier
+                            var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
+                            if (supplier != null)
+                            {
+                                Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
+                            }
+                        }
+                    }
+                });
+
+                // ReadLine
+                //Console.ReadLine();
+            });
+
+            Console.ReadLine();
+        }
+        public static void OldMain()
         {
             //DataEntityMapper.For<Person>()
             //    .On(Command.Query, "[dbo].[Person]")
