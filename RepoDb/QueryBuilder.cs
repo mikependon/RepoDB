@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
@@ -8,7 +7,7 @@ using System.Text;
 
 namespace RepoDb
 {
-    public class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
+    public sealed class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
         where TEntity : IDataEntity
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();

@@ -1352,11 +1352,11 @@ Upon creating a stock repository, the `fileCache` variable is being passed as a 
 
 ## Tracing
 
-One of the unique built-in feature of the library is Tracing. It allows developers to Trace the operations while executing it against the database. With tracing, the developers can able to create it own Trace class and inject in the repository.
+One of the unique built-in feature of the library is `Tracing`. It allows developers to debug or trace the operations while executing it against the database. With tracing, the developers can able to create it own trace class and inject in the repository.
 
 ### ITrace Interface
 
-This interface is the heart of library's Tracing feature. It resides from `RepoDb.Interfaces` namespace. For the developers to enable tracing, a custom class must be created and must implement this interface and inject in it in the repository.
+This interface is the heart of library's Tracing feature. It resides from `RepoDb.Interfaces` namespace. This interface is required to be implemented at the custom trace classes to enable the tracing, then, the custom class must be injected in the repository.
 
 The `ITrace` interface has the follow trace methods.
 
@@ -1444,3 +1444,184 @@ Once the customized Trace object has been injected, a breakpoint can be placed i
 ### Canceling an Operation
 
 To cancel an operation, simply call the method named `Cancel` of type `RepoDb.Interfaces.ICancelableTraceLog` in any `Before` operation. When calling this method, by passing `true` in the parameter would enable the debugger to throw an `RepoDb.Exception.CanceledExecutionException` exception object.
+
+## StatementBuilder
+
+The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the `RepoDb.SqlDbStatementBuilder` class that implements the `RepoDb.Interfaces.IStatementBuilder` interface.
+
+In order to override the statement builder, the developer must create a class that implements the `RepoDb.Interfaces.IStatementBuilder` interface. This allows the class to be injectable in the repository and implements the necessary methods needed by all operations.
+
+Below are the methods of the `IStatementBuilder` interface.
+
+ - **CreateBatchQuery** - called when creating a `BatchQuery` statement.
+ - **CreateCount** - called when creating a `Count` statement.
+ - **CreateCountBig** - called when creating a `CountBig` statement.
+ - **CreateDelete** - called when creating a `Delete` statement.
+ - **CreateInlineUpdate** - called when creating a `InlineUpdate` statement.
+ - **CreateInsert** - called when creating a `Insert` statement.
+ - **CreateMerge** - called when creating a `Merge` statement.
+ - **CreateQuery** - called when creating a `Query` statement.
+ - **CreateUpdate** - called when creating a `Update` statement.
+ 
+### CreateBatchQuery
+
+This method is being called when the `BatchQuery` operation of the repository is being called.
+
+Below are the arguments of `CreateBatchQuery` method.
+
+ - **queryBuilder** - the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ - **page** - the page number implied when creating a statement.
+ - **rowsPerBatch** - the size of the rows implied when creating a statement.
+ - **orderBy** - the fields used in the `ORDER BY` when creating a statement.
+ 
+### CreateCount
+
+This method is being called when the `Count` operation of the repository is being called.
+
+Below are the arguments of `CreateCount` method.
+
+ - **queryBuilder** - the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ 
+### CreateCountBig
+
+This method is being called when the `CountBig` operation of the repository is being called.
+
+Below are the arguments of `CreateCountBig` method.
+
+ - **queryBuilder** - the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ 
+### CreateDelete
+
+This method is being called when the `Delete` operation of the repository is being called.
+
+Below are the arguments of `CreateDelete` method.
+
+ - **queryBuilder** - the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ 
+### CreateInlineUpdate
+
+This method is being called when the `InlineUpdate` operation of the repository is being called.
+
+Below are the arguments of `CreateInlineUpdate` method.
+
+ - **queryBuilder** - the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **fields** - the list of fields to be updated when composing a statement (on enumerable of type `RepoDb.Interfaces.Field`).
+ - **where** - the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ - **overrideIgnore** - the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.
+ 
+### CreateInsert
+
+This method is being called when the `Insert` operation of the repository is being called.
+
+Below are the arguments of `CreateInsert` method.
+
+ - **queryBuilder** - the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ 
+### CreateMerge
+
+This method is being called when the `Merge` operation of the repository is being called.
+
+Below are the arguments of `CreateMerge` method.
+
+ - **queryBuilder** - the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **qualifiers** - the list of fields to be used as a qualifiers when composing a statement (on enumerable of type `RepoDb.Interfaces.Field`).
+
+### CreateQuery
+
+This method is being called when the `Query` operation of the repository is being called.
+
+Below are the arguments of `CreateQuery` method.
+
+ - **queryBuilder** - the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ - **top** - the value that identifies the number of rows to be returned when composing a statement.
+ - **orderBy** - the fields used in the `ORDER BY` when creating a statement.
+
+### CreateUpdate
+
+This method is being called when the `Update` operation of the repository is being called.
+
+Below are the arguments of `CreateUpdate` method.
+
+ - **queryBuilder** - the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
+ - **where** - the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+ 
+### QueryBuilder
+
+A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
+
+By default, the library is using the `RepoDb.QueryBuilder<TEntity>` object(implements the `RepoDb.Interfaces.IQueryBuilder<TEntity>` when composing the statement.
+
+**Note**: The query builder is not inheritable and we suggest not to create a customized query builder.
+
+### Creating a custom Statement Builder
+
+The main reason why the library supports the statement builder is to allow the developers override the default statement builder of the library. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements). However, it will fail if the library is being used to access the Oracle, MySql or any other providers.
+
+To create a custom statement builder, simply create a class and implements the `RepoDb.Interfaces.IStatementBuilder` interface. See sample below.
+```
+public class OracleStatementBuilder : IStatementBuilder
+{
+	public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+	{
+		throw new NotImplementedException();
+	}
+	
+	...
+}
+```
+Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below.
+```
+var oracleStatementBuilder = new OracleStatementBuilder();
+var stockRepository = new StockRepository(connectionString, statementBuilder: oracleStatementBuilder);
+```
+In the code snippets above, everytime the methods of repository is being called, the `OracleStatementBuilder` corresponding method will be executed.
+
+### Mapping a Statement Builder
+
+By default, the library is using the `RepoDb.SqlDbStatementBuilder` object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.
+
+The mapper is of static type `RepoDb.StatementBuilderMapper`.
+
+The following are the methods of this object.
+
+ - **Get** - returns the instance of statement builder by type (of type `System.Data.IDbConnection`).
+ - **Map** - maps the custom statement builder to a type (of type `System.Data.IDbConnection`).
+
+Mapping a statement builder enables the developer to map the custom statement builder by provider level. 
+
+Let say for example, if the developers created the following repositories:
+
+ - StockRepository<SqlConnection>
+ - TradeRepository<SqlConnection>
+ - SymbolRepository<OracleConnection>
+ - CompanyRepository<OleDbConnection>
+
+Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).
+
+Let say the developer created 2 new custom statement builders named:
+
+ - OracleStatementBuilder
+ - OleDbStatementBuilder
+
+The developers can now map the following statement builders into the repositories by provider level. Below is the sample way on how to do it.
+```
+StatementBuilderMapper.Map(typeof(OracleConnection), new OracleStatementBuilder());
+StatementBuilderMapper.Map(typeof(OleDbConnection), new OleDbStatementBuilder());
+
+```
+The object `StatementBuilderMapper.Map` is callable everywhere in the application as it was implemented in s static way. Make sure to call it once, or else, an exception will be thrown.
+
+## Type Mapping
+
+Type mapping is feature that allows the library to identify which type of .Net is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to specially when running the repository operations.
+
+Below is the way on how to map the `System.DataTime` to be equivalent as `System.Data.DbType.DateTime2`.
+```
+TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
+```
+**Note**: The class is callable anywhere in the application as it was implemented in a static way.

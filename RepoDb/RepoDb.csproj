@@ -73,7 +73,7 @@
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Interfaces\ICacheItem.cs" />
     <Compile Include="Interfaces\ITrace.cs" />
-    <Compile Include="Interfaces\ICancellableTraceLog.cs" />
+    <Compile Include="Interfaces\ICancelableTraceLog.cs" />
     <Compile Include="Interfaces\ITraceLog.cs" />
     <Compile Include="OrQueryGroup.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
