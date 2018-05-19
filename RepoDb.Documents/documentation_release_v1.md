@@ -1579,11 +1579,11 @@ public class OracleStatementBuilder : IStatementBuilder
 	...
 }
 ```
-Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below.
+Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below injecting a statement builder for Oracle provider.
 ```
-public class StockRepository : BaseRepository<Stock, SqlConnection>
+public class SymbolRepository : BaseRepository<Symbol, OracleConnection>
 {
-	public StockRepository(string connectionString)
+	public SymbolRepository(string connectionString)
 		: base(connectionString, null, null, null, new OracleStatementBuilder())
 	{
 	}
