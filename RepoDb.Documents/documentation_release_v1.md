@@ -1634,3 +1634,36 @@ Below is the way on how to map the `System.DataTime` to be equivalent as `System
 TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
 ```
 **Note**: The class is callable anywhere in the application as it was implemented in a static way.
+
+## Multi-Mapping
+
+This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a `DTO` class into multiple object in the database. This is very usable for some complex requirements that includes like the implementations of Table, Views and StoredProcedures must be mapped into one `DTO` object.
+
+The class named `RepoDb.DataEntityMapper` is used when doing a multiple mapping. Below are the methods.
+
+ - **For** - used to create a mapping between the data entity and database object. Returns an `RepoDb.DataEntityMapItem` object.
+ 
+The class named `RepoDb.DataEntityMapItem` is used to map the operation level of the repository into the database object. Below are the methods.
+
+ - **On** - used to map on which repository command operation and database object the mapping is implemented.
+ - **Set** - used to set the repository command operation data entity mapping definition. This is the underlying method being called by `On` method.
+ - **Get** - get the entity mapping definition defined on the repository command operation.
+
+Multi-mapping is bound in an operation-level of the repository. This means that the developer can map the `Query` operation of `Stock` object into `[dbo].[Stock]` table of the database, whereas the `Delete` operation is mapped into `[dbo].[sp_DeleteStock]` database object.
+
+Let say a `Stock` class `DTO` created in the solution, and the following database objects.
+
+ - A table named `Stock`.
+ - A stored procedure named `sp_DeleteStock`.
+ - A stored procedure named `sp_InsertStock`, where the logic inside of is joining from different database tables.
+ - A view named `vw_Stock`.
+ 
+Developers can simply call the mapper methods when mapping a `Stock` object into these database objects. See below on how to do it.
+```
+DataEntityMapper.For<Stock>()
+	.On(Command.Insert, "[dbo].[sp_QueryStock]", CommandType.StoredProcedure)
+	.On(Command.Delete, "[dbo].[sp_DeleteStock]", CommandType.StoredProcedure)
+	.On(Command.Query, "[dbo].[vw_Stock]")
+	.On(Command.Update, "[dbo].[Stock]")
+	.On(Command.BulkInsert, "[dbo].[Stock]");
+```

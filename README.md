@@ -50,15 +50,10 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
  - Tracing
  - SQL Builder
 
-### Version 1.0.18-beta
-
- - IL Emit the conversion of RepoDb.Interfaces.IDataEntity to System.Data.DataTable.
- - IL Emit the conversion of System.Data.DbDataReader to System.Object when calling the DbConnection.ExecuteQuery method.
- 
 ### Next Release
 
- - Finalizing the documentation.
+ - N/A
  
 ### Todos
 
- - Documentation: Multi-Mapping
+ - N/A
