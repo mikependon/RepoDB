@@ -6,15 +6,11 @@ A dynamic ORM .Net Library used to create an entity-based repository classes whe
 Link: https://www.nuget.org/packages/RepoDb
 
 ### Documentation
-Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_v1.0.10.md (in-progress)
+Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_release_v1.md (in-progress)
 
 ### Goal
 
 We aim to let .Net developers limit the implementation of SQL Statements within the application. We believe that as a .Net developer, one should only focus on .Net and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
-
-### Community Address
-
-As of to date, **RepoDb** is a running project. We will soon announce the stable release once we completed the 3 remaining features stated in the Next-Features and the Unit and Regression Tests. In preparation for the future usage, please refer to the documentation stated above. All developers can play around the library, but we advised not to used it for major projects for now.
 
 ### Notes
 
@@ -26,34 +22,43 @@ As of to date, **RepoDb** is a running project. We will soon announce the stable
 
 ### Features
 
- - BatchQuery/BatchQueryAsync
- - Count/CountAsync
- - CountBig/CountBigAsync
- - Query/QueryAsync
- - Insert/InsertAsync
- - Delete/DeleteAsync
- - Update/UpdateAsync
- - InlineUpdate/InlineUpdateAsync
- - Merge/MergeAsync
- - BulkInsert/BulkInsertAsync
- - ExecuteReader/ExecuteReaderAsync
- - ExecuteQuery/ExecuteQueryAsync
- - ExecuteNonQuery/ExecuteNonQueryAsync
- - ExecuteScalar/ExecuteScalarAsync
  - Transaction
- - Asynchronous Operations
+ - Asynchronous Operation
  - Type Mapping
  - Field Mapping
- - Multiple Mapping (Person = SELECT FROM Person, DELETE FROM sp_delete_person, UPDATE FROM sp_update_person, etc)
+ - Multiple Mapping
  - Expression Tree
  - Caching
  - Tracing
- - SQL Builder
+ - SQL Statement Builder
 
-### Next Release
+### Operations
 
- - N/A
- 
-### Todos
-
- - N/A
+ - BatchQuery
+ - BatchQueryAsync
+ - Count
+ - CountAsync
+ - CountBig
+ - CountBigAsync
+ - Query
+ - QueryAsync
+ - Insert
+ - InsertAsync
+ - Delete
+ - DeleteAsync
+ - Update
+ - UpdateAsync
+ - InlineUpdate
+ - InlineUpdateAsync
+ - Merge
+ - MergeAsync
+ - BulkInsert
+ - BulkInsertAsync
+ - ExecuteReader
+ - ExecuteReaderAsync
+ - ExecuteQuery
+ - ExecuteQueryAsync
+ - ExecuteNonQuery
+ - ExecuteNonQueryAsync
+ - ExecuteScalar
+ - ExecuteScalarAsync
