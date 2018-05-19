@@ -16,8 +16,8 @@ namespace RepoDb.Attributes
             CommandType = commandType;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
 
-        public CommandType CommandType { get; set; }
+        public CommandType CommandType { get; }
     }
 }
