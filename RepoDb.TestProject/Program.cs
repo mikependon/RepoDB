@@ -5,18 +5,22 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using RepoDb.Extensions;
-using System.Data;
 
 namespace RepoDb.TestProject
 {
     class Program
     {
-        private static readonly string _connectionString = @"Server=.;Database=Inventory;Integrated Security=True;";
+        private static readonly string RepoDbConnectionString = @"Server=.;Database=RepoDb;Integrated Security=True;";
+        private static readonly string InventoryConnectionString = "Initial Catalog=.;Database=Inventory;Integrated Security=True;";
 
         static void Main(string[] args)
         {
-            var connectionString = "Initial Catalog=.;Database=Inventory;Integrated Security=True;";
-            var repository = new DbRepository<SqlConnection>(connectionString, null, null, new InventoryTrace());
+            RepoDbMain();
+        }
+
+        public static void InventoryMain()
+        {
+            var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryTrace());
             var customers = repository.Query<CustomerDto>();
 
             customers.ToList().ForEach(customer =>
@@ -54,7 +58,7 @@ namespace RepoDb.TestProject
 
             Console.ReadLine();
         }
-        public static void OldMain()
+        public static void RepoDbMain()
         {
             //DataEntityMapper.For<Person>()
             //    .On(Command.Query, "[dbo].[Person]")
@@ -65,7 +69,7 @@ namespace RepoDb.TestProject
 
             Console.WriteLine("Started");
             //TestBulkInsert();
-            var rows = 1000000;
+            var rows = 2000000;
             TestDapper(rows);
             TestRepoDbQuery(rows);
             //TestRepoDbExecuteQuery(rows);
@@ -82,7 +86,7 @@ namespace RepoDb.TestProject
 
         private static void TestBulkInsert()
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
             var rows = 500000;
             var now = DateTime.UtcNow;
@@ -98,7 +102,7 @@ namespace RepoDb.TestProject
             var now = DateTime.UtcNow;
             Console.WriteLine(new string(char.Parse("-"), 50));
             Console.WriteLine("Dapper.DbConnection.Query");
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(RepoDbConnectionString))
             {
                 people = connection.Query<Person>(sql: $"SELECT TOP {rows} * FROM [dbo].[Person];");
             }
@@ -107,7 +111,7 @@ namespace RepoDb.TestProject
 
         private static void TestRepoDbQuery(int rows)
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
             var now = DateTime.UtcNow;
             Console.WriteLine(new string(char.Parse("-"), 50));
@@ -120,7 +124,7 @@ namespace RepoDb.TestProject
         {
             Console.WriteLine(new string(char.Parse("-"), 50));
             Console.WriteLine("RepoDb.Extensions.DbConnectionExtension.ExecuteQuery");
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(RepoDbConnectionString))
             {
                 var now = DateTime.UtcNow;
                 var objects = connection.ExecuteQuery($"SELECT TOP {rows} * FROM [dbo].[Person];");
@@ -135,7 +139,7 @@ namespace RepoDb.TestProject
             var now = DateTime.UtcNow;
             Console.WriteLine(new string(char.Parse("-"), 50));
             Console.WriteLine("Dapper: Looping Query Execution");
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new SqlConnection(RepoDbConnectionString))
             {
                 while (loops < 500)
                 {
@@ -148,7 +152,7 @@ namespace RepoDb.TestProject
 
         private static void TestRepoDbQueryLoop()
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
             var loops = 0;
             var now = DateTime.UtcNow;
@@ -164,7 +168,7 @@ namespace RepoDb.TestProject
 
         private static void TestInNotInBetweenNotBetweenAnyAllOperation()
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
 
             // Combined
@@ -227,7 +231,7 @@ namespace RepoDb.TestProject
 
         private static void TestBatchQuery()
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var rowsPerBatch = 777;
             var batches = repository.CountBig() / rowsPerBatch;
             for (var page = 0; page < batches; page++)
@@ -245,7 +249,7 @@ namespace RepoDb.TestProject
 
         private static void TestInlineUpdate()
         {
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var affectedRows = repository.InlineUpdate(new
             {
                 DateUpdated = DateTime.UtcNow
@@ -261,7 +265,7 @@ namespace RepoDb.TestProject
         private static void TestCrud()
         {
             // Repository
-            var repository = new PersonRepository(_connectionString);
+            var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
             var person = (Person)null;
             var personId = new Random().Next(3000, 20000);

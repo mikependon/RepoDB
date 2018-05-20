@@ -1,0 +1,44 @@
+﻿CREATE DATABASE [RepoDb];
+GO
+
+USE [RepoDb];
+GO
+
+CREATE TABLE [dbo].[Person]
+(
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](128) NOT NULL,
+	[Address] [nvarchar](256) NULL,
+	[DateOfBirth] [datetime2](7) NULL,
+	[Worth] [decimal](18, 5) NULL,
+	[SsId] [uniqueidentifier] NULL,
+	[DateUpdated] [datetime] NOT NULL,
+	[DateInserted] [datetime] NOT NULL
+) ON [PRIMARY];
+GO
+
+DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Person]);
+SET @counter = COALESCE(@counter, 1);
+WHILE (@counter < 1000)
+BEGIN
+	
+	INSERT INTO [dbo].[Person]
+	(
+		[Name]
+		, [Address]
+		, [DateOfBirth]
+		, [Worth]
+		, [SsId]
+		, [DateUpdated]
+		, [DateInserted]
+	)
+	SELECT CONCAT('Name-', @counter, '-', NEWID())
+		, CONCAT('Address-', @counter, '-', NEWID())
+		, DATEADD(YEAR, -(RAND() * 100), GETUTCDATE())
+		, RAND() * 100000000
+		, NEWID()
+		, GETUTCDATE()
+		, GETUTCDATE()
+	SET @counter = @counter + 1;
+END
+GO

@@ -68,5 +68,8 @@
       <Name>RepoDb</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="CreateRepoDb.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -69,6 +69,11 @@ namespace RepoDb.Reflection
         [CreateMethodInfo(TypeTypes.Guid, "Parse", new[] { typeof(string) })]
         GuidParse,
         /// <summary>
+        /// A System.Guid.ParseExact() method.
+        /// </summary>
+        [CreateMethodInfo(TypeTypes.Guid, "ParseExact", new[] { typeof(string), typeof(string) })]
+        GuidParseExact,
+        /// <summary>
         /// A RepoDb.Reflection.DbNullConverter.DbNullToNull method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.ObjectConverter, "DbNullToNull", new[] { typeof(object) })]

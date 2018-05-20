@@ -20,7 +20,7 @@ namespace RepoDb.TestProject
         public DateTime DateOfBirth { get; set; }
 
         [Map("Worth")]
-        public decimal Worth { get; set; }
+        public decimal? Worth { get; set; }
 
         public Guid? SsId { get; set; }
 

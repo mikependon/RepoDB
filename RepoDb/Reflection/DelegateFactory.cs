@@ -100,6 +100,8 @@ namespace RepoDb.Reflection
                 // Create a new instance of Nullable<T> object
                 //ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(TypeCache.Get(TypeTypes.Guid), TypeArrayCache.Get(TypeTypes.String)));
                 ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
+                //ilGenerator.Emit(OpCodes.Ldstr, "D");
+                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
             }
 
             // Check for nullable based on the underlying type
