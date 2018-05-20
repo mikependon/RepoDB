@@ -69,7 +69,7 @@ namespace RepoDb.TestProject
 
             Console.WriteLine("Started");
             //TestBulkInsert();
-            var rows = 2000000;
+            var rows = 1000000;
             TestDapper(rows);
             TestEntityFramework(rows);
             TestRepoDbQuery(rows);
@@ -177,204 +177,204 @@ namespace RepoDb.TestProject
             Console.WriteLine($"RepoDb: {loops} loops (top 10 rows each) for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
         }
 
-        private static void TestInNotInBetweenNotBetweenAnyAllOperation()
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
+        //private static void TestInNotInBetweenNotBetweenAnyAllOperation()
+        //{
+        //    var repository = new PersonRepository(RepoDbConnectionString);
+        //    var people = (IEnumerable<Person>)null;
 
-            // Combined
-            people = repository.Query(new
-            {
-                Id = new
-                {
-                    Operation = Operation.All,
-                    Value = new object[]
-                    {
-                        new { Operation = Operation.In, Value = new int[]{ 5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009, 5010 } },
-                        new { Operation = Operation.NotIn, Value = new int[]{ 5002, 5003, 5009 } },
-                        new { Operation = Operation.Between, Value = new object[]{ 5001, 5010 } },
-                        new { Operation = Operation.NotBetween, Value = new int[]{ 5006, 5010 } }
-                    }
-                }
-            });
-            // Expect: 5001, 5004, 5005
+        //    // Combined
+        //    people = repository.Query(new
+        //    {
+        //        Id = new
+        //        {
+        //            Operation = Operation.All,
+        //            Value = new object[]
+        //            {
+        //                new { Operation = Operation.In, Value = new int[]{ 5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009, 5010 } },
+        //                new { Operation = Operation.NotIn, Value = new int[]{ 5002, 5003, 5009 } },
+        //                new { Operation = Operation.Between, Value = new object[]{ 5001, 5010 } },
+        //                new { Operation = Operation.NotBetween, Value = new int[]{ 5006, 5010 } }
+        //            }
+        //        }
+        //    });
+        //    // Expect: 5001, 5004, 5005
 
-            // In
-            people = repository.Query(new
-            {
-                Id = new { Operation = Operation.In, Value = new[] { 6000, 6001, 6002, 6003, 6004, 6005 } }
-            });
-            // Expect: 6000, 6001, 6002, 6003, 6004, 6005
+        //    // In
+        //    people = repository.Query(new
+        //    {
+        //        Id = new { Operation = Operation.In, Value = new[] { 6000, 6001, 6002, 6003, 6004, 6005 } }
+        //    });
+        //    // Expect: 6000, 6001, 6002, 6003, 6004, 6005
 
-            // Between and In
-            people = repository.Query(new
-            {
-                QueryGroups = new[]
-                {
-                    new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
-                    new { Id = new { Operation = Operation.In, Value = new[] { 6000, 6001, 6002, 6003 } } }
-                }
-            });
-            // Expect: 6000, 6001, 6002, 6003
+        //    // Between and In
+        //    people = repository.Query(new
+        //    {
+        //        QueryGroups = new[]
+        //        {
+        //            new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
+        //            new { Id = new { Operation = Operation.In, Value = new[] { 6000, 6001, 6002, 6003 } } }
+        //        }
+        //    });
+        //    // Expect: 6000, 6001, 6002, 6003
 
-            // Between and NotIn
-            people = repository.Query(new
-            {
-                QueryGroups = new[]
-                {
-                    new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
-                    new { Id = new { Operation = Operation.NotIn, Value = new[] { 6000, 6001, 6002, 6003 } } }
-                }
-            });
-            // Expect: 6004 - 6010
+        //    // Between and NotIn
+        //    people = repository.Query(new
+        //    {
+        //        QueryGroups = new[]
+        //        {
+        //            new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
+        //            new { Id = new { Operation = Operation.NotIn, Value = new[] { 6000, 6001, 6002, 6003 } } }
+        //        }
+        //    });
+        //    // Expect: 6004 - 6010
 
-            // Between and NotBetween
-            people = repository.Query(new
-            {
-                QueryGroups = new[]
-                {
-                    new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
-                    new { Id = new { Operation = Operation.NotBetween, Value = new[] { 6002, 6007 } } }
-                }
-            });
-            // Expect: 6000, 6001, 6008, 6009, 6010
-        }
+        //    // Between and NotBetween
+        //    people = repository.Query(new
+        //    {
+        //        QueryGroups = new[]
+        //        {
+        //            new { Id = new { Operation = Operation.Between, Value = new[] { 6000, 6010 } } },
+        //            new { Id = new { Operation = Operation.NotBetween, Value = new[] { 6002, 6007 } } }
+        //        }
+        //    });
+        //    // Expect: 6000, 6001, 6008, 6009, 6010
+        //}
 
-        private static void TestBatchQuery()
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var rowsPerBatch = 777;
-            var batches = repository.CountBig() / rowsPerBatch;
-            for (var page = 0; page < batches; page++)
-            {
-                var people = repository.BatchQuery(
-                    page,
-                    rowsPerBatch,
-                    OrderField.Parse(new
-                    {
-                        Id = Order.Descending
-                    }));
-                Console.WriteLine($"Page: {page}, Rows: {people.Count()}, From: {people.Min(p => p.Id)}, To: {people.Max(p => p.Id)}");
-            }
-        }
+        //private static void TestBatchQuery()
+        //{
+        //    var repository = new PersonRepository(RepoDbConnectionString);
+        //    var rowsPerBatch = 777;
+        //    var batches = repository.CountBig() / rowsPerBatch;
+        //    for (var page = 0; page < batches; page++)
+        //    {
+        //        var people = repository.BatchQuery(
+        //            page,
+        //            rowsPerBatch,
+        //            OrderField.Parse(new
+        //            {
+        //                Id = Order.Descending
+        //            }));
+        //        Console.WriteLine($"Page: {page}, Rows: {people.Count()}, From: {people.Min(p => p.Id)}, To: {people.Max(p => p.Id)}");
+        //    }
+        //}
 
-        private static void TestInlineUpdate()
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var affectedRows = repository.InlineUpdate(new
-            {
-                DateUpdated = DateTime.UtcNow
-            },
-            new
-            {
-                Id = new { Operation = Operation.Between, Value = new[] { 600, 950 } },
-                Name = new { Operation = Operation.Like, Value = "Na%" }
-            },
-            true);
-        }
+        //private static void TestInlineUpdate()
+        //{
+        //    var repository = new PersonRepository(RepoDbConnectionString);
+        //    var affectedRows = repository.InlineUpdate(new
+        //    {
+        //        DateUpdated = DateTime.UtcNow
+        //    },
+        //    new
+        //    {
+        //        Id = new { Operation = Operation.Between, Value = new[] { 600, 950 } },
+        //        Name = new { Operation = Operation.Like, Value = "Na%" }
+        //    },
+        //    true);
+        //}
 
-        private static void TestCrud()
-        {
-            // Repository
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
-            var person = (Person)null;
-            var personId = new Random().Next(3000, 20000);
-            var affectedRows = 0;
+        //private static void TestCrud()
+        //{
+        //    // Repository
+        //    var repository = new PersonRepository(RepoDbConnectionString);
+        //    var people = (IEnumerable<Person>)null;
+        //    var person = (Person)null;
+        //    var personId = new Random().Next(3000, 20000);
+        //    var affectedRows = 0;
 
-            // BatchQuery
-            Console.WriteLine("BatchQuery");
-            people = repository.BatchQuery(0, 1000, OrderField.Parse(new { Id = Order.Descending }));
+        //    // BatchQuery
+        //    Console.WriteLine("BatchQuery");
+        //    people = repository.BatchQuery(0, 1000, OrderField.Parse(new { Id = Order.Descending }));
 
-            // Query 100K
-            Console.WriteLine("Query: 100K");
-            people = repository.Query(new { Id = new { Operation = Operation.GreaterThan, Value = 100 } }, top: 100000);
+        //    // Query 100K
+        //    Console.WriteLine("Query: 100K");
+        //    people = repository.Query(new { Id = new { Operation = Operation.GreaterThan, Value = 100 } }, top: 100000);
 
-            // BulkInsert
-            Console.WriteLine("BulkInsert: 100K");
-            affectedRows = repository.BulkInsert(people);
+        //    // BulkInsert
+        //    Console.WriteLine("BulkInsert: 100K");
+        //    affectedRows = repository.BulkInsert(people);
 
-            // Insert
-            Console.WriteLine("Insert");
-            person = new Person()
-            {
-                Name = $"Name: {Guid.NewGuid().ToString()}",
-                Address = $"Address: {Guid.NewGuid().ToString()}",
-                DateInserted = DateTime.UtcNow,
-                DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
-                DateUpdated = DateTime.UtcNow,
-                Worth = 6000000
-            };
-            personId = Convert.ToInt32(repository.Insert(person));
+        //    // Insert
+        //    Console.WriteLine("Insert");
+        //    person = new Person()
+        //    {
+        //        Name = $"Name: {Guid.NewGuid().ToString()}",
+        //        Address = $"Address: {Guid.NewGuid().ToString()}",
+        //        DateInserted = DateTime.UtcNow,
+        //        DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
+        //        DateUpdated = DateTime.UtcNow,
+        //        Worth = 6000000
+        //    };
+        //    personId = Convert.ToInt32(repository.Insert(person));
 
-            // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
+        //    // Verify
+        //    Console.WriteLine($"Query: {personId}");
+        //    person = repository.Query(personId).FirstOrDefault();
+        //    if (person == null)
+        //    {
+        //        throw new NullReferenceException("Person is null.");
+        //    }
 
-            // Update
-            Console.WriteLine($"Update: {personId}");
-            person.Name = $"Name: {Guid.NewGuid().ToString()} (Updated)";
-            person.Address = $"Address: {Guid.NewGuid().ToString()} (Updated)";
-            person.DateUpdated = DateTime.UtcNow;
-            affectedRows = repository.Update(person, new { Id = person.Id, Name = person.Name });
+        //    // Update
+        //    Console.WriteLine($"Update: {personId}");
+        //    person.Name = $"Name: {Guid.NewGuid().ToString()} (Updated)";
+        //    person.Address = $"Address: {Guid.NewGuid().ToString()} (Updated)";
+        //    person.DateUpdated = DateTime.UtcNow;
+        //    affectedRows = repository.Update(person, new { Id = person.Id, Name = person.Name });
 
-            // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
+        //    // Verify
+        //    Console.WriteLine($"Query: {personId}");
+        //    person = repository.Query(personId).FirstOrDefault();
+        //    if (person == null)
+        //    {
+        //        throw new NullReferenceException("Person is null.");
+        //    }
 
-            // Merge
-            Console.WriteLine($"Merge: {personId}");
-            person.Name = $"{Guid.NewGuid().ToString()} (Merged)";
-            person.Address = $"Address: {Guid.NewGuid().ToString()} (Merged)";
-            person.DateUpdated = DateTime.UtcNow;
-            affectedRows = repository.Merge(person, Field.From(new string[] { "Id" }));
+        //    // Merge
+        //    Console.WriteLine($"Merge: {personId}");
+        //    person.Name = $"{Guid.NewGuid().ToString()} (Merged)";
+        //    person.Address = $"Address: {Guid.NewGuid().ToString()} (Merged)";
+        //    person.DateUpdated = DateTime.UtcNow;
+        //    affectedRows = repository.Merge(person, Field.From(new string[] { "Id" }));
 
-            // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
+        //    // Verify
+        //    Console.WriteLine($"Query: {personId}");
+        //    person = repository.Query(personId).FirstOrDefault();
+        //    if (person == null)
+        //    {
+        //        throw new NullReferenceException("Person is null.");
+        //    }
 
-            // InlineUpdate
-            Console.WriteLine("InlineUpdate");
-            affectedRows = repository.InlineUpdate(new
-            {
-                Name = $"Name: {Guid.NewGuid().ToString()} (Inline Updated)"
-            },
-            new
-            {
-                Id = personId
-            });
+        //    // InlineUpdate
+        //    Console.WriteLine("InlineUpdate");
+        //    affectedRows = repository.InlineUpdate(new
+        //    {
+        //        Name = $"Name: {Guid.NewGuid().ToString()} (Inline Updated)"
+        //    },
+        //    new
+        //    {
+        //        Id = personId
+        //    });
 
-            // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
+        //    // Verify
+        //    Console.WriteLine($"Query: {personId}");
+        //    person = repository.Query(personId).FirstOrDefault();
+        //    if (person == null)
+        //    {
+        //        throw new NullReferenceException("Person is null.");
+        //    }
 
-            // Delete
-            Console.WriteLine($"Delete: {personId}");
-            affectedRows = repository.Delete(new { Name = "10000" });
+        //    // Delete
+        //    Console.WriteLine($"Delete: {personId}");
+        //    affectedRows = repository.Delete(new { Name = "10000" });
 
-            // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
-            if (person != null)
-            {
-                throw new NullReferenceException("Person should be null. We have just deleted it.");
-            }
-        }
+        //    // Verify
+        //    Console.WriteLine($"Query: {personId}");
+        //    person = repository.Query(personId).FirstOrDefault();
+        //    if (person != null)
+        //    {
+        //        throw new NullReferenceException("Person should be null. We have just deleted it.");
+        //    }
+        //}
     }
 }

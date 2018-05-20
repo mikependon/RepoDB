@@ -63,6 +63,13 @@ namespace RepoDb.Reflection
 
         private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property) where TEntity : IDataEntity
         {
+            // Get the property type
+            var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+            var propertyType = underlyingType ?? property.PropertyType;
+
+            // Variables for ending this property emitting
+            var endLabel = ilGenerator.DefineLabel();
+
             // Load the data DataReader instance from argument 0
             ilGenerator.Emit(OpCodes.Ldarg, 0);
 
@@ -70,13 +77,14 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
             ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderIntGetIndexer));
             ilGenerator.Emit(OpCodes.Stloc, 1);
+            //ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
+            //var method = typeof(DbDataReader).GetMethod($"Get{propertyType.Name}", new[] { typeof(int) });
+            //ilGenerator.Emit(OpCodes.Callvirt, method);
+            //ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Load the resulted Value and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
             ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
-
-            // Variables for ending this property emitting
-            var endLabel = ilGenerator.DefineLabel();
 
             // Check for DBNull.Value True equality
             ilGenerator.Emit(OpCodes.Ceq);
@@ -85,10 +93,6 @@ namespace RepoDb.Reflection
             // Load the DataEntity instance
             ilGenerator.Emit(OpCodes.Ldloc, 0);
             ilGenerator.Emit(OpCodes.Ldloc, 1);
-
-            // Get the property type
-            var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-            var propertyType = underlyingType ?? property.PropertyType;
 
             // Switch which method of Convert are going to used
             var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ?? MethodInfoCache.Get(MethodInfoTypes.ConvertToString);
@@ -99,9 +103,9 @@ namespace RepoDb.Reflection
             {
                 // Create a new instance of Nullable<T> object
                 //ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(TypeCache.Get(TypeTypes.Guid), TypeArrayCache.Get(TypeTypes.String)));
-                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
-                //ilGenerator.Emit(OpCodes.Ldstr, "D");
-                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
+                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
+                ilGenerator.Emit(OpCodes.Ldstr, "D");
+                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
             }
 
             // Check for nullable based on the underlying type
