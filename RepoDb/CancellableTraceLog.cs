@@ -3,20 +3,20 @@ using System.Reflection;
 
 namespace RepoDb
 {
-    public sealed class CancellableTraceLog : TraceLog, ICancelableTraceLog
+    public sealed class CancellableTraceLog : TraceLog, ICancellableTraceLog
     {
         internal CancellableTraceLog(MethodBase method, string statement, object parameter, object result)
             : base(method, statement, parameter, result, null)
         {
         }
 
-        public bool IsCanceled { get; private set; }
+        public bool IsCancelled { get; private set; }
 
         public bool IsThrowException { get; private set; }
 
         public void Cancel(bool throwException)
         {
-            IsCanceled = true;
+            IsCancelled = true;
             IsThrowException = throwException;
         }
     }

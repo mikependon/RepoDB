@@ -2,9 +2,9 @@
 
 namespace RepoDb.Exceptions
 {
-    public class CanceledExecutionException : Exception
+    public class CancelledExecutionException : Exception
     {
-        public CanceledExecutionException(string message)
+        public CancelledExecutionException(string message)
             : base(message) { }
     }
 }

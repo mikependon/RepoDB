@@ -75,72 +75,72 @@ namespace RepoDb.TestProject
             throw new NotImplementedException();
         }
 
-        public void BeforeBatchQuery(ICancelableTraceLog log)
+        public void BeforeBatchQuery(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeBulkInsert(ICancelableTraceLog log)
+        public void BeforeBulkInsert(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeCount(ICancelableTraceLog log)
+        public void BeforeCount(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeCountBig(ICancelableTraceLog log)
+        public void BeforeCountBig(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeDelete(ICancelableTraceLog log)
+        public void BeforeDelete(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeExecuteNonQuery(ICancelableTraceLog log)
+        public void BeforeExecuteNonQuery(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeExecuteQuery(ICancelableTraceLog log)
+        public void BeforeExecuteQuery(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeExecuteReader(ICancelableTraceLog log)
+        public void BeforeExecuteReader(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeExecuteScalar(ICancelableTraceLog log)
+        public void BeforeExecuteScalar(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeInlineUpdate(ICancelableTraceLog log)
+        public void BeforeInlineUpdate(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeInsert(ICancelableTraceLog log)
+        public void BeforeInsert(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeMerge(ICancelableTraceLog log)
+        public void BeforeMerge(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeQuery(ICancelableTraceLog log)
+        public void BeforeQuery(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }
 
-        public void BeforeUpdate(ICancelableTraceLog log)
+        public void BeforeUpdate(ICancellableTraceLog log)
         {
             throw new NotImplementedException();
         }

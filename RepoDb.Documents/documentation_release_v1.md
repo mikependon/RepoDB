@@ -1412,8 +1412,8 @@ This interface and deriving objects are used by the `RepoDb.Interfaces.ITrace` o
 
 Below are the properties of `ICancellableTraceLog` object.
 
- - **IsCanceled** - a property used to identify whether the operation is canceled.
- - **IsThrowException** - a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type `RepoDb.Exceptions.CanceledExecutionException`.
+ - **IsCancelled** - a property used to identify whether the operation is canceled.
+ - **IsThrowException** - a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type `RepoDb.Exceptions.CancelledExecutionException`.
 
 ### Creating a Trace Class
  
@@ -1448,7 +1448,7 @@ Once the customized Trace object has been injected, a breakpoint can be placed i
 
 ### Canceling an Operation
 
-To cancel an operation, simply call the method named `Cancel` of type `RepoDb.Interfaces.ICancelableTraceLog` in any `Before` operation. When calling this method, by passing `true` in the parameter would enable the debugger to throw an `RepoDb.Exception.CanceledExecutionException` exception object.
+To cancel an operation, simply call the method named `Cancel` of type `RepoDb.Interfaces.ICancelableTraceLog` in any `Before` operation. When calling this method, by passing `true` in the parameter would enable the debugger to throw an `RepoDb.Exception.CancelledExecutionException` exception object.
 
 ## StatementBuilder
 
