@@ -71,6 +71,7 @@ namespace RepoDb.TestProject
             //TestBulkInsert();
             var rows = 2000000;
             TestDapper(rows);
+            TestEntityFramework(rows);
             TestRepoDbQuery(rows);
             //TestRepoDbExecuteQuery(rows);
             //TestDapperLoop();
@@ -101,12 +102,22 @@ namespace RepoDb.TestProject
             var people = (IEnumerable<Person>)null;
             var now = DateTime.UtcNow;
             Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("Dapper.DbConnection.Query");
+            Console.WriteLine("Dapper.DbConnection.Query<T>");
             using (var connection = new SqlConnection(RepoDbConnectionString))
             {
                 people = connection.Query<Person>(sql: $"SELECT TOP {rows} * FROM [dbo].[Person];");
             }
             Console.WriteLine($"Dapper: {people.Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
+        }
+
+        private static void TestEntityFramework(int rows)
+        {
+            var now = DateTime.UtcNow;
+            Console.WriteLine(new string(char.Parse("-"), 50));
+            Console.WriteLine("EntityFramework.Database.SqlQuery<T>");
+            var context = new System.Data.Entity.DbContext(RepoDbConnectionString);
+            var people = context.Database.SqlQuery<Person>($"SELECT TOP {rows} * FROM [dbo].[Person];");
+            Console.WriteLine($"EntityFramework: {people.Where((p) => true).Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
         }
 
         private static void TestRepoDbQuery(int rows)
