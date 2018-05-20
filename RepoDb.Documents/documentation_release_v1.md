@@ -275,13 +275,13 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 	var result = connection.ExecuteReader("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
 }
 ```
-Returning an enumerable of `Stock` data entity object. *(this will be supported at version above 1.0.15)*
+Returning an enumerable of `Stock` data entity object.
 ```
 var stockRepository = new StockRepository(connectionString);
 using (var connection = stockRepository.CreateConnection().EnsureOpen())
 {
 	var param = new { Name = "GA%" };
-	var result = connection.ExecuteReader<Stock>("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
+	var result = connection.ExecuteQuery<Stock>("SELECT * FROM [dbo].[Stock] WHERE (Name = @Name);", param);
 }
 ```
 
@@ -1013,10 +1013,10 @@ if (stock != null)
 	var affectedRows = repository.Update(stock);
 }
 ```
-Dynamic way (column-based update) [Soon to be supported]:
+Dynamic way (column-based update), or see InlineUpdate documentation:
 ```
 var stockRepository = new StockRepository(connectionString);
-var affectedRows = stockRepository.Update(
+var affectedRows = stockRepository.InlineUpdate(
 new
 {
 	Motto = "Do not be evil."
