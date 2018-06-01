@@ -12,21 +12,21 @@ namespace RepoDb.TestProject
         [Map("Id")]
         public long Id { get; set; }
 
-        [Map("Name")]
-        public string Name { get; set; }
+        //[Map("Name")]
+        //public string Name { get; set; }
 
-        public string Address { get; set; }
+        //public string Address { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        //public DateTime DateOfBirth { get; set; }
 
-        [Map("Worth")]
-        public decimal? Worth { get; set; }
+        //[Map("Worth")]
+        //public decimal? Worth { get; set; }
 
         public Guid? SsId { get; set; }
 
-        public DateTime DateUpdated { get; set; }
+        //public DateTime DateUpdated { get; set; }
 
-        [Ignore(Command.Update)]
-        public DateTime DateInserted { get; set; }
+        //[Ignore(Command.Update)]
+        //public DateTime DateInserted { get; set; }
     }
 }

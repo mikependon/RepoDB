@@ -32,22 +32,6 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)_cache[key];
         }
 
-        ///// <summary>
-        ///// Creates a Delegate for mapping a System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject object.
-        ///// </summary>
-        ///// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
-        ///// <returns>An IL emitted Delegate object used to convert the System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject.</returns>
-        //public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
-        //{
-        //    var key = $"{typeof(ExpandoObject).FullName}.DataReaderToExpandoObject".ToLower();
-        //    if (!_cache.ContainsKey(key))
-        //    {
-        //        var value = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
-        //        _cache.Add(key, value);
-        //    }
-        //    return (DataReaderToExpandoObjectDelegate)_cache[key];
-        //}
-
         /// <summary>
         /// Creates a Delegate for mapping a System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.
         /// </summary>

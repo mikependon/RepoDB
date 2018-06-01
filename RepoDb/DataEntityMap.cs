@@ -4,12 +4,12 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used to map a RepoDb.Interfaces.IDataEntity object into database object.
+    /// An object used to map a <i>RepoDb.Interfaces.IDataEntity</i> object into database object.
     /// </summary>
     public class DataEntityMap : IDataEntityMap
     {
         /// <summary>
-        /// Creates an instance of RepoDb.ObjectMap class.
+        /// Creates an instance of <i>RepoDb.ObjectMap</i> class.
         /// </summary>
         /// <param name="name">The name of database object.</param>
         /// <param name="commandType">The type of command used during execution.</param>

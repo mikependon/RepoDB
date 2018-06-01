@@ -8,37 +8,73 @@ using System.Threading.Tasks;
 using System.Linq;
 using RepoDb.Exceptions;
 using System.Reflection;
-using RepoDb.Reflection;
 using RepoDb.Enumerations;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// A base object for all <b>Shared-Based Repository</b>. This object is usually being inheritted
+    /// if the derived class is meant for shared-based operations when it comes to data manipulations.
+    /// This object is used by <i>RepoDb.BaseRepository</i> as the underlying repository for all its
+    /// operations.
+    /// </summary>
+    /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public class DbRepository<TDbConnection> : IDbRepository<TDbConnection>
         where TDbConnection : DbConnection
     {
         private readonly string _connectionString;
         private readonly int? _commandTimeout;
 
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
         public DbRepository(string connectionString)
             : this(connectionString, null, null, null, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
         public DbRepository(string connectionString, int? commandTimeout)
             : this(connectionString, commandTimeout, null, null, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="cache">The </i>cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache)
             : this(connectionString, commandTimeout, cache, null, null)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
             : this(connectionString, commandTimeout, cache, trace, null)
         {
         }
-
+        
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
         {
             // Fields

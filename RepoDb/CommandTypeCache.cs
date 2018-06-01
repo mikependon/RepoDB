@@ -7,6 +7,10 @@ using RepoDb.Enumerations;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// A static class used to get the cached <i>System.Data.CommandType</i> object that is
+    /// mapped on a given <i>Data Transfer Object (DTO)</i> object.
+    /// </summary>
     public static class CommandTypeCache
     {
         private static readonly IDictionary<string, CommandType> _cache = new Dictionary<string, CommandType>();
@@ -27,6 +31,15 @@ namespace RepoDb
             return value;
         }
 
+        /// <summary>
+        /// Gets the <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Transfer Object (DTO)</i> object.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The entity where the <i>System.Data.Command</i> object will be retrieved. This object must 
+        /// implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// </typeparam>
+        /// <param name="command">The target command where to get the mapped name of the data entity.</param>
+        /// <returns>An instance of <i>System.Data.CommandType</i> object.</returns>
         public static CommandType Get<TEntity>(Command command)
             where TEntity : IDataEntity
         {

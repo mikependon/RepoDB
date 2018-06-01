@@ -85,11 +85,9 @@ namespace RepoDb.Reflection
             // Load the resulted Value and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
             ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
-
-            // Check for DBNull.Value True equality
             ilGenerator.Emit(OpCodes.Ceq);
             ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
-
+            
             // Load the DataEntity instance
             ilGenerator.Emit(OpCodes.Ldloc, 0);
             ilGenerator.Emit(OpCodes.Ldloc, 1);
@@ -103,9 +101,9 @@ namespace RepoDb.Reflection
             {
                 // Create a new instance of Nullable<T> object
                 //ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(TypeCache.Get(TypeTypes.Guid), TypeArrayCache.Get(TypeTypes.String)));
-                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
-                ilGenerator.Emit(OpCodes.Ldstr, "D");
-                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
+                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
+                //ilGenerator.Emit(OpCodes.Ldstr, "D");
+                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
             }
 
             // Check for nullable based on the underlying type

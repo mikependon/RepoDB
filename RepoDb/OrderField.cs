@@ -8,16 +8,31 @@ using System.Reflection;
 
 namespace RepoDb
 {
+    /// <summary>
+    /// An object that holds a field for ordering purposes.
+    /// </summary>
     public class OrderField : Field, IOrderField
     {
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.OrderField</i> object.
+        /// </summary>
+        /// <param name="name">The name of the field to be ordered.</param>
+        /// <param name="order">The ordering direction of the field.</param>
         public OrderField(string name, Order order)
             : base(name)
         {
             Order = order;
         }
 
-        public Order Order { get; set; }
+        /// <summary>
+        /// Gets the order direction of the field.
+        /// </summary>
+        public Order Order { get; }
 
+        /// <summary>
+        /// Gets the value of the <i>RepoDb.Attributes.TextAttribute.Text</i> thas was implemented on the ordering direction.
+        /// </summary>
+        /// <returns>The string containing the text value of the ordering direction.</returns>
         public string GetOrderText()
         {
             var textAttribute = typeof(Order)
@@ -29,6 +44,15 @@ namespace RepoDb
 
         // Static Methods
 
+        /// <summary>
+        /// Parse an object to be used for ordering. The object can have multiple properties for ordering and each property must have
+        /// a value of <i>RepoDb.Enumerations.Order</i> enumeration.
+        /// </summary>
+        /// <param name="obj">
+        /// An object to be parsed. Ex:
+        /// <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
+        /// </param>
+        /// <returns>An enumerable of <i>RepoDb.Interfaces.IOrderField</i> object that holds the ordering values for every field.</returns>
         public static new IEnumerable<IOrderField> Parse(object obj)
         {
             if (obj == null)

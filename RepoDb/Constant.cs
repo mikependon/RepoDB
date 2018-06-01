@@ -1,5 +1,8 @@
 ﻿namespace RepoDb
 {
+    /// <summary>
+    /// A class that holds the constant values fo <i>RepoDb</i> library.
+    /// </summary>
     public static class Constant
     {
         public static readonly string And = "And";

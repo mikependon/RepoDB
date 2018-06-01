@@ -1,5 +1,4 @@
 ﻿using System;
-using RepoDb.Enumerations;
 using Dapper;
 using System.Linq;
 using System.Collections.Generic;
@@ -15,14 +14,13 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            RepoDbMain();
+            InventoryMain();
         }
 
         public static void InventoryMain()
         {
             var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryTrace());
             var customers = repository.Query<CustomerDto>();
-
             customers.ToList().ForEach(customer =>
             {
                 // Customer
@@ -51,13 +49,10 @@ namespace RepoDb.TestProject
                         }
                     }
                 });
-
-                // ReadLine
-                //Console.ReadLine();
             });
-
             Console.ReadLine();
         }
+
         public static void RepoDbMain()
         {
             //DataEntityMapper.For<Person>()

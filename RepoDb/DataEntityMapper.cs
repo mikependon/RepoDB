@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that manage the mappings of a RepoDb.Interfaces.IDataEntity object into database object.
+    /// A class that manage the mappings of a <i>RepoDb.Interfaces.IDataEntity</i> object into database object.
     /// </summary>
     public static class DataEntityMapper
     {
@@ -22,7 +22,7 @@ namespace RepoDb
         /// Create a new entity and database mapping.
         /// </summary>
         /// <param name="command">The type of command to be used for mapping.</param>
-        /// <returns>An instance of RepoDb.DataEntityMapItem that is used for mapping.</returns>
+        /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         internal static DataEntityMapItem For(Type type)
         {
             var value = (DataEntityMapItem)null;
@@ -42,11 +42,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Create a new entity and database mapping.
+        /// Creates a new entity and database mapping.
         /// </summary>
-        /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type where to apply the mapping.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> type where to apply the mapping.</typeparam>
         /// <param name="command">The type of command to be used for mapping.</param>
-        /// <returns>An instance of RepoDb.DataEntityMapItem that is used for mapping.</returns>
+        /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         public static DataEntityMapItem For<TEntity>()
             where TEntity : IDataEntity
         {

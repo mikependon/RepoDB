@@ -4,7 +4,7 @@ namespace RepoDb.Interfaces
 {
     public interface IOrderField : IField
     {
-        Order Order { get; set; }
+        Order Order { get; }
         string GetOrderText();
     }
 }
