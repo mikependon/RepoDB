@@ -10,6 +10,9 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>RepoDb.Interfaces.IDataEntity</i> object.
+    /// </summary>
     public static class DataEntityExtension
     {
         // GetPropertiesFor
