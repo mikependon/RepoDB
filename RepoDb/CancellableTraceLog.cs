@@ -4,7 +4,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
+    /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
     /// </summary>
     public sealed class CancellableTraceLog : TraceLog, ICancellableTraceLog
     {

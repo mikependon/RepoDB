@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// An inherritable base object for all <b>Entity-Based Repository</b>. This object is usually being inheritted
+    /// An inherritable base object for all <b>Entity-Based Repositories</b>. This object is usually being inheritted
     /// if the derived class is meant for entity-based operations with corresponding <i>Data Transfer Object (DTO)</i>
     /// for data manipulations.
     /// </summary>
@@ -45,7 +45,7 @@ namespace RepoDb
         /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation of this repository.</param>
         /// <param name="cache">The </i>cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache)
             : this(connectionString, commandTimeout, cache, null, null)
@@ -56,7 +56,7 @@ namespace RepoDb
         /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation of this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
@@ -68,7 +68,7 @@ namespace RepoDb
         /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operations of this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation of this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
