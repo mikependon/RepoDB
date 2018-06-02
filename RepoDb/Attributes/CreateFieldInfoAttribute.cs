@@ -4,12 +4,12 @@ using System;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used by the RepoDb.FieldInfoTypes enum during the calls of RepoDb.ReflectionFactory.CreateField method.
+    /// An attribute used by the <i>RepoDb.FieldInfoTypes</i> enum during the calls of <i>RepoDb.ReflectionFactory.CreateField</i> method.
     /// </summary>
     public class CreateFieldInfoAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance RepoDb.Attributes.CreateFieldInfoAttribute object.
+        /// Creates a new instance <i>RepoDb.Attributes.CreateFieldInfoAttribute</i> object.
         /// </summary>
         /// <param name="type">The type of object.</param>
         /// <param name="fieldName">The name of the field to retrieve.</param>

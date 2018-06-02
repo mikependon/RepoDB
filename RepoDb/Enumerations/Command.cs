@@ -3,7 +3,7 @@
 namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// Commands used for every operation.
+    /// An enumeration used to define the commands for every operation.
     /// </summary>
     [Flags]
     public enum Command : short

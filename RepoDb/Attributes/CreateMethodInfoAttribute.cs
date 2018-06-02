@@ -4,12 +4,12 @@ using System;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used by the RepoDb.MethodInfoTypes enum during the calls of RepoDb.ReflectionFactory.CreateMethod method.
+    /// An attribute used by the <i>RepoDb.MethodInfoTypes</i> enum during the calls of <i>RepoDb.ReflectionFactory.CreateMethod</i> method.
     /// </summary>
     public class CreateMethodInfoAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance RepoDb.Attributes.CreateMethodInfoAttribute object.
+        /// Creates a new instance <i>RepoDb.Attributes.CreateMethodInfoAttribute</i> object.
         /// </summary>
         /// <param name="type">The type of object.</param>
         /// <param name="methodName">The name of the method to retrieve.</param>
