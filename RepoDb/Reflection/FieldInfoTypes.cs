@@ -3,12 +3,12 @@
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A type of System.Reflection.FieldInfo being cached.
+    /// An enumeration for type of <i>System.Reflection.FieldInfo</i>.
     /// </summary>
     public enum FieldInfoTypes : short
     {
         /// <summary>
-        /// A System.DBNull.Value field.
+        /// A <i>System.DBNull.Value</i> field.
         /// </summary>
         [CreateFieldInfo(TypeTypes.DBNull, "Value")]
         DbNullValue,

@@ -3,7 +3,7 @@
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A type of Type being cached.
+    /// An enumeration for type of <i>System.Type</i>.
     /// </summary>
     public enum TypeTypes : short
     {
@@ -13,87 +13,87 @@ namespace RepoDb.Reflection
         [Text("System.Reflection.Assembly")]
         Assembly,
         /// <summary>
-        /// A System.Boolean type.
+        /// A <i>System.Boolean</i> type.
         /// </summary>
         [Text("System.Boolean")]
         Boolean,
         /// <summary>
-        /// A System.Convert type.
+        /// A <i>System.Convert</i> type.
         /// </summary>
         [Text("System.Convert")]
         Convert,
         /// <summary>
-        /// A System.Data.DataRow type.
+        /// A <i>System.Data.DataRow</i> type.
         /// </summary>
         [Text("System.Data.DataRow")]
         DataRow,
         /// <summary>
-        /// A System.Data.DataTable type.
+        /// A <i>System.Data.DataTable</i> type.
         /// </summary>
         [Text("System.Data.DataTable")]
         DataTable,
         /// <summary>
-        /// A System.Collections.Generic.IDictionary`2 type.
+        /// A <i>System.Collections.Generic.IDictionary`2</i> type.
         /// </summary>
         [Text("System.Collections.Generic.IDictionary`2")]
         DictionaryStringObject,
         /// <summary>
-        /// A System.DbNull type.
+        /// A <i>System.DbNull</i> type.
         /// </summary>
         [Text("System.DBNull")]
         DBNull,
         /// <summary>
-        /// A RepoDb.ReflectionType.ObjectConverter type.
+        /// A <i>RepoDb.ReflectionType.ObjectConverter</i> type.
         /// </summary>
         [Text("RepoDb.Reflection.ObjectConverter")]
         ObjectConverter,
         /// <summary>
-        /// A System.Data.Common.DbDataReader type.
+        /// A <i>System.Data.Common.DbDataReader</i> type.
         /// </summary>
         [Text("System.Data.Common.DbDataReader")]
         DbDataReader,
         /// <summary>
-        /// An System.Dynamic.ExpandoObject type.
+        /// A <i>System.Dynamic.ExpandoObject</i> type.
         /// </summary>
         [Text("System.Dynamic.ExpandoObject")]
         ExpandoObject,
         /// <summary>
-        /// An System.Reflection.FieldInfo type.
+        /// A <i>System.Reflection.FieldInfo</i> type.
         /// </summary>
         [Text("System.Reflection.FieldInfo")]
         FieldInfo,
         /// <summary>
-        /// An System.Guid type.
+        /// A <i>System.Guid</i> type.
         /// </summary>
         [Text("System.Guid")]
         Guid,
         /// <summary>
-        /// An System.Reflection.MethodInfo type.
+        /// A <i>System.Reflection.MethodInfo</i> type.
         /// </summary>
         [Text("System.Reflection.MethodInfo")]
         MethodInfo,
         /// <summary>
-        /// An System.Nullable(GenericType) type.
+        /// A <i>System.Nullable(GenericType)</i> type.
         /// </summary>
         [Text("System.Nullable`1")]
         NullableGeneric,
         /// <summary>
-        /// An System.Object type.
+        /// A <i>System.Object</i> type.
         /// </summary>
         [Text("System.Object")]
         Object,
         /// <summary>
-        /// An System.Reflection.PropertyInfo type.
+        /// A <i>System.Reflection.PropertyInfo</i> type.
         /// </summary>
         [Text("System.Reflection.PropertyInfo")]
         PropertyInfo,
         /// <summary>
-        /// A System.String type.
+        /// A <i>System.String</i> type.
         /// </summary>
         [Text("System.String")]
         String,
         /// <summary>
-        /// A System.Type type.
+        /// A <i>System.Type</i> type.
         /// </summary>
         [Text("System.Type")]
         Type

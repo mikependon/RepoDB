@@ -1,24 +1,22 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A mapper used to convert the RepoDb.Interfaces.IDataEntity to certain objects (Dynamics, DataTable etc).
+    /// A mapper used to convert the <i>RepoDb.Interfaces.IDataEntity</i> to certain objects (Dynamics, DataTable etc).
     /// </summary>
     public static class DataEntityConverter
     {
         /// <summary>
-        /// Converts the list of RepoDb.Interfaces.IDataEntity object into System.DataTable object.
+        /// Converts the list of <i>RepoDb.Interfaces.IDataEntity</i> object into System.DataTable</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of RepoDb.Interfaces.IDataEntity object.</typeparam>
-        /// <param name="entities">The list of RepoDb.Interfaces.IDataEntity object to be converted.</param>
-        /// <returns>An instance of System.Data.DataTable object containing the converted values.</returns>
+        /// <typeparam name="TEntity">The type of <i>RepoDb.Interfaces.IDataEntity</i> object.</typeparam>
+        /// <param name="entities">The list of <i>RepoDb.Interfaces.IDataEntity</i> object to be converted.</param>
+        /// <returns>An instance of <i>System.Data.DataTable</i> object containing the converted values.</returns>
         public static DataTable ToDataTable<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : IDataEntity
         {

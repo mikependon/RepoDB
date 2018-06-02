@@ -4,17 +4,17 @@ using System.Reflection;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A cacher for a System.Reflection.FieldInfoCache.
+    /// A cacher for a <i>System.Reflection.FieldInfoCache</i>.
     /// </summary>
     public static class FieldInfoCache
     {
         private static readonly IDictionary<FieldInfoTypes, FieldInfo> _cache = new Dictionary<FieldInfoTypes, FieldInfo>();
 
         /// <summary>
-        /// Gets the System.Reflection.FieldInfo based on type.
+        /// Gets the <i>System.Reflection.FieldInfo</i> based on type.
         /// </summary>
-        /// <param name="type">The type of System.Reflection.FieldInfo to be cached.</param>
-        /// <returns>A System.Reflection.FieldInfo object.</returns>
+        /// <param name="type">The type of <i>System.Reflection.FieldInfo</i> to be cached.</param>
+        /// <returns>A <i>System.Reflection.FieldInfo</i> object.</returns>
         public static FieldInfo Get(FieldInfoTypes type)
         {
             if (!_cache.ContainsKey(type))

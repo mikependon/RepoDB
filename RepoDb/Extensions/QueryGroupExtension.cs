@@ -7,9 +7,16 @@ using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>RepoDb.Interfaces.IQueryGroup</i> object.
+    /// </summary>
     public static class QueryGroupExtension
     {
-        // AsEnumerable
+        /// <summary>
+        /// Convert an instance of query group into an enumerable list of query groups.
+        /// </summary>
+        /// <param name="queryGroup">The query group to be converted.</param>
+        /// <returns>An enumerable list of query groups.</returns>
         public static IEnumerable<IQueryGroup> AsEnumerable(this IQueryGroup queryGroup)
         {
             return new[] { queryGroup };

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Reflection;
 
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A cacher for a System.Reflection.MethodInfo.
+    /// A cacher for a <i>System.Reflection.MethodInfo</i>.
     /// </summary>
     public static class MethodInfoCache
     {
@@ -14,10 +13,10 @@ namespace RepoDb.Reflection
         private static readonly IDictionary<Type, MethodInfo> _convertToTypeMethodCache = new Dictionary<Type, MethodInfo>();
 
         /// <summary>
-        /// Gets the System.Reflection.MethodInfo based on type.
+        /// Gets the <i>System.Reflection.MethodInfo</i> based on type.
         /// </summary>
-        /// <param name="type">The type of System.Reflection.MethodInfo to be cached.</param>
-        /// <returns>A System.Reflection.MethodInfo object.</returns>
+        /// <param name="type">The type of <i>System.Reflection.MethodInfo</i> to be cached.</param>
+        /// <returns>A <i>System.Reflection.MethodInfo</i> object.</returns>
         public static MethodInfo Get(MethodInfoTypes type)
         {
             if (!_cache.ContainsKey(type))
@@ -28,10 +27,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a System.Convert.To<Type> method.
+        /// Gets a <i>System.Convert.To</i> type name method.
         /// </summary>
         /// <param name="type">A type of Method to get.</param>
-        /// <returns>A System.Reflection.MethodInfo object.</returns>
+        /// <returns>A <i>System.Reflection.MethodInfo</i> object.</returns>
         public static MethodInfo GetConvertTo(Type type)
         {
             if (!_convertToTypeMethodCache.ContainsKey(type))

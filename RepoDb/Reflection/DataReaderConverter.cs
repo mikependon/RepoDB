@@ -5,16 +5,16 @@ using System.Data.Common;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A mapper used to convert the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
+    /// A static classed used to convert the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.IDataEntity</i> object.
     /// </summary>
     public static class DataReaderConverter
     {
         /// <summary>
-        /// Converts the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity.
+        /// Converts the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.IDataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
-        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
-        /// <returns>An instance RepoDb.Interfaces.IDataEntity object.</returns>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> type to convert.</typeparam>
+        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <returns>An instance <i>RepoDb.Interfaces.IDataEntity</i> object.</returns>
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
@@ -23,11 +23,11 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the System.Data.Common.DbDataReader to an enumerable of RepoDb.Interfaces.IDataEntity.
+        /// Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>RepoDb.Interfaces.IDataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
-        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
-        /// <returns>An array of RepoDb.Interfaces.IDataEntity objects.</returns>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> type to convert.</typeparam>
+        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <returns>An array of <i>RepoDb.Interfaces.IDataEntity</i> objects.</returns>
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : IDataEntity
         {
@@ -42,10 +42,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Converts the System.Data.Common.DbDataReader to an enumerable of System.Dynamic.ExpandoObject.
+        /// Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>System.Dynamic.ExpandoObject</i> object.
         /// </summary>
-        /// <param name="reader">The System.Data.Common.DbDataReader to be converted.</param>
-        /// <returns>An array of System.Dynamic.ExpandoObject objects.</returns>
+        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <returns>An array of <i>System.Dynamic.ExpandoObject</i> objects.</returns>
         public static IEnumerable<object> ToEnumerable(DbDataReader reader)
         {
             var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);

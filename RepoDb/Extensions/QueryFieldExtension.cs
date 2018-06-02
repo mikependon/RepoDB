@@ -8,9 +8,16 @@ using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>RepoDb.Interfaces.IQueryField</i> object.
+    /// </summary>
     public static class QueryFieldExtension
     {
-        // AsEnumerable
+        /// <summary>
+        /// Converts an instance of a query field into an enumerable list of query fields.
+        /// </summary>
+        /// <param name="queryField">The query field to be converted.</param>
+        /// <returns>An enumerable list of query fields.</returns>
         public static IEnumerable<IQueryField> AsEnumerable(this IQueryField queryField)
         {
             return new[] { queryField };

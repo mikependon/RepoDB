@@ -1,5 +1,4 @@
 ﻿using RepoDb.Interfaces;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Dynamic;
@@ -7,26 +6,26 @@ using System.Dynamic;
 namespace RepoDb.Reflection.Delegates
 {
     /// <summary>
-    /// A delegate used to map the System.Data.Common.DbDataReader to RepoDb.Interfaces.IDataEntity object.
+    /// A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.IDataEntity</i> object.
     /// </summary>
-    /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity object to map.</typeparam>
-    /// <param name="dataReader">An instance of System.Data.Common.DbDataReader to be mapped.</param>
-    /// <returns>An instance of RepoDb.Interfaces.IDataEntity object containing the values from the System.Data.Common.DbDataReader object.</returns>
+    /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to map.</typeparam>
+    /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
+    /// <returns>An instance of <i>RepoDb.Interfaces.IDataEntity object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
     public delegate TEntity DataReaderToDataEntityDelegate<TEntity>(DbDataReader dataReader) where TEntity : IDataEntity;
 
     /// <summary>
-    /// A delegate used to map the System.Data.Common.DbDataReader to System.Dynamic.ExpandoObject object.
+    /// A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>System.Dynamic.ExpandoObject</i> object.
     /// </summary>
-    /// <param name="dataReader">An instance of System.Data.Common.DbDataReader to be mapped.</param>
-    /// <returns>An instance of System.Dynamic.ExpandoObject object containing the values from the System.Data.Common.DbDataReader object.</returns>
+    /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
+    /// <returns>An instance of <i>System.Dynamic.ExpandoObject</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
     public delegate ExpandoObject DataReaderToExpandoObjectDelegate(DbDataReader dataReader);
 
     /// <summary>
-    /// A delegate used to convert the RepoDb.Interfaces.IDataEntity object into System.Data.DataRow object.
+    /// A delegate used to convert the <i>RepoDb.Interfaces.IDataEntity</i> object into <i>System.Data.DataRow</i> object.
     /// </summary>
-    /// <typeparam name="TEntity">The RepoDb.Interfaces.IDataEntity type to be converted.</typeparam>
-    /// <param name="entity">The RepoDb.Interfaces.IDataEntity object to be converted.</param>
-    /// <param name="dataTable">The System.Data.DataTable object that will contain the converted row.</param>
-    /// <returns>An instance of System.Data.DataRow containing the converted values.</returns>
+    /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> type to be converted.</typeparam>
+    /// <param name="entity">The <i>RepoDb.Interfaces.IDataEntity</i> object to be converted.</param>
+    /// <param name="dataTable">The <i>System.Data.DataTable</i> object that will contain the converted row.</param>
+    /// <returns>An instance of <i>System.Data.DataRow</i> containing the converted values.</returns>
     public delegate DataRow DataEntityToDataRowDelegate<TEntity>(TEntity entity, DataTable dataTable) where TEntity : IDataEntity;
 }

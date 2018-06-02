@@ -15,31 +15,31 @@ namespace RepoDb.Reflection
     public static class ReflectionFactory
     {
         /// <summary>
-        /// Creates a System.Reflection.ConstructorInfo object of the defined type.
+        /// Creates a <i>System.Reflection.ConstructorInfo</i> object of the defined type.
         /// </summary>
-        /// <param name="type">The System.Type object where to create a constructor info.</param>
-        /// <returns>A System.Reflection.ConstructorInfo object of the defined type.</returns>
+        /// <param name="type">The <i>System.Type</i> object where to create a constructor info.</param>
+        /// <returns>A <i>System.Reflection.ConstructorInfo</i> object of the defined type.</returns>
         public static ConstructorInfo GetConstructor(Type type)
         {
             return type.GetConstructor(Type.EmptyTypes);
         }
 
         /// <summary>
-        /// Creates a System.Reflection.ConstructorInfo object of the defined type.
+        /// Creates a <i>System.Reflection.ConstructorInfo</i> object of the defined type.
         /// </summary>
-        /// <param name="type">The System.Type object  where to create a constructor info.</param>
+        /// <param name="type">The <i>System.Type</i> object  where to create a constructor info.</param>
         /// <param name="contructorTypes">The arguments of the constructor.</param>
-        /// <returns>A System.Reflection.ConstructorInfo object of the defined type.</returns>
+        /// <returns>A <i>System.Reflection.ConstructorInfo</i> object of the defined type.</returns>
         public static ConstructorInfo GetConstructor(Type type, params Type[] contructorTypes)
         {
             return type.GetConstructor(contructorTypes);
         }
 
         /// <summary>
-        /// Creates a System.Reflection.MethodInfo object based on type.
+        /// Creates a <i>System.Reflection.MethodInfo</i> object based on type.
         /// </summary>
-        /// <param name="type">A type of System.Reflection.MethodInfo object.</param>
-        /// <returns>A System.Reflection.MethodInfo object.</returns>
+        /// <param name="type">A type of <i>System.Reflection.MethodInfo</i> object.</param>
+        /// <returns>A <i>System.Reflection.MethodInfo</i> object.</returns>
         public static MethodInfo CreateMethod(MethodInfoTypes type)
         {
             var createMethodInfoAttribute = typeof(MethodInfoTypes)
@@ -53,10 +53,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Creates a System.Reflection.FieldInfo object based on type.
+        /// Creates a <i>System.Reflection.FieldInfo</i> object based on type.
         /// </summary>
-        /// <param name="type">A type of System.Reflection.FieldInfo object.</param>
-        /// <returns>A System.Reflection.FieldInfo object.</returns>
+        /// <param name="type">A type of <i>System.Reflection.FieldInfo</i> object.</param>
+        /// <returns>A <i>System.Reflection.FieldInfo</i> object.</returns>
         public static FieldInfo CreateField(FieldInfoTypes type)
         {
             var createFieldInfoAttribute = typeof(FieldInfoTypes)

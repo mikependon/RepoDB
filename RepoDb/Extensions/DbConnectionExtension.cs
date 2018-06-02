@@ -10,10 +10,21 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>System.Data.IDbConnection</i> object.
+    /// </summary>
     public static class DbConnectionExtension
     {
-        // CreateCommand
-        internal static IDbCommand CreateCommand(this IDbConnection connection,
+        /// <summary>
+        /// Creates a command object.
+        /// </summary>
+        /// <param name="connection">The connection to be used when creating a command object.</param>
+        /// <param name="commandText">The value of the <i>CommandText</i> property.</param>
+        /// <param name="commandType">The value of the <i>CommandType</i> property.</param>
+        /// <param name="commandTimeout">The value of the <i>CommandTimeout</i> property.</param>
+        /// <param name="transaction">The value of the <i>Transaction</i> property (if present).</param>
+        /// <returns>A command object instance containing the defined property values passed.</returns>
+        public static IDbCommand CreateCommand(this IDbConnection connection,
             string commandText,
             CommandType? commandType = null,
             int? commandTimeout = null,
@@ -36,7 +47,11 @@ namespace RepoDb.Extensions
             return command;
         }
 
-        // EnsureOpen
+        /// <summary>
+        /// Ensure that the connection object is on open state.
+        /// </summary>
+        /// <param name="connection">The connection to be opened.</param>
+        /// <returns>The instance of the current connection object.</returns>
         public static IDbConnection EnsureOpen(this IDbConnection connection)
         {
             if (connection.State != ConnectionState.Open)
@@ -46,7 +61,23 @@ namespace RepoDb.Extensions
             return connection;
         }
 
-        // ExecuteQuery
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// converts the result back to an enumerable list of dynamic objects.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// </returns>
         public static IEnumerable<object> ExecuteQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -97,7 +128,23 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteQueryAsync
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// converts the result back to an enumerable list of dynamic objects.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// </returns>
         public static Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -116,7 +163,24 @@ namespace RepoDb.Extensions
                     trace: trace));
         }
 
-        // ExecuteQuery
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// converts the result back to an enumerable list of DTO (<i>Data Transfer Object</i>).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>
+        /// An enumerable list of DTO (<i>Data Transfer Object</i>) containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// </returns>
         public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -163,7 +227,24 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteQueryAsync
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// converts the result back to an enumerable list of DTO (<i>Data Transfer Object</i>).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>
+        /// An enumerable list of DTO (<i>Data Transfer Object</i>) containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// </returns>
         public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -183,7 +264,21 @@ namespace RepoDb.Extensions
                     trace: trace));
         }
 
-        // ExecuteReader
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the instance of the data reader.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An instance of the data reader object.</returns>
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -226,7 +321,21 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteReaderAsync
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the instance of the data reader.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An instance of the data reader object.</returns>
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -245,7 +354,21 @@ namespace RepoDb.Extensions
                     trace: trace));
         }
 
-        // ExecuteNonQuery
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the number of affected rows during the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An instance of integer that holds the number of rows affected on the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -292,7 +415,21 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteNonQueryAsync
+        /// <summary>
+        /// Executes a query from the database in asynchronous way. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the number of affected rows during the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An instance of integer that holds the number of rows affected on the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -311,7 +448,21 @@ namespace RepoDb.Extensions
                     trace: trace));
         }
 
-        // ExecuteScalar
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -362,7 +513,21 @@ namespace RepoDb.Extensions
             }
         }
 
-        // ExecuteScalarAsync
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="trace">The trace object to be used on the execution (if present).</param>
+        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
             object param = null,

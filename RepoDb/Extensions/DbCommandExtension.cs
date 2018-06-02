@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>System.Data.IDbCommand</i> object.
+    /// </summary>
     public static class DbCommandExtension
     {
         // CreateParameter

@@ -5,6 +5,9 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>System.Object</i> object.
+    /// </summary>
     public static class ObjectExtension
     {
         // AsObject
@@ -29,7 +32,11 @@ namespace RepoDb.Extensions
             return (ExpandoObject)expandObject;
         }
 
-        // AsQueryFields
+        /// <summary>
+        /// Converts an instance of an object into an enumerable list of query fields.
+        /// </summary>
+        /// <param name="obj">The instance of the object to be converted.</param>
+        /// <returns>An enumerable list of query fields.</returns>
         public static IEnumerable<IQueryField> AsQueryFields(this object obj)
         {
             var list = new List<IQueryField>();
@@ -50,13 +57,21 @@ namespace RepoDb.Extensions
             return list;
         }
 
-        // AsFields
+        /// <summary>
+        /// Converts an instance of an object into an enumerable list of field.
+        /// </summary>
+        /// <param name="obj">The object to be converted.</param>
+        /// <returns>An enumerable list of fields.</returns>
         public static IEnumerable<IField> AsFields(this object obj)
         {
             return Field.Parse(obj);
         }
 
-        // AsOrderFields
+        /// <summary>
+        /// Converts an instance of an object into an enumerable list of order fields.
+        /// </summary>
+        /// <param name="obj">The object to be converted.</param>
+        /// <returns>An enumerable list of order fields.</returns>
         public static IEnumerable<IOrderField> AsOrderFields(this object obj)
         {
             return OrderField.Parse(obj);

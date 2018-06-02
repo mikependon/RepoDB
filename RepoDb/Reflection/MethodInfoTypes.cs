@@ -4,102 +4,102 @@ using System.Reflection;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A type of System.Reflection.MethodInfo being cached.
+    /// An enumeration for type of <i>System.Reflection.MethodInfo</i>.
     /// </summary>
     public enum MethodInfoTypes : short
     {
         /// <summary>
-        /// A System.Convert.ToString method.
+        /// A <i>System.Convert.ToString</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Convert, "ToString", new[] { typeof(object) })]
         ConvertToString,
         /// <summary>
-        /// A System.Data.Common.DbDataReader.GetName(int) method.
+        /// A <i>System.Data.Common.DbDataReader.GetName(int)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DbDataReader, "GetName", new[] { typeof(int) })]
         DataReaderGetName,
         /// <summary>
-        /// A System.Data.Common.DbDataReader.get_Item(int) method.
+        /// A <i>System.Data.Common.DbDataReader.get_Item(int)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DbDataReader, "get_Item", new[] { typeof(int) })]
         DataReaderIntGetIndexer,
         /// <summary>
-        /// A System.Data.Common.DbDataReader.get_Item(string) method.
+        /// A <i>System.Data.Common.DbDataReader.get_Item(string)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DbDataReader, "get_Item", new[] { typeof(string) })]
         DataReaderStringGetIndexer,
         /// <summary>
-        /// A System.Data.DataRow.get_Item(int) method.
+        /// A <i>System.Data.DataRow.get_Item(int)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataRow, "get_Item", new[] { typeof(int) })]
         DataRowIntGetIndexer,
         /// <summary>
-        /// A System.Data.DataRow.set_Item(int) method.
+        /// A <i>System.Data.DataRow.set_Item(int)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataRow, "set_Item", new[] { typeof(int), typeof(object) })]
         DataRowIntSetIndexer,
         /// <summary>
-        /// A System.Data.DataRow.get_Item(string) method.
+        /// A <i>System.Data.DataRow.get_Item(string)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataRow, "get_Item", new[] { typeof(string) })]
         DataRowStringGetIndexer,
         /// <summary>
-        /// A System.Data.DataRow.st_Item(string) method.
+        /// A <i>System.Data.DataRow.st_Item(string)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataRow, "set_Item", new[] { typeof(string), typeof(object) })]
         DataRowStringSetIndexer,
         /// <summary>
-        /// A System.Data.DataTable.NewRow() method.
+        /// A <i>System.Data.DataTable.NewRow()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DataTable, "NewRow")]
         DataTableNewRow,
         /// <summary>
-        /// A System.Collections.Generic.IDictionary`2.Add(string, object) method.
+        /// A <i>System.Collections.Generic.IDictionary`2.Add(string, object)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.DictionaryStringObject, "Add", new[] { typeof(string), typeof(object) })]
         DictionaryStringObjectAdd,
         /// <summary>
-        /// A System.Reflection.FieldInfo.GetValue() method.
+        /// A <i>System.Reflection.FieldInfo.GetValue()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.FieldInfo, "GetValue", new[] { typeof(object) })]
         FieldInfoGetValue,
         /// <summary>
-        /// A System.Guid.Parse() method.
+        /// A <i>System.Guid.Parse()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Guid, "Parse", new[] { typeof(string) })]
         GuidParse,
         /// <summary>
-        /// A System.Guid.ParseExact() method.
+        /// A <i>System.Guid.ParseExact()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Guid, "ParseExact", new[] { typeof(string), typeof(string) })]
         GuidParseExact,
         /// <summary>
-        /// A RepoDb.Reflection.DbNullConverter.DbNullToNull method.
+        /// A <i>RepoDb.Reflection.DbNullConverter.DbNullToNull</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.ObjectConverter, "DbNullToNull", new[] { typeof(object) })]
         ObjectConverterDbNullToNull,
         /// <summary>
-        /// A RepoDb.Reflection.DbNullConverter.GetValue method.
+        /// A <i>RepoDb.Reflection.DbNullConverter.GetValue</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.ObjectConverter, "GetValue", new[] { typeof(object), typeof(PropertyInfo) })]
         ObjectConverterGetValue,
         /// <summary>
-        /// A System.Reflection.PropertyInfo.GetValue() method.
+        /// A <i>System.Reflection.PropertyInfo.GetValue()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.PropertyInfo, "GetValue", new[] { typeof(object) })]
         PropertyInfoGetValue,
         /// <summary>
-        /// A System.Reflection.PropertyInfo.SetValue(object) method.
+        /// A <i>System.Reflection.PropertyInfo.SetValue(object)</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.PropertyInfo, "SetValue", new[] { typeof(object), typeof(object) })]
         PropertyInfoSetValue,
         /// <summary>
-        /// A System.Type.GetMethod.GetProperty() method.
+        /// A <i>System.Type.GetMethod.GetProperty()</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Type, "GetProperty", new[] { typeof(string) })]
         TypeGetProperty,
         /// <summary>
-        /// A System.Type.GetType method.
+        /// A <i>System.Type.GetType</i> method.
         /// </summary>
         [CreateMethodInfo(TypeTypes.Type, "GetType")]
         TypeGetType

@@ -4,9 +4,16 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>RepoDb.Interfaces.IField</i> object.
+    /// </summary>
     public static class FieldExtension
     {
-        // AsEnumerable
+        /// <summary>
+        /// Converts an instance of a field into an enumerable list of field.
+        /// </summary>
+        /// <param name="field">The field to be converted.</param>
+        /// <returns>An enumerable list of field.</returns>
         public static IEnumerable<IField> AsEnumerable(this IField field)
         {
             return new[] { field };

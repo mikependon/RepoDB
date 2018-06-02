@@ -8,84 +8,144 @@ using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>System.Reflection.PropertyInfo</i> object.
+    /// </summary>
     public static class PropertyInfoExtension
     {
-        // AsEnumerable
+        /// <summary>
+        /// Converts an instance of property info into an enumerable list of property info.
+        /// </summary>
+        /// <param name="property">The property info instance to be converted.</param>
+        /// <returns>An enumerable list of property info.</returns>
         public static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
         {
             return property != null ? new[] { property } : null;
         }
 
-        // GetMappedName
+        /// <summary>
+        /// Gets the mapped name of the propery.
+        /// </summary>
+        /// <param name="property">The property where the mapped name will be retrieved.</param>
+        /// <returns>A string containing the mapped name.</returns>
         public static string GetMappedName(this PropertyInfo property)
         {
             var attribute = property.GetCustomAttribute(typeof(MapAttribute)) as MapAttribute;
             return (attribute?.Name ?? property.Name);
         }
 
-        // IsIgnored
+        /// <summary>
+        /// Checks whether the property info is being ignored by the repository operation on a given command.
+        /// </summary>
+        /// <param name="property">The instance of the propery info to be checked.</param>
+        /// <param name="command">The command to be identified.</param>
+        /// <returns>A boolean value that signifies whether the property info is being ignored by the repository operation.</returns>
         public static bool IsIgnored(this PropertyInfo property, Command command)
         {
             var ignore = property.GetCustomAttribute<IgnoreAttribute>();
             return (ignore != null && (ignore.Command & command) == command && ignore.Command != Command.None);
         }
 
-        // IsPrimary
+        /// <summary>
+        /// Checks whether the property info is a primary property.
+        /// </summary>
+        /// <param name="property">The instance of property info to be checked.</param>
+        /// <returns>A boolean value that holds a value whether the property info is a primary property.</returns>
         public static bool IsPrimary(this PropertyInfo property)
         {
             return (property.GetCustomAttribute<PrimaryAttribute>() != null);
         }
 
-        // IsIdentity
+        /// <summary>
+        /// Checks whether the property info is an identity property.
+        /// </summary>
+        /// <param name="property">The instance of property info to be checked.</param>
+        /// <returns>A boolean value that holds a value whether the property info is an identity property.</returns>
         public static bool IsIdentity(this PropertyInfo property)
         {
             var primary = property.GetCustomAttribute<PrimaryAttribute>();
             return (primary?.IsIdentity).HasValue;
         }
 
-        // AsQueryField
+        /// <summary>
+        /// Converts a property info into a query field object.
+        /// </summary>
+        /// <param name="property">The instance of property info to be converted.</param>
+        /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
+        /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         public static IQueryField AsQueryField(this PropertyInfo property, object entity)
         {
             return new QueryField(property.GetMappedName(), property.GetValue(entity));
         }
 
-        // AsDataColumn
+        /// <summary>
+        /// Converts a property info into a data column object.
+        /// </summary>
+        /// <param name="property">The instance of property info to be converted.</param>
+        /// <returns>An instance of data column object.</returns>
         public static DataColumn AsDataColumn(this PropertyInfo property)
         {
             return new DataColumn(property.GetMappedName(), property.PropertyType);
         }
 
-        // AsJoinQualifier
+        /// <summary>
+        /// Converts a property info into a string qualifier with defined aliases that is usable for SQL Statements.
+        /// </summary>
+        /// <param name="property">The property info to be converted.</param>
+        /// <param name="leftAlias">The left alias to be used.</param>
+        /// <param name="rightAlias">The right alias to be used.</param>
+        /// <returns>A instance of string containing the value of converted property info with defined aliases.</returns>
         public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
         {
             return $"{leftAlias}.[{property.GetMappedName()}] = {rightAlias}.[{property.GetMappedName()}]";
         }
 
-        // AsField
+        /// <summary>
+        /// Converts a property info into a mapped name.
+        /// </summary>
+        /// <param name="property">The instance of the property to be converted.</param>
+        /// <returns>A instance of string containing the value of a mapped name.</returns>
         public static string AsField(this PropertyInfo property)
         {
             return $"[{property.GetMappedName()}]";
         }
 
-        // AsParameter
+        /// <summary>
+        /// Converts a property info into a paramertized name.
+        /// </summary>
+        /// <param name="property">The instance of the property to be converted.</param>
+        /// <returns>A instance of string containing the value of a parameterized name.</returns>
         public static string AsParameter(this PropertyInfo property)
         {
             return $"@{property.GetMappedName()}";
         }
 
-        // AsParameterAsField
+        /// <summary>
+        /// Converts a property info into a paramertized (as field) name.
+        /// </summary>
+        /// <param name="property">The instance of the property to be converted.</param>
+        /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         public static string AsParameterAsField(this PropertyInfo property)
         {
             return $"{AsParameter(property)} {Constant.As.ToUpper()} {AsField(property)}";
         }
-
-        // AsFieldAndParameter
+        
+        /// <summary>
+        /// Converts a property info into a field and parameter name.
+        /// </summary>
+        /// <param name="property">The instance of the property to be converted.</param>
+        /// <returns>A instance of string containing the value of a field and parameter name.</returns>
         public static string AsFieldAndParameter(this PropertyInfo property)
         {
             return $"{AsField(property)} = {AsParameter(property)}";
         }
 
-        // AsFieldAndAliasField
+        /// <summary>
+        /// Converts a property info into a field (and its alias) name.
+        /// </summary>
+        /// <param name="property">The instance of the property to be converted.</param>
+        /// <param name="alias">The alias to be used.</param>
+        /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         public static string AsFieldAndAliasField(this PropertyInfo property, string alias)
         {
             return $"{AsField(property)} = {alias}.{AsField(property)}";
@@ -93,31 +153,52 @@ namespace RepoDb.Extensions
 
         /* IEnumerable<PropertyInfo> */
 
-        // AsFields
+        /// <summary>
+        /// Converts an enumerable array of property info objects into an enumerable array of string (as field).
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field).</returns>
         public static IEnumerable<string> AsFields(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsField());
         }
 
-        // AsParameters
+        /// <summary>
+        /// Converts an enumerable array of property info objects into an enumerable array of string (as parameters).
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters).</returns>
         public static IEnumerable<string> AsParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameter());
         }
 
-        // AsParametersAsFields
+        /// <summary>
+        /// Converts an enumerable array of property info objects into an enumerable array of string (as parameters as fields).
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <returns>An enumerable array of strings containing the converted values of the given properties (as parameters as fields).</returns>
         public static IEnumerable<string> AsParametersAsFields(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsParameterAsField());
         }
-
-        // AsFieldsAndParameters
+        
+        /// <summary>
+        /// Converts an enumerable array of property info objects into an enumerable array of string (as field and parameters).
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and parameters).</returns>
         public static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<PropertyInfo> properties)
         {
             return properties?.Select(property => property.AsFieldAndParameter());
         }
-
-        // AsFieldsAndAliasFields
+        
+        /// <summary>
+        /// Converts an enumerable array of property info objects into an enumerable array of string (as field and its alias).
+        /// </summary>
+        /// <param name="properties">The enumerable array of properties to be converted.</param>
+        /// <param name="alias">The alias to be used.</param>
+        /// <returns>An enumerable array of strings containing the converted values of the given properties (as field and its alias).</returns>
         public static IEnumerable<string> AsFieldsAndAliasFields(this IEnumerable<PropertyInfo> properties, string alias)
         {
             return properties?.Select(property => property.AsFieldAndAliasField(alias));

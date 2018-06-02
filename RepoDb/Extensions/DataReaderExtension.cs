@@ -9,6 +9,9 @@ using System.Reflection;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>System.Data.IDataReader</i> object.
+    /// </summary>
     public static class DataReaderExtension
     {
         internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)

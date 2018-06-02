@@ -23,12 +23,26 @@ namespace RepoDb.Extensions
                 .Where(property => !property.IsIgnored(command));
         }
 
+        /// <summary>
+        /// Gets the list of <i>System.Reflection.PropertyInfo</i> objects from the data entity class based on the
+        /// target command.
+        /// </summary>
+        /// <typeparam name="T">The type of the data entity where to get the list of the properties.</typeparam>
+        /// <param name="command">The target command.</param>
+        /// <returns>The list of data entity properties based on the target command.</returns>
         public static IEnumerable<PropertyInfo> GetPropertiesFor<T>(Command command)
             where T : IDataEntity
         {
             return GetPropertiesFor(typeof(T), command);
         }
 
+        /// <summary>
+        /// Gets the list of <i>System.Reflection.PropertyInfo</i> objects from the data entity class based on the
+        /// target command.
+        /// </summary>
+        /// <param name="dataEntity">The instance of the data entity where to get the list of the properties.</param>
+        /// <param name="command">The target command.</param>
+        /// <returns>The list of data entity properties based on the target command.</returns>
         public static IEnumerable<PropertyInfo> GetPropertiesFor(this IDataEntity dataEntity, Command command)
         {
             return GetPropertiesFor(dataEntity.GetType(), command);
@@ -41,12 +55,24 @@ namespace RepoDb.Extensions
                 ClassMapCache.Get(type)?.CommandType ?? CommandType.Text;
         }
 
+        /// <summary>
+        /// Gets a mapped command type of the data entity object based on the target command.
+        /// </summary>
+        /// <typeparam name="T">The entity type where to get the mapped command type.</typeparam>
+        /// <param name="command">The target command.</param>
+        /// <returns>A command type object used by the data entity for the target command.</returns>
         public static CommandType GetCommandType<T>(Command command)
             where T : IDataEntity
         {
             return GetCommandType(typeof(T), command);
         }
 
+        /// <summary>
+        /// Gets a mapped command type of the data entity object based on the target command.
+        /// </summary>
+        /// <param name="dataEntity">The instance of data entity where to get the mapped command type.</param>
+        /// <param name="command">The target command.</param>
+        /// <returns>A command type object used by the data entity for the target command.</returns>
         public static CommandType GetCommandType(this IDataEntity dataEntity, Command command)
         {
             return GetCommandType(dataEntity.GetType(), command);
@@ -60,13 +86,13 @@ namespace RepoDb.Extensions
                 .FirstOrDefault(property => property.GetCustomAttribute(attributeType) != null);
         }
 
-        public static PropertyInfo GetPropertyByAttribute<T>(Type attributeType)
+        internal static PropertyInfo GetPropertyByAttribute<T>(Type attributeType)
             where T : IDataEntity
         {
             return GetPropertyByAttribute(typeof(T), attributeType);
         }
 
-        public static PropertyInfo GetPropertyByAttribute(this IDataEntity dataEntity, Type attributeType)
+        internal static PropertyInfo GetPropertyByAttribute(this IDataEntity dataEntity, Type attributeType)
         {
             return GetPropertyByAttribute(dataEntity.GetType(), attributeType);
         }
@@ -106,12 +132,34 @@ namespace RepoDb.Extensions
             return null;
         }
 
+        /// <summary>
+        /// Gets the primary key property of the data entity object. The identification of the primary key will be based on the availability of certain
+        /// attributes and naming convention.
+        /// The identification process:
+        /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
+        /// 2. If #1 is not present, then it checks the name of the property must be equal to <i>Id</i>.
+        /// 3. If #2 is not present, then it checks the type name of the class appended by the word <i>Id</i>.
+        /// 4. If #3 is not present, then it checks the mapped name of the class appended by the word <i>Id</i>
+        /// </summary>
+        /// <typeparam name="T">The type of the data entity where to get the primary key property.</typeparam>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
         public static PropertyInfo GetPrimaryProperty<T>()
             where T : IDataEntity
         {
             return GetPrimaryProperty(typeof(T));
         }
 
+        /// <summary>
+        /// Gets the primary key property of the data entity object. The identification of the primary key will be based on the availability of certain
+        /// attributes and naming convention.
+        /// The identification process:
+        /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
+        /// 2. If #1 is not present, then it checks the name of the property must be equal to <i>Id</i>.
+        /// 3. If #2 is not present, then it checks the type name of the class appended by the word <i>Id</i>.
+        /// 4. If #3 is not present, then it checks the mapped name of the class appended by the word <i>Id</i>
+        /// </summary>
+        /// <param name="dataEntity">The instance of data entity where to get the primary key property.</param>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
         public static PropertyInfo GetPrimaryProperty(this IDataEntity dataEntity)
         {
             return GetPrimaryProperty(dataEntity.GetType());
@@ -124,12 +172,24 @@ namespace RepoDb.Extensions
             return property != null ? property.IsIdentity() ? property : null : null;
         }
 
+        /// <summary>
+        /// Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
+        /// where the <i>IsIdentity</i> property value is set to <i>True</i>.
+        /// </summary>
+        /// <typeparam name="T">The type of the data entity where to get the the identity property.</typeparam>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
         public static PropertyInfo GetIdentityProperty<T>()
             where T : IDataEntity
         {
             return GetIdentityProperty(typeof(T));
         }
 
+        /// <summary>
+        /// Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
+        /// where the <i>IsIdentity</i> property value is set to <i>True</i>.
+        /// </summary>
+        /// <typeparam name="T">The instance of the data entity where to get the the identity property.</typeparam>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
         public static PropertyInfo GetIdentityProperty(this IDataEntity dataEntity)
         {
             return GetIdentityProperty(dataEntity.GetType());
@@ -142,18 +202,37 @@ namespace RepoDb.Extensions
                 ClassMapCache.Get(type)?.Name ?? type.Name;
         }
 
+        /// <summary>
+        /// Gets the mapped name of the data entity type on a target command. The identification process it to check the <i>RepoDb.Attributes.MapAttribute</i>
+        /// and get the value of the <i>Name</i> property.
+        /// </summary>
+        /// <typeparam name="T">The type of the data entity where to get the mapped name.</typeparam>
+        /// <param name="command">The target command.</param>
+        /// <returns>A string that contains the mapped name for the target command.</returns>
         public static string GetMappedName<T>(Command command)
             where T : IDataEntity
         {
             return GetMappedName(typeof(T), command);
         }
 
+        /// <summary>
+        /// Gets the mapped name of the data entity type on a target command. The identification process it to check the <i>RepoDb.Attributes.MapAttribute</i>
+        /// and get the value of the <i>Name</i> property.
+        /// </summary>
+        /// <param name="dataEntity">The instance of the data entity where to get the mapped name.</param>
+        /// <param name="command">The target command.</param>
+        /// <returns>A string that contains the mapped name for the target command.</returns>
         public static string GetMappedName(this IDataEntity dataEntity, Command command)
         {
             return GetMappedName(dataEntity.GetType(), command);
         }
 
-        // AsObject
+        /// <summary>
+        /// Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// </summary>
+        /// <param name="dataEntity">The data entity object to be converted.</param>
+        /// <param name="queryGroup">The query group to be merged.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this IDataEntity dataEntity, IQueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
@@ -175,6 +254,11 @@ namespace RepoDb.Extensions
             return (ExpandoObject)expandObject;
         }
 
+        /// <summary>
+        /// Converts the data entity object into a dynamic object.
+        /// </summary>
+        /// <param name="dataEntity">The data entity object to be converted.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this IDataEntity dataEntity)
         {
             return AsObject(dataEntity, null);
@@ -222,17 +306,6 @@ namespace RepoDb.Extensions
             return table;
         }
 
-        // GetValue
-        public static object GetValue(this IDataEntity dataEntity, string property)
-        {
-            return dataEntity?.GetType().GetProperty(property).GetValue(dataEntity);
-        }
-
-        public static T GetValue<T>(this IDataEntity dataEntity, string property)
-        {
-            return (T)GetValue(dataEntity, property);
-        }
-
         // IsBatchQueryable
         internal static bool IsBatchQueryable(Type type)
         {
@@ -240,12 +313,22 @@ namespace RepoDb.Extensions
             return commandType == CommandType.Text;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is batch queryable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is batch queryable.</returns>
         public static bool IsBatchQueryable<T>()
             where T : IDataEntity
         {
             return IsBatchQueryable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is batch queryable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is batch queryable.</returns>
         public static bool IsBatchQueryable(this IDataEntity dataEntity)
         {
             return IsQueryable(dataEntity.GetType());
@@ -258,12 +341,22 @@ namespace RepoDb.Extensions
             return commandType != CommandType.StoredProcedure;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsBulkInsertable<T>()
             where T : IDataEntity
         {
             return IsBulkInsertable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsBulkInsertable(this IDataEntity dataEntity)
         {
             return IsQueryable(dataEntity.GetType());
@@ -276,12 +369,22 @@ namespace RepoDb.Extensions
             return commandType == CommandType.Text;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsBigCountable<T>()
             where T : IDataEntity
         {
             return IsBigCountable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsBigCountable(this IDataEntity dataEntity)
         {
             return IsBigCountable(dataEntity.GetType());
@@ -294,12 +397,22 @@ namespace RepoDb.Extensions
             return commandType == CommandType.Text;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsCountable<T>()
             where T : IDataEntity
         {
             return IsCountable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is bulk insertable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         public static bool IsCountable(this IDataEntity dataEntity)
         {
             return IsCountable(dataEntity.GetType());
@@ -311,12 +424,22 @@ namespace RepoDb.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is deletable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is deletable.</returns>
         public static bool IsDeletable<T>()
             where T : IDataEntity
         {
             return IsDeletable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is deletable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is deletable.</returns>
         public static bool IsDeletable(this IDataEntity dataEntity)
         {
             return IsDeletable(dataEntity.GetType());
@@ -329,12 +452,22 @@ namespace RepoDb.Extensions
             return commandType == CommandType.Text;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is inline updateable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is inline updateable.</returns>
         public static bool IsInlineUpdateable<T>()
             where T : IDataEntity
         {
             return IsInlineUpdateable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is inline updateable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is inline updateable.</returns>
         public static bool IsInlineUpdateable(this IDataEntity dataEntity)
         {
             return IsInlineUpdateable(dataEntity.GetType());
@@ -346,12 +479,22 @@ namespace RepoDb.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is insertable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is insertable.</returns>
         public static bool IsInsertable<T>()
             where T : IDataEntity
         {
             return IsInsertable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is insertable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is insertable.</returns>
         public static bool IsInsertable(this IDataEntity dataEntity)
         {
             return IsInsertable(dataEntity.GetType());
@@ -364,12 +507,22 @@ namespace RepoDb.Extensions
             return commandType == CommandType.Text;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is mergeable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is mergeable.</returns>
         public static bool IsMergeable<T>()
             where T : IDataEntity
         {
             return IsMergeable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is mergeable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is mergeable.</returns>
         public static bool IsMergeable(this IDataEntity dataEntity)
         {
             return IsMergeable(dataEntity.GetType());
@@ -381,12 +534,22 @@ namespace RepoDb.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is queryable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is queryable.</returns>
         public static bool IsQueryable<T>()
             where T : IDataEntity
         {
             return IsQueryable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is queryable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is queryable.</returns>
         public static bool IsQueryable(this IDataEntity dataEntity)
         {
             return IsQueryable(dataEntity.GetType());
@@ -398,12 +561,22 @@ namespace RepoDb.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Checks whether the data entity is updateable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is updateable.</returns>
         public static bool IsUpdateable<T>()
             where T : IDataEntity
         {
             return IsUpdateable(typeof(T));
         }
 
+        /// <summary>
+        /// Checks whether the data entity is updateable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is updateable.</returns>
         public static bool IsUpdateable(this IDataEntity dataEntity)
         {
             return IsUpdateable(dataEntity.GetType());

@@ -4,15 +4,27 @@ using System.Text.RegularExpressions;
 
 namespace RepoDb.Extensions
 {
+    /// <summary>
+    /// Contains the extension methods for <i>RepoDb.String</i> object.
+    /// </summary>
     public static class StringExtension
     {
-        // Join
+        /// <summary>
+        /// Joins an array string with a given separator.
+        /// </summary>
+        /// <param name="strings">The enumerable list of strings.</param>
+        /// <param name="separator">The separator to be used.</param>
+        /// <returns>A joined string from a given array of strings separated by the defined separator.</returns>
         public static string Join(this IEnumerable<string> strings, string separator)
         {
             return string.Join(separator, strings);
         }
 
-        // AsUnquoted
+        /// <summary>
+        /// Removes the database quotes from the string.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be removed.</param>
+        /// <returns></returns>
         public static string AsUnquoted(this string value)
         {
             var v = value?.IndexOf(".") >= 0 ? value.Split(".".ToCharArray()).Last() : value;

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A cacher for a Type.
+    /// A cacher for a <i>System.Type</i> objects.
     /// </summary>
     public static class TypeCache
     {
         private static readonly IDictionary<TypeTypes, Type> _cache = new Dictionary<TypeTypes, Type>();
 
         /// <summary>
-        /// Gets the cached Type based on type.
+        /// Gets the cached <i>System.Type</i> based on type.
         /// </summary>
-        /// <param name="type">The type of Type being cached.</param>
+        /// <param name="type">The type of <i>System.Type</i> being cached.</param>
         /// <returns>An Type object.</returns>
         public static Type Get(TypeTypes type)
         {

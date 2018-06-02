@@ -7,7 +7,13 @@ namespace RepoDb.Enumerations
     /// </summary>
     public enum Conjunction : short
     {
+        /// <summary>
+        /// The (AND) conjunction.
+        /// </summary>
         [Text("AND")] And = 1,
+        /// <summary>
+        /// The (OR) conjunction.
+        /// </summary>
         [Text("OR")] Or = 2
     }
 }
