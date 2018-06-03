@@ -16,6 +16,8 @@ namespace RepoDb.TestProject
         static void Main(string[] args)
         {
             InventoryMain();
+            //RepoDbMain();
+            //TestCrud();
         }
 
         public static void InventoryMain()
@@ -54,7 +56,7 @@ namespace RepoDb.TestProject
                         }
                     }
                 });
-                Console.ReadLine();
+                //Console.ReadLine();
             });
             Console.ReadLine();
         }
@@ -321,7 +323,7 @@ namespace RepoDb.TestProject
             person.Name = $"Name: {Guid.NewGuid().ToString()} (Updated)";
             person.Address = $"Address: {Guid.NewGuid().ToString()} (Updated)";
             person.DateUpdated = DateTime.UtcNow;
-            affectedRows = repository.Update(person, new { Id = person.Id, Name = person.Name });
+            affectedRows = repository.Update(person, new { Id = person.Id });
 
             // Verify
             Console.WriteLine($"Query: {personId}");
@@ -367,7 +369,7 @@ namespace RepoDb.TestProject
 
             // Delete
             Console.WriteLine($"Delete: {personId}");
-            affectedRows = repository.Delete(new { Name = "10000" });
+            affectedRows = repository.Delete(new { Id = personId });
 
             // Verify
             Console.WriteLine($"Query: {personId}");

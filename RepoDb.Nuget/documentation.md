@@ -1,3 +1,24 @@
+### Stable Release
+
+RepoDb stable release is at version **1.0.20**.
+
+### Snippets
+
+Write less optimal codes.
+```
+var repository = new DbRepository<SqlConnection>(connectionString);
+var people = repository.Query<Person>(new
+{
+	LastName = { Operation = Operation.Like, Value = "Ander%" }
+},
+top: 100,
+orderBy: OrderField.Parse(new
+{
+	FirstName = Order.Ascending,
+	BirtDate = Order.Descending
+});
+```
+
 ### Documentation
 Click [here](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_release_v1.md) for the documentation.
 

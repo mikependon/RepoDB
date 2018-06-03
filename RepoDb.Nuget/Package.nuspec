@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.0.19</version>
+    <version>1.0.20</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -12,7 +12,7 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-    - Version 1.0.19
+    - Version 1.0.20
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
@@ -20,5 +20,6 @@
   <files>
     <file src="readme.txt" target="lib\RepoDb\readme.txt" />
     <file src="RepoDb.dll" target="lib\RepoDb\RepoDb.dll" />
+    <file src="RepoDb.xml" target="lib\RepoDb\RepoDb.xml" />
   </files>
 </package>
