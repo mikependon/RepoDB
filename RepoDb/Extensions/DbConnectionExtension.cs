@@ -368,7 +368,7 @@ namespace RepoDb.Extensions
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <param name="trace">The trace object to be used on the execution (if present).</param>
-        /// <returns>An instance of integer that holds the number of rows affected on the execution.</returns>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -429,7 +429,7 @@ namespace RepoDb.Extensions
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <param name="trace">The trace object to be used on the execution (if present).</param>
-        /// <returns>An instance of integer that holds the number of rows affected on the execution.</returns>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
