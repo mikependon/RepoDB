@@ -7,8 +7,7 @@ using RepoDb.Attributes;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached <i>RepoDb.Attributes.MapAttribute</i> implemented at
-    /// any <i>Data Transfer Object (DTO)</i> object.
+    /// A static class used to get the cached <i>RepoDb.Attributes.MapAttribute</i> implemented at any <i>Data Entity</i> object.
     /// </summary>
     public static class ClassMapCache
     {

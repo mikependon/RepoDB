@@ -56,7 +56,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets a mapped command type of the data entity object based on the target command.
+        /// Gets a mapped command type of the <i>Data Entity</i> object based on the target command.
         /// </summary>
         /// <typeparam name="T">The entity type where to get the mapped command type.</typeparam>
         /// <param name="command">The target command.</param>
@@ -68,7 +68,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets a mapped command type of the data entity object based on the target command.
+        /// Gets a mapped command type of the <i>Data Entity</i> object based on the target command.
         /// </summary>
         /// <param name="dataEntity">The instance of data entity where to get the mapped command type.</param>
         /// <param name="command">The target command.</param>
@@ -133,7 +133,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the primary key property of the data entity object. The identification of the primary key will be based on the availability of certain
+        /// Gets the primary key property of the <i>Data Entity</i> object. The identification of the primary key will be based on the availability of certain
         /// attributes and naming convention.
         /// The identification process:
         /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
@@ -150,7 +150,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the primary key property of the data entity object. The identification of the primary key will be based on the availability of certain
+        /// Gets the primary key property of the <i>Data Entity</i> object. The identification of the primary key will be based on the availability of certain
         /// attributes and naming convention.
         /// The identification process:
         /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
@@ -228,9 +228,9 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// Converts the <i>Data Entity</i> object into a dynamic object. During the conversion, the passed query groups are being merged.
         /// </summary>
-        /// <param name="dataEntity">The data entity object to be converted.</param>
+        /// <param name="dataEntity">The <i>Data Entity</i> object to be converted.</param>
         /// <param name="queryGroup">The query group to be merged.</param>
         /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this IDataEntity dataEntity, IQueryGroup queryGroup)
@@ -255,9 +255,9 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the data entity object into a dynamic object.
+        /// Converts the <i>Data Entity</i> object into a dynamic object.
         /// </summary>
-        /// <param name="dataEntity">The data entity object to be converted.</param>
+        /// <param name="dataEntity">The <i>Data Entity</i> object to be converted.</param>
         /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this IDataEntity dataEntity)
         {

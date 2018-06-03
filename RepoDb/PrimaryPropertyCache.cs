@@ -7,8 +7,7 @@ using RepoDb.Extensions;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached <i>RepoDb.Attributes.PrimaryAttribute</i> object that is
-    /// implemented on a given <i>Data Transfer Object (DTO)</i> object.
+    /// A static class used to get the cached <i>RepoDb.Attributes.PrimaryAttribute</i> object that is implemented on a given <i>Data Entity</i> object.
     /// </summary>
     public static class PrimaryPropertyCache
     {
@@ -16,7 +15,7 @@ namespace RepoDb
 
         /// <summary>
         /// Gets the first occurence <i>System.Reflection.PropertyInfo</i> object that has implemented
-        /// the <i>RepoDb.Attributes.PrimaryAttribute</i> from a given <i>Data Transfer Object (DTO)</i> object.
+        /// the <i>RepoDb.Attributes.PrimaryAttribute</i> from a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved. This object must 

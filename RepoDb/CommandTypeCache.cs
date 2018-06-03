@@ -8,8 +8,7 @@ using RepoDb.Enumerations;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached <i>System.Data.CommandType</i> object that is
-    /// mapped on a given <i>Data Transfer Object (DTO)</i> object.
+    /// A static class used to get the cached <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Entity</i> object.
     /// </summary>
     public static class CommandTypeCache
     {
@@ -32,7 +31,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Transfer Object (DTO)</i> object.
+        /// Gets the <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the <i>System.Data.Command</i> object will be retrieved. This object must 

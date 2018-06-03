@@ -6,15 +6,14 @@ namespace RepoDb
 {
     /// <summary>
     /// A static class used to get the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object on a
-    /// given <i>Data Transfer Object (DTO)</i> object.
+    /// given <i>Data Entity</i> object.
     /// </summary>
     public static class QueryBuilderCache
     {
         private static readonly IDictionary<Type, object> _cache = new Dictionary<Type, object>();
 
         /// <summary>
-        /// Gets the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object on a
-        /// given <i>Data Transfer Object (DTO)</i> object.
+        /// Gets the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object on a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object will be retrieved. This object must 

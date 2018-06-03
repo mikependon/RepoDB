@@ -6,8 +6,7 @@ using RepoDb.Enumerations;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached value of <i>RepoDb.Attributes.MapAttribute.Name</i> property implemented at
-    /// any <i>Data Transfer Object (DTO)</i> object.
+    /// A static class used to get the cached value of <i>RepoDb.Attributes.MapAttribute.Name</i> property implemented at <i>Data Entity</i> object.
     /// </summary>
     public static class ClassMapNameCache
     {

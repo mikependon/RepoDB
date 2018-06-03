@@ -8,8 +8,7 @@ namespace RepoDb
 {
     /// <summary>
     /// A static class used to get the enumerable cached <i>System.Reflection.PropertyInfo</i> objects
-    /// <i>RepoDb.Attributes.MapAttribute.Name</i> property values for a given <i>Data Transfer Object (DTO)</i>
-    /// object.
+    /// <i>RepoDb.Attributes.MapAttribute.Name</i> property values for a given <i>Data Entity</i> object
     /// </summary>
     public static class PropertyMapNameCache
     {
@@ -17,11 +16,11 @@ namespace RepoDb
 
         /// <summary>
         /// Gets the cached <i>System.Reflection.PropertyInfo</i> objects <i>RepoDb.Attributes.MapAttribute.Name</i> property
-        /// values for a given <i>Data Transfer Object (DTO)</i> object.
+        /// values for a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the cached <i>System.Reflection.PropertyInfo</i> objects <i>RepoDb.Attributes.MapAttribute.Name</i> property
-        /// values for a given <i>Data Transfer Object (DTO)</i> object.
+        /// values for a given <i>Data Entity</i> object.
         /// </typeparam>
         /// <param name="command">
         /// The target command where the cached <i>System.Reflection.PropertyInfo</i> objects has the implementation.

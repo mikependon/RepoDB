@@ -3,7 +3,7 @@
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a primary property for the DTO (<i>Data Transfer Object</i>) class.
+    /// An attribute used to define a primary property for the <i>Data Entity</i> object.
     /// </summary>
     public class PrimaryAttribute : Attribute
     {
