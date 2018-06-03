@@ -91,6 +91,10 @@ namespace RepoDb
 
         // CreateConnection (TDbConnection)
 
+        /// <summary>
+        /// Creates a new instance of database connection.
+        /// </summary>
+        /// <returns>An instance of new database connection.</returns>
         public TDbConnection CreateConnection()
         {
             var connection = Activator.CreateInstance<TDbConnection>();

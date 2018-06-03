@@ -5,6 +5,14 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Interfaces
 {
+    /// <summary>
+    /// An interface used to mark a class to be a base object for all <b>Entity-Based Repositories</b>.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The type of <i>Data Entity</i> object to be mapped on this repository. This object must inherit the <i>RepoDb.DataEntity</i>
+    /// object in order to be qualified as a repository entity.
+    /// </typeparam>
+    /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public interface IBaseRepository<TEntity, TDbConnection>
         where TEntity : DataEntity
         where TDbConnection : DbConnection

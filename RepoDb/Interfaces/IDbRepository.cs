@@ -5,12 +5,20 @@ using System.Threading.Tasks;
 
 namespace RepoDb.Interfaces
 {
+    /// <summary>
+    /// An interface used to mark a class to be a base object for all <b>Shared-Based Repositories</b>.
+    /// </summary>
+    /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public interface IDbRepository<TDbConnection>
         where TDbConnection : DbConnection
     {
 
         // CreateConnection (TDbConnection)
 
+        /// <summary>
+        /// Creates a new instance of database connection.
+        /// </summary>
+        /// <returns>An instance of new database connection.</returns>
         TDbConnection CreateConnection();
 
         // DbCache
