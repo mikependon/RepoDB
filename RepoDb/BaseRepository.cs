@@ -45,7 +45,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The </i>cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache)
             : this(connectionString, commandTimeout, cache, null, null)
         {
