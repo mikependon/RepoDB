@@ -3,7 +3,7 @@
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// A contracts object used to map a RepoDb.Interfaces.IDataEntity object into database object.
+    /// A an interface used implement to mark a class to be an object used to map a <i>RepoDb.Interfaces.IDataEntity</i> object into database object.
     /// </summary>
     public interface IDataEntityMap
     {

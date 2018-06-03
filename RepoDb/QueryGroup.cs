@@ -10,7 +10,7 @@ using RepoDb.Attributes;
 namespace RepoDb
 {
     /// <summary>
-    /// A widely-used object for defining a groups for the query expressions. This object is used by most of the repository operations
+    /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
     public class QueryGroup : IQueryGroup

@@ -46,7 +46,9 @@ namespace RepoDb
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
-        /// <param name="item">The cache item to be added in the collection. This object must implement the <i>RepoDb.Interfaces.ICacheItem<paramref name="item"/> interface.</param>
+        /// <param name="item">
+        /// The cache item to be added in the collection. This object must implement the <i>RepoDb.Interfaces.ICacheItem</i> interface.
+        /// </param>
         public void Add(ICacheItem item)
         {
             lock (_syncLock)
