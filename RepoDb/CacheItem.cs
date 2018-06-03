@@ -27,7 +27,7 @@ namespace RepoDb
         public string Key { get; }
 
         /// <summary>
-        /// Gets the value of the cache.
+        /// Gets or sets the value of the cache.
         /// </summary>
         public object Value { get; set; }
 

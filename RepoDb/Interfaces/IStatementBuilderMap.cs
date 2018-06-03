@@ -16,6 +16,6 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// Gets the statement builder used for mapping.
         /// </summary>
-        IStatementBuilder StatementBuilder { get; set; }
+        IStatementBuilder StatementBuilder { get;  }
     }
 }

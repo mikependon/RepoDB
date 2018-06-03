@@ -54,7 +54,7 @@ namespace RepoDb
         /// an argument exception will be thrown.
         /// </param>
         /// <param name="statementBuilder">
-        /// The statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>) to be mapped.
+        /// The statement builder to be mapped (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>).
         /// </param>
         public static void Map(Type dbConnectionType, IStatementBuilder statementBuilder)
         {
@@ -63,7 +63,7 @@ namespace RepoDb
                 var map = Get(dbConnectionType);
                 if (map != null)
                 {
-                    map.StatementBuilder = statementBuilder;
+                    throw new InvalidOperationException($"An existing mapping for type {dbConnectionType.Name} is already exists.");
                 }
                 else
                 {

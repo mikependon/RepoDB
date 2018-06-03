@@ -37,6 +37,6 @@ namespace RepoDb
         /// <summary>
         /// Gets the statement builder used for mapping.
         /// </summary>
-        public IStatementBuilder StatementBuilder { get; set; }
+        public IStatementBuilder StatementBuilder { get; internal set; }
     }
 }

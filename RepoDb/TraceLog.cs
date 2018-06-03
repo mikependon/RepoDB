@@ -32,12 +32,12 @@ namespace RepoDb
         public object Result { get; }
 
         /// <summary>
-        /// Gets the parameter object used on the actual operation execution.
+        /// Gets or sets the parameter object used on the actual operation execution.
         /// </summary>
         public object Parameter { get; set; }
 
         /// <summary>
-        /// Gets the SQL Statement used on the actual operation execution.
+        /// Gets or sets the SQL Statement used on the actual operation execution.
         /// </summary>
         public string Statement { get; set; }
 
