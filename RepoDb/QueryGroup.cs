@@ -166,13 +166,12 @@ namespace RepoDb
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
         /// <i>RepoDb.Interfaces.IQueryGroup</i> that defines the query tree expression.
         /// </summary>
-        /// <param name="obj">A dynamic query tree expression. Ex:
-        /// new {
-        ///     Conjunction = Conjunction.And,
-        ///     Company = "Microsoft",
-        ///     FirstName = new { Operation = Operation.Like, Value = "An%" },
-        ///     UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }
-        /// }
+        /// <param name="obj">
+        /// A dynamic query tree expression to be parsed.
+        /// Example:
+        /// var expression = new { Conjunction = Conjunction.And, Company = "Microsoft",
+        /// FirstName = new { Operation = Operation.Like, Value = "An%" },
+        /// UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
         /// </param>
         /// <returns></returns>
         public static IQueryGroup Parse(object obj)
