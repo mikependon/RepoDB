@@ -66,7 +66,7 @@ namespace RepoDb
             : this(connectionString, commandTimeout, cache, trace, null)
         {
         }
-        
+
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
         /// </summary>
@@ -1208,6 +1208,9 @@ namespace RepoDb
             // Check
             GuardInlineUpdateable<TEntity>();
 
+            // Append prefix to all parameters
+            ((QueryGroup)where).AppendParameterPrefix();
+
             // Variables
             var commandText = StatementBuilder.CreateInlineUpdate(QueryBuilderCache.Get<TEntity>(),
                 entity.AsFields(), where, overrideIgnore);
@@ -1338,7 +1341,7 @@ namespace RepoDb
         {
             var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
             return Update(entity: entity,
-                where: new QueryGroup(property.AsQueryField(entity).AsEnumerable()),
+                where: new QueryGroup(property.AsQueryField(entity, true).AsEnumerable()),
                 transaction: transaction);
         }
 
@@ -1372,7 +1375,8 @@ namespace RepoDb
             var queryGroup = (IQueryGroup)null;
             if (where is IQueryField)
             {
-                queryGroup = new QueryGroup(((IQueryField)where).AsEnumerable());
+                var queryField = (IQueryField)where;
+                queryGroup = new QueryGroup((queryField).AsEnumerable());
             }
             else if (where is IQueryGroup)
             {
@@ -1391,8 +1395,8 @@ namespace RepoDb
                 }
             }
             return Update(entity: entity,
-                    where: queryGroup,
-                    transaction: transaction);
+                where: queryGroup,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -1409,6 +1413,9 @@ namespace RepoDb
             // Check
             GuardUpdateable<TEntity>();
 
+            // Append prefix to all parameters
+            ((QueryGroup)where).AppendParameterPrefix();
+
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>(Command.Update);
             var commandText = commandType == CommandType.StoredProcedure ?
@@ -1420,7 +1427,7 @@ namespace RepoDb
             if (Trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                Trace.BeforeInlineUpdate(cancellableTraceLog);
+                Trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)

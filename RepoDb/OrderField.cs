@@ -11,7 +11,7 @@ namespace RepoDb
     /// <summary>
     /// An object that holds a field for ordering purposes.
     /// </summary>
-    public class OrderField : Field, IOrderField
+    public class OrderField : IOrderField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.OrderField</i> object.
@@ -19,10 +19,15 @@ namespace RepoDb
         /// <param name="name">The name of the field to be ordered.</param>
         /// <param name="order">The ordering direction of the field.</param>
         public OrderField(string name, Order order)
-            : base(name)
         {
+            Name = name;
             Order = order;
         }
+
+        /// <summary>
+        /// Gets the name of the current order field.
+        /// </summary>
+        public string Name { get; }
 
         /// <summary>
         /// Gets the order direction of the field.
@@ -53,7 +58,7 @@ namespace RepoDb
         /// <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
         /// </param>
         /// <returns>An enumerable of <i>RepoDb.Interfaces.IOrderField</i> object that holds the ordering values for every field.</returns>
-        public static new IEnumerable<IOrderField> Parse(object obj)
+        public static IEnumerable<IOrderField> Parse(object obj)
         {
             if (obj == null)
             {

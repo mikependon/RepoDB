@@ -13,7 +13,7 @@ namespace RepoDb
     /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
-    public class QueryGroup : IQueryGroup
+    public sealed class QueryGroup : IQueryGroup
     {
         private bool _isFixed = false;
 
@@ -47,6 +47,19 @@ namespace RepoDb
         /// Gets the list of child query groups being grouped by this object.
         /// </summary>
         public IEnumerable<IQueryGroup> QueryGroups { get; }
+
+        /// <summary>
+        /// Force to append prefixes on the bound parameter objects.
+        /// </summary>
+        internal void AppendParameterPrefix()
+        {
+            QueryFields?
+                .ToList()
+                .ForEach(queryField =>
+                {
+                    ((QueryField)queryField).AppendParameterPrefix();
+                });
+        }
 
         /// <summary>
         /// Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Conjunction</i> property value of this instance.

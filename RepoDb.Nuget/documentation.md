@@ -24,7 +24,7 @@ Click [here](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/d
 
 ### Goal
 
-We aim to let .Net developers limit the implementation of SQL Statements within the application. We believe that as a .Net developer, one should only focus on .Net and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
+We aim to let .NET developers limit the implementation of SQL Statements within the application. We believe that as a .NET developer, one should only focus on .NET and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
 
 ### Notes
 

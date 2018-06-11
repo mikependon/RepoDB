@@ -77,7 +77,6 @@
     <Compile Include="Interfaces\ITrace.cs" />
     <Compile Include="Interfaces\ICancellableTraceLog.cs" />
     <Compile Include="Interfaces\ITraceLog.cs" />
-    <Compile Include="OrQueryGroup.cs" />
     <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\MapAttribute.cs" />
     <Compile Include="Attributes\PrimaryAttribute.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="Interfaces\ITypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilder.cs" />
-    <Compile Include="AndQueryGroup.cs" />
     <Compile Include="CommandTypeCache.cs" />
     <Compile Include="QueryBuilderCache.cs" />
     <Compile Include="QueryGroup.cs" />

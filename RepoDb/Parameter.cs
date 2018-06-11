@@ -5,17 +5,31 @@ namespace RepoDb
     /// <summary>
     /// An object that holds the value of the field parameter.
     /// </summary>
-    public class Parameter : IParameter
+    public sealed class Parameter : IParameter
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Parameter</i> object.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        public Parameter(string name, object value)
+        public Parameter(string name, object value) : this(name, value, false)
         {
-            Name = $"_{name}";
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.Parameter</i> object.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="appendPrefix">The value to identify whether the underscope prefix will be appended.</param>
+        internal Parameter(string name, object value, bool appendPrefix)
+        {
+            Name = name;
             Value = value;
+            if (appendPrefix)
+            {
+                AppendPrefix();
+            }
         }
 
         /// <summary>
@@ -27,6 +41,17 @@ namespace RepoDb
         /// Gets the value of the parameter.
         /// </summary>
         public object Value { get; }
+
+        /// <summary>
+        /// Force to append prefix on the current parameter object.
+        /// </summary>
+        internal void AppendPrefix()
+        {
+            if (!Name.StartsWith("_"))
+            {
+                Name = $"_{Name}";
+            }
+        }
 
         /// <summary>
         /// Stringify the current object. Will return the format of <b>Name (Value)</b> text.

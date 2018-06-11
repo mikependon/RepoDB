@@ -75,7 +75,21 @@ namespace RepoDb.Extensions
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         public static IQueryField AsQueryField(this PropertyInfo property, object entity)
         {
-            return new QueryField(property.GetMappedName(), property.GetValue(entity));
+            return AsQueryField(property, entity, false);
+        }
+
+        /// <summary>
+        /// Converts a property info into a query field object.
+        /// </summary>
+        /// <param name="property">The instance of property info to be converted.</param>
+        /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
+        /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
+        /// <param name="appendParameterPrefix">
+        /// The value to identify whether the underscope prefix will be appended to the parameter name.
+        /// </param>
+        internal static IQueryField AsQueryField(this PropertyInfo property, object entity, bool appendParameterPrefix)
+        {
+            return new QueryField(property.GetMappedName(), Operation.Equal, property.GetValue(entity), appendParameterPrefix);
         }
 
         /// <summary>
@@ -129,7 +143,7 @@ namespace RepoDb.Extensions
         {
             return $"{AsParameter(property)} {Constant.As.ToUpper()} {AsField(property)}";
         }
-        
+
         /// <summary>
         /// Converts a property info into a field and parameter name.
         /// </summary>
@@ -182,7 +196,7 @@ namespace RepoDb.Extensions
         {
             return properties?.Select(property => property.AsParameterAsField());
         }
-        
+
         /// <summary>
         /// Converts an enumerable array of property info objects into an enumerable array of string (as field and parameters).
         /// </summary>
@@ -192,7 +206,7 @@ namespace RepoDb.Extensions
         {
             return properties?.Select(property => property.AsFieldAndParameter());
         }
-        
+
         /// <summary>
         /// Converts an enumerable array of property info objects into an enumerable array of string (as field and its alias).
         /// </summary>

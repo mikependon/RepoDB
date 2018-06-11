@@ -1,5 +1,5 @@
 # RepoDb
-A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
+A dynamic ORM .NET Library used to create an entity-based repository classes when accessing data from the database.
 
 ## Class Entity
 
@@ -340,7 +340,7 @@ using (var connection = stockRepository.CreateConnection().EnsureOpen())
 
 ## Transaction
 
-A transaction object works completely the same as it was with `ADO.Net`. The library only abstracted `ADO.Net` including the transaction objects.
+A transaction object works completely the same as it was with `ADO.NET`. The library only abstracted `ADO.NET` including the transaction objects.
 
 Transactions can be created by calling the `BeginTransaction` method of the `Connection` object. See the sample below.
 ```
@@ -1627,7 +1627,7 @@ The object `StatementBuilderMapper.Map` is callable everywhere in the applicatio
 
 ## Type Mapping
 
-Type mapping is feature that allows the library to identify which type of .Net is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to specially when running the repository operations.
+Type mapping is feature that allows the library to identify which type of .NET is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to specially when running the repository operations.
 
 Below is the way on how to map the `System.DataTime` to be equivalent as `System.Data.DbType.DateTime2`.
 ```

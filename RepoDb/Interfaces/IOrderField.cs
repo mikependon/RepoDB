@@ -5,8 +5,13 @@ namespace RepoDb.Interfaces
     /// <summary>
     /// An interface used to mark a class to be a field for ordering.
     /// </summary>
-    public interface IOrderField : IField
+    public interface IOrderField
     {
+        /// <summary>
+        /// Gets the name of the current order field.
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// Gets the order direction of the field.
         /// </summary>

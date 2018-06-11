@@ -12,7 +12,7 @@ namespace RepoDb
     /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Interfaces.IField</i>),
     /// parameter (<i>RepoDb.Interfaces.IParameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
     /// </summary>
-    public class QueryField : IQueryField
+    public sealed class QueryField : IQueryField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryField</i> object./
@@ -31,10 +31,24 @@ namespace RepoDb
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName, Operation operation, object value)
+            : this(fieldName, operation, value, false)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.QueryField</i> object./
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="appendParameterPrefix">
+        /// The value to identify whether the underscope prefix will be appended to the parameter name.
+        /// </param>
+        internal QueryField(string fieldName, Operation operation, object value, bool appendParameterPrefix)
         {
             Field = new Field(fieldName);
             Operation = operation;
-            Parameter = new Parameter(fieldName, value);
+            Parameter = new Parameter(fieldName, value, appendParameterPrefix);
         }
 
         // Properties
@@ -55,6 +69,14 @@ namespace RepoDb
         public IParameter Parameter { get; }
 
         // Methods
+
+        /// <summary>
+        /// Force to append prefix on the bound parameter object.
+        /// </summary>
+        internal void AppendParameterPrefix()
+        {
+            ((Parameter)Parameter)?.AppendPrefix();
+        }
 
         /// <summary>
         /// Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Operation</i> property value of this instance.

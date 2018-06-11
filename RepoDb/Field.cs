@@ -8,7 +8,7 @@ namespace RepoDb
     /// <summary>
     /// An object that signifies as data field in the query statement.
     /// </summary>
-    public class Field : IField
+    public sealed class Field : IField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Field</i> object.
