@@ -1209,7 +1209,7 @@ namespace RepoDb
             GuardInlineUpdateable<TEntity>();
 
             // Append prefix to all parameters
-            ((QueryGroup)where).AppendParameterPrefix();
+            ((QueryGroup)where).AppendParametersPrefix();
 
             // Variables
             var commandText = StatementBuilder.CreateInlineUpdate(QueryBuilderCache.Get<TEntity>(),
@@ -1414,7 +1414,7 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Append prefix to all parameters
-            ((QueryGroup)where).AppendParameterPrefix();
+            ((QueryGroup)where).AppendParametersPrefix();
 
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>(Command.Update);

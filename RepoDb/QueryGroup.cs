@@ -51,7 +51,7 @@ namespace RepoDb
         /// <summary>
         /// Force to append prefixes on the bound parameter objects.
         /// </summary>
-        internal void AppendParameterPrefix()
+        internal void AppendParametersPrefix()
         {
             QueryFields?
                 .ToList()
