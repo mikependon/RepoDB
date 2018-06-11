@@ -11,7 +11,7 @@ namespace RepoDb
     /// <summary>
     /// An object that holds a field for ordering purposes.
     /// </summary>
-    public class OrderField : IOrderField
+    public sealed class OrderField : IOrderField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.OrderField</i> object.
