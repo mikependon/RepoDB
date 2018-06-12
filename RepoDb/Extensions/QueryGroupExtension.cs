@@ -26,8 +26,8 @@ namespace RepoDb.Extensions
         internal static object AsObject(this IQueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            queryGroup?
-                .Fix()
+            ((QueryGroup)queryGroup)?
+                .FixParameters()
                 .GetAllQueryFields()?
                 .ToList()
                 .ForEach(queryField =>

@@ -243,8 +243,8 @@ namespace RepoDb.Extensions
                 {
                     expandObject[property.GetMappedName()] = property.GetValue(dataEntity);
                 });
-            queryGroup?
-                .Fix()
+            ((QueryGroup)queryGroup)?
+                .FixParameters()
                 .GetAllQueryFields()?
                 .ToList()
                 .ForEach(queryField =>

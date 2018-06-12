@@ -8,7 +8,7 @@ using RepoDb.Exceptions;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to map the .Net CLR Types into database types.
+    /// A static class used to map the .NET CLR Types into database types.
     /// </summary>
     public static class TypeMapper
     {
@@ -25,19 +25,19 @@ namespace RepoDb
         public static IEnumerable<ITypeMap> TypeMaps => _typeMaps;
 
         /// <summary>
-        /// Adds a mapping between .Net CLR Type and database type.
+        /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
-        /// <param name="type">The .Net CLR Type to be mapped.</param>
-        /// <param name="dbType">The database type where to map the .Net CLR Type.</param>
+        /// <param name="type">The .NET CLR Type to be mapped.</param>
+        /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
         public static void AddMap(Type type, DbType dbType)
         {
             AddMap(new TypeMap(type, dbType));
         }
 
         /// <summary>
-        /// Adds a mapping between .Net CLR Type and database type.
+        /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
-        /// <param name="typeMap">The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</param>
+        /// <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
         public static void AddMap(ITypeMap typeMap)
         {
             var target = Get(typeMap.Type);
@@ -49,20 +49,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the instance of type-mapping object that holds the mapping of .Net CLR Type and database type.
+        /// Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
         /// </summary>
-        /// <param name="type">The .Net CLR Type used for mapping.</param>
-        /// <returns>The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</returns>
+        /// <param name="type">The .NET CLR Type used for mapping.</param>
+        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         public static ITypeMap Get(Type type)
         {
             return _typeMaps.FirstOrDefault(t => t.Type == type);
         }
 
         /// <summary>
-        /// Gets the instance of type-mapping object that holds the mapping of .Net CLR Type and database type.
+        /// Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
         /// </summary>
-        /// <typeparam name="T">The dynamic .Net CLR Type used for mapping.</typeparam>
-        /// <returns>The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</returns>
+        /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
+        /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         public static ITypeMap Get<T>()
         {
             return Get(typeof(T));

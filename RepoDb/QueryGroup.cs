@@ -136,7 +136,7 @@ namespace RepoDb
         /// Please note that every repository operation itself is calling this method before the actual execution.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryGroup Fix()
+        internal IQueryGroup FixParameters()
         {
             if (_isFixed)
             {

@@ -842,13 +842,6 @@
             </summary>
             <returns>An enumerable list of child query groups.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IQueryGroup.Fix">
-            <summary>
-            Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-            Please note that every repository operation itself is calling this method before the actual execution.
-            </summary>
-            <returns>The current instance.</returns>
-        </member>
         <member name="M:RepoDb.Interfaces.IQueryGroup.GetConjunctionText">
             <summary>
             Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Conjunction</i> property value of this instance.
@@ -866,6 +859,11 @@
         <member name="T:RepoDb.Interfaces.IOrderField">
             <summary>
             An interface used to mark a class to be a field for ordering.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Interfaces.IOrderField.Name">
+            <summary>
+            Gets the name of the current order field.
             </summary>
         </member>
         <member name="P:RepoDb.Interfaces.IOrderField.Order">
@@ -1227,6 +1225,16 @@
             Appends a word CASE to the SQL Query Statement.
             </summary>
             <returns>The current instance.</returns>
+        </member>
+        <member name="T:RepoDb.Interfaces.IBaseRepository`2">
+            <summary>
+            An interface used to mark a class to be a base object for all <b>Entity-Based Repositories</b>.
+            </summary>
+            <typeparam name="TEntity">
+            The type of <i>Data Entity</i> object to be mapped on this repository. This object must inherit the <i>RepoDb.DataEntity</i>
+            object in order to be qualified as a repository entity.
+            </typeparam>
+            <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
         </member>
         <member name="M:RepoDb.Interfaces.IBaseRepository`2.CreateConnection">
             <summary>
@@ -1944,6 +1952,18 @@
             <summary>
             An interface used to implement to mark a class to be the base class of all <i>Data Entity</i> object.
             </summary>
+        </member>
+        <member name="T:RepoDb.Interfaces.IDbRepository`1">
+            <summary>
+            An interface used to mark a class to be a base object for all <b>Shared-Based Repositories</b>.
+            </summary>
+            <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
+        </member>
+        <member name="M:RepoDb.Interfaces.IDbRepository`1.CreateConnection">
+            <summary>
+            Creates a new instance of database connection.
+            </summary>
+            <returns>An instance of new database connection.</returns>
         </member>
         <member name="P:RepoDb.Interfaces.IDbRepository`1.Cache">
             <summary>
@@ -2746,12 +2766,12 @@
         </member>
         <member name="T:RepoDb.Interfaces.ITypeMap">
             <summary>
-            An interface used to mark the class to be a type mapping object that holds the mapping between the .Net CLR Types and database types.
+            An interface used to mark the class to be a type mapping object that holds the mapping between the .NET CLR Types and database types.
             </summary>
         </member>
         <member name="P:RepoDb.Interfaces.ITypeMap.Type">
             <summary>
-            Gets the .Net CLR Type used for mapping.
+            Gets the .NET CLR Type used for mapping.
             </summary>
         </member>
         <member name="P:RepoDb.Interfaces.ITypeMap.DbType">
@@ -2874,7 +2894,7 @@
         </member>
         <member name="P:RepoDb.CacheItem.Value">
             <summary>
-            Gets the value of the cache.
+            Gets or sets the value of the cache.
             </summary>
         </member>
         <member name="P:RepoDb.CacheItem.Timestamp">
@@ -3469,6 +3489,17 @@
             <param name="entity">The entity object where the value of the property will be retrieved.</param>
             <returns>An instance of query field object that holds the converted name and values of the property.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsQueryField(System.Reflection.PropertyInfo,System.Object,System.Boolean)">
+            <summary>
+            Converts a property info into a query field object.
+            </summary>
+            <param name="property">The instance of property info to be converted.</param>
+            <param name="entity">The entity object where the value of the property will be retrieved.</param>
+            <returns>An instance of query field object that holds the converted name and values of the property.</returns>
+            <param name="appendParameterPrefix">
+            The value to identify whether the underscope prefix will be appended to the parameter name.
+            </param>
+        </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsDataColumn(System.Reflection.PropertyInfo)">
             <summary>
             Converts a property info into a data column object.
@@ -3661,18 +3692,6 @@
             The key of the item to be removed from the cache collection. If the given key is not present, this method will ignore it.
             </param>
         </member>
-        <member name="T:RepoDb.OrQueryGroup">
-            <summary>
-            An object that signifies the <i>OR</i> grouping for the query.
-            </summary>
-        </member>
-        <member name="M:RepoDb.OrQueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.Interfaces.IQueryField},System.Collections.Generic.IEnumerable{RepoDb.Interfaces.IQueryGroup})">
-            <summary>
-            Creates a new instance of <i>RepoDb.OrQueryGroup</i> object.
-            </summary>
-            <param name="queryFields">The list of fields to be included on the <i>OR</i> grouping for the query.</param>
-            <param name="queryGroups">The list of the child groupings.</param>
-        </member>
         <member name="T:RepoDb.BaseRepository`2">
             <summary>
             An inherritable base object for all <b>Entity-Based Repositories</b>. This object is usually being inheritted if the 
@@ -3697,7 +3716,14 @@
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)" -->
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)">
+            <summary>
+            Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace)">
             <summary>
             Creates a new instance of <i>RepoDb.BaseRepository</i> object.
@@ -4475,6 +4501,12 @@
             <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.Cache</i> interface.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Interfaces.ITrace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.CreateConnection">
+            <summary>
+            Creates a new instance of database connection.
+            </summary>
+            <returns>An instance of new database connection.</returns>
         </member>
         <member name="P:RepoDb.DbRepository`1.Cache">
             <summary>
@@ -5404,6 +5436,14 @@
             <param name="name">The name of the parameter.</param>
             <param name="value">The value of the parameter.</param>
         </member>
+        <member name="M:RepoDb.Parameter.#ctor(System.String,System.Object,System.Boolean)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Parameter</i> object.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <param name="appendPrefix">The value to identify whether the underscope prefix will be appended.</param>
+        </member>
         <member name="P:RepoDb.Parameter.Name">
             <summary>
             Gets the name of the parameter.
@@ -5412,6 +5452,11 @@
         <member name="P:RepoDb.Parameter.Value">
             <summary>
             Gets the value of the parameter.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Parameter.AppendPrefix">
+            <summary>
+            Force to append prefix on the current parameter object.
             </summary>
         </member>
         <member name="M:RepoDb.Parameter.ToString">
@@ -5431,6 +5476,11 @@
             </summary>
             <param name="name">The name of the field to be ordered.</param>
             <param name="order">The ordering direction of the field.</param>
+        </member>
+        <member name="P:RepoDb.OrderField.Name">
+            <summary>
+            Gets the name of the current order field.
+            </summary>
         </member>
         <member name="P:RepoDb.OrderField.Order">
             <summary>
@@ -5849,18 +5899,6 @@
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="T:RepoDb.AndQueryGroup">
-            <summary>
-            An object that signifies the <i>AND</i> grouping for the query.
-            </summary>
-        </member>
-        <member name="M:RepoDb.AndQueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.Interfaces.IQueryField},System.Collections.Generic.IEnumerable{RepoDb.Interfaces.IQueryGroup})">
-            <summary>
-            Creates a new instance of <i>RepoDb.AndQueryGroup</i> object.
-            </summary>
-            <param name="queryFields">The list of fields to be included on the <i>AND</i> grouping for the query.</param>
-            <param name="queryGroups">The list of the child groupings.</param>
-        </member>
         <member name="T:RepoDb.CommandTypeCache">
             <summary>
             A static class used to get the cached <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Entity</i> object.
@@ -5926,6 +5964,11 @@
             Gets the list of child query groups being grouped by this object.
             </summary>
         </member>
+        <member name="M:RepoDb.QueryGroup.AppendParametersPrefix">
+            <summary>
+            Force to append prefixes on the bound parameter objects.
+            </summary>
+        </member>
         <member name="M:RepoDb.QueryGroup.GetConjunctionText">
             <summary>
             Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Conjunction</i> property value of this instance.
@@ -5946,7 +5989,7 @@
             </summary>
             <returns>An enumerable list of child query groups.</returns>
         </member>
-        <member name="M:RepoDb.QueryGroup.Fix">
+        <member name="M:RepoDb.QueryGroup.FixParameters">
             <summary>
             Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
             Please note that every repository operation itself is calling this method before the actual execution.
@@ -5958,13 +6001,12 @@
             This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
             <i>RepoDb.Interfaces.IQueryGroup</i> that defines the query tree expression.
             </summary>
-            <param name="obj">A dynamic query tree expression. Ex:
-            new {
-                Conjunction = Conjunction.And,
-                Company = "Microsoft",
-                FirstName = new { Operation = Operation.Like, Value = "An%" },
-                UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }
-            }
+            <param name="obj">
+            A dynamic query tree expression to be parsed.
+            Example:
+            var expression = new { Conjunction = Conjunction.And, Company = "Microsoft",
+            FirstName = new { Operation = Operation.Like, Value = "An%" },
+            UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
             </param>
             <returns></returns>
         </member>
@@ -5989,6 +6031,17 @@
             <param name="operation">The operation to be used for the query expression.</param>
             <param name="value">The value to be used for the query expression.</param>
         </member>
+        <member name="M:RepoDb.QueryField.#ctor(System.String,RepoDb.Enumerations.Operation,System.Object,System.Boolean)">
+            <summary>
+            Creates a new instance of <i>RepoDb.QueryField</i> object./
+            </summary>
+            <param name="fieldName">The name of the field for the query expression.</param>
+            <param name="operation">The operation to be used for the query expression.</param>
+            <param name="value">The value to be used for the query expression.</param>
+            <param name="appendParameterPrefix">
+            The value to identify whether the underscope prefix will be appended to the parameter name.
+            </param>
+        </member>
         <member name="P:RepoDb.QueryField.Field">
             <summary>
             Gets the associated field object.
@@ -6002,6 +6055,11 @@
         <member name="P:RepoDb.QueryField.Parameter">
             <summary>
             Gets the associated parameter object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.QueryField.AppendParameterPrefix">
+            <summary>
+            Force to append prefix on the bound parameter object.
             </summary>
         </member>
         <member name="M:RepoDb.QueryField.GetOperationText">
@@ -6461,7 +6519,14 @@
             <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to convert to.</typeparam>
             <returns>An instance of <i>System.Data.DataRow</i> object containing the converted values.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:RepoDb.Reflection.Delegates.DataReaderToDataEntityDelegate`1" -->
+        <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityDelegate`1">
+            <summary>
+            A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.IDataEntity</i> object.
+            </summary>
+            <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to map.</typeparam>
+            <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
+            <returns>An instance of <i>RepoDb.Interfaces.IDataEntity</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+        </member>
         <member name="T:RepoDb.Reflection.Delegates.DataReaderToExpandoObjectDelegate">
             <summary>
             A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>System.Dynamic.ExpandoObject</i> object.
@@ -6649,7 +6714,7 @@
             an argument exception will be thrown.
             </param>
             <param name="statementBuilder">
-            The statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>) to be mapped.
+            The statement builder to be mapped (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>).
             </param>
         </member>
         <member name="T:RepoDb.TraceLog">
@@ -6669,12 +6734,12 @@
         </member>
         <member name="P:RepoDb.TraceLog.Parameter">
             <summary>
-            Gets the parameter object used on the actual operation execution.
+            Gets or sets the parameter object used on the actual operation execution.
             </summary>
         </member>
         <member name="P:RepoDb.TraceLog.Statement">
             <summary>
-            Gets the SQL Statement used on the actual operation execution.
+            Gets or sets the SQL Statement used on the actual operation execution.
             </summary>
         </member>
         <member name="P:RepoDb.TraceLog.ExecutionTime">
@@ -6706,19 +6771,19 @@
         </member>
         <member name="T:RepoDb.TypeMap">
             <summary>
-            A type mapping object that holds the mapping between the .Net CLR Types and database types.
+            A type mapping object that holds the mapping between the .NET CLR Types and database types.
             </summary>
         </member>
         <member name="M:RepoDb.TypeMap.#ctor(System.Type,System.Data.DbType)">
             <summary>
             Creates a a new instance of <i>RepoDb.TypeMap</i> object.
             </summary>
-            <param name="type">The .Net CLR Type to be mapped.</param>
+            <param name="type">The .NET CLR Type to be mapped.</param>
             <param name="dbType">The database type to map (typeof <i>System.Data.DbType</i>).</param>
         </member>
         <member name="P:RepoDb.TypeMap.Type">
             <summary>
-            Gets the .Net CLR Type used for mapping.
+            Gets the .NET CLR Type used for mapping.
             </summary>
         </member>
         <member name="P:RepoDb.TypeMap.DbType">
@@ -6728,7 +6793,7 @@
         </member>
         <member name="T:RepoDb.TypeMapper">
             <summary>
-            A static class used to map the .Net CLR Types into database types.
+            A static class used to map the .NET CLR Types into database types.
             </summary>
         </member>
         <member name="P:RepoDb.TypeMapper.TypeMaps">
@@ -6738,30 +6803,30 @@
         </member>
         <member name="M:RepoDb.TypeMapper.AddMap(System.Type,System.Data.DbType)">
             <summary>
-            Adds a mapping between .Net CLR Type and database type.
+            Adds a mapping between .NET CLR Type and database type.
             </summary>
-            <param name="type">The .Net CLR Type to be mapped.</param>
-            <param name="dbType">The database type where to map the .Net CLR Type.</param>
+            <param name="type">The .NET CLR Type to be mapped.</param>
+            <param name="dbType">The database type where to map the .NET CLR Type.</param>
         </member>
         <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.Interfaces.ITypeMap)">
             <summary>
-            Adds a mapping between .Net CLR Type and database type.
+            Adds a mapping between .NET CLR Type and database type.
             </summary>
-            <param name="typeMap">The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</param>
+            <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
         </member>
         <member name="M:RepoDb.TypeMapper.Get(System.Type)">
             <summary>
-            Gets the instance of type-mapping object that holds the mapping of .Net CLR Type and database type.
+            Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
             </summary>
-            <param name="type">The .Net CLR Type used for mapping.</param>
-            <returns>The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</returns>
+            <param name="type">The .NET CLR Type used for mapping.</param>
+            <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         </member>
         <member name="M:RepoDb.TypeMapper.Get``1">
             <summary>
-            Gets the instance of type-mapping object that holds the mapping of .Net CLR Type and database type.
+            Gets the instance of type-mapping object that holds the mapping of .NET CLR Type and database type.
             </summary>
-            <typeparam name="T">The dynamic .Net CLR Type used for mapping.</typeparam>
-            <returns>The instance of type-mapping object that holds the mapping of .Net CLR Type and database type.</returns>
+            <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
+            <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         </member>
     </members>
 </doc>

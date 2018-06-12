@@ -1,6 +1,6 @@
 ### Stable Release
 
-RepoDb stable release is at version **1.0.20**.
+RepoDb stable release is at version **1.1.0**.
 
 ### Snippets
 

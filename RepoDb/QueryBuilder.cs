@@ -417,7 +417,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public IQueryBuilder<TEntity> Where(IQueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append($"WHERE {queryGroup.Fix().GetString()}") : this;
+            return (queryGroup != null) ? Append($"WHERE {((QueryGroup)queryGroup).FixParameters().GetString()}") : this;
         }
 
         /// <summary>

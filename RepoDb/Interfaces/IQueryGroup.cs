@@ -31,13 +31,6 @@ namespace RepoDb.Interfaces
         IEnumerable<IQueryField> GetAllQueryFields();
 
         /// <summary>
-        /// Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-        /// Please note that every repository operation itself is calling this method before the actual execution.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        IQueryGroup Fix();
-
-        /// <summary>
         /// Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Conjunction</i> property value of this instance.
         /// </summary>
         /// <returns>A string instance containing the value of the <i>RepoDb.Attributes.TextAttribute</i> text property.</returns>

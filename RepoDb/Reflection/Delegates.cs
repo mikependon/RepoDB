@@ -10,7 +10,7 @@ namespace RepoDb.Reflection.Delegates
     /// </summary>
     /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to map.</typeparam>
     /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
-    /// <returns>An instance of <i>RepoDb.Interfaces.IDataEntity object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+    /// <returns>An instance of <i>RepoDb.Interfaces.IDataEntity</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
     public delegate TEntity DataReaderToDataEntityDelegate<TEntity>(DbDataReader dataReader) where TEntity : IDataEntity;
 
     /// <summary>
