@@ -1071,19 +1071,7 @@ stock.Motto = "Do not be evil all the time.";
 UpdatedDate = DateTime.UtcNow;
 stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
 ```
-or by creating a new entity with existing qualifier value.
-```
-var stock = new Stock()
-{
-	Name = "GOOGL"
-	Motto = "Do not be evil all the time.",
-	UpdatedDate = DateTime.UtcNow
-};
-stockRepository.Merge(stock, Field.Parse(new { stock.Name }));
-```
-**Note**:  If the `qualifiers` are not defined, the library will automatically used the `PrimaryKey` as the default qualifier. If however the `PrimaryKey` is not defined in the entity, a `PrimaryFieldNotFoundException` will be thrown back to the caller.
-
-Please also note that merging is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
+**Note**: The merge is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
 
 ## InlineUpdate Operation
 
@@ -1096,7 +1084,7 @@ This operation is used to do a column-based update of an existing record from th
 Below is a sample on how to update a data.
 ```
 var stockRepository = new StockRepository(connectionString);
-stockRepository.InlineUpdate(new { Motto = "Do not be evil." }, new { Name = "GOOGL" });
+var affectedRows = stockRepository.InlineUpdate(new { Motto = "Do not be evil.", UpdatedDate = DateTime.UtcNow }, new { Name = "GOOGL" });
 ```
 The code snippets above will update the `Motto` column of a stock records from the dabatase where the value of `Name` column is equals to `GOOGL`.
 
