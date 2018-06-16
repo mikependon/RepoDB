@@ -15,6 +15,7 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
+            //TestInNotInBetweenNotBetweenAnyAllOperation();
             InventoryMain();
             //RepoDbMain();
             //TestCrud();
