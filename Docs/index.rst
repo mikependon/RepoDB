@@ -1358,10 +1358,12 @@ or by `PrimaryKey`
 
 
 Dynamic way:
-```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var affectedRows = repository.Delete<Order>(new { Id = "251" });
-```
+
+::
+
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
+	var affectedRows = repository.Delete<Order>(new { Id = "251" });
+
 **Note**: Deleting a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
 Merge Operation
@@ -1378,6 +1380,7 @@ Below are the parameters:
 Below is a sample on how to merge a data.
 
 ::
+
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	var order = repository.Query<Order>(1);
 	order.Quantity = 5;
