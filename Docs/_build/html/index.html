@@ -15,7 +15,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="DataEntity Class" href="DataEntity/DataEntity.html" />
+    <link rel="next" title="DbRepository Class" href="Repository/DbRepository.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -67,46 +67,65 @@
 </div>
 <div class="section" id="creating-a-dataentity">
 <h1>Creating a DataEntity<a class="headerlink" href="#creating-a-dataentity" title="Permalink to this headline">¶</a></h1>
-<p>An entity class is a DTO class used to feed the operations of the repositories. See documentation below.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="DataEntity/DataEntity.html">DataEntity Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DataEntity/IDataEntity.html">IDataEntity Interface</a></li>
-</ul>
-</div>
-<p>See sample codes below:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">ICustomer</span> <span class="p">:</span> <span class="n">IDataEntity</span>
-<span class="p">{</span>
-        <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span><span class="p">,</span> <span class="n">ICustomer</span>
+<p>A <cite>DataEntity</cite> is a DTO class used to feed the operations of the repositories. It acts as a single row when it comes to database.</p>
+<p>It is recommended that an explicit interface (of type <cite>RepoDb.Interfaces.IDataEntity</cite>) must be implemented in order to make a contracted <cite>DataEntity</cite>.</p>
+<div class="section" id="dataentity-class">
+<h2>DataEntity Class<a class="headerlink" href="#dataentity-class" title="Permalink to this headline">¶</a></h2>
+<p>Acts as the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb</cite> namespace.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">ClassName</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="idataentity-interface">
+<h2>IDataEntity Interface<a class="headerlink" href="#idataentity-interface" title="Permalink to this headline">¶</a></h2>
+<p>An interface used to implement to mark a class to be the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb.Interfaces</cite> namespace.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">IClassName</span> <span class="p">:</span> <span class="n">IDataEntity</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="mapping-with-mapattribute">
 <h1>Mapping with MapAttribute<a class="headerlink" href="#mapping-with-mapattribute" title="Permalink to this headline">¶</a></h1>
 <p>A <cite>MapAttribute</cite> is used to define a mapping of the current <cite>Class</cite> or <cite>Property</cite> equivalent to an <cite>Object</cite> or <cite>Field</cite> name in the database. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="MapAttribute/ClassMapping.html">Mapping a Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="MapAttribute/PropertyMapping.html">Mapping a Property</a></li>
-</ul>
-</div>
 <p>The <cite>Map</cite> attribute second parameter is a command type <cite>of type System.Data.CommandType</cite>. If this parameter is defined, the repository operation execution will then be of that command type. This parameter is only working at the class level implementation.</p>
 <p>See Microsoft documentation for <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx">System.Data.CommandType</a> here.</p>
+<div class="section" id="mapping-a-class">
+<h2>Mapping a Class<a class="headerlink" href="#mapping-a-class" title="Permalink to this headline">¶</a></h2>
+<p>By default, the name of the class is used as a default mapped object from the database. However, if the database object name is different from the class name, the <cite>MapAttribute</cite> is then use to map it properly.</p>
+<p>Below is a sample code that maps the class named <cite>EmployeeDto</cite> into <cite>Employee</cite> table from the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;, CommandType.Text)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapping-a-property">
+<h2>Mapping a Property<a class="headerlink" href="#mapping-a-property" title="Permalink to this headline">¶</a></h2>
+<p>By default, the name of the property is used as a default mapped field from the database object (table, view or any result set). However, if the database field name is different from the property name, the <cite>MapAttribute</cite> is then use to map it properly.</p>
+<p>Below is a sample code that maps the property named <cite>Id</cite> into a <cite>EmployeeId</cite> field <cite>Employee</cite> table from the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;, CommandType.Text)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="p">{</span>
+<span class="na">        [Map(&quot;EmployeeId&quot;)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="primary-attribute">
 <h1>Primary Attribute<a class="headerlink" href="#primary-attribute" title="Permalink to this headline">¶</a></h1>
 <p>A <cite>PrimaryAttribute</cite> is used to define the class property as primary property of the <cite>DataEntity</cite> object. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<p>See sample codes below:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
@@ -117,7 +136,6 @@
 <div class="section" id="defining-an-identity-property">
 <h2>Defining an Identity Property<a class="headerlink" href="#defining-an-identity-property" title="Permalink to this headline">¶</a></h2>
 <p>To define an identity property, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> during the implementation.</p>
-<p>See sample codes below:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary(true)]</span>
@@ -131,7 +149,6 @@
 <h1>Ignore Attribute<a class="headerlink" href="#ignore-attribute" title="Permalink to this headline">¶</a></h1>
 <p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
 <p>Example: If of type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property will not be a part of the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
-<p>See sample codes below:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -156,33 +173,141 @@
 <div class="section" id="working-wth-repository">
 <h1>Working wth Repository<a class="headerlink" href="#working-wth-repository" title="Permalink to this headline">¶</a></h1>
 <p>The library contains two repository objects, the <cite>RepoDb.BaseRepository&lt;TEntity, TDbConnection&gt;</cite> and the <cite>RepoDb.DbRepository&lt;TDbConnection&gt;</cite>.</p>
-<p>The latter is the <strong>heart</strong> of the library as it contains all the operations that is being used by all other repositories within or outside the library.</p>
+<p>The latter is the heart of the library as it contains all the operations that is being used by all other repositories within or outside the library.</p>
+<div class="section" id="dbrepository-class">
+<h2>DbRepository Class<a class="headerlink" href="#dbrepository-class" title="Permalink to this headline">¶</a></h2>
+<p>A base object for all shared-based repositories.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">INorthwindDbRepository</span> <span class="p">:</span> <span class="n">IDbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
+        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See the documentation below.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Repository/DbRepository.html">DbRepository Class</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="baserepository-class">
+<h2>BaseRepository Class<a class="headerlink" href="#baserepository-class" title="Permalink to this headline">¶</a></h2>
+<p>An abstract class for all entity-based repositories.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">ICustomerRepository</span> <span class="p">:</span> <span class="n">IBaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;,</span> <span class="n">ICustomerRepository</span>
+        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See the documentation below.</p>
+<div class="toctree-wrapper compound">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Repository/BaseRepository.html">BaseRepository Class</a></li>
 </ul>
 </div>
-<div class="section" id="dbrepository">
-<h2>DbRepository<a class="headerlink" href="#dbrepository" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="baserepository">
-<h2>BaseRepository<a class="headerlink" href="#baserepository" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
-<div class="section" id="creating-a-repository">
-<h1>Creating a Repository<a class="headerlink" href="#creating-a-repository" title="Permalink to this headline">¶</a></h1>
 </div>
 <div class="section" id="creating-a-connection">
-<h1>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h1>
+<h2>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>
+<p>A repository is used to create a connection object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="c1">// Use the connection here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="connection-ensureopen">
 <h2>Connection.EnsureOpen<a class="headerlink" href="#connection-ensureopen" title="Permalink to this headline">¶</a></h2>
+<p>This method is used to ensure that the connection object is <cite>Open</cite>. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</p>
+<p>The underlying method call of this method is the <cite>System.Data.DbConnection.Open()</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="c1">// No need to open the connection</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="connection-executereader">
 <h2>Connection.ExecuteReader<a class="headerlink" href="#connection-executereader" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. This method returns an instance of <cite>System.Data.IDataReader</cite> object.</p>
+<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
+        <span class="p">{</span>
+                <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
+                <span class="p">{</span>
+                        <span class="c1">// Process the records here</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+</ul>
 </div>
 <div class="section" id="connection-executequery">
 <h2>Connection.ExecuteQuery<a class="headerlink" href="#connection-executequery" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.Interfaces.IDataEntity</cite> object.</p>
+<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
+<p>Code below returns an enumerable list of <cite>dynamic</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
+        <span class="n">customers</span>
+                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+                        <span class="c1">// Process each customer here</span>
+                <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Code below returns an enumerable list of <cite>Customer</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
+        <span class="n">customers</span>
+                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+                        <span class="c1">// Process each customer here</span>
+                <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+</ul>
 </div>
 <div class="section" id="connection-executenonquery">
 <h2>Connection.ExecuteNonQuery<a class="headerlink" href="#connection-executenonquery" title="Permalink to this headline">¶</a></h2>
@@ -269,20 +394,25 @@
 <li><a class="reference internal" href="#why-repodb">Why RepoDb?</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a></li>
-<li><a class="reference internal" href="#mapping-with-mapattribute">Mapping with MapAttribute</a></li>
+<li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a><ul>
+<li><a class="reference internal" href="#dataentity-class">DataEntity Class</a></li>
+<li><a class="reference internal" href="#idataentity-interface">IDataEntity Interface</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mapping-with-mapattribute">Mapping with MapAttribute</a><ul>
+<li><a class="reference internal" href="#mapping-a-class">Mapping a Class</a></li>
+<li><a class="reference internal" href="#mapping-a-property">Mapping a Property</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#primary-attribute">Primary Attribute</a><ul>
 <li><a class="reference internal" href="#defining-an-identity-property">Defining an Identity Property</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
 <li><a class="reference internal" href="#working-wth-repository">Working wth Repository</a><ul>
-<li><a class="reference internal" href="#dbrepository">DbRepository</a></li>
-<li><a class="reference internal" href="#baserepository">BaseRepository</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#creating-a-repository">Creating a Repository</a></li>
-<li><a class="reference internal" href="#creating-a-connection">Creating a Connection</a><ul>
+<li><a class="reference internal" href="#dbrepository-class">DbRepository Class</a></li>
+<li><a class="reference internal" href="#baserepository-class">BaseRepository Class</a></li>
+<li><a class="reference internal" href="#creating-a-connection">Creating a Connection</a></li>
 <li><a class="reference internal" href="#connection-ensureopen">Connection.EnsureOpen</a></li>
 <li><a class="reference internal" href="#connection-executereader">Connection.ExecuteReader</a></li>
 <li><a class="reference internal" href="#connection-executequery">Connection.ExecuteQuery</a></li>
@@ -320,7 +450,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="DataEntity/DataEntity.html" title="next chapter">DataEntity Class</a></li>
+      <li>Next: <a href="Repository/DbRepository.html" title="next chapter">DbRepository Class</a></li>
   </ul></li>
 </ul>
 </div>

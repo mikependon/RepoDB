@@ -28,7 +28,7 @@ Then, call it somewhere.
 
 ::
 
-	var repository = new NorthwindRepository();
+	var repository = new CustomerRepository();
 
 It is recommended to create a contracted interface for `BaseRepository` in order for it to be dependency injectable.
 
