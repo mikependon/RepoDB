@@ -32,6 +32,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.TestProject", "RepoDb.TestProject\RepoDb.TestProject.csproj", "{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6837AEC8-8A8C-48EE-9338-62D972BC4DB0}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\index.rst = Docs\index.rst
+		Docs\samples.rst = Docs\samples.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{51DEB396-E657-4029-80F5-4780A1D582A3}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Repository\BaseRepository.rst = Docs\Repository\BaseRepository.rst
+		Docs\Repository\DbRepository.rst = Docs\Repository\DbRepository.rst
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,5 +68,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E04CF93F-91F8-49DE-940E-D920E28ECDE5} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
+		{51DEB396-E657-4029-80F5-4780A1D582A3} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
 	EndGlobalSection
 EndGlobal

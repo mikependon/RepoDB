@@ -559,7 +559,7 @@ var result = stockRepository.Query(new { Name = new { Operation = Operation.Equa
 ```
 Explicit way:
 ```
-var result = stockRepository.Query(new QueryField("Name", Operation.Equal, "GOOGL" });
+var result = stockRepository.Query(new QueryField("Name", Operation.Equal, "GOOGL" ));
 ```
 
 ### Operation.NotEqual

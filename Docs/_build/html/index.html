@@ -65,6 +65,33 @@
 </ul>
 </div>
 </div>
+<div class="section" id="installation-steps">
+<h1>Installation Steps<a class="headerlink" href="#installation-steps" title="Permalink to this headline">¶</a></h1>
+<p>There are two ways of installing the library as standardized by Microsoft. First, via Nuget Package Manager, and secondly, via Package Manager Console.</p>
+<div class="section" id="via-nuget-package-manager">
+<h2>Via Nuget Package Manager<a class="headerlink" href="#via-nuget-package-manager" title="Permalink to this headline">¶</a></h2>
+<p>Once the project solution is open, then do the following steps.</p>
+<ol class="arabic simple">
+<li>Right click on the solution and click the <cite>Manage Nuget Packages for Solution…</cite>.</li>
+<li>Select the <cite>Browse</cite> tab.</li>
+<li>In the <cite>Search</cite> field, type <cite>RepoDb</cite> and press <cite>Enter</cite>.</li>
+<li>In the right side, select the project you wish the library to install to.</li>
+<li>Click the <cite>Install</cite> button.</li>
+</ol>
+<p>Wait for few seconds until the installation is completed.</p>
+</div>
+<div class="section" id="via-package-manager-console">
+<h2>Via Package Manager Console<a class="headerlink" href="#via-package-manager-console" title="Permalink to this headline">¶</a></h2>
+<p>Once the project solution is open, then do the following steps.</p>
+<ol class="arabic simple">
+<li>Select the <cite>View -&gt; Other Windows -&gt; Package Manager Console</cite>.</li>
+<li>In the <cite>Package Source</cite> drop down field, select <cite>All</cite>.</li>
+<li>In the <cite>Default Project</cite> drop down field, select the project you wish the library to install to.</li>
+<li>In the <cite>Package Manager Console</cite>, type the <cite>Install-Package RepoDb</cite>, then press <cite>Enter</cite>.</li>
+</ol>
+<p>Wait for few seconds until the installation is completed.</p>
+</div>
+</div>
 <div class="section" id="creating-a-dataentity">
 <h1>Creating a DataEntity<a class="headerlink" href="#creating-a-dataentity" title="Permalink to this headline">¶</a></h1>
 <p>A <cite>DataEntity</cite> is a DTO class used to feed the operations of the repositories. It acts as a single row when it comes to database.</p>
@@ -311,73 +338,528 @@
 </div>
 <div class="section" id="connection-executenonquery">
 <h2>Connection.ExecuteNonQuery<a class="headerlink" href="#connection-executenonquery" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is used to execute a non-queryable SQL statement. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</p>
+<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteNonQuery()</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;UPDATE [dbo].[Customer] SET Name = @Name WHERE (Id = @Id);&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+</ul>
 </div>
 <div class="section" id="connection-executescalar">
 <h2>Connection.ExecuteScalar<a class="headerlink" href="#connection-executescalar" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is used to execute a query statement that returns single value of type <cite>System.Object</cite>.</p>
+<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteScalar()</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT MAX(Id) FROM [dbo].[Customer];&quot;</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">customerMaxId</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="n">commandText</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+</ul>
 </div>
 </div>
 <div class="section" id="transaction">
 <h1>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="creating-a-transaction">
-<h2>Creating a Transaction<a class="headerlink" href="#creating-a-transaction" title="Permalink to this headline">¶</a></h2>
+<p>A transaction object works completely the same as it was with <cite>ADO.NET</cite>. The library only abstracted <cite>ADO.NET</cite> including the transaction objects.</p>
+<p>Transactions can be created by calling the <cite>BeginTransaction</cite> method of the <cite>DbConnection</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">transaction</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">();</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Commit</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">catch</span>
+        <span class="p">{</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Rollback</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">finally</span>
+        <span class="p">{</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Dispose</span><span class="p">();</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
-<div class="section" id="transaction-commit-rollback">
-<h2>Transaction Commit/Rollback<a class="headerlink" href="#transaction-commit-rollback" title="Permalink to this headline">¶</a></h2>
+<p>Every operation of the repository accepts a transaction object as an argument. Once passed, the transaction will become a part of the execution context. See below on how to commit a transaction context with multiple operations.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">connectionString</span> <span class="p">=</span> <span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">customerRepository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="n">connectionString</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">orderRepository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderRepository</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="n">connectionString</span><span class="p">);</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">customerRepository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">transaction</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BeginTransaction</span><span class="p">();</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Customer</span><span class="p">()</span>
+                <span class="p">{</span>
+                        <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span><span class="p">,</span>
+                        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">};</span>
+                <span class="kt">var</span> <span class="n">customerId</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="n">customerRepository</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">customer</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">transaction</span><span class="p">));</span>
+                <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+                <span class="p">{</span>
+                        <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">customerId</span><span class="p">,</span>
+                        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+                        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+                <span class="p">};</span>
+                <span class="kt">var</span> <span class="n">orderId</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt32</span><span class="p">(</span><span class="n">orderRepository</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">transaction</span><span class="p">));</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Commit</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">catch</span>
+        <span class="p">{</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Rollback</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">finally</span>
+        <span class="p">{</span>
+                <span class="n">transaction</span><span class="p">.</span><span class="n">Dispose</span><span class="p">();</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
+<p>The code snippets above will first insert a <cite>Customer</cite> record in the database and will return the newly added customer <cite>Id</cite>. It will be followed by inserting the <cite>Order</cite> record with the parent <cite>Customer.Id</cite> as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.</p>
+<p><strong>Note</strong>: Notice that the transaction object were created via <cite>CustomerRepository</cite> and has been used in both repository afterwards. The library will adapt the transaction process of <cite>ADO.NET</cite>. So whether the transaction object is created via an independent <cite>DbConnection</cite> object, as long as the connection is open, then the operation is valid.</p>
 </div>
 <div class="section" id="expression-tree">
 <h1>Expression Tree<a class="headerlink" href="#expression-tree" title="Permalink to this headline">¶</a></h1>
+<p>The expression tree is the brain of the library. It defines the best possible way of doing a <cite>WHERE</cite> expression (SQL Statement) by composing it via <cite>dynamic</cite> or <cite>System.Interfaces.IQueryGroup</cite> objects.</p>
+<p>Objects used for composing the expression tree.</p>
+<ul class="simple">
+<li><strong>QueryGroup</strong>: used to group an expression.</li>
+<li><strong>QueryField</strong>: holds the field/value pair values of the expressions.</li>
+<li><strong>Conjunction</strong>: an enumeration that holds the value whether the expression is on <cite>And</cite> or <cite>Or</cite> operation.</li>
+<li><strong>Operation</strong>: an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like <cite>Equal</cite>, <cite>NotEqual</cite>, <cite>Between</cite>, <cite>GreaterThan</cite> and etc.</li>
+</ul>
+<p>Certain repository operations are using the expression trees.</p>
+<ul class="simple">
+<li>Repository.BatchQuery</li>
+<li>Repository.Count</li>
+<li>Repository.CountBig</li>
+<li>Repository.Delete</li>
+<li>Repository.ExecuteNonQuery</li>
+<li>Repository.ExecuteQuery</li>
+<li>Repository.ExecuteScalar</li>
+<li>Repository.InlineUpdate</li>
+<li>Repository.Query</li>
+<li>Repository.Update</li>
+</ul>
+<p>Certain connection extension methods are using the expression trees.</p>
+<ul class="simple">
+<li>DbConnection.ExecuteNonQuery</li>
+<li>DbConnection.ExecuteQuery</li>
+<li>DbConnection.ExecuteReader</li>
+<li>DbConnection.ExecuteScalar</li>
+</ul>
+<p>There are two ways of building the expression trees, the explicit way by using <cite>IQueryGroup</cite> objects and dynamic way by using <cite>dynamic</cite> objects.</p>
+<div class="section" id="explicit-query-expression">
+<h2>Explicit Query Expression<a class="headerlink" href="#explicit-query-expression" title="Permalink to this headline">¶</a></h2>
+<p>An explicit query expression are using the defined objects <cite>RepoDb.QueryGroup</cite>, <cite>RepoDb.QueryField</cite>, <cite>RepoDb.Enumerations.Conjunction</cite> and <cite>RepoDb.Enumerations.Operation</cite> when composing the expression.</p>
+<p>Below is a pseudo code of explicit query expression.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// WHERE (Field1 = @Field1 AND Field2 = @Field2) AND ((Field3 = @Field3 OR Field4 = @Field4) AND (Field5 = @Field5 OR Field6 = @Field6));</span>
+<span class="kt">var</span> <span class="n">tree</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+<span class="p">(</span>
+        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="c1">// List of QueryFields</span>
+        <span class="p">},</span>
+        <span class="k">new</span> <span class="n">QueryGroup</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="c1">// List of QueryGroups</span>
+                <span class="k">new</span> <span class="nf">QueryGroup</span>
+                <span class="p">(</span>
+                        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="c1">// List of QueryFields</span>
+                        <span class="p">},</span>
+                        <span class="k">new</span> <span class="n">QueryGroup</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="c1">// List of QueryGroups</span>
+                                <span class="p">...</span>
+                                <span class="p">...</span>
+                                <span class="p">...</span>
+                        <span class="p">}</span>
+                        <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span>
+                <span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryGroup</span>
+                <span class="p">(</span>
+                        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="c1">// List of QueryFields</span>
+                        <span class="p">},</span>
+                        <span class="k">new</span> <span class="n">QueryGroup</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="c1">// List of QueryGroups</span>
+                                <span class="p">...</span>
+                                <span class="p">...</span>
+                                <span class="p">...</span>
+                        <span class="p">}</span>
+                        <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span>
+                <span class="p">)</span>
+        <span class="p">},</span>
+        <span class="n">Conjunction</span><span class="p">.</span><span class="n">And</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Actual explicit query tree expression.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Last 3 months customer with CustomerId &gt;= 10045</span>
+<span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+<span class="p">(</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="m">10045</span><span class="p">),</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddMonths</span><span class="p">(-</span><span class="m">3</span><span class="p">)),</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// Child QueryGroups</span>
+        <span class="n">Conjunction</span><span class="p">.</span><span class="n">And</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dynamic-query-expression">
+<h2>Dynamic Query Expression<a class="headerlink" href="#dynamic-query-expression" title="Permalink to this headline">¶</a></h2>
+<p>A dynamic query expression is using a single dynamic object when composing the expression.</p>
+<p>Below is a pseudo code of dynamic query expression.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">tree</span> <span class="p">=</span> <span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">Conjunction</span> <span class="p">=</span> <span class="n">Conjunction</span><span class="p">.</span><span class="n">And</span><span class="p">,</span>
+        <span class="n">Field1</span> <span class="p">=</span> <span class="s">&quot;Field1&quot;</span><span class="p">,</span> <span class="c1">// QueryField</span>
+        <span class="n">Field2</span> <span class="p">=</span> <span class="s">&quot;Field2&quot;</span><span class="p">,</span> <span class="c1">// QueryField</span>
+        <span class="n">QueryGroups</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Conjunction</span> <span class="p">=</span> <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span><span class="p">,</span>
+                        <span class="n">Field3</span> <span class="p">=</span> <span class="s">&quot;Field3&quot;</span><span class="p">,</span> <span class="c1">// QueryField</span>
+                        <span class="n">Field4</span> <span class="p">=</span> <span class="s">&quot;Field4&quot;</span><span class="p">,</span>
+                        <span class="n">QueryGroups</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="p">...</span>
+                        <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="k">new</span>
+                <span class="p">{</span>
+                        <span class="n">Conjunction</span> <span class="p">=</span> <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span><span class="p">,</span>
+                        <span class="n">Field3</span> <span class="p">=</span> <span class="s">&quot;Field3&quot;</span><span class="p">,</span> <span class="c1">// QueryField</span>
+                        <span class="n">Field4</span> <span class="p">=</span> <span class="s">&quot;Field4&quot;</span><span class="p">,</span>
+                        <span class="n">QueryGroups</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
+                        <span class="p">{</span>
+                                <span class="p">...</span>
+                        <span class="p">}</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Actual dynamic query tree expression.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Last 3 months customer with CustomerId &gt;= 10045</span>
+<span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">CustomerId</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddMonths</span><span class="p">(-</span><span class="m">3</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="querygroup">
 <h1>QueryGroup<a class="headerlink" href="#querygroup" title="Permalink to this headline">¶</a></h1>
+<p>A query group object is used to group an expression when composing a tree expressions. It is equivalent to a grouping on a <cite>WHERE</cite> statement in SQL Statements.</p>
+<p>Below are the constructor parameters.</p>
+<ul class="simple">
+<li><strong>queryFields</strong>: the list of <cite>IQueryField</cite> objects to be included in the expression composition. It stands as <cite>[FieldName] = &#64;FiedName</cite> when it comes to SQL Statement compositions.</li>
+<li><strong>queryGroups</strong>: the list of child <cite>IQueryGroup</cite> objects to be included in the expresson composition. It stands as the <cite>([FieldName] = &#64;FieldName AND [FieldName1] = &#64;FieldName1)</cite> when it comes to SQL Statement compositions.</li>
+<li><strong>conjunction</strong>: the conjuction to be used when grouping the fields. It stands as the <cite>AND</cite> or <cite>OR</cite> in the SQL Statement compositions.</li>
+</ul>
+<p>As mentioned above, below is a sample code to create a query group object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Last 3 months customer with CustomerId &gt;= 10045</span>
+<span class="kt">var</span> <span class="n">query</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryGroup</span>
+<span class="p">(</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;CustomerId&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="m">10045</span><span class="p">),</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddMonths</span><span class="p">(-</span><span class="m">3</span><span class="p">)),</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// Child QueryGroups</span>
+        <span class="n">Conjunction</span><span class="p">.</span><span class="n">And</span>
+<span class="p">);</span>
+</pre></div>
 </div>
-<div class="section" id="operations">
-<h1>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="query-operations">
+<h2>Query Operations<a class="headerlink" href="#query-operations" title="Permalink to this headline">¶</a></h2>
+<p>The query operation defines the operation to be used by the query expression (field level) during the actual execution. It is located at <cite>RepoDb.Enumerations</cite> namespace.</p>
+<p>List of Operations:</p>
+<ul class="simple">
+<li>Operation.Equal</li>
+<li>Operation.NotEqual</li>
+<li>Operation.LessThan</li>
+<li>Operation.LessThanOrEqual</li>
+<li>Operation.GreaterThan</li>
+<li>Operation.GreaterThanOrEqual</li>
+<li>Operation.Like</li>
+<li>Operation.NotLike</li>
+<li>Operation.Between</li>
+<li>Operation.NotBetween</li>
+<li>Operation.In</li>
+<li>Operation.NotIn</li>
+<li>Operation.All</li>
+<li>Operation.Any</li>
+</ul>
+</div>
 <div class="section" id="operation-equal">
 <h2>Operation.Equal<a class="headerlink" href="#operation-equal" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine the <cite>equality</cite> of the field and data.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="m">10045</span> <span class="p">));</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-notequal">
 <h2>Operation.NotEqual<a class="headerlink" href="#operation-notequal" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine the <cite>inequality</cite> of the field and data.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-lessthan">
 <h2>Operation.LessThan<a class="headerlink" href="#operation-lessthan" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>less than</cite> of the defined value.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-greaterthan">
 <h2>Operation.GreaterThan<a class="headerlink" href="#operation-greaterthan" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>greater than</cite> of the defined value.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-lessthanorequal">
 <h2>Operation.LessThanOrEqual<a class="headerlink" href="#operation-lessthanorequal" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>less than or equal</cite> of the defined value.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-greaterthanorequal">
 <h2>Operation.GreaterThanOrEqual<a class="headerlink" href="#operation-greaterthanorequal" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>greater than or equal</cite> of the defined value.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-like">
 <h2>Operation.Like<a class="headerlink" href="#operation-like" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field is <cite>identitical</cite> to a given value.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-notlike">
 <h2>Operation.NotLike<a class="headerlink" href="#operation-notlike" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field is <cite>not identitical</cite> to a given value. An opposite of <cite>Operation.Like</cite>.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-between">
 <h2>Operation.Between<a class="headerlink" href="#operation-between" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>between</cite> 2 given values.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-notbetween">
 <h2>Operation.NotBetween<a class="headerlink" href="#operation-notbetween" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>not between</cite> 2 given values. An opposite of <cite>Operation.Between</cite>.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-in">
 <h2>Operation.In<a class="headerlink" href="#operation-in" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>in</cite> given values.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-notin">
 <h2>Operation.NotIn<a class="headerlink" href="#operation-notin" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether the field value is <cite>not in</cite> given values. An opposite of <cite>Operation.In</cite>. See sample below.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="operation-all">
 <h2>Operation.All<a class="headerlink" href="#operation-all" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether <cite>all</cite> the field values satisfied the criteria.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
+        <span class="p">{</span>
+                <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">All</span><span class="p">,</span> <span class="c1">// Works as AND</span>
+                <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
+                <span class="p">{</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">},</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">},</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span>
+<span class="p">(</span>
+        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">})</span>
+        <span class="p">}</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The <cite>Operation.All</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>IQueryField</cite> in the <cite>IQueryGroup</cite> object will do the same when calling it explicitly.</p>
 </div>
 <div class="section" id="operation-any">
 <h2>Operation.Any<a class="headerlink" href="#operation-any" title="Permalink to this headline">¶</a></h2>
+<p>Part of the expression tree used to determine whether <cite>any</cite> of the field values satisfied the criteria.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
+        <span class="p">{</span>
+                <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Any</span><span class="p">,</span> <span class="c1">// Works as OR</span>
+                <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
+                <span class="p">{</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">},</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">},</span>
+                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
 </div>
+<p>Explicit way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span>
+<span class="p">(</span>
+        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
+        <span class="p">{</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">),</span>
+                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">})</span>
+        <span class="p">},</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// List of QueryGroups</span>
+        <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span>
+<span class="p">);</span>
+</pre></div>
 </div>
-<div class="section" id="repository-operations">
-<h1>Repository Operations<a class="headerlink" href="#repository-operations" title="Permalink to this headline">¶</a></h1>
+<p>The <cite>Operation.Any</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>IQueryField</cite> in the <cite>IQueryGroup</cite> object will do the same when calling it explicitly.</p>
+</div>
 </div>
 
 
@@ -392,6 +874,11 @@
 <li><a class="reference internal" href="#goal">Goal</a></li>
 <li><a class="reference internal" href="#principles">Principles</a></li>
 <li><a class="reference internal" href="#why-repodb">Why RepoDb?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-steps">Installation Steps</a><ul>
+<li><a class="reference internal" href="#via-nuget-package-manager">Via Nuget Package Manager</a></li>
+<li><a class="reference internal" href="#via-package-manager-console">Via Package Manager Console</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a><ul>
@@ -420,14 +907,14 @@
 <li><a class="reference internal" href="#connection-executescalar">Connection.ExecuteScalar</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#transaction">Transaction</a><ul>
-<li><a class="reference internal" href="#creating-a-transaction">Creating a Transaction</a></li>
-<li><a class="reference internal" href="#transaction-commit-rollback">Transaction Commit/Rollback</a></li>
+<li><a class="reference internal" href="#transaction">Transaction</a></li>
+<li><a class="reference internal" href="#expression-tree">Expression Tree</a><ul>
+<li><a class="reference internal" href="#explicit-query-expression">Explicit Query Expression</a></li>
+<li><a class="reference internal" href="#dynamic-query-expression">Dynamic Query Expression</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#expression-tree">Expression Tree</a></li>
-<li><a class="reference internal" href="#querygroup">QueryGroup</a></li>
-<li><a class="reference internal" href="#operations">Operations</a><ul>
+<li><a class="reference internal" href="#querygroup">QueryGroup</a><ul>
+<li><a class="reference internal" href="#query-operations">Query Operations</a></li>
 <li><a class="reference internal" href="#operation-equal">Operation.Equal</a></li>
 <li><a class="reference internal" href="#operation-notequal">Operation.NotEqual</a></li>
 <li><a class="reference internal" href="#operation-lessthan">Operation.LessThan</a></li>
@@ -444,7 +931,6 @@
 <li><a class="reference internal" href="#operation-any">Operation.Any</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#repository-operations">Repository Operations</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
