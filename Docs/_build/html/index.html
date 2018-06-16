@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RepoDb Documentation &#8212; RepoDb 1.1.0 documentation</title>
+    <title>Introduction to RepoDb &#8212; RepoDb 1.1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="install.html" />
+    <link rel="next" title="DataEntity Class" href="DataEntity/DataEntity.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -30,29 +30,229 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="repodb-documentation">
-<h1>RepoDb Documentation<a class="headerlink" href="#repodb-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="this-is-the-section">
-<h2>This is the section<a class="headerlink" href="#this-is-the-section" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="this-is-the-sub-section">
-<h3>This is the sub section<a class="headerlink" href="#this-is-the-sub-section" title="Permalink to this headline">¶</a></h3>
-<p>You can use <code class="docutils literal notranslate"><span class="pre">backticks</span></code> for showing <code class="docutils literal notranslate"><span class="pre">highlighted</span></code> code.</p>
-<p><a class="reference external" href="http://sphinx-doc.org">A cool website</a></p>
-<p>A cool bit of code:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Some</span> <span class="n">cool</span> <span class="n">Code</span>
-</pre></div>
+  <div class="section" id="introduction-to-repodb">
+<h1>Introduction to RepoDb<a class="headerlink" href="#introduction-to-repodb" title="Permalink to this headline">¶</a></h1>
+<p>A dynamic ORM .NET Library used to create an entity-based repository classes when accessing data from the database.</p>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>We aim to let .NET developers limit the implementation of SQL Statements within the application.</p>
+<p>We believe that as a .NET developer, one should only focus on .NET and Business scenario development and not on writing repetitive SQL Statements.</p>
+<p>Of course, unless you are working closely with SQL Server Management Studio.</p>
 </div>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>A bit of <span class="gs">**rst**</span> which should be <span class="ge">*highlighted*</span> properly.
-</pre></div>
+<div class="section" id="principles">
+<h2>Principles<a class="headerlink" href="#principles" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>We will keep it simple as possible (KISS principle)</li>
+<li>We will make it fast as possible</li>
+<li>We will never make complex implementations (specially for Queries and Methods)</li>
+<li>We will avoid developing complex JOINs (until it is needed and requested by the community)</li>
+<li>We will never ever do try-catch inside the library</li>
+<li>We will help developers to be more focus on SOLID principle</li>
+</ul>
 </div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<div class="section" id="why-repodb">
+<h2>Why RepoDb?<a class="headerlink" href="#why-repodb" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Operations (Asynchronous)</li>
+<li>Type Mapping</li>
+<li>Field Mapping</li>
+<li>Multiple Mapping</li>
+<li>Expression Tree</li>
+<li>Caching</li>
+<li>Tracing</li>
+<li>SQL Statement Builder</li>
+<li>Transactions</li>
 </ul>
 </div>
 </div>
+<div class="section" id="creating-a-dataentity">
+<h1>Creating a DataEntity<a class="headerlink" href="#creating-a-dataentity" title="Permalink to this headline">¶</a></h1>
+<p>An entity class is a DTO class used to feed the operations of the repositories. See documentation below.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DataEntity/DataEntity.html">DataEntity Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataEntity/IDataEntity.html">IDataEntity Interface</a></li>
+</ul>
 </div>
+<p>See sample codes below:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">ICustomer</span> <span class="p">:</span> <span class="n">IDataEntity</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span><span class="p">,</span> <span class="n">ICustomer</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapping-with-mapattribute">
+<h1>Mapping with MapAttribute<a class="headerlink" href="#mapping-with-mapattribute" title="Permalink to this headline">¶</a></h1>
+<p>A <cite>MapAttribute</cite> is used to define a mapping of the current <cite>Class</cite> or <cite>Property</cite> equivalent to an <cite>Object</cite> or <cite>Field</cite> name in the database. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="MapAttribute/ClassMapping.html">Mapping a Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MapAttribute/PropertyMapping.html">Mapping a Property</a></li>
+</ul>
+</div>
+<p>The <cite>Map</cite> attribute second parameter is a command type <cite>of type System.Data.CommandType</cite>. If this parameter is defined, the repository operation execution will then be of that command type. This parameter is only working at the class level implementation.</p>
+<p>See Microsoft documentation for <a class="reference external" href="https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx">System.Data.CommandType</a> here.</p>
+</div>
+<div class="section" id="primary-attribute">
+<h1>Primary Attribute<a class="headerlink" href="#primary-attribute" title="Permalink to this headline">¶</a></h1>
+<p>A <cite>PrimaryAttribute</cite> is used to define the class property as primary property of the <cite>DataEntity</cite> object. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
+<p>See sample codes below:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="p">{</span>
+<span class="na">        [Primary]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="defining-an-identity-property">
+<h2>Defining an Identity Property<a class="headerlink" href="#defining-an-identity-property" title="Permalink to this headline">¶</a></h2>
+<p>To define an identity property, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> during the implementation.</p>
+<p>See sample codes below:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="p">{</span>
+<span class="na">        [Primary(true)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ignore-attribute">
+<h1>Ignore Attribute<a class="headerlink" href="#ignore-attribute" title="Permalink to this headline">¶</a></h1>
+<p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
+<p>Example: If of type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property will not be a part of the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
+<p>See sample codes below:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [Ignore(Command.Insert | Command.Update)]</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below are the commands that can be defined using the <cite>IgnoreAttribute</cite>.</p>
+<ul class="simple">
+<li>None</li>
+<li>Query</li>
+<li>Insert</li>
+<li>Update</li>
+<li>Delete</li>
+<li>Merge</li>
+<li>BatchQuery</li>
+<li>InlineUpdate</li>
+</ul>
+</div>
+<div class="section" id="working-wth-repository">
+<h1>Working wth Repository<a class="headerlink" href="#working-wth-repository" title="Permalink to this headline">¶</a></h1>
+<p>The library contains two repository objects, the <cite>RepoDb.BaseRepository&lt;TEntity, TDbConnection&gt;</cite> and the <cite>RepoDb.DbRepository&lt;TDbConnection&gt;</cite>.</p>
+<p>The latter is the <strong>heart</strong> of the library as it contains all the operations that is being used by all other repositories within or outside the library.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Repository/DbRepository.html">DbRepository Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Repository/BaseRepository.html">BaseRepository Class</a></li>
+</ul>
+</div>
+<div class="section" id="dbrepository">
+<h2>DbRepository<a class="headerlink" href="#dbrepository" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="baserepository">
+<h2>BaseRepository<a class="headerlink" href="#baserepository" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="creating-a-repository">
+<h1>Creating a Repository<a class="headerlink" href="#creating-a-repository" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="creating-a-connection">
+<h1>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="connection-ensureopen">
+<h2>Connection.EnsureOpen<a class="headerlink" href="#connection-ensureopen" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="connection-executereader">
+<h2>Connection.ExecuteReader<a class="headerlink" href="#connection-executereader" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="connection-executequery">
+<h2>Connection.ExecuteQuery<a class="headerlink" href="#connection-executequery" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="connection-executenonquery">
+<h2>Connection.ExecuteNonQuery<a class="headerlink" href="#connection-executenonquery" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="connection-executescalar">
+<h2>Connection.ExecuteScalar<a class="headerlink" href="#connection-executescalar" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="transaction">
+<h1>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="creating-a-transaction">
+<h2>Creating a Transaction<a class="headerlink" href="#creating-a-transaction" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="transaction-commit-rollback">
+<h2>Transaction Commit/Rollback<a class="headerlink" href="#transaction-commit-rollback" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="expression-tree">
+<h1>Expression Tree<a class="headerlink" href="#expression-tree" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="querygroup">
+<h1>QueryGroup<a class="headerlink" href="#querygroup" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="operations">
+<h1>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="operation-equal">
+<h2>Operation.Equal<a class="headerlink" href="#operation-equal" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-notequal">
+<h2>Operation.NotEqual<a class="headerlink" href="#operation-notequal" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-lessthan">
+<h2>Operation.LessThan<a class="headerlink" href="#operation-lessthan" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-greaterthan">
+<h2>Operation.GreaterThan<a class="headerlink" href="#operation-greaterthan" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-lessthanorequal">
+<h2>Operation.LessThanOrEqual<a class="headerlink" href="#operation-lessthanorequal" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-greaterthanorequal">
+<h2>Operation.GreaterThanOrEqual<a class="headerlink" href="#operation-greaterthanorequal" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-like">
+<h2>Operation.Like<a class="headerlink" href="#operation-like" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-notlike">
+<h2>Operation.NotLike<a class="headerlink" href="#operation-notlike" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-between">
+<h2>Operation.Between<a class="headerlink" href="#operation-between" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-notbetween">
+<h2>Operation.NotBetween<a class="headerlink" href="#operation-notbetween" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-in">
+<h2>Operation.In<a class="headerlink" href="#operation-in" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-notin">
+<h2>Operation.NotIn<a class="headerlink" href="#operation-notin" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-all">
+<h2>Operation.All<a class="headerlink" href="#operation-all" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="operation-any">
+<h2>Operation.Any<a class="headerlink" href="#operation-any" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+<div class="section" id="repository-operations">
+<h1>Repository Operations<a class="headerlink" href="#repository-operations" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -63,19 +263,64 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">RepoDb Documentation</a><ul>
-<li><a class="reference internal" href="#this-is-the-section">This is the section</a><ul>
-<li><a class="reference internal" href="#this-is-the-sub-section">This is the sub section</a></li>
+<li><a class="reference internal" href="#">Introduction to RepoDb</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#principles">Principles</a></li>
+<li><a class="reference internal" href="#why-repodb">Why RepoDb?</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a></li>
+<li><a class="reference internal" href="#mapping-with-mapattribute">Mapping with MapAttribute</a></li>
+<li><a class="reference internal" href="#primary-attribute">Primary Attribute</a><ul>
+<li><a class="reference internal" href="#defining-an-identity-property">Defining an Identity Property</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
+<li><a class="reference internal" href="#working-wth-repository">Working wth Repository</a><ul>
+<li><a class="reference internal" href="#dbrepository">DbRepository</a></li>
+<li><a class="reference internal" href="#baserepository">BaseRepository</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-repository">Creating a Repository</a></li>
+<li><a class="reference internal" href="#creating-a-connection">Creating a Connection</a><ul>
+<li><a class="reference internal" href="#connection-ensureopen">Connection.EnsureOpen</a></li>
+<li><a class="reference internal" href="#connection-executereader">Connection.ExecuteReader</a></li>
+<li><a class="reference internal" href="#connection-executequery">Connection.ExecuteQuery</a></li>
+<li><a class="reference internal" href="#connection-executenonquery">Connection.ExecuteNonQuery</a></li>
+<li><a class="reference internal" href="#connection-executescalar">Connection.ExecuteScalar</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transaction">Transaction</a><ul>
+<li><a class="reference internal" href="#creating-a-transaction">Creating a Transaction</a></li>
+<li><a class="reference internal" href="#transaction-commit-rollback">Transaction Commit/Rollback</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#expression-tree">Expression Tree</a></li>
+<li><a class="reference internal" href="#querygroup">QueryGroup</a></li>
+<li><a class="reference internal" href="#operations">Operations</a><ul>
+<li><a class="reference internal" href="#operation-equal">Operation.Equal</a></li>
+<li><a class="reference internal" href="#operation-notequal">Operation.NotEqual</a></li>
+<li><a class="reference internal" href="#operation-lessthan">Operation.LessThan</a></li>
+<li><a class="reference internal" href="#operation-greaterthan">Operation.GreaterThan</a></li>
+<li><a class="reference internal" href="#operation-lessthanorequal">Operation.LessThanOrEqual</a></li>
+<li><a class="reference internal" href="#operation-greaterthanorequal">Operation.GreaterThanOrEqual</a></li>
+<li><a class="reference internal" href="#operation-like">Operation.Like</a></li>
+<li><a class="reference internal" href="#operation-notlike">Operation.NotLike</a></li>
+<li><a class="reference internal" href="#operation-between">Operation.Between</a></li>
+<li><a class="reference internal" href="#operation-notbetween">Operation.NotBetween</a></li>
+<li><a class="reference internal" href="#operation-in">Operation.In</a></li>
+<li><a class="reference internal" href="#operation-notin">Operation.NotIn</a></li>
+<li><a class="reference internal" href="#operation-all">Operation.All</a></li>
+<li><a class="reference internal" href="#operation-any">Operation.Any</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#repository-operations">Repository Operations</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="install.html" title="next chapter">Installation</a></li>
+      <li>Next: <a href="DataEntity/DataEntity.html" title="next chapter">DataEntity Class</a></li>
   </ul></li>
 </ul>
 </div>

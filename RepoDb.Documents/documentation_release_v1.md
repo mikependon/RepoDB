@@ -19,7 +19,6 @@ It is also advisable (not required) that an explicit interface must be implement
 
 ```
 public interface IStock : IDataEntity
-
 {
 	int Id { get; set; }
 	string Name { get; set; }
