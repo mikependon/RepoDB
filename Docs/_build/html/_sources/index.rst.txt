@@ -559,6 +559,75 @@ Below are the parameters:
 - **transaction**: the transaction object be used when executing the command.
 - **trace**: the trace object to be used on this operation.
 
+Working with StoredProcedure
+----------------------------
+
+.. highlight:: c#
+
+Calling a stored procedure is a simple as a	executing any SQL Statements via repository, and by setting the `CommandType` to `StoredProcedure`.
+
+Say a Stored Procedure below exists in the database.
+
+.. highlight:: sql
+
+::
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_GetCustomer];
+	GO
+
+	CREATE PROCEDURE [dbo].[sp_GetCustomer]
+	(
+		@Id BIGINT
+	)
+	AS
+	BEGIN
+
+		SELECT Id
+			, Name
+			, Title
+			, UpdatedDate
+			, CreatedDate
+		FROM [dbo].[Customer]
+		WHERE (Id = @Id);
+
+	END
+
+.. highlight:: c#
+
+Below is the way on how to call the Stored Procedure defined above via `ExecuteQuery`.
+
+::
+
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
+	using (var connection = repository.CreateConnection().EnsureOpen())
+	{
+		var customers =  connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
+		customers
+			.ToList()
+			.ForEach(customer =>
+			{
+				// Process each customer here
+			});
+	}
+
+Or, via `ExeucteReader`.
+
+::
+
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
+	using (var connection = repository.CreateConnection().EnsureOpen())
+	{
+		using (var reader =  connection.ExecuteReader<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure))
+		{
+			while (reader.Read())
+			{
+				// Process each row here
+			}
+		}
+	}
+
+**Note**: The multiple mapping also supports the Stored Procedure by binding it to the entity object.
+
 Transaction
 ===========
 
