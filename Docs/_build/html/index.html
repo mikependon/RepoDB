@@ -15,7 +15,6 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="DbRepository Class" href="Repository/DbRepository.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -68,6 +67,7 @@
 <div class="section" id="installation-steps">
 <h1>Installation Steps<a class="headerlink" href="#installation-steps" title="Permalink to this headline">¶</a></h1>
 <p>There are two ways of installing the library as standardized by Microsoft. First, via Nuget Package Manager, and secondly, via Package Manager Console.</p>
+<p><strong>Pre-requisite</strong>: A Microsoft Visual Studio has already been installed and a Project Solution has already been created.</p>
 <div class="section" id="via-nuget-package-manager">
 <h2>Via Nuget Package Manager<a class="headerlink" href="#via-nuget-package-manager" title="Permalink to this headline">¶</a></h2>
 <p>Once the project solution is open, then do the following steps.</p>
@@ -101,8 +101,6 @@
 <p>Acts as the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb</cite> namespace.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">ClassName</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -112,8 +110,6 @@
 <p>An interface used to implement to mark a class to be the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb.Interfaces</cite> namespace.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">IClassName</span> <span class="p">:</span> <span class="n">IDataEntity</span>
 <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-        <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -197,33 +193,138 @@
 <li>InlineUpdate</li>
 </ul>
 </div>
+<div class="section" id="multiple-entity-mapping">
+<h1>Multiple Entity Mapping<a class="headerlink" href="#multiple-entity-mapping" title="Permalink to this headline">¶</a></h1>
+<p>This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a <cite>DataEntity</cite> object into multiple object in the database. This is very usable for some complex requirements that includes like the implementations of <cite>Table</cite>, <cite>Views</cite> and <cite>StoredProcedures</cite> must be mapped into one <cite>DataEntity</cite> object.</p>
+<p>The class named <cite>RepoDb.DataEntityMapper</cite> is used when doing a multiple mapping. Below are the methods.</p>
+<ul class="simple">
+<li><strong>For</strong>: used to create a mapping between the data entity and database object. Returns an <cite>RepoDb.DataEntityMapItem</cite> object.</li>
+</ul>
+<p>The class named <cite>RepoDb.DataEntityMapItem</cite> is used to map the operation level of the repository into the database object. Below are the methods.</p>
+<ul class="simple">
+<li><strong>On</strong>: used to map on which repository command operation and database object the mapping is implemented.</li>
+<li><strong>Set</strong>: used to set the repository command operation data entity mapping definition. This is the underlying method being called by <cite>On</cite> method.</li>
+<li><strong>Get</strong>: get the entity mapping definition defined on the repository command operation.</li>
+</ul>
+<p>Multi-mapping is bound in an operation-level of the repository. This means that the developer can map the <cite>Query</cite> operation of a <cite>Customer</cite> object into <cite>[dbo].[Customer]</cite> table of the database, whereas the <cite>Delete</cite> operation is mapped into <cite>[dbo].[sp_DeleteCustomer]</cite> database object.</p>
+<p>Let say a <cite>Customer</cite> entity object was created in the solution, and the following database objects exist.</p>
+<blockquote>
+<div><ul class="simple">
+<li>A table named <cite>Customer</cite>.</li>
+<li>A stored procedure named <cite>sp_DeleteCustomer</cite>.</li>
+<li>A stored procedure named <cite>sp_InsertCustomer</cite>, where the logic inside of is joining from different database tables.</li>
+<li>A view named <cite>vw_Customer</cite>.</li>
+</ul>
+</div></blockquote>
+<p>Developers can simply call the mapper methods when mapping a <cite>Customer</cite> object into these database objects.</p>
+<p>Below are the codes for multiple mapping.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DataEntityMapper</span><span class="p">.</span><span class="n">For</span><span class="p">&lt;</span><span class="n">Stock</span><span class="p">&gt;()</span>
+        <span class="p">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Insert</span><span class="p">,</span> <span class="s">&quot;[dbo].[sp_QueryCustomer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Delete</span><span class="p">,</span> <span class="s">&quot;[dbo].[sp_DeleteCustomer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Query</span><span class="p">,</span> <span class="s">&quot;[dbo].[vw_Customer]&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Update</span><span class="p">,</span> <span class="s">&quot;[dbo].[Customer]&quot;</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">,</span> <span class="s">&quot;[dbo].[Customer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">TableDirect</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These feature has its own limitations. All mappings could not be done on every command (i.e Count, CountBig, Merge, ExecuteQuery, ExecuteNonQuery, ExecuteReader, ExecuteScalar).</p>
+<p>Below are the supported mapping for each command.</p>
+<ul class="simple">
+<li><strong>BatchQuery</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
+<li><strong>Count</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
+<li><strong>CountBig</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
+<li><strong>InlineUpdate</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
+<li><strong>Merge</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
+<li><strong>BulkInsert</strong>: only for a database Table and <cite>CommandType.&lt;Text | TableDirect&gt;</cite>.</li>
+<li><strong>Insert</strong>: full support.</li>
+<li><strong>Delete</strong>: full support.</li>
+<li><strong>Query</strong>: full support.</li>
+<li><strong>Update</strong>: full support.</li>
+</ul>
+<p>Attempt to map to a wrong command would throw an <cite>System.InvalidOperationException</cite> back to the caller.</p>
+</div>
+<div class="section" id="type-mapping">
+<h1>Type Mapping<a class="headerlink" href="#type-mapping" title="Permalink to this headline">¶</a></h1>
+<p>Type mapping is feature that allows the library to identify which type of .NET is equivalent to the <cite>System.Data.DbType</cite> types. This feature is important to force the library the conversion it will going to specially when running the repository operations.</p>
+<p>Below is the way on how to map the <cite>System.DateTime</cite> to be equivalent as <cite>System.Data.DbType.DateTime2</cite>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">),</span> <span class="n">DbType</span><span class="p">.</span><span class="n">DateTime2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>and <cite>System.Decimal</cite> into <cite>System.Data.DbType.Double</cite>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="p">.</span><span class="n">AddMap</span><span class="p">(</span><span class="k">new</span> <span class="n">TypeMap</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="p">.</span><span class="n">Double</span><span class="p">));</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The class is callable anywhere in the application as it was implemented in a static way.</p>
+</div>
 <div class="section" id="working-wth-repository">
 <h1>Working wth Repository<a class="headerlink" href="#working-wth-repository" title="Permalink to this headline">¶</a></h1>
 <p>The library contains two repository objects, the <cite>RepoDb.BaseRepository&lt;TEntity, TDbConnection&gt;</cite> and the <cite>RepoDb.DbRepository&lt;TDbConnection&gt;</cite>.</p>
 <p>The latter is the heart of the library as it contains all the operations that is being used by all other repositories within or outside the library.</p>
 <div class="section" id="dbrepository-class">
 <h2>DbRepository Class<a class="headerlink" href="#dbrepository-class" title="Permalink to this headline">¶</a></h2>
-<p>A base object for all shared-based repositories.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">INorthwindDbRepository</span> <span class="p">:</span> <span class="n">IDbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
-<span class="p">{</span>
-<span class="p">}</span>
-
-<span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
+<p>A base object for all shared-based repositories. This object is usually being inheritted if the derived class is meant for shared-based operations. This object is used by <cite>RepoDb.BaseRepository&lt;TEntity, TDbConnection&gt;</cite> as an underlying repository for all of its operations. Located at <cite>RepoDb</cite> namespace.</p>
+<p>This means that, the <cite>RepoDb.BaseRepository&lt;TEntity, TDbConnection&gt;</cite> is only abstracting the operations of the <cite>RepoDb.DbRepository&lt;TDbConnection&gt;</cite> object in all areas.</p>
+<p>Below are the constructor parameters:</p>
+<ul class="simple">
+<li><strong>connectionString</strong>: the connection string to connect to.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds. It is being used to set the value of the <cite>DbCommand.CommandTimeout</cite> object prior to the execution of the operation.</li>
+<li><strong>cache (optional)</strong>: the cache object to be used by the repository. By default, the repository is using the <cite>RepoDb.MemoryCache</cite> object.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used by the repository. The default is <cite>null</cite>.</li>
+<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by the repository. By default, the repository is using the <cite>RepoDb.SqlDbStatementBuilder</cite> object.</li>
+</ul>
+<p>This repository can be instantiated directly or indirectly. Indirectly means, it should be abstracted first before instantiation.</p>
+<p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Another way of creating a <cite>DbRepository</cite> is by abstracting it through derived classes. See sample code below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
         <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>See the documentation below.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Repository/DbRepository.html">DbRepository Class</a></li>
-</ul>
+<p>Then, call it somewhere.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindRepository</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>It is recommended to create a contracted interface for <cite>DbRepository</cite> in order for it to be dependency injectable.</p>
+<p>See sample code below the way on how to create an interface and implement it directly to the derived class.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">INorthwindDbRepository</span> <span class="p">:</span> <span class="n">IDbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;,</span> <span class="n">INorthwindDbRepository</span>
+        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="baserepository-class">
 <h2>BaseRepository Class<a class="headerlink" href="#baserepository-class" title="Permalink to this headline">¶</a></h2>
-<p>An abstract class for all entity-based repositories.</p>
+<p>An abstract class for all entity-based repositories. This object is usually being inheritted if the derived class is meant for entity-based operations. Located at <cite>RepoDb</cite> namespace.</p>
+<p>The operational scope of this repository is only limited to its defined target <cite>DataEntity</cite> object.</p>
+<p>Below are the constructor parameters:</p>
+<ul class="simple">
+<li><strong>connectionString</strong>: the connection string to connect to.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds. It is being used to set the value of the <cite>DbCommand.CommandTimeout</cite> object prior to the execution of the operation.</li>
+<li><strong>cache (optional)</strong>: the cache object to be used by the repository. By default, the repository is using the <cite>RepoDb.MemoryCache</cite> object.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used by the repository. The default is <cite>null</cite>.</li>
+<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by the repository. By default, the repository is using the <cite>RepoDb.SqlDbStatementBuilder</cite> object.</li>
+</ul>
+<p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
+        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then, call it somewhere.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>It is recommended to create a contracted interface for <cite>BaseRepository</cite> in order for it to be dependency injectable.</p>
+<p>See sample code below the way on how to create an interface and implement it directly to the derived class.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">ICustomerRepository</span> <span class="p">:</span> <span class="n">IBaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
 <span class="p">{</span>
 <span class="p">}</span>
@@ -233,12 +334,6 @@
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
-</div>
-<p>See the documentation below.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Repository/BaseRepository.html">BaseRepository Class</a></li>
-</ul>
 </div>
 </div>
 <div class="section" id="creating-a-connection">
@@ -632,18 +727,21 @@
 <h2>Operation.Equal<a class="headerlink" href="#operation-equal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine the <cite>equality</cite> of the field and data.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
 <span class="p">{</span>
         <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="m">10045</span> <span class="p">));</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="m">10045</span> <span class="p">));</span>
 </pre></div>
 </div>
 </div>
@@ -651,14 +749,16 @@
 <h2>Operation.NotEqual<a class="headerlink" href="#operation-notequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine the <cite>inequality</cite> of the field and data.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
 <span class="p">{</span>
         <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -666,11 +766,13 @@
 <h2>Operation.LessThan<a class="headerlink" href="#operation-lessthan" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>less than</cite> of the defined value.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -678,11 +780,13 @@
 <h2>Operation.GreaterThan<a class="headerlink" href="#operation-greaterthan" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>greater than</cite> of the defined value.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -690,11 +794,13 @@
 <h2>Operation.LessThanOrEqual<a class="headerlink" href="#operation-lessthanorequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>less than or equal</cite> of the defined value.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -702,11 +808,13 @@
 <h2>Operation.GreaterThanOrEqual<a class="headerlink" href="#operation-greaterthanorequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>greater than or equal</cite> of the defined value.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -714,11 +822,13 @@
 <h2>Operation.Like<a class="headerlink" href="#operation-like" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field is <cite>identitical</cite> to a given value.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -726,11 +836,13 @@
 <h2>Operation.NotLike<a class="headerlink" href="#operation-notlike" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field is <cite>not identitical</cite> to a given value. An opposite of <cite>Operation.Like</cite>.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -738,19 +850,23 @@
 <h2>Operation.Between<a class="headerlink" href="#operation-between" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>between</cite> 2 given values.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -758,19 +874,23 @@
 <h2>Operation.NotBetween<a class="headerlink" href="#operation-notbetween" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>not between</cite> 2 given values. An opposite of <cite>Operation.Between</cite>.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;CreatedDate&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -778,11 +898,13 @@
 <h2>Operation.In<a class="headerlink" href="#operation-in" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>in</cite> given values.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -790,11 +912,13 @@
 <h2>Operation.NotIn<a class="headerlink" href="#operation-notin" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>not in</cite> given values. An opposite of <cite>Operation.In</cite>. See sample below.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span> <span class="p">}</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
 </div>
@@ -802,7 +926,8 @@
 <h2>Operation.All<a class="headerlink" href="#operation-all" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether <cite>all</cite> the field values satisfied the criteria.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
 <span class="p">{</span>
         <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
@@ -818,7 +943,8 @@
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;</span>
 <span class="p">(</span>
         <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
         <span class="p">{</span>
@@ -835,7 +961,8 @@
 <h2>Operation.Any<a class="headerlink" href="#operation-any" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether <cite>any</cite> of the field values satisfied the criteria.</p>
 <p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="k">new</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
 <span class="p">{</span>
         <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
         <span class="p">{</span>
@@ -851,7 +978,8 @@
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;</span>
 <span class="p">(</span>
         <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
         <span class="p">{</span>
@@ -1137,12 +1265,12 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>Dynamic way:
-<code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">var</span> <span class="pre">repository</span> <span class="pre">=</span> <span class="pre">new</span> <span class="pre">DbRepository&lt;SqlConnection&gt;(&#64;&quot;Server=.;Database=Northwind;Integrated</span> <span class="pre">Security=SSPI;&quot;);</span>
-<span class="pre">var</span> <span class="pre">affectedRows</span> <span class="pre">=</span> <span class="pre">repository.Delete&lt;Order&gt;(new</span> <span class="pre">{</span> <span class="pre">Id</span> <span class="pre">=</span> <span class="pre">&quot;251&quot;</span> <span class="pre">});</span>
-<span class="pre">`</span></code>
-<strong>Note</strong>: Deleting a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: Deleting a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
 </div>
 <div class="section" id="merge-operation">
 <h2>Merge Operation<a class="headerlink" href="#merge-operation" title="Permalink to this headline">¶</a></h2>
@@ -1154,14 +1282,13 @@
 <li><strong>transaction</strong>: the transaction object to be used when merging a data.</li>
 </ul>
 <p>Below is a sample on how to merge a data.</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd>var repository = new DbRepository&lt;SqlConnection&gt;(&#64;”Server=.;Database=Northwind;Integrated Security=SSPI;”);
-var order = repository.Query&lt;Order&gt;(1);
-order.Quantity = 5;
-UpdatedDate = DateTime.UtcNow;
-repository.Merge(order, Field.Parse(new { order.Id }));</dd>
-</dl>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">1</span><span class="p">);</span>
+<span class="n">order</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
+<span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">;</span>
+<span class="n">repository</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">}));</span>
+</pre></div>
+</div>
 <p><strong>Note</strong>: The merge is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.</p>
 </div>
 <div class="section" id="inlineupdate-operation">
@@ -1334,6 +1461,765 @@ repository.Merge(order, Field.Parse(new { order.Id }));</dd>
 </div>
 </div>
 </div>
+<div class="section" id="working-with-cache">
+<h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
+<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository. It can be access through the repository <cite>Cache</cite> property (implements <cite>RepoDb.Interfaces.ICache</cite> interface).</p>
+<p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
+<p>Below are the methods of <cite>ICache</cite> object.</p>
+<ul class="simple">
+<li><strong>Add</strong>: accepts an <cite>item</cite> or a <cite>key</cite> and <cite>value</cite> pair parameters. It adds an item to the <cite>Cache</cite> object. If an item is already existing, the item will be overriden.</li>
+<li><strong>Clear</strong>: clear all items from the cache.</li>
+<li><strong>Contains</strong>: accepts a <cite>key</cite> parameter. Checks whether the <cite>Cache</cite> object contains an item with the defined key.</li>
+<li><strong>Get</strong>: accepts a <cite>key</cite> parameter. Returns a cached item object.</li>
+<li><strong>GetEnumerator</strong>: returns an enumerator for <cite>IEnumerable&lt;ICacheItem&gt;</cite> objects. It contains all the cached items from the <cite>Cache</cite> object.</li>
+<li><strong>Remove</strong>: accepts a <cite>key</cite> parameter. Removes an entry from the <cite>Cache</cite> object.</li>
+</ul>
+<p>One important object when manipulating a cache is the <cite>CacheItem</cite> object (implements <cite>RepoDb.Interfaces.ICacheItem</cite>). It acts as the cache item entry for the cache object.</p>
+<p>Below are the constructor arguments of the <cite>ICacheItem</cite> object.</p>
+<ul class="simple">
+<li><strong>key</strong>: the key of the cache.</li>
+<li><strong>value</strong>: the value object of the cache.</li>
+</ul>
+<p>Below are the properties of <cite>ICacheItem</cite> object.</p>
+<ul class="simple">
+<li><strong>Key</strong>: the key of the cache. It returns a <cite>System.String</cite> type.</li>
+<li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
+<li><strong>Timestamp</strong>: the time of the cache last refreshed. It returns a <cite>System.DateTime</cite> object.</li>
+</ul>
+<p>The repository caching operation is of the <cite>pseudo</cite> below.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
+IF ($cacheKey is not null) THEN
+        set $item = get value from cache where the key equals to $cacheKey
+        IF ($item is not null) THEN
+                RETURN item
+        END IF
+END IF
+VAR $result = query the data from the database
+IF ($result is not null AND $cacheKey is not null) THEN
+        Add cache item where:
+                Key = $cacheKey
+                Value = $result
+END IF
+RETURN $result
+</pre></div>
+</div>
+<p>Below is the way on how to query and cache the <cite>Stock</cite> data from the database with caching enabled.</p>
+<div class="section" id="creating-a-cache-entry">
+<h2>Creating a Cache Entry<a class="headerlink" href="#creating-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<p>The snippets below declared a variable named <cite>cacheKey</cite>. The value of this variable acts as the key value of the items to be cached by the repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">cacheKey</span> <span class="p">=</span> <span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">},</span> <span class="n">cacheKey</span><span class="p">:</span> <span class="n">cacheKey</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>First, it wil query the data from the database where the <cite>Name</cite> is started at <cite>Anna</cite>. Then, the operation will cache the result into the <cite>Cache</cite> object with the given key at the variable named <cite>cacheKey</cite> (valued <cite>CacheKey.Customers.StartsWith.Anna</cite>).</p>
+<p>The next time the same query is executed, the repository automatically returns the cached item if the same key is passed.</p>
+<p>Please note that the cache object of the repository is immutable per instance, this means that accessing the cache object directly passing the same cache key would return the same result.</p>
+<p>Codes below will return the same result as above assuming the same repository object is used.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="checking-a-cache-entry">
+<h2>Checking a Cache Entry<a class="headerlink" href="#checking-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to check if the cached item is present on the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterating-the-cache-entries">
+<h2>Iterating the Cache Entries<a class="headerlink" href="#iterating-the-cache-entries" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to retrieve or iterate all the cached items from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Let&#39;s expect that the repository is meant for Customer data entity</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">item</span><span class="p">;</span>
+        <span class="c1">// Process the item here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="removing-or-clearing-a-cache">
+<h2>Removing or Clearing a Cache<a class="headerlink" href="#removing-or-clearing-a-cache" title="Permalink to this headline">¶</a></h2>
+<p>By default, the library does not support the auto-flush of the cache. Those forcing the developers to handle the flushing on its way.</p>
+<p>Clearing or removing an entry from a cache is the only way to flush the cached objects.</p>
+<p>See below on how to clear the cached item from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Below is the way to remove specific cache item.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="injecting-a-custom-cache-object">
+<h2>Injecting a Custom Cache Object<a class="headerlink" href="#injecting-a-custom-cache-object" title="Permalink to this headline">¶</a></h2>
+<p>The library supports a cache object injection in the repository level. As mentioned earlier, by default, the library is using the <cite>RepoDb.MemoryCache</cite> object. It can overriden by creating a class and implements the <cite>RepoDb.Interfaces.ICache</cite> interface, and passed it to the <cite>cache</cite> argument of the repository constructor.</p>
+<p>Below is the way on how to create a custom <cite>Cache</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="nf">FileCache</span><span class="p">(</span><span class="kt">string</span> <span class="n">location</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Add a logic on the constructor</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Serialize to a File</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">ICacheItem</span> <span class="n">item</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Serialize to a File</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Clear</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Delete the Files</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Contains</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Check if the Filename exists by Key</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">object</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Deserialize the File where the FileName is equals to Key, return the object</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">ICacheItem</span><span class="p">&gt;</span> <span class="n">GetEnumerator</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Remove</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Delete the File where the FileName is equals to Key</span>
+        <span class="p">}</span>
+
+        <span class="n">IEnumerator</span> <span class="n">IEnumerable</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is the way on how to inject the custom cache to a repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
+        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
+        <span class="n">fileCache</span><span class="p">,</span> <span class="c1">// cache</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// trace</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
+<p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the cache manager object of the <cite>Query</cite> operation.</p>
+<p><strong>Note:</strong> The caller can activate a debugger on the <cite>FileCache</cite> class to enable debugging. When the callers call the <cite>Query</cite> method and passed a <cite>cacheKey</cite> value on it, the breakpoint will be hit by the debugger if it is placed inside <cite>Add</cite> method of the <cite>FileCache</cite> class.</p>
+</div>
+</div>
+<div class="section" id="working-with-trace">
+<h1>Working with Trace<a class="headerlink" href="#working-with-trace" title="Permalink to this headline">¶</a></h1>
+<p>One of the unique built-in feature of the library is tracing. It allows developers to do debugging or tracing on the operations while executing it against the database.</p>
+<p>With tracing, the developers can able to create its own <cite>Trace</cite> object and inject in the repository.</p>
+<div class="section" id="itrace-interface">
+<h2>ITrace Interface<a class="headerlink" href="#itrace-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface is the heart of library’s tracing feature. It resides from <cite>RepoDb.Interfaces</cite> namespace. This interface is required to be implemented at the custom trace classes to enable the tracing, then, the custom class must be injected in the repository.</p>
+<p>The <cite>ITrace</cite> interface has the follow trace methods.</p>
+<ul class="simple">
+<li><strong>AfterBatchQuery</strong>: called after the <cite>Repository.BatchQuery</cite> operation has been executed.</li>
+<li><strong>AfterBulkInsert</strong>: called after the <cite>Repository.BulkInsert</cite> operation has been executed.</li>
+<li><strong>AfterCount</strong>: called after the <cite>Repository.Count</cite> operation has been executed.</li>
+<li><strong>AfterCountBig</strong>: called after the <cite>Repository.CountBig</cite> operation has been executed.</li>
+<li><strong>AfterDelete</strong>: called after the <cite>Repository.Delete</cite> operation has been executed.</li>
+<li><strong>AfterExecuteNonQuery</strong>: called after the <cite>Repository.ExecuteNonQuery</cite> operation has been executed.</li>
+<li><strong>AfterExecuteQuery</strong>: called after the <cite>Repository.ExecuteQuery</cite> operation has been executed.</li>
+<li><strong>AfterExecuteReader</strong>: called after the <cite>Repository.ExecuteReader</cite> operation has been executed.</li>
+<li><strong>AfterExecuteScalar</strong>: called after the <cite>Repository.ExecuteScalar</cite> operation has been executed.</li>
+<li><strong>AfterInlineUpdate</strong>: called after the <cite>Repository.InlineUpdate</cite> operation has been executed.</li>
+<li><strong>AfterInsert</strong>: called after the <cite>Repository.Insert</cite> operation has been executed.</li>
+<li><strong>AfterMerge</strong>: called after the <cite>Repository.Merge</cite> operation has been executed.</li>
+<li><strong>AfterQuery</strong>: called after the <cite>Repository.Query</cite> operation has been executed.</li>
+<li><strong>AfterUpdate</strong>: called after the <cite>Repository.Update</cite> operation has been executed.</li>
+</ul>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ITraceLog</cite>.</p>
+<ul class="simple">
+<li><strong>BeforeBatchQuery</strong>: called before the <cite>Repository.BatchQuery</cite> actual execution.</li>
+<li><strong>BeforeBulkInsert</strong>: called before the <cite>Repository.BulkInsert</cite> actual execution.</li>
+<li><strong>BeforeCount</strong>: called before the <cite>Repository.Count</cite> actual execution.</li>
+<li><strong>BeforeCountBig</strong>: called before the <cite>Repository.CountBig</cite> actual execution.</li>
+<li><strong>BeforeDelete</strong>: called before the <cite>Repository.Delete</cite> actual execution.</li>
+<li><strong>BeforeExecuteNonQuery</strong>: called before the <cite>Repository.ExecuteNonQuery</cite> actual execution.</li>
+<li><strong>BeforeExecuteQuery</strong>: called before the <cite>Repository.ExecuteQuery</cite> actual execution.</li>
+<li><strong>BeforeExecuteReader</strong>: called before the <cite>Repository.ExecuteReader</cite> actual execution.</li>
+<li><strong>BeforeExecuteScalar</strong>: called before the <cite>Repository.ExecuteScalar</cite> actual execution.</li>
+<li><strong>BeforeInlineUpdate</strong>: called before the <cite>Repository.InlineUpdate</cite> actual execution.</li>
+<li><strong>BeforeInsert</strong>: called before the <cite>Repository.Insert</cite> actual execution.</li>
+<li><strong>BeforeMerge</strong>: called before the <cite>Repository.Merge</cite> actual execution.</li>
+<li><strong>BeforeQuery</strong>: called before the <cite>Repository.Query</cite> actual execution.</li>
+<li><strong>BeforeUpdate</strong>: called before the <cite>Repository.Update</cite> actual execution.</li>
+</ul>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ICancellableTraceLog</cite>.</p>
+</div>
+<div class="section" id="itracelog-interface">
+<h2>ITraceLog Interface<a class="headerlink" href="#itracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument during the <cite>After</cite> operations.</p>
+<p>Below are the properties of <cite>ITraceLog</cite> object.</p>
+<ul class="simple">
+<li><strong>Method</strong>: a <cite>System.Reflection.MethodBase</cite> object that holds the pointer to the actual method that triggers the execution of the operation.</li>
+<li><strong>Result</strong>: an object that holds the result of the execution.</li>
+<li><strong>Parameter</strong>: an object that defines the parameters used when executing the operation.</li>
+<li><strong>Statement</strong>: the actual query statement used in the execution.</li>
+<li><strong>ExecutionTime</strong>: a <cite>System.Timespan</cite> object that holds the time length of actual execution.</li>
+</ul>
+</div>
+<div class="section" id="icancellabletracelog-interface">
+<h2>ICancellableTraceLog Interface<a class="headerlink" href="#icancellabletracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument at the <cite>Before</cite> operations. It inherits the <cite>RepoDb.Interfaces.ITrace</cite> interface.</p>
+<p>Below are the properties of <cite>ICancellableTraceLog</cite> object.</p>
+<ul class="simple">
+<li><strong>IsCancelled</strong>: a property used to identify whether the operation is canceled.</li>
+<li><strong>IsThrowException</strong>: a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type <cite>RepoDb.Exceptions.CancelledExecutionException</cite>.</li>
+</ul>
+</div>
+<div class="section" id="creating-a-custom-trace-object">
+<h2>Creating a Custom Trace Object<a class="headerlink" href="#creating-a-custom-trace-object" title="Permalink to this headline">¶</a></h2>
+<p>Below is a sample customized <cite>Trace</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDatabaseTrace</span> <span class="p">:</span> <span class="n">ITrace</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBatchQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBatchQuery</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBulkInsert</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBulkInsert</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is the way on how to inject a Trace class in the repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
+        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// cache</span>
+        <span class="n">trace</span><span class="p">,</span> <span class="c1">// trace</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.</p>
+</div>
+<div class="section" id="canceling-an-operation">
+<h2>Canceling an Operation<a class="headerlink" href="#canceling-an-operation" title="Permalink to this headline">¶</a></h2>
+<p>To cancel an operation, simply call the method named <cite>Cancel</cite> of type <cite>RepoDb.Interfaces.ICancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
+<p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">keywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;INSERT&quot;</span><span class="p">,</span> <span class="s">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s">&quot;UPDATE&quot;</span><span class="p">,</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;MERGE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">keywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>
+        <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;A suspicious statement has been injected on the Query operations.&quot;</span><span class="p">);</span>
+                <span class="n">log</span><span class="p">.</span><span class="n">Cancel</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>By passing the value of <cite>true</cite> in the parameter when calling the <cite>Cancel</cite> method, it would signal the library to throw an <cite>RepoDb.Exception.CancelledExecutionException</cite> exception object back to the caller.</p>
+</div>
+</div>
+<div class="section" id="working-with-statementbuilder">
+<h1>Working with StatementBuilder<a class="headerlink" href="#working-with-statementbuilder" title="Permalink to this headline">¶</a></h1>
+<p>The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the <cite>RepoDb.SqlDbStatementBuilder</cite> class that implements the <cite>RepoDb.Interfaces.IStatementBuilder</cite> interface.</p>
+<p>In order to override the statement builder, the developer must create a class that implements the <cite>RepoDb.Interfaces.IStatementBuilder</cite> interface. This allows the class to be injectable in the repository and implements the necessary methods needed by all operations.</p>
+<p>A <cite>QueryBuilder</cite> object comes along the way when the custom statement builder is being created. This object is a helper object when composing the actual SQL Statements. See the <cite>QueryBuilder</cite> documentation.</p>
+<p>Below are the methods of the <cite>IStatementBuilder</cite> interface.</p>
+<ul class="simple">
+<li><strong>CreateBatchQuery</strong>: called when creating a <cite>BatchQuery</cite> statement.</li>
+<li><strong>CreateCount</strong>: called when creating a <cite>Count</cite> statement.</li>
+<li><strong>CreateCountBig</strong>: called when creating a <cite>CountBig</cite> statement.</li>
+<li><strong>CreateDelete</strong>: called when creating a <cite>Delete</cite> statement.</li>
+<li><strong>CreateInlineUpdate</strong>: called when creating a <cite>InlineUpdate</cite> statement.</li>
+<li><strong>CreateInsert</strong>: called when creating a <cite>Insert</cite> statement.</li>
+<li><strong>CreateMerge</strong>: called when creating a <cite>Merge</cite> statement.</li>
+<li><strong>CreateQuery</strong>: called when creating a <cite>Query</cite> statement.</li>
+<li><strong>CreateUpdate</strong>: called when creating a <cite>Update</cite> statement.</li>
+</ul>
+<div class="section" id="querybuilder-object">
+<h2>QueryBuilder Object<a class="headerlink" href="#querybuilder-object" title="Permalink to this headline">¶</a></h2>
+<p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
+<p>By default, the library is using the <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite> object(implements the <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite> when composing the statement.</p>
+<p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provide.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where, int? top = 0, IEnumerable&lt;IOrderField&gt; orderBy = null) where TEntity : IDataEntity
+{
+        // Create an initial SELECT statement
+        queryBuilder.Clear()
+                .Select()
+                .Fields(Command.Query)
+                .From()
+                .Table(Command.Query);
+
+        // Add all fields for WHERE
+        if (where != null)
+        {
+                queryBuilder.Where(where);
+        }
+
+        // Add the LIMIT (TOP in SQL Server)
+        if (top &gt; 0)
+        {
+                // In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM &lt;=(Rows)
+                queryBuilder.WriteText($&quot;AND (ROWNUM &lt;= {top})&quot;);
+        }
+
+        // End the builder
+        queryBuilder.End();
+
+        // Return the Statement
+        return queryBuilder.ToString();
+}
+</pre></div>
+</div>
+<p>The methods of this object might be limited as it varies on the target data provider to be implemented. This object is open for modification soon for extensibility support. We are happy to open this to become inherittable in the near future if this is necessary for the .NET community.</p>
+<p><strong>Note</strong>: The query builder is not inheritable and we suggest not to create a customized query builder.</p>
+</div>
+<div class="section" id="createbatchquery-method">
+<h2>CreateBatchQuery Method<a class="headerlink" href="#createbatchquery-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>BatchQuery</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateBatchQuery</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+<li><strong>page</strong>: the page number implied when creating a statement.</li>
+<li><strong>rowsPerBatch</strong>: the size of the rows implied when creating a statement.</li>
+<li><strong>orderBy</strong>: the fields used in the <cite>ORDER BY</cite> when creating a statement.</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateBatchQuery</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable&lt;IOrderField&gt; orderBy) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .With()
+                .WriteText(&quot;CTE&quot;)
+                .As()
+                .OpenParen()
+                .Select()
+                .RowNumber()
+                .Over()
+                .OpenParen()
+                .OrderBy(orderBy)
+                .CloseParen()
+                .As(&quot;[RowNumber],&quot;)
+                .Fields(Command.BatchQuery)
+                .From()
+                .Table(Command.BatchQuery)
+                .Where(where)
+                .CloseParen()
+                .Select()
+                .Fields(Command.BatchQuery)
+                .From()
+                .WriteText(&quot;CTE&quot;)
+                .WriteText($&quot;WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})&quot;)
+                .OrderBy(orderBy)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createcount-method">
+<h2>CreateCount Method<a class="headerlink" href="#createcount-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Count</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateCount</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateCount</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCount&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Select()
+                .Count()
+                .WriteText(&quot;(*) AS [Counted]&quot;)
+                .From()
+                .Table(Command.Count)
+                .Where(where)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createcountbig-method">
+<h2>CreateCountBig Method<a class="headerlink" href="#createcountbig-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>CountBig</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateCountBig</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateCountBig</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCountBig&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Select()
+                .CountBig()
+                .WriteText(&quot;(*) AS [Counted]&quot;)
+                .From()
+                .Table(Command.CountBig)
+                .Where(where)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createdelete-method">
+<h2>CreateDelete Method<a class="headerlink" href="#createdelete-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Delete</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateDelete</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateDelete</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDelete&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Delete()
+                .From()
+                .Table(Command.Delete)
+                .Where(where)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createinlineupdate-method">
+<h2>CreateInlineUpdate Method<a class="headerlink" href="#createinlineupdate-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>InlineUpdate</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateInlineUpdate</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>fields</strong>: the list of fields to be updated when composing a statement (on enumerable of type <cite>RepoDb.Interfaces.Field</cite>).</li>
+<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+<li><strong>overrideIgnore</strong>: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInlineUpdate</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineUpdate&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;IField&gt; fields, IQueryGroup where, bool? overrideIgnore = false) where TEntity : IDataEntity
+{
+        if (overrideIgnore == false)
+        {
+                var properties = PropertyCache.Get&lt;TEntity&gt;(Command.InlineUpdate)
+                        .Select(property =&gt; property.GetMappedName());
+                var unmatches = fields?.Where(field =&gt;
+                        properties?.FirstOrDefault(property =&gt;
+                                field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatches?.Count() &gt; 0)
+                {
+                        throw new InvalidOperationException($&quot;The following columns ({unmatches.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}) &quot; +
+                                $&quot;are not updatable for entity ({DataEntityExtension.GetMappedName&lt;TEntity&gt;(Command.InlineUpdate)}).&quot;);
+                }
+        }
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Update()
+                .Table(Command.InlineUpdate)
+                .Set()
+                .FieldsAndParameters(fields)
+                .Where(where)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createinsert-method">
+<h2>CreateInsert Method<a class="headerlink" href="#createinsert-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Insert</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateInsert</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInsert</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        var primary = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Insert()
+                .Into()
+                .Table(Command.Insert)
+                .OpenParen()
+                .Fields(Command.Insert)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .Parameters(Command.Insert)
+                .CloseParen()
+                .End();
+        if (primary != null)
+        {
+                var result = primary.IsIdentity() ? &quot;SCOPE_IDENTITY()&quot; : $&quot;@{primary.GetMappedName()}&quot;;
+                queryBuilder
+                        .Select()
+                        .WriteText(result)
+                        .As(&quot;[Result]&quot;)
+                        .End();
+        }
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createmerge-method">
+<h2>CreateMerge Method<a class="headerlink" href="#createmerge-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Merge</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateMerge</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type <cite>RepoDb.Interfaces.Field</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateMerge</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;IField&gt; qualifiers) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        if (qualifiers == null)
+        {
+                var primaryKey = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+                if (primaryKey != null)
+                {
+                        qualifiers = new Field(primaryKey.Name).AsEnumerable();
+                }
+        }
+        queryBuilder
+                .Clear()
+                // MERGE T USING S
+                .Merge()
+                .Table(Command.Merge)
+                .As(&quot;T&quot;)
+                .Using()
+                .OpenParen()
+                .Select()
+                .ParametersAsFields(Command.None) // All fields must be included for selection
+                .CloseParen()
+                .As(&quot;S&quot;)
+                // QUALIFIERS
+                .On()
+                .OpenParen()
+                .WriteText(qualifiers?
+                        .Select(
+                                field =&gt; field.AsJoinQualifier(&quot;S&quot;, &quot;T&quot;))
+                                        .Join($&quot; {Constant.And.ToUpper()} &quot;))
+                .CloseParen()
+                // WHEN NOT MATCHED THEN INSERT VALUES
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .Fields(Command.Merge)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .Parameters(Command.Merge)
+                .CloseParen()
+                // WHEN MATCHED THEN UPDATE SET
+                .When()
+                .Matched()
+                .Then()
+                .Update()
+                .Set()
+                .FieldsAndAliasFields(Command.Merge, &quot;S&quot;)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createquery-method">
+<h2>CreateQuery Method<a class="headerlink" href="#createquery-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Query</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateQuery</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+<li><strong>top</strong>: the value that identifies the number of rows to be returned when composing a statement.</li>
+<li><strong>orderBy</strong>: the fields used in the <cite>ORDER BY</cite> when creating a statement.</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateQuery</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where, int? top = 0, IEnumerable&lt;IOrderField&gt; orderBy = null) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Select()
+                .Top(top)
+                .Fields(Command.Query)
+                .From()
+                .Table(Command.Query)
+                .Where(where)
+                .OrderBy(orderBy)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="createupdate-method">
+<h2>CreateUpdate Method<a class="headerlink" href="#createupdate-method" title="Permalink to this headline">¶</a></h2>
+<p>This method is being called when the <cite>Update</cite> operation of the repository is being called.</p>
+<p>Below are the arguments of <cite>CreateUpdate</cite> method.</p>
+<ul class="simple">
+<li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryBuilder&lt;TEntity&gt;</cite>).</li>
+<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.Interfaces.IQueryGroup</cite>).</li>
+</ul>
+<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateUpdate</cite> method.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+{
+        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        queryBuilder
+                .Clear()
+                .Update()
+                .Table(Command.Update)
+                .Set()
+                .FieldsAndParameters(Command.Update)
+                .Where(where)
+                .End();
+        return queryBuilder.GetString();
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-a-custom-statement-builder">
+<h2>Creating a custom Statement Builder<a class="headerlink" href="#creating-a-custom-statement-builder" title="Permalink to this headline">¶</a></h2>
+<p>The main reason why the library supports the statement builder is to allow the developers override the default statement builder of the library. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements). However, it will fail if the library is being used to access the Oracle, MySql or any other providers.</p>
+<p>To create a custom statement builder, simply create a class and implements the <cite>RepoDb.Interfaces.IStatementBuilder</cite> interface.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public class OracleDbStatementBuilder : IStatementBuilder
+{
+        public string CreateQuery&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where, int? top = 0,
+                IEnumerable&lt;IOrderField&gt; orderBy = null) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateBatchQuery&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where, int page,
+                int rowsPerBatch, IEnumerable&lt;IOrderField&gt; orderby) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateCount&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateCountBig&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateDelete&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateInlineUpdate&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;IField&gt; fields, IQueryGroup where, bool? overrideIgnore = false) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateInsert&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateMerge&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;IField&gt; qualifiers) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+
+        public string CreateUpdate&lt;TEntity&gt;(IQueryBuilder&lt;TEntity&gt; queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        {
+                throw new NotImplementedException();
+        }
+}
+</pre></div>
+</div>
+<p>Once the custom statement builder is created, it then can be used as an injectable object into the repository. See sample below injecting a statement builder for Oracle provider.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>var statementBuilder = new OracleDbStatementBuilder();
+var repository = new DbRepository&lt;SqlConnection&gt;(@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;
+        0, // commandTimeout
+        null, // cache
+        null, // trace
+        statementBuilder, // statementBuilder
+);
+</pre></div>
+</div>
+<p>With the code snippets above, everytime the repository operation methods is being called, the <cite>OracleStatementBuilder</cite> corresponding method will be executed.</p>
+</div>
+<div class="section" id="mapping-a-statement-builder">
+<h2>Mapping a Statement Builder<a class="headerlink" href="#mapping-a-statement-builder" title="Permalink to this headline">¶</a></h2>
+<p>By default, the library is using the <cite>RepoDb.SqlDbStatementBuilder</cite> object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.</p>
+<p>The mapper is of static type <cite>RepoDb.StatementBuilderMapper</cite>.</p>
+<p>The following are the methods of this object.</p>
+<ul class="simple">
+<li><strong>Get</strong>: returns the instance of statement builder by type (of type <cite>System.Data.IDbConnection</cite>).</li>
+<li><strong>Map</strong>: maps the custom statement builder to a type (of type <cite>System.Data.IDbConnection</cite>).</li>
+</ul>
+<p>Mapping a statement builder enables the developer to map the custom statement builder by provider level.</p>
+<p>Let say for example, if the developers created the following repositories:</p>
+<blockquote>
+<div><ul class="simple">
+<li>StockRepository (for SqlConnection)</li>
+<li>TradeRepository (for SqlConnection)</li>
+<li>SymbolRepository (for OracleConnection)</li>
+<li>CompanyRepository (for OleDbConnection)</li>
+</ul>
+</div></blockquote>
+<p>Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).</p>
+<p>Let say the developer created 2 new custom statement builders named:</p>
+<blockquote>
+<div><ul class="simple">
+<li>OracleStatementBuilder</li>
+<li>OleDbStatementBuilder</li>
+</ul>
+</div></blockquote>
+<p>The developers can now map the following statement builders into the repositories by provider level. Below is the sample way on how to do it.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OracleConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OracleStatementBuilder</span><span class="p">());</span>
+<span class="n">StatementBuilderMapper</span><span class="p">.</span><span class="n">Map</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">OleDbConnection</span><span class="p">),</span> <span class="k">new</span> <span class="n">OleDbStatementBuilder</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>The object <cite>StatementBuilderMapper.Map</cite> is callable everywhere in the application as it was implemented in s static way. Make sure to call it once, or else, an exception will be thrown.</p>
+</div>
+</div>
 
 
           </div>
@@ -1369,6 +2255,8 @@ repository.Merge(order, Field.Parse(new { order.Id }));</dd>
 </ul>
 </li>
 <li><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
+<li><a class="reference internal" href="#multiple-entity-mapping">Multiple Entity Mapping</a></li>
+<li><a class="reference internal" href="#type-mapping">Type Mapping</a></li>
 <li><a class="reference internal" href="#working-wth-repository">Working wth Repository</a><ul>
 <li><a class="reference internal" href="#dbrepository-class">DbRepository Class</a></li>
 <li><a class="reference internal" href="#baserepository-class">BaseRepository Class</a></li>
@@ -1423,12 +2311,42 @@ repository.Merge(order, Field.Parse(new { order.Id }));</dd>
 <li><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#working-with-cache">Working with Cache</a><ul>
+<li><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
+<li><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
+<li><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
+<li><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
+<li><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-trace">Working with Trace</a><ul>
+<li><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
+<li><a class="reference internal" href="#itracelog-interface">ITraceLog Interface</a></li>
+<li><a class="reference internal" href="#icancellabletracelog-interface">ICancellableTraceLog Interface</a></li>
+<li><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
+<li><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-statementbuilder">Working with StatementBuilder</a><ul>
+<li><a class="reference internal" href="#querybuilder-object">QueryBuilder Object</a></li>
+<li><a class="reference internal" href="#createbatchquery-method">CreateBatchQuery Method</a></li>
+<li><a class="reference internal" href="#createcount-method">CreateCount Method</a></li>
+<li><a class="reference internal" href="#createcountbig-method">CreateCountBig Method</a></li>
+<li><a class="reference internal" href="#createdelete-method">CreateDelete Method</a></li>
+<li><a class="reference internal" href="#createinlineupdate-method">CreateInlineUpdate Method</a></li>
+<li><a class="reference internal" href="#createinsert-method">CreateInsert Method</a></li>
+<li><a class="reference internal" href="#createmerge-method">CreateMerge Method</a></li>
+<li><a class="reference internal" href="#createquery-method">CreateQuery Method</a></li>
+<li><a class="reference internal" href="#createupdate-method">CreateUpdate Method</a></li>
+<li><a class="reference internal" href="#creating-a-custom-statement-builder">Creating a custom Statement Builder</a></li>
+<li><a class="reference internal" href="#mapping-a-statement-builder">Mapping a Statement Builder</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="Repository/DbRepository.html" title="next chapter">DbRepository Class</a></li>
   </ul></li>
 </ul>
 </div>
