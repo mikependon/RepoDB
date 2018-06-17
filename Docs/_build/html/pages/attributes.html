@@ -165,7 +165,8 @@
   <div class="section" id="property-attributes">
 <h1>Property Attributes<a class="headerlink" href="#property-attributes" title="Permalink to this headline">¶</a></h1>
 <p>A <cite>PrimaryAttribute</cite> is used to define the class property as primary property of the <cite>DataEntity</cite> object. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;Employee&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -175,14 +176,14 @@
 <p>The following primary property identification will be used in any case.</p>
 <ol class="arabic simple">
 <li>If the <cite>PrimaryAttribute</cite> is not defined, it checks for <cite>Id</cite> property. If present, it will then become the default primary property.</li>
-<li>If the <cite>Id</cite> property is not present, it checks for the <cite>Class.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeId</cite>. If present, it will then become the default property.</li>
-<li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeTableId</cite>. If present, it will then become the default property.</li>
+<li>If the <cite>Id</cite> property is not present, it checks for the <cite>Class.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeDtoId</cite>. If present, it will then become the default property.</li>
+<li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeId</cite>. If present, it will then become the default property.</li>
 </ol>
 <p>If all of the conditions are not met, then the <cite>DataEntity</cite> will have no primary property. It usually fails if call the certain repository operations that requires the <cite>PrimaryKey</cite> (i.e: <cite>Update</cite>, <cite>Delete</cite>).</p>
 <div class="section" id="identity-property">
 <h2>Identity Property<a class="headerlink" href="#identity-property" title="Permalink to this headline">¶</a></h2>
 <p>To define an identity property, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> during the implementation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary(true)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -194,7 +195,7 @@
 <h2>Ignoring a Property<a class="headerlink" href="#ignoring-a-property" title="Permalink to this headline">¶</a></h2>
 <p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
 <p>Example: If of type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property will not be a part of the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 

@@ -7,7 +7,8 @@ A `PrimaryAttribute` is used to define the class property as primary property of
 
 ::
 
-	public class Employee : DataEntity
+	[Map("Employee")]
+	public class EmployeeDto : DataEntity
 	{
 		[Primary]
 		public int Id { get; set; }
@@ -16,8 +17,8 @@ A `PrimaryAttribute` is used to define the class property as primary property of
 The following primary property identification will be used in any case.
 
 1. If the `PrimaryAttribute` is not defined, it checks for `Id` property. If present, it will then become the default primary property.
-2. If the `Id` property is not present, it checks for the `Class.Name` + `Id` property. In the case above, it should be `EmployeeId`. If present, it will then become the default property.
-3. If both properties are not present, it then checks for the `Mapped.Name` + `Id` property. In the case above, it should be `EmployeeTableId`. If present, it will then become the default property.
+2. If the `Id` property is not present, it checks for the `Class.Name` + `Id` property. In the case above, it should be `EmployeeDtoId`. If present, it will then become the default property.
+3. If both properties are not present, it then checks for the `Mapped.Name` + `Id` property. In the case above, it should be `EmployeeId`. If present, it will then become the default property.
 
 If all of the conditions are not met, then the `DataEntity` will have no primary property. It usually fails if call the certain repository operations that requires the `PrimaryKey` (i.e: `Update`, `Delete`).
 
@@ -28,7 +29,7 @@ To define an identity property, simply sets the `isIdentity` parameter of the `P
 
 ::
 
-	public class Employee : DataEntity
+	public class EmployeeDto : DataEntity
 	{
 		[Primary(true)]
 		public int Id { get; set; }
@@ -45,7 +46,7 @@ Example: If of type command `Insert` and `Update` is defined on the `IgnoreAttri
 
 ::
 
-	public class Employee : DataEntity
+	public class EmployeeDto : DataEntity
 	{
 		public int Id { get; set; }
 
