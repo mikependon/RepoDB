@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Working with Cache &mdash; RepoDb 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Working with Trace" href="trace.html" />
+    <link rel="prev" title="Repository Operations" href="repositoryoperations.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> RepoDb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Cache</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RepoDb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Working with Cache</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/pages/cache.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="working-with-cache">
+<h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
+<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository. It can be access through the repository <cite>Cache</cite> property (implements <cite>RepoDb.Interfaces.ICache</cite> interface).</p>
+<p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
+<p>Below are the methods of <cite>ICache</cite> object.</p>
+<ul class="simple">
+<li><strong>Add</strong>: accepts an <cite>item</cite> or a <cite>key</cite> and <cite>value</cite> pair parameters. It adds an item to the <cite>Cache</cite> object. If an item is already existing, the item will be overriden.</li>
+<li><strong>Clear</strong>: clear all items from the cache.</li>
+<li><strong>Contains</strong>: accepts a <cite>key</cite> parameter. Checks whether the <cite>Cache</cite> object contains an item with the defined key.</li>
+<li><strong>Get</strong>: accepts a <cite>key</cite> parameter. Returns a cached item object.</li>
+<li><strong>GetEnumerator</strong>: returns an enumerator for <cite>IEnumerable&lt;ICacheItem&gt;</cite> objects. It contains all the cached items from the <cite>Cache</cite> object.</li>
+<li><strong>Remove</strong>: accepts a <cite>key</cite> parameter. Removes an entry from the <cite>Cache</cite> object.</li>
+</ul>
+<p>One important object when manipulating a cache is the <cite>CacheItem</cite> object (implements <cite>RepoDb.Interfaces.ICacheItem</cite>). It acts as the cache item entry for the cache object.</p>
+<p>Below are the constructor arguments of the <cite>ICacheItem</cite> object.</p>
+<ul class="simple">
+<li><strong>key</strong>: the key of the cache.</li>
+<li><strong>value</strong>: the value object of the cache.</li>
+</ul>
+<p>Below are the properties of <cite>ICacheItem</cite> object.</p>
+<ul class="simple">
+<li><strong>Key</strong>: the key of the cache. It returns a <cite>System.String</cite> type.</li>
+<li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
+<li><strong>Timestamp</strong>: the time of the cache last refreshed. It returns a <cite>System.DateTime</cite> object.</li>
+</ul>
+<p>The repository caching operation is of the <cite>pseudo</cite> below.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
+IF ($cacheKey is not null) THEN
+        set $item = get value from cache where the key equals to $cacheKey
+        IF ($item is not null) THEN
+                RETURN item
+        END IF
+END IF
+VAR $result = query the data from the database
+IF ($result is not null AND $cacheKey is not null) THEN
+        Add cache item where:
+                Key = $cacheKey
+                Value = $result
+END IF
+RETURN $result
+</pre></div>
+</div>
+<p>Below is the way on how to query and cache the <cite>Stock</cite> data from the database with caching enabled.</p>
+<div class="section" id="creating-a-cache-entry">
+<h2>Creating a Cache Entry<a class="headerlink" href="#creating-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<p>The snippets below declared a variable named <cite>cacheKey</cite>. The value of this variable acts as the key value of the items to be cached by the repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">cacheKey</span> <span class="p">=</span> <span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">},</span> <span class="n">cacheKey</span><span class="p">:</span> <span class="n">cacheKey</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>First, it wil query the data from the database where the <cite>Name</cite> is started at <cite>Anna</cite>. Then, the operation will cache the result into the <cite>Cache</cite> object with the given key at the variable named <cite>cacheKey</cite> (valued <cite>CacheKey.Customers.StartsWith.Anna</cite>).</p>
+<p>The next time the same query is executed, the repository automatically returns the cached item if the same key is passed.</p>
+<p>Please note that the cache object of the repository is immutable per instance, this means that accessing the cache object directly passing the same cache key would return the same result.</p>
+<p>Codes below will return the same result as above assuming the same repository object is used.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="checking-a-cache-entry">
+<h2>Checking a Cache Entry<a class="headerlink" href="#checking-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to check if the cached item is present on the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="iterating-the-cache-entries">
+<h2>Iterating the Cache Entries<a class="headerlink" href="#iterating-the-cache-entries" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to retrieve or iterate all the cached items from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Let&#39;s expect that the repository is meant for Customer data entity</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">item</span><span class="p">;</span>
+        <span class="c1">// Process the item here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="removing-or-clearing-a-cache">
+<h2>Removing or Clearing a Cache<a class="headerlink" href="#removing-or-clearing-a-cache" title="Permalink to this headline">¶</a></h2>
+<p>By default, the library does not support the auto-flush of the cache. Those forcing the developers to handle the flushing on its way.</p>
+<p>Clearing or removing an entry from a cache is the only way to flush the cached objects.</p>
+<p>See below on how to clear the cached item from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Below is the way to remove specific cache item.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="injecting-a-custom-cache-object">
+<h2>Injecting a Custom Cache Object<a class="headerlink" href="#injecting-a-custom-cache-object" title="Permalink to this headline">¶</a></h2>
+<p>The library supports a cache object injection in the repository level. As mentioned earlier, by default, the library is using the <cite>RepoDb.MemoryCache</cite> object. It can overriden by creating a class and implements the <cite>RepoDb.Interfaces.ICache</cite> interface, and passed it to the <cite>cache</cite> argument of the repository constructor.</p>
+<p>Below is the way on how to create a custom <cite>Cache</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="nf">FileCache</span><span class="p">(</span><span class="kt">string</span> <span class="n">location</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Add a logic on the constructor</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Serialize to a File</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">ICacheItem</span> <span class="n">item</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Serialize to a File</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Clear</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Delete the Files</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Contains</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Check if the Filename exists by Key</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">object</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Deserialize the File where the FileName is equals to Key, return the object</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">ICacheItem</span><span class="p">&gt;</span> <span class="n">GetEnumerator</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Remove</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// Delete the File where the FileName is equals to Key</span>
+        <span class="p">}</span>
+
+        <span class="n">IEnumerator</span> <span class="n">IEnumerable</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">()</span>
+        <span class="p">{</span>
+                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is the way on how to inject the custom cache to a repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
+        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
+        <span class="n">fileCache</span><span class="p">,</span> <span class="c1">// cache</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// trace</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
+<p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the cache manager object of the <cite>Query</cite> operation.</p>
+<p><strong>Note:</strong> The caller can activate a debugger on the <cite>FileCache</cite> class to enable debugging. When the callers call the <cite>Query</cite> method and passed a <cite>cacheKey</cite> value on it, the breakpoint will be hit by the debugger if it is placed inside <cite>Add</cite> method of the <cite>FileCache</cite> class.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="trace.html" class="btn btn-neutral float-right" title="Working with Trace" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="repositoryoperations.html" class="btn btn-neutral" title="Repository Operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Michael Camara Pendon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

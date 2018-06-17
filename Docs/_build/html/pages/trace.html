@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Working with Trace &mdash; RepoDb 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Working with StatementBuilder" href="statementbuilder.html" />
+    <link rel="prev" title="Working with Cache" href="cache.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> RepoDb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Trace</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#itracelog-interface">ITraceLog Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#icancellabletracelog-interface">ICancellableTraceLog Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">RepoDb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Working with Trace</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/pages/trace.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="working-with-trace">
+<h1>Working with Trace<a class="headerlink" href="#working-with-trace" title="Permalink to this headline">¶</a></h1>
+<p>One of the unique built-in feature of the library is tracing. It allows developers to do debugging or tracing on the operations while executing it against the database.</p>
+<p>With tracing, the developers can able to create its own <cite>Trace</cite> object and inject in the repository.</p>
+<div class="section" id="itrace-interface">
+<h2>ITrace Interface<a class="headerlink" href="#itrace-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface is the heart of library’s tracing feature. It resides from <cite>RepoDb.Interfaces</cite> namespace. This interface is required to be implemented at the custom trace classes to enable the tracing, then, the custom class must be injected in the repository.</p>
+<p>The <cite>ITrace</cite> interface has the follow trace methods.</p>
+<ul class="simple">
+<li><strong>AfterBatchQuery</strong>: called after the <cite>Repository.BatchQuery</cite> operation has been executed.</li>
+<li><strong>AfterBulkInsert</strong>: called after the <cite>Repository.BulkInsert</cite> operation has been executed.</li>
+<li><strong>AfterCount</strong>: called after the <cite>Repository.Count</cite> operation has been executed.</li>
+<li><strong>AfterCountBig</strong>: called after the <cite>Repository.CountBig</cite> operation has been executed.</li>
+<li><strong>AfterDelete</strong>: called after the <cite>Repository.Delete</cite> operation has been executed.</li>
+<li><strong>AfterExecuteNonQuery</strong>: called after the <cite>Repository.ExecuteNonQuery</cite> operation has been executed.</li>
+<li><strong>AfterExecuteQuery</strong>: called after the <cite>Repository.ExecuteQuery</cite> operation has been executed.</li>
+<li><strong>AfterExecuteReader</strong>: called after the <cite>Repository.ExecuteReader</cite> operation has been executed.</li>
+<li><strong>AfterExecuteScalar</strong>: called after the <cite>Repository.ExecuteScalar</cite> operation has been executed.</li>
+<li><strong>AfterInlineUpdate</strong>: called after the <cite>Repository.InlineUpdate</cite> operation has been executed.</li>
+<li><strong>AfterInsert</strong>: called after the <cite>Repository.Insert</cite> operation has been executed.</li>
+<li><strong>AfterMerge</strong>: called after the <cite>Repository.Merge</cite> operation has been executed.</li>
+<li><strong>AfterQuery</strong>: called after the <cite>Repository.Query</cite> operation has been executed.</li>
+<li><strong>AfterUpdate</strong>: called after the <cite>Repository.Update</cite> operation has been executed.</li>
+</ul>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ITraceLog</cite>.</p>
+<ul class="simple">
+<li><strong>BeforeBatchQuery</strong>: called before the <cite>Repository.BatchQuery</cite> actual execution.</li>
+<li><strong>BeforeBulkInsert</strong>: called before the <cite>Repository.BulkInsert</cite> actual execution.</li>
+<li><strong>BeforeCount</strong>: called before the <cite>Repository.Count</cite> actual execution.</li>
+<li><strong>BeforeCountBig</strong>: called before the <cite>Repository.CountBig</cite> actual execution.</li>
+<li><strong>BeforeDelete</strong>: called before the <cite>Repository.Delete</cite> actual execution.</li>
+<li><strong>BeforeExecuteNonQuery</strong>: called before the <cite>Repository.ExecuteNonQuery</cite> actual execution.</li>
+<li><strong>BeforeExecuteQuery</strong>: called before the <cite>Repository.ExecuteQuery</cite> actual execution.</li>
+<li><strong>BeforeExecuteReader</strong>: called before the <cite>Repository.ExecuteReader</cite> actual execution.</li>
+<li><strong>BeforeExecuteScalar</strong>: called before the <cite>Repository.ExecuteScalar</cite> actual execution.</li>
+<li><strong>BeforeInlineUpdate</strong>: called before the <cite>Repository.InlineUpdate</cite> actual execution.</li>
+<li><strong>BeforeInsert</strong>: called before the <cite>Repository.Insert</cite> actual execution.</li>
+<li><strong>BeforeMerge</strong>: called before the <cite>Repository.Merge</cite> actual execution.</li>
+<li><strong>BeforeQuery</strong>: called before the <cite>Repository.Query</cite> actual execution.</li>
+<li><strong>BeforeUpdate</strong>: called before the <cite>Repository.Update</cite> actual execution.</li>
+</ul>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ICancellableTraceLog</cite>.</p>
+</div>
+<div class="section" id="itracelog-interface">
+<h2>ITraceLog Interface<a class="headerlink" href="#itracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument during the <cite>After</cite> operations.</p>
+<p>Below are the properties of <cite>ITraceLog</cite> object.</p>
+<ul class="simple">
+<li><strong>Method</strong>: a <cite>System.Reflection.MethodBase</cite> object that holds the pointer to the actual method that triggers the execution of the operation.</li>
+<li><strong>Result</strong>: an object that holds the result of the execution.</li>
+<li><strong>Parameter</strong>: an object that defines the parameters used when executing the operation.</li>
+<li><strong>Statement</strong>: the actual query statement used in the execution.</li>
+<li><strong>ExecutionTime</strong>: a <cite>System.Timespan</cite> object that holds the time length of actual execution.</li>
+</ul>
+</div>
+<div class="section" id="icancellabletracelog-interface">
+<h2>ICancellableTraceLog Interface<a class="headerlink" href="#icancellabletracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument at the <cite>Before</cite> operations. It inherits the <cite>RepoDb.Interfaces.ITrace</cite> interface.</p>
+<p>Below are the properties of <cite>ICancellableTraceLog</cite> object.</p>
+<ul class="simple">
+<li><strong>IsCancelled</strong>: a property used to identify whether the operation is canceled.</li>
+<li><strong>IsThrowException</strong>: a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type <cite>RepoDb.Exceptions.CancelledExecutionException</cite>.</li>
+</ul>
+</div>
+<div class="section" id="creating-a-custom-trace-object">
+<h2>Creating a Custom Trace Object<a class="headerlink" href="#creating-a-custom-trace-object" title="Permalink to this headline">¶</a></h2>
+<p>Below is a sample customized <cite>Trace</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDatabaseTrace</span> <span class="p">:</span> <span class="n">ITrace</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBatchQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBatchQuery</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBulkInsert</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBulkInsert</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is the way on how to inject a Trace class in the repository.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
+        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// cache</span>
+        <span class="n">trace</span><span class="p">,</span> <span class="c1">// trace</span>
+        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.</p>
+</div>
+<div class="section" id="canceling-an-operation">
+<h2>Canceling an Operation<a class="headerlink" href="#canceling-an-operation" title="Permalink to this headline">¶</a></h2>
+<p>To cancel an operation, simply call the method named <cite>Cancel</cite> of type <cite>RepoDb.Interfaces.ICancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
+<p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">keywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;INSERT&quot;</span><span class="p">,</span> <span class="s">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s">&quot;UPDATE&quot;</span><span class="p">,</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;MERGE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">keywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>
+        <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;A suspicious statement has been injected on the Query operations.&quot;</span><span class="p">);</span>
+                <span class="n">log</span><span class="p">.</span><span class="n">Cancel</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>By passing the value of <cite>true</cite> in the parameter when calling the <cite>Cancel</cite> method, it would signal the library to throw an <cite>RepoDb.Exception.CancelledExecutionException</cite> exception object back to the caller.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="statementbuilder.html" class="btn btn-neutral float-right" title="Working with StatementBuilder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cache.html" class="btn btn-neutral" title="Working with Cache" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Michael Camara Pendon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
