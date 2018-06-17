@@ -11,7 +11,7 @@ namespace RepoDb.TestProject
     class Program
     {
         private static readonly string RepoDbConnectionString = @"Server=.;Database=RepoDb;Integrated Security=True;";
-        private static readonly string InventoryConnectionString = "Initial Catalog=.;Database=Inventory;Integrated Security=True;";
+        private static readonly string InventoryConnectionString = "Initial Catalog=.;Database=Northwind;Integrated Security=True;";
 
         static void Main(string[] args)
         {
@@ -26,11 +26,23 @@ namespace RepoDb.TestProject
             var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryTrace());
             var customers = repository.Query<CustomerDto>(orderBy: OrderField.Parse(new
             {
-                LastName = Order.Descending,
-                FirstName = Order.Ascending
-            }));
+                LastName = Order.Ascending
+            }),
+            where: new { LastName = new { Operation = Operation.Like, Value = "A%" } });
+
+            using (var connection = new SqlConnection(InventoryConnectionString))
+            {
+                var customers2 = connection.ExecuteQuery("SELECT * FROM Customer WHERE LastName LIKE @LastName ORDER BY LastName ASC;",
+                    new { LastName = "A%" });
+            }
+
             customers.ToList().ForEach(customer =>
             {
+                var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                rows = Convert.ToInt32(repository.Insert(customer));
+                rows = repository.Update(customer);
+                rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+
                 // Customer
                 Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
                 // Orders
@@ -285,6 +297,9 @@ namespace RepoDb.TestProject
             var person = (Person)null;
             var personId = new Random().Next(3000, 20000);
             var affectedRows = 0;
+
+            // Count
+            affectedRows = repository.Count();
 
             // BatchQuery
             Console.WriteLine("BatchQuery");

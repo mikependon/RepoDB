@@ -33,6 +33,10 @@ namespace RepoDb
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            var queryProperties = PropertyCache.Get<TEntity>(Command.Query);
+            var batchQueryProperties = PropertyCache.Get<TEntity>(Command.BatchQuery)
+                .Where(property => queryProperties.Contains(property));
+            var fields = batchQueryProperties.Select(property => new Field(property.Name));
             queryBuilder
                 .Clear()
                 .With()
@@ -52,7 +56,7 @@ namespace RepoDb
                 .Where(where)
                 .CloseParen()
                 .Select()
-                .Fields(Command.BatchQuery)
+                .Fields(fields)
                 .From()
                 .WriteText("CTE")
                 .WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
@@ -78,7 +82,7 @@ namespace RepoDb
                 .Clear()
                 .Select()
                 .Count()
-                .WriteText("(*) AS [Counted]")
+                .WriteText("(1) AS [Counted]")
                 .From()
                 .Table(Command.Count)
                 .Where(where)
@@ -103,7 +107,7 @@ namespace RepoDb
                 .Clear()
                 .Select()
                 .CountBig()
-                .WriteText("(*) AS [Counted]")
+                .WriteText("(1) AS [Counted]")
                 .From()
                 .Table(Command.CountBig)
                 .Where(where)
@@ -154,14 +158,16 @@ namespace RepoDb
         {
             if (overrideIgnore == false)
             {
-                var properties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
+                var updateableProperties = PropertyCache.Get<TEntity>(Command.Update);
+                var inlineUpdateableProperties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
+                    .Where(property => property != PrimaryPropertyCache.Get<TEntity>() && updateableProperties.Contains(property))
                     .Select(property => property.GetMappedName());
-                var unmatches = fields?.Where(field =>
-                    properties?.FirstOrDefault(property =>
+                var unmatchesProperties = fields?.Where(field =>
+                    inlineUpdateableProperties?.FirstOrDefault(property =>
                         field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatches?.Count() > 0)
+                if (unmatchesProperties?.Count() > 0)
                 {
-                    throw new InvalidOperationException($"The following columns ({unmatches.Select(field => field.AsField()).Join(", ")}) " +
+                    throw new InvalidOperationException($"The following columns ({unmatchesProperties.Select(field => field.AsField()).Join(", ")}) " +
                         $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}).");
                 }
             }
@@ -190,28 +196,29 @@ namespace RepoDb
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = PrimaryPropertyCache.Get<TEntity>();
+            var isPrimaryIdentity = primary.IsIdentity();
+            var fields = PropertyCache.Get<TEntity>(Command.Insert)
+                .Where(property => !(isPrimaryIdentity && property == primary))
+                .Select(p => new Field(p.Name));
             queryBuilder
                 .Clear()
                 .Insert()
                 .Into()
                 .Table(Command.Insert)
                 .OpenParen()
-                .Fields(Command.Insert)
+                .Fields(fields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(Command.Insert)
+                .Parameters(fields)
                 .CloseParen()
                 .End();
-            if (primary != null)
-            {
-                var result = primary.IsIdentity() ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
-                queryBuilder
-                    .Select()
-                    .WriteText(result)
-                    .As("[Result]")
-                    .End();
-            }
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
+            queryBuilder
+                .Select()
+                .WriteText(result)
+                .As("[Result]")
+                .End();
             return queryBuilder.GetString();
         }
 
@@ -228,19 +235,28 @@ namespace RepoDb
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            if (qualifiers == null)
+            var primary = PrimaryPropertyCache.Get<TEntity>();
+            var isPrimaryIdentity = primary.IsIdentity();
+            if (qualifiers == null && primary != null)
             {
-                var primaryKey = PrimaryPropertyCache.Get<TEntity>();
-                if (primaryKey != null)
-                {
-                    qualifiers = new Field(primaryKey.Name).AsEnumerable();
-                }
+                qualifiers = new Field(primary?.Name).AsEnumerable();
             }
+            var insertProperties = PropertyCache.Get<TEntity>(Command.Insert)
+                .Where(property => !(isPrimaryIdentity && property == primary));
+            var updateProperties = PropertyCache.Get<TEntity>(Command.Insert)
+                .Where(property => property != primary);
+            var mergeProperties = PropertyCache.Get<TEntity>(Command.Merge);
+            var mergeInsertableFields = mergeProperties
+                .Where(property => insertProperties.Contains(property))
+                .Select(property => new Field(property.Name));
+            var mergeUpdateableFields = mergeProperties
+                .Where(property => updateProperties.Contains(property))
+                .Select(property => new Field(property.Name));
             queryBuilder
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .Table(Command.Merge) 
+                .Table(Command.Merge)
                 .As("T")
                 .Using()
                 .OpenParen()
@@ -263,11 +279,11 @@ namespace RepoDb
                 .Then()
                 .Insert()
                 .OpenParen()
-                .Fields(Command.Merge)
+                .Fields(mergeInsertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(Command.Merge)
+                .Parameters(mergeInsertableFields)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -275,7 +291,7 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFields(Command.Merge, "S")
+                .FieldsAndAliasFields(mergeUpdateableFields, "S")
                 .End();
             return queryBuilder.GetString();
         }
@@ -321,12 +337,15 @@ namespace RepoDb
             where TEntity : IDataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            var fields = PropertyCache.Get<TEntity>(Command.Update)
+                .Where(property => property != PrimaryPropertyCache.Get<TEntity>())
+                .Select(p => new Field(p.Name));
             queryBuilder
                 .Clear()
                 .Update()
                 .Table(Command.Update)
                 .Set()
-                .FieldsAndParameters(Command.Update)
+                .FieldsAndParameters(fields)
                 .Where(where)
                 .End();
             return queryBuilder.GetString();

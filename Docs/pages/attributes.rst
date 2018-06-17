@@ -25,13 +25,13 @@ If all of the conditions are not met, then the `DataEntity` will have no primary
 Identity Property
 -----------------
 
-To define an identity property, simply sets the `isIdentity` parameter of the `PrimaryAttribute` during the implementation.
+By default, upon defining a `PrimaryAttribute`, the property is automatically identity. To unset, simply sets the `isIdentity` parameter of the `PrimaryAttribute` to `false`.
 
 ::
 
 	public class EmployeeDto : DataEntity
 	{
-		[Primary(true)]
+		[Primary] // This is identity by default
 		public int Id { get; set; }
 	}
 

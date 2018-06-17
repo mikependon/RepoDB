@@ -1413,11 +1413,13 @@ namespace RepoDb
             // Check
             GuardUpdateable<TEntity>();
 
-            // Append prefix to all parameters
-            ((QueryGroup)where).AppendParametersPrefix();
-
             // Variables
             var commandType = CommandTypeCache.Get<TEntity>(Command.Update);
+            if (commandType != CommandType.StoredProcedure)
+            {
+                // Append prefix to all parameters for non StoredProcedure (this is mappable, that's why)
+                ((QueryGroup)where).AppendParametersPrefix();
+            }
             var commandText = commandType == CommandType.StoredProcedure ?
                 ClassMapNameCache.Get<TEntity>(Command.Update) :
                 StatementBuilder.CreateUpdate(QueryBuilderCache.Get<TEntity>(), where);

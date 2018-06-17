@@ -3,12 +3,6 @@ Mapping with MapAttribute
 
 A `MapAttribute` is used to define a mapping of the current `Class` or `Property` equivalent to an `Object` or `Field` name in the database. Located at `RepoDb.Attributes` namespace.
 
-The `Map` attribute second parameter is a command type `of type System.Data.CommandType`. If this parameter is defined, the repository operation execution will then be of that command type. This parameter is only working at the class level implementation.
-
-See Microsoft documentation for `System.Data.CommandType`_ here.
-
-.. _System.Data.CommandType: https://msdn.microsoft.com/en-us/library/system.data.commandtype%28v=vs.110%29.aspx
-
 Mapping a Class
 ----------------
 
@@ -20,7 +14,7 @@ Below is a sample code that maps the class named `EmployeeDto` into `Employee` t
 
 ::
 
-	[Map("[dbo].[Employee]", CommandType.Text)]
+	[Map("[dbo].[Employee]")]
 	public class EmployeeDto : DataEntity
 	{
 		public int Id { get; set; }
@@ -37,7 +31,7 @@ Below is a sample code that maps the property named `Id` into a `EmployeeId` fie
 
 ::
 
-	[Map("[dbo].[Employee]", CommandType.Text)]
+	[Map("[dbo].[Employee]")]
 	public class EmployeeDto : DataEntity
 	{
 		[Map("EmployeeId")]

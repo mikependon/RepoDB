@@ -1,6 +1,10 @@
-### Stable Release
+### Why RepoDb
 
-RepoDb stable release is at version **1.1.0**.
+ - Only 30 seconds to Setup.
+ - Massive ORM Operation supports.
+ - Seriously fast because of IL.
+ - Less Code and Fluent.
+ - Unique and Developer Friendly Expression Tree.
 
 ### Snippets
 
@@ -20,7 +24,7 @@ orderBy: OrderField.Parse(new
 ```
 
 ### Documentation
-Click [here](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/documentation_release_v1.md) for the documentation.
+Click [here](https://repodb.readthedocs.io/en/latest/index.html) for the documentation.
 
 ### Goal
 

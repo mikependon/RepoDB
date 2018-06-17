@@ -51,8 +51,7 @@ namespace RepoDb.Extensions
         // GetCommandType
         internal static CommandType GetCommandType(Type type, Command command)
         {
-            return DataEntityMapper.For(type)?.Get(command)?.CommandType ??
-                ClassMapCache.Get(type)?.CommandType ?? CommandType.Text;
+            return DataEntityMapper.For(type)?.Get(command)?.CommandType ?? CommandType.Text;
         }
 
         /// <summary>

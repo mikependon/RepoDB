@@ -182,10 +182,10 @@
 <p>If all of the conditions are not met, then the <cite>DataEntity</cite> will have no primary property. It usually fails if call the certain repository operations that requires the <cite>PrimaryKey</cite> (i.e: <cite>Update</cite>, <cite>Delete</cite>).</p>
 <div class="section" id="identity-property">
 <h2>Identity Property<a class="headerlink" href="#identity-property" title="Permalink to this headline">¶</a></h2>
-<p>To define an identity property, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> during the implementation.</p>
+<p>By default, upon defining a <cite>PrimaryAttribute</cite>, the property is automatically identity. To unset, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> to <cite>false</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
-<span class="na">        [Primary(true)]</span>
+<span class="na">        [Primary]</span> <span class="c1">// This is identity by default</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

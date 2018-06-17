@@ -127,11 +127,13 @@ namespace RepoDb.TestProject
         public void BeforeInsert(ICancellableTraceLog log)
         {
             // throw new NotImplementedException();
+            var l = log;
         }
 
         public void BeforeMerge(ICancellableTraceLog log)
         {
             // throw new NotImplementedException();
+            var l = log;
         }
 
         public void BeforeQuery(ICancellableTraceLog log)
@@ -142,6 +144,7 @@ namespace RepoDb.TestProject
         public void BeforeUpdate(ICancellableTraceLog log)
         {
             // throw new NotImplementedException();
+            var l = log;
         }
     }
 }
