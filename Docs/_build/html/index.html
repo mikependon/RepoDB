@@ -500,11 +500,22 @@
 <span class="k">END</span>
 </pre></div>
 </div>
-<p>Below is the way on how to call the Stored Procedure defined above via <cite>ExecuteQuery</cite>.</p>
+<p>Below is the way on how to call the Stored Procedure.</p>
+<p>Calling via <cite>Repository.ExecuteQuery</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
+<span class="n">customers</span>
+        <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
+        <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+                <span class="c1">// Process each customer here</span>
+        <span class="p">});</span>
+</pre></div>
+</div>
+<p>Or, via independent <cite>SqlConnection</cite> object extended <cite>ExecuteQuery</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
         <span class="n">customers</span>
                 <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
                 <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
@@ -514,16 +525,24 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Or, via <cite>ExeucteReader</cite>.</p>
+<p>Or, via <cite>Repository.ExecuteReader</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">))</span>
 <span class="p">{</span>
-        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">))</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
         <span class="p">{</span>
-                <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process each row here</span>
-                <span class="p">}</span>
+                <span class="c1">// Process each row here</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or, via independent <cite>SqlConnection</cite> object extended <cite>ExecuteReader</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
+        <span class="p">{</span>
+                <span class="c1">// Process each row here</span>
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

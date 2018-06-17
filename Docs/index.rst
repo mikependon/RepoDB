@@ -594,14 +594,28 @@ Say a Stored Procedure below exists in the database.
 
 .. highlight:: c#
 
-Below is the way on how to call the Stored Procedure defined above via `ExecuteQuery`.
+Below is the way on how to call the Stored Procedure.
+
+Calling via `Repository.ExecuteQuery`.
 
 ::
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	using (var connection = repository.CreateConnection().EnsureOpen())
+	var customers = repository.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
+	customers
+		.ToList()
+		.ForEach(customer =>
+		{
+			// Process each customer here
+		});
+
+Or, via independent `SqlConnection` object extended `ExecuteQuery` method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var customers =  connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
+		var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
 		customers
 			.ToList()
 			.ForEach(customer =>
@@ -610,19 +624,29 @@ Below is the way on how to call the Stored Procedure defined above via `ExecuteQ
 			});
 	}
 
-Or, via `ExeucteReader`.
+Or, via `Repository.ExecuteReader`.
 
 ::
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	using (var connection = repository.CreateConnection().EnsureOpen())
+	using (var reader = repository.ExecuteReader("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure))
 	{
-		using (var reader =  connection.ExecuteReader<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure))
+		while (reader.Read())
 		{
-			while (reader.Read())
-			{
-				// Process each row here
-			}
+			// Process each row here
+		}
+	}
+
+Or, via independent `SqlConnection` object extended `ExecuteReader` method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	{
+		var customers = connection.ExecuteReader("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
+		while (reader.Read())
+		{
+			// Process each row here
 		}
 	}
 
