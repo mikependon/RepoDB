@@ -2253,10 +2253,10 @@ var repository = new DbRepository&lt;SqlConnection&gt;(@&quot;Server=.;Database=
 <p>Let say for example, if the developers created the following repositories:</p>
 <blockquote>
 <div><ul class="simple">
-<li>StockRepository (for SqlConnection)</li>
-<li>TradeRepository (for SqlConnection)</li>
-<li>SymbolRepository (for OracleConnection)</li>
-<li>CompanyRepository (for OleDbConnection)</li>
+<li>CustomerRepository (for <cite>SqlConnection</cite>)</li>
+<li>ProductRepository (for <cite>SqlConnection</cite>)</li>
+<li>OrderRepository (for <cite>OracleConnection</cite>)</li>
+<li>CompanyRepository (for <cite>OleDbConnection</cite>)</li>
 </ul>
 </div></blockquote>
 <p>Then, by mapping a custom statement builders, it will enable the library to summon the statement builder based on the provider of the repository. With the following repositories defined above, the developers must implement atleast two (2) custom statement builder (one for Oracle provider and one for OleDb provider).</p>
