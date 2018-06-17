@@ -1,33 +1,260 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Introduction to RepoDb &#8212; RepoDb 1.1.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Introduction to RepoDb &mdash; RepoDb 1.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  <div class="wy-grid-for-nav">
 
-  </head><body>
-  
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+          
+            <a href="#" class="icon icon-home"> RepoDb
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Introduction to RepoDb</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#principles">Principles</a></li>
+<li><a class="reference internal" href="#why-repodb">Why RepoDb?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation-steps">Installation Steps</a><ul>
+<li><a class="reference internal" href="#via-nuget-package-manager">Via Nuget Package Manager</a></li>
+<li><a class="reference internal" href="#via-package-manager-console">Via Package Manager Console</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a><ul>
+<li><a class="reference internal" href="#dataentity-class">DataEntity Class</a></li>
+<li><a class="reference internal" href="#idataentity-interface">IDataEntity Interface</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mapping-with-mapattribute">Mapping with MapAttribute</a><ul>
+<li><a class="reference internal" href="#mapping-a-class">Mapping a Class</a></li>
+<li><a class="reference internal" href="#mapping-a-property">Mapping a Property</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#primary-attribute">Primary Attribute</a><ul>
+<li><a class="reference internal" href="#defining-an-identity-property">Defining an Identity Property</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
+<li><a class="reference internal" href="#multiple-entity-mapping">Multiple Entity Mapping</a></li>
+<li><a class="reference internal" href="#type-mapping">Type Mapping</a></li>
+<li><a class="reference internal" href="#working-wth-repository">Working wth Repository</a><ul>
+<li><a class="reference internal" href="#dbrepository-class">DbRepository Class</a></li>
+<li><a class="reference internal" href="#baserepository-class">BaseRepository Class</a></li>
+<li><a class="reference internal" href="#creating-a-connection">Creating a Connection</a></li>
+<li><a class="reference internal" href="#connection-ensureopen">Connection.EnsureOpen</a></li>
+<li><a class="reference internal" href="#connection-executereader">Connection.ExecuteReader</a></li>
+<li><a class="reference internal" href="#connection-executequery">Connection.ExecuteQuery</a></li>
+<li><a class="reference internal" href="#connection-executenonquery">Connection.ExecuteNonQuery</a></li>
+<li><a class="reference internal" href="#connection-executescalar">Connection.ExecuteScalar</a></li>
+<li><a class="reference internal" href="#working-with-storedprocedure">Working with StoredProcedure</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transaction">Transaction</a></li>
+<li><a class="reference internal" href="#expression-tree">Expression Tree</a><ul>
+<li><a class="reference internal" href="#explicit-query-expression">Explicit Query Expression</a></li>
+<li><a class="reference internal" href="#dynamic-query-expression">Dynamic Query Expression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#querygroup">QueryGroup</a><ul>
+<li><a class="reference internal" href="#query-operations">Query Operations</a></li>
+<li><a class="reference internal" href="#operation-equal">Operation.Equal</a></li>
+<li><a class="reference internal" href="#operation-notequal">Operation.NotEqual</a></li>
+<li><a class="reference internal" href="#operation-lessthan">Operation.LessThan</a></li>
+<li><a class="reference internal" href="#operation-greaterthan">Operation.GreaterThan</a></li>
+<li><a class="reference internal" href="#operation-lessthanorequal">Operation.LessThanOrEqual</a></li>
+<li><a class="reference internal" href="#operation-greaterthanorequal">Operation.GreaterThanOrEqual</a></li>
+<li><a class="reference internal" href="#operation-like">Operation.Like</a></li>
+<li><a class="reference internal" href="#operation-notlike">Operation.NotLike</a></li>
+<li><a class="reference internal" href="#operation-between">Operation.Between</a></li>
+<li><a class="reference internal" href="#operation-notbetween">Operation.NotBetween</a></li>
+<li><a class="reference internal" href="#operation-in">Operation.In</a></li>
+<li><a class="reference internal" href="#operation-notin">Operation.NotIn</a></li>
+<li><a class="reference internal" href="#operation-all">Operation.All</a></li>
+<li><a class="reference internal" href="#operation-any">Operation.Any</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#repository-operations">Repository Operations</a><ul>
+<li><a class="reference internal" href="#query-operation">Query Operation</a><ul>
+<li><a class="reference internal" href="#ordering-a-query">Ordering a Query</a></li>
+<li><a class="reference internal" href="#limiting-a-query-result">Limiting a Query Result</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#insert-operation">Insert Operation</a></li>
+<li><a class="reference internal" href="#update-operation">Update Operation</a></li>
+<li><a class="reference internal" href="#delete-operation">Delete Operation</a></li>
+<li><a class="reference internal" href="#merge-operation">Merge Operation</a></li>
+<li><a class="reference internal" href="#inlineupdate-operation">InlineUpdate Operation</a></li>
+<li><a class="reference internal" href="#bulkinsert-operation">BulkInsert Operation</a></li>
+<li><a class="reference internal" href="#count-and-countbig-operation">Count and CountBig Operation</a></li>
+<li><a class="reference internal" href="#batchquery-operation">BatchQuery Operation</a></li>
+<li><a class="reference internal" href="#executequery-operation">ExecuteQuery Operation</a></li>
+<li><a class="reference internal" href="#executenonquery-operation">ExecuteNonQuery Operation</a></li>
+<li><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-cache">Working with Cache</a><ul>
+<li><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
+<li><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
+<li><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
+<li><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
+<li><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-trace">Working with Trace</a><ul>
+<li><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
+<li><a class="reference internal" href="#itracelog-interface">ITraceLog Interface</a></li>
+<li><a class="reference internal" href="#icancellabletracelog-interface">ICancellableTraceLog Interface</a></li>
+<li><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
+<li><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#working-with-statementbuilder">Working with StatementBuilder</a><ul>
+<li><a class="reference internal" href="#querybuilder-object">QueryBuilder Object</a></li>
+<li><a class="reference internal" href="#createbatchquery-method">CreateBatchQuery Method</a></li>
+<li><a class="reference internal" href="#createcount-method">CreateCount Method</a></li>
+<li><a class="reference internal" href="#createcountbig-method">CreateCountBig Method</a></li>
+<li><a class="reference internal" href="#createdelete-method">CreateDelete Method</a></li>
+<li><a class="reference internal" href="#createinlineupdate-method">CreateInlineUpdate Method</a></li>
+<li><a class="reference internal" href="#createinsert-method">CreateInsert Method</a></li>
+<li><a class="reference internal" href="#createmerge-method">CreateMerge Method</a></li>
+<li><a class="reference internal" href="#createquery-method">CreateQuery Method</a></li>
+<li><a class="reference internal" href="#createupdate-method">CreateUpdate Method</a></li>
+<li><a class="reference internal" href="#creating-a-custom-statement-builder">Creating a custom Statement Builder</a></li>
+<li><a class="reference internal" href="#mapping-a-statement-builder">Mapping a Statement Builder</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">RepoDb</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Introduction to RepoDb</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="introduction-to-repodb">
 <h1>Introduction to RepoDb<a class="headerlink" href="#introduction-to-repodb" title="Permalink to this headline">¶</a></h1>
@@ -2296,172 +2523,59 @@ var repository = new DbRepository&lt;SqlConnection&gt;(@&quot;Server=.;Database=
 </div>
 
 
+           </div>
+           
           </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Michael Camara Pendon.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Introduction to RepoDb</a><ul>
-<li><a class="reference internal" href="#goal">Goal</a></li>
-<li><a class="reference internal" href="#principles">Principles</a></li>
-<li><a class="reference internal" href="#why-repodb">Why RepoDb?</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#installation-steps">Installation Steps</a><ul>
-<li><a class="reference internal" href="#via-nuget-package-manager">Via Nuget Package Manager</a></li>
-<li><a class="reference internal" href="#via-package-manager-console">Via Package Manager Console</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#creating-a-dataentity">Creating a DataEntity</a><ul>
-<li><a class="reference internal" href="#dataentity-class">DataEntity Class</a></li>
-<li><a class="reference internal" href="#idataentity-interface">IDataEntity Interface</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#mapping-with-mapattribute">Mapping with MapAttribute</a><ul>
-<li><a class="reference internal" href="#mapping-a-class">Mapping a Class</a></li>
-<li><a class="reference internal" href="#mapping-a-property">Mapping a Property</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#primary-attribute">Primary Attribute</a><ul>
-<li><a class="reference internal" href="#defining-an-identity-property">Defining an Identity Property</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
-<li><a class="reference internal" href="#multiple-entity-mapping">Multiple Entity Mapping</a></li>
-<li><a class="reference internal" href="#type-mapping">Type Mapping</a></li>
-<li><a class="reference internal" href="#working-wth-repository">Working wth Repository</a><ul>
-<li><a class="reference internal" href="#dbrepository-class">DbRepository Class</a></li>
-<li><a class="reference internal" href="#baserepository-class">BaseRepository Class</a></li>
-<li><a class="reference internal" href="#creating-a-connection">Creating a Connection</a></li>
-<li><a class="reference internal" href="#connection-ensureopen">Connection.EnsureOpen</a></li>
-<li><a class="reference internal" href="#connection-executereader">Connection.ExecuteReader</a></li>
-<li><a class="reference internal" href="#connection-executequery">Connection.ExecuteQuery</a></li>
-<li><a class="reference internal" href="#connection-executenonquery">Connection.ExecuteNonQuery</a></li>
-<li><a class="reference internal" href="#connection-executescalar">Connection.ExecuteScalar</a></li>
-<li><a class="reference internal" href="#working-with-storedprocedure">Working with StoredProcedure</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#transaction">Transaction</a></li>
-<li><a class="reference internal" href="#expression-tree">Expression Tree</a><ul>
-<li><a class="reference internal" href="#explicit-query-expression">Explicit Query Expression</a></li>
-<li><a class="reference internal" href="#dynamic-query-expression">Dynamic Query Expression</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#querygroup">QueryGroup</a><ul>
-<li><a class="reference internal" href="#query-operations">Query Operations</a></li>
-<li><a class="reference internal" href="#operation-equal">Operation.Equal</a></li>
-<li><a class="reference internal" href="#operation-notequal">Operation.NotEqual</a></li>
-<li><a class="reference internal" href="#operation-lessthan">Operation.LessThan</a></li>
-<li><a class="reference internal" href="#operation-greaterthan">Operation.GreaterThan</a></li>
-<li><a class="reference internal" href="#operation-lessthanorequal">Operation.LessThanOrEqual</a></li>
-<li><a class="reference internal" href="#operation-greaterthanorequal">Operation.GreaterThanOrEqual</a></li>
-<li><a class="reference internal" href="#operation-like">Operation.Like</a></li>
-<li><a class="reference internal" href="#operation-notlike">Operation.NotLike</a></li>
-<li><a class="reference internal" href="#operation-between">Operation.Between</a></li>
-<li><a class="reference internal" href="#operation-notbetween">Operation.NotBetween</a></li>
-<li><a class="reference internal" href="#operation-in">Operation.In</a></li>
-<li><a class="reference internal" href="#operation-notin">Operation.NotIn</a></li>
-<li><a class="reference internal" href="#operation-all">Operation.All</a></li>
-<li><a class="reference internal" href="#operation-any">Operation.Any</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#repository-operations">Repository Operations</a><ul>
-<li><a class="reference internal" href="#query-operation">Query Operation</a><ul>
-<li><a class="reference internal" href="#ordering-a-query">Ordering a Query</a></li>
-<li><a class="reference internal" href="#limiting-a-query-result">Limiting a Query Result</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#insert-operation">Insert Operation</a></li>
-<li><a class="reference internal" href="#update-operation">Update Operation</a></li>
-<li><a class="reference internal" href="#delete-operation">Delete Operation</a></li>
-<li><a class="reference internal" href="#merge-operation">Merge Operation</a></li>
-<li><a class="reference internal" href="#inlineupdate-operation">InlineUpdate Operation</a></li>
-<li><a class="reference internal" href="#bulkinsert-operation">BulkInsert Operation</a></li>
-<li><a class="reference internal" href="#count-and-countbig-operation">Count and CountBig Operation</a></li>
-<li><a class="reference internal" href="#batchquery-operation">BatchQuery Operation</a></li>
-<li><a class="reference internal" href="#executequery-operation">ExecuteQuery Operation</a></li>
-<li><a class="reference internal" href="#executenonquery-operation">ExecuteNonQuery Operation</a></li>
-<li><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#working-with-cache">Working with Cache</a><ul>
-<li><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
-<li><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
-<li><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
-<li><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
-<li><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#working-with-trace">Working with Trace</a><ul>
-<li><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
-<li><a class="reference internal" href="#itracelog-interface">ITraceLog Interface</a></li>
-<li><a class="reference internal" href="#icancellabletracelog-interface">ICancellableTraceLog Interface</a></li>
-<li><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
-<li><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#working-with-statementbuilder">Working with StatementBuilder</a><ul>
-<li><a class="reference internal" href="#querybuilder-object">QueryBuilder Object</a></li>
-<li><a class="reference internal" href="#createbatchquery-method">CreateBatchQuery Method</a></li>
-<li><a class="reference internal" href="#createcount-method">CreateCount Method</a></li>
-<li><a class="reference internal" href="#createcountbig-method">CreateCountBig Method</a></li>
-<li><a class="reference internal" href="#createdelete-method">CreateDelete Method</a></li>
-<li><a class="reference internal" href="#createinlineupdate-method">CreateInlineUpdate Method</a></li>
-<li><a class="reference internal" href="#createinsert-method">CreateInsert Method</a></li>
-<li><a class="reference internal" href="#createmerge-method">CreateMerge Method</a></li>
-<li><a class="reference internal" href="#createquery-method">CreateQuery Method</a></li>
-<li><a class="reference internal" href="#createupdate-method">CreateUpdate Method</a></li>
-<li><a class="reference internal" href="#creating-a-custom-statement-builder">Creating a custom Statement Builder</a></li>
-<li><a class="reference internal" href="#mapping-a-statement-builder">Mapping a Statement Builder</a></li>
-</ul>
-</li>
-</ul>
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="#">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/index.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2018, Michael Camara Pendon.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
-      |
-      <a href="_sources/index.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
 
-    
+    </section>
 
-    
-  </body>
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>
