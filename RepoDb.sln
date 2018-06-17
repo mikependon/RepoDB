@@ -30,7 +30,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6837AEC8-8A8C-48EE-9338-62D972BC4DB0}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\index.rst = Docs\index.rst
-		Docs\samples.rst = Docs\samples.rst
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B}"

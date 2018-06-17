@@ -343,18 +343,21 @@ Or, via independent `SqlConnection` object extended `ExecuteQuery` method.
 			});
 	}
 
-Or, via `Repository.ExecuteReader`.
+Or, via independent `SqlConnection` object extended `ExecuteQuery` method that returns the list of `dynamic` objects.
 
 ::
-
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	using (var reader = repository.ExecuteReader("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure))
+	
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		while (reader.Read())
-		{
-			// Process each row here
-		}
+		var customers = connection.ExecuteQuery("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
+		customers
+			.ToList()
+			.ForEach(customer =>
+			{
+				// Process each customer here
+			});
 	}
+
 
 Or, via independent `SqlConnection` object extended `ExecuteReader` method.
 
