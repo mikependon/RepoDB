@@ -31,7 +31,7 @@ By default, upon defining a `PrimaryAttribute`, the property is automatically id
 
 	public class EmployeeDto : DataEntity
 	{
-		[Primary] // This is identity by default
+		[Primary] // This is identity by default, can be set to [Primary(false)]
 		public int Id { get; set; }
 	}
 

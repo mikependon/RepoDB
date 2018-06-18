@@ -122,6 +122,15 @@ A repository is used to create a connection object.
 		// Use the connection here
 	}
 
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	{
+		// Use the connection here
+	}
+
 Connection.EnsureOpen
 ---------------------
 
@@ -139,6 +148,15 @@ The underlying method call of this method is the `System.Data.DbConnection.Open(
 		// No need to open the connection
 	}
 
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Use the connection here
+	}
+
 Connection.ExecuteReader
 ------------------------
 
@@ -152,6 +170,22 @@ The underlying method call of this method is the `System.Data.IDbCommand.Execute
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	using (var connection = repository.CreateConnection().EnsureOpen())
+	{
+		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE (Id <= @Id);";
+		using (var reader = connection.ExecuteReader(commandText, new { Id = 10000 }))
+		{
+			while (reader.Read())
+			{
+				// Process the records here
+			}
+		}
+	}
+
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE (Id <= @Id);";
 		using (var reader = connection.ExecuteReader(commandText, new { Id = 10000 }))
@@ -198,12 +232,44 @@ Code below returns an enumerable list of `dynamic` object.
 			});
 	}
 
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE (Id <= @Id);";
+		var customers = connection.ExecuteQuery(commandText, new { Id = 10000 }))
+		customers
+			.ToList()
+			.ForEach(customer =>
+			{
+				// Process each customer here
+			});
+	}
+
 Code below returns an enumerable list of `Customer` object.
 
 ::
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	using (var connection = repository.CreateConnection().EnsureOpen())
+	{
+		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE (Id <= @Id);";
+		var customers = connection.ExecuteQuery<Customer>(commandText, new { Id = 10000 }))
+		customers
+			.ToList()
+			.ForEach(customer =>
+			{
+				// Process each customer here
+			});
+	}
+
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE (Id <= @Id);";
 		var customers = connection.ExecuteQuery<Customer>(commandText, new { Id = 10000 }))
@@ -242,6 +308,16 @@ The underlying method call of this method is the `System.Data.IDbCommand.Execute
 		var affectedRows =  connection.ExecuteNonQuery(commandText, new { Id = 10000, Name = "Anna Fullerton" });
 	}
 
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = @"UPDATE [dbo].[Customer] SET Name = @Name WHERE (Id = @Id);";
+		var affectedRows =  connection.ExecuteNonQuery(commandText, new { Id = 10000, Name = "Anna Fullerton" });
+	}
+
 Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
@@ -264,6 +340,16 @@ The underlying method call of this method is the `System.Data.IDbCommand.Execute
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	using (var connection = repository.CreateConnection().EnsureOpen())
+	{
+		var commandText = @"SELECT MAX(Id) FROM [dbo].[Customer];";
+		var customerMaxId =  connection.ExecuteScalar(commandText);
+	}
+
+Or, in a tradional way with independent `SqlConnection` object extended method.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var commandText = @"SELECT MAX(Id) FROM [dbo].[Customer];";
 		var customerMaxId =  connection.ExecuteScalar(commandText);
@@ -328,7 +414,7 @@ Calling via `Repository.ExecuteQuery`.
 			// Process each customer here
 		});
 
-Or, via independent `SqlConnection` object extended `ExecuteQuery` method.
+Or, in a tradional way with independent `SqlConnection` object extended method.
 
 ::
 
@@ -359,7 +445,7 @@ Or, via independent `SqlConnection` object extended `ExecuteQuery` method that r
 	}
 
 
-Or, via independent `SqlConnection` object extended `ExecuteReader` method.
+Or, in a tradional way with independent `SqlConnection` object extended method.
 
 ::
 

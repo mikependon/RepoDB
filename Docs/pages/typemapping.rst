@@ -3,7 +3,7 @@ Type Mapping
 
 .. highlight: c#
 
-Type mapping is feature that allows the library to identify which type of .NET is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to specially when running the repository operations.
+Type mapping is feature that allows the library to identify which of the `.NET CLR Types` is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to do, specially when running the repository operations.
 
 Below is the way on how to map the `System.DateTime` to be equivalent as `System.Data.DbType.DateTime2`.
 

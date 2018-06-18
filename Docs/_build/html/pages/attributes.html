@@ -185,7 +185,7 @@
 <p>By default, upon defining a <cite>PrimaryAttribute</cite>, the property is automatically identity. To unset, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> to <cite>false</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
-<span class="na">        [Primary]</span> <span class="c1">// This is identity by default</span>
+<span class="na">        [Primary]</span> <span class="c1">// This is identity by default, can be set to [Primary(false)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

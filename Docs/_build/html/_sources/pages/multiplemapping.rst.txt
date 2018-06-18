@@ -1,7 +1,7 @@
 Multiple Entity Mapping
 =======================
 
-This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a `DataEntity` object into multiple object in the database. This is very usable for some complex requirements that includes like the implementations of `Table`, `Views` and `StoredProcedures` must be mapped into one `DataEntity` object.
+This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a `DataEntity` object into multiple object in the database. This is very usable for some complex requirements that includes like the combined implementations of `Table`, `Views` and `StoredProcedures` must be mapped into one `DataEntity` object.
 
 The class named `RepoDb.DataEntityMapper` is used when doing a multiple mapping. Below are the methods.
 
@@ -15,14 +15,14 @@ The class named `RepoDb.DataEntityMapItem` is used to map the operation level of
 
 Multi-mapping is bound in an operation-level of the repository. This means that the developer can map the `Query` operation of a `Customer` object into `[dbo].[Customer]` table of the database, whereas the `Delete` operation is mapped into `[dbo].[sp_DeleteCustomer]` database object.
 
-Let say a `Customer` entity object was created in the solution, and the following database objects exist.
+In scenario below where a `Customer` entity object was created in the solution, and the following objects exist in the database.
 
  - A table named `Customer`.
  - A stored procedure named `sp_DeleteCustomer`.
  - A stored procedure named `sp_InsertCustomer`, where the logic inside of is joining from different database tables.
  - A view named `vw_Customer`.
  
-Developers can simply call the mapper methods when mapping a `Customer` object into these database objects.
+Then, the developers can call the mapper methods when mapping a `Customer` object into these database objects.
 
 Below are the codes for multiple mapping.
 

@@ -160,7 +160,7 @@
             
   <div class="section" id="multiple-entity-mapping">
 <h1>Multiple Entity Mapping<a class="headerlink" href="#multiple-entity-mapping" title="Permalink to this headline">¶</a></h1>
-<p>This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a <cite>DataEntity</cite> object into multiple object in the database. This is very usable for some complex requirements that includes like the implementations of <cite>Table</cite>, <cite>Views</cite> and <cite>StoredProcedures</cite> must be mapped into one <cite>DataEntity</cite> object.</p>
+<p>This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a <cite>DataEntity</cite> object into multiple object in the database. This is very usable for some complex requirements that includes like the combined implementations of <cite>Table</cite>, <cite>Views</cite> and <cite>StoredProcedures</cite> must be mapped into one <cite>DataEntity</cite> object.</p>
 <p>The class named <cite>RepoDb.DataEntityMapper</cite> is used when doing a multiple mapping. Below are the methods.</p>
 <ul class="simple">
 <li><strong>For</strong>: used to create a mapping between the data entity and database object. Returns an <cite>RepoDb.DataEntityMapItem</cite> object.</li>
@@ -172,7 +172,7 @@
 <li><strong>Get</strong>: get the entity mapping definition defined on the repository command operation.</li>
 </ul>
 <p>Multi-mapping is bound in an operation-level of the repository. This means that the developer can map the <cite>Query</cite> operation of a <cite>Customer</cite> object into <cite>[dbo].[Customer]</cite> table of the database, whereas the <cite>Delete</cite> operation is mapped into <cite>[dbo].[sp_DeleteCustomer]</cite> database object.</p>
-<p>Let say a <cite>Customer</cite> entity object was created in the solution, and the following database objects exist.</p>
+<p>In scenario below where a <cite>Customer</cite> entity object was created in the solution, and the following objects exist in the database.</p>
 <blockquote>
 <div><ul class="simple">
 <li>A table named <cite>Customer</cite>.</li>
@@ -181,7 +181,7 @@
 <li>A view named <cite>vw_Customer</cite>.</li>
 </ul>
 </div></blockquote>
-<p>Developers can simply call the mapper methods when mapping a <cite>Customer</cite> object into these database objects.</p>
+<p>Then, the developers can call the mapper methods when mapping a <cite>Customer</cite> object into these database objects.</p>
 <p>Below are the codes for multiple mapping.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DataEntityMapper</span><span class="o">.</span><span class="n">For</span><span class="o">&lt;</span><span class="n">Stock</span><span class="o">&gt;</span><span class="p">()</span>
         <span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">Insert</span><span class="p">,</span> <span class="s2">&quot;[dbo].[sp_QueryCustomer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="o">.</span><span class="n">StoredProcedure</span><span class="p">)</span>
