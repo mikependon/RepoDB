@@ -32,9 +32,9 @@ namespace RepoDb
         public object Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the timestamp of this cache item. By default, it is equals to the time
+        /// Gets the timestamp of this cache item. By default, it is equals to the time
         /// of when this cache item object has been instantiated.
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; internal set; }
     }
 }

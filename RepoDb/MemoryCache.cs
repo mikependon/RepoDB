@@ -13,12 +13,31 @@ namespace RepoDb
     public class MemoryCache : ICache
     {
         private static object _syncLock = new object();
-        private readonly IList<ICacheItem> _cacheList;
+        private readonly IList<CacheItem> _cacheList;
 
-        internal MemoryCache()
+        /// <summary>
+        /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
+        /// </summary>
+        public MemoryCache() : this(180) { }
+
+        /// <summary>
+        /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
+        /// </summary>
+        /// <param name="expirationInMinutes">An expiration in minutes of the cache item.</param>
+        public MemoryCache(int expirationInMinutes)
         {
-            _cacheList = new List<ICacheItem>();
+            if (expirationInMinutes < 0)
+            {
+                throw new ArgumentOutOfRangeException("Expiration in minutes.");
+            }
+            _cacheList = new List<CacheItem>();
+            ExpirationInMinutes = expirationInMinutes;
         }
+
+        /// <summary>
+        /// Gets the cache item expiration in minutes.
+        /// </summary>
+        public int ExpirationInMinutes { get; set; }
 
         /// <summary>
         /// Adds a cache item value.
@@ -27,20 +46,7 @@ namespace RepoDb
         /// <param name="value">The value of the cache.</param>
         public void Add(string key, object value)
         {
-            lock (_syncLock)
-            {
-                var item = GetItem(key);
-                if (item == null)
-                {
-                    _cacheList.Add(new CacheItem(key, value));
-                }
-                else
-                {
-                    var cacheItem = (CacheItem)item;
-                    cacheItem.Value = value;
-                    cacheItem.Timestamp = DateTime.UtcNow;
-                }
-            }
+            Add(new CacheItem(key, value));
         }
 
         /// <summary>
@@ -49,19 +55,26 @@ namespace RepoDb
         /// <param name="item">
         /// The cache item to be added in the collection. This object must implement the <i>RepoDb.Interfaces.ICacheItem</i> interface.
         /// </param>
-        public void Add(ICacheItem item)
+        public void Add(CacheItem item)
         {
             lock (_syncLock)
             {
-                var cache = GetItem(item.Key);
-                if (cache == null)
+                var cacheItem = GetItem(item.Key);
+                if (cacheItem == null)
                 {
                     _cacheList.Add(item);
                 }
                 else
                 {
-                    cache.Value = item.Value;
-                    cache.Timestamp = DateTime.UtcNow;
+                    if (!IsExpired(cacheItem))
+                    {
+                        throw new InvalidOperationException($"An existing cache for key '{item.Key}' already exists.");
+                    }
+                    else
+                    {
+                        cacheItem.Value = item.Value;
+                        cacheItem.Timestamp = DateTime.UtcNow;
+                    }
                 }
             }
         }
@@ -81,7 +94,8 @@ namespace RepoDb
         /// <returns>A boolean value that signifies the presence of the key from the collection.</returns>
         public bool Contains(string key)
         {
-            return GetItem(key) != null;
+            var cacheItem = GetItem(key);
+            return cacheItem != null && !IsExpired(cacheItem);
         }
 
         /// <summary>
@@ -92,16 +106,22 @@ namespace RepoDb
         public object Get(string key)
         {
             var cacheItem = GetItem(key);
-            return cacheItem?.Value;
+            if (cacheItem != null && !IsExpired(cacheItem))
+            {
+                return cacheItem.Value;
+            }
+            return null;
         }
 
         /// <summary>
         /// Gets the enumerator of the cache collection.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<ICacheItem> GetEnumerator()
+        public IEnumerator<CacheItem> GetEnumerator()
         {
-            return _cacheList.GetEnumerator();
+            return _cacheList
+                .Where(cacheItem => !IsExpired(cacheItem))
+                .GetEnumerator();
         }
 
         /// <summary>
@@ -111,12 +131,6 @@ namespace RepoDb
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _cacheList.GetEnumerator();
-        }
-
-        private ICacheItem GetItem(string key)
-        {
-            return _cacheList.FirstOrDefault(cacheItem =>
-                string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
         }
 
         /// <summary>
@@ -132,6 +146,21 @@ namespace RepoDb
             {
                 _cacheList.Remove(item);
             }
+            else
+            {
+                throw new InvalidOperationException($"The cache item with '{key}' is not found.");
+            }
+        }
+
+        private CacheItem GetItem(string key)
+        {
+            return (CacheItem)_cacheList.FirstOrDefault(cacheItem =>
+                string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
+        }
+
+        private bool IsExpired(ICacheItem item)
+        {
+            return (DateTime.UtcNow - item.Timestamp).TotalMinutes >= ExpirationInMinutes;
         }
     }
 }

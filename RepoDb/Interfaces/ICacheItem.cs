@@ -18,8 +18,8 @@ namespace RepoDb.Interfaces
         object Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the timestamp of this cache item.
+        /// Gets the timestamp of this cache item.
         /// </summary>
-        DateTime Timestamp { get; set; }
+        DateTime Timestamp { get; }
     }
 }

@@ -4,7 +4,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute class used to define a class property or any <i>Data Entity</i> object properties to be marked as ignoreable
+    /// An attribute used to define a class property or any <i>Data Entity</i> object properties to be marked as ignoreable
     /// during the actual repository operation.
     /// </summary>
     public class IgnoreAttribute : Attribute

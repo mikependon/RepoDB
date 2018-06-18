@@ -5,8 +5,13 @@ namespace RepoDb.Interfaces
     /// <summary>
     /// An interface used to mark the class to be a cacher for an object.
     /// </summary>
-    public interface ICache : IEnumerable<ICacheItem>
+    public interface ICache : IEnumerable<CacheItem>
     {
+        /// <summary>
+        /// Gets the cache item expiration in minutes.
+        /// </summary>
+        int ExpirationInMinutes { get; set; }
+
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
@@ -18,9 +23,9 @@ namespace RepoDb.Interfaces
         /// Adds a cache item value.
         /// </summary>
         /// <param name="item">
-        /// The cache item to be added in the collection. This object must implement the <i>RepoDb.Interfaces.ICacheItem</i> interface.
+        /// The cache item to be added in the collection.
         /// </param>
-        void Add(ICacheItem item);
+        void Add(CacheItem item);
 
         /// <summary>
         /// Clears the collection of the cache.
