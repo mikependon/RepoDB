@@ -194,7 +194,7 @@
 <div class="section" id="querybuilder-object">
 <h2>QueryBuilder Object<a class="headerlink" href="#querybuilder-object" title="Permalink to this headline">¶</a></h2>
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
-<p>By default, the library is using the <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite> object(implements the <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite> when composing the statement.</p>
+<p>By default, the library is using the <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite> object when composing the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provide.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null) where TEntity : DataEntity
 {

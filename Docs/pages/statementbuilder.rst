@@ -26,7 +26,7 @@ QueryBuilder Object
 
 A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
 
-By default, the library is using the `RepoDb.QueryBuilder<TEntity>` object(implements the `RepoDb.QueryBuilder<TEntity>` when composing the statement.
+By default, the library is using the `RepoDb.QueryBuilder<TEntity>` object when composing the statement.
 
 Below is a sample code that creates a SQL Statement for the `Query` operation for `Oracle` data provide.
 
