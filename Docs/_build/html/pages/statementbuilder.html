@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Library Extensibility" href="extensibility.html" />
     <link rel="prev" title="Working with Trace" href="trace.html" /> 
 
   
@@ -107,6 +108,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#mapping-a-statement-builder">Mapping a Statement Builder</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 </ul>
 
             
@@ -223,8 +226,7 @@
 }
 </pre></div>
 </div>
-<p>The methods of this object might be limited as it varies on the target data provider to be implemented. This object is open for modification soon for extensibility support. We are happy to open this to become inherittable in the near future if this is necessary for the .NET community.</p>
-<p><strong>Note</strong>: The query builder is not inheritable and we suggest not to create a customized query builder.</p>
+<p>As of today, the methods of this <cite>RepoDb.QueryBuilder</cite> object might be limited as it only varies on the current supported data provider SQL Server Data Provider.</p>
 </div>
 <div class="section" id="createbatchquery-method">
 <h2>CreateBatchQuery Method<a class="headerlink" href="#createbatchquery-method" title="Permalink to this headline">¶</a></h2>
@@ -656,6 +658,8 @@ var repository = new DbRepository&lt;SqlConnection&gt;(@&quot;Server=.;Database=
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="extensibility.html" class="btn btn-neutral float-right" title="Library Extensibility" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="trace.html" class="btn btn-neutral" title="Working with Trace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

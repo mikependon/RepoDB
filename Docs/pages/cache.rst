@@ -3,7 +3,7 @@ Working with Cache
 
 .. highlight:: c#
 
-The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on `Query` operation of the repository. It can be access through the repository `Cache` property (implements `RepoDb.Interfaces.ICache` interface).
+The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on `Query` operation of the repository.
 
 A cache key is important in order for the caching to cache the object. It should be unique to every cache item.
 
@@ -30,6 +30,10 @@ Below are the properties of `CacheItem` object.
 - **Value**: the cached object of the item. It returns a `System.Object` type. It can be casted back to a defined object type.
 - **CreatedDate**: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a `System.DateTime` object.
 - **Expiration**: the expiration date of this cache item.. It returns a `System.DateTime` object.
+
+Below are the methods of `CacheItem` object.
+
+- **IsExpired**: Checks whether the cached item is expired. It returns a `System.Boolean` value.
 
 The repository caching operation is of the `pseudo` below.
 
@@ -124,7 +128,7 @@ Code below is the way on how to retrieve or iterate all the cached items from th
 	// Let's expect that the repository is meant for Customer data entity
 	foreach (var item in repository.Cache)
 	{
-		var item = (IEnumerable<Customer>)item;
+		var item = (IEnumerable<Customer>)item.Value;
 		// Process the item here
 	}
 
@@ -188,7 +192,7 @@ Below is the way on how to create a custom `Cache` object.
 			// Check if the Filename exists by Key
 		}
 
-		public object Get(string key)
+		public CacheItem Get(string key)
 		{
 			// Deserialize the File where the FileName is equals to Key, return the object
 		}

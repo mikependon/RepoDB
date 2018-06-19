@@ -103,6 +103,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 </ul>
 
             
@@ -169,7 +171,7 @@
             
   <div class="section" id="working-with-cache">
 <h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
-<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository. It can be access through the repository <cite>Cache</cite> property (implements <cite>RepoDb.Interfaces.ICache</cite> interface).</p>
+<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository.</p>
 <p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
 <p>Below are the methods of <cite>Cache</cite> object.</p>
 <ul class="simple">
@@ -193,6 +195,10 @@
 <li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
 <li><strong>CreatedDate</strong>: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a <cite>System.DateTime</cite> object.</li>
 <li><strong>Expiration</strong>: the expiration date of this cache item.. It returns a <cite>System.DateTime</cite> object.</li>
+</ul>
+<p>Below are the methods of <cite>CacheItem</cite> object.</p>
+<ul class="simple">
+<li><strong>IsExpired</strong>: Checks whether the cached item is expired. It returns a <cite>System.Boolean</cite> value.</li>
 </ul>
 <p>The repository caching operation is of the <cite>pseudo</cite> below.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
@@ -255,7 +261,7 @@ RETURN $result
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Let&#39;s expect that the repository is meant for Customer data entity</span>
 <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">item</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span>
         <span class="c1">// Process the item here</span>
 <span class="p">}</span>
 </pre></div>
@@ -305,7 +311,7 @@ RETURN $result
                 <span class="c1">// Check if the Filename exists by Key</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="kt">object</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">public</span> <span class="n">CacheItem</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="c1">// Deserialize the File where the FileName is equals to Key, return the object</span>
         <span class="p">}</span>

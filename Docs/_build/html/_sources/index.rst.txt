@@ -19,3 +19,5 @@ RepoDb Documentation
    pages/cache
    pages/trace
    pages/statementbuilder
+   pages/extensibility
+   pages/support

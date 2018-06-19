@@ -104,9 +104,6 @@
     <Compile Include="Parameter.cs" />
     <Compile Include="OrderField.cs" />
     <Compile Include="Field.cs" />
-    <Compile Include="Interfaces\IQueryBuilder.cs" />
-    <Compile Include="Interfaces\IBaseRepository.cs" />
-    <Compile Include="Interfaces\IDbRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBuilder.cs" />
     <Compile Include="CommandTypeCache.cs" />

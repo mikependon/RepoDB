@@ -8,7 +8,7 @@ namespace RepoDb.Enumerations
     public enum Operation : short
     {
         /// <summary>
-        /// An equal operation (=).
+        /// An equal operation.
         /// </summary>
         [Text("=")] Equal,
         /// <summary>

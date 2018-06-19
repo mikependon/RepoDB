@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Type Mapping &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Library Extensibility &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Working with Repository" href="repository.html" />
-    <link rel="prev" title="Multiple Entity Mapping" href="multiplemapping.html" /> 
+    <link rel="next" title="Supported Versions" href="support.html" />
+    <link rel="prev" title="Working with StatementBuilder" href="statementbuilder.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
@@ -94,7 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 </ul>
 
@@ -141,13 +141,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Type Mapping</li>
+      <li>Library Extensibility</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/pages/typemapping.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/pages/extensibility.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -160,18 +160,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="type-mapping">
-<h1>Type Mapping<a class="headerlink" href="#type-mapping" title="Permalink to this headline">¶</a></h1>
-<p>Type mapping is feature that allows the library to identify which of the <cite>.NET CLR Types</cite> is equivalent to the <cite>System.Data.DbType</cite> types. This feature is important to force the library the conversion it will going to do, specially when running the repository operations.</p>
-<p>Below is the way on how to map the <cite>System.DateTime</cite> to be equivalent as <cite>System.Data.DbType.DateTime2</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">DateTime2</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>and <cite>System.Decimal</cite> into <cite>System.Data.DbType.Double</cite>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">AddMap</span><span class="p">(</span><span class="n">new</span> <span class="n">TypeMap</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">Double</span><span class="p">));</span>
-</pre></div>
-</div>
-<p><strong>Note</strong>: The class is callable anywhere in the application as it was implemented in a static way.</p>
+  <div class="section" id="library-extensibility">
+<h1>Library Extensibility<a class="headerlink" href="#library-extensibility" title="Permalink to this headline">¶</a></h1>
+<p>RepoDb is highly extensible for RDBMS only. Below are the objects that can be extended.</p>
+<ul class="simple">
+<li>Cache</li>
+<li>Trace</li>
+<li>Statement Builder</li>
+<li>Repository</li>
+</ul>
+<p>RepoDb can be extended to support various data providers like Oracle, MySql, PostgreSQL and Ole Databases.</p>
+<p>RepoDb is an ORM for RDBMS and cannot be extended for NoSql Databases.</p>
 </div>
 
 
@@ -182,10 +181,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="repository.html" class="btn btn-neutral float-right" title="Working with Repository" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="support.html" class="btn btn-neutral float-right" title="Supported Versions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="multiplemapping.html" class="btn btn-neutral" title="Multiple Entity Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="statementbuilder.html" class="btn btn-neutral" title="Working with StatementBuilder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -15,8 +15,7 @@ namespace RepoDb
     /// object in order to be qualified as a repository entity.
     /// </typeparam>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public abstract class BaseRepository<TEntity, TDbConnection> : IBaseRepository<TEntity, TDbConnection>
-        where TEntity : DataEntity
+    public abstract class BaseRepository<TEntity, TDbConnection> where TEntity : DataEntity
         where TDbConnection : DbConnection
     {
         private readonly DbRepository<TDbConnection> _dbRepository;
@@ -101,7 +100,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the underlying repository used by this repository.
         /// </summary>
-        public IDbRepository<TDbConnection> DbRepository => _dbRepository;
+        public DbRepository<TDbConnection> DbRepository => _dbRepository;
 
         // DbCache
 

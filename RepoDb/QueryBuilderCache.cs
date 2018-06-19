@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using RepoDb.Interfaces;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object on a
+    /// A static class used to get the cached <i>RepoDb.QueryBuilder</i> object on a
     /// given <i>Data Entity</i> object.
     /// </summary>
     public static class QueryBuilderCache
@@ -13,22 +12,22 @@ namespace RepoDb
         private static readonly IDictionary<Type, object> _cache = new Dictionary<Type, object>();
 
         /// <summary>
-        /// Gets the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object on a given <i>Data Entity</i> object.
+        /// Gets the cached <i>RepoDb.QueryBuilder</i> object on a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The entity where the cached <i>RepodDb.Interfaces.IQueryBuilder</i> object will be retrieved. This object must 
+        /// The entity where the cached <i>RepoDb.QueryBuilder</i> object will be retrieved. This object must 
         /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="createNew">Defines whether a new instance will be created if the object is not at the cache.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.IQueryBuilder</i> object bound for an entity.</returns>
-        public static IQueryBuilder<TEntity> Get<TEntity>(bool createNew = true)
+        /// <returns>An instance of <i>RepoDb.Interfaces.QueryBuilder</i> object bound for an entity.</returns>
+        public static QueryBuilder<TEntity> Get<TEntity>(bool createNew = true)
             where TEntity : DataEntity
         {
-            var value = (IQueryBuilder<TEntity>)null;
+            var value = (QueryBuilder<TEntity>)null;
             var key = typeof(TEntity);
             if (_cache.ContainsKey(key))
             {
-                value = (IQueryBuilder<TEntity>)_cache[key];
+                value = (QueryBuilder<TEntity>)_cache[key];
             }
             else
             {

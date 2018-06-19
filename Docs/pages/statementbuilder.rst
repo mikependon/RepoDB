@@ -61,9 +61,7 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 		return queryBuilder.ToString();
 	}
 
-The methods of this object might be limited as it varies on the target data provider to be implemented. This object is open for modification soon for extensibility support. We are happy to open this to become inherittable in the near future if this is necessary for the .NET community.
-
-**Note**: The query builder is not inheritable and we suggest not to create a customized query builder.
+As of today, the methods of this `RepoDb.QueryBuilder` object might be limited as it only varies on the current supported data provider SQL Server Data Provider.
 
 CreateBatchQuery Method
 -----------------------

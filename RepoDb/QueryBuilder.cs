@@ -11,8 +11,7 @@ namespace RepoDb
     /// An object used to compose a SQL Query Statement.
     /// </summary>
     /// <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
-    public sealed class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
-        where TEntity : DataEntity
+    public class QueryBuilder<TEntity> where TEntity : DataEntity
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
@@ -43,7 +42,7 @@ namespace RepoDb
         /// Clears the current composed SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Clear()
+        public QueryBuilder<TEntity> Clear()
         {
             _stringBuilder.Clear();
             return this;
@@ -53,7 +52,7 @@ namespace RepoDb
         /// Append a space to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Space()
+        public QueryBuilder<TEntity> Space()
         {
             return Append(" ");
         }
@@ -62,7 +61,7 @@ namespace RepoDb
         /// Appends a new-line to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> NewLine()
+        public QueryBuilder<TEntity> NewLine()
         {
             return Append("\n");
         }
@@ -72,12 +71,12 @@ namespace RepoDb
         /// </summary>
         /// <param name="text">The text to be written.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> WriteText(string text)
+        public QueryBuilder<TEntity> WriteText(string text)
         {
             return Append(text);
         }
 
-        private IQueryBuilder<TEntity> Append(string value)
+        private QueryBuilder<TEntity> Append(string value)
         {
             _stringBuilder.Append(_stringBuilder.Length > 0 ? $" {value}" : value);
             return this;
@@ -89,7 +88,7 @@ namespace RepoDb
         /// Appends a word DELETE word to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Delete()
+        public QueryBuilder<TEntity> Delete()
         {
             return Append("DELETE");
         }
@@ -98,7 +97,7 @@ namespace RepoDb
         /// Appends a character ";" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> End()
+        public QueryBuilder<TEntity> End()
         {
             return Append(";");
         }
@@ -107,7 +106,7 @@ namespace RepoDb
         /// Appends a word COUNT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Count()
+        public QueryBuilder<TEntity> Count()
         {
             return Append("COUNT");
         }
@@ -116,7 +115,7 @@ namespace RepoDb
         /// Appends a word COUNT_BIG to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> CountBig()
+        public QueryBuilder<TEntity> CountBig()
         {
             return Append("COUNT_BIG");
         }
@@ -126,7 +125,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Field(Field field)
+        public QueryBuilder<TEntity> Field(Field field)
         {
             return Append(field?.AsField());
         }
@@ -136,7 +135,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The mapped command where to get all the fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Fields(Command command)
+        public QueryBuilder<TEntity> Fields(Command command)
         {
             var fields = PropertyMapNameCache.Get<TEntity>(command).ToList();
             return Append(fields?.AsFields().Join(", "));
@@ -147,7 +146,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Fields(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> Fields(IEnumerable<Field> fields)
         {
             return Append(fields?.Select(f => f.AsField()).Join(", "));
         }
@@ -157,7 +156,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndParameters(Command command)
+        public QueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
             return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
         }
@@ -167,7 +166,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> FieldsAndParameters(IEnumerable<Field> fields)
         {
             return Append(fields?.AsFieldsAndParameters().Join(", "));
         }
@@ -178,7 +177,7 @@ namespace RepoDb
         /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
+        public QueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
             return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
         }
@@ -189,7 +188,7 @@ namespace RepoDb
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<Field> fields, string alias)
+        public QueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<Field> fields, string alias)
         {
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
@@ -198,7 +197,7 @@ namespace RepoDb
         /// Appends a word FROM to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> From()
+        public QueryBuilder<TEntity> From()
         {
             return Append("FROM");
         }
@@ -208,7 +207,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
         {
             return Append($"GROUP BY {fields?.AsFields().Join(", ")}");
         }
@@ -218,7 +217,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> HavingCount(QueryField queryField)
+        public QueryBuilder<TEntity> HavingCount(QueryField queryField)
         {
             return Append($"HAVING COUNT({queryField.Field.AsField()}) {queryField.GetOperationText()} {queryField.AsParameter()}");
         }
@@ -227,7 +226,7 @@ namespace RepoDb
         /// Appends a word INSERT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Insert()
+        public QueryBuilder<TEntity> Insert()
         {
             return Append("INSERT");
         }
@@ -236,7 +235,7 @@ namespace RepoDb
         /// Appends a word INTO to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Into()
+        public QueryBuilder<TEntity> Into()
         {
             return Append("INTO");
         }
@@ -245,7 +244,7 @@ namespace RepoDb
         /// Appends a word VALUES to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Values()
+        public QueryBuilder<TEntity> Values()
         {
             return Append("VALUES");
         }
@@ -256,7 +255,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="alias">The aliases to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> OrderBy(IEnumerable<OrderField> orderBy = null, string alias = null)
+        public QueryBuilder<TEntity> OrderBy(IEnumerable<OrderField> orderBy = null, string alias = null)
         {
             return (orderBy != null && orderBy.Any()) ?
                 Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :
@@ -268,7 +267,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="alias">The alias to be prepended.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> As(string alias = null)
+        public QueryBuilder<TEntity> As(string alias = null)
         {
             return string.IsNullOrEmpty(alias) ? Append($"AS") : Append($"AS {alias}");
         }
@@ -277,7 +276,7 @@ namespace RepoDb
         /// Appends a word WITH to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> With()
+        public QueryBuilder<TEntity> With()
         {
             return Append("WITH");
         }
@@ -286,7 +285,7 @@ namespace RepoDb
         /// Appends a word SET to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Set()
+        public QueryBuilder<TEntity> Set()
         {
             return Append("SET");
         }
@@ -295,7 +294,7 @@ namespace RepoDb
         /// Appends a word JOIN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Join()
+        public QueryBuilder<TEntity> Join()
         {
             return Append("JOIN");
         }
@@ -307,7 +306,7 @@ namespace RepoDb
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> JoinQualifiers(Field field, string leftAlias, string rightAlias)
+        public QueryBuilder<TEntity> JoinQualifiers(Field field, string leftAlias, string rightAlias)
         {
             return Append(field.AsJoinQualifier(leftAlias, rightAlias));
         }
@@ -316,7 +315,7 @@ namespace RepoDb
         /// Appends a word MERGE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Merge()
+        public QueryBuilder<TEntity> Merge()
         {
             return Append("MERGE");
         }
@@ -326,7 +325,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Table(Command command)
+        public QueryBuilder<TEntity> Table(Command command)
         {
             return Append($"{ClassMapNameCache.Get<TEntity>(command)}");
         }
@@ -336,7 +335,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Parameters(Command command)
+        public QueryBuilder<TEntity> Parameters(Command command)
         {
             var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
             return Append(properties?.AsParameters().Join(", "));
@@ -347,7 +346,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Parameters(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> Parameters(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParameters().Join(", "));
         }
@@ -357,7 +356,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> ParametersAsFields(Command command)
+        public QueryBuilder<TEntity> ParametersAsFields(Command command)
         {
             var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
             return Append(properties?.AsParametersAsFields().Join(", "));
@@ -368,7 +367,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> ParametersAsFields(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParametersAsFields().Join(", "));
         }
@@ -377,7 +376,7 @@ namespace RepoDb
         /// Appends a word SELECT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Select()
+        public QueryBuilder<TEntity> Select()
         {
             return Append("SELECT");
         }
@@ -387,7 +386,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="rows">The row number to be appended.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Top(int? rows = 0)
+        public QueryBuilder<TEntity> Top(int? rows = 0)
         {
             return rows > 0 ? Append($"TOP ({rows})") : this;
         }
@@ -396,7 +395,7 @@ namespace RepoDb
         /// Appends a word UPDATE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Update()
+        public QueryBuilder<TEntity> Update()
         {
             return Append("UPDATE");
         }
@@ -405,7 +404,7 @@ namespace RepoDb
         /// Appends a word USING to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Using()
+        public QueryBuilder<TEntity> Using()
         {
             return Append("USING");
         }
@@ -415,7 +414,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Where(QueryGroup queryGroup)
+        public QueryBuilder<TEntity> Where(QueryGroup queryGroup)
         {
             return (queryGroup != null) ? Append($"WHERE {((QueryGroup)queryGroup).FixParameters().GetString()}") : this;
         }
@@ -424,7 +423,7 @@ namespace RepoDb
         /// Appends a word ROW_NUMBER to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> RowNumber()
+        public QueryBuilder<TEntity> RowNumber()
         {
             return Append("ROW_NUMBER()");
         }
@@ -433,7 +432,7 @@ namespace RepoDb
         /// Appends a word OVER to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Over()
+        public QueryBuilder<TEntity> Over()
         {
             return Append("OVER");
         }
@@ -442,7 +441,7 @@ namespace RepoDb
         /// Appends a word AND to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> And()
+        public QueryBuilder<TEntity> And()
         {
             return Append("AND");
         }
@@ -451,7 +450,7 @@ namespace RepoDb
         /// Appends a word OR to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Or()
+        public QueryBuilder<TEntity> Or()
         {
             return Append("OR");
         }
@@ -460,7 +459,7 @@ namespace RepoDb
         /// Appends a character "(" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> OpenParen()
+        public QueryBuilder<TEntity> OpenParen()
         {
             return Append("(");
         }
@@ -469,7 +468,7 @@ namespace RepoDb
         /// Appends a character ")" to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> CloseParen()
+        public QueryBuilder<TEntity> CloseParen()
         {
             return Append(")");
         }
@@ -478,7 +477,7 @@ namespace RepoDb
         /// Appends a word ON to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> On()
+        public QueryBuilder<TEntity> On()
         {
             return Append("ON");
         }
@@ -487,7 +486,7 @@ namespace RepoDb
         /// Appends a word IN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> In()
+        public QueryBuilder<TEntity> In()
         {
             return Append("IN");
         }
@@ -496,7 +495,7 @@ namespace RepoDb
         /// Appends a word BETWEEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Between()
+        public QueryBuilder<TEntity> Between()
         {
             return Append("BETWEEN");
         }
@@ -505,7 +504,7 @@ namespace RepoDb
         /// Appends a word WHEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> When()
+        public QueryBuilder<TEntity> When()
         {
             return Append("WHEN");
         }
@@ -514,7 +513,7 @@ namespace RepoDb
         /// Appends a word NOT to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Not()
+        public QueryBuilder<TEntity> Not()
         {
             return Append("NOT");
         }
@@ -523,7 +522,7 @@ namespace RepoDb
         /// Appends a word MATCHED to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Matched()
+        public QueryBuilder<TEntity> Matched()
         {
             return Append("MATCHED");
         }
@@ -532,7 +531,7 @@ namespace RepoDb
         /// Appends a word THEN to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Then()
+        public QueryBuilder<TEntity> Then()
         {
             return Append("THEN");
         }
@@ -541,7 +540,7 @@ namespace RepoDb
         /// Appends a word CASE to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Case()
+        public QueryBuilder<TEntity> Case()
         {
             return Append("CASE");
         }

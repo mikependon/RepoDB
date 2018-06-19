@@ -1,6 +1,6 @@
 ## RepoDb
 
-A dynamic, lightweight and fast ORM .Net Library.
+A highly-extensible, dynamic, lightweight and fast ORM .Net Library.
 
 ### Package
 Link: https://www.nuget.org/packages/RepoDb

@@ -19,8 +19,7 @@ namespace RepoDb
     /// operations.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public class DbRepository<TDbConnection> : IDbRepository<TDbConnection>
-        where TDbConnection : DbConnection
+    public class DbRepository<TDbConnection> where TDbConnection : DbConnection
     {
         private readonly string _connectionString;
         private readonly int? _commandTimeout;

@@ -105,6 +105,8 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 </ul>
 
             
@@ -202,17 +204,6 @@
 </pre></div>
 </div>
 <p>It is recommended to create a contracted interface for <cite>DbRepository</cite> in order for it to be dependency injectable.</p>
-<p>See sample code below the way on how to create an interface and implement it directly to the derived class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">INorthwindDbRepository</span> <span class="p">:</span> <span class="n">IDbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;</span>
-<span class="p">{</span>
-<span class="p">}</span>
-
-<span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDbRepository</span> <span class="p">:</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;,</span> <span class="n">INorthwindDbRepository</span>
-        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="baserepository-class">
 <h2>BaseRepository Class<a class="headerlink" href="#baserepository-class" title="Permalink to this headline">¶</a></h2>
@@ -238,17 +229,6 @@
 </pre></div>
 </div>
 <p>It is recommended to create a contracted interface for <cite>BaseRepository</cite> in order for it to be dependency injectable.</p>
-<p>See sample code below the way on how to create an interface and implement it directly to the derived class.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">ICustomerRepository</span> <span class="p">:</span> <span class="n">IBaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>
-<span class="p">{</span>
-<span class="p">}</span>
-
-<span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;,</span> <span class="n">ICustomerRepository</span>
-        <span class="k">base</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="creating-a-connection">
 <h2>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>

@@ -47,19 +47,6 @@ Then, call it somewhere.
 
 It is recommended to create a contracted interface for `DbRepository` in order for it to be dependency injectable.
 
-See sample code below the way on how to create an interface and implement it directly to the derived class.
-
-::
-
-	public interface INorthwindDbRepository : IDbRepository<SqlConnection>
-	{
-	}
-
-	public class NorthwindDbRepository : DbRepository<SqlConnection>, INorthwindDbRepository
-		base(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
-	{
-	}
-
 BaseRepository Class
 --------------------
 
@@ -93,19 +80,6 @@ Then, call it somewhere.
 	var repository = new CustomerRepository();
 
 It is recommended to create a contracted interface for `BaseRepository` in order for it to be dependency injectable.
-
-See sample code below the way on how to create an interface and implement it directly to the derived class.
-
-::
-
-	public interface ICustomerRepository : IBaseRepository<Customer, SqlConnection>
-	{
-	}
-
-	public class CustomerRepository : BaseRepository<Customer, SqlConnection>, ICustomerRepository
-		base(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
-	{
-	}
 
 Creating a Connection
 ---------------------

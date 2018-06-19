@@ -113,7 +113,7 @@ namespace RepoDb
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _cacheList.GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <summary>

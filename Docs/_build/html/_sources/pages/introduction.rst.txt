@@ -1,7 +1,7 @@
 Introduction to RepoDb
 ======================
 
-A dynamic, lightweight and fast ORM .Net Library.
+A highly-extensible, dynamic, lightweight and fast ORM .Net Library.
 
 Goal and Vision
 ---------------
