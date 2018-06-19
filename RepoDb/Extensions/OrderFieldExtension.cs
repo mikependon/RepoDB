@@ -4,7 +4,7 @@ using RepoDb.Interfaces;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.IOrderField</i> object.
+    /// Contains the extension methods for <i>RepoDb.Interfaces.OrderField</i> object.
     /// </summary>
     public static class OrderFieldExtension
     {
@@ -13,7 +13,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        public static IEnumerable<IOrderField> AsEnumerable(this IOrderField orderField)
+        public static IEnumerable<OrderField> AsEnumerable(this OrderField orderField)
         {
             return new[] { orderField };
         }
@@ -23,7 +23,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="orderField">The order field instance to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        internal static string AsField(this IOrderField orderField)
+        internal static string AsField(this OrderField orderField)
         {
             return $"[{orderField.Name}] {orderField.GetOrderText()}";
         }
@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
         /// <param name="orderField">The order field to be converted.</param>
         /// <param name="alias">The alias to be used for conversion.</param>
         /// <returns>A string value for the stringified alias-formatted converted string.</returns>
-        internal static string AsAliasField(this IOrderField orderField, string alias)
+        internal static string AsAliasField(this OrderField orderField, string alias)
         {
             return $"{alias}.[{orderField.Name}] {orderField.GetOrderText()}";
         }

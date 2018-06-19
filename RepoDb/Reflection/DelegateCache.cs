@@ -14,13 +14,13 @@ namespace RepoDb.Reflection
         private static readonly IDictionary<string, Delegate> _cache = new Dictionary<string, Delegate>();
 
         /// <summary>
-        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.IDataEntity</i> object.
+        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> type to convert.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.IDataEntity</i> object.</returns>
+        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             var key = $"{typeof(TEntity).FullName}.DataReaderToDataEntity".ToLower();
             if (!_cache.ContainsKey(key))
@@ -32,12 +32,12 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.IDataEntity</i> object.
+        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity type to convert.</typeparam>
-        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.IDataEntity</i> object.</returns>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity type to convert.</typeparam>
+        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>()
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             var key = $"{typeof(TEntity).FullName}.DataEntityToDataRow".ToLower();
             if (!_cache.ContainsKey(key))

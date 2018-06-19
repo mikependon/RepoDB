@@ -35,12 +35,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the <i>System.Data.Command</i> object will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="command">The target command where to get the mapped name of the data entity.</param>
         /// <returns>An instance of <i>System.Data.CommandType</i> object.</returns>
         public static CommandType Get<TEntity>(Command command)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             return Get(typeof(TEntity), command);
         }

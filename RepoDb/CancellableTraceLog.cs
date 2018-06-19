@@ -1,12 +1,11 @@
-﻿using RepoDb.Interfaces;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace RepoDb
 {
     /// <summary>
     /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
     /// </summary>
-    public sealed class CancellableTraceLog : TraceLog, ICancellableTraceLog
+    public sealed class CancellableTraceLog : TraceLog
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.CancellableTraceLog</i> object.

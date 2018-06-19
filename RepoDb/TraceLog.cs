@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A tracing log object used in the tracing operations.
     /// </summary>
-    public class TraceLog : ITraceLog
+    public class TraceLog
     {
         internal TraceLog(MethodBase method, string statement, object parameter, object result, TimeSpan? executionTime)
         {

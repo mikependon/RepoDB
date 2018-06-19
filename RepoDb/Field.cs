@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb
@@ -8,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// An object that signifies as data field in the query statement.
     /// </summary>
-    public sealed class Field : IField
+    public class Field
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Field</i> object.
@@ -34,28 +33,28 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates an enumerable of <i>RepoDb.Interfaces.IField</i> objects that derived from the given array of string values.
+        /// Creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects that derived from the given array of string values.
         /// </summary>
         /// <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.IField</i> object.</returns>
-        public static IEnumerable<IField> From(params string[] fields)
+        /// <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> object.</returns>
+        public static IEnumerable<Field> From(params string[] fields)
         {
             return fields.ToList().Select(field => new Field(field));
         }
 
         /// <summary>
-        /// Parse an object and creates an enumerable of <i>RepoDb.Interfaces.IField</i> objects. Each field is equivalent
+        /// Parse an object and creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects. Each field is equivalent
         /// to each property of the given object. The parse operation uses a reflection operation.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.IField</i> objects.</returns>
-        public static IEnumerable<IField> Parse(object obj)
+        /// <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> objects.</returns>
+        public static IEnumerable<Field> Parse(object obj)
         {
             if (obj == null)
             {
                 throw new InvalidOperationException("Parameter 'obj' cannot be null.");
             }
-            var list = new List<IField>();
+            var list = new List<Field>();
             obj.GetType()
                 .GetProperties()
                 .ToList()

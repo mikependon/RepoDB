@@ -11,7 +11,7 @@ namespace RepoDb.Extensions
     public static class ObjectExtension
     {
         // AsObject
-        internal static object Merge(this object obj, IQueryGroup queryGroup)
+        internal static object Merge(this object obj, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             obj?.GetType()
@@ -37,14 +37,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The instance of the object to be converted.</param>
         /// <returns>An enumerable list of query fields.</returns>
-        public static IEnumerable<IQueryField> AsQueryFields(this object obj)
+        public static IEnumerable<QueryField> AsQueryFields(this object obj)
         {
-            var list = new List<IQueryField>();
+            var list = new List<QueryField>();
             var expandoObject = obj as ExpandoObject;
             if (expandoObject != null)
             {
                 var dictionary = (IDictionary<string, object>)expandoObject;
-                list.AddRange(dictionary.Select(item => new QueryField(item.Key, item.Value)).Cast<IQueryField>());
+                list.AddRange(dictionary.Select(item => new QueryField(item.Key, item.Value)).Cast<QueryField>());
             }
             else
             {
@@ -62,7 +62,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of fields.</returns>
-        public static IEnumerable<IField> AsFields(this object obj)
+        public static IEnumerable<Field> AsFields(this object obj)
         {
             return Field.Parse(obj);
         }
@@ -72,7 +72,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="obj">The object to be converted.</param>
         /// <returns>An enumerable list of order fields.</returns>
-        public static IEnumerable<IOrderField> AsOrderFields(this object obj)
+        public static IEnumerable<OrderField> AsOrderFields(this object obj)
         {
             return OrderField.Parse(obj);
         }

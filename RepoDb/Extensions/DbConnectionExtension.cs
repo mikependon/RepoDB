@@ -188,7 +188,7 @@ namespace RepoDb.Extensions
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             // Before Execution
             if (trace != null)
@@ -252,7 +252,7 @@ namespace RepoDb.Extensions
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 ExecuteQuery<TEntity>(connection: connection,

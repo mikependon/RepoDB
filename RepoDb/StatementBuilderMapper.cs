@@ -16,13 +16,13 @@ namespace RepoDb
     public static class StatementBuilderMapper
     {
         private static readonly object _syncLock;
-        private static readonly IList<IStatementBuilderMap> _maps;
+        private static readonly IList<StatementBuilderMap> _maps;
 
         static StatementBuilderMapper()
         {
             // Properties
             _syncLock = new object();
-            _maps = new List<IStatementBuilderMap>();
+            _maps = new List<StatementBuilderMap>();
 
             // Default for SqlDbConnection
             Map(typeof(SqlConnection), new SqlDbStatementBuilder());
@@ -35,8 +35,8 @@ namespace RepoDb
         /// The target type of the database connection to be used for mapping. This must be of type <i>System.Data.DbConnection</i>, or else,
         /// an argument exception will be thrown.
         /// </param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.IStatementBuilderMap</i> defined on the mapping.</returns>
-        public static IStatementBuilderMap Get(Type dbConnectionType)
+        /// <returns>An instance of <i>RepoDb.Interfaces.StatementBuilderMap</i> defined on the mapping.</returns>
+        public static StatementBuilderMap Get(Type dbConnectionType)
         {
             if (!dbConnectionType.IsSubclassOf(typeof(IDbConnection)) && !dbConnectionType.IsSubclassOf(typeof(DbConnection)))
             {

@@ -5,7 +5,7 @@ namespace RepoDb
     /// <summary>
     /// An object that holds the value of the field parameter.
     /// </summary>
-    public sealed class Parameter : IParameter
+    public sealed class Parameter
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Parameter</i> object.

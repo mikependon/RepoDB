@@ -119,7 +119,7 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of property info to be converted.</param>
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
-        public static IQueryField AsQueryField(this PropertyInfo property, object entity)
+        public static QueryField AsQueryField(this PropertyInfo property, object entity)
         {
             return AsQueryField(property, entity, false);
         }
@@ -133,7 +133,7 @@ namespace RepoDb.Extensions
         /// <param name="appendParameterPrefix">
         /// The value to identify whether the underscope prefix will be appended to the parameter name.
         /// </param>
-        internal static IQueryField AsQueryField(this PropertyInfo property, object entity, bool appendParameterPrefix)
+        internal static QueryField AsQueryField(this PropertyInfo property, object entity, bool appendParameterPrefix)
         {
             return new QueryField(property.GetMappedName(), Operation.Equal, property.GetValue(entity), appendParameterPrefix);
         }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 using RepoDb.Extensions;
 using RepoDb.Attributes;
 
@@ -12,7 +11,7 @@ namespace RepoDb
     /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
-    public sealed class QueryGroup : IQueryGroup
+    public class QueryGroup
     {
         private bool _isFixed = false;
 
@@ -25,7 +24,7 @@ namespace RepoDb
         /// The conjunction to be used for every group seperation. The value could be <i>AND</i> or <i>OR</i>.
         /// Uses the <i>RepoDb.Enumerations.Conjunction</i> enumeration values.
         /// </param>
-        public QueryGroup(IEnumerable<IQueryField> queryFields, IEnumerable<IQueryGroup> queryGroups = null, Conjunction conjunction = Conjunction.And)
+        public QueryGroup(IEnumerable<QueryField> queryFields, IEnumerable<QueryGroup> queryGroups = null, Conjunction conjunction = Conjunction.And)
         {
             Conjunction = conjunction;
             QueryFields = queryFields;
@@ -40,12 +39,12 @@ namespace RepoDb
         /// <summary>
         /// Gets the list of fields being grouped by this object.
         /// </summary>
-        public IEnumerable<IQueryField> QueryFields { get; }
+        public IEnumerable<QueryField> QueryFields { get; }
 
         /// <summary>
         /// Gets the list of child query groups being grouped by this object.
         /// </summary>
-        public IEnumerable<IQueryGroup> QueryGroups { get; }
+        public IEnumerable<QueryGroup> QueryGroups { get; }
 
         /// <summary>
         /// Force to append prefixes on the bound parameter objects.
@@ -108,11 +107,11 @@ namespace RepoDb
         /// Gets all the child query groups associated on the current instance.
         /// </summary>
         /// <returns>An enumerable list of child query groups.</returns>
-        public IEnumerable<IQueryField> GetAllQueryFields()
+        public IEnumerable<QueryField> GetAllQueryFields()
         {
-            var traverse = (Action<IQueryGroup>)null;
-            var queryFields = new List<IQueryField>();
-            traverse = new Action<IQueryGroup>((queryGroup) =>
+            var traverse = (Action<QueryGroup>)null;
+            var queryFields = new List<QueryField>();
+            traverse = new Action<QueryGroup>((queryGroup) =>
             {
                 if (queryGroup.QueryFields != null && queryGroup.QueryFields.Any())
                 {
@@ -135,7 +134,7 @@ namespace RepoDb
         /// Please note that every repository operation itself is calling this method before the actual execution.
         /// </summary>
         /// <returns>The current instance.</returns>
-        internal IQueryGroup FixParameters()
+        internal QueryGroup FixParameters()
         {
             if (_isFixed)
             {
@@ -146,25 +145,25 @@ namespace RepoDb
                 .ToList();
             if (firstList != null && firstList.Any())
             {
-                var secondList = new List<IQueryField>(firstList);
+                var secondList = new List<QueryField>(firstList);
                 for (var i = 0; i < firstList.Count; i++)
                 {
-                    var iQueryField = firstList[i];
+                    var QueryField = firstList[i];
                     for (var c = 0; c < secondList.Count; c++)
                     {
                         var cQueryField = secondList[c];
-                        if (iQueryField == cQueryField)
+                        if (QueryField == cQueryField)
                         {
                             continue;
                         }
-                        if (string.Equals(iQueryField.Field.Name, cQueryField.Field.Name,
+                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
                             StringComparison.InvariantCultureIgnoreCase))
                         {
                             var fieldValue = ((Parameter)cQueryField.Parameter);
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
-                    secondList.RemoveAll(queryField => string.Equals(iQueryField.Field.Name, queryField.Field.Name,
+                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name,
                         StringComparison.InvariantCultureIgnoreCase));
                 }
             }
@@ -176,7 +175,7 @@ namespace RepoDb
 
         /// <summary>
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
-        /// <i>RepoDb.Interfaces.IQueryGroup</i> that defines the query tree expression.
+        /// <i>RepoDb.Interfaces.QueryGroup</i> that defines the query tree expression.
         /// </summary>
         /// <param name="obj">
         /// A dynamic query tree expression to be parsed.
@@ -186,14 +185,14 @@ namespace RepoDb
         /// UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
         /// </param>
         /// <returns></returns>
-        public static IQueryGroup Parse(object obj)
+        public static QueryGroup Parse(object obj)
         {
             if (obj == null)
             {
                 throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
-            var queryFields = new List<IQueryField>();
-            var queryGroups = new List<IQueryGroup>();
+            var queryFields = new List<QueryField>();
+            var queryGroups = new List<QueryGroup>();
             var conjunction = Conjunction.And;
             obj.GetType().GetProperties().ToList().ForEach(property =>
             {
@@ -255,7 +254,7 @@ namespace RepoDb
                         {
                             if (value.GetType().IsArray)
                             {
-                                var qfs = new List<IQueryField>();
+                                var qfs = new List<QueryField>();
                                 ((Array)value).AsEnumerable().ToList().ForEach(underlyingValue =>
                                 {
                                     qfs.Add(QueryField.Parse(fieldName, underlyingValue));

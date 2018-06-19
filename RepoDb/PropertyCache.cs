@@ -18,14 +18,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="command">
         /// The target command where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects has the implementation.
         /// </param>
         /// <returns>An enumerable of <i>System.Reflection.PropertyInfo</i> objects.</returns>
         public static IEnumerable<PropertyInfo> Get<TEntity>(Command command)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             var value = (IEnumerable<PropertyInfo>)null;
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}";

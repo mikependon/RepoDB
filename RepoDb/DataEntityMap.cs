@@ -1,12 +1,11 @@
-﻿using RepoDb.Interfaces;
-using System.Data;
+﻿using System.Data;
 
 namespace RepoDb
 {
     /// <summary>
-    /// An object used to map a <i>RepoDb.Interfaces.IDataEntity</i> object into database object.
+    /// An object used to map a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
     /// </summary>
-    public class DataEntityMap : IDataEntityMap
+    public class DataEntityMap
     {
         /// <summary>
         /// Creates an instance of <i>RepoDb.ObjectMap</i> class.

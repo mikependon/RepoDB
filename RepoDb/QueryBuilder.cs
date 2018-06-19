@@ -12,7 +12,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
     public sealed class QueryBuilder<TEntity> : IQueryBuilder<TEntity>
-        where TEntity : IDataEntity
+        where TEntity : DataEntity
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
@@ -126,7 +126,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Field(IField field)
+        public IQueryBuilder<TEntity> Field(Field field)
         {
             return Append(field?.AsField());
         }
@@ -147,7 +147,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Fields(IEnumerable<IField> fields)
+        public IQueryBuilder<TEntity> Fields(IEnumerable<Field> fields)
         {
             return Append(fields?.Select(f => f.AsField()).Join(", "));
         }
@@ -167,7 +167,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<IField> fields)
+        public IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<Field> fields)
         {
             return Append(fields?.AsFieldsAndParameters().Join(", "));
         }
@@ -189,7 +189,7 @@ namespace RepoDb
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias)
+        public IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<Field> fields, string alias)
         {
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
@@ -208,7 +208,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> GroupBy(IEnumerable<IField> fields)
+        public IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
         {
             return Append($"GROUP BY {fields?.AsFields().Join(", ")}");
         }
@@ -218,7 +218,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> HavingCount(IQueryField queryField)
+        public IQueryBuilder<TEntity> HavingCount(QueryField queryField)
         {
             return Append($"HAVING COUNT({queryField.Field.AsField()}) {queryField.GetOperationText()} {queryField.AsParameter()}");
         }
@@ -256,7 +256,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="alias">The aliases to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> orderBy = null, string alias = null)
+        public IQueryBuilder<TEntity> OrderBy(IEnumerable<OrderField> orderBy = null, string alias = null)
         {
             return (orderBy != null && orderBy.Any()) ?
                 Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :
@@ -307,7 +307,7 @@ namespace RepoDb
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> JoinQualifiers(IField field, string leftAlias, string rightAlias)
+        public IQueryBuilder<TEntity> JoinQualifiers(Field field, string leftAlias, string rightAlias)
         {
             return Append(field.AsJoinQualifier(leftAlias, rightAlias));
         }
@@ -347,7 +347,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Parameters(IEnumerable<IField> fields)
+        public IQueryBuilder<TEntity> Parameters(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParameters().Join(", "));
         }
@@ -368,7 +368,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<IField> fields)
+        public IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParametersAsFields().Join(", "));
         }
@@ -415,7 +415,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public IQueryBuilder<TEntity> Where(IQueryGroup queryGroup)
+        public IQueryBuilder<TEntity> Where(QueryGroup queryGroup)
         {
             return (queryGroup != null) ? Append($"WHERE {((QueryGroup)queryGroup).FixParameters().GetString()}") : this;
         }

@@ -70,7 +70,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        int Count<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        int Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        int Count<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        int Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // CountAsync
@@ -111,7 +111,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        Task<int> CountAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        Task<int> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        Task<int> CountAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        Task<int> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // CountBig
@@ -152,7 +152,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        long CountBig<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        long CountBig<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        long CountBig<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        long CountBig<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // CountBigAsync
@@ -193,7 +193,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        Task<long> CountBigAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        Task<long> CountBigAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        Task<long> CountBigAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        Task<long> CountBigAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // BatchQuery
@@ -219,7 +219,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -263,8 +263,8 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        IEnumerable<TEntity> BatchQuery<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        IEnumerable<TEntity> BatchQuery<TEntity>(QueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // BatchQueryAsync
@@ -280,7 +280,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -309,8 +309,8 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<IQueryField> where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -324,8 +324,8 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IQueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<IOrderField> orderBy, IDbTransaction transaction = null)
+        Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where, int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // Query
@@ -343,7 +343,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -359,8 +359,8 @@ namespace RepoDb.Interfaces
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        IEnumerable<TEntity> Query<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -393,8 +393,8 @@ namespace RepoDb.Interfaces
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        IEnumerable<TEntity> Query<TEntity>(IQueryGroup where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+        IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IDbTransaction transaction = null, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         // QueryAsync
@@ -412,7 +412,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -428,8 +428,8 @@ namespace RepoDb.Interfaces
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null,
+            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -446,7 +446,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
         Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -462,8 +462,8 @@ namespace RepoDb.Interfaces
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>Data Entity</i> object.</returns>
-        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<IOrderField> orderBy = null, string cacheKey = null)
+        Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null,
+            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
             where TEntity : DataEntity;
 
         // Insert
@@ -521,7 +521,7 @@ namespace RepoDb.Interfaces
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int InlineUpdate<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        int InlineUpdate<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -534,7 +534,7 @@ namespace RepoDb.Interfaces
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int InlineUpdate<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        int InlineUpdate<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // InlineUpdateAsync
@@ -562,7 +562,7 @@ namespace RepoDb.Interfaces
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<IQueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -575,7 +575,7 @@ namespace RepoDb.Interfaces
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> InlineUpdateAsync<TEntity>(object entity, IQueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // Update
@@ -598,7 +598,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int Update<TEntity>(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        int Update<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -620,7 +620,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int Update<TEntity>(TEntity entity, IQueryGroup where, IDbTransaction transaction = null)
+        int Update<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // UpdateAsync
@@ -643,7 +643,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -665,7 +665,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> UpdateAsync<TEntity>(TEntity entity, IQueryGroup where, IDbTransaction transaction = null)
+        Task<int> UpdateAsync<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
         
         // Delete
@@ -677,7 +677,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int Delete<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        int Delete<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -697,7 +697,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int Delete<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        int Delete<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // DeleteAsync
@@ -709,7 +709,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> DeleteAsync<TEntity>(IEnumerable<IQueryField> where, IDbTransaction transaction = null)
+        Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -729,7 +729,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> DeleteAsync<TEntity>(IQueryGroup where, IDbTransaction transaction = null)
+        Task<int> DeleteAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // Merge
@@ -756,7 +756,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        int Merge<TEntity>(TEntity entity, IEnumerable<IField> qualifiers, IDbTransaction transaction = null)
+        int Merge<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // MergeAsync
@@ -783,7 +783,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<IField> qualifiers, IDbTransaction transaction = null)
+        Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity;
 
         // BulkInsert

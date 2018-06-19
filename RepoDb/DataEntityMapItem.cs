@@ -8,11 +8,11 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.Interfaces.IDataEntity</i> object into database object.
+    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
     /// </summary>
     public class DataEntityMapItem
     {
-        private readonly IDictionary<Command, IDataEntityMap> _cache;
+        private readonly IDictionary<Command, DataEntityMap> _cache;
         private static readonly object _syncLock = new object();
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace RepoDb
         /// </summary>
         public DataEntityMapItem()
         {
-            _cache = new Dictionary<Command, IDataEntityMap>();
+            _cache = new Dictionary<Command, DataEntityMap>();
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The type of command this mapping is used to.</param>
         /// <param name="map">The mapping to be used before execution.</param>
-        private void Validate(Command command, IDataEntityMap map)
+        private void Validate(Command command, DataEntityMap map)
         {
             if (map == null)
             {
@@ -78,7 +78,7 @@ namespace RepoDb
         /// <param name="command">The type of command this mapping is used to.</param>
         /// <param name="map">The mapping to be used before execution.</param>
         /// <returns>The current instance of <i>RepoDb.DataEntityMapItem</i> that holds the mapping.</returns>
-        public DataEntityMapItem Set(Command command, IDataEntityMap map)
+        public DataEntityMapItem Set(Command command, DataEntityMap map)
         {
             // Validate
             Validate(command, map);
@@ -104,10 +104,10 @@ namespace RepoDb
         /// Gets the instance of <i>RepoDb.DataEntityMap</i> object based on the command mapping.
         /// </summary>
         /// <param name="command">The command specified on this mapping.</param>
-        /// <returns>An instance of <i>RepoDb.IDataEntityMap</i> that holds the mapping.</returns>
-        public IDataEntityMap Get(Command command)
+        /// <returns>An instance of <i>RepoDb.DataEntityMap</i> that holds the mapping.</returns>
+        public DataEntityMap Get(Command command)
         {
-            var result = (IDataEntityMap)null;
+            var result = (DataEntityMap)null;
             if (_cache.ContainsKey(command))
             {
                 result = _cache[command];

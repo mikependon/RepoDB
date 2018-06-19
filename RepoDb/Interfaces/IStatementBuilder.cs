@@ -13,7 +13,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>BatchQuery</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -21,50 +21,50 @@ namespace RepoDb.Interfaces
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
-        string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderby)
-            where TEntity : IDataEntity;
+        string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderby)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Count</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
-        string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
-            where TEntity : IDataEntity;
+        string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>CountBig</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>CountBig</i> operation.</returns>
-        string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
-            where TEntity : IDataEntity;
+        string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Delete</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
-        string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
-            where TEntity : IDataEntity;
+        string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
@@ -74,56 +74,56 @@ namespace RepoDb.Interfaces
         /// be ignored on the inline update operation on SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
-        string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false)
-            where TEntity : IDataEntity;
+        string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Insert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder)
-            where TEntity : IDataEntity;
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Merge</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
-        string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers)
-            where TEntity : IDataEntity;
+        string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Query</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="top">The number of rows to be returned by the <i>Query</i> operation on SQL Statement composition.</param>
         /// <param name="orderBy">The list of fields  to be used for ordering on SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
-        string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int? top = 0, IEnumerable<IOrderField> orderBy = null)
-            where TEntity : IDataEntity;
+        string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
+            where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Update</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
-        string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where)
-            where TEntity : IDataEntity;
+        string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where)
+            where TEntity : DataEntity;
     }
 }

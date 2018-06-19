@@ -15,85 +15,85 @@
         /// A method being raised before the actual <i>BatchQuery</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>BatchQuery</i> execution.</param>
-        void BeforeBatchQuery(ICancellableTraceLog log);
+        void BeforeBatchQuery(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Count</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Count</i> execution.</param>
-        void BeforeCount(ICancellableTraceLog log);
+        void BeforeCount(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>CountBig</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>CountBig</i> execution.</param>
-        void BeforeCountBig(ICancellableTraceLog log);
+        void BeforeCountBig(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Query</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Query</i> execution.</param>
-        void BeforeQuery(ICancellableTraceLog log);
+        void BeforeQuery(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>InlineUpdate</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>InlineUpdate</i> execution.</param>
-        void BeforeInlineUpdate(ICancellableTraceLog log);
+        void BeforeInlineUpdate(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Update</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Update</i> execution.</param>
-        void BeforeUpdate(ICancellableTraceLog log);
+        void BeforeUpdate(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Delete</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Delete</i> execution.</param>
-        void BeforeDelete(ICancellableTraceLog log);
+        void BeforeDelete(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Merge</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Merge</i> execution.</param>
-        void BeforeMerge(ICancellableTraceLog log);
+        void BeforeMerge(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>Insert</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Insert</i> execution.</param>
-        void BeforeInsert(ICancellableTraceLog log);
+        void BeforeInsert(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>BulkInsert</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>BulkInsert</i> execution.</param>
-        void BeforeBulkInsert(ICancellableTraceLog log);
+        void BeforeBulkInsert(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>ExecuteQuery</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>ExecuteQuery</i> execution.</param>
-        void BeforeExecuteQuery(ICancellableTraceLog log);
+        void BeforeExecuteQuery(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>ExecuteNonQuery</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>ExecuteNonQuery</i> execution.</param>
-        void BeforeExecuteNonQuery(ICancellableTraceLog log);
+        void BeforeExecuteNonQuery(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>ExecuteReader</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>ExecuteReader</i> execution.</param>
-        void BeforeExecuteReader(ICancellableTraceLog log);
+        void BeforeExecuteReader(CancellableTraceLog log);
 
         /// <summary>
         /// A method being raised before the actual <i>ExecuteScalar</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>ExecuteScalar</i> execution.</param>
-        void BeforeExecuteScalar(ICancellableTraceLog log);
+        void BeforeExecuteScalar(CancellableTraceLog log);
 
         /*
          * AFTER
@@ -104,84 +104,84 @@
         /// </summary>
         /// <param name="log">The log object referenced by the <i>BatchQuery</i> execution.</param>
 
-        void AfterBatchQuery(ITraceLog log);
+        void AfterBatchQuery(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Count</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Count</i> execution.</param>
-        void AfterCount(ITraceLog log);
+        void AfterCount(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>CountBig</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>CountBig</i> execution.</param>
-        void AfterCountBig(ITraceLog log);
+        void AfterCountBig(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Query</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Query</i> execution.</param>
-        void AfterQuery(ITraceLog log);
+        void AfterQuery(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>InlineUpdate</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>InlineUpdate</i> execution.</param>
-        void AfterInlineUpdate(ITraceLog log);
+        void AfterInlineUpdate(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Update</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Update</i> execution.</param>
-        void AfterUpdate(ITraceLog log);
+        void AfterUpdate(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Delete</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Delete</i> execution.</param>
-        void AfterDelete(ITraceLog log);
+        void AfterDelete(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Merge</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Merge</i> execution.</param>
-        void AfterMerge(ITraceLog log);
+        void AfterMerge(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Insert</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Insert</i> execution.</param>
-        void AfterInsert(ITraceLog log);
+        void AfterInsert(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>BulkInsert</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>BulkInsert</i> execution.</param>
-        void AfterBulkInsert(ITraceLog log);
+        void AfterBulkInsert(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>ExecuteQuery</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>ExecuteQuery</i> execution.</param>
-        void AfterExecuteQuery(ITraceLog log);
+        void AfterExecuteQuery(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>ExecuteNonQuery</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>ExecuteNonQuery</i> execution.</param>
-        void AfterExecuteNonQuery(ITraceLog log);
+        void AfterExecuteNonQuery(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>ExecuteReader</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>ExecuteReader</i> execution.</param>
-        void AfterExecuteReader(ITraceLog log);
+        void AfterExecuteReader(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>ExecuteScalar</i> operation execution.
         /// </summary>
         /// <param name="log">The log object referenced by the <i>ExecuteScalar</i> execution.</param>
-        void AfterExecuteScalar(ITraceLog log);
+        void AfterExecuteScalar(TraceLog log);
     }
 }

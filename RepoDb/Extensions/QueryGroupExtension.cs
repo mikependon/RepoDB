@@ -8,7 +8,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.IQueryGroup</i> object.
+    /// Contains the extension methods for <i>RepoDb.Interfaces.QueryGroup</i> object.
     /// </summary>
     public static class QueryGroupExtension
     {
@@ -17,13 +17,13 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="queryGroup">The query group to be converted.</param>
         /// <returns>An enumerable list of query groups.</returns>
-        public static IEnumerable<IQueryGroup> AsEnumerable(this IQueryGroup queryGroup)
+        public static IEnumerable<QueryGroup> AsEnumerable(this QueryGroup queryGroup)
         {
             return new[] { queryGroup };
         }
 
         // AsObject
-        internal static object AsObject(this IQueryGroup queryGroup)
+        internal static object AsObject(this QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             ((QueryGroup)queryGroup)?

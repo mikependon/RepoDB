@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using RepoDb.Interfaces;
 using RepoDb.Exceptions;
 
 namespace RepoDb
@@ -12,17 +11,17 @@ namespace RepoDb
     /// </summary>
     public static class TypeMapper
     {
-        private static readonly IList<ITypeMap> _typeMaps = new List<ITypeMap>();
+        private static readonly IList<TypeMap> _typeMaps = new List<TypeMap>();
 
         static TypeMapper()
         {
-            new List<ITypeMap>();
+            new List<TypeMap>();
         }
 
         /// <summary>
         /// Gets the list of type-mapping objects.
         /// </summary>
-        public static IEnumerable<ITypeMap> TypeMaps => _typeMaps;
+        public static IEnumerable<TypeMap> TypeMaps => _typeMaps;
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
@@ -38,7 +37,7 @@ namespace RepoDb
         /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
         /// <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
-        public static void AddMap(ITypeMap typeMap)
+        public static void AddMap(TypeMap typeMap)
         {
             var target = Get(typeMap.Type);
             if (target != null)
@@ -53,7 +52,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type used for mapping.</param>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static ITypeMap Get(Type type)
+        public static TypeMap Get(Type type)
         {
             return _typeMaps.FirstOrDefault(t => t.Type == type);
         }
@@ -63,7 +62,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static ITypeMap Get<T>()
+        public static TypeMap Get<T>()
         {
             return Get(typeof(T));
         }

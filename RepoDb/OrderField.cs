@@ -1,18 +1,16 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb
 {
     /// <summary>
     /// An object that holds a field for ordering purposes.
     /// </summary>
-    public sealed class OrderField : IOrderField
+    public class OrderField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.OrderField</i> object.
@@ -58,14 +56,14 @@ namespace RepoDb
         /// An object to be parsed. Ex:
         /// <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
         /// </param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.IOrderField</i> object that holds the ordering values for every field.</returns>
-        public static IEnumerable<IOrderField> Parse(object obj)
+        /// <returns>An enumerable of <i>RepoDb.Interfaces.OrderField</i> object that holds the ordering values for every field.</returns>
+        public static IEnumerable<OrderField> Parse(object obj)
         {
             if (obj == null)
             {
                 return null;
             }
-            var list = new List<IOrderField>();
+            var list = new List<OrderField>();
             obj
                 .GetType()
                 .GetProperties()

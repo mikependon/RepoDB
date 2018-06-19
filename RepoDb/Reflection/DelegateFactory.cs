@@ -17,12 +17,12 @@ namespace RepoDb.Reflection
     public static class DelegateFactory
     {
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.IDataEntity</i> object.
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to convert to.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.IDataEntity</i> object.</returns>
-        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : IDataEntity
+        /// <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : DataEntity
         {
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
@@ -61,7 +61,7 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToDataEntityDelegate<TEntity>));
         }
 
-        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property) where TEntity : IDataEntity
+        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property) where TEntity : DataEntity
         {
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -124,10 +124,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.IDataEntity</i> object.
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
         /// </summary>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.IDataEntity</i> object.</returns>
+        /// <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             var returnType = TypeCache.Get(TypeTypes.ExpandoObject);
@@ -188,11 +188,11 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>RepoDb.Interfaces.IDataEntity</i> object into <i>System.Data.DataRow</i> object.
+        /// Gets a delegate that is used to convert the <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.Data.DataRow</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.IDataEntity</i> object to convert to.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
         /// <returns>An instance of <i>System.Data.DataRow</i> object containing the converted values.</returns>
-        public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>() where TEntity : IDataEntity
+        public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>() where TEntity : DataEntity
         {
             var returnType = TypeCache.Get(TypeTypes.DataRow);
             var entityType = typeof(TEntity);
@@ -234,7 +234,7 @@ namespace RepoDb.Reflection
             return (DataEntityToDataRowDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataEntityToDataRowDelegate<TEntity>));
         }
 
-        private static void EmitDataEntityToDataRowMapping<TEntity>(ILGenerator ilGenerator, PropertyInfo property) where TEntity : IDataEntity
+        private static void EmitDataEntityToDataRowMapping<TEntity>(ILGenerator ilGenerator, PropertyInfo property) where TEntity : DataEntity
         {
             var propertyName = property.GetMappedName();
 

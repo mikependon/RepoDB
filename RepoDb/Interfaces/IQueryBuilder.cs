@@ -8,7 +8,7 @@ namespace RepoDb.Interfaces
     /// </summary>
     /// <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
     public interface IQueryBuilder<TEntity>
-        where TEntity : IDataEntity
+        where TEntity : DataEntity
     {
         // Custom Methods
 
@@ -74,7 +74,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> Field(IField field);
+        IQueryBuilder<TEntity> Field(Field field);
 
         /// <summary>
         /// Appends a stringified fields to the SQL Query Statement by command.
@@ -88,7 +88,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> Fields(IEnumerable<IField> fields);
+        IQueryBuilder<TEntity> Fields(IEnumerable<Field> fields);
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement by command.
@@ -102,7 +102,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<IField> fields);
+        IQueryBuilder<TEntity> FieldsAndParameters(IEnumerable<Field> fields);
 
         /// <summary>
         /// Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
@@ -118,7 +118,7 @@ namespace RepoDb.Interfaces
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<IField> fields, string alias);
+        IQueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<Field> fields, string alias);
 
         /// <summary>
         /// Appends a word FROM to the SQL Query Statement.
@@ -131,14 +131,14 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> GroupBy(IEnumerable<IField> fields);
+        IQueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields);
 
         /// <summary>
         /// Appends a word HAVING COUNT and a conditional field to the SQL Query Statement.
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> HavingCount(IQueryField queryField);
+        IQueryBuilder<TEntity> HavingCount(QueryField queryField);
 
         /// <summary>
         /// Appends a word INSERT to the SQL Query Statement.
@@ -164,7 +164,7 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="alias">The aliases to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> OrderBy(IEnumerable<IOrderField> orderBy = null, string alias = null);
+        IQueryBuilder<TEntity> OrderBy(IEnumerable<OrderField> orderBy = null, string alias = null);
 
         /// <summary>
         /// Appends a word AS to the SQL Query Statement with alias.
@@ -198,7 +198,7 @@ namespace RepoDb.Interfaces
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> JoinQualifiers(IField field, string leftAlias, string rightAlias);
+        IQueryBuilder<TEntity> JoinQualifiers(Field field, string leftAlias, string rightAlias);
 
         /// <summary>
         /// Appends a word MERGE to the SQL Query Statement.
@@ -225,7 +225,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> Parameters(IEnumerable<IField> fields);
+        IQueryBuilder<TEntity> Parameters(IEnumerable<Field> fields);
 
         /// <summary>
         /// Append the stringified parameter as fields to the SQL Query Statement based on the mapped command.
@@ -239,7 +239,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<IField> fields);
+        IQueryBuilder<TEntity> ParametersAsFields(IEnumerable<Field> fields);
 
         /// <summary>
         /// Appends a word SELECT to the SQL Query Statement.
@@ -271,7 +271,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <returns>The current instance.</returns>
-        IQueryBuilder<TEntity> Where(IQueryGroup queryGroup);
+        IQueryBuilder<TEntity> Where(QueryGroup queryGroup);
 
         /// <summary>
         /// Appends a word ROW_NUMBER to the SQL Query Statement.

@@ -9,7 +9,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.IQueryField</i> object.
+    /// Contains the extension methods for <i>RepoDb.Interfaces.QueryField</i> object.
     /// </summary>
     public static class QueryFieldExtension
     {
@@ -18,37 +18,37 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="queryField">The query field to be converted.</param>
         /// <returns>An enumerable list of query fields.</returns>
-        public static IEnumerable<IQueryField> AsEnumerable(this IQueryField queryField)
+        public static IEnumerable<QueryField> AsEnumerable(this QueryField queryField)
         {
             return new[] { queryField };
         }
 
         // AsField
-        internal static string AsField(this IQueryField queryField)
+        internal static string AsField(this QueryField queryField)
         {
             return $"[{queryField.Field.Name}]";
         }
 
         // AsParameter
-        internal static string AsParameter(this IQueryField queryField)
+        internal static string AsParameter(this QueryField queryField)
         {
             return $"@{queryField.Parameter.Name}";
         }
 
         // AsParameterAsField
-        internal static string AsParameterAsField(this IQueryField queryField)
+        internal static string AsParameterAsField(this QueryField queryField)
         {
             return $"@{queryField.Parameter.Name} AS [{queryField.Field.Name}]";
         }
 
         // AsBetweenParameter
-        internal static string AsBetweenParameter(this IQueryField queryField)
+        internal static string AsBetweenParameter(this QueryField queryField)
         {
             return $"@{queryField.Parameter.Name}_{StringConstant.BetweenLeft} {StringConstant.And.ToUpper()} @{queryField.Parameter.Name}_{StringConstant.BetweenRight}";
         }
 
         // AsInParameter
-        internal static string AsInParameter(this IQueryField queryField)
+        internal static string AsInParameter(this QueryField queryField)
         {
             var values = ((Array)queryField.Parameter.Value)?.OfType<object>().ToList();
             var parameters = new List<string>();
@@ -60,7 +60,7 @@ namespace RepoDb.Extensions
         }
 
         // AsFieldAndParameter
-        internal static string AsFieldAndParameter(this IQueryField queryField)
+        internal static string AsFieldAndParameter(this QueryField queryField)
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
@@ -89,39 +89,39 @@ namespace RepoDb.Extensions
         }
 
         // AsDbParameter
-        internal static IDbDataParameter AsDbParameter(this IQueryField queryField, IDbCommand command)
+        internal static IDbDataParameter AsDbParameter(this QueryField queryField, IDbCommand command)
         {
             return AsDbParameter(queryField, command.CreateParameter());
         }
 
-        internal static IDbDataParameter AsDbParameter(this IQueryField queryField, IDbDataParameter parameter)
+        internal static IDbDataParameter AsDbParameter(this QueryField queryField, IDbDataParameter parameter)
         {
             parameter.ParameterName = queryField.Field.Name;
             parameter.Value = queryField.Parameter.Value ?? DBNull.Value;
             return parameter;
         }
 
-        /* IEnumerable<IQueryField> */
+        /* IEnumerable<QueryField> */
 
         // AsFieldsAndParameters
-        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<IQueryField> queryFields)
+        internal static IEnumerable<string> AsFieldsAndParameters(this IEnumerable<QueryField> queryFields)
         {
             return queryFields.Select(field => field.AsFieldAndParameter());
         }
 
         // Has
-        internal static bool Has(this IEnumerable<IQueryField> queryFields, string name, StringComparison comparisonType)
+        internal static bool Has(this IEnumerable<QueryField> queryFields, string name, StringComparison comparisonType)
         {
             return queryFields.FirstOrDefault(queryField => string.Equals(queryField.Field.Name, name, comparisonType)) != null;
         }
 
-        internal static bool Has(this IEnumerable<IQueryField> queryFields, string name)
+        internal static bool Has(this IEnumerable<QueryField> queryFields, string name)
         {
             return Has(queryFields, name, StringComparison.InvariantCultureIgnoreCase);
         }
 
         // AsObject
-        internal static object AsObject(this IEnumerable<IQueryField> queryFields)
+        internal static object AsObject(this IEnumerable<QueryField> queryFields)
         {
             var expandoObject = new ExpandoObject() as IDictionary<string, object>;
             queryFields.ToList().ForEach(queryField =>

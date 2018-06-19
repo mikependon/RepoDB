@@ -9,7 +9,7 @@ namespace RepoDb
     /// A class used as an map-item when mapping a statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>)
     /// to be used for every connection type (typeof <i>System.Data.DbConnection</i>).
     /// </summary>
-    public class StatementBuilderMap : IStatementBuilderMap
+    public class StatementBuilderMap
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.StatementBuilderMap</i> object.
@@ -30,12 +30,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the type of the database connection used for mapping.
+        /// Gets the type of the database connection object that is being used for mapping.
         /// </summary>
         public Type DbConnectionType { get; }
 
         /// <summary>
-        /// Gets the statement builder used for mapping.
+        /// Gets the statement builder object that is being used for mapping.
         /// </summary>
         public IStatementBuilder StatementBuilder { get; internal set; }
     }

@@ -56,8 +56,7 @@ namespace RepoDb
                     }
                     else
                     {
-                        cacheItem.Value = item.Value;
-                        cacheItem.CreatedDate = DateTime.UtcNow;
+                        cacheItem.UpdateFrom(item);
                     }
                 }
             }

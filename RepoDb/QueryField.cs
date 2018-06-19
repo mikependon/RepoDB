@@ -1,18 +1,16 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Interfaces.IField</i>),
-    /// parameter (<i>RepoDb.Interfaces.IParameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
+    /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Interfaces.Field</i>),
+    /// parameter (<i>RepoDb.Interfaces.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
     /// </summary>
-    public sealed class QueryField : IQueryField
+    public class QueryField
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryField</i> object./
@@ -56,7 +54,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the associated field object.
         /// </summary>
-        public IField Field { get; }
+        public Field Field { get; }
 
         /// <summary>
         /// Gets the operation used by this instance.
@@ -66,7 +64,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the associated parameter object.
         /// </summary>
-        public IParameter Parameter { get; }
+        public Parameter Parameter { get; }
 
         // Methods
 
@@ -102,7 +100,7 @@ namespace RepoDb
 
         // Static Methods
 
-        internal static IQueryField Parse(string fieldName, object value)
+        internal static QueryField Parse(string fieldName, object value)
         {
             if (value == null)
             {

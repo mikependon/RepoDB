@@ -27,7 +27,7 @@ namespace RepoDb
         /// </param>
         /// <returns>An enumerable of strings that signifies the mapped name ofs each property.</returns>
         public static IEnumerable<string> Get<TEntity>(Command command)
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             var value = (IEnumerable<string>)null;
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}".ToLower();

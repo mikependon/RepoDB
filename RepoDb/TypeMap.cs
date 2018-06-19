@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A type mapping object that holds the mapping between the .NET CLR Types and database types.
     /// </summary>
-    public class TypeMap : ITypeMap
+    public class TypeMap
     {
         /// <summary>
         /// Creates a a new instance of <i>RepoDb.TypeMap</i> object.

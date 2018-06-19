@@ -19,11 +19,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.IDataEntity</i> interface.
+        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> object.</returns>
         public static PropertyInfo Get<TEntity>()
-            where TEntity : IDataEntity
+            where TEntity : DataEntity
         {
             return Get(typeof(TEntity));
         }
