@@ -95,7 +95,7 @@ namespace RepoDb.Extensions
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.ExecuteQuery);
+                        throw new CancelledExecutionException(StringConstant.ExecuteQuery);
                     }
                     return null;
                 }
@@ -199,7 +199,7 @@ namespace RepoDb.Extensions
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.ExecuteQuery);
+                        throw new CancelledExecutionException(StringConstant.ExecuteQuery);
                     }
                     return null;
                 }
@@ -296,7 +296,7 @@ namespace RepoDb.Extensions
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.ExecuteReader);
+                        throw new CancelledExecutionException(StringConstant.ExecuteReader);
                     }
                     return null;
                 }
@@ -386,7 +386,7 @@ namespace RepoDb.Extensions
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.ExecuteNonQuery);
+                        throw new CancelledExecutionException(StringConstant.ExecuteNonQuery);
                     }
                     return 0;
                 }
@@ -480,7 +480,7 @@ namespace RepoDb.Extensions
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.ExecuteScalar);
+                        throw new CancelledExecutionException(StringConstant.ExecuteScalar);
                     }
                     return null;
                 }

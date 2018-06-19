@@ -4,7 +4,6 @@ using System.Linq;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.Extensions;
-using System.Reflection;
 using RepoDb.Attributes;
 
 namespace RepoDb
@@ -191,7 +190,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new ArgumentNullException($"Parameter '{Constant.Obj.ToLower()}' cannot be null.");
+                throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
             var queryFields = new List<IQueryField>();
             var queryGroups = new List<IQueryGroup>();
@@ -199,11 +198,11 @@ namespace RepoDb
             obj.GetType().GetProperties().ToList().ForEach(property =>
             {
                 var fieldName = property.Name;
-                if (string.Equals(fieldName, Constant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
                 {
                     conjunction = (Conjunction)property.GetValue(obj);
                 }
-                else if (string.Equals(fieldName, Constant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
+                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var value = property.GetValue(obj);
                     if (value is Array)
@@ -230,10 +229,10 @@ namespace RepoDb
                     {
                         var operationProperty = type?
                             .GetProperties()
-                            .FirstOrDefault(p => p.Name.ToLower() == Constant.Operation.ToLower());
+                            .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
                         var valueProperty = type?
                             .GetProperties()
-                            .FirstOrDefault(p => p.Name.ToLower() == Constant.Value.ToLower());
+                            .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
                         if (operationProperty == null)
                         {
                             throw new InvalidOperationException($"Operation property must be present.");

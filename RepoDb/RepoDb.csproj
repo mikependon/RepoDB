@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RepoDb</RootNamespace>
     <AssemblyName>RepoDb</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,12 +42,12 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CreateFieldInfoAttribute.cs" />
     <Compile Include="Attributes\CreateMethodInfoAttribute.cs" />
+    <Compile Include="Constant.cs" />
     <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBigCountableException.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="ClassMapCache.cs" />
     <Compile Include="Exceptions\DataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
+    <Compile Include="Extensions\MemberInfoExtension.cs" />
+    <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Interfaces\IDataEntityMap.cs" />
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="Interfaces\IParameter.cs" />
@@ -62,7 +65,7 @@
     <Compile Include="PrimaryPropertyCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="ClassMapNameCache.cs" />
-    <Compile Include="Constant.cs" />
+    <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />
@@ -73,7 +76,6 @@
     <Compile Include="MemoryCache.cs" />
     <Compile Include="Exceptions\CancelledExecutionException.cs" />
     <Compile Include="Interfaces\ICache.cs" />
-    <Compile Include="Interfaces\ICacheItem.cs" />
     <Compile Include="Interfaces\ITrace.cs" />
     <Compile Include="Interfaces\ICancellableTraceLog.cs" />
     <Compile Include="Interfaces\ITraceLog.cs" />

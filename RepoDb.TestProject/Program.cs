@@ -24,24 +24,13 @@ namespace RepoDb.TestProject
         public static void InventoryMain()
         {
             var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryTrace());
-            var customers = repository.Query<CustomerDto>(orderBy: OrderField.Parse(new
-            {
-                LastName = Order.Ascending
-            }),
-            where: new { LastName = new { Operation = Operation.Like, Value = "A%" } });
-
-            using (var connection = new SqlConnection(InventoryConnectionString))
-            {
-                var customers2 = connection.ExecuteQuery("SELECT * FROM Customer WHERE LastName LIKE @LastName ORDER BY LastName ASC;",
-                    new { LastName = "A%" });
-            }
-
+            var customers = repository.Query<CustomerDto>();
             customers.ToList().ForEach(customer =>
             {
-                var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                rows = Convert.ToInt32(repository.Insert(customer));
-                rows = repository.Update(customer);
-                rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+                //var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                //rows = Convert.ToInt32(repository.Insert(customer));
+                //rows = repository.Update(customer);
+                //rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
                 // Customer
                 Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");

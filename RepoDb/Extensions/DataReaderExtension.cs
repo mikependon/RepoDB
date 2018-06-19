@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Interfaces;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;

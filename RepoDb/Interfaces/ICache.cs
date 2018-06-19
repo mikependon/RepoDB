@@ -8,11 +8,6 @@ namespace RepoDb.Interfaces
     public interface ICache : IEnumerable<CacheItem>
     {
         /// <summary>
-        /// Gets the cache item expiration in minutes.
-        /// </summary>
-        int ExpirationInMinutes { get; set; }
-
-        /// <summary>
         /// Adds a cache item value.
         /// </summary>
         /// <param name="key">The key to the cache.</param>

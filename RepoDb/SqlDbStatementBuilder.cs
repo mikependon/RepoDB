@@ -270,7 +270,7 @@ namespace RepoDb
                 .WriteText(qualifiers?
                     .Select(
                         field => field.AsJoinQualifier("S", "T"))
-                            .Join($" {Constant.And.ToUpper()} "))
+                            .Join($" {StringConstant.And.ToUpper()} "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
                 .When()

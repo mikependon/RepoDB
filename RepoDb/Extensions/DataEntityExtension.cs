@@ -78,6 +78,7 @@ namespace RepoDb.Extensions
         }
 
         // GetPropertyByAttribute
+
         internal static PropertyInfo GetPropertyByAttribute(Type type, Type attributeType)
         {
             return type
@@ -107,21 +108,21 @@ namespace RepoDb.Extensions
             }
 
             // Id Property
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == Constant.Id.ToLower());
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Type.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{Constant.Id}".ToLower());
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Mapping.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{Constant.Id}".ToLower());
+            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;
@@ -278,8 +279,8 @@ namespace RepoDb.Extensions
                     var schemaTable = reader.GetSchemaTable();
                     foreach (DataRow row in schemaTable.Rows)
                     {
-                        var columnName = Convert.ToString(row[Constant.ColumnName]);
-                        var dataType = Type.GetType(Convert.ToString(row[Constant.DataType]));
+                        var columnName = Convert.ToString(row[StringConstant.ColumnName]);
+                        var dataType = Type.GetType(Convert.ToString(row[StringConstant.DataType]));
                         var dataColumn = new DataColumn(columnName, dataType);
                         var property = properties.FirstOrDefault(p =>
                         {

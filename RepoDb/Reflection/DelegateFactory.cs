@@ -25,7 +25,7 @@ namespace RepoDb.Reflection
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : IDataEntity
         {
             var entityType = typeof(TEntity);
-            var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
+            var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 entityType,
                 TypeArrayCache.Get(TypeTypes.DbDataReader),
                 TypeCache.Get(TypeTypes.Assembly),
@@ -117,7 +117,7 @@ namespace RepoDb.Reflection
             }
 
             // Call the (Property.Set) or (Property = Value)
-            ilGenerator.Emit(OpCodes.Call, property.SetMethod);
+            ilGenerator.Emit(OpCodes.Call, property.GetSetMethod());
 
             // End label for DBNull.Value checking
             ilGenerator.MarkLabel(endLabel);
@@ -131,7 +131,7 @@ namespace RepoDb.Reflection
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             var returnType = TypeCache.Get(TypeTypes.ExpandoObject);
-            var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
+            var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 returnType,
                 TypeArrayCache.Get(TypeTypes.DbDataReader),
                 TypeCache.Get(TypeTypes.Assembly),
@@ -196,7 +196,7 @@ namespace RepoDb.Reflection
         {
             var returnType = TypeCache.Get(TypeTypes.DataRow);
             var entityType = typeof(TEntity);
-            var dynamicMethod = new DynamicMethod(Constant.DynamicMethod,
+            var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 returnType,
                 new Type[] { entityType, TypeCache.Get(TypeTypes.DataTable) },
                 TypeCache.Get(TypeTypes.Assembly),

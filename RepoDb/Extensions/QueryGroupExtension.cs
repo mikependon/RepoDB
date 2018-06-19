@@ -34,8 +34,8 @@ namespace RepoDb.Extensions
             {
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    var leftParameterName = $"{queryField.Parameter.Name}_{Constant.LeftValue}";
-                    var rightParameterName = $"{queryField.Parameter.Name}_{Constant.RightValue}";
+                    var betweenLeftParameterName = $"{queryField.Parameter.Name}_{StringConstant.BetweenLeft}";
+                    var betweenRightParameterName = $"{queryField.Parameter.Name}_{StringConstant.BetweenRight}";
                     var values = new List<object>();
                     if (queryField.Parameter.Value != null)
                     {
@@ -48,15 +48,15 @@ namespace RepoDb.Extensions
                             values.Add(queryField.Parameter.Value);
                         }
                     }
-                    if (!expandObject.ContainsKey(leftParameterName))
+                    if (!expandObject.ContainsKey(betweenLeftParameterName))
                     {
                         var leftValue = values.Count > 0 ? values[0] : null;
-                        expandObject.Add(leftParameterName, leftValue);
+                        expandObject.Add(betweenLeftParameterName, leftValue);
                     }
-                    if (!expandObject.ContainsKey(rightParameterName))
+                    if (!expandObject.ContainsKey(betweenRightParameterName))
                     {
                         var rightValue = values.Count > 1 ? values[1] : null;
-                        expandObject.Add(rightParameterName, rightValue);
+                        expandObject.Add(betweenRightParameterName, rightValue);
                     }
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
@@ -75,7 +75,7 @@ namespace RepoDb.Extensions
                     }
                     for (var i = 0; i < values.Count; i++)
                     {
-                        var parameterName = $"{queryField.Parameter.Name}_{Constant.In}_{i}";
+                        var parameterName = $"{queryField.Parameter.Name}_{StringConstant.In}_{i}";
                         if (!expandObject.ContainsKey(parameterName))
                         {
                             expandObject.Add(parameterName, values[i]);

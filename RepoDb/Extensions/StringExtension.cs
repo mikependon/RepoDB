@@ -58,7 +58,7 @@ namespace RepoDb.Extensions
         // AsParameterAsField
         public static string AsParameterAsField(this string value)
         {
-            return $"{AsParameter(value.AsUnquoted())} {Constant.As.ToUpper()} {AsField(value.AsUnquoted())}";
+            return $"{AsParameter(value.AsUnquoted())} {StringConstant.As.ToUpper()} {AsField(value.AsUnquoted())}";
         }
 
         // AsFieldAndParameter

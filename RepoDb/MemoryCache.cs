@@ -18,26 +18,10 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
         /// </summary>
-        public MemoryCache() : this(180) { }
-
-        /// <summary>
-        /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
-        /// </summary>
-        /// <param name="expirationInMinutes">An expiration in minutes of the cache item.</param>
-        public MemoryCache(int expirationInMinutes)
+        public MemoryCache()
         {
-            if (expirationInMinutes < 0)
-            {
-                throw new ArgumentOutOfRangeException("Expiration in minutes.");
-            }
             _cacheList = new List<CacheItem>();
-            ExpirationInMinutes = expirationInMinutes;
         }
-
-        /// <summary>
-        /// Gets the cache item expiration in minutes.
-        /// </summary>
-        public int ExpirationInMinutes { get; set; }
 
         /// <summary>
         /// Adds a cache item value.
@@ -66,14 +50,14 @@ namespace RepoDb
                 }
                 else
                 {
-                    if (!IsExpired(cacheItem))
+                    if (!cacheItem.IsExpired())
                     {
                         throw new InvalidOperationException($"An existing cache for key '{item.Key}' already exists.");
                     }
                     else
                     {
                         cacheItem.Value = item.Value;
-                        cacheItem.Timestamp = DateTime.UtcNow;
+                        cacheItem.CreatedDate = DateTime.UtcNow;
                     }
                 }
             }
@@ -95,7 +79,7 @@ namespace RepoDb
         public bool Contains(string key)
         {
             var cacheItem = GetItem(key);
-            return cacheItem != null && !IsExpired(cacheItem);
+            return cacheItem != null && !cacheItem.IsExpired();
         }
 
         /// <summary>
@@ -106,7 +90,7 @@ namespace RepoDb
         public object Get(string key)
         {
             var cacheItem = GetItem(key);
-            if (cacheItem != null && !IsExpired(cacheItem))
+            if (cacheItem != null && !cacheItem.IsExpired())
             {
                 return cacheItem.Value;
             }
@@ -120,7 +104,7 @@ namespace RepoDb
         public IEnumerator<CacheItem> GetEnumerator()
         {
             return _cacheList
-                .Where(cacheItem => !IsExpired(cacheItem))
+                .Where(cacheItem => !cacheItem.IsExpired())
                 .GetEnumerator();
         }
 
@@ -154,13 +138,8 @@ namespace RepoDb
 
         private CacheItem GetItem(string key)
         {
-            return (CacheItem)_cacheList.FirstOrDefault(cacheItem =>
+            return _cacheList.FirstOrDefault(cacheItem =>
                 string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
-        }
-
-        private bool IsExpired(ICacheItem item)
-        {
-            return (DateTime.UtcNow - item.Timestamp).TotalMinutes >= ExpirationInMinutes;
         }
     }
 }

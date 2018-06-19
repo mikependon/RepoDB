@@ -109,8 +109,8 @@ namespace RepoDb
                 throw new ArgumentNullException($"Value must not be null.");
             }
             var properties = value.GetType().GetProperties();
-            var operationProperty = properties.FirstOrDefault(p => p.Name.ToLower() == Constant.Operation.ToLower());
-            var valueProperty = properties.FirstOrDefault(p => p.Name.ToLower() == Constant.Value.ToLower());
+            var operationProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
+            var valueProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
             if (operationProperty == null)
             {
                 throw new InvalidOperationException($"Operation property must be present.");

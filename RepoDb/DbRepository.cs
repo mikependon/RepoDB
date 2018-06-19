@@ -231,7 +231,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Count);
+                        throw new CancelledExecutionException(StringConstant.Count);
                     }
                     return default(int);
                 }
@@ -416,7 +416,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.CountBig);
+                        throw new CancelledExecutionException(StringConstant.CountBig);
                     }
                     return default(long);
                 }
@@ -627,7 +627,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.BatchQuery);
+                        throw new CancelledExecutionException(StringConstant.BatchQuery);
                     }
                     return null;
                 }
@@ -899,7 +899,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Query);
+                        throw new CancelledExecutionException(StringConstant.Query);
                     }
                     return null;
                 }
@@ -1079,7 +1079,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Insert);
+                        throw new CancelledExecutionException(StringConstant.Insert);
                     }
                     return null;
                 }
@@ -1225,7 +1225,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.InlineUpdate);
+                        throw new CancelledExecutionException(StringConstant.InlineUpdate);
                     }
                     return 0;
                 }
@@ -1434,7 +1434,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Update);
+                        throw new CancelledExecutionException(StringConstant.Update);
                     }
                     return 0;
                 }
@@ -1619,7 +1619,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Delete);
+                        throw new CancelledExecutionException(StringConstant.Delete);
                     }
                     return 0;
                 }
@@ -1754,7 +1754,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(Constant.Merge);
+                        throw new CancelledExecutionException(StringConstant.Merge);
                     }
                     return 0;
                 }
@@ -1854,13 +1854,13 @@ namespace RepoDb
                 // Before Execution
                 if (Trace != null)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), Constant.BulkInsert, entities, null);
+                    var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), StringConstant.BulkInsert, entities, null);
                     Trace.BeforeBulkInsert(cancellableTraceLog);
                     if (cancellableTraceLog.IsCancelled)
                     {
                         if (cancellableTraceLog.IsThrowException)
                         {
-                            throw new CancelledExecutionException(Constant.BulkInsert);
+                            throw new CancelledExecutionException(StringConstant.BulkInsert);
                         }
                         return 0;
                     }
@@ -1886,7 +1886,7 @@ namespace RepoDb
                 // After Execution
                 if (Trace != null)
                 {
-                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), Constant.BulkInsert, table, result,
+                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), StringConstant.BulkInsert, table, result,
                         DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 

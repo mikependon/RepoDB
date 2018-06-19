@@ -44,7 +44,7 @@ namespace RepoDb.Extensions
         // AsBetweenParameter
         internal static string AsBetweenParameter(this IQueryField queryField)
         {
-            return $"@{queryField.Parameter.Name}_{Constant.LeftValue} {Constant.And.ToUpper()} @{queryField.Parameter.Name}_{Constant.RightValue}";
+            return $"@{queryField.Parameter.Name}_{StringConstant.BetweenLeft} {StringConstant.And.ToUpper()} @{queryField.Parameter.Name}_{StringConstant.BetweenRight}";
         }
 
         // AsInParameter
@@ -54,7 +54,7 @@ namespace RepoDb.Extensions
             var parameters = new List<string>();
             for (var i = 0; i < values.Count; i++)
             {
-                parameters.Add($"@{queryField.Parameter.Name}_{Constant.In}_{i}");
+                parameters.Add($"@{queryField.Parameter.Name}_{StringConstant.In}_{i}");
             }
             return $"({parameters.Join(", ")})";
         }

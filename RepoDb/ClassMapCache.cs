@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using RepoDb.Interfaces;
 using RepoDb.Attributes;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
