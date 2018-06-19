@@ -331,7 +331,7 @@
 </div>
 <div class="section" id="connection-executequery">
 <h2>Connection.ExecuteQuery<a class="headerlink" href="#connection-executequery" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.Interfaces.IDataEntity</cite> object.</p>
+<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.Interfaces.DataEntity</cite> object.</p>
 <p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
 <p>Code below returns an enumerable list of <cite>dynamic</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>

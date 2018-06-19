@@ -32,43 +32,43 @@ namespace RepoDb.Extensions
         }
 
         // AsEnumerable
-        public static IEnumerable<string> AsEnumerable(this string value)
+        internal static IEnumerable<string> AsEnumerable(this string value)
         {
             return value != null ? new[] { value } : null;
         }
 
         // AsJoinQualifier
-        public static string AsJoinQualifier(this string value, string leftAlias, string rightAlias)
+        internal static string AsJoinQualifier(this string value, string leftAlias, string rightAlias)
         {
             return $"{leftAlias}.[{value.AsUnquoted()}] = {rightAlias}.[{value.AsUnquoted()}]";
         }
 
         // AsField
-        public static string AsField(this string value)
+        internal static string AsField(this string value)
         {
             return $"[{value.AsUnquoted()}]";
         }
 
         // AsParameter
-        public static string AsParameter(this string value)
+        internal static string AsParameter(this string value)
         {
             return $"@{value.AsUnquoted()}";
         }
 
         // AsParameterAsField
-        public static string AsParameterAsField(this string value)
+        internal static string AsParameterAsField(this string value)
         {
             return $"{AsParameter(value.AsUnquoted())} {StringConstant.As.ToUpper()} {AsField(value.AsUnquoted())}";
         }
 
         // AsFieldAndParameter
-        public static string AsFieldAndParameter(this string value)
+        internal static string AsFieldAndParameter(this string value)
         {
             return $"{AsField(value.AsUnquoted())} = {AsParameter(value.AsUnquoted())}";
         }
 
         // AsFieldAndAliasField
-        public static string AsFieldAndAliasField(this string value, string alias)
+        internal static string AsFieldAndAliasField(this string value, string alias)
         {
             return $"{AsField(value.AsUnquoted())} = {alias}.{AsField(value.AsUnquoted())}";
         }

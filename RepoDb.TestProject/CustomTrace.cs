@@ -6,142 +6,142 @@ namespace RepoDb.TestProject
 {
     public class CustomTrace : ITrace
     {
-        public void AfterBatchQuery(ITraceLog log)
+        public void AfterBatchQuery(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterBulkInsert(ITraceLog log)
+        public void AfterBulkInsert(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterCount(ITraceLog log)
+        public void AfterCount(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterCountBig(ITraceLog log)
+        public void AfterCountBig(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterDelete(ITraceLog log)
+        public void AfterDelete(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterExecuteNonQuery(ITraceLog log)
+        public void AfterExecuteNonQuery(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterExecuteQuery(ITraceLog log)
+        public void AfterExecuteQuery(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterExecuteReader(ITraceLog log)
+        public void AfterExecuteReader(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterExecuteScalar(ITraceLog log)
+        public void AfterExecuteScalar(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterInlineUpdate(ITraceLog log)
+        public void AfterInlineUpdate(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterInsert(ITraceLog log)
+        public void AfterInsert(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterMerge(ITraceLog log)
+        public void AfterMerge(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterQuery(ITraceLog log)
+        public void AfterQuery(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterUpdate(ITraceLog log)
+        public void AfterUpdate(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeBatchQuery(ICancellableTraceLog log)
+        public void BeforeBatchQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeBulkInsert(ICancellableTraceLog log)
+        public void BeforeBulkInsert(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeCount(ICancellableTraceLog log)
+        public void BeforeCount(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeCountBig(ICancellableTraceLog log)
+        public void BeforeCountBig(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeDelete(ICancellableTraceLog log)
+        public void BeforeDelete(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeExecuteNonQuery(ICancellableTraceLog log)
+        public void BeforeExecuteNonQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeExecuteQuery(ICancellableTraceLog log)
+        public void BeforeExecuteQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeExecuteReader(ICancellableTraceLog log)
+        public void BeforeExecuteReader(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeExecuteScalar(ICancellableTraceLog log)
+        public void BeforeExecuteScalar(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeInlineUpdate(ICancellableTraceLog log)
+        public void BeforeInlineUpdate(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeInsert(ICancellableTraceLog log)
+        public void BeforeInsert(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeMerge(ICancellableTraceLog log)
+        public void BeforeMerge(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeQuery(ICancellableTraceLog log)
+        public void BeforeQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void BeforeUpdate(ICancellableTraceLog log)
+        public void BeforeUpdate(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }

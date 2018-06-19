@@ -34,8 +34,7 @@ We aim to let .NET developers limit the implementation of SQL Statements within 
 
  - We will keep it simple as possible (KISS principle)
  - We will make it fast as possible
- - We will never make complex implementations (specially for Queries and Methods)
- - We will avoid developing complex JOINs (until it is needed and requested by the community)
+ - We will never make complex implementations (specially for Joins)
  - We will never ever do try-catch inside the library
 
 ### Features

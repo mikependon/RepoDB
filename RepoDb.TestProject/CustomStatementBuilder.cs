@@ -6,47 +6,47 @@ namespace RepoDb.TestProject
 {
     public class CustomStatementBuilder : IStatementBuilder
     {
-        public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+        public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+        public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup) where TEntity : IDataEntity
+        public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false) where TEntity : IDataEntity
+        public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
+        public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers) where TEntity : IDataEntity
+        public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup, int? top = 0, IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+        public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }
 
-        public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup queryGroup) where TEntity : IDataEntity
+        public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }

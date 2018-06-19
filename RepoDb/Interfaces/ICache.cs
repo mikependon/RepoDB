@@ -39,7 +39,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="key">The key of the cache object to be retrieved.</param>
         /// <returns>An object from the cache collection based on the given key.</returns>
-        object Get(string key);
+        CacheItem Get(string key);
 
         /// <summary>
         /// Removes the item from the cache collection.

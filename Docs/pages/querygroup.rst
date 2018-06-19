@@ -7,8 +7,8 @@ A query group object is used to group an expression when composing a tree expres
 
 Below are the constructor parameters.
 
-- **queryFields**: the list of `IQueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
-- **queryGroups**: the list of child `IQueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
+- **queryFields**: the list of `QueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
+- **queryGroups**: the list of child `QueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
 - **conjunction**: the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
 
 As mentioned above, below is a sample code to create a query group object.
@@ -387,7 +387,7 @@ Explicit way:
 		}
 	);
 
-The `Operation.All` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `IQueryField` in the `IQueryGroup` object will do the same when calling it explicitly.
+The `Operation.All` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `QueryField` in the `QueryGroup` object will do the same when calling it explicitly.
 
 Operation.Any
 -------------
@@ -432,4 +432,4 @@ Explicit way:
 		Conjunction.Or
 	);
 
-The `Operation.Any` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `IQueryField` in the `IQueryGroup` object will do the same when calling it explicitly.
+The `Operation.Any` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `QueryField` in the `QueryGroup` object will do the same when calling it explicitly.

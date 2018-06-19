@@ -1,5 +1,4 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace RepoDb.Reflection
     public static class DataEntityConverter
     {
         /// <summary>
-        /// Converts the list of <i>RepoDb.Interfaces.DataEntity</i> object into System.DataTable</i> object.
+        /// Converts the list of <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.DataTable</i> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of <i>RepoDb.Interfaces.DataEntity</i> object.</typeparam>
         /// <param name="entities">The list of <i>RepoDb.Interfaces.DataEntity</i> object to be converted.</param>

@@ -15,7 +15,7 @@ The repositories contain different operations to manipulate the data from the da
 - **CountBig**: used to count (big) all the records in the database. It uses the `SELECT`, `COUNT_BIG` command of SQL.
 - **BatchQuery**: used to query a record from the database by batch. It uses the `SELECT` in combination of `ROW_NUMBER` and `ORDER` command of SQL.
 - **BulkInsert**: used to bulk-insert the records in the database.
-- **ExecuteQuery**: used to read certain records from the database in fast-forward access. It returns an enumerable list of `RepoDb.Interfaces.IDataEntity` objects.
+- **ExecuteQuery**: used to read certain records from the database in fast-forward access. It returns an enumerable list of `RepoDb.Interfaces.DataEntity` objects.
 - **ExecuteNonQuery**: used to execute a non-queryable query statement in the database.
 - **ExecuteScalar**: used to execute a command that returns a single-object value from the database.
 
@@ -468,7 +468,7 @@ BatchQuery Operation
 
 .. highlight:: c#
 
-This operation is used to batching when querying a data from the database. It returns an enumerable object of `RepoDb.Interfaces.IDataEntity` objects.
+This operation is used to batching when querying a data from the database. It returns an enumerable object of `RepoDb.Interfaces.DataEntity` objects.
 
 Below are the parameters:
 
@@ -518,7 +518,7 @@ ExecuteQuery Operation
 
 .. highlight:: c#
 
-This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `RepoDb.Interfaces.IDataEntity` type as its generic type.
+This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an `IEnumerable` object with `dynamic` or `RepoDb.Interfaces.DataEntity` type as its generic type.
 
 Below are the parameters:
 

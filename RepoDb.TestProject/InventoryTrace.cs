@@ -4,144 +4,144 @@ namespace RepoDb.TestProject
 {
     public class InventoryTrace : ITrace
     {
-        public void AfterBatchQuery(ITraceLog log)
+        public void AfterBatchQuery(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterBulkInsert(ITraceLog log)
+        public void AfterBulkInsert(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterCount(ITraceLog log)
+        public void AfterCount(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterCountBig(ITraceLog log)
+        public void AfterCountBig(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterDelete(ITraceLog log)
+        public void AfterDelete(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterExecuteNonQuery(ITraceLog log)
+        public void AfterExecuteNonQuery(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterExecuteQuery(ITraceLog log)
+        public void AfterExecuteQuery(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterExecuteReader(ITraceLog log)
+        public void AfterExecuteReader(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterExecuteScalar(ITraceLog log)
+        public void AfterExecuteScalar(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterInlineUpdate(ITraceLog log)
+        public void AfterInlineUpdate(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterInsert(ITraceLog log)
+        public void AfterInsert(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterMerge(ITraceLog log)
+        public void AfterMerge(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterQuery(ITraceLog log)
+        public void AfterQuery(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void AfterUpdate(ITraceLog log)
+        public void AfterUpdate(TraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeBatchQuery(ICancellableTraceLog log)
+        public void BeforeBatchQuery(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeBulkInsert(ICancellableTraceLog log)
+        public void BeforeBulkInsert(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeCount(ICancellableTraceLog log)
+        public void BeforeCount(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeCountBig(ICancellableTraceLog log)
+        public void BeforeCountBig(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeDelete(ICancellableTraceLog log)
+        public void BeforeDelete(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeExecuteNonQuery(ICancellableTraceLog log)
+        public void BeforeExecuteNonQuery(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeExecuteQuery(ICancellableTraceLog log)
+        public void BeforeExecuteQuery(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeExecuteReader(ICancellableTraceLog log)
+        public void BeforeExecuteReader(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeExecuteScalar(ICancellableTraceLog log)
+        public void BeforeExecuteScalar(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeInlineUpdate(ICancellableTraceLog log)
+        public void BeforeInlineUpdate(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeInsert(ICancellableTraceLog log)
-        {
-            // throw new NotImplementedException();
-            var l = log;
-        }
-
-        public void BeforeMerge(ICancellableTraceLog log)
+        public void BeforeInsert(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
             var l = log;
         }
 
-        public void BeforeQuery(ICancellableTraceLog log)
+        public void BeforeMerge(CancellableTraceLog log)
+        {
+            // throw new NotImplementedException();
+            var l = log;
+        }
+
+        public void BeforeQuery(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }
 
-        public void BeforeUpdate(ICancellableTraceLog log)
+        public void BeforeUpdate(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
             var l = log;

@@ -94,6 +94,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Cache</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#checking-a-cache-expiration">Checking a Cache Expiration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-the-cache-expiration">Setting the Cache Expiration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
@@ -169,26 +171,28 @@
 <h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
 <p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository. It can be access through the repository <cite>Cache</cite> property (implements <cite>RepoDb.Interfaces.ICache</cite> interface).</p>
 <p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
-<p>Below are the methods of <cite>ICache</cite> object.</p>
+<p>Below are the methods of <cite>Cache</cite> object.</p>
 <ul class="simple">
 <li><strong>Add</strong>: accepts an <cite>item</cite> or a <cite>key</cite> and <cite>value</cite> pair parameters. It adds an item to the <cite>Cache</cite> object. If an item is already existing, the item will be overriden.</li>
 <li><strong>Clear</strong>: clear all items from the cache.</li>
 <li><strong>Contains</strong>: accepts a <cite>key</cite> parameter. Checks whether the <cite>Cache</cite> object contains an item with the defined key.</li>
 <li><strong>Get</strong>: accepts a <cite>key</cite> parameter. Returns a cached item object.</li>
-<li><strong>GetEnumerator</strong>: returns an enumerator for <cite>IEnumerable&lt;ICacheItem&gt;</cite> objects. It contains all the cached items from the <cite>Cache</cite> object.</li>
+<li><strong>GetEnumerator</strong>: returns an enumerator for <cite>IEnumerable&lt;CacheItem&gt;</cite> objects. It contains all the cached items from the <cite>Cache</cite> object.</li>
 <li><strong>Remove</strong>: accepts a <cite>key</cite> parameter. Removes an entry from the <cite>Cache</cite> object.</li>
 </ul>
-<p>One important object when manipulating a cache is the <cite>CacheItem</cite> object (implements <cite>RepoDb.Interfaces.ICacheItem</cite>). It acts as the cache item entry for the cache object.</p>
-<p>Below are the constructor arguments of the <cite>ICacheItem</cite> object.</p>
+<p>One important object when manipulating a cache is the <cite>CacheItem</cite> object (implements <cite>RepoDb.CacheItem</cite>). It acts as the cache item entry for the cache object. The default expiration of the <cite>CacheItem</cite> is 180 minutes.</p>
+<p>Below are the constructor arguments of the <cite>CacheItem</cite> object.</p>
 <ul class="simple">
 <li><strong>key</strong>: the key of the cache.</li>
 <li><strong>value</strong>: the value object of the cache.</li>
+<li><strong>expirationInMinutes</strong>: The expiration in minutes of the cache item.</li>
 </ul>
-<p>Below are the properties of <cite>ICacheItem</cite> object.</p>
+<p>Below are the properties of <cite>CacheItem</cite> object.</p>
 <ul class="simple">
 <li><strong>Key</strong>: the key of the cache. It returns a <cite>System.String</cite> type.</li>
 <li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
-<li><strong>Timestamp</strong>: the time of the cache last refreshed. It returns a <cite>System.DateTime</cite> object.</li>
+<li><strong>CreatedDate</strong>: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a <cite>System.DateTime</cite> object.</li>
+<li><strong>Expiration</strong>: the expiration date of this cache item.. It returns a <cite>System.DateTime</cite> object.</li>
 </ul>
 <p>The repository caching operation is of the <cite>pseudo</cite> below.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
@@ -220,7 +224,7 @@ RETURN $result
 <p>The next time the same query is executed, the repository automatically returns the cached item if the same key is passed.</p>
 <p>Please note that the cache object of the repository is immutable per instance, this means that accessing the cache object directly passing the same cache key would return the same result.</p>
 <p>Codes below will return the same result as above assuming the same repository object is used.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">).</span><span class="n">Value</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -228,6 +232,20 @@ RETURN $result
 <h2>Checking a Cache Entry<a class="headerlink" href="#checking-a-cache-entry" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to check if the cached item is present on the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="checking-a-cache-expiration">
+<h2>Checking a Cache Expiration<a class="headerlink" href="#checking-a-cache-expiration" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to check if the cached item is expired already, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-the-cache-expiration">
+<h2>Setting the Cache Expiration<a class="headerlink" href="#setting-the-cache-expiration" title="Permalink to this headline">¶</a></h2>
+<p>Code below is the way on how to set cached item is expiration, assuming that a repository object has been created already.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -272,7 +290,7 @@ RETURN $result
                 <span class="c1">// Serialize to a File</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">ICacheItem</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">CacheItem</span> <span class="n">item</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="c1">// Serialize to a File</span>
         <span class="p">}</span>
@@ -292,7 +310,7 @@ RETURN $result
                 <span class="c1">// Deserialize the File where the FileName is equals to Key, return the object</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">ICacheItem</span><span class="p">&gt;</span> <span class="n">GetEnumerator</span><span class="p">()</span>
+        <span class="k">public</span> <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">CacheItem</span><span class="p">&gt;</span> <span class="n">GetEnumerator</span><span class="p">()</span>
         <span class="p">{</span>
                 <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
         <span class="p">}</span>

@@ -18,7 +18,7 @@ namespace RepoDb.TestProject
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             //InventoryMain();
             //RepoDbMain();
-            //TestCrud();
+            TestCrud();
         }
 
         public static void InventoryMain()
@@ -27,10 +27,10 @@ namespace RepoDb.TestProject
             var customers = repository.Query<CustomerDto>();
             customers.ToList().ForEach(customer =>
             {
-                //var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                //rows = Convert.ToInt32(repository.Insert(customer));
-                //rows = repository.Update(customer);
-                //rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+                var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                rows = Convert.ToInt32(repository.Insert(customer));
+                rows = repository.Update(customer);
+                rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
                 // Customer
                 Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");

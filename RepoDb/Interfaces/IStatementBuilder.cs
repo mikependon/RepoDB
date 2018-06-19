@@ -21,7 +21,7 @@ namespace RepoDb.Interfaces
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
-        string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderby)
+        string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy)
             where TEntity : DataEntity;
 
         /// <summary>

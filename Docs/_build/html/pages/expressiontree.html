@@ -164,7 +164,7 @@
             
   <div class="section" id="expression-tree">
 <h1>Expression Tree<a class="headerlink" href="#expression-tree" title="Permalink to this headline">¶</a></h1>
-<p>The expression tree is the brain of the library. It defines the best possible way of doing a <cite>WHERE</cite> expression (SQL Statement) by composing it via <cite>dynamic</cite> or <cite>System.Interfaces.IQueryGroup</cite> objects.</p>
+<p>The expression tree is the brain of the library. It defines the best possible way of doing a <cite>WHERE</cite> expression (SQL Statement) by composing it via <cite>dynamic</cite> or <cite>System.Interfaces.QueryGroup</cite> objects.</p>
 <p>Objects used for composing the expression tree.</p>
 <ul class="simple">
 <li><strong>QueryGroup</strong>: used to group an expression.</li>
@@ -192,7 +192,7 @@
 <li>DbConnection.ExecuteReader</li>
 <li>DbConnection.ExecuteScalar</li>
 </ul>
-<p>There are two ways of building the expression trees, the explicit way by using <cite>IQueryGroup</cite> objects and dynamic way by using <cite>dynamic</cite> objects.</p>
+<p>There are two ways of building the expression trees, the explicit way by using <cite>QueryGroup</cite> objects and dynamic way by using <cite>dynamic</cite> objects.</p>
 <div class="section" id="explicit-query-expression">
 <h2>Explicit Query Expression<a class="headerlink" href="#explicit-query-expression" title="Permalink to this headline">¶</a></h2>
 <p>An explicit query expression are using the defined objects <cite>RepoDb.QueryGroup</cite>, <cite>RepoDb.QueryField</cite>, <cite>RepoDb.Enumerations.Conjunction</cite> and <cite>RepoDb.Enumerations.Operation</cite> when composing the expression.</p>

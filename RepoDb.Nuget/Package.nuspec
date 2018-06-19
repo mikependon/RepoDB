@@ -2,17 +2,32 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <title>RepoDb</title>
-    <description>A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.</description>
+    <description>A dynamic, lightweight and fast ORM .Net Library.</description>
     <language>en-US</language>
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-    - Version 1.1.0
+      - Version 1.1.2
+      - Built on a target framework 4.0 for earlier compatibility
+      - Renamed CacheItem.Timestamp to CacheItem.CreatedDate
+      - Added CacheItem.IsExpired method
+      - Added CacheItem.Expiration property
+      - Removed ICacheItem
+      - Removed ITraceLog
+      - Removed ICancellableTraceLog
+      - Removed ITypeMap
+      - Removed IStatementBuilderMap
+      - Removed IQueryGroup
+      - Removed IQueryField
+      - Removed IParameter
+      - Removed IField
+      - Removed IOrderField
+      - Removed IDataEntityMap
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

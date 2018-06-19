@@ -211,7 +211,7 @@ Connection.ExecuteQuery
 
 .. highlight:: c#
 
-This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `dynamic` or `RepoDb.Interfaces.IDataEntity` object.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `dynamic` or `RepoDb.Interfaces.DataEntity` object.
 
 The underlying method call of this method is the `System.Data.IDbCommand.ExecuteReader()` method.
 

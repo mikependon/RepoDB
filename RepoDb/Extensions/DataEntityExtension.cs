@@ -188,7 +188,6 @@ namespace RepoDb.Extensions
         /// Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
         /// where the <i>IsIdentity</i> property value is set to <i>True</i>.
         /// </summary>
-        /// <typeparam name="T">The instance of the data entity where to get the the identity property.</typeparam>
         /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
         public static PropertyInfo GetIdentityProperty(this DataEntity dataEntity)
         {

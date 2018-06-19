@@ -3,7 +3,7 @@ Expression Tree
 
 .. highlight:: c#
 
-The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.Interfaces.IQueryGroup` objects.
+The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.Interfaces.QueryGroup` objects.
 
 Objects used for composing the expression tree.
 
@@ -32,7 +32,7 @@ Certain connection extension methods are using the expression trees.
 - DbConnection.ExecuteReader
 - DbConnection.ExecuteScalar
 
-There are two ways of building the expression trees, the explicit way by using `IQueryGroup` objects and dynamic way by using `dynamic` objects.
+There are two ways of building the expression trees, the explicit way by using `QueryGroup` objects and dynamic way by using `dynamic` objects.
 
 Explicit Query Expression
 -------------------------

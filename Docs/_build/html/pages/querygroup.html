@@ -180,8 +180,8 @@
 <p>A query group object is used to group an expression when composing a tree expressions. It is equivalent to a grouping on a <cite>WHERE</cite> statement in SQL Statements.</p>
 <p>Below are the constructor parameters.</p>
 <ul class="simple">
-<li><strong>queryFields</strong>: the list of <cite>IQueryField</cite> objects to be included in the expression composition. It stands as <cite>[FieldName] = &#64;FiedName</cite> when it comes to SQL Statement compositions.</li>
-<li><strong>queryGroups</strong>: the list of child <cite>IQueryGroup</cite> objects to be included in the expresson composition. It stands as the <cite>([FieldName] = &#64;FieldName AND [FieldName1] = &#64;FieldName1)</cite> when it comes to SQL Statement compositions.</li>
+<li><strong>queryFields</strong>: the list of <cite>QueryField</cite> objects to be included in the expression composition. It stands as <cite>[FieldName] = &#64;FiedName</cite> when it comes to SQL Statement compositions.</li>
+<li><strong>queryGroups</strong>: the list of child <cite>QueryGroup</cite> objects to be included in the expresson composition. It stands as the <cite>([FieldName] = &#64;FieldName AND [FieldName1] = &#64;FieldName1)</cite> when it comes to SQL Statement compositions.</li>
 <li><strong>conjunction</strong>: the conjuction to be used when grouping the fields. It stands as the <cite>AND</cite> or <cite>OR</cite> in the SQL Statement compositions.</li>
 </ul>
 <p>As mentioned above, below is a sample code to create a query group object.</p>
@@ -451,7 +451,7 @@
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>The <cite>Operation.All</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>IQueryField</cite> in the <cite>IQueryGroup</cite> object will do the same when calling it explicitly.</p>
+<p>The <cite>Operation.All</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>QueryField</cite> in the <cite>QueryGroup</cite> object will do the same when calling it explicitly.</p>
 </div>
 <div class="section" id="operation-any">
 <h2>Operation.Any<a class="headerlink" href="#operation-any" title="Permalink to this headline">¶</a></h2>
@@ -488,7 +488,7 @@
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>The <cite>Operation.Any</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>IQueryField</cite> in the <cite>IQueryGroup</cite> object will do the same when calling it explicitly.</p>
+<p>The <cite>Operation.Any</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>QueryField</cite> in the <cite>QueryGroup</cite> object will do the same when calling it explicitly.</p>
 </div>
 </div>
 

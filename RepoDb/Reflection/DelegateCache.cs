@@ -34,7 +34,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity type to convert.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
         /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>()
             where TEntity : DataEntity

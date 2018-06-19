@@ -3,7 +3,7 @@
     /// <summary>
     /// A class that holds the constant values fo <i>RepoDb</i> library.
     /// </summary>
-    public static class StringConstant
+    internal static class StringConstant
     {
         // Strings
         public static readonly string And = "And";

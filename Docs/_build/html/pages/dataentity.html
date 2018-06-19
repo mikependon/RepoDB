@@ -83,7 +83,6 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Creating a DataEntity</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dataentity-class">DataEntity Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#idataentity-interface">IDataEntity Interface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
@@ -164,21 +163,11 @@
             
   <div class="section" id="creating-a-dataentity">
 <h1>Creating a DataEntity<a class="headerlink" href="#creating-a-dataentity" title="Permalink to this headline">¶</a></h1>
-<p>A <cite>DataEntity</cite> is a DTO class used to feed the operations of the repositories. It acts as a single row when it comes to database.</p>
-<p>It is recommended that an explicit interface (of type <cite>RepoDb.Interfaces.IDataEntity</cite>) must be implemented in order to make a contracted <cite>DataEntity</cite>.</p>
+<p>A <cite>DataEntity</cite> is a DTO class used to feed the operations of the repositories. It is equivalent to a single row in a database.</p>
 <div class="section" id="dataentity-class">
 <h2>DataEntity Class<a class="headerlink" href="#dataentity-class" title="Permalink to this headline">¶</a></h2>
 <p>Acts as the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb</cite> namespace.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">ClassName</span> <span class="p">:</span> <span class="n">DataEntity</span>
-<span class="p">{</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="idataentity-interface">
-<h2>IDataEntity Interface<a class="headerlink" href="#idataentity-interface" title="Permalink to this headline">¶</a></h2>
-<p>An interface used to implement to mark a class to be the base class of all <cite>Data Entity</cite> object. Located at <cite>RepoDb.Interfaces</cite> namespace.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">interface</span> <span class="n">IClassName</span> <span class="p">:</span> <span class="n">IDataEntity</span>
 <span class="p">{</span>
 <span class="p">}</span>
 </pre></div>

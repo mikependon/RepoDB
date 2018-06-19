@@ -29,7 +29,7 @@ The `ITrace` interface has the follow trace methods.
 - **AfterQuery**: called after the `Repository.Query` operation has been executed.
 - **AfterUpdate**: called after the `Repository.Update` operation has been executed.
  
-Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.Interfaces.ITraceLog`.
+Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.TraceLog`.
  
 - **BeforeBatchQuery**: called before the `Repository.BatchQuery` actual execution.
 - **BeforeBulkInsert**: called before the `Repository.BulkInsert` actual execution.
@@ -46,14 +46,14 @@ Note: All trace methods mentioned above accepts the parameter named `log` of typ
 - **BeforeQuery**: called before the `Repository.Query` actual execution.
 - **BeforeUpdate**: called before the `Repository.Update` actual execution.
  
-Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.Interfaces.ICancellableTraceLog`.
+Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.CancellableTraceLog`.
 
-ITraceLog Interface
+TraceLog Interface
 -------------------
 
-This interface and deriving objects are used by the `RepoDb.Interfaces.ITrace` object as a method argument during the `After` operations.
+This interface and deriving objects are used by the `RepoDb.Trace` object as a method argument during the `After` operations.
 
-Below are the properties of `ITraceLog` object.
+Below are the properties of `TraceLog` object.
 
 - **Method**: a `System.Reflection.MethodBase` object that holds the pointer to the actual method that triggers the execution of the operation.
 - **Result**: an object that holds the result of the execution.
@@ -61,12 +61,12 @@ Below are the properties of `ITraceLog` object.
 - **Statement**: the actual query statement used in the execution.
 - **ExecutionTime**: a `System.Timespan` object that holds the time length of actual execution.
 
-ICancellableTraceLog Interface
+CancellableTraceLog Interface
 ------------------------------
 
-This interface and deriving objects are used by the `RepoDb.Interfaces.ITrace` object as a method argument at the `Before` operations. It inherits the `RepoDb.Interfaces.ITrace` interface.
+This interface and deriving objects are used by the `RepoDb.Trace` object as a method argument at the `Before` operations. It inherits the `RepoDb.Trace` interface.
 
-Below are the properties of `ICancellableTraceLog` object.
+Below are the properties of `CancellableTraceLog` object.
 
 - **IsCancelled**: a property used to identify whether the operation is canceled.
 - **IsThrowException**: a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type `RepoDb.Exceptions.CancelledExecutionException`.
@@ -82,22 +82,22 @@ Below is a sample customized `Trace` object.
 
 	public class NorthwindDatabaseTrace : ITrace
 	{
-		public void BeforeBatchQuery(ICancellableTraceLog log)
+		public void BeforeBatchQuery(CancellableTraceLog log)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void AfterBatchQuery(ITraceLog log)
+		public void AfterBatchQuery(TraceLog log)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void BeforeBulkInsert(ICancellableTraceLog log)
+		public void BeforeBulkInsert(CancellableTraceLog log)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void AfterBulkInsert(ITraceLog log)
+		public void AfterBulkInsert(TraceLog log)
 		{
 			throw new NotImplementedException();
 		}
@@ -130,7 +130,7 @@ Below is a sample code that calls the `Cancel` method of the `BeforeQuery` opera
 
 ::
 
-	public void BeforeQuery(ICancellableTraceLog log)
+	public void BeforeQuery(CancellableTraceLog log)
 	{
 		var keywords = new[] { "INSERT", "DELETE", "UPDATE", "DROP", "MERGE", "ALTER" };
 		if (keywords.Any(keyword => log.Statement.Contains(keyword)))

@@ -29,7 +29,7 @@ namespace RepoDb.Reflection
         /// Gets a <i>System.Reflection.ConstructorInfo</i> object of the defined type.
         /// </summary>
         /// <param name="type">The <i>System.Type</i> object where to create a constructor info.</param>
-        /// <param name="contructorTypes">The arguments of the constructor.</param>
+        /// <param name="constructorTypes">The arguments of the constructor.</param>
         /// <returns>A <i>System.Reflection.ConstructorInfo</i> object of the defined type.</returns>
         public static ConstructorInfo Get(Type type, params Type[] constructorTypes)
         {

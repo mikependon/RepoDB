@@ -190,7 +190,7 @@
 <li><strong>CountBig</strong>: used to count (big) all the records in the database. It uses the <cite>SELECT</cite>, <cite>COUNT_BIG</cite> command of SQL.</li>
 <li><strong>BatchQuery</strong>: used to query a record from the database by batch. It uses the <cite>SELECT</cite> in combination of <cite>ROW_NUMBER</cite> and <cite>ORDER</cite> command of SQL.</li>
 <li><strong>BulkInsert</strong>: used to bulk-insert the records in the database.</li>
-<li><strong>ExecuteQuery</strong>: used to read certain records from the database in fast-forward access. It returns an enumerable list of <cite>RepoDb.Interfaces.IDataEntity</cite> objects.</li>
+<li><strong>ExecuteQuery</strong>: used to read certain records from the database in fast-forward access. It returns an enumerable list of <cite>RepoDb.Interfaces.DataEntity</cite> objects.</li>
 <li><strong>ExecuteNonQuery</strong>: used to execute a non-queryable query statement in the database.</li>
 <li><strong>ExecuteScalar</strong>: used to execute a command that returns a single-object value from the database.</li>
 </ul>
@@ -543,7 +543,7 @@
 </div>
 <div class="section" id="batchquery-operation">
 <h2>BatchQuery Operation<a class="headerlink" href="#batchquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to batching when querying a data from the database. It returns an enumerable object of <cite>RepoDb.Interfaces.IDataEntity</cite> objects.</p>
+<p>This operation is used to batching when querying a data from the database. It returns an enumerable object of <cite>RepoDb.Interfaces.DataEntity</cite> objects.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>where</strong>: an expression to used to filter the data.</li>
@@ -584,7 +584,7 @@
 </div>
 <div class="section" id="executequery-operation">
 <h2>ExecuteQuery Operation<a class="headerlink" href="#executequery-operation" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an <cite>IEnumerable</cite> object with <cite>dynamic</cite> or <cite>RepoDb.Interfaces.IDataEntity</cite> type as its generic type.</p>
+<p>This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an <cite>IEnumerable</cite> object with <cite>dynamic</cite> or <cite>RepoDb.Interfaces.DataEntity</cite> type as its generic type.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>

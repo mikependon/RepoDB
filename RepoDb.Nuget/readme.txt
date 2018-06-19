@@ -1,6 +1,6 @@
 ## RepoDb
 
-A dynamic ORM .Net Library used to create an entity-based repository classes when accessing data from the database.
+A dynamic, lightweight and fast ORM .Net Library.
 
 ### Package
 Link: https://www.nuget.org/packages/RepoDb

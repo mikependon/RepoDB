@@ -32,7 +32,7 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 
 ::
 
-	public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int? top = 0, IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+	public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
 	{
 		// Create an initial SELECT statement
 		queryBuilder.Clear()
@@ -75,7 +75,7 @@ This method is being called when the `BatchQuery` operation of the repository is
 Below are the arguments of `CreateBatchQuery` method.
 
 - **queryBuilder**: the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when creating a statement (of type `RepoDb.QueryGroup`).
 - **page**: the page number implied when creating a statement.
 - **rowsPerBatch**: the size of the rows implied when creating a statement.
 - **orderBy**: the fields used in the `ORDER BY` when creating a statement.
@@ -84,7 +84,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page, int rowsPerBatch, IEnumerable<IOrderField> orderBy) where TEntity : IDataEntity
+	public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -125,13 +125,13 @@ This method is being called when the `Count` operation of the repository is bein
 Below are the arguments of `CreateCount` method.
 
 - **queryBuilder**: the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when creating a statement (of type `RepoDb.QueryGroup`).
  
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateCount` method.
 
 ::
 
-	public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+	public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -156,13 +156,13 @@ This method is being called when the `CountBig` operation of the repository is b
 Below are the arguments of `CreateCountBig` method.
 
 - **queryBuilder**: the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when creating a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when creating a statement (of type `RepoDb.QueryGroup`).
 
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateCountBig` method.
 
 ::
 
-	public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+	public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -187,13 +187,13 @@ This method is being called when the `Delete` operation of the repository is bei
 Below are the arguments of `CreateDelete` method.
 
 - **queryBuilder**: the builder used when creating a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when composing a statement (of type `RepoDb.QueryGroup`).
 
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateDelete` method.
 
 ::
 
-	public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+	public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -217,14 +217,14 @@ Below are the arguments of `CreateInlineUpdate` method.
 
 - **queryBuilder**: the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
 - **fields**: the list of fields to be updated when composing a statement (on enumerable of type `RepoDb.Interfaces.Field`).
-- **where**: the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when composing a statement (of type `RepoDb.QueryGroup`).
 - **overrideIgnore**: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.
  
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateInlineUpdate` method.
 
 ::
 
-	public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false) where TEntity : IDataEntity
+	public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false) where TEntity : DataEntity
 	{
 		if (overrideIgnore == false)
 		{
@@ -266,7 +266,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
+	public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		var primary = PrimaryPropertyCache.Get<TEntity>();
@@ -311,7 +311,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers) where TEntity : IDataEntity
+	public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		if (qualifiers == null)
@@ -376,7 +376,7 @@ This method is being called when the `Query` operation of the repository is bein
 Below are the arguments of `CreateQuery` method.
 
 - **queryBuilder**: the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when composing a statement (of type `RepoDb.QueryGroup`).
 - **top**: the value that identifies the number of rows to be returned when composing a statement.
 - **orderBy**: the fields used in the `ORDER BY` when creating a statement.
  
@@ -384,7 +384,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int? top = 0, IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+	public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -410,13 +410,13 @@ This method is being called when the `Update` operation of the repository is bei
 Below are the arguments of `CreateUpdate` method.
 
 - **queryBuilder**: the builder used when composing a statement (of type `RepoDb.Interfaces.IQueryBuilder<TEntity>`).
-- **where**: the expression used when composing a statement (of type `RepoDb.Interfaces.IQueryGroup`).
+- **where**: the expression used when composing a statement (of type `RepoDb.QueryGroup`).
  
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateUpdate` method.
 
 ::
 
-	public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+	public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -443,49 +443,49 @@ To create a custom statement builder, simply create a class and implements the `
 	
 	public class OracleDbStatementBuilder : IStatementBuilder
 	{
-		public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int? top = 0,
-			IEnumerable<IOrderField> orderBy = null) where TEntity : IDataEntity
+		public string CreateQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0,
+			IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where, int page,
-			int rowsPerBatch, IEnumerable<IOrderField> orderby) where TEntity : IDataEntity
+		public string CreateBatchQuery<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where, int page,
+			int rowsPerBatch, IEnumerable<OrderField> orderby) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+		public string CreateCount<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+		public string CreateCountBig<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+		public string CreateDelete<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> fields, IQueryGroup where, bool? overrideIgnore = false) where TEntity : IDataEntity
+		public string CreateInlineUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : IDataEntity
+		public string CreateInsert<TEntity>(IQueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<IField> qualifiers) where TEntity : IDataEntity
+		public string CreateMerge<TEntity>(IQueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}
 
-		public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, IQueryGroup where) where TEntity : IDataEntity
+		public string CreateUpdate<TEntity>(IQueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}

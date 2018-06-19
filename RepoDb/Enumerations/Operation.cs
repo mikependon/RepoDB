@@ -12,23 +12,23 @@ namespace RepoDb.Enumerations
         /// </summary>
         [Text("=")] Equal,
         /// <summary>
-        /// A not-equal operation (<>).
+        /// A not-equal operation.
         /// </summary>
         [Text("<>")] NotEqual,
         /// <summary>
-        /// A less-than operation (<).
+        /// A less-than operation.
         /// </summary>
         [Text("<")] LessThan,
         /// <summary>
-        /// A greater-than operation (>).
+        /// A greater-than operation.
         /// </summary>
         [Text(">")] GreaterThan,
         /// <summary>
-        /// A less-than-or-equal operation (<=).
+        /// A less-than-or-equal operation.
         /// </summary>
         [Text("<=")] LessThanOrEqual,
         /// <summary>
-        /// A greater-than-or-equal operation (>=).
+        /// A greater-than-or-equal operation.
         /// </summary>
         [Text(">=")] GreaterThanOrEqual,
         /// <summary>

@@ -94,8 +94,8 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Trace</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#itracelog-interface">ITraceLog Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#icancellabletracelog-interface">ICancellableTraceLog Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tracelog-interface">TraceLog Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cancellabletracelog-interface">CancellableTraceLog Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
 </ul>
@@ -189,7 +189,7 @@
 <li><strong>AfterQuery</strong>: called after the <cite>Repository.Query</cite> operation has been executed.</li>
 <li><strong>AfterUpdate</strong>: called after the <cite>Repository.Update</cite> operation has been executed.</li>
 </ul>
-<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ITraceLog</cite>.</p>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.TraceLog</cite>.</p>
 <ul class="simple">
 <li><strong>BeforeBatchQuery</strong>: called before the <cite>Repository.BatchQuery</cite> actual execution.</li>
 <li><strong>BeforeBulkInsert</strong>: called before the <cite>Repository.BulkInsert</cite> actual execution.</li>
@@ -206,12 +206,12 @@
 <li><strong>BeforeQuery</strong>: called before the <cite>Repository.Query</cite> actual execution.</li>
 <li><strong>BeforeUpdate</strong>: called before the <cite>Repository.Update</cite> actual execution.</li>
 </ul>
-<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.Interfaces.ICancellableTraceLog</cite>.</p>
+<p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.CancellableTraceLog</cite>.</p>
 </div>
-<div class="section" id="itracelog-interface">
-<h2>ITraceLog Interface<a class="headerlink" href="#itracelog-interface" title="Permalink to this headline">¶</a></h2>
-<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument during the <cite>After</cite> operations.</p>
-<p>Below are the properties of <cite>ITraceLog</cite> object.</p>
+<div class="section" id="tracelog-interface">
+<h2>TraceLog Interface<a class="headerlink" href="#tracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Trace</cite> object as a method argument during the <cite>After</cite> operations.</p>
+<p>Below are the properties of <cite>TraceLog</cite> object.</p>
 <ul class="simple">
 <li><strong>Method</strong>: a <cite>System.Reflection.MethodBase</cite> object that holds the pointer to the actual method that triggers the execution of the operation.</li>
 <li><strong>Result</strong>: an object that holds the result of the execution.</li>
@@ -220,10 +220,10 @@
 <li><strong>ExecutionTime</strong>: a <cite>System.Timespan</cite> object that holds the time length of actual execution.</li>
 </ul>
 </div>
-<div class="section" id="icancellabletracelog-interface">
-<h2>ICancellableTraceLog Interface<a class="headerlink" href="#icancellabletracelog-interface" title="Permalink to this headline">¶</a></h2>
-<p>This interface and deriving objects are used by the <cite>RepoDb.Interfaces.ITrace</cite> object as a method argument at the <cite>Before</cite> operations. It inherits the <cite>RepoDb.Interfaces.ITrace</cite> interface.</p>
-<p>Below are the properties of <cite>ICancellableTraceLog</cite> object.</p>
+<div class="section" id="cancellabletracelog-interface">
+<h2>CancellableTraceLog Interface<a class="headerlink" href="#cancellabletracelog-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface and deriving objects are used by the <cite>RepoDb.Trace</cite> object as a method argument at the <cite>Before</cite> operations. It inherits the <cite>RepoDb.Trace</cite> interface.</p>
+<p>Below are the properties of <cite>CancellableTraceLog</cite> object.</p>
 <ul class="simple">
 <li><strong>IsCancelled</strong>: a property used to identify whether the operation is canceled.</li>
 <li><strong>IsThrowException</strong>: a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type <cite>RepoDb.Exceptions.CancelledExecutionException</cite>.</li>
@@ -234,22 +234,22 @@
 <p>Below is a sample customized <cite>Trace</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">NorthwindDatabaseTrace</span> <span class="p">:</span> <span class="n">ITrace</span>
 <span class="p">{</span>
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBatchQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBatchQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBatchQuery</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBatchQuery</span><span class="p">(</span><span class="n">TraceLog</span> <span class="n">log</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBulkInsert</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeBulkInsert</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
         <span class="p">}</span>
 
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBulkInsert</span><span class="p">(</span><span class="n">ITraceLog</span> <span class="n">log</span><span class="p">)</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">AfterBulkInsert</span><span class="p">(</span><span class="n">TraceLog</span> <span class="n">log</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
         <span class="p">}</span>
@@ -274,7 +274,7 @@
 <h2>Canceling an Operation<a class="headerlink" href="#canceling-an-operation" title="Permalink to this headline">¶</a></h2>
 <p>To cancel an operation, simply call the method named <cite>Cancel</cite> of type <cite>RepoDb.Interfaces.ICancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
 <p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">ICancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">keywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;INSERT&quot;</span><span class="p">,</span> <span class="s">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s">&quot;UPDATE&quot;</span><span class="p">,</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;MERGE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">keywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>

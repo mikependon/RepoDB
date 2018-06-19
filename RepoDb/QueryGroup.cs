@@ -175,7 +175,7 @@ namespace RepoDb
 
         /// <summary>
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
-        /// <i>RepoDb.Interfaces.QueryGroup</i> that defines the query tree expression.
+        /// <i>RepoDb.QueryGroup</i> that defines the query tree expression.
         /// </summary>
         /// <param name="obj">
         /// A dynamic query tree expression to be parsed.

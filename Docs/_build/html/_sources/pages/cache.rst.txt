@@ -7,27 +7,29 @@ The library supports caching when querying a data from the database. By the defa
 
 A cache key is important in order for the caching to cache the object. It should be unique to every cache item.
 
-Below are the methods of `ICache` object.
+Below are the methods of `Cache` object.
 
 - **Add**: accepts an `item` or a `key` and `value` pair parameters. It adds an item to the `Cache` object. If an item is already existing, the item will be overriden.
 - **Clear**: clear all items from the cache.
 - **Contains**: accepts a `key` parameter. Checks whether the `Cache` object contains an item with the defined key.
 - **Get**: accepts a `key` parameter. Returns a cached item object.
-- **GetEnumerator**: returns an enumerator for `IEnumerable<ICacheItem>` objects. It contains all the cached items from the `Cache` object.
+- **GetEnumerator**: returns an enumerator for `IEnumerable<CacheItem>` objects. It contains all the cached items from the `Cache` object.
 - **Remove**: accepts a `key` parameter. Removes an entry from the `Cache` object.
 
-One important object when manipulating a cache is the `CacheItem` object (implements `RepoDb.Interfaces.ICacheItem`). It acts as the cache item entry for the cache object.
+One important object when manipulating a cache is the `CacheItem` object (implements `RepoDb.CacheItem`). It acts as the cache item entry for the cache object. The default expiration of the `CacheItem` is 180 minutes.
 
-Below are the constructor arguments of the `ICacheItem` object.
+Below are the constructor arguments of the `CacheItem` object.
 
 - **key**: the key of the cache.
 - **value**: the value object of the cache.
+- **expirationInMinutes**: The expiration in minutes of the cache item.
 
-Below are the properties of `ICacheItem` object.
+Below are the properties of `CacheItem` object.
 
 - **Key**: the key of the cache. It returns a `System.String` type.
 - **Value**: the cached object of the item. It returns a `System.Object` type. It can be casted back to a defined object type.
-- **Timestamp**: the time of the cache last refreshed. It returns a `System.DateTime` object.
+- **CreatedDate**: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a `System.DateTime` object.
+- **Expiration**: the expiration date of this cache item.. It returns a `System.DateTime` object.
 
 The repository caching operation is of the `pseudo` below.
 
@@ -75,7 +77,7 @@ Codes below will return the same result as above assuming the same repository ob
 
 ::
 
-	var customers = (IEnumerable<Customer>)repository.Cache.Get("CacheKey.Customers.StartsWith.Anna");
+	var customers = (IEnumerable<Customer>)repository.Cache.Get("CacheKey.Customers.StartsWith.Anna").Value;
 
 Checking a Cache Entry
 ----------------------
@@ -87,6 +89,28 @@ Code below is the way on how to check if the cached item is present on the `Cach
 ::
 
 	var isExists = repository.Cache.Contains("CacheKey");
+
+Checking a Cache Expiration
+---------------------------
+
+.. highlight:: c#
+
+Code below is the way on how to check if the cached item is expired already, assuming that a repository object has been created already.
+
+::
+
+	var isExpired = repository.Cache.Contains("CacheKey").IsExpired();
+
+Setting the Cache Expiration
+----------------------------
+
+.. highlight:: c#
+
+Code below is the way on how to set cached item is expiration, assuming that a repository object has been created already.
+
+::
+
+	repository.Cache.Contains("CacheKey").Expiration = DateTime.UtcNow.Date.AddHours(3);
 
 Iterating the Cache Entries
 ---------------------------
@@ -149,7 +173,7 @@ Below is the way on how to create a custom `Cache` object.
 			// Serialize to a File
 		}
 
-		public void Add(ICacheItem item)
+		public void Add(CacheItem item)
 		{
 			// Serialize to a File
 		}
@@ -169,7 +193,7 @@ Below is the way on how to create a custom `Cache` object.
 			// Deserialize the File where the FileName is equals to Key, return the object
 		}
 
-		public IEnumerator<ICacheItem> GetEnumerator()
+		public IEnumerator<CacheItem> GetEnumerator()
 		{
 			// Get the File.ParentFolder.Files enumerator and deserialize each file
 		}

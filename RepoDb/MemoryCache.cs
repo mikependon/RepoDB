@@ -37,7 +37,7 @@ namespace RepoDb
         /// Adds a cache item value.
         /// </summary>
         /// <param name="item">
-        /// The cache item to be added in the collection. This object must implement the <i>RepoDb.Interfaces.ICacheItem</i> interface.
+        /// The cache item to be added in the collection. This object must implement the <i>RepoDb.CacheItem</i> interface.
         /// </param>
         public void Add(CacheItem item)
         {
@@ -85,13 +85,13 @@ namespace RepoDb
         /// Gets an object from the cache collection.
         /// </summary>
         /// <param name="key">The key of the cache object to be retrieved.</param>
-        /// <returns>An object from the cache collection based on the given key.</returns>
-        public object Get(string key)
+        /// <returns>A cached item object from the cache collection based on the given key.</returns>
+        public CacheItem Get(string key)
         {
             var cacheItem = GetItem(key);
             if (cacheItem != null && !cacheItem.IsExpired())
             {
-                return cacheItem.Value;
+                return cacheItem;
             }
             return null;
         }
