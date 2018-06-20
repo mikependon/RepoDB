@@ -4,7 +4,7 @@ using RepoDb.Interfaces;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.OrderField</i> object.
+    /// Contains the extension methods for <i>RepoDb.OrderField</i> object.
     /// </summary>
     public static class OrderFieldExtension
     {

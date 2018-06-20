@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RepoDb.Interfaces;
 using RepoDb.Extensions;
 using RepoDb.Enumerations;
 
@@ -17,7 +16,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the <i>RepoDb.Attributes.MapAttribute.Name</i> property value will be retrieved.
-        /// This object must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <param name="command">The target command where to get the mapped name of the data entity.</param>
         /// <returns>A string value that signifies the mapped name for the entity object on a target command.</returns>

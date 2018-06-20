@@ -34,8 +34,7 @@ namespace RepoDb
         /// Gets the <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The entity where the <i>System.Data.Command</i> object will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+        /// The entity where the <i>System.Data.Command</i> object will be retrieved.
         /// </typeparam>
         /// <param name="command">The target command where to get the mapped name of the data entity.</param>
         /// <returns>An instance of <i>System.Data.CommandType</i> object.</returns>

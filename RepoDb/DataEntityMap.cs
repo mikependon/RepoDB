@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// An object used to map a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
+    /// An object used to map a <i>RepoDb.DataEntity</i> object into database object.
     /// </summary>
     public class DataEntityMap
     {

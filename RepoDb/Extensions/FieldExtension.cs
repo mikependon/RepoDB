@@ -5,7 +5,7 @@ using RepoDb.Interfaces;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.Field</i> object.
+    /// Contains the extension methods for <i>RepoDb.Field</i> object.
     /// </summary>
     public static class FieldExtension
     {

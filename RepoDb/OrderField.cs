@@ -56,7 +56,7 @@ namespace RepoDb
         /// An object to be parsed. Ex:
         /// <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
         /// </param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.OrderField</i> object that holds the ordering values for every field.</returns>
+        /// <returns>An enumerable of <i>RepoDb.OrderField</i> object that holds the ordering values for every field.</returns>
         public static IEnumerable<OrderField> Parse(object obj)
         {
             if (obj == null)

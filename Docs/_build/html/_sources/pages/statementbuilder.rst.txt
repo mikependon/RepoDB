@@ -214,7 +214,7 @@ This method is being called when the `InlineUpdate` operation of the repository 
 Below are the arguments of `CreateInlineUpdate` method.
 
 - **queryBuilder**: the builder used when composing a statement (of type `RepoDb.QueryBuilder<TEntity>`).
-- **fields**: the list of fields to be updated when composing a statement (on enumerable of type `RepoDb.Interfaces.Field`).
+- **fields**: the list of fields to be updated when composing a statement (on enumerable of type `RepoDb.Field`).
 - **where**: the expression used when composing a statement (of type `RepoDb.QueryGroup`).
 - **overrideIgnore**: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.
  
@@ -303,7 +303,7 @@ This method is being called when the `Merge` operation of the repository is bein
 Below are the arguments of `CreateMerge` method.
 
 - **queryBuilder**: the builder used when composing a statement (of type `RepoDb.QueryBuilder<TEntity>`).
-- **qualifiers**: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type `RepoDb.Interfaces.Field`).
+- **qualifiers**: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type `RepoDb.Field`).
  
 See below the actual implementation of `SqlDbStatementBuilder` object for `CreateMerge` method.
 

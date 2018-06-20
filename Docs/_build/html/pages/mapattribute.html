@@ -98,8 +98,10 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -170,21 +172,20 @@
 <div class="section" id="mapping-a-class">
 <h2>Mapping a Class<a class="headerlink" href="#mapping-a-class" title="Permalink to this headline">¶</a></h2>
 <p>By default, the name of the class is used as a default mapped object from the database. However, if the database object name is different from the class name, the <cite>MapAttribute</cite> is then use to map it properly.</p>
-<p>Below is a sample code that maps the class named <cite>EmployeeDto</cite> into <cite>Employee</cite> table from the database.</p>
+<p>Below is a sample code that maps the class named <cite>Employee</cite> into <cite>[dbo].[Employee]</cite> table from the database.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="mapping-a-property">
 <h2>Mapping a Property<a class="headerlink" href="#mapping-a-property" title="Permalink to this headline">¶</a></h2>
-<p>By default, the name of the property is used as a default mapped field from the database object (table, view or any result set). However, if the database field name is different from the property name, the <cite>MapAttribute</cite> is then use to map it properly.</p>
-<p>Below is a sample code that maps the property named <cite>Id</cite> into a <cite>EmployeeId</cite> field <cite>Employee</cite> table from the database.</p>
+<p>By default, the name of the property is used as a default mapped field from the database object (table, view or any result set).</p>
+<p>Below is a sample code that maps the property named <cite>Id</cite> into an <cite>EmployeeId</cite> field of <cite>[dbo].[Employee]</cite> table.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Map(&quot;EmployeeId&quot;)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>

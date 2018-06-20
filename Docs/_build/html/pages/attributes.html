@@ -98,8 +98,10 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -167,25 +169,26 @@
   <div class="section" id="property-attributes">
 <h1>Property Attributes<a class="headerlink" href="#property-attributes" title="Permalink to this headline">¶</a></h1>
 <p>A <cite>PrimaryAttribute</cite> is used to define the class property as primary property of the <cite>DataEntity</cite> object. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;Employee&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The following primary property identification will be used in any case.</p>
+<p>The following primary property identification processed will be used in any case.</p>
 <ol class="arabic simple">
 <li>If the <cite>PrimaryAttribute</cite> is not defined, it checks for <cite>Id</cite> property. If present, it will then become the default primary property.</li>
-<li>If the <cite>Id</cite> property is not present, it checks for the <cite>Class.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeDtoId</cite>. If present, it will then become the default property.</li>
+<li>If the <cite>Id</cite> property is not present, it checks for the <cite>Class.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeId</cite>. If present, it will then become the default property.</li>
 <li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>EmployeeId</cite>. If present, it will then become the default property.</li>
 </ol>
-<p>If all of the conditions are not met, then the <cite>DataEntity</cite> will have no primary property. It usually fails if call the certain repository operations that requires the <cite>PrimaryKey</cite> (i.e: <cite>Update</cite>, <cite>Delete</cite>).</p>
+<p>If all of the conditions are not met, then the <cite>DataEntity</cite> will have no primary property. It usually fails if the operation of like <cite>Delete</cite> and <cite>Update</cite> has been called without explicitly specifying the expressions for the <cite>WHERE</cite> parameter.</p>
 <div class="section" id="identity-property">
 <h2>Identity Property<a class="headerlink" href="#identity-property" title="Permalink to this headline">¶</a></h2>
-<p>By default, upon defining a <cite>PrimaryAttribute</cite>, the property is automatically identity. To unset, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> to <cite>false</cite>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<p>By default, upon defining a <cite>PrimaryAttribute</cite>, the property is automatically an identity. To unset, simply sets the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> to <cite>false</cite>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span> <span class="c1">// This is identity by default, can be set to [Primary(false)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -197,13 +200,34 @@
 <h2>Ignoring a Property<a class="headerlink" href="#ignoring-a-property" title="Permalink to this headline">¶</a></h2>
 <p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
 <p>Example: If of type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property will not be a part of the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">EmployeeDto</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<p>Below is a sample class that has certain columns with <cite>Ignore</cite> attributes defined.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Employee</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">DataEntity</span>
 <span class="p">{</span>
+<span class="na">        [Primary]</span>
+<span class="na">        [Ignore(Command.Insert | Command.Update)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
-<span class="na">        [Ignore(Command.Insert | Command.Update)]</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [Ignore(Command.Query | Command.Update)]</span>
         <span class="k">public</span> <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+<p>When the operation <cite>Repository.Insert</cite> is called, then following SQL statement will be composed prior to the actual execution in the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `Id` field in Insert operation</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Employee</span><span class="p">]</span> <span class="p">(</span><span class="n">Name</span><span class="p">,</span> <span class="n">CreatedDate</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="n">@Name</span><span class="p">,</span> <span class="n">CreatedDate</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>When the operation <cite>Repository.Query</cite> and <cite>Repository.Update</cite> is called, then following SQL statement will be composed prior to the execution in the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `CreatedDate` field in Query operation</span>
+<span class="n">INSERT</span> <span class="n">INTO</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Employee</span><span class="p">]</span> <span class="p">(</span><span class="n">Name</span><span class="p">,</span> <span class="n">CreatedDate</span><span class="p">)</span> <span class="n">VALUES</span> <span class="p">(</span><span class="n">@Name</span><span class="p">,</span> <span class="n">CreatedDate</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `Id` and `CreatedDate` fields in Update operation</span>
+<span class="n">UPDATE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Employee</span><span class="p">]</span> <span class="n">SET</span> <span class="n">Name</span> <span class="p">=</span> <span class="n">@Name</span> <span class="n">WHERE</span> <span class="p">(.....);</span> <span class="c1">// WHERE part will vary on the expression passed during the calls</span>
 </pre></div>
 </div>
 <p>Below are the commands that can be defined using the <cite>IgnoreAttribute</cite>.</p>

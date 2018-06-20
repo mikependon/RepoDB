@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using RepoDb.Reflection.Delegates;
+﻿using RepoDb.Reflection.Delegates;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -14,11 +13,11 @@ namespace RepoDb.Reflection
         private static readonly IDictionary<string, Delegate> _cache = new Dictionary<string, Delegate>();
 
         /// <summary>
-        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
+        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
             where TEntity : DataEntity
         {
@@ -32,10 +31,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
+        /// Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
-        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
+        /// <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>()
             where TEntity : DataEntity
         {

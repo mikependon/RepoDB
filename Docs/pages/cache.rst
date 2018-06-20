@@ -103,7 +103,7 @@ Code below is the way on how to check if the cached item is expired already, ass
 
 ::
 
-	var isExpired = repository.Cache.Contains("CacheKey").IsExpired();
+	var isExpired = repository.Cache.Get("CacheKey").IsExpired();
 
 Setting the Cache Expiration
 ----------------------------
@@ -114,7 +114,7 @@ Code below is the way on how to set cached item is expiration, assuming that a r
 
 ::
 
-	repository.Cache.Contains("CacheKey").Expiration = DateTime.UtcNow.Date.AddHours(3);
+	repository.Cache.Get("CacheKey").Expiration = DateTime.UtcNow.Date.AddHours(3);
 
 Iterating the Cache Entries
 ---------------------------

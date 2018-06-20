@@ -10,8 +10,10 @@ DataEntity Class
 
 Acts as the base class of all `Data Entity` object. Located at `RepoDb` namespace.
 
+See below the sample code:
+
 ::
 
-	public class ClassName : DataEntity
+	public class Employee : DataEntity
 	{
 	}

@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Library Extensibility" href="extensibility.html" />
+    <link rel="next" title="Performance Benchmark" href="performance.html" />
     <link rel="prev" title="Working with Trace" href="trace.html" /> 
 
   
@@ -108,8 +108,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#mapping-a-statement-builder">Mapping a Statement Builder</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -355,7 +357,7 @@
 <p>Below are the arguments of <cite>CreateInlineUpdate</cite> method.</p>
 <ul class="simple">
 <li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>fields</strong>: the list of fields to be updated when composing a statement (on enumerable of type <cite>RepoDb.Interfaces.Field</cite>).</li>
+<li><strong>fields</strong>: the list of fields to be updated when composing a statement (on enumerable of type <cite>RepoDb.Field</cite>).</li>
 <li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
 <li><strong>overrideIgnore</strong>: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.</li>
 </ul>
@@ -434,7 +436,7 @@
 <p>Below are the arguments of <cite>CreateMerge</cite> method.</p>
 <ul class="simple">
 <li><strong>queryBuilder</strong>: the builder used when composing a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type <cite>RepoDb.Interfaces.Field</cite>).</li>
+<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type <cite>RepoDb.Field</cite>).</li>
 </ul>
 <p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateMerge</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers) where TEntity : DataEntity
@@ -659,7 +661,7 @@ var repository = new DbRepository&lt;SqlConnection&gt;(@&quot;Server=.;Database=
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="extensibility.html" class="btn btn-neutral float-right" title="Library Extensibility" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="performance.html" class="btn btn-neutral float-right" title="Performance Benchmark" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="trace.html" class="btn btn-neutral" title="Working with Trace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

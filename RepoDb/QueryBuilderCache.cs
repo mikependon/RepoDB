@@ -15,11 +15,10 @@ namespace RepoDb
         /// Gets the cached <i>RepoDb.QueryBuilder</i> object on a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The entity where the cached <i>RepoDb.QueryBuilder</i> object will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+        /// The entity where the cached <i>RepoDb.QueryBuilder</i> object will be retrieved.
         /// </typeparam>
         /// <param name="createNew">Defines whether a new instance will be created if the object is not at the cache.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.QueryBuilder</i> object bound for an entity.</returns>
+        /// <returns>An instance of <i>RepoDb.QueryBuilder</i> object bound for an entity.</returns>
         public static QueryBuilder<TEntity> Get<TEntity>(bool createNew = true)
             where TEntity : DataEntity
         {

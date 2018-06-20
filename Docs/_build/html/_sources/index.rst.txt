@@ -19,5 +19,7 @@ RepoDb Documentation
    pages/cache
    pages/trace
    pages/statementbuilder
+   pages/performance
    pages/extensibility
    pages/support
+   pages/contact

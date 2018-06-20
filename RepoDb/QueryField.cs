@@ -7,8 +7,8 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Interfaces.Field</i>),
-    /// parameter (<i>RepoDb.Interfaces.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
+    /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Field</i>),
+    /// parameter (<i>RepoDb.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
     /// </summary>
     public class QueryField
     {

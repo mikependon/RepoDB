@@ -36,6 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7
 	ProjectSection(SolutionItems) = preProject
 		Docs\pages\attributes.rst = Docs\pages\attributes.rst
 		Docs\pages\cache.rst = Docs\pages\cache.rst
+		Docs\pages\contact.rst = Docs\pages\contact.rst
 		Docs\pages\dataentity.rst = Docs\pages\dataentity.rst
 		Docs\pages\expressiontree.rst = Docs\pages\expressiontree.rst
 		Docs\pages\extensibility.rst = Docs\pages\extensibility.rst

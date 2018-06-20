@@ -1,6 +1,5 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using RepoDb.Reflection.Delegates;
 using System;
 using System.Data;
@@ -17,11 +16,11 @@ namespace RepoDb.Reflection
     public static class DelegateFactory
     {
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : DataEntity
         {
             var entityType = typeof(TEntity);
@@ -124,10 +123,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
         /// </summary>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             var returnType = TypeCache.Get(TypeTypes.ExpandoObject);
@@ -188,9 +187,9 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.Data.DataRow</i> object.
+        /// Gets a delegate that is used to convert the <i>RepoDb.DataEntity</i> object into <i>System.Data.DataRow</i> object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
+        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
         /// <returns>An instance of <i>System.Data.DataRow</i> object containing the converted values.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>() where TEntity : DataEntity
         {

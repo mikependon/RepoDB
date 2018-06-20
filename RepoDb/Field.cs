@@ -33,21 +33,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects that derived from the given array of string values.
+        /// Creates an enumerable of <i>RepoDb.Field</i> objects that derived from the given array of string values.
         /// </summary>
         /// <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> object.</returns>
+        /// <returns>An enumerable of <i>RepoDb.Field</i> object.</returns>
         public static IEnumerable<Field> From(params string[] fields)
         {
             return fields.ToList().Select(field => new Field(field));
         }
 
         /// <summary>
-        /// Parse an object and creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects. Each field is equivalent
+        /// Parse an object and creates an enumerable of <i>RepoDb.Field</i> objects. Each field is equivalent
         /// to each property of the given object. The parse operation uses a reflection operation.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
-        /// <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> objects.</returns>
+        /// <returns>An enumerable of <i>RepoDb.Field</i> objects.</returns>
         public static IEnumerable<Field> Parse(object obj)
         {
             if (obj == null)

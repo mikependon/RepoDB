@@ -103,8 +103,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -244,14 +246,14 @@ RETURN $result
 <div class="section" id="checking-a-cache-expiration">
 <h2>Checking a Cache Expiration<a class="headerlink" href="#checking-a-cache-expiration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to check if the cached item is expired already, assuming that a repository object has been created already.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="setting-the-cache-expiration">
 <h2>Setting the Cache Expiration<a class="headerlink" href="#setting-the-cache-expiration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to set cached item is expiration, assuming that a repository object has been created already.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

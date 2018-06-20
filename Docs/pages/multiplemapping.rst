@@ -35,7 +35,7 @@ Below are the codes for multiple mapping.
 		.On(Command.Update, "[dbo].[Customer]")
 		.On(Command.BulkInsert, "[dbo].[Customer]", CommandType.TableDirect);
 
-These feature has its own limitations. All mappings could not be done on every command (i.e Count, CountBig, Merge, ExecuteQuery, ExecuteNonQuery, ExecuteReader, ExecuteScalar).
+These feature has its own limitations. In reality, all mappings could not be done on every command like `Merge`. The `Merge` can only be done at the `Table` and not in `StoredProcedure`.
 
 Below are the supported mapping for each command.
 

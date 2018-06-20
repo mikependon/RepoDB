@@ -17,8 +17,7 @@ namespace RepoDb
         /// Gets the cached <i>System.Reflection.PropertyInfo</i> objects of a given <i>Data Entity</i> object for each command.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The entity where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+        /// The entity where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects will be retrieved.
         /// </typeparam>
         /// <param name="command">
         /// The target command where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects has the implementation.

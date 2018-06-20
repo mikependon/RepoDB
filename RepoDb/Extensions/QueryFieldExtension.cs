@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
-using RepoDb.Interfaces;
 using RepoDb.Enumerations;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.QueryField</i> object.
+    /// Contains the extension methods for <i>RepoDb.QueryField</i> object.
     /// </summary>
     public static class QueryFieldExtension
     {

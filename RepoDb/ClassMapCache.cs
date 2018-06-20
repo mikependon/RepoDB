@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
-using RepoDb.Interfaces;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 
@@ -19,7 +17,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">
         /// The entity where the <i>RepoDb.Attributes.MapAttribute</i> will be retrieved.
-        /// This object must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
         /// </typeparam>
         /// <returns>An instance of <i>RepoDb.Attributes.MapAttribute</i> object mapped at the given data entity.</returns>
         public static MapAttribute Get<TEntity>()

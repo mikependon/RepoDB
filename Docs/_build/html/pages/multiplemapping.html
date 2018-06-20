@@ -94,8 +94,10 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -193,7 +195,7 @@
         <span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">BulkInsert</span><span class="p">,</span> <span class="s2">&quot;[dbo].[Customer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="o">.</span><span class="n">TableDirect</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>These feature has its own limitations. All mappings could not be done on every command (i.e Count, CountBig, Merge, ExecuteQuery, ExecuteNonQuery, ExecuteReader, ExecuteScalar).</p>
+<p>These feature has its own limitations. In reality, all mappings could not be done on every command like <cite>Merge</cite>. The <cite>Merge</cite> can only be done at the <cite>Table</cite> and not in <cite>StoredProcedure</cite>.</p>
 <p>Below are the supported mapping for each command.</p>
 <ul class="simple">
 <li><strong>BatchQuery</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>

@@ -122,7 +122,7 @@ Once the customized Trace object has been injected, a breakpoint can be placed i
 Canceling an Operation
 ----------------------
 
-To cancel an operation, simply call the method named `Cancel` of type `RepoDb.Interfaces.ICancelableTraceLog` in any `Before` operation.
+To cancel an operation, simply call the method named `Cancel` of type `RepoDb.CancelableTraceLog` in any `Before` operation.
 
 Below is a sample code that calls the `Cancel` method of the `BeforeQuery` operation if any of the specified keywords from the variable named `keywords` is found from the statement.
 
@@ -140,4 +140,4 @@ Below is a sample code that calls the `Cancel` method of the `BeforeQuery` opera
 		}
 	}
 
-By passing the value of `true` in the parameter when calling the `Cancel` method, it would signal the library to throw an `RepoDb.Exception.CancelledExecutionException` exception object back to the caller.
+By passing the value of `true` in the parameter when calling the `Cancel` method, it would signal the library to throw an `RepoDb.Exceptions.CancelledExecutionException` exception object back to the caller.

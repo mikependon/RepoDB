@@ -6,12 +6,11 @@ using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Interfaces.DataEntity</i> object.
+    /// Contains the extension methods for <i>RepoDb.DataEntity</i> object.
     /// </summary>
     public static class DataEntityExtension
     {

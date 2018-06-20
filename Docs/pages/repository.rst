@@ -114,6 +114,8 @@ This method is used to ensure that the connection object is `Open`. The reposito
 
 The underlying method call of this method is the `System.Data.DbConnection.Open()` method.
 
+See sample codes below.
+
 ::
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
@@ -139,6 +141,8 @@ Connection.ExecuteReader
 This connection extension method is use to execute a SQL statement query from the database in fast-forward access. This method returns an instance of `System.Data.IDataReader` object.
 
 The underlying method call of this method is the `System.Data.IDbCommand.ExecuteReader()` method.
+
+See sample codes below.
 
 ::
 
@@ -185,7 +189,7 @@ Connection.ExecuteQuery
 
 .. highlight:: c#
 
-This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `dynamic` or `RepoDb.Interfaces.DataEntity` object.
+This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of `dynamic` or `RepoDb.DataEntity` object.
 
 The underlying method call of this method is the `System.Data.IDbCommand.ExecuteReader()` method.
 
@@ -273,6 +277,8 @@ This connection extension method is used to execute a non-queryable SQL statemen
 
 The underlying method call of this method is the `System.Data.IDbCommand.ExecuteNonQuery()` method.
 
+See sample codes below.
+
 ::
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
@@ -309,6 +315,8 @@ Connection.ExecuteScalar
 This connection extension method is used to execute a query statement that returns single value of type `System.Object`.
 
 The underlying method call of this method is the `System.Data.IDbCommand.ExecuteScalar()` method.
+
+See sample codes below.
 
 ::
 

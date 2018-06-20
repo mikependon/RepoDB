@@ -3,8 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// An item used when caching an object in the repository object. This is the default class used by the
-    /// <i>RepoDb.MemoryCache</i> object.
+    /// An item used when caching an object in the repository object. This is the default class used by the <i>RepoDb.MemoryCache</i> object.
     /// </summary>
     public class CacheItem
     {
@@ -66,7 +65,7 @@ namespace RepoDb
         /// Gets the created timestamp of this cache item. By default, it is equals to the time
         /// of when this cache item object has been instantiated.
         /// </summary>
-        public DateTime CreatedDate { get; internal set; }
+        public DateTime CreatedDate { get; private set; }
 
         /// <summary>
         /// Gets or sets the expiration date of this cache item.

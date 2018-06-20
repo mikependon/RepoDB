@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using RepoDb.Interfaces;
 using RepoDb.Extensions;
 
 namespace RepoDb
@@ -18,8 +17,7 @@ namespace RepoDb
         /// the <i>RepoDb.Attributes.PrimaryAttribute</i> from a given <i>Data Entity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved. This object must 
-        /// implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+        /// The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved.
         /// </typeparam>
         /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> object.</returns>
         public static PropertyInfo Get<TEntity>()

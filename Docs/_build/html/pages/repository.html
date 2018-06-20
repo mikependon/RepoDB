@@ -105,8 +105,10 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
 </ul>
 
             
@@ -252,6 +254,7 @@
 <h2>Connection.EnsureOpen<a class="headerlink" href="#connection-ensureopen" title="Permalink to this headline">¶</a></h2>
 <p>This method is used to ensure that the connection object is <cite>Open</cite>. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</p>
 <p>The underlying method call of this method is the <cite>System.Data.DbConnection.Open()</cite> method.</p>
+<p>See sample codes below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -271,6 +274,7 @@
 <h2>Connection.ExecuteReader<a class="headerlink" href="#connection-executereader" title="Permalink to this headline">¶</a></h2>
 <p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. This method returns an instance of <cite>System.Data.IDataReader</cite> object.</p>
 <p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
+<p>See sample codes below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -311,7 +315,7 @@
 </div>
 <div class="section" id="connection-executequery">
 <h2>Connection.ExecuteQuery<a class="headerlink" href="#connection-executequery" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.Interfaces.DataEntity</cite> object.</p>
+<p>This connection extension method is use to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.DataEntity</cite> object.</p>
 <p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
 <p>Code below returns an enumerable list of <cite>dynamic</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
@@ -385,6 +389,7 @@
 <h2>Connection.ExecuteNonQuery<a class="headerlink" href="#connection-executenonquery" title="Permalink to this headline">¶</a></h2>
 <p>This connection extension method is used to execute a non-queryable SQL statement. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</p>
 <p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteNonQuery()</cite> method.</p>
+<p>See sample codes below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -415,6 +420,7 @@
 <h2>Connection.ExecuteScalar<a class="headerlink" href="#connection-executescalar" title="Permalink to this headline">¶</a></h2>
 <p>This connection extension method is used to execute a query statement that returns single value of type <cite>System.Object</cite>.</p>
 <p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteScalar()</cite> method.</p>
+<p>See sample codes below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
