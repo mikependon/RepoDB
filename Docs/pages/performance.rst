@@ -7,8 +7,11 @@ We have measure the performance benchmarks of `RepoDb` against `Dapper` library,
 
 Comparisson process:
 
-1. A table named `Employee` has been created to a local machine.
-2. Created a small `Console` application to `Insert` and `Query` the data.
+1. Created a local database.
+2. A table named `Employee` has been created to a local machine SQL Server database.
+3. Created a small `Console` application to `Insert` and `Query` the data. Can be downloaded.
+
+**Note**: Modify the connection string to connect to your own local machine newly created test database.
 
 .. highlight:: sql
 
@@ -102,10 +105,10 @@ For querying 1M rows.
 	Dapper.Query (Dynamic): 8.0423502 for 1000000 rows.
 	RepoDb.Connection.ExecuteQuery (Dynamic - No IL): 13.1152323 for 1000000 rows.
 	
-.. image:: ../images/perf_benchmark_query_1M_rows.png
+.. image:: ../images/perf_benchmark_query_1m_rows.png
 
 Currently, `Dapper` is much more faster in `Insert` operation, but we find `RepoDb` much faster in `Query` operation.
 
-Our performance benchmark tool can be found downloaded at https://github.com/mikependon/RepoDb/tree/master/Docs/Project_ORM_Perf_Benchmark.zip.
+Our performance benchmark tool can be downloaded at https://github.com/mikependon/RepoDb/tree/master/Docs.
 
-The team is doing its best effort for us to optimize the performance of the library. Stay stuned!
+The team is doing its best effort to further optimize the performance of the library. Stay stuned!

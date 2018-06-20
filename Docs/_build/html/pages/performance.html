@@ -167,9 +167,11 @@
 <p>We have measure the performance benchmarks of <cite>RepoDb</cite> against <cite>Dapper</cite> library, as we considered the most lightweight ORM currently available.</p>
 <p>Comparisson process:</p>
 <ol class="arabic simple">
-<li>A table named <cite>Employee</cite> has been created to a local machine.</li>
-<li>Created a small <cite>Console</cite> application to <cite>Insert</cite> and <cite>Query</cite> the data.</li>
+<li>Created a local database.</li>
+<li>A table named <cite>Employee</cite> has been created to a local machine SQL Server database.</li>
+<li>Created a small <cite>Console</cite> application to <cite>Insert</cite> and <cite>Query</cite> the data. Can be downloaded.</li>
 </ol>
+<p><strong>Note</strong>: Modify the connection string to connect to your own local machine newly created test database.</p>
 <p>Table structure:</p>
 <div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">IF</span> <span class="k">EXISTS</span><span class="p">(</span><span class="k">SELECT</span> <span class="mi">1</span> <span class="k">FROM</span> <span class="n">sys</span><span class="p">.</span><span class="n">objects</span> <span class="k">WHERE</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Employee&#39;</span> <span class="k">AND</span> <span class="k">type</span> <span class="o">=</span> <span class="s1">&#39;U&#39;</span><span class="p">)</span>
 <span class="k">BEGIN</span>
@@ -241,10 +243,10 @@
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">Connection</span><span class="p">.</span><span class="n">ExecuteQuery</span> <span class="p">(</span><span class="n">Dynamic</span> <span class="p">-</span> <span class="n">No</span> <span class="n">IL</span><span class="p">):</span> <span class="m">13.1152323</span> <span class="k">for</span> <span class="m">1000000</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_query_1M_rows.png" src="../_images/perf_benchmark_query_1M_rows.png" />
+<img alt="../_images/perf_benchmark_query_1m_rows.png" src="../_images/perf_benchmark_query_1m_rows.png" />
 <p>Currently, <cite>Dapper</cite> is much more faster in <cite>Insert</cite> operation, but we find <cite>RepoDb</cite> much faster in <cite>Query</cite> operation.</p>
-<p>Our performance benchmark tool can be found downloaded at <a class="reference external" href="https://github.com/mikependon/RepoDb/tree/master/Docs/Project_ORM_Perf_Benchmark.zip">https://github.com/mikependon/RepoDb/tree/master/Docs/Project_ORM_Perf_Benchmark.zip</a>.</p>
-<p>The team is doing its best effort for us to optimize the performance of the library. Stay stuned!</p>
+<p>Our performance benchmark tool can be downloaded at <a class="reference external" href="https://github.com/mikependon/RepoDb/tree/master/Docs">https://github.com/mikependon/RepoDb/tree/master/Docs</a>.</p>
+<p>The team is doing its best effort to further optimize the performance of the library. Stay stuned!</p>
 </div>
 
 
