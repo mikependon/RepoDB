@@ -97,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -164,16 +164,16 @@
             
   <div class="section" id="type-mapping">
 <h1>Type Mapping<a class="headerlink" href="#type-mapping" title="Permalink to this headline">¶</a></h1>
-<p>Type mapping is feature that allows the library to identify which of the <cite>.NET CLR Types</cite> is equivalent to the <cite>System.Data.DbType</cite> types. This feature is important to force the library the conversion it will going to do, specially when running the repository operations.</p>
-<p>Below is the way on how to map the <cite>System.DateTime</cite> to be equivalent as <cite>System.Data.DbType.DateTime2</cite>.</p>
+<p>It is a feature used to map the <cite>.NET CLR Types</cite> into its equivalent <cite>System.Data.DbType</cite> database types.</p>
+<p>Code below shows how to map the <cite>System.DateTime</cite> type to a <cite>System.Data.DbType.DateTime2</cite> database type.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">DateTime2</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>and <cite>System.Decimal</cite> into <cite>System.Data.DbType.Double</cite>.</p>
+<p>and a <cite>System.Decimal</cite> type into <cite>System.Data.DbType.Double</cite> database type.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">AddMap</span><span class="p">(</span><span class="n">new</span> <span class="n">TypeMap</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">Double</span><span class="p">));</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The class is callable anywhere in the application as it was implemented in a static way.</p>
+<p><strong>Note</strong>: The <cite>TypeMapper</cite> class is callable anywhere in the application as it was implemented as a static class.</p>
 </div>
 
 

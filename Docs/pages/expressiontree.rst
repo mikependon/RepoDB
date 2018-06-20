@@ -3,12 +3,12 @@ Expression Tree
 
 .. highlight:: c#
 
-The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.Interfaces.QueryGroup` objects.
+The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.QueryGroup` objects.
 
 Objects used for composing the expression tree.
 
 - **QueryGroup**: used to group an expression.
-- **QueryField**: holds the field/value pair values of the expressions.
+- **QueryField**: it holds the `Field` and `Parameter` objects to be used on the query expressions.
 - **Conjunction**: an enumeration that holds the value whether the expression is on `And` or `Or` operation.
 - **Operation**: an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
 
@@ -16,7 +16,6 @@ Certain repository operations are using the expression trees.
 
 - Repository.BatchQuery
 - Repository.Count
-- Repository.CountBig
 - Repository.Delete
 - Repository.ExecuteNonQuery
 - Repository.ExecuteQuery

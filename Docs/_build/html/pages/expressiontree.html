@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -168,11 +168,11 @@
             
   <div class="section" id="expression-tree">
 <h1>Expression Tree<a class="headerlink" href="#expression-tree" title="Permalink to this headline">¶</a></h1>
-<p>The expression tree is the brain of the library. It defines the best possible way of doing a <cite>WHERE</cite> expression (SQL Statement) by composing it via <cite>dynamic</cite> or <cite>System.Interfaces.QueryGroup</cite> objects.</p>
+<p>The expression tree is the brain of the library. It defines the best possible way of doing a <cite>WHERE</cite> expression (SQL Statement) by composing it via <cite>dynamic</cite> or <cite>System.QueryGroup</cite> objects.</p>
 <p>Objects used for composing the expression tree.</p>
 <ul class="simple">
 <li><strong>QueryGroup</strong>: used to group an expression.</li>
-<li><strong>QueryField</strong>: holds the field/value pair values of the expressions.</li>
+<li><strong>QueryField</strong>: it holds the <cite>Field</cite> and <cite>Parameter</cite> objects to be used on the query expressions.</li>
 <li><strong>Conjunction</strong>: an enumeration that holds the value whether the expression is on <cite>And</cite> or <cite>Or</cite> operation.</li>
 <li><strong>Operation</strong>: an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like <cite>Equal</cite>, <cite>NotEqual</cite>, <cite>Between</cite>, <cite>GreaterThan</cite> and etc.</li>
 </ul>
@@ -180,7 +180,6 @@
 <ul class="simple">
 <li>Repository.BatchQuery</li>
 <li>Repository.Count</li>
-<li>Repository.CountBig</li>
 <li>Repository.Delete</li>
 <li>Repository.ExecuteNonQuery</li>
 <li>Repository.ExecuteQuery</li>

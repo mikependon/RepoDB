@@ -45,8 +45,6 @@ Then, call it somewhere.
 
 	var repository = new NorthwindRepository();
 
-It is recommended to create a contracted interface for `DbRepository` in order for it to be dependency injectable.
-
 BaseRepository Class
 --------------------
 
@@ -78,8 +76,6 @@ Then, call it somewhere.
 ::
 
 	var repository = new CustomerRepository();
-
-It is recommended to create a contracted interface for `BaseRepository` in order for it to be dependency injectable.
 
 Creating a Connection
 ---------------------
@@ -179,10 +175,10 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
-- **trace**: the trace object to be used on this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
+- **trace (optional)**: the trace object to be used on this operation.
 
 Connection.ExecuteQuery
 -----------------------
@@ -263,10 +259,10 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
-- **trace**: the trace object to be used on this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
+- **trace (optional)**: the trace object to be used on this operation.
 
 Connection.ExecuteNonQuery
 --------------------------
@@ -302,10 +298,10 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
-- **trace**: the trace object to be used on this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
+- **trace (optional)**: the trace object to be used on this operation.
 
 Connection.ExecuteScalar
 ------------------------
@@ -341,10 +337,10 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
-- **trace**: the trace object to be used on this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
+- **trace (optional)**: the trace object to be used on this operation.
 
 Working with StoredProcedure
 ----------------------------
@@ -442,4 +438,4 @@ Or, in a tradional way with independent `SqlConnection` object extended method.
 		}
 	}
 
-**Note**: The multiple mapping also supports the Stored Procedure by binding it to the entity object.
+**Note**: The multiple mapping also supports the Stored Procedure by binding it to the `DataEntity` object.

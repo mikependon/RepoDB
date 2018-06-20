@@ -21,11 +21,6 @@ namespace RepoDb.TestProject
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
-        public void AfterCountBig(TraceLog log)
-        {
-            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
-        }
-
         public void AfterDelete(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
@@ -87,11 +82,6 @@ namespace RepoDb.TestProject
         }
 
         public void BeforeCount(CancellableTraceLog log)
-        {
-            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
-        }
-
-        public void BeforeCountBig(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }

@@ -135,7 +135,12 @@ namespace RepoDb
             }
         }
 
-        private CacheItem GetItem(string key)
+        /// <summary>
+        /// Gets the cached item by key. This includes the expired cached item.
+        /// </summary>
+        /// <param name="key">The key of the cached item.</param>
+        /// <returns>The cached item based on the given key.</returns>
+        protected CacheItem GetItem(string key)
         {
             return _cacheList.FirstOrDefault(cacheItem =>
                 string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));

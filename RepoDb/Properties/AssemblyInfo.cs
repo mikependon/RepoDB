@@ -8,7 +8,7 @@ using System.Security;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RepoDb")]
-[assembly: AssemblyDescription("A highly-extensible, dynamic, lightweight and fast ORM .Net Library.")]
+[assembly: AssemblyDescription("A dynamic, lightweight and fast repo-based ORM .NET Library.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RepoDb")]

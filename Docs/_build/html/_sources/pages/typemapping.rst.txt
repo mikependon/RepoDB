@@ -3,18 +3,18 @@ Type Mapping
 
 .. highlight: c#
 
-Type mapping is feature that allows the library to identify which of the `.NET CLR Types` is equivalent to the `System.Data.DbType` types. This feature is important to force the library the conversion it will going to do, specially when running the repository operations.
+It is a feature used to map the `.NET CLR Types` into its equivalent `System.Data.DbType` database types.
 
-Below is the way on how to map the `System.DateTime` to be equivalent as `System.Data.DbType.DateTime2`.
+Code below shows how to map the `System.DateTime` type to a `System.Data.DbType.DateTime2` database type.
 
 ::
 
 	TypeMapper.Map(typeof(DateTime), DbType.DateTime2);
 
-and `System.Decimal` into `System.Data.DbType.Double`.
+and a `System.Decimal` type into `System.Data.DbType.Double` database type.
 
 ::
 	
 	TypeMapper.AddMap(new TypeMap(typeof(Decimal), DbType.Double));
 
-**Note**: The class is callable anywhere in the application as it was implemented in a static way.
+**Note**: The `TypeMapper` class is callable anywhere in the application as it was implemented as a static class.

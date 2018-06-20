@@ -1,7 +1,7 @@
 Working with StatementBuilder
 =============================
 
-The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the `RepoDb.SqlDbStatementBuilder` class that implements the `RepoDb.Interfaces.IStatementBuilder` interface.
+The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the `RepoDb.SqlDbStatementBuilder` that is only working for SQL Server databases.
 
 In order to override the statement builder, the developer must create a class that implements the `RepoDb.Interfaces.IStatementBuilder` interface. This allows the class to be injectable in the repository and implements the necessary methods needed by all operations.
 
@@ -11,7 +11,6 @@ Below are the methods of the `IStatementBuilder` interface.
 
 - **CreateBatchQuery**: called when creating a `BatchQuery` statement.
 - **CreateCount**: called when creating a `Count` statement.
-- **CreateCountBig**: called when creating a `CountBig` statement.
 - **CreateDelete**: called when creating a `Delete` statement.
 - **CreateInlineUpdate**: called when creating a `InlineUpdate` statement.
 - **CreateInsert**: called when creating a `Insert` statement.
@@ -61,8 +60,6 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 		return queryBuilder.ToString();
 	}
 
-As of today, the methods of this `RepoDb.QueryBuilder` object might be limited as it only varies on the current supported data provider SQL Server Data Provider.
-
 CreateBatchQuery Method
 -----------------------
 
@@ -85,6 +82,10 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+		var queryProperties = PropertyCache.Get<TEntity>(Command.Query);
+		var batchQueryProperties = PropertyCache.Get<TEntity>(Command.BatchQuery)
+			.Where(property => queryProperties.Contains(property));
+		var fields = batchQueryProperties.Select(property => new Field(property.Name));
 		queryBuilder
 			.Clear()
 			.With()
@@ -104,7 +105,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 			.Where(where)
 			.CloseParen()
 			.Select()
-			.Fields(Command.BatchQuery)
+			.Fields(fields)
 			.From()
 			.WriteText("CTE")
 			.WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
@@ -135,41 +136,10 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 		queryBuilder
 			.Clear()
 			.Select()
-			.Count()
-			.WriteText("(*) AS [Counted]")
+			.CountBig()
+			.WriteText("(1) AS [Counted]")
 			.From()
 			.Table(Command.Count)
-			.Where(where)
-			.End();
-		return queryBuilder.GetString();
-	}
-
-CreateCountBig Method
----------------------
-
-.. highlight:: none
-
-This method is being called when the `CountBig` operation of the repository is being called.
-
-Below are the arguments of `CreateCountBig` method.
-
-- **queryBuilder**: the builder used when creating a statement (of type `RepoDb.QueryBuilder<TEntity>`).
-- **where**: the expression used when creating a statement (of type `RepoDb.QueryGroup`).
-
-See below the actual implementation of `SqlDbStatementBuilder` object for `CreateCountBig` method.
-
-::
-
-	public string CreateCountBig<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
-	{
-		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		queryBuilder
-			.Clear()
-			.Select()
-			.CountBig()
-			.WriteText("(*) AS [Counted]")
-			.From()
-			.Table(Command.CountBig)
 			.Where(where)
 			.End();
 		return queryBuilder.GetString();
@@ -226,14 +196,16 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	{
 		if (overrideIgnore == false)
 		{
-			var properties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
+			var updateableProperties = PropertyCache.Get<TEntity>(Command.Update);
+			var inlineUpdateableProperties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
+				.Where(property => property != PrimaryPropertyCache.Get<TEntity>() && updateableProperties.Contains(property))
 				.Select(property => property.GetMappedName());
-			var unmatches = fields?.Where(field =>
-				properties?.FirstOrDefault(property =>
+			var unmatchesProperties = fields?.Where(field =>
+				inlineUpdateableProperties?.FirstOrDefault(property =>
 					field.Name.ToLower() == property.ToLower()) == null);
-			if (unmatches?.Count() > 0)
+			if (unmatchesProperties?.Count() > 0)
 			{
-				throw new InvalidOperationException($"The following columns ({unmatches.Select(field => field.AsField()).Join(", ")}) " +
+				throw new InvalidOperationException($"The following columns ({unmatchesProperties.Select(field => field.AsField()).Join(", ")}) " +
 					$"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}).");
 			}
 		}
@@ -268,28 +240,29 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		var primary = PrimaryPropertyCache.Get<TEntity>();
+		var isPrimaryIdentity = primary.IsIdentity();
+		var fields = PropertyCache.Get<TEntity>(Command.Insert)
+			.Where(property => !(isPrimaryIdentity && property == primary))
+			.Select(p => new Field(p.Name));
 		queryBuilder
 			.Clear()
 			.Insert()
 			.Into()
 			.Table(Command.Insert)
 			.OpenParen()
-			.Fields(Command.Insert)
+			.Fields(fields)
 			.CloseParen()
 			.Values()
 			.OpenParen()
-			.Parameters(Command.Insert)
+			.Parameters(fields)
 			.CloseParen()
 			.End();
-		if (primary != null)
-		{
-			var result = primary.IsIdentity() ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
-			queryBuilder
-				.Select()
-				.WriteText(result)
-				.As("[Result]")
-				.End();
-		}
+		var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
+		queryBuilder
+			.Select()
+			.WriteText(result)
+			.As("[Result]")
+			.End();
 		return queryBuilder.GetString();
 	}
 
@@ -312,19 +285,28 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		if (qualifiers == null)
+		var primary = PrimaryPropertyCache.Get<TEntity>();
+		var isPrimaryIdentity = primary.IsIdentity();
+		if (qualifiers == null && primary != null)
 		{
-			var primaryKey = PrimaryPropertyCache.Get<TEntity>();
-			if (primaryKey != null)
-			{
-				qualifiers = new Field(primaryKey.Name).AsEnumerable();
-			}
+			qualifiers = new Field(primary?.Name).AsEnumerable();
 		}
+		var insertProperties = PropertyCache.Get<TEntity>(Command.Insert)
+			.Where(property => !(isPrimaryIdentity && property == primary));
+		var updateProperties = PropertyCache.Get<TEntity>(Command.Insert)
+			.Where(property => property != primary);
+		var mergeProperties = PropertyCache.Get<TEntity>(Command.Merge);
+		var mergeInsertableFields = mergeProperties
+			.Where(property => insertProperties.Contains(property))
+			.Select(property => new Field(property.Name));
+		var mergeUpdateableFields = mergeProperties
+			.Where(property => updateProperties.Contains(property))
+			.Select(property => new Field(property.Name));
 		queryBuilder
 			.Clear()
 			// MERGE T USING S
 			.Merge()
-			.Table(Command.Merge) 
+			.Table(Command.Merge)
 			.As("T")
 			.Using()
 			.OpenParen()
@@ -338,7 +320,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 			.WriteText(qualifiers?
 				.Select(
 					field => field.AsJoinQualifier("S", "T"))
-						.Join($" {Constant.And.ToUpper()} "))
+						.Join($" {StringConstant.And.ToUpper()} "))
 			.CloseParen()
 			// WHEN NOT MATCHED THEN INSERT VALUES
 			.When()
@@ -347,11 +329,11 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 			.Then()
 			.Insert()
 			.OpenParen()
-			.Fields(Command.Merge)
+			.Fields(mergeInsertableFields)
 			.CloseParen()
 			.Values()
 			.OpenParen()
-			.Parameters(Command.Merge)
+			.Parameters(mergeInsertableFields)
 			.CloseParen()
 			// WHEN MATCHED THEN UPDATE SET
 			.When()
@@ -359,7 +341,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 			.Then()
 			.Update()
 			.Set()
-			.FieldsAndAliasFields(Command.Merge, "S")
+			.FieldsAndAliasFields(mergeUpdateableFields, "S")
 			.End();
 		return queryBuilder.GetString();
 	}
@@ -417,12 +399,15 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+		var fields = PropertyCache.Get<TEntity>(Command.Update)
+			.Where(property => property != PrimaryPropertyCache.Get<TEntity>())
+			.Select(p => new Field(p.Name));
 		queryBuilder
 			.Clear()
 			.Update()
 			.Table(Command.Update)
 			.Set()
-			.FieldsAndParameters(Command.Update)
+			.FieldsAndParameters(fields)
 			.Where(where)
 			.End();
 		return queryBuilder.GetString();
@@ -454,11 +439,6 @@ To create a custom statement builder, simply create a class and implements the `
 		}
 
 		public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
-		{
-			throw new NotImplementedException();
-		}
-
-		public string CreateCountBig<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 		{
 			throw new NotImplementedException();
 		}

@@ -19,11 +19,6 @@ namespace RepoDb.TestProject
             // throw new NotImplementedException();
         }
 
-        public void AfterCountBig(TraceLog log)
-        {
-            // throw new NotImplementedException();
-        }
-
         public void AfterDelete(TraceLog log)
         {
             // throw new NotImplementedException();
@@ -85,11 +80,6 @@ namespace RepoDb.TestProject
         }
 
         public void BeforeCount(CancellableTraceLog log)
-        {
-            // throw new NotImplementedException();
-        }
-
-        public void BeforeCountBig(CancellableTraceLog log)
         {
             // throw new NotImplementedException();
         }

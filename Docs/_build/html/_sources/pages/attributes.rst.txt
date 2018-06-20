@@ -3,12 +3,12 @@ Property Attributes
 
 .. highlight:: c#
 
-A `PrimaryAttribute` is used to define the class property as primary property of the `DataEntity` object. Located at `RepoDb.Attributes` namespace.
+A `PrimaryAttribute` is used to define the class property to become the primary property of the `DataEntity` object. Located at `RepoDb.Attributes` namespace.
 
 ::
 
-	[Map("[dbo].[Employee]")]
-	public class Employee : DataEntity
+	[Map("[dbo].[Customer]")]
+	public class Customer : DataEntity
 	{
 		[Primary]
 		public int Id { get; set; }
@@ -17,20 +17,20 @@ A `PrimaryAttribute` is used to define the class property as primary property of
 The following primary property identification processed will be used in any case.
 
 1. If the `PrimaryAttribute` is not defined, it checks for `Id` property. If present, it will then become the default primary property.
-2. If the `Id` property is not present, it checks for the `Class.Name` + `Id` property. In the case above, it should be `EmployeeId`. If present, it will then become the default property.
-3. If both properties are not present, it then checks for the `Mapped.Name` + `Id` property. In the case above, it should be `EmployeeId`. If present, it will then become the default property.
+2. If the `Id` property is not present, it checks for the `Class.Name` + `Id` property. In the case above, it should be `CustomerId`. If present, it will then become the default property.
+3. If both properties are not present, it then checks for the `Mapped.Name` + `Id` property. In the case above, it should be `CustomerId`. If present, it will then become the default property.
 
-If all of the conditions are not met, then the `DataEntity` will have no primary property. It usually fails if the operation of like `Delete` and `Update` has been called without explicitly specifying the expressions for the `WHERE` parameter.
+If all of the conditions above were not met, then the `DataEntity` will have no primary property. It somehow fails if the repository operation of like `Delete` and `Update` has been called without explicitly specifying the expressions for the `WHERE` parameter.
 
 Identity Property
 -----------------
 
-By default, upon defining a `PrimaryAttribute`, the property is automatically an identity. To unset, simply sets the `isIdentity` parameter of the `PrimaryAttribute` to `false`.
+By default, upon defining a `PrimaryAttribute`, the targetted property will automatically become an `Identity` property. To unset, simply pass a `False` value on the `isIdentity` parameter of the `PrimaryAttribute` when defining it to the property.
 
 ::
 
-	[Map("[dbo].[Employee]")]
-	public class Employee : DataEntity
+	[Map("[dbo].[Customer]")]
+	public class Customer : DataEntity
 	{
 		[Primary] // This is identity by default, can be set to [Primary(false)]
 		public int Id { get; set; }
@@ -41,16 +41,16 @@ Ignoring a Property
 
 .. highlight:: c#
 
-An `IgnoreAttribute` is used to mark a class property to be ignoreable during the actual repository operation. Located at `RepoDb.Attributes` namespace.
+An `IgnoreAttribute` is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at `RepoDb.Attributes` namespace.
 
-Example: If of type command `Insert` and `Update` is defined on the `IgnoreAttribute` of the class property named `CreatedDate`, then the property will not be a part of the `Insert` and `Update` operation of the repository.
+Example: If the type command `Insert` and `Update` is defined on the `IgnoreAttribute` of the class property named `CreatedDate`, then the property `Created` will be excluded on the `Insert` and `Update` operation of the repository.
 
 Below is a sample class that has certain columns with `Ignore` attributes defined.
 
 ::
 
-	[Map("[dbo].[Employee]")]
-	public class Employee : DataEntity
+	[Map("[dbo].[Customer]")]
+	public class Customer : DataEntity
 	{
 		[Primary]
 		[Ignore(Command.Insert | Command.Update)]
@@ -67,23 +67,23 @@ When the operation `Repository.Insert` is called, then following SQL statement w
 ::
 
 	// Ignoring the `Id` field in Insert operation
-	INSERT INTO [dbo].[Employee] (Name, CreatedDate) VALUES (@Name, CreatedDate);
+	INSERT INTO [dbo].[Customer] ([Name], [CreatedDate]) VALUES (@Name, CreatedDate);
 
-When the operation `Repository.Query` and `Repository.Update` is called, then following SQL statement will be composed prior to the execution in the database.
+When the operation `Repository.Query` is called, then following SQL statement will be composed prior to the execution in the database.
 
 ::
 
 	// Ignoring the `CreatedDate` field in Query operation
-	INSERT INTO [dbo].[Employee] (Name, CreatedDate) VALUES (@Name, CreatedDate);
+	SELECT [Id], [Name] FROM [dbo].[Customer] WHERE (.....); // WHERE part will vary on the expression passed during the calls
 
-or
+When the operation `Repository.Update` is called, then following SQL statement will be composed prior to the execution in the database.
 
 ::
 
 	// Ignoring the `Id` and `CreatedDate` fields in Update operation
-	UPDATE [dbo].[Employee] SET Name = @Name WHERE (.....); // WHERE part will vary on the expression passed during the calls
+	UPDATE [dbo].[Customer] SET [Name] = @Name WHERE (.....); // WHERE part will vary on the expression passed during the calls
 
-Below are the commands that can be defined using the `IgnoreAttribute`.
+Below are the commands that can be defined in the `IgnoreAttribute`.
 
 * None
 * Query
@@ -93,3 +93,5 @@ Below are the commands that can be defined using the `IgnoreAttribute`.
 * Merge
 * BatchQuery
 * InlineUpdate
+
+**Note**: All commands specified above can be defined together in a single `IgnoreAttribute` by using the pipe character (`|`) as the separator.

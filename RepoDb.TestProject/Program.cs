@@ -249,7 +249,7 @@ namespace RepoDb.TestProject
         {
             var repository = new PersonRepository(RepoDbConnectionString);
             var rowsPerBatch = 777;
-            var batches = repository.CountBig() / rowsPerBatch;
+            var batches = repository.Count() / rowsPerBatch;
             for (var page = 0; page < batches; page++)
             {
                 var people = repository.BatchQuery(
@@ -288,7 +288,7 @@ namespace RepoDb.TestProject
             var affectedRows = 0;
 
             // Count
-            affectedRows = repository.Count();
+            Console.WriteLine($"Number of records: {repository.Count()}");
 
             // BatchQuery
             Console.WriteLine("BatchQuery");

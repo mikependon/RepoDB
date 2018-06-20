@@ -18,7 +18,7 @@ namespace RepoDb
         public SqlDbStatementBuilder() { }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>BatchQuery</i> operation.
+        /// Creates a SQL Statement for repository <i>BatchQuery</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -66,7 +66,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Count</i> operation.
+        /// Creates a SQL Statement for repository <i>Count</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -81,7 +81,7 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Select()
-                .Count()
+                .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
                 .Table(Command.Count)
@@ -91,32 +91,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>CountBig</i> operation.
-        /// </summary>
-        /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
-        /// </typeparam>
-        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>CountBig</i> operation.</returns>
-        public string CreateCountBig<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
-            where TEntity : DataEntity
-        {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            queryBuilder
-                .Clear()
-                .Select()
-                .CountBig()
-                .WriteText("(1) AS [Counted]")
-                .From()
-                .Table(Command.CountBig)
-                .Where(where)
-                .End();
-            return queryBuilder.GetString();
-        }
-
-        /// <summary>
-        /// Creates a SQL Statement for repository <i>Delete</i> operation.
+        /// Creates a SQL Statement for repository <i>Delete</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -139,7 +114,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
+        /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -184,7 +159,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Insert</i> operation.
+        /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -223,7 +198,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Merge</i> operation.
+        /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -297,7 +272,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Query</i> operation.
+        /// Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
@@ -325,7 +300,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Update</i> operation.
+        /// Creates a SQL Statement for repository <i>Update</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>Data Entity</i> object bound for the SQL Statement to be created.

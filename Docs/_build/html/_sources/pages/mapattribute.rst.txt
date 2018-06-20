@@ -1,21 +1,21 @@
 Mapping with MapAttribute
 =========================
 
-A `MapAttribute` is used to define a mapping of the current `Class` or `Property` equivalent to an `Object` or `Field` name in the database. Located at `RepoDb.Attributes` namespace.
+A `MapAttribute` is used to define a mapping between the `Class` and its `Properties` into its equivalent database `Object` and `Fields`. Located at `RepoDb.Attributes` namespace.
 
 Mapping a Class
 ----------------
 
 .. highlight:: c#
 
-By default, the name of the class is used as a default mapped object from the database. However, if the database object name is different from the class name, the `MapAttribute` is then use to map it properly.
+By default, the `Name` of the `Class` is used as a default mapped `Object` from the database. However, if the database `Object Name` is different from the `Class Name`, then the `MapAttribute` is use to map it properly.
 
-Below is a sample code that maps the class named `Employee` into `[dbo].[Employee]` table from the database.
+Below is a sample code that maps a class named `Customer` into a table named `[dbo].[Customer]` from the database.
 
 ::
 
-	[Map("[dbo].[Employee]")]
-	public class Employee : DataEntity
+	[Map("[dbo].[Customer]")]
+	public class Customer : DataEntity
 	{
 	}
 
@@ -24,15 +24,15 @@ Mapping a Property
 
 .. highlight:: c#
 
-By default, the name of the property is used as a default mapped field from the database object (table, view or any result set).
+By default, the `Name` of the `Property` is used as a default mapped `Field` from the database `Table`, `View` or any `ResultSet`.
 
-Below is a sample code that maps the property named `Id` into an `EmployeeId` field of `[dbo].[Employee]` table.
+Below is a sample code that maps the property named `Id` into an `CustomerId` field of `[dbo].[Customer]` table.
 
 ::
 
-	[Map("[dbo].[Employee]")]
-	public class Employee : DataEntity
+	[Map("[dbo].[Customer]")]
+	public class Customer : DataEntity
 	{
-		[Map("EmployeeId")]
+		[Map("CustomerId")]
 		public int Id { get; set; }
 	}

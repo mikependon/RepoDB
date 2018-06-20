@@ -153,7 +153,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public int Count<TEntity>(IDbTransaction transaction = null)
+        public long Count<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Count<TEntity>(where: (QueryGroup)null,
@@ -167,7 +167,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count<TEntity>(object where, IDbTransaction transaction = null)
+        public long Count<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -197,7 +197,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public long Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Count<TEntity>(where: where != null ? new QueryGroup(where) : null,
@@ -211,7 +211,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
+        public long Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Check
@@ -242,7 +242,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = Convert.ToInt32(ExecuteScalar(commandText: commandText,
+            var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
                  param: param,
                  commandType: CommandTypeCache.Get<TEntity>(Command.Count),
                  commandTimeout: _commandTimeout,
@@ -267,7 +267,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<int> CountAsync<TEntity>(IDbTransaction transaction = null)
+        public Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -281,7 +281,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
+        public Task<long> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -296,7 +296,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -311,196 +311,11 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
+        public Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(where: where,
-                    transaction: transaction));
-        }
-
-        // GuardBigCountable
-
-        private void GuardBigCountable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsBigCountable<TEntity>())
-            {
-                throw new EntityNotBigCountableException(ClassMapNameCache.Get<TEntity>(Command.CountBig));
-            }
-        }
-
-        // CountBig
-
-        /// <summary>
-        /// Counts the number of rows from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public long CountBig<TEntity>(IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return CountBig<TEntity>(where: (QueryGroup)null,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig<TEntity>(object where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            var queryGroup = (QueryGroup)null;
-            if (where is QueryField)
-            {
-                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
-            }
-            else if (where is QueryGroup)
-            {
-                queryGroup = (QueryGroup)where;
-            }
-            else
-            {
-                if ((bool)where?.GetType().IsGenericType)
-                {
-                    queryGroup = QueryGroup.Parse(where);
-                }
-            }
-            return CountBig<TEntity>(where: queryGroup,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return CountBig<TEntity>(where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            // Check
-            GuardBigCountable<TEntity>();
-
-            // Variables
-            var commandText = StatementBuilder.CreateCountBig(QueryBuilderCache.Get<TEntity>(), where);
-            var param = where?.AsObject();
-
-            // Before Execution
-            if (Trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                Trace.BeforeCountBig(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.CountBig);
-                    }
-                    return default(long);
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
-                 param: param,
-                 commandType: CommandTypeCache.Get<TEntity>(Command.CountBig),
-                 commandTimeout: _commandTimeout,
-                 transaction: transaction));
-
-            // After Execution
-            if (Trace != null)
-            {
-                Trace.AfterCountBig(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        // CountBigAsync
-
-        /// <summary>
-        /// Counts the number of rows from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<long> CountBigAsync<TEntity>(IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                CountBig<TEntity>(transaction: transaction));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync<TEntity>(object where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                CountBig<TEntity>(where: where,
-                    transaction: transaction));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                CountBig<TEntity>(where: where,
-                    transaction: transaction));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                CountBig<TEntity>(where: where,
                     transaction: transaction));
         }
 

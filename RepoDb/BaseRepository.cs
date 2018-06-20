@@ -130,7 +130,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public int Count(IDbTransaction transaction = null)
+        public long Count(IDbTransaction transaction = null)
         {
             return DbRepository.Count<TEntity>(transaction: transaction);
         }
@@ -141,7 +141,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count(object where, IDbTransaction transaction = null)
+        public long Count(object where, IDbTransaction transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
@@ -153,7 +153,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public long Count(IEnumerable<QueryField> where, IDbTransaction transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
@@ -165,7 +165,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public int Count(QueryGroup where, IDbTransaction transaction = null)
+        public long Count(QueryGroup where, IDbTransaction transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
@@ -178,7 +178,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<int> CountAsync(IDbTransaction transaction = null)
+        public Task<long> CountAsync(IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(transaction: transaction);
         }
@@ -189,7 +189,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync(object where, IDbTransaction transaction = null)
+        public Task<long> CountAsync(object where, IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
                 transaction: transaction);
@@ -201,7 +201,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public Task<long> CountAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
                 transaction: transaction);
@@ -213,105 +213,9 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  on this operation.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<int> CountAsync(QueryGroup where, IDbTransaction transaction = null)
+        public Task<long> CountAsync(QueryGroup where, IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        // CountBig
-
-        /// <summary>
-        /// Counts the number of rows from the database.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public long CountBig(IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBig<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBig<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBig<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public long CountBig(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBig<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        // CountBigAsync
-
-        /// <summary>
-        /// Counts the number of rows from the database in an asynchronous way.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<long> CountBigAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBigAsync<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBigAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBigAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        public Task<long> CountBigAsync(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountBigAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 

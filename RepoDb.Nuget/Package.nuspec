@@ -2,19 +2,20 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <title>RepoDb</title>
-    <description>A highly-extensible, dynamic, lightweight and fast ORM .Net Library.</description>
+    <description>A dynamic, lightweight and fast repo-based ORM .NET Library.</description>
     <language>en-US</language>
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
       - Built on a target framework 4.0 for earlier compatibility
       - Renamed CacheItem.Timestamp to CacheItem.CreatedDate
-      - Added CacheItem.IsExpired method
+      - Removed the Repository.CountBig() support
+      - Added CacheItem.IsExpired() method
       - Added CacheItem.Expiration property
       - Removed ICacheItem
       - Removed ITraceLog

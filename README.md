@@ -38,8 +38,6 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - BatchQueryAsync
  - Count
  - CountAsync
- - CountBig
- - CountBigAsync
  - Query
  - QueryAsync
  - Insert

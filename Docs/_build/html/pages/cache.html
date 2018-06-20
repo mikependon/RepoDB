@@ -106,7 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -173,7 +173,7 @@
             
   <div class="section" id="working-with-cache">
 <h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
-<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository.</p>
+<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library only works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository.</p>
 <p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
 <p>Below are the methods of <cite>Cache</cite> object.</p>
 <ul class="simple">
@@ -335,7 +335,8 @@ RETURN $result
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Below is the way on how to inject the custom cache to a repository.</p>
+<p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
+<p>Below is the way on how to inject the custom <cite>Cache</cite> object to a repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
 <span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
         <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
@@ -345,9 +346,8 @@ RETURN $result
 <span class="p">);</span>
 </pre></div>
 </div>
-<p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
-<p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the cache manager object of the <cite>Query</cite> operation.</p>
-<p><strong>Note:</strong> The caller can activate a debugger on the <cite>FileCache</cite> class to enable debugging. When the callers call the <cite>Query</cite> method and passed a <cite>cacheKey</cite> value on it, the breakpoint will be hit by the debugger if it is placed inside <cite>Add</cite> method of the <cite>FileCache</cite> class.</p>
+<p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the <cite>Cache</cite> object manager of the <cite>Query</cite> operation.</p>
+<p><strong>Note:</strong> The caller can activate a debugger on the <cite>FileCache</cite> class to enable debugging. When the callers call the <cite>Query</cite> method and passed a <cite>cacheKey</cite> value on it, the breakpoint will be hitted by the debugger if it is placed inside <cite>Add</cite> method of the <cite>FileCache</cite> class.</p>
 </div>
 </div>
 

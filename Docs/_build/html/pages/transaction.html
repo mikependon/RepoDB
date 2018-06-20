@@ -97,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -164,7 +164,7 @@
             
   <div class="section" id="transaction">
 <h1>Transaction<a class="headerlink" href="#transaction" title="Permalink to this headline">¶</a></h1>
-<p>A transaction object works completely the same as it was with <cite>ADO.NET</cite>. The library only abstracted <cite>ADO.NET</cite> including the transaction objects.</p>
+<p>The library has abstracted everything from <cite>ADO.NET</cite> including the <cite>Transaction</cite> object. This means, the <cite>Transaction</cite> object works completely the same as it was with <cite>ADO.NET</cite>.</p>
 <p>Transactions can be created by calling the <cite>BeginTransaction</cite> method of the <cite>DbConnection</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
@@ -185,7 +185,8 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Every operation of the repository accepts a transaction object as an argument. Once passed, the transaction will become a part of the execution context. See below on how to commit a transaction context with multiple operations.</p>
+<p>Every operation of the repository accepts a transaction object as an argument. Once the <cite>Transaction</cite> object is passed, then the repository operation execution context will be a part of that transaction.</p>
+<p>See below on how to use a <cite>Transaction</cite> object with multiple operations.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">connectionString</span> <span class="p">=</span> <span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">;</span>
 <span class="kt">var</span> <span class="n">customerRepository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="n">connectionString</span><span class="p">);</span>
 <span class="kt">var</span> <span class="n">orderRepository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderRepository</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="n">connectionString</span><span class="p">);</span>
@@ -221,7 +222,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The code snippets above will first insert a <cite>Customer</cite> record in the database and will return the newly added customer <cite>Id</cite>. It will be followed by inserting the <cite>Order</cite> record with the parent <cite>Customer.Id</cite> as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.</p>
+<p>The code snippets above will first insert a <cite>Customer</cite> record in the database and will return the newly added customer <cite>Id</cite>. It will be followed by inserting the <cite>Order</cite> record with the parent <cite>CustomerId</cite> as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.</p>
 <p><strong>Note</strong>: Notice that the transaction object were created via <cite>CustomerRepository</cite> and has been used in both repository afterwards. The library will adapt the transaction process of <cite>ADO.NET</cite>. So whether the transaction object is created via an independent <cite>DbConnection</cite> object, as long as the connection is open, then the operation is valid.</p>
 </div>
 

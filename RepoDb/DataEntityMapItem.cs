@@ -38,13 +38,12 @@ namespace RepoDb
             {
                 case Command.BatchQuery:
                 case Command.Count:
-                case Command.CountBig:
-                case Command.InlineUpdate:
                 case Command.Merge:
-                    error = map.CommandType != CommandType.Text;
+                    error = map.CommandType == CommandType.TableDirect;
                     break;
                 case Command.BulkInsert:
-                    error = map.CommandType == CommandType.StoredProcedure;
+                case Command.InlineUpdate:
+                    error = map.CommandType != CommandType.Text;
                     break;
                 case Command.Delete:
                 case Command.Insert:

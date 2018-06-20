@@ -94,8 +94,8 @@
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Trace</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#itrace-interface">ITrace Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tracelog-interface">TraceLog Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cancellabletracelog-interface">CancellableTraceLog Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tracelog-entry">TraceLog Entry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cancellabletracelog-entry">CancellableTraceLog Entry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
 </ul>
@@ -104,7 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -171,17 +171,16 @@
             
   <div class="section" id="working-with-trace">
 <h1>Working with Trace<a class="headerlink" href="#working-with-trace" title="Permalink to this headline">¶</a></h1>
-<p>One of the unique built-in feature of the library is tracing. It allows developers to do debugging or tracing on the operations while executing it against the database.</p>
-<p>With tracing, the developers can able to create its own <cite>Trace</cite> object and inject in the repository.</p>
+<p>One of the unique built-in feature of the library is <cite>Tracing</cite>. It allows developers to do <cite>Debugging</cite> or <cite>Tracing</cite> on the operations while executing it against the database.</p>
+<p>With <cite>Tracing</cite>, the developers can able to create its own <cite>Trace</cite> object and inject in the repository.</p>
 <div class="section" id="itrace-interface">
 <h2>ITrace Interface<a class="headerlink" href="#itrace-interface" title="Permalink to this headline">¶</a></h2>
-<p>This interface is the heart of library’s tracing feature. It resides from <cite>RepoDb.Interfaces</cite> namespace. This interface is required to be implemented at the custom trace classes to enable the tracing, then, the custom class must be injected in the repository.</p>
-<p>The <cite>ITrace</cite> interface has the follow trace methods.</p>
+<p>This interface is used to mark the custom class to become a qualified <cite>Trace</cite> object. It resides from <cite>RepoDb.Interfaces</cite> namespace.</p>
+<p>The <cite>ITrace</cite> interface has the following methods.</p>
 <ul class="simple">
 <li><strong>AfterBatchQuery</strong>: called after the <cite>Repository.BatchQuery</cite> operation has been executed.</li>
 <li><strong>AfterBulkInsert</strong>: called after the <cite>Repository.BulkInsert</cite> operation has been executed.</li>
 <li><strong>AfterCount</strong>: called after the <cite>Repository.Count</cite> operation has been executed.</li>
-<li><strong>AfterCountBig</strong>: called after the <cite>Repository.CountBig</cite> operation has been executed.</li>
 <li><strong>AfterDelete</strong>: called after the <cite>Repository.Delete</cite> operation has been executed.</li>
 <li><strong>AfterExecuteNonQuery</strong>: called after the <cite>Repository.ExecuteNonQuery</cite> operation has been executed.</li>
 <li><strong>AfterExecuteQuery</strong>: called after the <cite>Repository.ExecuteQuery</cite> operation has been executed.</li>
@@ -198,7 +197,6 @@
 <li><strong>BeforeBatchQuery</strong>: called before the <cite>Repository.BatchQuery</cite> actual execution.</li>
 <li><strong>BeforeBulkInsert</strong>: called before the <cite>Repository.BulkInsert</cite> actual execution.</li>
 <li><strong>BeforeCount</strong>: called before the <cite>Repository.Count</cite> actual execution.</li>
-<li><strong>BeforeCountBig</strong>: called before the <cite>Repository.CountBig</cite> actual execution.</li>
 <li><strong>BeforeDelete</strong>: called before the <cite>Repository.Delete</cite> actual execution.</li>
 <li><strong>BeforeExecuteNonQuery</strong>: called before the <cite>Repository.ExecuteNonQuery</cite> actual execution.</li>
 <li><strong>BeforeExecuteQuery</strong>: called before the <cite>Repository.ExecuteQuery</cite> actual execution.</li>
@@ -212,10 +210,10 @@
 </ul>
 <p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.CancellableTraceLog</cite>.</p>
 </div>
-<div class="section" id="tracelog-interface">
-<h2>TraceLog Interface<a class="headerlink" href="#tracelog-interface" title="Permalink to this headline">¶</a></h2>
-<p>This interface and deriving objects are used by the <cite>RepoDb.Trace</cite> object as a method argument during the <cite>After</cite> operations.</p>
-<p>Below are the properties of <cite>TraceLog</cite> object.</p>
+<div class="section" id="tracelog-entry">
+<h2>TraceLog Entry<a class="headerlink" href="#tracelog-entry" title="Permalink to this headline">¶</a></h2>
+<p>This object is the one that holds the value of the repository operations if the <cite>Tracing</cite> is enabled. It is located at <cite>RepoDb</cite> namespace.</p>
+<p>Below are the properties of the <cite>TraceLog</cite> object.</p>
 <ul class="simple">
 <li><strong>Method</strong>: a <cite>System.Reflection.MethodBase</cite> object that holds the pointer to the actual method that triggers the execution of the operation.</li>
 <li><strong>Result</strong>: an object that holds the result of the execution.</li>
@@ -224,9 +222,9 @@
 <li><strong>ExecutionTime</strong>: a <cite>System.Timespan</cite> object that holds the time length of actual execution.</li>
 </ul>
 </div>
-<div class="section" id="cancellabletracelog-interface">
-<h2>CancellableTraceLog Interface<a class="headerlink" href="#cancellabletracelog-interface" title="Permalink to this headline">¶</a></h2>
-<p>This interface and deriving objects are used by the <cite>RepoDb.Trace</cite> object as a method argument at the <cite>Before</cite> operations. It inherits the <cite>RepoDb.Trace</cite> interface.</p>
+<div class="section" id="cancellabletracelog-entry">
+<h2>CancellableTraceLog Entry<a class="headerlink" href="#cancellabletracelog-entry" title="Permalink to this headline">¶</a></h2>
+<p>This object is a deriving object from the <cite>TraceLog</cite> object, the only different is that, this object is being extended to support the cancellation of the executing operation. It is located at <cite>RepoDb</cite> namespace.</p>
 <p>Below are the properties of <cite>CancellableTraceLog</cite> object.</p>
 <ul class="simple">
 <li><strong>IsCancelled</strong>: a property used to identify whether the operation is canceled.</li>
@@ -276,7 +274,7 @@
 </div>
 <div class="section" id="canceling-an-operation">
 <h2>Canceling an Operation<a class="headerlink" href="#canceling-an-operation" title="Permalink to this headline">¶</a></h2>
-<p>To cancel an operation, simply call the method named <cite>Cancel</cite> of type <cite>RepoDb.CancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
+<p>To cancel an operation, simply call the <cite>Cancel</cite> method of type <cite>RepoDb.CancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
 <p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
 <span class="p">{</span>

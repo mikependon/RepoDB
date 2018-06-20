@@ -97,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -164,10 +164,10 @@
             
   <div class="section" id="multiple-entity-mapping">
 <h1>Multiple Entity Mapping<a class="headerlink" href="#multiple-entity-mapping" title="Permalink to this headline">¶</a></h1>
-<p>This feature is a unique built-in feature of the library that enables the developer to do multiple mapping on a <cite>DataEntity</cite> object into multiple object in the database. This is very usable for some complex requirements that includes like the combined implementations of <cite>Table</cite>, <cite>Views</cite> and <cite>StoredProcedures</cite> must be mapped into one <cite>DataEntity</cite> object.</p>
-<p>The class named <cite>RepoDb.DataEntityMapper</cite> is used when doing a multiple mapping. Below are the methods.</p>
+<p>This feature is a unique built-in feature of the library. It allows the developer to map a single <cite>DataEntity</cite> object into a multiple database objects. This is very useful on a scenario that requires the combination of the <cite>Table</cite>, <cite>View</cite> and <cite>StoredProcedure</cite> to be mapped into single <cite>DataEntity</cite> object.</p>
+<p>The class named <cite>RepoDb.DataEntityMapper</cite> is used when implementing a multiple mapping. Below are the methods.</p>
 <ul class="simple">
-<li><strong>For</strong>: used to create a mapping between the data entity and database object. Returns an <cite>RepoDb.DataEntityMapItem</cite> object.</li>
+<li><strong>For</strong>: used to create a mapping between the <cite>DataEntity</cite> and the database object. Returns an <cite>RepoDb.DataEntityMapItem</cite> object.</li>
 </ul>
 <p>The class named <cite>RepoDb.DataEntityMapItem</cite> is used to map the operation level of the repository into the database object. Below are the methods.</p>
 <ul class="simple">
@@ -176,17 +176,15 @@
 <li><strong>Get</strong>: get the entity mapping definition defined on the repository command operation.</li>
 </ul>
 <p>Multi-mapping is bound in an operation-level of the repository. This means that the developer can map the <cite>Query</cite> operation of a <cite>Customer</cite> object into <cite>[dbo].[Customer]</cite> table of the database, whereas the <cite>Delete</cite> operation is mapped into <cite>[dbo].[sp_DeleteCustomer]</cite> database object.</p>
-<p>In scenario below where a <cite>Customer</cite> entity object was created in the solution, and the following objects exist in the database.</p>
-<blockquote>
-<div><ul class="simple">
-<li>A table named <cite>Customer</cite>.</li>
-<li>A stored procedure named <cite>sp_DeleteCustomer</cite>.</li>
-<li>A stored procedure named <cite>sp_InsertCustomer</cite>, where the logic inside of is joining from different database tables.</li>
-<li>A view named <cite>vw_Customer</cite>.</li>
+<p>Let say we have the following class and database objects below.</p>
+<ul class="simple">
+<li>A class named <cite>Customer</cite>.</li>
+<li>A table named <cite>[dbo].[Customer]</cite>.</li>
+<li>A stored procedure named <cite>[dbo].[sp_DeleteCustomer]</cite>.</li>
+<li>A stored procedure named <cite>[dbo].[sp_InsertCustomer]</cite>.</li>
+<li>A view named <cite>[dbo].[vw_Customer]</cite>.</li>
 </ul>
-</div></blockquote>
-<p>Then, the developers can call the mapper methods when mapping a <cite>Customer</cite> object into these database objects.</p>
-<p>Below are the codes for multiple mapping.</p>
+<p>Then, below are the codes for multiple mapping.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DataEntityMapper</span><span class="o">.</span><span class="n">For</span><span class="o">&lt;</span><span class="n">Stock</span><span class="o">&gt;</span><span class="p">()</span>
         <span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">Insert</span><span class="p">,</span> <span class="s2">&quot;[dbo].[sp_QueryCustomer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="o">.</span><span class="n">StoredProcedure</span><span class="p">)</span>
         <span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">Delete</span><span class="p">,</span> <span class="s2">&quot;[dbo].[sp_DeleteCustomer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="o">.</span><span class="n">StoredProcedure</span><span class="p">)</span>
@@ -195,15 +193,13 @@
         <span class="o">.</span><span class="n">On</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">BulkInsert</span><span class="p">,</span> <span class="s2">&quot;[dbo].[Customer]&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="o">.</span><span class="n">TableDirect</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>These feature has its own limitations. In reality, all mappings could not be done on every command like <cite>Merge</cite>. The <cite>Merge</cite> can only be done at the <cite>Table</cite> and not in <cite>StoredProcedure</cite>.</p>
 <p>Below are the supported mapping for each command.</p>
 <ul class="simple">
-<li><strong>BatchQuery</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
-<li><strong>Count</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
-<li><strong>CountBig</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
-<li><strong>InlineUpdate</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
-<li><strong>Merge</strong>: only for a database Table and <cite>CommandType.Text</cite>.</li>
-<li><strong>BulkInsert</strong>: only for a database Table and <cite>CommandType.&lt;Text | TableDirect&gt;</cite>.</li>
+<li><strong>BatchQuery</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
+<li><strong>BulkInsert</strong>: only for <cite>CommandType.&lt;Text&gt;</cite>.</li>
+<li><strong>Count</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
+<li><strong>InlineUpdate</strong>: only for <cite>CommandType.&lt;Text&gt;</cite>.</li>
+<li><strong>Merge</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
 <li><strong>Insert</strong>: full support.</li>
 <li><strong>Delete</strong>: full support.</li>
 <li><strong>Query</strong>: full support.</li>

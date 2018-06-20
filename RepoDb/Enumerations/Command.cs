@@ -47,10 +47,6 @@ namespace RepoDb.Enumerations
         /// <summary>
         /// Command used when counting a data.
         /// </summary>
-        Count = 512,
-        /// <summary>
-        /// Command used when counting (big) a data.
-        /// </summary>
-        CountBig = 1024
+        Count = 512
     }
 }

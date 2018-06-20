@@ -1,19 +1,19 @@
 Creating a DataEntity
 =====================
 
-A `DataEntity` is a DTO class used to feed the operations of the repositories. It is equivalent to a single row in a database.
+A `DataEntity` is a DTO class that is being used to feed the operations of the repository. It is equivalent to a single row in the database.
 
 DataEntity Class
 ----------------
 
 .. highlight:: c#
 
-Acts as the base class of all `Data Entity` object. Located at `RepoDb` namespace.
+It acts as the base class of all `DataEntity` objects. Located at `RepoDb` namespace.
 
-See below the sample code:
+Below is a sample code for a `Customer` data entity object.
 
 ::
 
-	public class Employee : DataEntity
+	public class Customer : DataEntity
 	{
 	}

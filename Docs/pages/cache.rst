@@ -3,7 +3,7 @@ Working with Cache
 
 .. highlight:: c#
 
-The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. Given the name itself, the library works with memory caching by default. A cache is only working on `Query` operation of the repository.
+The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. Given the name itself, the library only works with memory caching by default. A cache is only working on `Query` operation of the repository.
 
 A cache key is important in order for the caching to cache the object. It should be unique to every cache item.
 
@@ -213,7 +213,9 @@ Below is the way on how to create a custom `Cache` object.
 		}
 	}
 
-Below is the way on how to inject the custom cache to a repository.
+The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library `Cache` object.
+
+Below is the way on how to inject the custom `Cache` object to a repository.
 
 ::
 
@@ -225,8 +227,6 @@ Below is the way on how to inject the custom cache to a repository.
 		null, // statementBuilder
 	);
 
-The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library `Cache` object.
+Upon creating a repository, the `fileCache` variable is being passed in the `cache` parameter. This signals the repository to use the `FileCache` class as the `Cache` object manager of the `Query` operation.
 
-Upon creating a repository, the `fileCache` variable is being passed in the `cache` parameter. This signals the repository to use the `FileCache` class as the cache manager object of the `Query` operation.
-
-**Note:** The caller can activate a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hit by the debugger if it is placed inside `Add` method of the `FileCache` class.
+**Note:** The caller can activate a debugger on the `FileCache` class to enable debugging. When the callers call the `Query` method and passed a `cacheKey` value on it, the breakpoint will be hitted by the debugger if it is placed inside `Add` method of the `FileCache` class.

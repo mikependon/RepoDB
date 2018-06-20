@@ -97,7 +97,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#querybuilder-object">QueryBuilder Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createbatchquery-method">CreateBatchQuery Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createcount-method">CreateCount Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#createcountbig-method">CreateCountBig Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createdelete-method">CreateDelete Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createinlineupdate-method">CreateInlineUpdate Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createinsert-method">CreateInsert Method</a></li>
@@ -111,7 +110,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -178,14 +177,13 @@
             
   <div class="section" id="working-with-statementbuilder">
 <h1>Working with StatementBuilder<a class="headerlink" href="#working-with-statementbuilder" title="Permalink to this headline">¶</a></h1>
-<p>The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the <cite>RepoDb.SqlDbStatementBuilder</cite> class that implements the <cite>RepoDb.Interfaces.IStatementBuilder</cite> interface.</p>
+<p>The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the <cite>RepoDb.SqlDbStatementBuilder</cite> that is only working for SQL Server databases.</p>
 <p>In order to override the statement builder, the developer must create a class that implements the <cite>RepoDb.Interfaces.IStatementBuilder</cite> interface. This allows the class to be injectable in the repository and implements the necessary methods needed by all operations.</p>
 <p>A <cite>QueryBuilder</cite> object comes along the way when the custom statement builder is being created. This object is a helper object when composing the actual SQL Statements. See the <cite>QueryBuilder</cite> documentation.</p>
 <p>Below are the methods of the <cite>IStatementBuilder</cite> interface.</p>
 <ul class="simple">
 <li><strong>CreateBatchQuery</strong>: called when creating a <cite>BatchQuery</cite> statement.</li>
 <li><strong>CreateCount</strong>: called when creating a <cite>Count</cite> statement.</li>
-<li><strong>CreateCountBig</strong>: called when creating a <cite>CountBig</cite> statement.</li>
 <li><strong>CreateDelete</strong>: called when creating a <cite>Delete</cite> statement.</li>
 <li><strong>CreateInlineUpdate</strong>: called when creating a <cite>InlineUpdate</cite> statement.</li>
 <li><strong>CreateInsert</strong>: called when creating a <cite>Insert</cite> statement.</li>
@@ -228,7 +226,6 @@
 }
 </pre></div>
 </div>
-<p>As of today, the methods of this <cite>RepoDb.QueryBuilder</cite> object might be limited as it only varies on the current supported data provider SQL Server Data Provider.</p>
 </div>
 <div class="section" id="createbatchquery-method">
 <h2>CreateBatchQuery Method<a class="headerlink" href="#createbatchquery-method" title="Permalink to this headline">¶</a></h2>
@@ -245,6 +242,10 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable&lt;OrderField&gt; orderBy) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        var queryProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Query);
+        var batchQueryProperties = PropertyCache.Get&lt;TEntity&gt;(Command.BatchQuery)
+                .Where(property =&gt; queryProperties.Contains(property));
+        var fields = batchQueryProperties.Select(property =&gt; new Field(property.Name));
         queryBuilder
                 .Clear()
                 .With()
@@ -264,7 +265,7 @@
                 .Where(where)
                 .CloseParen()
                 .Select()
-                .Fields(Command.BatchQuery)
+                .Fields(fields)
                 .From()
                 .WriteText(&quot;CTE&quot;)
                 .WriteText($&quot;WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})&quot;)
@@ -290,36 +291,10 @@
         queryBuilder
                 .Clear()
                 .Select()
-                .Count()
-                .WriteText(&quot;(*) AS [Counted]&quot;)
+                .CountBig()
+                .WriteText(&quot;(1) AS [Counted]&quot;)
                 .From()
                 .Table(Command.Count)
-                .Where(where)
-                .End();
-        return queryBuilder.GetString();
-}
-</pre></div>
-</div>
-</div>
-<div class="section" id="createcountbig-method">
-<h2>CreateCountBig Method<a class="headerlink" href="#createcountbig-method" title="Permalink to this headline">¶</a></h2>
-<p>This method is being called when the <cite>CountBig</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateCountBig</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateCountBig</cite> method.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCountBig&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : DataEntity
-{
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Select()
-                .CountBig()
-                .WriteText(&quot;(*) AS [Counted]&quot;)
-                .From()
-                .Table(Command.CountBig)
                 .Where(where)
                 .End();
         return queryBuilder.GetString();
@@ -366,14 +341,16 @@
 {
         if (overrideIgnore == false)
         {
-                var properties = PropertyCache.Get&lt;TEntity&gt;(Command.InlineUpdate)
+                var updateableProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Update);
+                var inlineUpdateableProperties = PropertyCache.Get&lt;TEntity&gt;(Command.InlineUpdate)
+                        .Where(property =&gt; property != PrimaryPropertyCache.Get&lt;TEntity&gt;() &amp;&amp; updateableProperties.Contains(property))
                         .Select(property =&gt; property.GetMappedName());
-                var unmatches = fields?.Where(field =&gt;
-                        properties?.FirstOrDefault(property =&gt;
+                var unmatchesProperties = fields?.Where(field =&gt;
+                        inlineUpdateableProperties?.FirstOrDefault(property =&gt;
                                 field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatches?.Count() &gt; 0)
+                if (unmatchesProperties?.Count() &gt; 0)
                 {
-                        throw new InvalidOperationException($&quot;The following columns ({unmatches.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}) &quot; +
+                        throw new InvalidOperationException($&quot;The following columns ({unmatchesProperties.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}) &quot; +
                                 $&quot;are not updatable for entity ({DataEntityExtension.GetMappedName&lt;TEntity&gt;(Command.InlineUpdate)}).&quot;);
                 }
         }
@@ -403,28 +380,29 @@
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
         var primary = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+        var isPrimaryIdentity = primary.IsIdentity();
+        var fields = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+                .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary))
+                .Select(p =&gt; new Field(p.Name));
         queryBuilder
                 .Clear()
                 .Insert()
                 .Into()
                 .Table(Command.Insert)
                 .OpenParen()
-                .Fields(Command.Insert)
+                .Fields(fields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(Command.Insert)
+                .Parameters(fields)
                 .CloseParen()
                 .End();
-        if (primary != null)
-        {
-                var result = primary.IsIdentity() ? &quot;SCOPE_IDENTITY()&quot; : $&quot;@{primary.GetMappedName()}&quot;;
-                queryBuilder
-                        .Select()
-                        .WriteText(result)
-                        .As(&quot;[Result]&quot;)
-                        .End();
-        }
+        var result = isPrimaryIdentity ? &quot;SCOPE_IDENTITY()&quot; : $&quot;@{primary.GetMappedName()}&quot;;
+        queryBuilder
+                .Select()
+                .WriteText(result)
+                .As(&quot;[Result]&quot;)
+                .End();
         return queryBuilder.GetString();
 }
 </pre></div>
@@ -442,14 +420,23 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        if (qualifiers == null)
+        var primary = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+        var isPrimaryIdentity = primary.IsIdentity();
+        if (qualifiers == null &amp;&amp; primary != null)
         {
-                var primaryKey = PrimaryPropertyCache.Get&lt;TEntity&gt;();
-                if (primaryKey != null)
-                {
-                        qualifiers = new Field(primaryKey.Name).AsEnumerable();
-                }
+                qualifiers = new Field(primary?.Name).AsEnumerable();
         }
+        var insertProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+                .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary));
+        var updateProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+                .Where(property =&gt; property != primary);
+        var mergeProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Merge);
+        var mergeInsertableFields = mergeProperties
+                .Where(property =&gt; insertProperties.Contains(property))
+                .Select(property =&gt; new Field(property.Name));
+        var mergeUpdateableFields = mergeProperties
+                .Where(property =&gt; updateProperties.Contains(property))
+                .Select(property =&gt; new Field(property.Name));
         queryBuilder
                 .Clear()
                 // MERGE T USING S
@@ -468,7 +455,7 @@
                 .WriteText(qualifiers?
                         .Select(
                                 field =&gt; field.AsJoinQualifier(&quot;S&quot;, &quot;T&quot;))
-                                        .Join($&quot; {Constant.And.ToUpper()} &quot;))
+                                        .Join($&quot; {StringConstant.And.ToUpper()} &quot;))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
                 .When()
@@ -477,11 +464,11 @@
                 .Then()
                 .Insert()
                 .OpenParen()
-                .Fields(Command.Merge)
+                .Fields(mergeInsertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(Command.Merge)
+                .Parameters(mergeInsertableFields)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -489,7 +476,7 @@
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFields(Command.Merge, &quot;S&quot;)
+                .FieldsAndAliasFields(mergeUpdateableFields, &quot;S&quot;)
                 .End();
         return queryBuilder.GetString();
 }
@@ -537,12 +524,15 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
+        var fields = PropertyCache.Get&lt;TEntity&gt;(Command.Update)
+                .Where(property =&gt; property != PrimaryPropertyCache.Get&lt;TEntity&gt;())
+                .Select(p =&gt; new Field(p.Name));
         queryBuilder
                 .Clear()
                 .Update()
                 .Table(Command.Update)
                 .Set()
-                .FieldsAndParameters(Command.Update)
+                .FieldsAndParameters(fields)
                 .Where(where)
                 .End();
         return queryBuilder.GetString();
@@ -569,11 +559,6 @@
         }
 
         public string CreateCount&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : DataEntity
-        {
-                throw new NotImplementedException();
-        }
-
-        public string CreateCountBig&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : DataEntity
         {
                 throw new NotImplementedException();
         }

@@ -15,7 +15,6 @@
         public static readonly string ColumnName = "ColumnName";
         public static readonly string Conjunction = "Conjunction";
         public static readonly string Count = "Count";
-        public static readonly string CountBig = "CountBig";
         public static readonly string DataType = "DataType";
         public static readonly string Delete = "Delete";
         public static readonly string DynamicMethod = "DynamicMethod";

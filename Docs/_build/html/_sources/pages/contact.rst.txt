@@ -1,4 +1,4 @@
-Contact Us
-==========
+Contacts
+========
 
-You can send me an email at michael.c.pendon@outlook.com.
+Please send me an email at michael.c.pendon@outlook.com.

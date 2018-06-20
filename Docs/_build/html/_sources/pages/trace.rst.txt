@@ -3,21 +3,20 @@ Working with Trace
 
 .. highlight:: c#
 
-One of the unique built-in feature of the library is tracing. It allows developers to do debugging or tracing on the operations while executing it against the database.
+One of the unique built-in feature of the library is `Tracing`. It allows developers to do `Debugging` or `Tracing` on the operations while executing it against the database.
 
-With tracing, the developers can able to create its own `Trace` object and inject in the repository.
+With `Tracing`, the developers can able to create its own `Trace` object and inject in the repository.
 
 ITrace Interface
 ----------------
 
-This interface is the heart of library's tracing feature. It resides from `RepoDb.Interfaces` namespace. This interface is required to be implemented at the custom trace classes to enable the tracing, then, the custom class must be injected in the repository.
+This interface is used to mark the custom class to become a qualified `Trace` object. It resides from `RepoDb.Interfaces` namespace.
 
-The `ITrace` interface has the follow trace methods.
+The `ITrace` interface has the following methods.
 
 - **AfterBatchQuery**: called after the `Repository.BatchQuery` operation has been executed.
 - **AfterBulkInsert**: called after the `Repository.BulkInsert` operation has been executed.
 - **AfterCount**: called after the `Repository.Count` operation has been executed.
-- **AfterCountBig**: called after the `Repository.CountBig` operation has been executed.
 - **AfterDelete**: called after the `Repository.Delete` operation has been executed.
 - **AfterExecuteNonQuery**: called after the `Repository.ExecuteNonQuery` operation has been executed.
 - **AfterExecuteQuery**: called after the `Repository.ExecuteQuery` operation has been executed.
@@ -34,7 +33,6 @@ Note: All trace methods mentioned above accepts the parameter named `log` of typ
 - **BeforeBatchQuery**: called before the `Repository.BatchQuery` actual execution.
 - **BeforeBulkInsert**: called before the `Repository.BulkInsert` actual execution.
 - **BeforeCount**: called before the `Repository.Count` actual execution.
-- **BeforeCountBig**: called before the `Repository.CountBig` actual execution.
 - **BeforeDelete**: called before the `Repository.Delete` actual execution.
 - **BeforeExecuteNonQuery**: called before the `Repository.ExecuteNonQuery` actual execution.
 - **BeforeExecuteQuery**: called before the `Repository.ExecuteQuery` actual execution.
@@ -48,12 +46,12 @@ Note: All trace methods mentioned above accepts the parameter named `log` of typ
  
 Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.CancellableTraceLog`.
 
-TraceLog Interface
--------------------
+TraceLog Entry
+--------------
 
-This interface and deriving objects are used by the `RepoDb.Trace` object as a method argument during the `After` operations.
+This object is the one that holds the value of the repository operations if the `Tracing` is enabled. It is located at `RepoDb` namespace.
 
-Below are the properties of `TraceLog` object.
+Below are the properties of the `TraceLog` object.
 
 - **Method**: a `System.Reflection.MethodBase` object that holds the pointer to the actual method that triggers the execution of the operation.
 - **Result**: an object that holds the result of the execution.
@@ -61,10 +59,10 @@ Below are the properties of `TraceLog` object.
 - **Statement**: the actual query statement used in the execution.
 - **ExecutionTime**: a `System.Timespan` object that holds the time length of actual execution.
 
-CancellableTraceLog Interface
+CancellableTraceLog Entry
 ------------------------------
 
-This interface and deriving objects are used by the `RepoDb.Trace` object as a method argument at the `Before` operations. It inherits the `RepoDb.Trace` interface.
+This object is a deriving object from the `TraceLog` object, the only different is that, this object is being extended to support the cancellation of the executing operation. It is located at `RepoDb` namespace.
 
 Below are the properties of `CancellableTraceLog` object.
 
@@ -122,7 +120,7 @@ Once the customized Trace object has been injected, a breakpoint can be placed i
 Canceling an Operation
 ----------------------
 
-To cancel an operation, simply call the method named `Cancel` of type `RepoDb.CancelableTraceLog` in any `Before` operation.
+To cancel an operation, simply call the `Cancel` method of type `RepoDb.CancelableTraceLog` in any `Before` operation.
 
 Below is a sample code that calls the `Cancel` method of the `BeforeQuery` operation if any of the specified keywords from the variable named `keywords` is found from the statement.
 

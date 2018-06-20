@@ -24,12 +24,6 @@
         void BeforeCount(CancellableTraceLog log);
 
         /// <summary>
-        /// A method being raised before the actual <i>CountBig</i> operation execution.
-        /// </summary>
-        /// <param name="log">The cancellable log object referenced by the <i>CountBig</i> execution.</param>
-        void BeforeCountBig(CancellableTraceLog log);
-
-        /// <summary>
         /// A method being raised before the actual <i>Query</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Query</i> execution.</param>
@@ -111,12 +105,6 @@
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Count</i> execution.</param>
         void AfterCount(TraceLog log);
-
-        /// <summary>
-        /// A method being raised after the actual <i>CountBig</i> operation execution.
-        /// </summary>
-        /// <param name="log">The log object referenced by the <i>CountBig</i> execution.</param>
-        void AfterCountBig(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Query</i> operation execution.

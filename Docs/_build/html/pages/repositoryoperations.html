@@ -91,22 +91,22 @@
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Repository Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#batchquery-operation">BatchQuery Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bulkinsert-operation">BulkInsert Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#count-operation">Count Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#delete-operation">Delete Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executenonquery-operation">ExecuteNonQuery Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executequery-operation">ExecuteQuery Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inlineupdate-operation">InlineUpdate Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#insert-operation">Insert Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#merge-operation">Merge Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#query-operation">Query Operation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ordering-a-query">Ordering a Query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#limiting-a-query-result">Limiting a Query Result</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#insert-operation">Insert Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update-operation">Update Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#delete-operation">Delete Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#merge-operation">Merge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inlineupdate-operation">InlineUpdate Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bulkinsert-operation">BulkInsert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#count-and-countbig-operation">Count and CountBig Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#batchquery-operation">BatchQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executequery-operation">ExecuteQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executenonquery-operation">ExecuteNonQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
@@ -115,7 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -182,38 +182,272 @@
             
   <div class="section" id="repository-operations">
 <h1>Repository Operations<a class="headerlink" href="#repository-operations" title="Permalink to this headline">¶</a></h1>
-<p>The repositories contain different operations to manipulate the data from the database. Below are the list of common operations widely used.</p>
+<p>A repository contain different operations to manipulate the data from the database. Below are the list of common operations widely used.</p>
 <ul class="simple">
-<li><strong>Query</strong>: used to query a record from the database. It uses the <cite>SELECT</cite> command of SQL.</li>
-<li><strong>Insert</strong>: used to insert a record in the database. It uses the <cite>INSERT</cite> command of SQL.</li>
-<li><strong>Update</strong>: used to update a record in the database. It uses the <cite>UPDATE</cite> command of SQL.</li>
-<li><strong>Delete</strong>: used to delete a record in the database. It uses the <cite>DELETE</cite> command of SQL.</li>
-<li><strong>Merge</strong>: used to merge a record in the database. It uses the <cite>MERGE</cite> command of SQL.</li>
-<li><strong>InlineUpdate</strong>: used to do column-based update of the records in the database. It uses the <cite>UPDATE</cite> command of SQL.</li>
-<li><strong>Count</strong>: used to count all the records in the database. It uses the <cite>SELECT</cite>, <cite>COUNT</cite> command of SQL.</li>
-<li><strong>CountBig</strong>: used to count (big) all the records in the database. It uses the <cite>SELECT</cite>, <cite>COUNT_BIG</cite> command of SQL.</li>
 <li><strong>BatchQuery</strong>: used to query a record from the database by batch. It uses the <cite>SELECT</cite> in combination of <cite>ROW_NUMBER</cite> and <cite>ORDER</cite> command of SQL.</li>
 <li><strong>BulkInsert</strong>: used to bulk-insert the records in the database.</li>
-<li><strong>ExecuteQuery</strong>: used to read certain records from the database in fast-forward access. It returns an enumerable list of <cite>RepoDb.DataEntity</cite> objects.</li>
+<li><strong>Count</strong>: used to count all the records in the database. It uses the <cite>SELECT</cite>, <cite>COUNT</cite> command of SQL.</li>
+<li><strong>Delete</strong>: used to delete a record in the database. It uses the <cite>DELETE</cite> command of SQL.</li>
 <li><strong>ExecuteNonQuery</strong>: used to execute a non-queryable query statement in the database.</li>
+<li><strong>ExecuteQuery</strong>: used to read certain records from the database in fast-forward access. It returns an enumerable list of <cite>RepoDb.DataEntity</cite> objects.</li>
 <li><strong>ExecuteScalar</strong>: used to execute a command that returns a single-object value from the database.</li>
+<li><strong>InlineUpdate</strong>: used to do column-based update of the records in the database. It uses the <cite>UPDATE</cite> command of SQL.</li>
+<li><strong>Insert</strong>: used to insert a record in the database. It uses the <cite>INSERT</cite> command of SQL.</li>
+<li><strong>Merge</strong>: used to merge a record in the database. It uses the <cite>MERGE</cite> command of SQL.</li>
+<li><strong>Query</strong>: used to query a record from the database. It uses the <cite>SELECT</cite> command of SQL.</li>
+<li><strong>Update</strong>: used to update a record in the database. It uses the <cite>UPDATE</cite> command of SQL.</li>
 </ul>
 <p>All operations mentioned above has its own corresponding asynchronous operation. Usually, the asynchronous operation is only appended by <cite>Async</cite> keyword. Below are the list of asynchronous operations.</p>
 <ul class="simple">
-<li><strong>QueryAsync</strong></li>
-<li><strong>InsertAsync</strong></li>
-<li><strong>UpdateAsync</strong></li>
-<li><strong>DeleteAsync</strong></li>
-<li><strong>MergeAsync</strong></li>
-<li><strong>InlineUpdateAsync</strong></li>
-<li><strong>CountAsync</strong></li>
-<li><strong>CountBigAsync</strong></li>
 <li><strong>BatchQueryAsync</strong></li>
 <li><strong>BulkInsertAsync</strong></li>
-<li><strong>ExecuteQueryAsync</strong></li>
+<li><strong>CountAsync</strong></li>
+<li><strong>DeleteAsync</strong></li>
 <li><strong>ExecuteNonQueryAsync</strong></li>
+<li><strong>ExecuteQueryAsync</strong></li>
 <li><strong>ExecuteScalar</strong></li>
+<li><strong>InlineUpdateAsync</strong></li>
+<li><strong>InsertAsync</strong></li>
+<li><strong>MergeAsync</strong></li>
+<li><strong>QueryAsync</strong></li>
+<li><strong>UpdateAsync</strong></li>
 </ul>
+<div class="section" id="batchquery-operation">
+<h2>BatchQuery Operation<a class="headerlink" href="#batchquery-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to batching when querying a data from the database. It returns an enumerable object of <cite>RepoDb.DataEntity</cite> objects.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>where</strong>: an expression to used to filter the data.</li>
+<li><strong>page</strong>: a zero-based index that signifies the page number of the batch to query.</li>
+<li><strong>rowsPerBatch</strong>: the number of rows to be returned per batch.</li>
+<li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
+<li><strong>transaction</strong>: the transaction object to be used when querying a data.</li>
+</ul>
+<p>Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Below is the way to query by batch the data with expression.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">scroller</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">Any</span> <span class="n">Customimzed</span> <span class="n">Scroller</span> <span class="n">Object</span><span class="p">&gt;</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">page</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">rowsPerBatch</span> <span class="p">=</span> <span class="m">24</span><span class="p">;</span>
+
+<span class="n">scroller</span><span class="p">.</span><span class="n">ScrollToEnd</span> <span class="p">+=</span> <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">=&gt;</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">page</span><span class="p">,</span> <span class="n">rowsPerBatch</span><span class="p">);</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+        <span class="n">page</span><span class="p">++;</span>
+<span class="p">};</span>
+
+<span class="k">void</span> <span class="nf">Process</span><span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;</span> <span class="n">orders</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">// Process the orders (display on the page)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bulkinsert-operation">
+<h2>BulkInsert Operation<a class="headerlink" href="#bulkinsert-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to bulk-insert the entities to the database. It returns an <cite>int</cite> value indicating the number of rows affected by the bulk-inserting.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>entities</strong>: the list of entities to be inserted.</li>
+<li><strong>transaction</strong>: the transaction object to be used when doing bulk-insert.</li>
+</ul>
+<p>Below is a sample on how to do bulk-insert.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+<span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">});</span>
+<span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Stock</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
+        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
+        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">});</span>
+<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="n">entities</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="count-operation">
+<h2>Count Operation<a class="headerlink" href="#count-operation" title="Permalink to this headline">¶</a></h2>
+<p>These operations are used to count the number of records from the database. It returns a value indicating the number of counted rows based on the created expression.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>where</strong>: an expression to used when counting a record. If left <cite>null</cite>, all records from the database will be counted.</li>
+<li><strong>transaction</strong>: the transaction object to be used when updating a data.</li>
+</ul>
+<p>Below is a sample on how to count a data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">rows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+</pre></div>
+</div>
+<p>The code snippets above will count all the <cite>Order</cite> records from the database.</p>
+<p>Below is the sample way to count a records with expression</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">rows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>Above code snippets will count all the <cite>Order</cite> records from the database where <cite>CustomerId</cite> is equals to <cite>10045</cite>.</p>
+</div>
+<div class="section" id="delete-operation">
+<h2>Delete Operation<a class="headerlink" href="#delete-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to delete an existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the delete.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>where</strong>: an expression to used when deleting a record.</li>
+<li><strong>transaction</strong>: the transaction object to be used when deleting a data.</li>
+</ul>
+<p>Below is a sample on how to delete a data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">order</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>or by <cite>PrimaryKey</cite></p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: Deleting a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
+</div>
+<div class="section" id="executenonquery-operation">
+<h2>ExecuteNonQuery Operation<a class="headerlink" href="#executenonquery-operation" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is used to execute a non-queryable SQL statement query. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+</ul>
+<p>Below is the way on how to call the operation.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span>
+<span class="p">{</span>
+        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">};</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;UPDATE [dbo].[Stock] SET Quantity = @Quantity, UpdatedDate = @UpdatedDate WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executequery-operation">
+<h2>ExecuteQuery Operation<a class="headerlink" href="#executequery-operation" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an <cite>IEnumerable</cite> object with <cite>dynamic</cite> or <cite>RepoDb.DataEntity</cite> type as its generic type.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+</ul>
+<p>Below is the way on how to call the operation.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">};</span>
+<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Stock] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executescalar-operation">
+<h2>ExecuteScalar Operation<a class="headerlink" href="#executescalar-operation" title="Permalink to this headline">¶</a></h2>
+<p>This connection extension method is used to execute a query statement that returns a single value.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>param</strong>: the parameters to be used for the execution.</li>
+<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+</ul>
+<p>Below is the way on how to call the operation.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">};</span>
+<span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxIdByCustomerId FROM [dbo].[Stock] CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="inlineupdate-operation">
+<h2>InlineUpdate Operation<a class="headerlink" href="#inlineupdate-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to do a column-based update of an existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the updates.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>entity</strong>: the dynamically or entity driven data entity object that contains the target fields to be updated.</li>
+<li><strong>where</strong>: an expression to used when updating a record.</li>
+<li><strong>transaction</strong>: the transaction object to be used when updating a data.</li>
+</ul>
+<p>Below is a sample on how to update a data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">});</span>
+</pre></div>
+</div>
+<p>The code snippets above will update the <cite>Quantity</cite> column of a order records from the dabatase where the value of <cite>Id</cite> column is equals to <cite>251</cite>.</p>
+</div>
+<div class="section" id="insert-operation">
+<h2>Insert Operation<a class="headerlink" href="#insert-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to insert a record in the database. It returns an object valued by the <cite>PrimaryKey</cite> column. If the <cite>PrimaryKey</cite> column is identity, this operation will return the newly added identity column value.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>entity</strong>: the entity object to be inserted.</li>
+<li><strong>transaction</strong>: the transaction object to be used when inserting a data.</li>
+</ul>
+<p>Below is a sample on how to insert a data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
+        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span>
+        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
+<span class="p">};</span>
+<span class="n">repository</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="merge-operation">
+<h2>Merge Operation<a class="headerlink" href="#merge-operation" title="Permalink to this headline">¶</a></h2>
+<p>This operation is used to merge an entity from the existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the merge.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>entity</strong>: the entity object to be merged.</li>
+<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when merging a record.</li>
+<li><strong>transaction</strong>: the transaction object to be used when merging a data.</li>
+</ul>
+<p>Below is a sample on how to merge a data.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">1</span><span class="p">);</span>
+<span class="n">order</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
+<span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">;</span>
+<span class="n">repository</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">}));</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The merge is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.</p>
+</div>
 <div class="section" id="query-operation">
 <h2>Query Operation<a class="headerlink" href="#query-operation" title="Permalink to this headline">¶</a></h2>
 <p>This operation is used to query a data from the database and returns an <cite>IEnumerable&lt;TEntity&gt;</cite> object. Below are the parameters.</p>
@@ -381,27 +615,6 @@
 </div>
 </div>
 </div>
-<div class="section" id="insert-operation">
-<h2>Insert Operation<a class="headerlink" href="#insert-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to insert a record in the database. It returns an object valued by the <cite>PrimaryKey</cite> column. If the <cite>PrimaryKey</cite> column is identity, this operation will return the newly added identity column value.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be inserted.</li>
-<li><strong>transaction</strong>: the transaction object to be used when inserting a data.</li>
-</ul>
-<p>Below is a sample on how to insert a data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
-<span class="p">{</span>
-        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
-        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span>
-        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-<span class="p">};</span>
-<span class="n">repository</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="update-operation">
 <h2>Update Operation<a class="headerlink" href="#update-operation" title="Permalink to this headline">¶</a></h2>
 <p>This operation is used to update an existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the updates.</p>
@@ -428,222 +641,6 @@
 </pre></div>
 </div>
 <p><strong>Note</strong>:  Updating a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
-</div>
-<div class="section" id="delete-operation">
-<h2>Delete Operation<a class="headerlink" href="#delete-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to delete an existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the delete.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: an expression to used when deleting a record.</li>
-<li><strong>transaction</strong>: the transaction object to be used when deleting a data.</li>
-</ul>
-<p>Below is a sample on how to delete a data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">order</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>or by <cite>PrimaryKey</cite></p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p><strong>Note</strong>: Deleting a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
-</div>
-<div class="section" id="merge-operation">
-<h2>Merge Operation<a class="headerlink" href="#merge-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to merge an entity from the existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the merge.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be merged.</li>
-<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when merging a record.</li>
-<li><strong>transaction</strong>: the transaction object to be used when merging a data.</li>
-</ul>
-<p>Below is a sample on how to merge a data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">1</span><span class="p">);</span>
-<span class="n">order</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
-<span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">;</span>
-<span class="n">repository</span><span class="p">.</span><span class="n">Merge</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">}));</span>
-</pre></div>
-</div>
-<p><strong>Note</strong>: The merge is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.</p>
-</div>
-<div class="section" id="inlineupdate-operation">
-<h2>InlineUpdate Operation<a class="headerlink" href="#inlineupdate-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to do a column-based update of an existing record from the database. It returns an <cite>int</cite> value indicating the number of rows affected by the updates.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the dynamically or entity driven data entity object that contains the target fields to be updated.</li>
-<li><strong>where</strong>: an expression to used when updating a record.</li>
-<li><strong>transaction</strong>: the transaction object to be used when updating a data.</li>
-</ul>
-<p>Below is a sample on how to update a data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p>The code snippets above will update the <cite>Quantity</cite> column of a order records from the dabatase where the value of <cite>Id</cite> column is equals to <cite>251</cite>.</p>
-</div>
-<div class="section" id="bulkinsert-operation">
-<h2>BulkInsert Operation<a class="headerlink" href="#bulkinsert-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to bulk-insert the entities to the database. It returns an <cite>int</cite> value indicating the number of rows affected by the bulk-inserting.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entities</strong>: the list of entities to be inserted.</li>
-<li><strong>transaction</strong>: the transaction object to be used when doing bulk-insert.</li>
-</ul>
-<p>Below is a sample on how to do bulk-insert.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-<span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
-<span class="p">{</span>
-        <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
-        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
-        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
-        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
-        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-<span class="p">});</span>
-<span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Stock</span><span class="p">()</span>
-<span class="p">{</span>
-        <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
-        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
-        <span class="n">ProductId</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
-        <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
-        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-<span class="p">});</span>
-<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">(</span><span class="n">entities</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="count-and-countbig-operation">
-<h2>Count and CountBig Operation<a class="headerlink" href="#count-and-countbig-operation" title="Permalink to this headline">¶</a></h2>
-<p>These operations are used to count the number of records from the database. It returns a value indicating the number of counted rows based on the created expression.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: an expression to used when counting a record. If left <cite>null</cite>, all records from the database will be counted.</li>
-<li><strong>transaction</strong>: the transaction object to be used when updating a data.</li>
-</ul>
-<p>Below is a sample on how to count a data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">rows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-</pre></div>
-</div>
-<p>The code snippets above will count all the <cite>Order</cite> records from the database.</p>
-<p>Below is the sample way to count a records with expression</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">rows</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p>Above code snippets will count all the <cite>Order</cite> records from the database where <cite>CustomerId</cite> is equals to <cite>10045</cite>.</p>
-<p><strong>Note</strong>: The same operation applies to <cite>CountBig</cite> operation. The only difference is that, <cite>CountBig</cite> is returning a <cite>System.Int64</cite> type and the internal SQL statetement is using the <cite>COUNT_BIG</cite> keyword.</p>
-</div>
-<div class="section" id="batchquery-operation">
-<h2>BatchQuery Operation<a class="headerlink" href="#batchquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>This operation is used to batching when querying a data from the database. It returns an enumerable object of <cite>RepoDb.DataEntity</cite> objects.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: an expression to used to filter the data.</li>
-<li><strong>page</strong>: a zero-based index that signifies the page number of the batch to query.</li>
-<li><strong>rowsPerBatch</strong>: the number of rows to be returned per batch.</li>
-<li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
-<li><strong>transaction</strong>: the transaction object to be used when querying a data.</li>
-</ul>
-<p>Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>Below is the way to query by batch the data with expression.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">scroller</span> <span class="p">=</span> <span class="p">&lt;</span><span class="n">Any</span> <span class="n">Customimzed</span> <span class="n">Scroller</span> <span class="n">Object</span><span class="p">&gt;</span>
-<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">page</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
-<span class="kt">var</span> <span class="n">rowsPerBatch</span> <span class="p">=</span> <span class="m">24</span><span class="p">;</span>
-
-<span class="n">scroller</span><span class="p">.</span><span class="n">ScrollToEnd</span> <span class="p">+=</span> <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="p">=&gt;</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">page</span><span class="p">,</span> <span class="n">rowsPerBatch</span><span class="p">);</span>
-        <span class="n">Process</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
-        <span class="n">page</span><span class="p">++;</span>
-<span class="p">};</span>
-
-<span class="k">void</span> <span class="nf">Process</span><span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;</span> <span class="n">orders</span><span class="p">)</span>
-<span class="p">{</span>
-        <span class="c1">// Process the orders (display on the page)</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executequery-operation">
-<h2>ExecuteQuery Operation<a class="headerlink" href="#executequery-operation" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a SQL Statement query from the database in fast-forward access. It returns an <cite>IEnumerable</cite> object with <cite>dynamic</cite> or <cite>RepoDb.DataEntity</cite> type as its generic type.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Stock] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executenonquery-operation">
-<h2>ExecuteNonQuery Operation<a class="headerlink" href="#executenonquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a non-queryable SQL statement query. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span>
-<span class="p">{</span>
-        <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
-        <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-        <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-<span class="p">};</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="s">&quot;UPDATE [dbo].[Stock] SET Quantity = @Quantity, UpdatedDate = @UpdatedDate WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executescalar-operation">
-<h2>ExecuteScalar Operation<a class="headerlink" href="#executescalar-operation" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a query statement that returns a single value.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="kt">var</span> <span class="n">param</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">};</span>
-<span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxIdByCustomerId FROM [dbo].[Stock] CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">);</span>
-</pre></div>
-</div>
 </div>
 </div>
 

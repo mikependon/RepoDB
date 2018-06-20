@@ -16,11 +16,6 @@ namespace RepoDb.TestProject
             throw new NotImplementedException();
         }
 
-        public string CreateCountBig<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
-        {
-            throw new NotImplementedException();
-        }
-
         public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup) where TEntity : DataEntity
         {
             throw new NotImplementedException();

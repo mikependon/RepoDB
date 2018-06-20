@@ -1,21 +1,17 @@
 Introduction to RepoDb
 ======================
 
-A highly-extensible, dynamic, lightweight and fast ORM .Net Library.
+A dynamic, lightweight and fast repo-based ORM .NET Library.
 
 Goal
 ----
 
-We aim to let .NET developers `limit` the implementation of SQL Statements within the application.
-
-We believe that as a .NET developer, one should only focus on .NET and Business scenario development and not on writing repetitive SQL Statements.
-
-Of course, unless you are working closely with SQL Server Management Studio.
+We aim to limit the implementation of SQL Statements in the .NET application.
 
 Vision
 ------
 
-To help developers to have more flexibility and easy to fast-switch from ORM massive to lightweight operations.
+To provide more flexibility and fast-switching development approach, whether to use the massive or lightweight ORM operations.
 
 Principles
 ----------

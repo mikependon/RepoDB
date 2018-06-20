@@ -108,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact Us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
 
             
@@ -205,7 +205,6 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindRepository</span><span class="p">();</span>
 </pre></div>
 </div>
-<p>It is recommended to create a contracted interface for <cite>DbRepository</cite> in order for it to be dependency injectable.</p>
 </div>
 <div class="section" id="baserepository-class">
 <h2>BaseRepository Class<a class="headerlink" href="#baserepository-class" title="Permalink to this headline">¶</a></h2>
@@ -230,7 +229,6 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CustomerRepository</span><span class="p">();</span>
 </pre></div>
 </div>
-<p>It is recommended to create a contracted interface for <cite>BaseRepository</cite> in order for it to be dependency injectable.</p>
 </div>
 <div class="section" id="creating-a-connection">
 <h2>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>
@@ -307,10 +305,10 @@
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
 <li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
 </ul>
 </div>
 <div class="section" id="connection-executequery">
@@ -379,10 +377,10 @@
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
 <li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
 </ul>
 </div>
 <div class="section" id="connection-executenonquery">
@@ -410,10 +408,10 @@
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
 <li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
 </ul>
 </div>
 <div class="section" id="connection-executescalar">
@@ -441,10 +439,10 @@
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
 <li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace</strong>: the trace object to be used on this operation.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
 </ul>
 </div>
 <div class="section" id="working-with-storedprocedure">
@@ -523,7 +521,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The multiple mapping also supports the Stored Procedure by binding it to the entity object.</p>
+<p><strong>Note</strong>: The multiple mapping also supports the Stored Procedure by binding it to the <cite>DataEntity</cite> object.</p>
 </div>
 </div>
 
