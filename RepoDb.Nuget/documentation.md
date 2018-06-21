@@ -34,8 +34,8 @@ public class CustomerRepository : BaseRepository<Customer, SqlConnection>(@"Serv
 ```
 Query Operation:
 ```
-var repository = new NorthwindDbRepository<SqlConnection>();
-var customer = repository.Query<Customer>(new { Id = 10045 });
+var repository = new CustomerRepository();
+var customer = repository.Query(new { Id = 10045 });
 ```
 Insert Operation:
 ```
@@ -49,7 +49,7 @@ var customerId = repository.Insert(new Customer
 Update Operation:
 ```
 var repository = new CustomerRepository();
-var customer = repository.Quer>(new { Id = 10045 });
+var customer = repository.Query(new { Id = 10045 });
 customer.Name = "Anna Fullerton";
 customer.UpdateDate = DateTime.UtcNow;
 var affectedRows = repository.Update(customer);
@@ -76,3 +76,4 @@ customer.Name = "Anna Albert Fullerton";
 var affectedRows = repository.Merge(customer,
 	Field.Parse(new { customer.Id } ));
 ```
+And many more...
