@@ -87,6 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
@@ -339,10 +340,10 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
 </ul>
 <p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
@@ -363,9 +364,9 @@
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
 <li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
 </ul>
 <p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
@@ -380,10 +381,10 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution.</li>
-<li><strong>commandTimeout</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction</strong>: the transaction object be used when executing the command.</li>
+<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
 </ul>
 <p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>

@@ -12,25 +12,10 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      - Built on a target framework 4.0 for earlier compatibility
-      - Renamed CacheItem.Timestamp to CacheItem.CreatedDate
-      - Removed the Repository.CountBig() support
-      - Added CacheItem.IsExpired() method
-      - Added CacheItem.Expiration property
-      - Removed ICacheItem
-      - Removed ITraceLog
-      - Removed ICancellableTraceLog
-      - Removed ITypeMap
-      - Removed IStatementBuilderMap
-      - Removed IQueryGroup
-      - Removed IQueryField
-      - Removed IParameter
-      - Removed IField
-      - Removed IOrderField
-      - Removed IDataEntityMap
-      - Removed IQueryBuilder
-      - Removed IDbRepository
-      - Removed IBaseRepository
+      - Built on a lower target framework 4.0 for earlier compatibility.
+      - Solution clean-up, removed interfaces that is not unnecessary for extensions.
+      - Updated the caching by adding the expiration feature in the CacheItem.
+      - Next release is to support the .Net Core.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

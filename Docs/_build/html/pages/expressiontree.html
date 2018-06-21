@@ -87,10 +87,11 @@
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Expression Tree</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#explicit-query-expression">Explicit Query Expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dynamic-query-expression">Dynamic Query Expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#explicit-expression">Explicit Expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dynamic-expression">Dynamic Expression</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
@@ -196,8 +197,8 @@
 <li>DbConnection.ExecuteScalar</li>
 </ul>
 <p>There are two ways of building the expression trees, the explicit way by using <cite>QueryGroup</cite> objects and dynamic way by using <cite>dynamic</cite> objects.</p>
-<div class="section" id="explicit-query-expression">
-<h2>Explicit Query Expression<a class="headerlink" href="#explicit-query-expression" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="explicit-expression">
+<h2>Explicit Expression<a class="headerlink" href="#explicit-expression" title="Permalink to this headline">¶</a></h2>
 <p>An explicit query expression are using the defined objects <cite>RepoDb.QueryGroup</cite>, <cite>RepoDb.QueryField</cite>, <cite>RepoDb.Enumerations.Conjunction</cite> and <cite>RepoDb.Enumerations.Operation</cite> when composing the expression.</p>
 <p>Below is a pseudo code of explicit query expression.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// WHERE (Field1 = @Field1 AND Field2 = @Field2) AND ((Field3 = @Field3 OR Field4 = @Field4) AND (Field5 = @Field5 OR Field6 = @Field6));</span>
@@ -260,8 +261,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dynamic-query-expression">
-<h2>Dynamic Query Expression<a class="headerlink" href="#dynamic-query-expression" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dynamic-expression">
+<h2>Dynamic Expression<a class="headerlink" href="#dynamic-expression" title="Permalink to this headline">¶</a></h2>
 <p>A dynamic query expression is using a single dynamic object when composing the expression.</p>
 <p>Below is a pseudo code of dynamic query expression.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">tree</span> <span class="p">=</span> <span class="k">new</span>

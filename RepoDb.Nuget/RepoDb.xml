@@ -131,7 +131,7 @@
         </member>
         <member name="T:RepoDb.DataEntityMapItem">
             <summary>
-            An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
+            An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.DataEntity</i> object into database object.
             </summary>
         </member>
         <member name="M:RepoDb.DataEntityMapItem.#ctor">
@@ -347,7 +347,6 @@
             </summary>
             <typeparam name="TEntity">
             The entity where the <i>RepoDb.Attributes.MapAttribute</i> will be retrieved.
-            This object must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
             </typeparam>
             <returns>An instance of <i>RepoDb.Attributes.MapAttribute</i> object mapped at the given data entity.</returns>
         </member>
@@ -392,7 +391,7 @@
         </member>
         <member name="T:RepoDb.Extensions.OrderFieldExtension">
             <summary>
-            Contains the extension methods for <i>RepoDb.Interfaces.OrderField</i> object.
+            Contains the extension methods for <i>RepoDb.OrderField</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Extensions.OrderFieldExtension.AsEnumerable(RepoDb.OrderField)">
@@ -419,7 +418,7 @@
         </member>
         <member name="T:RepoDb.Extensions.FieldExtension">
             <summary>
-            Contains the extension methods for <i>RepoDb.Interfaces.Field</i> object.
+            Contains the extension methods for <i>RepoDb.Field</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Extensions.FieldExtension.AsEnumerable(RepoDb.Field)">
@@ -431,7 +430,7 @@
         </member>
         <member name="T:RepoDb.Extensions.DataEntityExtension">
             <summary>
-            Contains the extension methods for <i>RepoDb.Interfaces.DataEntity</i> object.
+            Contains the extension methods for <i>RepoDb.DataEntity</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetPropertiesFor``1(RepoDb.Enumerations.Command)">
@@ -1103,7 +1102,7 @@
         </member>
         <member name="T:RepoDb.Extensions.QueryFieldExtension">
             <summary>
-            Contains the extension methods for <i>RepoDb.Interfaces.QueryField</i> object.
+            Contains the extension methods for <i>RepoDb.QueryField</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Extensions.QueryFieldExtension.AsEnumerable(RepoDb.QueryField)">
@@ -1147,7 +1146,7 @@
         </member>
         <member name="T:RepoDb.DataEntityMapper">
             <summary>
-            A class that manage the mappings of a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
+            A class that manage the mappings of a <i>RepoDb.DataEntity</i> object into database object.
             </summary>
         </member>
         <member name="M:RepoDb.DataEntityMapper.For(System.Type)">
@@ -1161,7 +1160,7 @@
             <summary>
             Creates a new entity and database mapping.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type where to apply the mapping.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type where to apply the mapping.</typeparam>
             <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         </member>
         <member name="T:RepoDb.PropertyMapNameCache">
@@ -1195,8 +1194,7 @@
             the <i>RepoDb.Attributes.PrimaryAttribute</i> from a given <i>Data Entity</i> object.
             </summary>
             <typeparam name="TEntity">
-            The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved. This object must 
-            implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The entity where the cached <i>System.Reflection.PropertyInfo</i> object will be retrieved.
             </typeparam>
             <returns>An instance of <i>System.Reflection.PropertyInfo</i> object.</returns>
         </member>
@@ -1210,8 +1208,7 @@
             Gets the cached <i>System.Reflection.PropertyInfo</i> objects of a given <i>Data Entity</i> object for each command.
             </summary>
             <typeparam name="TEntity">
-            The entity where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects will be retrieved. This object must 
-            implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The entity where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects will be retrieved.
             </typeparam>
             <param name="command">
             The target command where the enumerable cached <i>System.Reflection.PropertyInfo</i> objects has the implementation.
@@ -1229,7 +1226,6 @@
             </summary>
             <typeparam name="TEntity">
             The entity where the <i>RepoDb.Attributes.MapAttribute.Name</i> property value will be retrieved.
-            This object must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
             </typeparam>
             <param name="command">The target command where to get the mapped name of the data entity.</param>
             <returns>A string value that signifies the mapped name for the entity object on a target command.</returns>
@@ -1241,8 +1237,7 @@
         </member>
         <member name="T:RepoDb.CacheItem">
             <summary>
-            An item used when caching an object in the repository object. This is the default class used by the
-            <i>RepoDb.MemoryCache</i> object.
+            An item used when caching an object in the repository object. This is the default class used by the <i>RepoDb.MemoryCache</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.CacheItem.#ctor(System.String,System.Object)">
@@ -1305,7 +1300,7 @@
             Creates a SQL Statement for repository <i>BatchQuery</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -1319,29 +1314,18 @@
             Creates a SQL Statement for repository <i>Count</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
-        </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateCountBig``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
-            <summary>
-            Creates a SQL Statement for repository <i>CountBig</i> operation.
-            </summary>
-            <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
-            </typeparam>
-            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-            <param name="where">The query expression for SQL statement.</param>
-            <returns>A string containing the composed SQL Statement for <i>CountBig</i> operation.</returns>
         </member>
         <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository <i>Delete</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -1352,7 +1336,7 @@
             Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
@@ -1368,7 +1352,7 @@
             Creates a SQL Statement for repository <i>Insert</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
@@ -1378,7 +1362,7 @@
             Creates a SQL Statement for repository <i>Merge</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
@@ -1389,7 +1373,7 @@
             Creates a SQL Statement for repository <i>Query</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -1402,7 +1386,7 @@
             Creates a SQL Statement for repository <i>Update</i> operation.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -1473,12 +1457,6 @@
             A method being raised before the actual <i>Count</i> operation execution.
             </summary>
             <param name="log">The cancellable log object referenced by the <i>Count</i> execution.</param>
-        </member>
-        <member name="M:RepoDb.Interfaces.ITrace.BeforeCountBig(RepoDb.CancellableTraceLog)">
-            <summary>
-            A method being raised before the actual <i>CountBig</i> operation execution.
-            </summary>
-            <param name="log">The cancellable log object referenced by the <i>CountBig</i> execution.</param>
         </member>
         <member name="M:RepoDb.Interfaces.ITrace.BeforeQuery(RepoDb.CancellableTraceLog)">
             <summary>
@@ -1557,12 +1535,6 @@
             A method being raised after the actual <i>Count</i> operation execution.
             </summary>
             <param name="log">The log object referenced by the <i>Count</i> execution.</param>
-        </member>
-        <member name="M:RepoDb.Interfaces.ITrace.AfterCountBig(RepoDb.TraceLog)">
-            <summary>
-            A method being raised after the actual <i>CountBig</i> operation execution.
-            </summary>
-            <param name="log">The log object referenced by the <i>CountBig</i> execution.</param>
         </member>
         <member name="M:RepoDb.Interfaces.ITrace.AfterQuery(RepoDb.TraceLog)">
             <summary>
@@ -1694,6 +1666,13 @@
             <param name="key">
             The key of the item to be removed from the cache collection. If the given key is not present, this method will ignore it.
             </param>
+        </member>
+        <member name="M:RepoDb.MemoryCache.GetItem(System.String)">
+            <summary>
+            Gets the cached item by key. This includes the expired cached item.
+            </summary>
+            <param name="key">The key of the cached item.</param>
+            <returns>The cached item based on the given key.</returns>
         </member>
         <member name="T:RepoDb.BaseRepository`2">
             <summary>
@@ -1827,68 +1806,6 @@
             <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.CountAsync(RepoDb.QueryGroup,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBig(System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database.
-            </summary>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBig(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBig(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBig(RepoDb.QueryGroup,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBigAsync(System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database in an asynchronous way.
-            </summary>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBigAsync(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBigAsync(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountBigAsync(RepoDb.QueryGroup,System.Data.IDbTransaction)">
             <summary>
             Counts the number of rows from the database based on a given query expression in an asynchronous way.
             </summary>
@@ -2603,76 +2520,6 @@
             <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.CountBig``1(System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBig``1(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBig``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBig``1(RepoDb.QueryGroup,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBigAsync``1(System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBigAsync``1(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBigAsync``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.CountBigAsync``1(RepoDb.QueryGroup,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on a given query expression in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the <i>Data Entity</i> object.</typeparam>
-            <param name="where">The query expression to be used  on this operation.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.BatchQuery``1(System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
             <summary>
             Query the data from the database by batch. The batching will vary on the page number and number of rows per batch defined on this
@@ -3366,11 +3213,6 @@
             Command used when counting a data.
             </summary>
         </member>
-        <member name="F:RepoDb.Enumerations.Command.CountBig">
-            <summary>
-            Command used when counting (big) a data.
-            </summary>
-        </member>
         <member name="T:RepoDb.Enumerations.Operation">
             <summary>
             An enumeration used to define an operation on the query expression.
@@ -3524,7 +3366,7 @@
             An object to be parsed. Ex:
             <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
             </param>
-            <returns>An enumerable of <i>RepoDb.Interfaces.OrderField</i> object that holds the ordering values for every field.</returns>
+            <returns>An enumerable of <i>RepoDb.OrderField</i> object that holds the ordering values for every field.</returns>
         </member>
         <member name="T:RepoDb.Field">
             <summary>
@@ -3550,18 +3392,18 @@
         </member>
         <member name="M:RepoDb.Field.From(System.String[])">
             <summary>
-            Creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects that derived from the given array of string values.
+            Creates an enumerable of <i>RepoDb.Field</i> objects that derived from the given array of string values.
             </summary>
             <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
-            <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> object.</returns>
+            <returns>An enumerable of <i>RepoDb.Field</i> object.</returns>
         </member>
         <member name="M:RepoDb.Field.Parse(System.Object)">
             <summary>
-            Parse an object and creates an enumerable of <i>RepoDb.Interfaces.Field</i> objects. Each field is equivalent
+            Parse an object and creates an enumerable of <i>RepoDb.Field</i> objects. Each field is equivalent
             to each property of the given object. The parse operation uses a reflection operation.
             </summary>
             <param name="obj">An object to be parsed.</param>
-            <returns>An enumerable of <i>RepoDb.Interfaces.Field</i> objects.</returns>
+            <returns>An enumerable of <i>RepoDb.Field</i> objects.</returns>
         </member>
         <member name="T:RepoDb.QueryBuilder`1">
             <summary>
@@ -3931,8 +3773,7 @@
             Gets the <i>System.Data.CommandType</i> object that is mapped on a given <i>Data Entity</i> object.
             </summary>
             <typeparam name="TEntity">
-            The entity where the <i>System.Data.Command</i> object will be retrieved. This object must 
-            implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The entity where the <i>System.Data.Command</i> object will be retrieved.
             </typeparam>
             <param name="command">The target command where to get the mapped name of the data entity.</param>
             <returns>An instance of <i>System.Data.CommandType</i> object.</returns>
@@ -3948,11 +3789,10 @@
             Gets the cached <i>RepoDb.QueryBuilder</i> object on a given <i>Data Entity</i> object.
             </summary>
             <typeparam name="TEntity">
-            The entity where the cached <i>RepoDb.QueryBuilder</i> object will be retrieved. This object must 
-            implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The entity where the cached <i>RepoDb.QueryBuilder</i> object will be retrieved.
             </typeparam>
             <param name="createNew">Defines whether a new instance will be created if the object is not at the cache.</param>
-            <returns>An instance of <i>RepoDb.Interfaces.QueryBuilder</i> object bound for an entity.</returns>
+            <returns>An instance of <i>RepoDb.QueryBuilder</i> object bound for an entity.</returns>
         </member>
         <member name="T:RepoDb.QueryGroup">
             <summary>
@@ -4034,8 +3874,8 @@
         </member>
         <member name="T:RepoDb.QueryField">
             <summary>
-            A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Interfaces.Field</i>),
-            parameter (<i>RepoDb.Interfaces.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
+            A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Field</i>),
+            parameter (<i>RepoDb.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
             </summary>
         </member>
         <member name="M:RepoDb.QueryField.#ctor(System.String,System.Object)">
@@ -4148,15 +3988,15 @@
         </member>
         <member name="T:RepoDb.Reflection.DataEntityConverter">
             <summary>
-            A mapper used to convert the <i>RepoDb.Interfaces.DataEntity</i> to certain objects (Dynamics, DataTable etc).
+            A mapper used to convert the <i>RepoDb.DataEntity</i> to certain objects (Dynamics, DataTable etc).
             </summary>
         </member>
         <member name="M:RepoDb.Reflection.DataEntityConverter.ToDataTable``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Converts the list of <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.DataTable</i> object.
+            Converts the list of <i>RepoDb.DataEntity</i> object into <i>System.DataTable</i> object.
             </summary>
-            <typeparam name="TEntity">The type of <i>RepoDb.Interfaces.DataEntity</i> object.</typeparam>
-            <param name="entities">The list of <i>RepoDb.Interfaces.DataEntity</i> object to be converted.</param>
+            <typeparam name="TEntity">The type of <i>RepoDb.DataEntity</i> object.</typeparam>
+            <param name="entities">The list of <i>RepoDb.DataEntity</i> object to be converted.</param>
             <returns>An instance of <i>System.Data.DataTable</i> object containing the converted values.</returns>
         </member>
         <member name="T:RepoDb.Reflection.FieldInfoCache">
@@ -4481,24 +4321,24 @@
         </member>
         <member name="T:RepoDb.Reflection.DataReaderConverter">
             <summary>
-            A static classed used to convert the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.DataEntity</i> object.
+            A static classed used to convert the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.AsEntity``1(System.Data.Common.DbDataReader)">
             <summary>
-            Converts the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.DataEntity</i> object.
+            Converts the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An instance <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+            <returns>An instance <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable``1(System.Data.Common.DbDataReader)">
             <summary>
-            Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>RepoDb.Interfaces.DataEntity</i> object.
+            Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An array of <i>RepoDb.Interfaces.DataEntity</i> objects.</returns>
+            <returns>An array of <i>RepoDb.DataEntity</i> objects.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable(System.Data.Common.DbDataReader)">
             <summary>
@@ -4514,18 +4354,18 @@
         </member>
         <member name="M:RepoDb.Reflection.DelegateCache.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader)">
             <summary>
-            Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
+            Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+            <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DelegateCache.GetDataEntityToDataRowDelegate``1">
             <summary>
-            Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.
+            Creates a Delegate for mapping a <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to convert.</typeparam>
-            <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
+            <returns>An IL emitted Delegate object used to convert the <i>System.Data.Common.DbDataReader</i> to <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="T:RepoDb.Reflection.DelegateFactory">
             <summary>
@@ -4534,33 +4374,33 @@
         </member>
         <member name="M:RepoDb.Reflection.DelegateFactory.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DelegateFactory.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.Interfaces.DataEntity</i> object.
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
             </summary>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object.</returns>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Reflection.DelegateFactory.GetDataEntityToDataRowDelegate``1">
             <summary>
-            Gets a delegate that is used to convert the <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.Data.DataRow</i> object.
+            Gets a delegate that is used to convert the <i>RepoDb.DataEntity</i> object into <i>System.Data.DataRow</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to convert to.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
             <returns>An instance of <i>System.Data.DataRow</i> object containing the converted values.</returns>
         </member>
         <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityDelegate`1">
             <summary>
-            A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.Interfaces.DataEntity</i> object.
+            A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> object to map.</typeparam>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to map.</typeparam>
             <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
-            <returns>An instance of <i>RepoDb.Interfaces.DataEntity</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
         </member>
         <member name="T:RepoDb.Reflection.Delegates.DataReaderToExpandoObjectDelegate">
             <summary>
@@ -4571,10 +4411,10 @@
         </member>
         <member name="T:RepoDb.Reflection.Delegates.DataEntityToDataRowDelegate`1">
             <summary>
-            A delegate used to convert the <i>RepoDb.Interfaces.DataEntity</i> object into <i>System.Data.DataRow</i> object.
+            A delegate used to convert the <i>RepoDb.DataEntity</i> object into <i>System.Data.DataRow</i> object.
             </summary>
-            <typeparam name="TEntity">The <i>RepoDb.Interfaces.DataEntity</i> type to be converted.</typeparam>
-            <param name="entity">The <i>RepoDb.Interfaces.DataEntity</i> object to be converted.</param>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to be converted.</typeparam>
+            <param name="entity">The <i>RepoDb.DataEntity</i> object to be converted.</param>
             <param name="dataTable">The <i>System.Data.DataTable</i> object that will contain the converted row.</param>
             <returns>An instance of <i>System.Data.DataRow</i> containing the converted values.</returns>
         </member>
@@ -4590,10 +4430,10 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateBatchQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField})">
             <summary>
-            Creates a SQL Statement for repository <i>BatchQuery</i> operation.
+            Creates a SQL Statement for repository <i>BatchQuery</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -4604,32 +4444,21 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateCount``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
             <summary>
-            Creates a SQL Statement for repository <i>Count</i> operation.
+            Creates a SQL Statement for repository <i>Count</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlDbStatementBuilder.CreateCountBig``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
-            <summary>
-            Creates a SQL Statement for repository <i>CountBig</i> operation.
-            </summary>
-            <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
-            </typeparam>
-            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-            <param name="where">The query expression for SQL statement.</param>
-            <returns>A string containing the composed SQL Statement for <i>CountBig</i> operation.</returns>
-        </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateDelete``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
             <summary>
-            Creates a SQL Statement for repository <i>Delete</i> operation.
+            Creates a SQL Statement for repository <i>Delete</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -4637,10 +4466,10 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Nullable{System.Boolean})">
             <summary>
-            Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
+            Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
@@ -4653,20 +4482,20 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0})">
             <summary>
-            Creates a SQL Statement for repository <i>Insert</i> operation.
+            Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
-            Creates a SQL Statement for repository <i>Merge</i> operation.
+            Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
@@ -4674,10 +4503,10 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField})">
             <summary>
-            Creates a SQL Statement for repository <i>Query</i> operation.
+            Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -4687,10 +4516,10 @@
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateUpdate``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup)">
             <summary>
-            Creates a SQL Statement for repository <i>Update</i> operation.
+            Creates a SQL Statement for repository <i>Update</i> operation that is meant for SQL Server.
             </summary>
             <typeparam name="TEntity">
-            The <i>Data Entity</i> object bound for the SQL Statement to be created. This must implement the <i>RepoDb.Interfaces.DataEntity</i> interface.
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
@@ -4784,7 +4613,7 @@
         </member>
         <member name="T:RepoDb.DataEntityMap">
             <summary>
-            An object used to map a <i>RepoDb.Interfaces.DataEntity</i> object into database object.
+            An object used to map a <i>RepoDb.DataEntity</i> object into database object.
             </summary>
         </member>
         <member name="M:RepoDb.DataEntityMap.#ctor(System.String,System.Data.CommandType)">

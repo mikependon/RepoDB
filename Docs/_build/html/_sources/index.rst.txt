@@ -12,6 +12,7 @@ RepoDb Documentation
    pages/multiplemapping
    pages/typemapping
    pages/repository
+   pages/connection
    pages/transaction
    pages/expressiontree
    pages/querygroup

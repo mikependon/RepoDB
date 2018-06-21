@@ -33,8 +33,8 @@ Certain connection extension methods are using the expression trees.
 
 There are two ways of building the expression trees, the explicit way by using `QueryGroup` objects and dynamic way by using `dynamic` objects.
 
-Explicit Query Expression
--------------------------
+Explicit Expression
+-------------------
 
 An explicit query expression are using the defined objects `RepoDb.QueryGroup`, `RepoDb.QueryField`, `RepoDb.Enumerations.Conjunction` and `RepoDb.Enumerations.Operation` when composing the expression.
 
@@ -102,8 +102,8 @@ Actual explicit query tree expression.
 		Conjunction.And
 	);
 
-Dynamic Query Expression
-------------------------
+Dynamic Expression
+------------------
 
 .. highlight:: c#
 

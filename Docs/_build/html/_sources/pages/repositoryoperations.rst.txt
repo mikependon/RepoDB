@@ -197,10 +197,10 @@ This connection extension method is used to execute a non-queryable SQL statemen
 Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
-- **param**: the parameters to be used for the execution.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
+- **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
 
 Below is the way on how to call the operation.
 
@@ -226,9 +226,9 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
 
 Below is the way on how to call the operation.
 
@@ -248,10 +248,10 @@ This connection extension method is used to execute a query statement that retur
 Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
-- **param**: the parameters to be used for the execution.
-- **commandTimeout**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction**: the transaction object be used when executing the command.
+- **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
+- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
+- **transaction (optional)**: the transaction object be used when executing the command.
 
 Below is the way on how to call the operation.
 

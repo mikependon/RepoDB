@@ -12,39 +12,52 @@ Click [here](https://repodb.readthedocs.io/en/latest/index.html) for the complet
 ### Snippets
 
 Write less optimal codes.
-
+```
+public class Customer
+{
+	public int Id { get; set; }
+	public string Name {get; set; }
+	public CreatedDate { get; set; }
+}
+```
+Create Shared-Repository via DbRepository:
+```
+public class NorthwindDbRepository : DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
+{
+}
+```
+Create Shared-Repository via BaseRepository:
+```
+public class CustomerRepository : BaseRepository<Customer, SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;")
+{
+}
+```
 Query Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
+var repository = new NorthwindDbRepository<SqlConnection>();
 var customer = repository.Query<Customer>(new { Id = 10045 });
-```
-Or
-```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var customer = repository.Query<Customer>(new
-{
-	LastName = { Operation = Operation.Like, Value = "Ander%" },
-	top: 100,
-	orderBy: OrderField.Parse(new { FirstName = Order.Ascending, BirtDate = Order.Descending })
-});
 ```
 Insert Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var customerId = repository.Insert(new Customer { Name = "Anna Fullerton", CreatedDate = DateTime.UtcNow });
+var repository = new CustomerRepository();
+var customerId = repository.Insert(new Customer
+{
+	Name = "Anna Fullerton",
+	CreatedDate = DateTime.UtcNow
+});
 ```
 Update Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var customer = repository.Query<Customer>(new { Id = 10045 });
+var repository = new CustomerRepository();
+var customer = repository.Quer>(new { Id = 10045 });
 customer.Name = "Anna Fullerton";
 customer.UpdateDate = DateTime.UtcNow;
 var affectedRows = repository.Update(customer);
 ```
 Inline Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var affectedRows = repository.InlineUpdate<Customer>(new
+var repository = new CustomerRepository();
+var affectedRows = repository.InlineUpdate(new
 {
 	Name = "Anna Fullerton", UpdatedDate = DateTime.UtcNow
 },
@@ -52,13 +65,14 @@ new { Id = 10045 };
 ```
 Delete Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var affectedRows = repository.Update<Customer>(new { Id = 10045 };
+var repository = new CustomerRepository();
+var affectedRows = repository.Update(new { Id = 10045 };
 ```
 Merge Operation:
 ```
-var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-var customer = repository.Query<Customer>(new { Id = 10045 });
+var repository = new CustomerRepository();
+var customer = repository.Query(new { Id = 10045 });
 customer.Name = "Anna Albert Fullerton";
-var affectedRows = repository.Merge(customer, Field.Parse(new { customer.Id } ));
+var affectedRows = repository.Merge(customer,
+	Field.Parse(new { customer.Id } ));
 ```
