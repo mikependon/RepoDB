@@ -1,7 +1,6 @@
-﻿using RepoDb;
-using RepoDb.Attributes;
+﻿using RepoDb.Attributes;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Models
 {
     [Map("Customer")]
     public class CustomerDto : DataEntity

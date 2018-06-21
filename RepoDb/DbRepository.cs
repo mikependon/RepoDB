@@ -21,9 +21,6 @@ namespace RepoDb
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public class DbRepository<TDbConnection> where TDbConnection : DbConnection
     {
-        private readonly string _connectionString;
-        private readonly int? _commandTimeout;
-
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
         /// </summary>
@@ -77,8 +74,8 @@ namespace RepoDb
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
         {
             // Fields
-            _connectionString = connectionString;
-            _commandTimeout = commandTimeout;
+            ConnectionString = connectionString;
+            CommandTimeout = commandTimeout;
 
             // Properties
             Cache = (cache ?? new MemoryCache());
@@ -87,6 +84,16 @@ namespace RepoDb
                 StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ??
                 new SqlDbStatementBuilder());
         }
+
+        /// <summary>
+        /// Gets the connection used by this repository.
+        /// </summary>
+        public string ConnectionString { get; }
+
+        /// <summary>
+        /// Gets the command timeout value in seconds that is being used by this repository on every operation.
+        /// </summary>
+        public int? CommandTimeout { get; }
 
         // CreateConnection (TDbConnection)
 
@@ -97,7 +104,7 @@ namespace RepoDb
         public TDbConnection CreateConnection()
         {
             var connection = Activator.CreateInstance<TDbConnection>();
-            connection.ConnectionString = _connectionString;
+            connection.ConnectionString = ConnectionString;
             return connection;
         }
 
@@ -218,7 +225,11 @@ namespace RepoDb
             GuardCountable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
+            var command = Command.Count;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>(command) :
+                StatementBuilder.CreateCount(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -230,7 +241,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Count);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return default(int);
                 }
@@ -244,8 +255,8 @@ namespace RepoDb
             // Actual Execution
             var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
                  param: param,
-                 commandType: CommandTypeCache.Get<TEntity>(Command.Count),
-                 commandTimeout: _commandTimeout,
+                 commandType: CommandTypeCache.Get<TEntity>(command),
+                 commandTimeout: CommandTimeout,
                  transaction: transaction));
 
             // After Execution
@@ -429,7 +440,11 @@ namespace RepoDb
             GuardBatchQueryable<TEntity>();
 
             // Variables
-            var commandText = StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
+            var command = Command.BatchQuery;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                ClassMapNameCache.Get<TEntity>(command) :
+                StatementBuilder.CreateBatchQuery(QueryBuilderCache.Get<TEntity>(), where, page, rowsPerBatch, orderBy);
             var param = where?.AsObject();
 
             // Before Execution
@@ -441,7 +456,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.BatchQuery);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return null;
                 }
@@ -455,8 +470,8 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.BatchQuery),
-                commandTimeout: _commandTimeout,
+                commandType: CommandTypeCache.Get<TEntity>(command),
+                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -698,9 +713,10 @@ namespace RepoDb
             GuardQueryable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.Query);
+            var command = Command.Query;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Query) :
+                ClassMapNameCache.Get<TEntity>(command) :
                 StatementBuilder.CreateQuery(QueryBuilderCache.Get<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
@@ -713,7 +729,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Query);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return null;
                 }
@@ -728,7 +744,7 @@ namespace RepoDb
             var result = ExecuteQuery<TEntity>(commandText: commandText,
                  param: param,
                  commandType: commandType,
-                 commandTimeout: _commandTimeout,
+                 commandTimeout: CommandTimeout,
                  transaction: transaction);
 
             // After Execution
@@ -878,11 +894,31 @@ namespace RepoDb
             GuardInsertable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.Insert);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Insert) :
-                StatementBuilder.CreateInsert(QueryBuilderCache.Get<TEntity>());
+            var command = Command.Insert;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var queryBuilder = QueryBuilderCache.Get<TEntity>();
+            var commandText = string.Empty;
             var param = entity?.AsObject();
+
+            // Compose command text
+            if (commandType == CommandType.StoredProcedure)
+            {
+                commandText = ClassMapNameCache.Get<TEntity>(command);
+            }
+            else
+            {
+                if (StatementBuilder is SqlDbStatementBuilder)
+                {
+                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
+                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(queryBuilder, isPrimaryIsIdentityAtDb);
+                }
+                else
+                {
+                    // Other Sql Data Providers
+                    commandText = StatementBuilder.CreateInsert(QueryBuilderCache.Get<TEntity>());
+                }
+            }
 
             // Before Execution
             if (Trace != null)
@@ -893,7 +929,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Insert);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return null;
                 }
@@ -908,8 +944,11 @@ namespace RepoDb
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout,
+                commandTimeout: CommandTimeout,
                 transaction: transaction);
+
+            // Set back result equals to PrimaryKey type
+            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (Trace != null)
@@ -1023,9 +1062,10 @@ namespace RepoDb
             GuardInlineUpdateable<TEntity>();
 
             // Append prefix to all parameters
-            ((QueryGroup)where).AppendParametersPrefix();
+            where.AppendParametersPrefix();
 
             // Variables
+            var command = Command.InlineUpdate;
             var commandText = StatementBuilder.CreateInlineUpdate(QueryBuilderCache.Get<TEntity>(),
                 entity.AsFields(), where, overrideIgnore);
             var param = entity?.Merge(where);
@@ -1039,7 +1079,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.InlineUpdate);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return 0;
                 }
@@ -1053,8 +1093,8 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.InlineUpdate),
-                commandTimeout: _commandTimeout,
+                commandType: CommandTypeCache.Get<TEntity>(command),
+                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1189,8 +1229,7 @@ namespace RepoDb
             var queryGroup = (QueryGroup)null;
             if (where is QueryField)
             {
-                var queryField = (QueryField)where;
-                queryGroup = new QueryGroup((queryField).AsEnumerable());
+                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
             }
             else if (where is QueryGroup)
             {
@@ -1228,14 +1267,15 @@ namespace RepoDb
             GuardUpdateable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.Update);
+            var command = Command.Update;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             if (commandType != CommandType.StoredProcedure)
             {
                 // Append prefix to all parameters for non StoredProcedure (this is mappable, that's why)
-                ((QueryGroup)where).AppendParametersPrefix();
+                where.AppendParametersPrefix();
             }
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Update) :
+                ClassMapNameCache.Get<TEntity>(command) :
                 StatementBuilder.CreateUpdate(QueryBuilderCache.Get<TEntity>(), where);
             var param = entity?.AsObject(where);
 
@@ -1248,7 +1288,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Update);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return 0;
                 }
@@ -1263,7 +1303,7 @@ namespace RepoDb
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout,
+                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1398,7 +1438,15 @@ namespace RepoDb
             }
             else
             {
-                queryGroup = QueryGroup.Parse(where);
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    queryGroup = QueryGroup.Parse(where);
+                }
+                else
+                {
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Query);
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
+                }
             }
             return Delete<TEntity>(where: queryGroup,
                     transaction: transaction);
@@ -1418,9 +1466,10 @@ namespace RepoDb
             GuardDeletable<TEntity>();
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(Command.Delete);
+            var command = Command.Delete;
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMapNameCache.Get<TEntity>(Command.Delete) :
+                ClassMapNameCache.Get<TEntity>(command) :
                 StatementBuilder.CreateDelete(QueryBuilderCache.Get<TEntity>(), where);
             var param = where?.AsObject();
 
@@ -1433,7 +1482,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Delete);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return 0;
                 }
@@ -1448,7 +1497,7 @@ namespace RepoDb
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout);
+                commandTimeout: CommandTimeout);
 
             // After Execution
             if (Trace != null)
@@ -1551,13 +1600,37 @@ namespace RepoDb
         public int Merge<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            var command = Command.Merge;
+
             // Check
             GuardMergeable<TEntity>();
-            GetAndGuardPrimaryKey<TEntity>(Command.Merge);
+            GetAndGuardPrimaryKey<TEntity>(command);
 
             // Variables
-            var commandText = StatementBuilder.CreateMerge(QueryBuilderCache.Get<TEntity>(), qualifiers);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var queryBuilder = QueryBuilderCache.Get<TEntity>();
+            var commandText = string.Empty;
             var param = entity?.AsObject();
+
+            // Compose command text
+            if (commandType == CommandType.StoredProcedure)
+            {
+                commandText = ClassMapNameCache.Get<TEntity>(command);
+            }
+            else
+            {
+                if (StatementBuilder is SqlDbStatementBuilder)
+                {
+                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
+                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(queryBuilder, qualifiers, isPrimaryIsIdentityAtDb);
+                }
+                else
+                {
+                    // Other Sql Data Providers
+                    commandText = StatementBuilder.CreateMerge(QueryBuilderCache.Get<TEntity>(), qualifiers);
+                }
+            }
 
             // Before Execution
             if (Trace != null)
@@ -1568,7 +1641,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(StringConstant.Merge);
+                        throw new CancelledExecutionException(command.ToString());
                     }
                     return 0;
                 }
@@ -1582,8 +1655,8 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: CommandTypeCache.Get<TEntity>(Command.Merge),
-                commandTimeout: _commandTimeout,
+                commandType: CommandTypeCache.Get<TEntity>(command),
+                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1663,18 +1736,19 @@ namespace RepoDb
             GuardBulkInsert<TEntity>();
 
             // Variables
+            var command = Command.BulkInsert;
             using (var connection = (transaction?.Connection ?? CreateConnection()).EnsureOpen())
             {
                 // Before Execution
                 if (Trace != null)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), StringConstant.BulkInsert, entities, null);
+                    var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
                     Trace.BeforeBulkInsert(cancellableTraceLog);
                     if (cancellableTraceLog.IsCancelled)
                     {
                         if (cancellableTraceLog.IsThrowException)
                         {
-                            throw new CancelledExecutionException(StringConstant.BulkInsert);
+                            throw new CancelledExecutionException(command.ToString());
                         }
                         return 0;
                     }
@@ -1700,7 +1774,7 @@ namespace RepoDb
                 // After Execution
                 if (Trace != null)
                 {
-                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), StringConstant.BulkInsert, table, result,
+                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), table, result,
                         DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 
@@ -1752,7 +1826,7 @@ namespace RepoDb
             var result = connection.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout,
+                commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace);
             if (transaction == null)
@@ -1814,7 +1888,7 @@ namespace RepoDb
             var result = connection.ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout,
+                commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace);
             if (transaction == null)
@@ -1872,7 +1946,7 @@ namespace RepoDb
             var result = connection.ExecuteScalar(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: _commandTimeout,
+                commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace);
             if (transaction == null)

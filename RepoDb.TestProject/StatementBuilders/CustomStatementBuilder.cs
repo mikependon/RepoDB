@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using RepoDb.Interfaces;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.StatementBuilders
 {
     public class CustomStatementBuilder : IStatementBuilder
     {

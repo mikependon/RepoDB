@@ -84,7 +84,6 @@
 <li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Property Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#identity-property">Identity Property</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ignoring-a-property">Ignoring a Property</a></li>
 </ul>
 </li>
@@ -185,18 +184,6 @@
 <li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>CustomerId</cite>. If present, it will then become the default property.</li>
 </ol>
 <p>If all of the conditions above were not met, then the <cite>DataEntity</cite> will have no primary property. It somehow fails if the repository operation of like <cite>Delete</cite> and <cite>Update</cite> has been called without explicitly specifying the expressions for the <cite>WHERE</cite> parameter.</p>
-<div class="section" id="identity-property">
-<h2>Identity Property<a class="headerlink" href="#identity-property" title="Permalink to this headline">¶</a></h2>
-<p>By default, upon defining a <cite>PrimaryAttribute</cite>, the targetted property will automatically become an <cite>Identity</cite> property. To unset, simply pass a <cite>False</cite> value on the <cite>isIdentity</cite> parameter of the <cite>PrimaryAttribute</cite> when defining it to the property.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span>
-<span class="p">{</span>
-<span class="na">        [Primary]</span> <span class="c1">// This is identity by default, can be set to [Primary(false)]</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="ignoring-a-property">
 <h2>Ignoring a Property<a class="headerlink" href="#ignoring-a-property" title="Permalink to this headline">¶</a></h2>
 <p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>

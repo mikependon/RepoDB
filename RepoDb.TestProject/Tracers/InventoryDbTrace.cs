@@ -1,8 +1,8 @@
 ﻿using RepoDb.Interfaces;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Tracers
 {
-    public class InventoryTrace : ITrace
+    public class InventoryDbTrace : ITrace
     {
         public void AfterBatchQuery(TraceLog log)
         {

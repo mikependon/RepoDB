@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.Enumerations;
+using RepoDb.TestProject.Models;
+using RepoDb.TestProject.Tracers;
+using RepoDb.TestProject.Repositories;
 
 namespace RepoDb.TestProject
 {
@@ -16,14 +19,15 @@ namespace RepoDb.TestProject
         static void Main(string[] args)
         {
             //TestInNotInBetweenNotBetweenAnyAllOperation();
-            InventoryMain();
+            //InventoryMain();
             //RepoDbMain();
-            //TestCrud();
+            TestCrud();
+            Console.ReadLine();
         }
 
         public static void InventoryMain()
         {
-            var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryTrace());
+            var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryDbTrace());
             var customers = repository.Query<CustomerDto>();
             customers.ToList().ForEach(customer =>
             {
@@ -281,30 +285,45 @@ namespace RepoDb.TestProject
         private static void TestCrud()
         {
             // Repository
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
-            var person = (Person)null;
-            var personId = new Random().Next(3000, 20000);
-            var affectedRows = 0;
+            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 
             // Count
-            Console.WriteLine($"Number of records: {repository.Count()}");
+            Console.WriteLine($"Person Records: {repository.Count<Person>()}");
+            Console.WriteLine($"Animal Records: {repository.Count<Animal>()}");
 
             // BatchQuery
-            Console.WriteLine("BatchQuery");
-            people = repository.BatchQuery(0, 1000, OrderField.Parse(new { Id = Order.Descending }));
+            Console.WriteLine("BatchQuery Person");
+            var batchQueryResult = repository.BatchQuery<Person>(0, 1000, OrderField.Parse(new { Id = Order.Descending }));
 
             // Query 100K
-            Console.WriteLine("Query: 100K");
-            people = repository.Query(new { Id = new { Operation = Operation.GreaterThan, Value = 100 } }, top: 100000);
+            Console.WriteLine("Query Person: 100K");
+            var queryResult = repository.Query<Person>(new
+            {
+                Id = new
+                {
+                    Operation = Operation.GreaterThan,
+                    Value = 100
+                }
+            }, top: 100000);
 
             // BulkInsert
-            Console.WriteLine("BulkInsert: 100K");
-            affectedRows = repository.BulkInsert(people);
+            Console.WriteLine("BulkInsert Person: 100K");
+            var bulkInsertResult = repository.BulkInsert(queryResult);
 
-            // Insert
-            Console.WriteLine("Insert");
-            person = new Person()
+            // Insert with Guid Primary Key
+            Console.WriteLine("Insert with UniqueIdentifier PrimaryKey");
+            var animalId = repository.Insert(new Animal()
+            {
+                Id = Guid.NewGuid(),
+                Name = $"Name: {Guid.NewGuid().ToString()}",
+                Address = $"Address: {Guid.NewGuid().ToString()}",
+                DateInserted = DateTime.UtcNow,
+                DateUpdated = DateTime.UtcNow
+            });
+
+            // Insert with Identity PrimaryKey
+            Console.WriteLine("Insert with Identity");
+            var personId = repository.Insert(new Person()
             {
                 Name = $"Name: {Guid.NewGuid().ToString()}",
                 Address = $"Address: {Guid.NewGuid().ToString()}",
@@ -312,27 +331,26 @@ namespace RepoDb.TestProject
                 DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
                 DateUpdated = DateTime.UtcNow,
                 Worth = 6000000
-            };
-            personId = Convert.ToInt32(repository.Insert(person));
+            });
 
             // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
+            Console.WriteLine($"Query Person with Identity: {personId}");
+            var person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");
             }
 
             // Update
-            Console.WriteLine($"Update: {personId}");
+            Console.WriteLine($"Update Person: {personId}");
             person.Name = $"Name: {Guid.NewGuid().ToString()} (Updated)";
             person.Address = $"Address: {Guid.NewGuid().ToString()} (Updated)";
             person.DateUpdated = DateTime.UtcNow;
-            affectedRows = repository.Update(person, new { Id = person.Id });
+            var updateResult = repository.Update(person);//, new { Id = person.Id });
 
             // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
+            Console.WriteLine($"Verify Person after Update: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");
@@ -343,19 +361,19 @@ namespace RepoDb.TestProject
             person.Name = $"{Guid.NewGuid().ToString()} (Merged)";
             person.Address = $"Address: {Guid.NewGuid().ToString()} (Merged)";
             person.DateUpdated = DateTime.UtcNow;
-            affectedRows = repository.Merge(person, Field.From(new string[] { "Id" }));
+            var mergeResult = repository.Merge(person, Field.Parse(new { person.Id }));
 
             // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
+            Console.WriteLine($"Query Person After Merge: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");
             }
 
             // InlineUpdate
-            Console.WriteLine("InlineUpdate");
-            affectedRows = repository.InlineUpdate(new
+            Console.WriteLine("InlineUpdate Person");
+            var inlineUpdateResult = repository.InlineUpdate<Person>(new
             {
                 Name = $"Name: {Guid.NewGuid().ToString()} (Inline Updated)"
             },
@@ -365,24 +383,29 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
+            Console.WriteLine($"Verify Person After InlineUpdate: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");
             }
 
             // Delete
-            Console.WriteLine($"Delete: {personId}");
-            affectedRows = repository.Delete(new { Id = personId });
+            Console.WriteLine($"Delete Person: {personId}");
+            var deleteResult = repository.Delete<Person>(personId);
 
             // Verify
-            Console.WriteLine($"Query: {personId}");
-            person = repository.Query(personId).FirstOrDefault();
+            Console.WriteLine($"Verify Person After Delete: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
             if (person != null)
             {
                 throw new NullReferenceException("Person should be null. We have just deleted it.");
             }
+
+            // Count
+            Console.WriteLine($"Person Records: {repository.Count<Person>()}");
+            Console.WriteLine($"Animal Records: {repository.Count<Animal>()}");
+
         }
     }
 }

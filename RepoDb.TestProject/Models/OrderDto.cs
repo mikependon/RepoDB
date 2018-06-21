@@ -2,7 +2,7 @@
 using System;
 using RepoDb.Attributes;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Models
 {
     [Map("[dbo].[Order]")]
     public class OrderDto : DataEntity

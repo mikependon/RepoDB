@@ -52,18 +52,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomerDto.cs" />
-    <Compile Include="CustomStatementBuilder.cs" />
-    <Compile Include="CustomTrace.cs" />
-    <Compile Include="InventoryTrace.cs" />
-    <Compile Include="OrderDto.cs" />
-    <Compile Include="OrderItemDto.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="PersonRepository.cs" />
-    <Compile Include="ProductDto.cs" />
+    <Compile Include="Models\CustomerDto.cs" />
+    <Compile Include="Models\Animal.cs" />
+    <Compile Include="Repositories\AnimalRepository.cs" />
+    <Compile Include="StatementBuilders\CustomStatementBuilder.cs" />
+    <Compile Include="Tracers\SharedTrace.cs" />
+    <Compile Include="Tracers\InventoryDbTrace.cs" />
+    <Compile Include="Models\OrderDto.cs" />
+    <Compile Include="Models\OrderItemDto.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Repositories\PersonRepository.cs" />
+    <Compile Include="Models\ProductDto.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SupplierDto.cs" />
+    <Compile Include="Models\SupplierDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -78,5 +80,6 @@
       <Name>RepoDb</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

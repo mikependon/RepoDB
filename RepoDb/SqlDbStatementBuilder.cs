@@ -169,9 +169,23 @@ namespace RepoDb
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : DataEntity
         {
+            return CreateInsert(queryBuilder, false);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
+        internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
+            where TEntity : DataEntity
+        {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = PrimaryPropertyCache.Get<TEntity>();
-            var isPrimaryIdentity = primary.IsIdentity();
             var fields = PropertyCache.Get<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary))
                 .Select(p => new Field(p.Name));
@@ -209,9 +223,24 @@ namespace RepoDb
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
         {
+            return CreateMerge(queryBuilder, qualifiers);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
+        internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
+            where TEntity : DataEntity
+        {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             var primary = PrimaryPropertyCache.Get<TEntity>();
-            var isPrimaryIdentity = primary.IsIdentity();
             if (qualifiers == null && primary != null)
             {
                 qualifiers = new Field(primary?.Name).AsEnumerable();

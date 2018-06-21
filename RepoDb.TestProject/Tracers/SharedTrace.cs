@@ -2,9 +2,9 @@
 using RepoDb.Interfaces;
 using System.Reflection;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Tracers
 {
-    public class CustomTrace : ITrace
+    public class SharedTrace : ITrace
     {
         public void AfterBatchQuery(TraceLog log)
         {

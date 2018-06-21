@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using RepoDb.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -14,6 +15,33 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DataEntityExtension
     {
+        /// <summary>
+        /// Converts the value to the type of the primary property of the target data entity.
+        /// </summary>
+        /// <typeparam name="T">The type of the <i>DataEntity</i>.</typeparam>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>The converted value to primary property type.</returns>
+        internal static object ValueToPrimaryType<T>(object value) where T : DataEntity
+        {
+            if (value == null || value == DBNull.Value)
+            {
+                return null;
+            }
+            var primary = PrimaryPropertyCache.Get<T>();
+            if (primary != null)
+            {
+                if (primary.PropertyType == TypeCache.Get(TypeTypes.Guid))
+                {
+                    value = Guid.Parse(value.ToString());
+                }
+                else
+                {
+                    value = Convert.ChangeType(value, primary.PropertyType);
+                }
+            }
+            return value;
+        }
+
         // GetPropertiesFor
         internal static IEnumerable<PropertyInfo> GetPropertiesFor(Type type, Command command)
         {
@@ -164,35 +192,6 @@ namespace RepoDb.Extensions
             return GetPrimaryProperty(dataEntity.GetType());
         }
 
-        // GetIdentityProperty
-        internal static PropertyInfo GetIdentityProperty(Type type)
-        {
-            var property = GetPropertyByAttribute(type, typeof(PrimaryAttribute));
-            return property != null ? property.IsIdentity() ? property : null : null;
-        }
-
-        /// <summary>
-        /// Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
-        /// where the <i>IsIdentity</i> property value is set to <i>True</i>.
-        /// </summary>
-        /// <typeparam name="T">The type of the data entity where to get the the identity property.</typeparam>
-        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
-        public static PropertyInfo GetIdentityProperty<T>()
-            where T : DataEntity
-        {
-            return GetIdentityProperty(typeof(T));
-        }
-
-        /// <summary>
-        /// Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
-        /// where the <i>IsIdentity</i> property value is set to <i>True</i>.
-        /// </summary>
-        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
-        public static PropertyInfo GetIdentityProperty(this DataEntity dataEntity)
-        {
-            return GetIdentityProperty(dataEntity.GetType());
-        }
-
         // GetMappedName
         internal static string GetMappedName(Type type, Command command)
         {
@@ -308,7 +307,7 @@ namespace RepoDb.Extensions
         internal static bool IsBatchQueryable(Type type)
         {
             var commandType = CommandTypeCache.Get(type, Command.BatchQuery);
-            return commandType == CommandType.Text;
+            return commandType != CommandType.TableDirect;
         }
 
         /// <summary>
@@ -360,39 +359,11 @@ namespace RepoDb.Extensions
             return IsQueryable(dataEntity.GetType());
         }
 
-        // IsBigCountable
-        internal static bool IsBigCountable(Type type)
-        {
-            var commandType = CommandTypeCache.Get(type, Command.Count);
-            return commandType == CommandType.Text;
-        }
-
-        /// <summary>
-        /// Checks whether the data entity is bulk insertable.
-        /// </summary>
-        /// <typeparam name="T">The data entity type to be checked.</typeparam>
-        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
-        public static bool IsBigCountable<T>()
-            where T : DataEntity
-        {
-            return IsBigCountable(typeof(T));
-        }
-
-        /// <summary>
-        /// Checks whether the data entity is bulk insertable.
-        /// </summary>
-        /// <param name="dataEntity">The data entity instance to be checked.</param>
-        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
-        public static bool IsBigCountable(this DataEntity dataEntity)
-        {
-            return IsBigCountable(dataEntity.GetType());
-        }
-
         // IsCountable
         internal static bool IsCountable(Type type)
         {
             var commandType = CommandTypeCache.Get(type, Command.Count);
-            return commandType == CommandType.Text;
+            return commandType != CommandType.TableDirect;
         }
 
         /// <summary>
@@ -502,7 +473,7 @@ namespace RepoDb.Extensions
         internal static bool IsMergeable(Type type)
         {
             var commandType = CommandTypeCache.Get(type, Command.Merge);
-            return commandType == CommandType.Text;
+            return commandType != CommandType.TableDirect;
         }
 
         /// <summary>

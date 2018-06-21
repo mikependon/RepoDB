@@ -97,17 +97,6 @@
             Creates a new instance of <i>RepoDb.Attributes.PrimaryAttribute</i> object.
             </summary>
         </member>
-        <member name="M:RepoDb.Attributes.PrimaryAttribute.#ctor(System.Boolean)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Attributes.PrimaryAttribute</i> object.
-            </summary>
-            <param name="isIdentity">Used to define whether the primary property is an identity.</param>
-        </member>
-        <member name="P:RepoDb.Attributes.PrimaryAttribute.IsIdentity">
-            <summary>
-            Gets a value that defines whether the primary property is an identity.
-            </summary>
-        </member>
         <member name="T:RepoDb.Attributes.TextAttribute">
             <summary>
             An attribute used to define a text value on any object.
@@ -123,6 +112,20 @@
             <summary>
             Gets a value of the text.
             </summary>
+        </member>
+        <member name="T:RepoDb.DataEntityIsPrimaryIdentityCache">
+            <summary>
+            A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
+            </summary>
+        </member>
+        <member name="M:RepoDb.DataEntityIsPrimaryIdentityCache.Get``1(System.String,RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the <i>RepoDb.Attributes.MapAttribute.Name</i> value implemented on the data entity on a target command.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="connectionString">The connection string object to be used.</param>
+            <param name="command">The target command.</param>
+            <returns>A boolean value indicating the identification of the column.</returns>
         </member>
         <member name="T:RepoDb.Constant">
             <summary>
@@ -433,6 +436,14 @@
             Contains the extension methods for <i>RepoDb.DataEntity</i> object.
             </summary>
         </member>
+        <member name="M:RepoDb.Extensions.DataEntityExtension.ValueToPrimaryType``1(System.Object)">
+            <summary>
+            Converts the value to the type of the primary property of the target data entity.
+            </summary>
+            <typeparam name="T">The type of the <i>DataEntity</i>.</typeparam>
+            <param name="value">The value to be converted.</param>
+            <returns>The converted value to primary property type.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetPropertiesFor``1(RepoDb.Enumerations.Command)">
             <summary>
             Gets the list of <i>System.Reflection.PropertyInfo</i> objects from the data entity class based on the
@@ -493,21 +504,6 @@
             <param name="dataEntity">The instance of data entity where to get the primary key property.</param>
             <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.GetIdentityProperty``1">
-            <summary>
-            Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
-            where the <i>IsIdentity</i> property value is set to <i>True</i>.
-            </summary>
-            <typeparam name="T">The type of the data entity where to get the the identity property.</typeparam>
-            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.GetIdentityProperty(RepoDb.DataEntity)">
-            <summary>
-            Gets the identity property of the data entiy type. The identification process is to check the implemented <i>RepoDb.Attributes.PrimaryKeyAttribute</i>
-            where the <i>IsIdentity</i> property value is set to <i>True</i>.
-            </summary>
-            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a identity property of the data entity.</returns>
-        </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetMappedName``1(RepoDb.Enumerations.Command)">
             <summary>
             Gets the mapped name of the data entity type on a target command. The identification process it to check the <i>RepoDb.Attributes.MapAttribute</i>
@@ -563,20 +559,6 @@
             <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.IsBulkInsertable(RepoDb.DataEntity)">
-            <summary>
-            Checks whether the data entity is bulk insertable.
-            </summary>
-            <param name="dataEntity">The data entity instance to be checked.</param>
-            <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.IsBigCountable``1">
-            <summary>
-            Checks whether the data entity is bulk insertable.
-            </summary>
-            <typeparam name="T">The data entity type to be checked.</typeparam>
-            <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.IsBigCountable(RepoDb.DataEntity)">
             <summary>
             Checks whether the data entity is bulk insertable.
             </summary>
@@ -986,13 +968,6 @@
             <param name="property">The instance of property info to be checked.</param>
             <returns>A boolean value that holds a value whether the property info is a primary property.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.IsIdentity(System.Reflection.PropertyInfo)">
-            <summary>
-            Checks whether the property info is an identity property.
-            </summary>
-            <param name="property">The instance of property info to be checked.</param>
-            <returns>A boolean value that holds a value whether the property info is an identity property.</returns>
-        </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.AsQueryField(System.Reflection.PropertyInfo,System.Object)">
             <summary>
             Converts a property info into a query field object.
@@ -1229,6 +1204,21 @@
             </typeparam>
             <param name="command">The target command where to get the mapped name of the data entity.</param>
             <returns>A string value that signifies the mapped name for the entity object on a target command.</returns>
+        </member>
+        <member name="T:RepoDb.SqlDbHelper">
+            <summary>
+            A helper class for database specially for the direct access. This class is only meant for SQL Server.
+            </summary>
+        </member>
+        <member name="M:RepoDb.SqlDbHelper.IsIdentity``1(System.String,RepoDb.Enumerations.Command,System.String)">
+            <summary>
+            Checks whether the column is identity.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="connectionString">The connection string object to be used.</param>
+            <param name="command">The target command.</param>
+            <param name="columnName">The name of the column.</param>
+            <returns>A boolean value indicating the identification of the column.</returns>
         </member>
         <member name="T:RepoDb.StringConstant">
             <summary>
@@ -2428,6 +2418,16 @@
             <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="P:RepoDb.DbRepository`1.ConnectionString">
+            <summary>
+            Gets the connection used by this repository.
+            </summary>
+        </member>
+        <member name="P:RepoDb.DbRepository`1.CommandTimeout">
+            <summary>
+            Gets the command timeout value in seconds that is being used by this repository on every operation.
+            </summary>
         </member>
         <member name="M:RepoDb.DbRepository`1.CreateConnection">
             <summary>
@@ -4490,6 +4490,17 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         </member>
+        <member name="M:RepoDb.SqlDbStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0},System.Boolean)">
+            <summary>
+            Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
+            </summary>
+            <typeparam name="TEntity">
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
+            </typeparam>
+            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+            <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+            <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
+        </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
@@ -4499,6 +4510,18 @@
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+            <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
+        </member>
+        <member name="M:RepoDb.SqlDbStatementBuilder.CreateMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Boolean)">
+            <summary>
+            Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
+            </summary>
+            <typeparam name="TEntity">
+            The <i>Data Entity</i> object bound for the SQL Statement to be created.
+            </typeparam>
+            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+            <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+            <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField})">

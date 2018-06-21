@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -15,6 +15,7 @@
       - Built on a lower target framework 4.0 for earlier compatibility.
       - Solution clean-up, removed interfaces that is not unnecessary for extensions.
       - Updated the caching by adding the expiration feature in the CacheItem.
+      - Support identity primary field identification from the database.
       - Next release is to support the .Net Core.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>

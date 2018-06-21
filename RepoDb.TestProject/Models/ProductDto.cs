@@ -1,7 +1,7 @@
 ﻿using RepoDb;
 using RepoDb.Attributes;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Models
 {
     [Map("Product")]
     public class ProductDto : DataEntity

@@ -22,20 +22,6 @@ The following primary property identification processed will be used in any case
 
 If all of the conditions above were not met, then the `DataEntity` will have no primary property. It somehow fails if the repository operation of like `Delete` and `Update` has been called without explicitly specifying the expressions for the `WHERE` parameter.
 
-Identity Property
------------------
-
-By default, upon defining a `PrimaryAttribute`, the targetted property will automatically become an `Identity` property. To unset, simply pass a `False` value on the `isIdentity` parameter of the `PrimaryAttribute` when defining it to the property.
-
-::
-
-	[Map("[dbo].[Customer]")]
-	public class Customer : DataEntity
-	{
-		[Primary] // This is identity by default, can be set to [Primary(false)]
-		public int Id { get; set; }
-	}
-
 Ignoring a Property
 -------------------
 

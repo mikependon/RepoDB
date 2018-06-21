@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb.Extensions
@@ -100,17 +99,6 @@ namespace RepoDb.Extensions
         public static bool IsPrimary(this PropertyInfo property)
         {
             return (property.GetCustomAttribute<PrimaryAttribute>() != null);
-        }
-
-        /// <summary>
-        /// Checks whether the property info is an identity property.
-        /// </summary>
-        /// <param name="property">The instance of property info to be checked.</param>
-        /// <returns>A boolean value that holds a value whether the property info is an identity property.</returns>
-        public static bool IsIdentity(this PropertyInfo property)
-        {
-            var primary = property.GetCustomAttribute<PrimaryAttribute>();
-            return (primary?.IsIdentity).HasValue;
         }
 
         /// <summary>

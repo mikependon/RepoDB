@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Attributes\CreateFieldInfoAttribute.cs" />
     <Compile Include="Attributes\CreateMethodInfoAttribute.cs" />
+    <Compile Include="DataEntityIsPrimaryIdentityCache.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="PrimaryPropertyCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="ClassMapNameCache.cs" />
+    <Compile Include="SqlDbHelper.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />

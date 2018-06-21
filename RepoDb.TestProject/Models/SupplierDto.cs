@@ -1,6 +1,6 @@
 ﻿using RepoDb.Attributes;
 
-namespace RepoDb.TestProject
+namespace RepoDb.TestProject.Models
 {
 
     [Map("Supplier")]
