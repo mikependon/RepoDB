@@ -820,6 +820,30 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        // DeleteAll
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int DeleteAll(IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(transaction: transaction);
+        }
+
+        // DeleteAllAsync
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAllAsync(IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAllAsync<TEntity>();
+        }
+
         // Delete
 
         /// <summary>

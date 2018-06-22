@@ -1393,6 +1393,34 @@ namespace RepoDb
             }
         }
 
+        // DeleteAll
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int DeleteAll<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Delete<TEntity>(transaction: transaction);
+        }
+
+        // DeleteAllAsync
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() => DeleteAll<TEntity>(transaction: transaction));
+        }
+
         // Delete
 
         /// <summary>
