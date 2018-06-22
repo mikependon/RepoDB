@@ -158,7 +158,7 @@ This operation is used to delete an existing record from the database. It return
 
 Below are the parameters:
 
-- **where**: an expression to used when deleting a record.
+- **where**: an expression to used when deleting a record. When set to `null` it deletes all the data from the database.
 - **transaction**: the transaction object to be used when deleting a data.
 
 Below is a sample on how to delete a data.
