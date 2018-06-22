@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 using RepoDb.Extensions;
 using System.Linq;
 using System.Text;
@@ -137,8 +136,8 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> Fields(Command command)
         {
-            var fields = PropertyMapNameCache.Get<TEntity>(command).ToList();
-            return Append(fields?.AsFields().Join(", "));
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.ToList().AsFields().Join(", "));
         }
 
         /// <summary>
@@ -158,7 +157,8 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> FieldsAndParameters(Command command)
         {
-            return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndParameters().Join(", "));
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.AsFieldsAndParameters().Join(", "));
         }
 
         /// <summary>
@@ -179,7 +179,8 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
         {
-            return Append(PropertyMapNameCache.Get<TEntity>(command)?.AsFieldsAndAliasFields(alias).Join(", "));
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         /// <summary>
@@ -327,7 +328,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> Table(Command command)
         {
-            return Append($"{ClassMapNameCache.Get<TEntity>(command)}");
+            return Append($"{DataEntityExtension.GetMappedName<TEntity>(command)}");
         }
 
         /// <summary>
@@ -337,8 +338,8 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> Parameters(Command command)
         {
-            var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
-            return Append(properties?.AsParameters().Join(", "));
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.AsParameters().Join(", "));
         }
 
         /// <summary>
@@ -358,8 +359,8 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> ParametersAsFields(Command command)
         {
-            var properties = PropertyMapNameCache.Get<TEntity>(command)?.ToList();
-            return Append(properties?.AsParametersAsFields().Join(", "));
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.AsParametersAsFields().Join(", "));
         }
 
         /// <summary>

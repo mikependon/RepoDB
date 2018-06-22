@@ -2,8 +2,10 @@
 using RepoDb.Extensions;
 using RepoDb.Reflection.Delegates;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -26,21 +28,21 @@ namespace RepoDb.Reflection
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 entityType,
-                TypeArrayCache.Get(TypeTypes.DbDataReader),
-                TypeCache.Get(TypeTypes.Assembly),
+                new[] { typeof(DbDataReader) },
+                typeof(Assembly).Module,
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
+            ilGenerator.DeclareLocal(typeof(object));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Iterate the properties
-            PropertyCache.Get<TEntity>(Command.Query)
+            DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
                 .ToList()
                 .ForEach(property =>
@@ -74,45 +76,38 @@ namespace RepoDb.Reflection
 
             // Load the value base on the ordinal
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderIntGetIndexer));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("get_Item", new[] { typeof(int) }));
             ilGenerator.Emit(OpCodes.Stloc, 1);
-            //ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            //var method = typeof(DbDataReader).GetMethod($"Get{propertyType.Name}", new[] { typeof(int) });
-            //ilGenerator.Emit(OpCodes.Callvirt, method);
-            //ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Load the resulted Value and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
-            ilGenerator.Emit(OpCodes.Ldsfld, FieldInfoCache.Get(FieldInfoTypes.DbNullValue));
+            ilGenerator.Emit(OpCodes.Ldsfld, typeof(DBNull).GetField("Value"));
             ilGenerator.Emit(OpCodes.Ceq);
             ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
-            
+
             // Load the DataEntity instance
             ilGenerator.Emit(OpCodes.Ldloc, 0);
             ilGenerator.Emit(OpCodes.Ldloc, 1);
 
             // Switch which method of Convert are going to used
-            var convertMethod = MethodInfoCache.GetConvertTo(propertyType) ?? MethodInfoCache.Get(MethodInfoTypes.ConvertToString);
+            var convertMethod = typeof(Convert).GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
+                typeof(Convert).GetMethod($"ToString", new[] { typeof(object) });
             ilGenerator.Emit(OpCodes.Call, convertMethod);
 
             // Parse if it is Guid
             if (propertyType == typeof(Guid))
             {
-                // Create a new instance of Nullable<T> object
-                //ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(TypeCache.Get(TypeTypes.Guid), TypeArrayCache.Get(TypeTypes.String)));
-                ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParse));
-                //ilGenerator.Emit(OpCodes.Ldstr, "D");
-                //ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.GuidParseExact));
+                ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetMethod("Parse", new[] { typeof(string) }));
             }
 
             // Check for nullable based on the underlying type
             if (underlyingType != null)
             {
                 // Get the type of Nullable<T> object
-                var nullableType = TypeCache.Get(TypeTypes.NullableGeneric).MakeGenericType(propertyType);
+                var nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
 
                 // Create a new instance of Nullable<T> object
-                ilGenerator.Emit(OpCodes.Newobj, ConstructorInfoCache.Get(nullableType, propertyType));
+                ilGenerator.Emit(OpCodes.Newobj, nullableType.GetConstructor(new[] { propertyType }));
             }
 
             // Call the (Property.Set) or (Property = Value)
@@ -129,18 +124,18 @@ namespace RepoDb.Reflection
         /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
-            var returnType = TypeCache.Get(TypeTypes.ExpandoObject);
+            var returnType = typeof(ExpandoObject);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 returnType,
-                TypeArrayCache.Get(TypeTypes.DbDataReader),
-                TypeCache.Get(TypeTypes.Assembly),
+                new[] { typeof(DbDataReader) },
+                typeof(Assembly),
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(returnType);
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.String));
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Object));
+            ilGenerator.DeclareLocal(typeof(string));
+            ilGenerator.DeclareLocal(typeof(object));
 
             // Create instance of the object type
             ilGenerator.Emit(OpCodes.Newobj, returnType.GetConstructor(Type.EmptyTypes));
@@ -167,14 +162,15 @@ namespace RepoDb.Reflection
 
             // Get the column name by ordinal
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderGetName));
+
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("GetName", new[] { typeof(int) }));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Call the reader[] method
             ilGenerator.Emit(OpCodes.Ldarg, 0);
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataReaderIntGetIndexer));
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.ObjectConverterDbNullToNull));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("get_Item", new[] { typeof(int) }));
+            ilGenerator.Emit(OpCodes.Call, typeof(ObjectConverter).GetMethod("DbNullToNull", new[] { typeof(object) }));
             ilGenerator.Emit(OpCodes.Stloc, 2);
 
             // Load the object instance
@@ -183,7 +179,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldloc, 2);
 
             // Add the value
-            ilGenerator.Emit(OpCodes.Call, MethodInfoCache.Get(MethodInfoTypes.DictionaryStringObjectAdd));
+            ilGenerator.Emit(OpCodes.Call, typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) }));
         }
 
         /// <summary>
@@ -193,31 +189,31 @@ namespace RepoDb.Reflection
         /// <returns>An instance of <i>System.Data.DataRow</i> object containing the converted values.</returns>
         public static DataEntityToDataRowDelegate<TEntity> GetDataEntityToDataRowDelegate<TEntity>() where TEntity : DataEntity
         {
-            var returnType = TypeCache.Get(TypeTypes.DataRow);
+            var returnType = typeof(DataRow);
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 returnType,
-                new Type[] { entityType, TypeCache.Get(TypeTypes.DataTable) },
-                TypeCache.Get(TypeTypes.Assembly),
+                new Type[] { entityType, typeof(DataTable) },
+                typeof(Assembly),
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(returnType);
-            ilGenerator.DeclareLocal(TypeCache.Get(TypeTypes.Type));
+            ilGenerator.DeclareLocal(typeof(Type));
 
             // Get the DataEntity type
             ilGenerator.Emit(OpCodes.Ldarg, 0);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.TypeGetType));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(Type).GetMethod("GetType"));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Create a new DataRow
             ilGenerator.Emit(OpCodes.Ldarg, 1);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataTableNewRow));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DataTable).GetMethod("NewRow"));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Iterate every properties
-            PropertyCache.Get<TEntity>(Command.None)?
+            DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
                 .Where(property => property.CanRead)
                 .ToList()
                 .ForEach(property =>
@@ -246,16 +242,16 @@ namespace RepoDb.Reflection
             // Get the target PropertyInfo
             ilGenerator.Emit(OpCodes.Ldloc, 1);
             ilGenerator.Emit(OpCodes.Ldstr, propertyName);
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.TypeGetProperty));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(Type).GetMethod("GetProperty", new[] { typeof(string) }));
 
             // Load the DataEntity object
             ilGenerator.Emit(OpCodes.Ldarg, 0);
 
             // Call the PropertyInfo.GetValue method
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.PropertyInfoGetValue));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(PropertyInfo).GetMethod("GetValue", new[] { typeof(object) }));
 
             // Call the DataRow[..] set indexer
-            ilGenerator.Emit(OpCodes.Callvirt, MethodInfoCache.Get(MethodInfoTypes.DataRowStringSetIndexer));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DataRow).GetMethod("set_Item", new[] { typeof(string), typeof(object) }));
         }
     }
 }

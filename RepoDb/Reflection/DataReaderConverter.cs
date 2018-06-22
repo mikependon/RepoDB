@@ -17,7 +17,7 @@ namespace RepoDb.Reflection
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
             where TEntity : DataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>(reader);
+            var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
             return @delegate(reader);
         }
 
@@ -30,7 +30,7 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : DataEntity
         {
-            var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>(reader);
+            var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
             var list = new List<TEntity>();
             while (reader.Read())
             {
@@ -45,10 +45,10 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An array of <i>System.Dynamic.ExpandoObject</i> objects.</returns>
-        public static IEnumerable<object> ToEnumerable(DbDataReader reader)
+        public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader)
         {
             var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
-            var list = new List<object>();
+            var list = new List<dynamic>();
             while (reader.Read())
             {
                 var expandoObject = @delegate(reader);

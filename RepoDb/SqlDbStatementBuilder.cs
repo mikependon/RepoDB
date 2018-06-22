@@ -21,7 +21,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>BatchQuery</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -33,8 +33,8 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var queryProperties = PropertyCache.Get<TEntity>(Command.Query);
-            var batchQueryProperties = PropertyCache.Get<TEntity>(Command.BatchQuery)
+            var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
+            var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
                 .Where(property => queryProperties.Contains(property));
             var fields = batchQueryProperties.Select(property => new Field(property.Name));
             queryBuilder
@@ -69,7 +69,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Count</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -94,7 +94,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Delete</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -117,7 +117,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
@@ -133,9 +133,9 @@ namespace RepoDb
         {
             if (overrideIgnore == false)
             {
-                var updateableProperties = PropertyCache.Get<TEntity>(Command.Update);
-                var inlineUpdateableProperties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
-                    .Where(property => property != PrimaryPropertyCache.Get<TEntity>() && updateableProperties.Contains(property))
+                var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
+                var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
+                    .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>() && updateableProperties.Contains(property))
                     .Select(property => property.GetMappedName());
                 var unmatchesProperties = fields?.Where(field =>
                     inlineUpdateableProperties?.FirstOrDefault(property =>
@@ -162,7 +162,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
@@ -176,7 +176,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
@@ -185,8 +185,8 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var primary = PrimaryPropertyCache.Get<TEntity>();
-            var fields = PropertyCache.Get<TEntity>(Command.Insert)
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary))
                 .Select(p => new Field(p.Name));
             queryBuilder
@@ -215,7 +215,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
@@ -230,7 +230,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
@@ -240,16 +240,16 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var primary = PrimaryPropertyCache.Get<TEntity>();
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (qualifiers == null && primary != null)
             {
                 qualifiers = new Field(primary?.Name).AsEnumerable();
             }
-            var insertProperties = PropertyCache.Get<TEntity>(Command.Insert)
+            var insertProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary));
-            var updateProperties = PropertyCache.Get<TEntity>(Command.Insert)
+            var updateProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => property != primary);
-            var mergeProperties = PropertyCache.Get<TEntity>(Command.Merge);
+            var mergeProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
             var mergeInsertableFields = mergeProperties
                 .Where(property => insertProperties.Contains(property))
                 .Select(property => new Field(property.Name));
@@ -304,7 +304,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -332,7 +332,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Update</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -341,8 +341,8 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var fields = PropertyCache.Get<TEntity>(Command.Update)
-                .Where(property => property != PrimaryPropertyCache.Get<TEntity>())
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
+                .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>())
                 .Select(p => new Field(p.Name));
             queryBuilder
                 .Clear()

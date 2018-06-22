@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using RepoDb.Extensions;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -19,9 +20,9 @@ namespace RepoDb.Reflection
         public static DataTable ToDataTable<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : DataEntity
         {
-            var @delegate = DelegateCache.GetDataEntityToDataRowDelegate<TEntity>();
+            var @delegate = DelegateFactory.GetDataEntityToDataRowDelegate<TEntity>();
             var table = new DataTable(typeof(TEntity).Name);
-            PropertyCache.Get<TEntity>(Command.None)?
+            DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
                 .Where(property => property.CanRead)
                 .ToList()
                 .ForEach(property =>

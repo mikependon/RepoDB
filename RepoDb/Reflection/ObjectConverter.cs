@@ -5,7 +5,7 @@ namespace RepoDb.Reflection
     /// <summary>
     /// A class used for converting an object.
     /// </summary>
-    public static class ObjectConverter
+    internal static class ObjectConverter
     {
         /// <summary>
         /// Converts a value to NULL if the value is equals to <i>System.DBNull.Value</i>, otherwise, returns the object value.

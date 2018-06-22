@@ -13,7 +13,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>BatchQuery</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -28,7 +28,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Count</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -40,7 +40,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Delete</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -52,7 +52,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
@@ -69,7 +69,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Insert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
@@ -80,7 +80,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Merge</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
@@ -92,7 +92,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Query</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -106,7 +106,7 @@ namespace RepoDb.Interfaces
         /// Creates a SQL Statement for repository <i>Update</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>Data Entity</i> object bound for the SQL Statement to be created.
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>

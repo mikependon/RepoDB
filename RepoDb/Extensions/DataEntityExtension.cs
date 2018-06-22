@@ -27,10 +27,10 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            var primary = PrimaryPropertyCache.Get<T>();
+            var primary = GetPrimaryProperty<T>();
             if (primary != null)
             {
-                if (primary.PropertyType == TypeCache.Get(TypeTypes.Guid))
+                if (primary.PropertyType == typeof(Guid))
                 {
                     value = Guid.Parse(value.ToString());
                 }
@@ -82,7 +82,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets a mapped command type of the <i>Data Entity</i> object based on the target command.
+        /// Gets a mapped command type of the <i>DataEntity</i> object based on the target command.
         /// </summary>
         /// <typeparam name="T">The entity type where to get the mapped command type.</typeparam>
         /// <param name="command">The target command.</param>
@@ -94,7 +94,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets a mapped command type of the <i>Data Entity</i> object based on the target command.
+        /// Gets a mapped command type of the <i>DataEntity</i> object based on the target command.
         /// </summary>
         /// <param name="dataEntity">The instance of data entity where to get the mapped command type.</param>
         /// <param name="command">The target command.</param>
@@ -160,7 +160,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the primary key property of the <i>Data Entity</i> object. The identification of the primary key will be based on the availability of certain
+        /// Gets the primary key property of the <i>DataEntity</i> object. The identification of the primary key will be based on the availability of certain
         /// attributes and naming convention.
         /// The identification process:
         /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
@@ -177,7 +177,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the primary key property of the <i>Data Entity</i> object. The identification of the primary key will be based on the availability of certain
+        /// Gets the primary key property of the <i>DataEntity</i> object. The identification of the primary key will be based on the availability of certain
         /// attributes and naming convention.
         /// The identification process:
         /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
@@ -196,7 +196,7 @@ namespace RepoDb.Extensions
         internal static string GetMappedName(Type type, Command command)
         {
             return DataEntityMapper.For(type)?.Get(command)?.Name ??
-                ClassMapCache.Get(type)?.Name ?? type.Name;
+                type.GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
         }
 
         /// <summary>
@@ -225,9 +225,9 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the <i>Data Entity</i> object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// Converts the <i>DataEntity</i> object into a dynamic object. During the conversion, the passed query groups are being merged.
         /// </summary>
-        /// <param name="dataEntity">The <i>Data Entity</i> object to be converted.</param>
+        /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <param name="queryGroup">The query group to be merged.</param>
         /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup)
@@ -252,9 +252,9 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the <i>Data Entity</i> object into a dynamic object.
+        /// Converts the <i>DataEntity</i> object into a dynamic object.
         /// </summary>
-        /// <param name="dataEntity">The <i>Data Entity</i> object to be converted.</param>
+        /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <returns>An instance of converted dynamic object.</returns>
         public static object AsObject(this DataEntity dataEntity)
         {
@@ -267,7 +267,7 @@ namespace RepoDb.Extensions
         {
             var mappedName = GetMappedName<T>(Command.None);
             var table = new DataTable(mappedName);
-            var properties = PropertyCache.Get<T>(command);
+            var properties = DataEntityExtension.GetPropertiesFor<T>(command);
             var dict = new Dictionary<DataColumn, PropertyInfo>();
             using (var cmd = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
             {
@@ -306,7 +306,7 @@ namespace RepoDb.Extensions
         // IsBatchQueryable
         internal static bool IsBatchQueryable(Type type)
         {
-            var commandType = CommandTypeCache.Get(type, Command.BatchQuery);
+            var commandType = GetCommandType(type, Command.BatchQuery);
             return commandType != CommandType.TableDirect;
         }
 
@@ -334,7 +334,7 @@ namespace RepoDb.Extensions
         // IsBulkInsertable
         internal static bool IsBulkInsertable(Type type)
         {
-            var commandType = CommandTypeCache.Get(type, Command.BulkInsert);
+            var commandType = GetCommandType(type, Command.BulkInsert);
             return commandType != CommandType.StoredProcedure;
         }
 
@@ -362,7 +362,7 @@ namespace RepoDb.Extensions
         // IsCountable
         internal static bool IsCountable(Type type)
         {
-            var commandType = CommandTypeCache.Get(type, Command.Count);
+            var commandType = GetCommandType(type, Command.Count);
             return commandType != CommandType.TableDirect;
         }
 
@@ -417,7 +417,7 @@ namespace RepoDb.Extensions
         // IsInlineUpdateable
         internal static bool IsInlineUpdateable(Type type)
         {
-            var commandType = CommandTypeCache.Get(type, Command.InlineUpdate);
+            var commandType = GetCommandType(type, Command.InlineUpdate);
             return commandType == CommandType.Text;
         }
 
@@ -472,7 +472,7 @@ namespace RepoDb.Extensions
         // IsMergeable
         internal static bool IsMergeable(Type type)
         {
-            var commandType = CommandTypeCache.Get(type, Command.Merge);
+            var commandType = GetCommandType(type, Command.Merge);
             return commandType != CommandType.TableDirect;
         }
 

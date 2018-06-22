@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
         internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
             where T : DataEntity
         {
-            var properties = PropertyCache.Get<T>(Command.None)
+            var properties = DataEntityExtension.GetPropertiesFor<T>(Command.None)
                 .Where(property => property.CanWrite);
             var dictionary = new Dictionary<int, PropertyInfo>();
             for (var i = 0; i < reader.FieldCount; i++)

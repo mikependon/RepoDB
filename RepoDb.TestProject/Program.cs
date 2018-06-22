@@ -8,6 +8,7 @@ using RepoDb.Enumerations;
 using RepoDb.TestProject.Models;
 using RepoDb.TestProject.Tracers;
 using RepoDb.TestProject.Repositories;
+using System.Threading.Tasks;
 
 namespace RepoDb.TestProject
 {
@@ -21,8 +22,23 @@ namespace RepoDb.TestProject
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             //InventoryMain();
             //RepoDbMain();
-            TestCrud();
+            //TestCrud();
+            Task.Factory.StartNew(Test);
+            Task.Factory.StartNew(Test);
+            Task.Factory.StartNew(Test);
+            Task.Factory.StartNew(Test);
+            Task.Factory.StartNew(Test);
             Console.ReadLine();
+        }
+
+        private static void Test()
+        {
+            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
+            using (var connection = repository.CreateConnection().EnsureOpen())
+            {
+                var result = connection.ExecuteQuery("SELECT TOP 100000 * FROM [dbo].[Person]");
+            }
+            Console.WriteLine($"20 records inserted.");
         }
 
         public static void InventoryMain()

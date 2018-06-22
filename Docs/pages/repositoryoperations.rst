@@ -319,7 +319,7 @@ This operation is used to merge an entity from the existing record from the data
 Below are the parameters:
 
 - **entity**: the entity object to be merged.
-- **qualifiers**: the list of fields to be used as a qualifiers when merging a record.
+- **qualifiers**: the list of fields to be used as the qualifiers when merging a record.
 - **transaction**: the transaction object to be used when merging a data.
 
 Below is a sample on how to merge a data.

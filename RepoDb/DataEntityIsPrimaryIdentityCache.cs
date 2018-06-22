@@ -10,6 +10,7 @@ namespace RepoDb
     internal static class DataEntityIsPrimaryIdentityCache
     {
         private static readonly IDictionary<string, bool> _cache = new Dictionary<string, bool>();
+        private static object _syncLock = new object();
 
         /// <summary>
         /// Gets the <i>RepoDb.Attributes.MapAttribute.Name</i> value implemented on the data entity on a target command.
@@ -21,20 +22,23 @@ namespace RepoDb
         public static bool Get<TEntity>(string connectionString, Command command)
             where TEntity : DataEntity
         {
-            var value = false;
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}".ToLower();
-            if (_cache.ContainsKey(key))
+            var value = false;
+            lock (_syncLock)
             {
-                value = _cache[key];
-            }
-            else
-            {
-                var primary = PrimaryPropertyCache.Get<TEntity>();
-                if (primary != null)
+                if (_cache.ContainsKey(key))
                 {
-                    value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.Name);
+                    value = _cache[key];
                 }
-                _cache.Add(key, value);
+                else
+                {
+                    var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                    if (primary != null)
+                    {
+                        value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.Name);
+                    }
+                    _cache.Add(key, value);
+                }
             }
             return value;
         }

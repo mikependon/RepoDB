@@ -82,8 +82,8 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		var queryProperties = PropertyCache.Get<TEntity>(Command.Query);
-		var batchQueryProperties = PropertyCache.Get<TEntity>(Command.BatchQuery)
+		var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
+		var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
 			.Where(property => queryProperties.Contains(property));
 		var fields = batchQueryProperties.Select(property => new Field(property.Name));
 		queryBuilder
@@ -196,9 +196,9 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	{
 		if (overrideIgnore == false)
 		{
-			var updateableProperties = PropertyCache.Get<TEntity>(Command.Update);
-			var inlineUpdateableProperties = PropertyCache.Get<TEntity>(Command.InlineUpdate)
-				.Where(property => property != PrimaryPropertyCache.Get<TEntity>() && updateableProperties.Contains(property))
+			var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
+			var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
+				.Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>() && updateableProperties.Contains(property))
 				.Select(property => property.GetMappedName());
 			var unmatchesProperties = fields?.Where(field =>
 				inlineUpdateableProperties?.FirstOrDefault(property =>
@@ -239,9 +239,9 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		var primary = PrimaryPropertyCache.Get<TEntity>();
+		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 		var isPrimaryIdentity = primary.IsIdentity();
-		var fields = PropertyCache.Get<TEntity>(Command.Insert)
+		var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
 			.Where(property => !(isPrimaryIdentity && property == primary))
 			.Select(p => new Field(p.Name));
 		queryBuilder
@@ -285,17 +285,17 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		var primary = PrimaryPropertyCache.Get<TEntity>();
+		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 		var isPrimaryIdentity = primary.IsIdentity();
 		if (qualifiers == null && primary != null)
 		{
 			qualifiers = new Field(primary?.Name).AsEnumerable();
 		}
-		var insertProperties = PropertyCache.Get<TEntity>(Command.Insert)
+		var insertProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
 			.Where(property => !(isPrimaryIdentity && property == primary));
-		var updateProperties = PropertyCache.Get<TEntity>(Command.Insert)
+		var updateProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
 			.Where(property => property != primary);
-		var mergeProperties = PropertyCache.Get<TEntity>(Command.Merge);
+		var mergeProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
 		var mergeInsertableFields = mergeProperties
 			.Where(property => insertProperties.Contains(property))
 			.Select(property => new Field(property.Name));
@@ -399,8 +399,8 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-		var fields = PropertyCache.Get<TEntity>(Command.Update)
-			.Where(property => property != PrimaryPropertyCache.Get<TEntity>())
+		var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
+			.Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>())
 			.Select(p => new Field(p.Name));
 		queryBuilder
 			.Clear()

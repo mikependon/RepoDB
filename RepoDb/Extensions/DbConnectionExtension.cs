@@ -78,7 +78,7 @@ namespace RepoDb.Extensions
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
-        public static IEnumerable<object> ExecuteQuery(this IDbConnection connection,
+        public static IEnumerable<dynamic> ExecuteQuery(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -165,7 +165,7 @@ namespace RepoDb.Extensions
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
-        /// converts the result back to an enumerable list of <i>Data Entity</i> object.
+        /// converts the result back to an enumerable list of <i>DataEntity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
         /// <param name="connection">The connection to be used during execution.</param>
@@ -179,7 +179,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of <i>Data Entity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
             string commandText,
@@ -229,7 +229,7 @@ namespace RepoDb.Extensions
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
-        /// converts the result back to an enumerable list of <i>Data Entity</i> object.
+        /// converts the result back to an enumerable list of <i>DataEntity</i> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
         /// <param name="connection">The connection to be used during execution.</param>
@@ -243,7 +243,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of <i>Data Entity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
             string commandText,
