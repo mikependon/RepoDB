@@ -10,20 +10,24 @@ Link: https://github.com/mikependon/RepoDb/blob/master/RepoDb.Documents/document
 
 ### Goal
 
-We aim to let .Net developers limit the implementation of SQL Statements within the application. We believe that as a .Net developer, one should only focus on .Net and Business scenario development and not on writing repetitive SQL Statements. Ofcourse, unless you are working closely with SQL Server Management Studio.
+We aim to limit the implementation of SQL Statements in the .NET application.
 
-### Notes
+### Vision
+
+To provide more flexibility and fast-switching development approach, whether to use the massive or lightweight ORM operations.
+
+### Principles
 
  - We will keep it simple as possible (KISS principle)
+ - We will help developers to be more focus on SOLID principle
  - We will make it fast as possible
- - We will never make complex implementations (specially for Queries and Methods)
- - We will avoid developing complex JOINs (until it is needed and requested by the community)
+ - We will make it more flexible
  - We will never ever do try-catch inside the library
+ - We will never make complex implementations (specially for complex Join Queries)
 
-### Features
+### What's with RepoDb?
 
- - Transaction
- - Asynchronous Operation
+ - Operations (Asynchronous)
  - Type Mapping
  - Field Mapping
  - Multiple Mapping
@@ -31,6 +35,7 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - Caching
  - Tracing
  - SQL Statement Builder
+ - Transactions
 
 ### Operations
 
@@ -44,8 +49,14 @@ We aim to let .Net developers limit the implementation of SQL Statements within 
  - InsertAsync
  - Delete
  - DeleteAsync
+ - DeleteAll
+ - DeleteAllAsync
  - Update
  - UpdateAsync
+ - InlineInsert
+ - InlineInsertAsync
+ - InlineMerge
+ - InlineMergeAsync
  - InlineUpdate
  - InlineUpdateAsync
  - Merge

@@ -1,11 +1,10 @@
-﻿using RepoDb.Exceptions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RepoDb.Extensions
@@ -74,7 +73,6 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
@@ -83,29 +81,8 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.ExecuteQuery);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
@@ -113,17 +90,7 @@ namespace RepoDb.Extensions
                 using (var reader = command.ExecuteReader())
                 {
                     //var result = reader.AsEnumerable();
-                    var result = DataReaderConverter.ToEnumerable((DbDataReader)reader);
-
-                    // After Execution
-                    if (trace != null)
-                    {
-                        trace.AfterExecuteQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                            DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                    }
-
-                    // Result
-                    return result;
+                    return DataReaderConverter.ToEnumerable((DbDataReader)reader);
                 }
             }
         }
@@ -141,7 +108,6 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
@@ -159,8 +125,7 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace));
+                    transaction: transaction));
         }
 
         /// <summary>
@@ -177,7 +142,6 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
@@ -186,44 +150,13 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.ExecuteQuery);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Actual Execution
-            using (var reader = ExecuteReader(connection, commandText, param, commandType, commandTimeout, transaction, trace))
+            using (var reader = ExecuteReader(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                var result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
-
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterExecuteQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Result
-                return result;
+                return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
             }
         }
 
@@ -241,7 +174,6 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
@@ -250,8 +182,7 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -260,8 +191,7 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace));
+                    transaction: transaction));
         }
 
         /// <summary>
@@ -277,47 +207,19 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An instance of the data reader object.</returns>
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteReader(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.ExecuteReader);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
                 command.CreateParameters(param);
-                var reader = command.ExecuteReader();
-                if (trace != null)
-                {
-                    trace.AfterExecuteReader(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, reader,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-                return reader;
+                return command.ExecuteReader();
             }
         }
 
@@ -334,15 +236,13 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An instance of the data reader object.</returns>
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew(() =>
                 ExecuteReader(connection: connection,
@@ -350,8 +250,7 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace));
+                    transaction: transaction));
         }
 
         /// <summary>
@@ -367,51 +266,19 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteNonQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.ExecuteNonQuery);
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
                 command.CreateParameters(param);
-                var result = command.ExecuteNonQuery();
-
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterExecuteNonQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Result
-                return result;
+                return command.ExecuteNonQuery();
             }
         }
 
@@ -428,15 +295,13 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew<int>(() =>
                 ExecuteNonQuery(connection: connection,
@@ -444,8 +309,7 @@ namespace RepoDb.Extensions
                     param: param,
                     commandType: commandType,
                     commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace));
+                    transaction: transaction));
         }
 
         /// <summary>
@@ -461,55 +325,19 @@ namespace RepoDb.Extensions
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeExecuteScalar(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(StringConstant.ExecuteScalar);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
                 command.CreateParameters(param);
-                var result = command.ExecuteScalar();
-                if (result == DBNull.Value)
-                {
-                    result = null;
-                }
-
-                // After Execution
-                if (trace != null)
-                {
-                    trace.AfterExecuteScalar(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Result
-                return result;
+                return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RepoDb.Reflection
+namespace RepoDb
 {
     /// <summary>
     /// A class used for converting an object.

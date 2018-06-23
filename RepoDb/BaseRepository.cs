@@ -602,11 +602,48 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        // InlineInsert
+
+        /// <summary>
+        /// Inserts a data in the database targetting certain fields only.
+        /// </summary>
+        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public object InlineInsert(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineInsert<TEntity>(entity: entity,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        // InlineInsertAsync
+
+        /// <summary>
+        /// Inserts a data in the database targetting certain fields only.
+        /// </summary>
+        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public Task<object> InlineInsertAsync(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineInsertAsync<TEntity>(entity: entity,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
         // InlineUpdate
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>
@@ -622,8 +659,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>
@@ -639,8 +675,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>
@@ -658,8 +693,7 @@ namespace RepoDb
         // InlineUpdateAsync
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>
@@ -675,8 +709,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>
@@ -692,8 +725,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  on this operation.</param>

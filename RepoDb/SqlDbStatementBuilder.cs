@@ -135,6 +135,87 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// </param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
+        public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
+            where TEntity : DataEntity
+        {
+            return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// </param>
+        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
+        internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
+            bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+            where TEntity : DataEntity
+        {
+            if (overrideIgnore == false)
+            {
+                var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert);
+                var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
+                    .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>() && insertableProperties.Contains(property))
+                    .Select(property => property.GetMappedName());
+                var unmatchesProperties = fields?.Where(field =>
+                    inlineInsertableProperties?.FirstOrDefault(property =>
+                        field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatchesProperties?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The columns {unmatchesProperties.Select(field => field.AsField()).Join(", ")} are not insertable for entity {typeof(TEntity).FullName}.");
+                }
+            }
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            if (primary!=null)
+            {
+                fields = fields?
+                    .Where(field => !(isPrimaryIdentity && field.Name.ToLower() == primary.Name.ToLower()))
+                    .Select(field => field);
+            }
+            queryBuilder
+                .Clear()
+                .Insert()
+                .Into()
+                .Table(Command.Insert)
+                .OpenParen()
+                .Fields(fields)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .Parameters(fields)
+                .CloseParen()
+                .End();
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
+            queryBuilder
+                .Select()
+                .WriteText(result)
+                .As("[Result]")
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
@@ -163,8 +244,7 @@ namespace RepoDb
                         field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesProperties?.Count() > 0)
                 {
-                    throw new InvalidOperationException($"The following columns ({unmatchesProperties.Select(field => field.AsField()).Join(", ")}) " +
-                        $"are not updatable for entity ({DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}).");
+                    throw new InvalidOperationException($"The columns {unmatchesProperties.Select(field => field.AsField()).Join(", ")} are not updateable for entity {typeof(TEntity).FullName}.");
                 }
             }
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();

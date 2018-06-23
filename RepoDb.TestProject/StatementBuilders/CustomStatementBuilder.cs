@@ -21,6 +21,16 @@ namespace RepoDb.TestProject.StatementBuilders
             throw new NotImplementedException();
         }
 
+        public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
+        public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false) where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
         public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false) where TEntity : DataEntity
         {
             throw new NotImplementedException();

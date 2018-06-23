@@ -902,12 +902,7 @@ namespace RepoDb
                 if (StatementBuilder is SqlDbStatementBuilder)
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    //var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
                     var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    //if (primary != null)
-                    //{
-                    //    isPrimaryIsIdentityAtDb = SqlDbHelper.IsIdentity<TEntity>(ConnectionString, command, primary.Name);
-                    //}
                     commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(queryBuilder, isPrimaryIsIdentityAtDb);
                 }
                 else
@@ -978,6 +973,246 @@ namespace RepoDb
                     transaction: transaction));
         }
 
+        // GuardInlineInsertable
+
+        private void GuardInlineInsertable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInlineInsertable<TEntity>())
+            {
+                throw new EntityNotInlineUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert));
+            }
+        }
+
+        // InlineInsert
+
+        /// <summary>
+        /// Inserts a data in the database targetting certain fields only.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public object InlineInsert<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardInlineInsertable<TEntity>();
+
+            // Variables
+            var command = Command.InlineInsert;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var queryBuilder = new QueryBuilder<TEntity>();
+            var commandText = string.Empty;
+
+            // Compose command text
+            if (commandType == CommandType.StoredProcedure)
+            {
+                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
+            }
+            else
+            {
+                if (StatementBuilder is SqlDbStatementBuilder)
+                {
+                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
+                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(queryBuilder, entity?.AsFields(),
+                        overrideIgnore, isPrimaryIsIdentityAtDb);
+                }
+                else
+                {
+                    // Other Sql Data Providers
+                    commandText = StatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
+                }
+            }
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                Trace.BeforeInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                entity = (cancellableTraceLog?.Parameter ?? entity);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteScalar(commandText: commandText,
+                param: entity,
+                commandType: commandType,
+                commandTimeout: CommandTimeout,
+                transaction: transaction);
+
+            // Set back result equals to PrimaryKey type
+            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // InlineInsertAsync
+
+        /// <summary>
+        /// Inserts a data in the database targetting certain fields only in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineInsert<TEntity>(entity: entity,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
+        // GuardInlineMergeable
+
+        private void GuardInlineMergeable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInlineMergeable<TEntity>())
+            {
+                throw new EntityNotInlineInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge));
+            }
+        }
+
+        // InlineMerge
+
+        ///// <summary>
+        ///// Merges a data in the database targetting certain fields only.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        ///// <param name="entity">The object that contains the targetted columns to be merged.</param>
+        ///// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        ///// <param name="transaction">The transaction to be used on this operation.</param>
+        ///// <returns>
+        ///// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        ///// <i>PrimaryKey</i> property is not present.
+        ///// </returns>
+        //public object InlineInsert<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        //    where TEntity : DataEntity
+        //{
+        //    // Check
+        //    GuardInlineInsertable<TEntity>();
+
+        //    // Variables
+        //    var command = Command.InlineInsert;
+        //    var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+        //    var queryBuilder = new QueryBuilder<TEntity>();
+        //    var commandText = string.Empty;
+
+        //    // Compose command text
+        //    if (commandType == CommandType.StoredProcedure)
+        //    {
+        //        commandText = DataEntityExtension.GetMappedName<TEntity>(command);
+        //    }
+        //    else
+        //    {
+        //        if (StatementBuilder is SqlDbStatementBuilder)
+        //        {
+        //            // Cache only if the 'isIdentity' is not defined, only for SQL Server
+        //            var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+        //            commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(queryBuilder, entity?.AsFields(),
+        //                overrideIgnore, isPrimaryIsIdentityAtDb);
+        //        }
+        //        else
+        //        {
+        //            // Other Sql Data Providers
+        //            commandText = StatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
+        //        }
+        //    }
+
+        //    // Before Execution
+        //    if (Trace != null)
+        //    {
+        //        var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+        //        Trace.BeforeInsert(cancellableTraceLog);
+        //        if (cancellableTraceLog.IsCancelled)
+        //        {
+        //            if (cancellableTraceLog.IsThrowException)
+        //            {
+        //                throw new CancelledExecutionException(command.ToString());
+        //            }
+        //            return 0;
+        //        }
+        //        commandText = (cancellableTraceLog?.Statement ?? commandText);
+        //        entity = (cancellableTraceLog?.Parameter ?? entity);
+        //    }
+
+        //    // Before Execution Time
+        //    var beforeExecutionTime = DateTime.UtcNow;
+
+        //    // Actual Execution
+        //    var result = ExecuteScalar(commandText: commandText,
+        //        param: entity,
+        //        commandType: commandType,
+        //        commandTimeout: CommandTimeout,
+        //        transaction: transaction);
+
+        //    // Set back result equals to PrimaryKey type
+        //    result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
+
+        //    // After Execution
+        //    if (Trace != null)
+        //    {
+        //        Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+        //            DateTime.UtcNow.Subtract(beforeExecutionTime)));
+        //    }
+
+        //    // Result
+        //    return result;
+        //}
+
+        //// InsertAsync
+
+        ///// <summary>
+        ///// Inserts a data in the database targetting certain fields only in an asynchronous way.
+        ///// </summary>
+        ///// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        ///// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        ///// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        ///// <param name="transaction">The transaction to be used on this operation.</param>
+        ///// <returns>
+        ///// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        ///// <i>PrimaryKey</i> property is not present.
+        ///// </returns>
+        //public Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        //    where TEntity : DataEntity
+        //{
+        //    return Task.Factory.StartNew(() =>
+        //        InlineInsert<TEntity>(entity: entity,
+        //            overrideIgnore: overrideIgnore,
+        //            transaction: transaction));
+        //}
+
         // GuardInlineUpdateable
 
         private void GuardInlineUpdateable<TEntity>()
@@ -992,8 +1227,7 @@ namespace RepoDb
         // InlineUpdate
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1024,8 +1258,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1043,8 +1276,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression. This update operation is a targetted column-based operation
-        /// based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1108,8 +1340,7 @@ namespace RepoDb
         // InlineUpdateAsync
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1128,8 +1359,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1148,8 +1378,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way. This update operation is a targetted
-        /// column-based operation based on the columns specified in the data entity.
+        /// Updates a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -1724,12 +1953,7 @@ namespace RepoDb
                 if (StatementBuilder is SqlDbStatementBuilder)
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    //var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
                     var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    //if (primary != null)
-                    //{
-                    //    isPrimaryIsIdentityAtDb = SqlDbHelper.IsIdentity<TEntity>(ConnectionString, command, primary.Name);
-                    //}
                     commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(queryBuilder, qualifiers, isPrimaryIsIdentityAtDb);
                 }
                 else
@@ -1934,8 +2158,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace);
+                transaction: transaction);
             if (transaction == null)
             {
                 connection.Dispose();
@@ -1996,8 +2219,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace);
+                transaction: transaction);
             if (transaction == null)
             {
                 connection.Dispose();
@@ -2054,8 +2276,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace);
+                transaction: transaction);
             if (transaction == null)
             {
                 connection.Dispose();

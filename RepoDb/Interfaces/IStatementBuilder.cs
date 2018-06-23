@@ -60,13 +60,29 @@ namespace RepoDb.Interfaces
             where TEntity : DataEntity;
 
         /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// </param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
+        string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
+            where TEntity : DataEntity;
+
+        /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of fields to be a part of the inline update operation on SQL Statement composition.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 

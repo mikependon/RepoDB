@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
     /// Contains the extension methods for <i>System.Object</i> object.
     /// </summary>
-    public static class ObjectExtension
+    internal static class ObjectExtension
     {
-        // AsObject
-        internal static object Merge(this object obj, QueryGroup queryGroup)
+        /// <summary>
+        /// Merge the <i>RepoDb.QueryGroup</i> object into the current object.
+        /// </summary>
+        /// <param name="obj">The object where the <i>RepoDb.QueryGroup</i> object will be merged.</param>
+        /// <param name="queryGroup">The <i>RepoDb.QueryGroup</i> object to merged.</param>
+        /// <returns>The object instance itself with the merged values.</returns>
+        public static object Merge(this object obj, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             obj?.GetType()
@@ -75,6 +79,17 @@ namespace RepoDb.Extensions
         public static IEnumerable<OrderField> AsOrderFields(this object obj)
         {
             return OrderField.Parse(obj);
+        }
+
+        /// <summary>
+        /// Returns the first non-null occurence.
+        /// </summary>
+        /// <param name="parameters">The list of parameters.</param>
+        /// <returns>The first non-null object.</returns>
+        public static object Coalesce(this object obj, params object[] parameters)
+        {
+            return parameters?
+                .First(param => param != null);
         }
     }
 }

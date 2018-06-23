@@ -53,6 +53,8 @@
     <Compile Include="Exceptions\EntityNotCountableException.cs" />
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
     <Compile Include="Exceptions\DataEntityMapException.cs" />
+    <Compile Include="Exceptions\EntityNotInlineInsertableException.cs" />
+    <Compile Include="Exceptions\EntityNotInlineMergeableException.cs" />
     <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
@@ -105,7 +107,7 @@
     <Compile Include="QueryField.cs" />
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="Reflection\DataEntityConverter.cs" />
-    <Compile Include="Reflection\ObjectConverter.cs" />
+    <Compile Include="ObjectConverter.cs" />
     <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\Delegates.cs" />

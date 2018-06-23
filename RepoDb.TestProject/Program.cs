@@ -19,26 +19,12 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //TestInNotInBetweenNotBetweenAnyAllOperation();
             //InventoryMain();
             //RepoDbMain();
-            //TestCrud();
-            Task.Factory.StartNew(Test);
-            Task.Factory.StartNew(Test);
-            Task.Factory.StartNew(Test);
-            Task.Factory.StartNew(Test);
-            Task.Factory.StartNew(Test);
+            TestAllOperations();
+            //TestInNotInBetweenNotBetweenAnyAllOperation();
+            //TestParallelism();
             Console.ReadLine();
-        }
-
-        private static void Test()
-        {
-            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
-            using (var connection = repository.CreateConnection().EnsureOpen())
-            {
-                var result = connection.ExecuteQuery("SELECT TOP 100000 * FROM [dbo].[Person]");
-            }
-            Console.WriteLine($"20 records inserted.");
         }
 
         public static void InventoryMain()
@@ -202,6 +188,22 @@ namespace RepoDb.TestProject
             Console.WriteLine($"RepoDb: {loops} loops (top 10 rows each) for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
         }
 
+        private static void TestParallelism()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                TestRepoDbQuery(500000);
+            });
+            Task.Factory.StartNew(() =>
+            {
+                TestRepoDbQuery(100000);
+            });
+            Task.Factory.StartNew(() =>
+            {
+                TestRepoDbQuery(300000);
+            });
+        }
+
         private static void TestInNotInBetweenNotBetweenAnyAllOperation()
         {
             var repository = new PersonRepository(RepoDbConnectionString);
@@ -298,7 +300,7 @@ namespace RepoDb.TestProject
             true);
         }
 
-        private static void TestCrud()
+        private static void TestAllOperations()
         {
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
@@ -337,6 +339,14 @@ namespace RepoDb.TestProject
                 DateUpdated = DateTime.UtcNow
             });
 
+            // Verify
+            Console.WriteLine($"Query Animal: {animalId}");
+            var animal = repository.Query<Animal>(animalId).FirstOrDefault();
+            if (animal == null)
+            {
+                throw new NullReferenceException("Animal is null.");
+            }
+
             // Insert with Identity PrimaryKey
             Console.WriteLine("Insert with Identity");
             var personId = repository.Insert(new Person()
@@ -346,12 +356,32 @@ namespace RepoDb.TestProject
                 DateInserted = DateTime.UtcNow,
                 DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
                 DateUpdated = DateTime.UtcNow,
-                Worth = 6000000
+                Worth = new Random().Next(30000, 60000)
             });
 
             // Verify
             Console.WriteLine($"Query Person with Identity: {personId}");
             var person = repository.Query<Person>(personId).FirstOrDefault();
+            if (person == null)
+            {
+                throw new NullReferenceException("Person is null.");
+            }
+
+            // Insert with Dynamic
+            Console.WriteLine("InlineInsert with Identity");
+            personId = repository.InlineInsert<Person>(new
+            {
+                Name = $"Name: {Guid.NewGuid().ToString()}",
+                Address = $"Address: {Guid.NewGuid().ToString()}",
+                DateInserted = DateTime.UtcNow,
+                DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
+                DateUpdated = DateTime.UtcNow,
+                Worth = new Random().Next(30000, 60000)
+            });
+
+            // Verify
+            Console.WriteLine($"Query Person Inserted via InlineInsert: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");

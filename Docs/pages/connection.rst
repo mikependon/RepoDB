@@ -41,15 +41,6 @@ This method is used to ensure that the connection object is `Open`. The reposito
 
 The underlying method call of this method is the `System.Data.DbConnection.Open()` method.
 
-Below are the parameters:
-
-- **commandText**: the SQL statement to be used for execution.
-- **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
-- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **transaction (optional)**: the transaction object be used when executing the command.
-- **trace (optional)**: the trace object to be used on this operation.
-
 See sample codes below.
 
 ::
@@ -85,7 +76,6 @@ Below are the parameters:
 - **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
-- **trace (optional)**: the trace object to be used on this operation.
 
 See sample codes below.
 
@@ -136,7 +126,6 @@ Below are the parameters:
 - **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
-- **trace (optional)**: the trace object to be used on this operation.
 
 Code below returns an enumerable list of `dynamic` object.
 
@@ -220,7 +209,6 @@ Below are the parameters:
 - **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
-- **trace (optional)**: the trace object to be used on this operation.
 
 See sample codes below.
 
@@ -259,7 +247,6 @@ Below are the parameters:
 - **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
-- **trace (optional)**: the trace object to be used on this operation.
 
 See sample codes below.
 
