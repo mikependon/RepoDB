@@ -306,8 +306,8 @@ namespace RepoDb.TestProject
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 
             // Count
-            Console.WriteLine($"Person Records: {repository.Count<Person>()}");
-            Console.WriteLine($"Animal Records: {repository.Count<Animal>()}");
+            Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
+            Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");
 
             // BatchQuery
             Console.WriteLine("BatchQuery Person");
@@ -329,7 +329,7 @@ namespace RepoDb.TestProject
             var bulkInsertResult = repository.BulkInsert(queryResult);
 
             // Insert with Guid Primary Key
-            Console.WriteLine("Insert with UniqueIdentifier PrimaryKey");
+            Console.WriteLine("Insert with Guid PrimaryKey");
             var animalId = repository.Insert(new Animal()
             {
                 Id = Guid.NewGuid(),
@@ -340,7 +340,7 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Query Animal: {animalId}");
+            Console.WriteLine($"Verify Insert with Guid PrimaryKey: {animalId}");
             var animal = repository.Query<Animal>(animalId).FirstOrDefault();
             if (animal == null)
             {
@@ -348,7 +348,7 @@ namespace RepoDb.TestProject
             }
 
             // Insert with Identity PrimaryKey
-            Console.WriteLine("Insert with Identity");
+            Console.WriteLine("Insert with Identity PrimaryKey");
             var personId = repository.Insert(new Person()
             {
                 Name = $"Name: {Guid.NewGuid().ToString()}",
@@ -360,34 +360,60 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Query Person with Identity: {personId}");
+            Console.WriteLine($"Verify Insert with Identity PrimaryKey: {personId}");
             var person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
                 throw new NullReferenceException("Person is null.");
             }
 
+            // Check InlineInsert
+            Console.WriteLine($"InlineInsert Person");
+            personId = repository.InlineInsert<Person>(new
+            {
+                Name = $"NAME-{Guid.NewGuid().ToString()} - InlineInsert",
+                Address = $"ADDR-{Guid.NewGuid().ToString()} - InlineInsert"
+            });
+
+            // Verify
+            Console.WriteLine($"Verify Record after InlineInsert: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
+            if (person == null)
+            {
+                throw new NullReferenceException("Person is null.");
+            }
+
             // Check InlineMerge
+            Console.WriteLine($"InlineMerge Person: {personId}");
             var affectedRows = repository.InlineMerge<Person>(new
             {
+                Id = personId,
                 Name = $"{person.Name} - InlineMerge",
                 Address = $"{person.Name} - InlineMerge"
             });
 
-            // Insert with Dynamic
-            Console.WriteLine("InlineInsert with Identity");
-            personId = repository.InlineInsert<Person>(new
+            // Verify
+            Console.WriteLine($"Verify Record after InlineMerge: {personId}");
+            person = repository.Query<Person>(personId).FirstOrDefault();
+            if (person == null)
             {
-                Name = $"Name: {Guid.NewGuid().ToString()}",
-                Address = $"Address: {Guid.NewGuid().ToString()}",
-                DateInserted = DateTime.UtcNow,
-                DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
-                DateUpdated = DateTime.UtcNow,
-                Worth = new Random().Next(30000, 60000)
+                throw new NullReferenceException("Person is null.");
+            }
+
+            // InlineUpdate
+            Console.WriteLine("InlineUpdate Person");
+            var inlineUpdateResult = repository.InlineUpdate<Person>(new
+            {
+                Name = $"NAME-{Guid.NewGuid().ToString()} - InlineUpdate",
+                Address = $"ADDR-{Guid.NewGuid().ToString()} - InlineUpdate"
+            },
+            new
+            {
+                Id = personId
             });
 
             // Verify
-            Console.WriteLine($"Query Person Inserted via InlineInsert: {personId}");
+            Console.WriteLine($"Verify Person After InlineUpdate: {personId}");
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
@@ -418,25 +444,6 @@ namespace RepoDb.TestProject
 
             // Verify
             Console.WriteLine($"Query Person After Merge: {personId}");
-            person = repository.Query<Person>(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
-
-            // InlineUpdate
-            Console.WriteLine("InlineUpdate Person");
-            var inlineUpdateResult = repository.InlineUpdate<Person>(new
-            {
-                Name = $"Name: {Guid.NewGuid().ToString()} (Inline Updated)"
-            },
-            new
-            {
-                Id = personId
-            });
-
-            // Verify
-            Console.WriteLine($"Verify Person After InlineUpdate: {personId}");
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {

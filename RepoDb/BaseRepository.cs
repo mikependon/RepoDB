@@ -650,7 +650,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public object InlineMerge(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public int InlineMerge(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return DbRepository.InlineMerge<TEntity>(entity,
                 overrideIgnore: overrideIgnore,
@@ -666,7 +666,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public object InlineMerge(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public int InlineMerge(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return DbRepository.InlineMerge<TEntity>(entity,
                 qualifiers: qualifiers,
@@ -684,7 +684,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<object> InlineMergeAsync(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public Task<int> InlineMergeAsync(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew(() =>
                 DbRepository.InlineMerge<TEntity>(entity,
@@ -701,7 +701,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<object> InlineMergeAsync(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+        public Task<int> InlineMergeAsync(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew(() =>

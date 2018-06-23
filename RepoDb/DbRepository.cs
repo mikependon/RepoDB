@@ -128,7 +128,7 @@ namespace RepoDb
             var property = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (property == null)
             {
-                throw new PrimaryFieldNotFoundException($"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>(command)})");
+                throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}' for database object '{DataEntityExtension.GetMappedName<TEntity>(command)}'.");
             }
             return property;
         }
@@ -888,7 +888,6 @@ namespace RepoDb
             // Variables
             var command = Command.Insert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var queryBuilder = new QueryBuilder<TEntity>();
             var commandText = string.Empty;
             var param = entity?.AsObject();
 
@@ -903,7 +902,7 @@ namespace RepoDb
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
                     var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(queryBuilder, isPrimaryIdentity);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
                 }
                 else
                 {
@@ -1006,7 +1005,6 @@ namespace RepoDb
             // Variables
             var command = Command.InlineInsert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var queryBuilder = new QueryBuilder<TEntity>();
             var commandText = string.Empty;
 
             // Compose command text
@@ -1020,7 +1018,7 @@ namespace RepoDb
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
                     var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(queryBuilder, entity?.AsFields(),
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(),
                         overrideIgnore, isPrimaryIdentity);
                 }
                 else
@@ -1114,7 +1112,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public object InlineMerge<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public int InlineMerge<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return InlineMerge<TEntity>(entity,
@@ -1132,7 +1130,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public object InlineMerge<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+        public int InlineMerge<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null) where TEntity : DataEntity
         {
             // Check
@@ -1151,24 +1149,19 @@ namespace RepoDb
                     throw new PrimaryFieldNotFoundException($"Merge operation could proceed. Primary field is missing at type " +
                         $"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>(command)}).");
                 }
-                else
-                {
-                    qualifiers = Field.From(primary.GetMappedName());
-                }
             }
 
             // All qualifiers must be present in the dynamic entity
-            var missingFields = qualifiers.Where(qualifier => entityProperties.FirstOrDefault(property =>
+            var missingFields = qualifiers?.Where(qualifier => entityProperties.FirstOrDefault(property =>
                 property.GetMappedName().ToLower() == qualifier.Name.ToLower()) == null);
-            if (missingFields.Any())
+            if (missingFields?.Count() > 0)
             {
-                throw new InvalidOperationException($"All qualifier fields {missingFields.Select(f => f.AsField()).Join(", ")} " +
-                    $"must be present in the dynamic entity.");
+                throw new InvalidOperationException($"All qualifier fields must be presented in the given dynamic entity object. " +
+                    $"The list of missing field(s) are {missingFields.Select(f => f.AsField()).Join(", ")}.");
             }
 
             // Other variables
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var queryBuilder = new QueryBuilder<TEntity>();
             var commandText = string.Empty;
 
             // Compose command text
@@ -1182,7 +1175,7 @@ namespace RepoDb
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
                     var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineMerge(queryBuilder, entity?.AsFields(),
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(),
                         qualifiers, overrideIgnore, isPrimaryIdentity);
                 }
                 else
@@ -1214,14 +1207,11 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalar(commandText: commandText,
+            var result = ExecuteNonQuery(commandText: commandText,
                 param: entity,
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
-
-            // Set back result equals to PrimaryKey type
-            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (Trace != null)
@@ -1244,7 +1234,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<object> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public Task<int> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1262,7 +1252,7 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<object> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+        public Task<int> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1529,7 +1519,7 @@ namespace RepoDb
                 else
                 {
                     var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
-                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
+                    queryGroup = new QueryGroup(new QueryField(property?.GetMappedName(), where).AsEnumerable());
                 }
             }
             return Update(entity: entity,
@@ -1822,7 +1812,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Query);
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
                     queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
@@ -1998,7 +1988,6 @@ namespace RepoDb
 
             // Variables
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var queryBuilder = new QueryBuilder<TEntity>();
             var commandText = string.Empty;
             var param = entity?.AsObject();
 
@@ -2013,7 +2002,7 @@ namespace RepoDb
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
                     var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(queryBuilder, qualifiers, isPrimaryIdentity);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(new QueryBuilder<TEntity>(), qualifiers, isPrimaryIdentity);
                 }
                 else
                 {
