@@ -1,6 +1,4 @@
-﻿using RepoDb.Interfaces;
-
-namespace RepoDb
+﻿namespace RepoDb
 {
     /// <summary>
     /// Acts as the base class of all <i>DataEntity</i> object.

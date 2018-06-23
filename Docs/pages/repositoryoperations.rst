@@ -488,12 +488,12 @@ or
 
 **Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
-Ordering a Query
-~~~~~~~~~~~~~~~~
+Ordering the Result
+~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: c#
 
-An ordering is the way of sorting the result of your query in `ascending` or `descending` order, depending on the qualifier fields. Below is a sample snippet that returns the `Stock` records ordered by `ParentId` field in ascending manner and `Name` field is in `descending` manner.
+An ordering is the way of sorting the result of your query in `Ascending` or `Descending` order, depending on the qualifier fields. Below is a sample snippet that returns the `Stock` records ordered by `ParentId` field in ascending manner and `Name` field is in `descending` manner.
 
 Dynamic way:
 
@@ -502,10 +502,9 @@ Dynamic way:
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	var orderBy = new
 	{
-		CustomerId = Order.Ascending,
 		Name = Order.Descending
 	};
-	var orders = repository.Query<Order>(new { CustomerId = new { Operation = Operation.GreaterThan, Value = 1 } }, orderBy: OrderField.Parse(orderBy));
+	var orders = repository.Query<Customer>(new { Id = new { Operation = Operation.In, Value = new [] { 100, 200 } } }, orderBy: OrderField.Parse(orderBy));
 
 Explicit way:
 
@@ -514,17 +513,16 @@ Explicit way:
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	var orderBy = new []
 	{
-		new OrderField("CustomerId", Order.Ascending),
 		new OrderField("Name", Order.Descending)
 	};
-	var orders = repository.Query<Order>(new { CustomerId = new { Operation = Operation.GreaterThan, Value = 1 } }, orderBy: orderBy);
+	var orders = repository.Query<Customer>(new { Id = new { Operation = Operation.In, Value = new [] { 100, 200 } } }, orderBy: orderBy);
 
 The `RepodDb.OrderField` is an object that is being used to order a query result. The `Parse` method is used to convert the `dynamic` object to become an `OrderField` instances.
 
 **Note:** When composing a dynamic ordering object, the value of the properties should be equal to `RepoDb.Enumerations.Order` values (`Ascending` or `Descending`). Otherwise, an exception will be thrown during `OrderField.Parse` operation.
 
-Limiting a Query Result
-~~~~~~~~~~~~~~~~~~~~~~~
+Limiting the Query Result
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: c#
 

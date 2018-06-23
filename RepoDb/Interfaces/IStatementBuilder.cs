@@ -66,13 +66,30 @@ namespace RepoDb.Interfaces
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
-        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
         string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
+            where TEntity : DataEntity;
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored on the inline insert operation in SQL Statement composition.
+        /// </param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
+        string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -82,11 +99,11 @@ namespace RepoDb.Interfaces
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of the inline update operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of fields to be a part of the inline update operation in SQL Statement composition.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
-        /// be ignored on the inline update operation on SQL Statement composition.
+        /// be ignored on the inline update operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
         string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false)
@@ -110,7 +127,7 @@ namespace RepoDb.Interfaces
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity;
@@ -123,8 +140,8 @@ namespace RepoDb.Interfaces
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation on SQL Statement composition.</param>
-        /// <param name="orderBy">The list of fields  to be used for ordering on SQL Statement composition.</param>
+        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
+        /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
             where TEntity : DataEntity;

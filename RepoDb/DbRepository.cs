@@ -902,8 +902,8 @@ namespace RepoDb
                 if (StatementBuilder is SqlDbStatementBuilder)
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(queryBuilder, isPrimaryIsIdentityAtDb);
+                    var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInsert(queryBuilder, isPrimaryIdentity);
                 }
                 else
                 {
@@ -980,7 +980,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInlineInsertable<TEntity>())
             {
-                throw new EntityNotInlineUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert));
+                throw new EntityNotInlineInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert));
             }
         }
 
@@ -1019,9 +1019,9 @@ namespace RepoDb
                 if (StatementBuilder is SqlDbStatementBuilder)
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
                     commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(queryBuilder, entity?.AsFields(),
-                        overrideIgnore, isPrimaryIsIdentityAtDb);
+                        overrideIgnore, isPrimaryIdentity);
                 }
                 else
                 {
@@ -1100,118 +1100,177 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInlineMergeable<TEntity>())
             {
-                throw new EntityNotInlineInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge));
+                throw new EntityNotInlineMergeableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge));
             }
         }
 
         // InlineMerge
 
-        ///// <summary>
-        ///// Merges a data in the database targetting certain fields only.
-        ///// </summary>
-        ///// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        ///// <param name="entity">The object that contains the targetted columns to be merged.</param>
-        ///// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        ///// <param name="transaction">The transaction to be used on this operation.</param>
-        ///// <returns>
-        ///// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        ///// <i>PrimaryKey</i> property is not present.
-        ///// </returns>
-        //public object InlineInsert<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-        //    where TEntity : DataEntity
-        //{
-        //    // Check
-        //    GuardInlineInsertable<TEntity>();
+        /// <summary>
+        /// Merges a data in the database targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public object InlineMerge<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return InlineMerge<TEntity>(entity,
+                qualifiers: null,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
 
-        //    // Variables
-        //    var command = Command.InlineInsert;
-        //    var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-        //    var queryBuilder = new QueryBuilder<TEntity>();
-        //    var commandText = string.Empty;
+        /// <summary>
+        /// Merges a data in the database targetting certain fields only.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public object InlineMerge<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+            IDbTransaction transaction = null) where TEntity : DataEntity
+        {
+            // Check
+            GuardInlineMergeable<TEntity>();
 
-        //    // Compose command text
-        //    if (commandType == CommandType.StoredProcedure)
-        //    {
-        //        commandText = DataEntityExtension.GetMappedName<TEntity>(command);
-        //    }
-        //    else
-        //    {
-        //        if (StatementBuilder is SqlDbStatementBuilder)
-        //        {
-        //            // Cache only if the 'isIdentity' is not defined, only for SQL Server
-        //            var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-        //            commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineInsert(queryBuilder, entity?.AsFields(),
-        //                overrideIgnore, isPrimaryIsIdentityAtDb);
-        //        }
-        //        else
-        //        {
-        //            // Other Sql Data Providers
-        //            commandText = StatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
-        //        }
-        //    }
+            // Variables
+            var command = Command.InlineMerge;
+            var entityProperties = entity?.GetType().GetProperties();
 
-        //    // Before Execution
-        //    if (Trace != null)
-        //    {
-        //        var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
-        //        Trace.BeforeInsert(cancellableTraceLog);
-        //        if (cancellableTraceLog.IsCancelled)
-        //        {
-        //            if (cancellableTraceLog.IsThrowException)
-        //            {
-        //                throw new CancelledExecutionException(command.ToString());
-        //            }
-        //            return 0;
-        //        }
-        //        commandText = (cancellableTraceLog?.Statement ?? commandText);
-        //        entity = (cancellableTraceLog?.Parameter ?? entity);
-        //    }
+            // Force to use the PrimaryKey
+            if (qualifiers == null)
+            {
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"Merge operation could proceed. Primary field is missing at type " +
+                        $"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>(command)}).");
+                }
+                else
+                {
+                    qualifiers = Field.From(primary.GetMappedName());
+                }
+            }
 
-        //    // Before Execution Time
-        //    var beforeExecutionTime = DateTime.UtcNow;
+            // All qualifiers must be present in the dynamic entity
+            var missingFields = qualifiers.Where(qualifier => entityProperties.FirstOrDefault(property =>
+                property.GetMappedName().ToLower() == qualifier.Name.ToLower()) == null);
+            if (missingFields.Any())
+            {
+                throw new InvalidOperationException($"All qualifier fields {missingFields.Select(f => f.AsField()).Join(", ")} " +
+                    $"must be present in the dynamic entity.");
+            }
 
-        //    // Actual Execution
-        //    var result = ExecuteScalar(commandText: commandText,
-        //        param: entity,
-        //        commandType: commandType,
-        //        commandTimeout: CommandTimeout,
-        //        transaction: transaction);
+            // Other variables
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var queryBuilder = new QueryBuilder<TEntity>();
+            var commandText = string.Empty;
 
-        //    // Set back result equals to PrimaryKey type
-        //    result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
+            // Compose command text
+            if (commandType == CommandType.StoredProcedure)
+            {
+                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
+            }
+            else
+            {
+                if (StatementBuilder is SqlDbStatementBuilder)
+                {
+                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
+                    var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateInlineMerge(queryBuilder, entity?.AsFields(),
+                        qualifiers, overrideIgnore, isPrimaryIdentity);
+                }
+                else
+                {
+                    // Other Sql Data Providers
+                    commandText = StatementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers,
+                        overrideIgnore);
+                }
+            }
 
-        //    // After Execution
-        //    if (Trace != null)
-        //    {
-        //        Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
-        //            DateTime.UtcNow.Subtract(beforeExecutionTime)));
-        //    }
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                Trace.BeforeInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                entity = (cancellableTraceLog?.Parameter ?? entity);
+            }
 
-        //    // Result
-        //    return result;
-        //}
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
 
-        //// InsertAsync
+            // Actual Execution
+            var result = ExecuteScalar(commandText: commandText,
+                param: entity,
+                commandType: commandType,
+                commandTimeout: CommandTimeout,
+                transaction: transaction);
 
-        ///// <summary>
-        ///// Inserts a data in the database targetting certain fields only in an asynchronous way.
-        ///// </summary>
-        ///// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        ///// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        ///// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        ///// <param name="transaction">The transaction to be used on this operation.</param>
-        ///// <returns>
-        ///// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        ///// <i>PrimaryKey</i> property is not present.
-        ///// </returns>
-        //public Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-        //    where TEntity : DataEntity
-        //{
-        //    return Task.Factory.StartNew(() =>
-        //        InlineInsert<TEntity>(entity: entity,
-        //            overrideIgnore: overrideIgnore,
-        //            transaction: transaction));
-        //}
+            // Set back result equals to PrimaryKey type
+            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // InlineMergeAsync
+
+        /// <summary>
+        /// Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<object> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineMerge<TEntity>(entity,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
+        /// <summary>
+        /// Merges a data in the database targetting certain fields only in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<object> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+            IDbTransaction transaction = null) where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                InlineMerge<TEntity>(entity: entity,
+                    qualifiers: qualifiers,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
 
         // GuardInlineUpdateable
 
@@ -1953,8 +2012,8 @@ namespace RepoDb
                 if (StatementBuilder is SqlDbStatementBuilder)
                 {
                     // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIsIdentityAtDb = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(queryBuilder, qualifiers, isPrimaryIsIdentityAtDb);
+                    var isPrimaryIdentity = DataEntityIsPrimaryIdentityCache.Get<TEntity>(ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)StatementBuilder).CreateMerge(queryBuilder, qualifiers, isPrimaryIdentity);
                 }
                 else
                 {

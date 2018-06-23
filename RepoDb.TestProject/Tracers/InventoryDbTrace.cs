@@ -1,4 +1,6 @@
-﻿using RepoDb.Interfaces;
+﻿using System;
+using RepoDb.Interfaces;
+using System.Reflection;
 
 namespace RepoDb.TestProject.Tracers
 {
@@ -6,134 +8,164 @@ namespace RepoDb.TestProject.Tracers
     {
         public void AfterBatchQuery(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterBulkInsert(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterCount(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterDelete(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void AfterDeleteAll(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterExecuteNonQuery(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterExecuteQuery(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterExecuteReader(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterExecuteScalar(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void AfterInlineInsert(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void AfterInlineMerge(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterInlineUpdate(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterInsert(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterMerge(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterQuery(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void AfterUpdate(TraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeBatchQuery(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeBulkInsert(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeCount(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeDelete(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeDeleteAll(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeExecuteNonQuery(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeExecuteQuery(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeExecuteReader(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeExecuteScalar(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeInlineInsert(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeInlineMerge(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeInlineUpdate(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeInsert(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
             var l = log;
         }
 
         public void BeforeMerge(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
             var l = log;
         }
 
         public void BeforeQuery(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
         public void BeforeUpdate(CancellableTraceLog log)
         {
-            // throw new NotImplementedException();
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
             var l = log;
         }
     }

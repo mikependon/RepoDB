@@ -141,10 +141,10 @@ namespace RepoDb
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
-        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
@@ -160,10 +160,10 @@ namespace RepoDb
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of the inline insert operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
-        /// be ignored on the inline insert operation on SQL Statement composition.
+        /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
@@ -171,11 +171,12 @@ namespace RepoDb
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
             where TEntity : DataEntity
         {
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (overrideIgnore == false)
             {
                 var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert);
                 var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
-                    .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>() && insertableProperties.Contains(property))
+                    .Where(property => property != primary && insertableProperties.Contains(property))
                     .Select(property => property.GetMappedName());
                 var unmatchesProperties = fields?.Where(field =>
                     inlineInsertableProperties?.FirstOrDefault(property =>
@@ -186,8 +187,7 @@ namespace RepoDb
                 }
             }
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            if (primary!=null)
+            if (primary != null)
             {
                 fields = fields?
                     .Where(field => !(isPrimaryIdentity && field.Name.ToLower() == primary.Name.ToLower()))
@@ -206,11 +206,127 @@ namespace RepoDb
                 .Parameters(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
                 .As("[Result]")
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored on the inline merge operation in SQL Statement composition.
+        /// </param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
+        public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
+            where TEntity : DataEntity
+        {
+            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">
+        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// be ignored in the inline merge operation in SQL Statement composition.
+        /// </param>
+        /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
+        internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers,
+            bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+            where TEntity : DataEntity
+        {
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
+            var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)
+                .Where(property => property != primary && mergeableProperties.Contains(property));
+            if (overrideIgnore == false)
+            {
+                var unmatchesProperties = fields?.Where(field =>
+                    inlineMergeableProperties?.FirstOrDefault(property =>
+                        field.Name.ToLower() == property.GetMappedName().ToLower()) == null);
+                if (unmatchesProperties?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The columns {unmatchesProperties.Select(field => field.AsField()).Join(", ")} are not insertable for entity {typeof(TEntity).FullName}.");
+                }
+            }
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            if (qualifiers == null && primary != null)
+            {
+                qualifiers = new Field(primary?.Name).AsEnumerable();
+            }
+            var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+                .Where(property => !(isPrimaryIdentity && property == primary));
+            var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
+                .Where(property => property != primary);
+            var mergeInsertableFields = mergeableProperties
+                .Where(property => insertableProperties.Contains(property) &&
+                    mergeableProperties.Contains(property) &&
+                        inlineMergeableProperties.Contains(property))
+                .Select(property => new Field(property.Name));
+            var mergeUpdateableFields = mergeableProperties
+                .Where(property => updateableProperties.Contains(property) &&
+                    mergeableProperties.Contains(property) &&
+                        inlineMergeableProperties.Contains(property))
+                .Select(property => new Field(property.Name));
+            queryBuilder
+                .Clear()
+                // MERGE T USING S
+                .Merge()
+                .Table(Command.Merge)
+                .As("T")
+                .Using()
+                .OpenParen()
+                .Select()
+                .ParametersAsFields(Command.None) // All fields must be included for selection
+                .CloseParen()
+                .As("S")
+                // QUALIFIERS
+                .On()
+                .OpenParen()
+                .WriteText(qualifiers?
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T"))
+                            .Join($" {StringConstant.And.ToUpper()} "))
+                .CloseParen()
+                // WHEN NOT MATCHED THEN INSERT VALUES
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .Fields(mergeInsertableFields)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .Parameters(mergeInsertableFields)
+                .CloseParen()
+                // WHEN MATCHED THEN UPDATE SET
+                .When()
+                .Matched()
+                .Then()
+                .Update()
+                .Set()
+                .FieldsAndAliasFields(mergeUpdateableFields, "S")
                 .End();
             return queryBuilder.GetString();
         }
@@ -222,11 +338,11 @@ namespace RepoDb
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="fields">The list of fields to be a part of inline update operation on SQL Statement composition.</param>
+        /// <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="overrideIgnore">
         /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
-        /// be ignored on the inline update operation on SQL Statement composition.
+        /// be ignored on the inline update operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
         public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
@@ -303,7 +419,7 @@ namespace RepoDb
                 .Parameters(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : $"@{primary.GetMappedName()}";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -319,7 +435,7 @@ namespace RepoDb
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
@@ -334,7 +450,7 @@ namespace RepoDb
         /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation on SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
@@ -346,16 +462,16 @@ namespace RepoDb
             {
                 qualifiers = new Field(primary?.Name).AsEnumerable();
             }
-            var insertProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+            var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary));
-            var updateProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+            var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
                 .Where(property => property != primary);
-            var mergeProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
-            var mergeInsertableFields = mergeProperties
-                .Where(property => insertProperties.Contains(property))
+            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
+            var mergeInsertableFields = mergeableProperties
+                .Where(property => insertableProperties.Contains(property))
                 .Select(property => new Field(property.Name));
-            var mergeUpdateableFields = mergeProperties
-                .Where(property => updateProperties.Contains(property))
+            var mergeUpdateableFields = mergeableProperties
+                .Where(property => updateableProperties.Contains(property))
                 .Select(property => new Field(property.Name));
             queryBuilder
                 .Clear()
@@ -409,8 +525,8 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation on SQL Statement composition.</param>
-        /// <param name="orderBy">The list of fields  to be used for ordering on SQL Statement composition.</param>
+        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
+        /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
             where TEntity : DataEntity

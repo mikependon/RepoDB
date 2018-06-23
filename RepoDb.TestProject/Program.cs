@@ -367,6 +367,13 @@ namespace RepoDb.TestProject
                 throw new NullReferenceException("Person is null.");
             }
 
+            // Check InlineMerge
+            var affectedRows = repository.InlineMerge<Person>(new
+            {
+                Name = $"{person.Name} - InlineMerge",
+                Address = $"{person.Name} - InlineMerge"
+            });
+
             // Insert with Dynamic
             Console.WriteLine("InlineInsert with Identity");
             personId = repository.InlineInsert<Person>(new

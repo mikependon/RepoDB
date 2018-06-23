@@ -26,6 +26,11 @@ namespace RepoDb.TestProject.Tracers
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
+        public void AfterDeleteAll(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
         public void AfterExecuteNonQuery(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
@@ -42,6 +47,16 @@ namespace RepoDb.TestProject.Tracers
         }
 
         public void AfterExecuteScalar(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void AfterInlineInsert(TraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void AfterInlineMerge(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
@@ -91,6 +106,11 @@ namespace RepoDb.TestProject.Tracers
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
+        public void BeforeDeleteAll(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
         public void BeforeExecuteNonQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
@@ -107,6 +127,16 @@ namespace RepoDb.TestProject.Tracers
         }
 
         public void BeforeExecuteScalar(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeInlineInsert(CancellableTraceLog log)
+        {
+            Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeInlineMerge(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }

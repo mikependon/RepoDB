@@ -25,10 +25,10 @@ namespace RepoDb.Extensions
                 {
                     expandObject[property.Name] = property.GetValue(obj);
                 });
-            var queryGroupExpandObject = queryGroup?.AsObject() as ExpandoObject as IDictionary<string, object>;
-            if (queryGroupExpandObject != null)
+            var dictionary = queryGroup?.AsObject() as ExpandoObject as IDictionary<string, object>;
+            if (dictionary != null)
             {
-                foreach(var kvp in queryGroupExpandObject)
+                foreach(var kvp in dictionary)
                 {
                     expandObject[kvp.Key] = kvp.Value;
                 }

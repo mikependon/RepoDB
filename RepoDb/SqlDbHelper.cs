@@ -53,7 +53,7 @@ namespace RepoDb
 
                         // Execute and set the result
                         var result = dbCommand.ExecuteScalar();
-                        if (result != null)
+                        if (result != null && result != DBNull.Value)
                         {
                             isIdentity = Convert.ToBoolean(result);
                         }

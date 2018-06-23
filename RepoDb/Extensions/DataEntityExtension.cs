@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -166,7 +165,7 @@ namespace RepoDb.Extensions
         /// 1. Checks the <i>RepoDb.Attributes.PrimaryKeyAttribute</i>.
         /// 2. If #1 is not present, then it checks the name of the property must be equal to <i>Id</i>.
         /// 3. If #2 is not present, then it checks the type name of the class appended by the word <i>Id</i>.
-        /// 4. If #3 is not present, then it checks the mapped name of the class appended by the word <i>Id</i>
+        /// 4. If #3 is not present, then it checks the mapped name of the class appended by the word <i>Id</i>.
         /// </summary>
         /// <typeparam name="T">The type of the data entity where to get the primary key property.</typeparam>
         /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>

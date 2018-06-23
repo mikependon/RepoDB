@@ -31,6 +31,11 @@ namespace RepoDb.TestProject.StatementBuilders
             throw new NotImplementedException();
         }
 
+        public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false) where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
         public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false) where TEntity : DataEntity
         {
             throw new NotImplementedException();
