@@ -13,40 +13,52 @@ namespace RepoDb.Enumerations
         /// </summary>
         None = 1,
         /// <summary>
-        /// Command used when querying a data.
+        /// A command that is being used when querying the data.
         /// </summary>
         Query = 2,
         /// <summary>
-        /// Command used when inserting a data.
+        /// A command that is being used when inserting the data.
         /// </summary>
         Insert = 4,
         /// <summary>
-        /// Command used when updating a data.
+        /// A command that is being used when updating the data.
         /// </summary>
         Update = 8,
         /// <summary>
-        /// Command used when deleting a data.
+        /// A command that is being used when deleting the data.
         /// </summary>
         Delete = 16,
         /// <summary>
-        /// Command used when merging a data.
+        /// A command that is being used when merging the data.
         /// </summary>
         Merge = 32,
         /// <summary>
-        /// Command used when doing a batch query.
+        /// A command that is being used when querying the data (with batch).
         /// </summary>
         BatchQuery = 64,
         /// <summary>
-        /// Command used when doing an inline update on the data.
+        /// A command that is being used when doing an inline update on the data.
         /// </summary>
         InlineUpdate = 128,
         /// <summary>
-        /// Command used when bulk-inserting the data.
+        /// A command that is being used when updating the data, targetting certail fields only.
         /// </summary>
         BulkInsert = 256,
         /// <summary>
-        /// Command used when counting a data.
+        /// A command that is being used when counting the data.
         /// </summary>
-        Count = 512
+        Count = 512,
+        /// <summary>
+        /// A command that is being used when deleting all data.
+        /// </summary>
+        DeleteAll = 1024,
+        /// <summary>
+        /// A command that is being used when inserting the data, targetting certain fields only.
+        /// </summary>
+        InlineInsert = 2048,
+        /// <summary>
+        /// A command that is being used when merging the data, targetting certain fields only.
+        /// </summary>
+        InlineMerge = 4096
     }
 }

@@ -114,6 +114,27 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Creates a SQL Statement for repository <i>DeleteAll</i> operation that is meant for SQL Server.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>DeleteAll</i> operation.</returns>
+        public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
+            where TEntity : DataEntity
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .Delete()
+                .From()
+                .Table(Command.DeleteAll)
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">

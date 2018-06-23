@@ -1384,7 +1384,7 @@ namespace RepoDb
 
         // GuardDeletable
 
-        private void GuardDeletable<TEntity>()
+        private void GuardDeletableAll<TEntity>()
             where TEntity : DataEntity
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
@@ -1404,7 +1404,49 @@ namespace RepoDb
         public int DeleteAll<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            return Delete<TEntity>(transaction: transaction);
+            // Check
+            GuardDeletableAll<TEntity>();
+
+            // Variables
+            var command = Command.DeleteAll;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                StatementBuilder.CreateDeleteAll(new QueryBuilder<TEntity>());
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                Trace.BeforeDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQuery(commandText: commandText,
+                commandType: commandType,
+                commandTimeout: CommandTimeout);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
         }
 
         // DeleteAllAsync
@@ -1419,6 +1461,17 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() => DeleteAll<TEntity>(transaction: transaction));
+        }
+
+        // GuardDeletable
+
+        private void GuardDeletable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsDeletable<TEntity>())
+            {
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+            }
         }
 
         // Delete

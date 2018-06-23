@@ -49,6 +49,17 @@ namespace RepoDb.Interfaces
             where TEntity : DataEntity;
 
         /// <summary>
+        /// Creates a SQL Statement for repository <i>DeleteAll</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>DeleteAll</i> operation.</returns>
+        string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
+            where TEntity : DataEntity;
+
+        /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">

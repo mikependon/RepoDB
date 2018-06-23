@@ -36,17 +36,18 @@ namespace RepoDb
             var error = false;
             switch (command)
             {
-                case Command.BatchQuery:
-                case Command.Count:
-                case Command.Merge:
-                    error = map.CommandType == CommandType.TableDirect;
-                    break;
-                case Command.BulkInsert:
+                case Command.InlineInsert:
+                case Command.InlineMerge:
                 case Command.InlineUpdate:
-                    error = map.CommandType != CommandType.Text;
+                    error = map.CommandType == CommandType.StoredProcedure;
                     break;
+                case Command.BatchQuery:
+                case Command.BulkInsert:
+                case Command.Count:
                 case Command.Delete:
+                case Command.DeleteAll:
                 case Command.Insert:
+                case Command.Merge:
                 case Command.Query:
                 case Command.Update:
                     error = false;

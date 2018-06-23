@@ -332,6 +332,7 @@ namespace RepoDb.Extensions
         }
 
         // IsBulkInsertable
+
         internal static bool IsBulkInsertable(Type type)
         {
             var commandType = GetCommandType(type, Command.BulkInsert);
@@ -360,17 +361,17 @@ namespace RepoDb.Extensions
         }
 
         // IsCountable
+
         internal static bool IsCountable(Type type)
         {
-            var commandType = GetCommandType(type, Command.Count);
-            return commandType != CommandType.TableDirect;
+            return true;
         }
 
         /// <summary>
-        /// Checks whether the data entity is bulk insertable.
+        /// Checks whether the data entity is countable.
         /// </summary>
         /// <typeparam name="T">The data entity type to be checked.</typeparam>
-        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
+        /// <returns>A boolean value signifies whether the data entity is countable.</returns>
         public static bool IsCountable<T>()
             where T : DataEntity
         {
@@ -378,16 +379,45 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Checks whether the data entity is bulk insertable.
+        /// Checks whether the data entity is countable.
         /// </summary>
         /// <param name="dataEntity">The data entity instance to be checked.</param>
-        /// <returns>A boolean value signifies whether the data entity is bulk insertable.</returns>
+        /// <returns>A boolean value signifies whether the data entity is countable.</returns>
         public static bool IsCountable(this DataEntity dataEntity)
         {
             return IsCountable(dataEntity.GetType());
         }
 
+        // IsDeletableAll
+
+        internal static bool IsDeletableAll(Type type)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether all data entity is deletable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether all the data entity is deletable.</returns>
+        public static bool IsDeletableAll<T>()
+            where T : DataEntity
+        {
+            return IsDeletableAll(typeof(T));
+        }
+
+        /// <summary>
+        /// Checks whether all data entity is deletable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether all the data entity is deletable.</returns>
+        public static bool IsDeletableAll(this DataEntity dataEntity)
+        {
+            return IsDeletableAll(dataEntity.GetType());
+        }
+
         // IsDeletable
+
         internal static bool IsDeletable(Type type)
         {
             return true;
@@ -415,10 +445,11 @@ namespace RepoDb.Extensions
         }
 
         // IsInlineUpdateable
+
         internal static bool IsInlineUpdateable(Type type)
         {
             var commandType = GetCommandType(type, Command.InlineUpdate);
-            return commandType == CommandType.Text;
+            return commandType != CommandType.StoredProcedure;
         }
 
         /// <summary>
@@ -442,7 +473,66 @@ namespace RepoDb.Extensions
             return IsInlineUpdateable(dataEntity.GetType());
         }
 
+        // IsInlineInsertable
+
+        internal static bool IsInlineInsertable(Type type)
+        {
+            var commandType = GetCommandType(type, Command.InlineInsert);
+            return commandType != CommandType.StoredProcedure;
+        }
+
+        /// <summary>
+        /// Checks whether the data entity is inline insertable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is inline insertable.</returns>
+        public static bool IsInlineInsertable<T>()
+            where T : DataEntity
+        {
+            return IsInlineInsertable(typeof(T));
+        }
+
+        /// <summary>
+        /// Checks whether the data entity is inline insertable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is inline insertable.</returns>
+        public static bool IsInlineInsertable(this DataEntity dataEntity)
+        {
+            return IsInlineInsertable(dataEntity.GetType());
+        }
+
+        // IsInlineMergeable
+
+        internal static bool IsInlineMergeable(Type type)
+        {
+            var commandType = GetCommandType(type, Command.InlineUpdate);
+            return commandType != CommandType.StoredProcedure;
+        }
+
+        /// <summary>
+        /// Checks whether the data entity is inline mergeable.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the data entity is inline mergeable.</returns>
+        public static bool IsInlineMergeable<T>()
+            where T : DataEntity
+        {
+            return IsInlineMergeable(typeof(T));
+        }
+
+        /// <summary>
+        /// Checks whether the data entity is inline mergeable.
+        /// </summary>
+        /// <param name="dataEntity">The data entity instance to be checked.</param>
+        /// <returns>A boolean value signifies whether the data entity is inline mergeable.</returns>
+        public static bool IsInlineMergeable(this DataEntity dataEntity)
+        {
+            return IsInlineMergeable(dataEntity.GetType());
+        }
+
         // IsInsertable
+
         internal static bool IsInsertable(Type type)
         {
             return true;
@@ -525,6 +615,7 @@ namespace RepoDb.Extensions
         }
 
         // IsUpdateable
+
         internal static bool IsUpdateable(Type type)
         {
             return true;
