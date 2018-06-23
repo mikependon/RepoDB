@@ -2133,27 +2133,28 @@ namespace RepoDb
                     }
                 }
 
-                // Convert to table
-                //var table = DataEntityConverter.ToDataTable(entities);
-                var table = entities.AsDataTable(connection, Command.BulkInsert);
+                var result = 0;
 
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
                 // Actual Execution
-                var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
-                var result = entities.Count();
-                sqlBulkCopy.DestinationTableName = table.TableName;
-                foreach (var column in table.Columns.OfType<DataColumn>())
+                using (var reader = new DataEntityListDataReader<TEntity>(entities))
                 {
-                    sqlBulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                    var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
+                    sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(Command.BulkInsert);
+                    foreach (var field in reader.Properties.Select(property => property.GetMappedName()))
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                    }
+                    sqlBulkCopy.WriteToServer(reader);
+                    result = reader.RecordsAffected;
                 }
-                sqlBulkCopy.WriteToServer(table);
 
                 // After Execution
                 if (Trace != null)
                 {
-                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), table, result,
+                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
                         DateTime.UtcNow.Subtract(beforeExecutionTime)));
                 }
 

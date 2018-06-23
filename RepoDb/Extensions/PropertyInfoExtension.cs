@@ -127,16 +127,6 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts a property info into a data column object.
-        /// </summary>
-        /// <param name="property">The instance of property info to be converted.</param>
-        /// <returns>An instance of data column object.</returns>
-        public static DataColumn AsDataColumn(this PropertyInfo property)
-        {
-            return new DataColumn(property.GetMappedName(), property.PropertyType);
-        }
-
-        /// <summary>
         /// Converts a property info into a string qualifier with defined aliases that is usable for SQL Statements.
         /// </summary>
         /// <param name="property">The property info to be converted.</param>

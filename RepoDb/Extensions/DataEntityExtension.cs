@@ -260,48 +260,6 @@ namespace RepoDb.Extensions
             return AsObject(dataEntity, null);
         }
 
-        // AsDataTable
-        internal static DataTable AsDataTable<T>(this IEnumerable<T> entities, IDbConnection connection, Command command = Command.None)
-            where T : DataEntity
-        {
-            var mappedName = GetMappedName<T>(Command.None);
-            var table = new DataTable(mappedName);
-            var properties = DataEntityExtension.GetPropertiesFor<T>(command);
-            var dict = new Dictionary<DataColumn, PropertyInfo>();
-            using (var cmd = connection.CreateCommand($"SELECT TOP 1 * FROM {mappedName} WHERE 1 = 0;"))
-            {
-                using (var reader = cmd.ExecuteReader(CommandBehavior.SchemaOnly))
-                {
-                    var schemaTable = reader.GetSchemaTable();
-                    foreach (DataRow row in schemaTable.Rows)
-                    {
-                        var columnName = Convert.ToString(row[StringConstant.ColumnName]);
-                        var dataType = Type.GetType(Convert.ToString(row[StringConstant.DataType]));
-                        var dataColumn = new DataColumn(columnName, dataType);
-                        var property = properties.FirstOrDefault(p =>
-                        {
-                            return columnName.ToLower() == p.GetMappedName().ToLower();
-                        });
-                        table.Columns.Add(dataColumn);
-                        if (property != null)
-                        {
-                            dict.Add(dataColumn, property);
-                        }
-                    }
-                }
-            }
-            entities?.ToList().ForEach(entity =>
-            {
-                var row = table.NewRow();
-                foreach (var kvp in dict)
-                {
-                    row[kvp.Key] = kvp.Value?.GetValue(entity) ?? DBNull.Value;
-                }
-                table.Rows.Add(row);
-            });
-            return table;
-        }
-
         // IsBatchQueryable
         internal static bool IsBatchQueryable(Type type)
         {

@@ -18,13 +18,4 @@ namespace RepoDb.Reflection.Delegates
     /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
     /// <returns>An instance of <i>System.Dynamic.ExpandoObject</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
     public delegate ExpandoObject DataReaderToExpandoObjectDelegate(DbDataReader dataReader);
-
-    /// <summary>
-    /// A delegate used to convert the <i>RepoDb.DataEntity</i> object into <i>System.Data.DataRow</i> object.
-    /// </summary>
-    /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to be converted.</typeparam>
-    /// <param name="entity">The <i>RepoDb.DataEntity</i> object to be converted.</param>
-    /// <param name="dataTable">The <i>System.Data.DataTable</i> object that will contain the converted row.</param>
-    /// <returns>An instance of <i>System.Data.DataRow</i> containing the converted values.</returns>
-    public delegate DataRow DataEntityToDataRowDelegate<TEntity>(TEntity entity, DataTable dataTable) where TEntity : DataEntity;
 }
