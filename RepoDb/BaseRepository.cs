@@ -1043,6 +1043,26 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        // Truncate
+
+        /// <summary>
+        /// Truncates a table from the database.
+        /// </summary>
+        public void Truncate()
+        {
+            DbRepository.Truncate<TEntity>();
+        }
+
+        // TruncateAsync
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        public Task TruncateAsync()
+        {
+            return DbRepository.TruncateAsync<TEntity>();
+        }
+
         // Merge
 
         /// <summary>

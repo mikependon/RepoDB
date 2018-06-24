@@ -59,6 +59,10 @@ namespace RepoDb.Enumerations
         /// <summary>
         /// A command that is being used when merging the data, targetting certain fields only.
         /// </summary>
-        InlineMerge = 4096
+        InlineMerge = 4096,
+        /// <summary>
+        /// A command that is being used when truncating a table.
+        /// </summary>
+        Truncate = 8192
     }
 }

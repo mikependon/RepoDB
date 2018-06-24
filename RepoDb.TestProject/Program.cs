@@ -305,6 +305,9 @@ namespace RepoDb.TestProject
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 
+            // Truncate
+            repository.Truncate<Animal>();
+
             // Count
             Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
             Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");
@@ -367,8 +370,25 @@ namespace RepoDb.TestProject
                 throw new NullReferenceException("Person is null.");
             }
 
-            // Check InlineInsert
-            Console.WriteLine($"InlineInsert Person");
+            // Check InlineInsert with Guid
+            Console.WriteLine($"InlineInsert Animal");
+            animalId = repository.InlineInsert<Animal>(new
+            {
+                Id = Guid.NewGuid(),
+                Name = $"NAME-{Guid.NewGuid().ToString()} - InlineInsert",
+                Address = $"ADDR-{Guid.NewGuid().ToString()} - InlineInsert"
+            });
+
+            // Verify
+            Console.WriteLine($"Verify InlineInsert with Guid PrimaryKey: {animalId}");
+            animal = repository.Query<Animal>(animalId).FirstOrDefault();
+            if (animal == null)
+            {
+                throw new NullReferenceException("Animal is null.");
+            }
+
+            // Check InlineInsert with Identity
+            Console.WriteLine($"InlineInsert with Identity PrimaryKey");
             personId = repository.InlineInsert<Person>(new
             {
                 Name = $"NAME-{Guid.NewGuid().ToString()} - InlineInsert",
@@ -376,24 +396,7 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Verify Record after InlineInsert: {personId}");
-            person = repository.Query<Person>(personId).FirstOrDefault();
-            if (person == null)
-            {
-                throw new NullReferenceException("Person is null.");
-            }
-
-            // Check InlineMerge
-            Console.WriteLine($"InlineMerge Person: {personId}");
-            var affectedRows = repository.InlineMerge<Person>(new
-            {
-                Id = personId,
-                Name = $"{person.Name} - InlineMerge",
-                Address = $"{person.Name} - InlineMerge"
-            });
-
-            // Verify
-            Console.WriteLine($"Verify Record after InlineMerge: {personId}");
+            Console.WriteLine($"Verify Insert with Identity PrimaryKey: {personId}");
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
@@ -401,8 +404,32 @@ namespace RepoDb.TestProject
             }
 
             // InlineUpdate
-            Console.WriteLine("InlineUpdate Person");
-            var inlineUpdateResult = repository.InlineUpdate<Person>(new
+            Console.WriteLine("InlineUpdate with Guid PrimaryKey");
+            var affectedRows = repository.InlineUpdate<Animal>(new
+            {
+                Name = $"NAME-{Guid.NewGuid().ToString()} - InlineUpdate",
+                Address = $"ADDR-{Guid.NewGuid().ToString()} - InlineUpdate"
+            },
+            new
+            {
+                Id = animalId
+            });
+
+            // Verify
+            Console.WriteLine($"Verify InlineUpdate with Guid PrimaryKey: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the inline update.");
+            }
+            animal = repository.Query<Animal>(animalId).FirstOrDefault();
+            if (animal == null)
+            {
+                throw new NullReferenceException("Animal is null.");
+            }
+
+            // InlineUpdate
+            Console.WriteLine("InlineUpdate with Identity PrimaryKey");
+            affectedRows = repository.InlineUpdate<Person>(new
             {
                 Name = $"NAME-{Guid.NewGuid().ToString()} - InlineUpdate",
                 Address = $"ADDR-{Guid.NewGuid().ToString()} - InlineUpdate"
@@ -413,7 +440,53 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Verify Person After InlineUpdate: {personId}");
+            Console.WriteLine($"Verify InlineUpdate with Identity PrimaryKey: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the inline update.");
+            }
+            person = repository.Query<Person>(personId).FirstOrDefault();
+            if (person == null)
+            {
+                throw new NullReferenceException("Person is null.");
+            }
+
+            // Check InlineMerge
+            Console.WriteLine($"InlineMerge with Guid PrimaryKey: {animalId}");
+            affectedRows = repository.InlineMerge<Animal>(new
+            {
+                Id = animalId,
+                Name = $"{animal.Name} - InlineMerge",
+                Address = $"{animal.Name} - InlineMerge"
+            });
+
+            // Verify
+            Console.WriteLine($"Verify InlineMerge with Guid PrimaryKey: {animalId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the inline merge.");
+            }
+            animal = repository.Query<Animal>(animalId).FirstOrDefault();
+            if (animal == null)
+            {
+                throw new NullReferenceException("Animal is null.");
+            }
+
+            // Check InlineMerge
+            Console.WriteLine($"InlineMerge with Identity PrimaryKey: {personId}");
+            affectedRows = repository.InlineMerge<Person>(new
+            {
+                Id = personId,
+                Name = $"{person.Name} - InlineMerge",
+                Address = $"{person.Name} - InlineMerge"
+            });
+
+            // Verify
+            Console.WriteLine($"Verify InlineMerge with Identity PrimaryKey: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the inline merge.");
+            }
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
@@ -425,10 +498,15 @@ namespace RepoDb.TestProject
             person.Name = $"Name: {Guid.NewGuid().ToString()} (Updated)";
             person.Address = $"Address: {Guid.NewGuid().ToString()} (Updated)";
             person.DateUpdated = DateTime.UtcNow;
-            var updateResult = repository.Update(person);//, new { Id = person.Id });
+            person.DateOfBirth = DateTime.UtcNow;
+            affectedRows = repository.Update(person);
 
             // Verify
             Console.WriteLine($"Verify Person after Update: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the update.");
+            }
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
@@ -440,10 +518,14 @@ namespace RepoDb.TestProject
             person.Name = $"{Guid.NewGuid().ToString()} (Merged)";
             person.Address = $"Address: {Guid.NewGuid().ToString()} (Merged)";
             person.DateUpdated = DateTime.UtcNow;
-            var mergeResult = repository.Merge(person, Field.Parse(new { person.Id }));
+            affectedRows = repository.Merge(person, Field.Parse(new { person.Id }));
 
             // Verify
             Console.WriteLine($"Query Person After Merge: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the merge.");
+            }
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person == null)
             {
@@ -452,10 +534,14 @@ namespace RepoDb.TestProject
 
             // Delete
             Console.WriteLine($"Delete Person: {personId}");
-            var deleteResult = repository.Delete<Person>(personId);
+            affectedRows = repository.Delete<Person>(personId);
 
             // Verify
             Console.WriteLine($"Verify Person After Delete: {personId}");
+            if (affectedRows <= 0)
+            {
+                throw new Exception("No rows has been affected by the delete.");
+            }
             person = repository.Query<Person>(personId).FirstOrDefault();
             if (person != null)
             {

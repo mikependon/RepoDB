@@ -14,9 +14,18 @@ namespace RepoDb
     /// <typeparam name="TEntity">The type of the <i>DataEntity</i></typeparam>
     public class DataEntityListDataReader<TEntity> : IDataReader where TEntity : DataEntity
     {
-        public DataEntityListDataReader(IEnumerable<TEntity> entities)
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DataEntityListDataReader</i> object.
+        /// </summary>
+        /// <param name="entities">The list of the <i>DataEntity</i> object to be used for manipulation.</param>
+        /// <param name="command">The type of command to be used by this data reader.</param>
+        public DataEntityListDataReader(IEnumerable<TEntity> entities, Command command)
         {
-            Properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None).ToList();
+            if (entities == null)
+            {
+                throw new NullReferenceException("The entities could not be null.");
+            }
+            Properties = DataEntityExtension.GetPropertiesFor<TEntity>(command).ToList();
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             Position = -1;
@@ -55,7 +64,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The name of the column.</param>
         /// <returns>The value from the column name.</returns>
-        public object this[string name] { get { return GetValue(GetOrdinal(name)); } }
+        public object this[string name] { get { return this[GetOrdinal(name)]; } }
 
         /// <summary>
         /// Gets the depth value.
@@ -68,7 +77,12 @@ namespace RepoDb
         public bool IsClosed { get; private set; }
 
         /// <summary>
-        /// Gets the number of rows affected.
+        /// Gets the value that indicates whether the current reader is already disposed.
+        /// </summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gets the number of rows affected by the iteration.
         /// </summary>
         public int RecordsAffected { get; private set; }
 
@@ -83,6 +97,7 @@ namespace RepoDb
         public void Close()
         {
             IsClosed = true;
+            IsDisposed = true;
         }
 
         /// <summary>
@@ -96,12 +111,23 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Resets the pointer of the position to the beginning.
+        /// </summary>
+        public void Reset()
+        {
+            ThrowExceptionIfNotAvailable();
+            Position = -1;
+            Enumerator = Entities.GetEnumerator();
+        }
+
+        /// <summary>
         /// Gets the boolean value from the defined property index.
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
         public bool GetBoolean(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToBoolean(GetValue(i));
         }
 
@@ -112,12 +138,14 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public byte GetByte(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToByte(GetValue(i));
         }
-        
+
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         /// <summary>
@@ -127,17 +155,20 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public char GetChar(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToChar(GetValue(i));
         }
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         public IDataReader GetData(int i)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         /// <summary>
@@ -147,6 +178,7 @@ namespace RepoDb
         /// <returns>The property type name from the property index.</returns>
         public string GetDataTypeName(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Properties[i].PropertyType.Name;
         }
 
@@ -157,6 +189,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public DateTime GetDateTime(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToDateTime(GetValue(i));
         }
 
@@ -167,6 +200,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public decimal GetDecimal(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToDecimal(GetValue(i));
         }
 
@@ -177,6 +211,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public double GetDouble(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToDouble(GetValue(i));
         }
 
@@ -187,6 +222,7 @@ namespace RepoDb
         /// <returns>The property type from the property index.</returns>
         public Type GetFieldType(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Properties[i].PropertyType;
         }
 
@@ -197,6 +233,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public float GetFloat(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return float.Parse(GetValue(i)?.ToString());
         }
 
@@ -207,6 +244,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public Guid GetGuid(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Guid.Parse(GetValue(i)?.ToString());
         }
 
@@ -217,6 +255,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public short GetInt16(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToInt16(GetValue(i));
         }
 
@@ -227,6 +266,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public int GetInt32(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToInt32(GetValue(i));
         }
 
@@ -237,6 +277,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public long GetInt64(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToInt64(GetValue(i));
         }
 
@@ -247,6 +288,7 @@ namespace RepoDb
         /// <returns>The name from the property index.</returns>
         public string GetName(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Properties[i].GetMappedName();
         }
 
@@ -257,12 +299,14 @@ namespace RepoDb
         /// <returns>The index of the property from property name.</returns>
         public int GetOrdinal(string name)
         {
+            ThrowExceptionIfNotAvailable();
             return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
         public DataTable GetSchemaTable()
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         /// <summary>
@@ -272,6 +316,7 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public string GetString(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Convert.ToString(GetValue(i));
         }
 
@@ -282,12 +327,14 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public object GetValue(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return Properties[i].GetValue(Enumerator.Current);
         }
 
         public int GetValues(object[] values)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         /// <summary>
@@ -297,12 +344,18 @@ namespace RepoDb
         /// <returns>The value from the property index.</returns>
         public bool IsDBNull(int i)
         {
+            ThrowExceptionIfNotAvailable();
             return GetValue(i) == DBNull.Value;
         }
 
+        /// <summary>
+        /// Forwards the data reader to the next result.
+        /// </summary>
+        /// <returns>Returns true if the forward operation is successful.</returns>
         public bool NextResult()
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotAvailable();
+            throw new NotSupportedException("This is not supported by this data reader.");
         }
 
         /// <summary>
@@ -311,13 +364,25 @@ namespace RepoDb
         /// <returns>A value that indicates whether the movement is successful.</returns>
         public bool Read()
         {
-            if (IsClosed)
-            {
-                throw new InvalidOperationException("The reader is close.");
-            }
+            ThrowExceptionIfNotAvailable();
             Position++;
             RecordsAffected++;
             return Enumerator.MoveNext();
+        }
+
+        /// <summary>
+        /// Throws an exception if the current data reader is not available.
+        /// </summary>
+        private void ThrowExceptionIfNotAvailable()
+        {
+            if (IsDisposed)
+            {
+                throw new InvalidOperationException("The reader is already disposed.");
+            }
+            if (IsClosed)
+            {
+                throw new InvalidOperationException("The reader is already closed.");
+            }
         }
     }
 }

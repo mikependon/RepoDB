@@ -81,6 +81,11 @@ namespace RepoDb.TestProject.Tracers
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
         }
 
+        public void AfterTruncate(TraceLog log)
+        {
+            throw new NotImplementedException();
+        }
+
         public void AfterUpdate(TraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
@@ -161,6 +166,11 @@ namespace RepoDb.TestProject.Tracers
         public void BeforeQuery(CancellableTraceLog log)
         {
             Console.WriteLine($"{MethodBase.GetCurrentMethod().Name}: {log.Statement}");
+        }
+
+        public void BeforeTruncate(CancellableTraceLog log)
+        {
+            throw new NotImplementedException();
         }
 
         public void BeforeUpdate(CancellableTraceLog log)

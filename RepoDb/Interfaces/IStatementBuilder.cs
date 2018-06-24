@@ -145,6 +145,15 @@ namespace RepoDb.Interfaces
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
             where TEntity : DataEntity;
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>Truncate</i> operation.</returns>
+        string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Update</i> operation.

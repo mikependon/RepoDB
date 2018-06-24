@@ -1144,10 +1144,11 @@ namespace RepoDb
             if (qualifiers == null)
             {
                 var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                if (primary == null)
+                var hasError = (primary != null) && (entityProperties?.Any(property => property.Name.ToLower() == primary?.GetMappedName().ToLower()) == false);
+                if (hasError)
                 {
-                    throw new PrimaryFieldNotFoundException($"Merge operation could proceed. Primary field is missing at type " +
-                        $"{typeof(TEntity).FullName} ({DataEntityExtension.GetMappedName<TEntity>(command)}).");
+                    throw new PrimaryFieldNotFoundException($"Merge operation could proceed with missing primary key. Either specify a qualifier or " +
+                        $"include the primary key in the dynamic entity.");
                 }
             }
 
@@ -1156,8 +1157,8 @@ namespace RepoDb
                 property.GetMappedName().ToLower() == qualifier.Name.ToLower()) == null);
             if (missingFields?.Count() > 0)
             {
-                throw new InvalidOperationException($"All qualifier fields must be presented in the given dynamic entity object. " +
-                    $"The list of missing field(s) are {missingFields.Select(f => f.AsField()).Join(", ")}.");
+                throw new MissingFieldException($"All qualifier fields must be presented in the given dynamic entity object. " +
+                    $"The missing field(s) are {missingFields.Select(f => f.AsField()).Join(", ")}.");
             }
 
             // Other variables
@@ -1937,6 +1938,79 @@ namespace RepoDb
                     transaction: transaction));
         }
 
+        // GuardTruncatable
+
+        private void GuardTruncatable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsDeletable<TEntity>())
+            {
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+            }
+        }
+
+        // Truncate
+
+        /// <summary>
+        /// Truncates a table from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        public void Truncate<TEntity>() where TEntity : DataEntity
+        {
+            // Check
+            GuardDeletable<TEntity>();
+
+            // Variables
+            var command = Command.Truncate;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                StatementBuilder.CreateTruncate(new QueryBuilder<TEntity>());
+
+            // Before Execution
+            if (Trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                Trace.BeforeDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQuery(commandText: commandText,
+                param: null,
+                commandType: commandType,
+                commandTimeout: CommandTimeout);
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+        }
+
+        // TruncateAsync
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        public Task TruncateAsync<TEntity>()
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() => Truncate<TEntity>());
+        }
+
         // GuardMergeable
 
         private void GuardMergeable<TEntity>()
@@ -2111,6 +2185,12 @@ namespace RepoDb
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
+            // Validate, only supports SqlConnection
+            if (typeof(TDbConnection) != typeof(System.Data.SqlClient.SqlConnection))
+            {
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
+            }
+
             // Check
             GuardBulkInsert<TEntity>();
 
@@ -2139,16 +2219,18 @@ namespace RepoDb
                 var beforeExecutionTime = DateTime.UtcNow;
 
                 // Actual Execution
-                using (var reader = new DataEntityListDataReader<TEntity>(entities))
+                using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
                 {
-                    var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection);
-                    sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(Command.BulkInsert);
-                    foreach (var field in reader.Properties.Select(property => property.GetMappedName()))
+                    using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy(ConnectionString))
                     {
-                        sqlBulkCopy.ColumnMappings.Add(field, field);
+                        sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(command);
+                        reader.Properties.ToList().ForEach(property =>
+                        {
+                            var columnName = property.GetMappedName();
+                            sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                        });
+                        sqlBulkCopy.WriteToServer(reader);
                     }
-                    sqlBulkCopy.WriteToServer(reader);
-                    result = reader.RecordsAffected;
                 }
 
                 // After Execution

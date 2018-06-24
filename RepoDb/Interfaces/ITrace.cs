@@ -102,6 +102,12 @@
         void BeforeQuery(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual <i>Truncate</i> operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the <i>Truncate</i> execution.</param>
+        void BeforeTruncate(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual <i>Update</i> operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the <i>Update</i> execution.</param>
@@ -201,6 +207,12 @@
         /// </summary>
         /// <param name="log">The log object referenced by the <i>Query</i> execution.</param>
         void AfterQuery(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual <i>Truncate</i> operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the <i>Truncate</i> execution.</param>
+        void AfterTruncate(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual <i>Update</i> operation execution.

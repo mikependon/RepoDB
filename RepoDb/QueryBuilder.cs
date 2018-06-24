@@ -134,7 +134,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The mapped command where to get all the fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Fields(Command command)
+        public QueryBuilder<TEntity> FieldsFrom(Command command)
         {
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
             return Append(fields?.ToList().AsFields().Join(", "));
@@ -145,7 +145,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Fields(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> FieldsFrom(IEnumerable<Field> fields)
         {
             return Append(fields?.Select(f => f.AsField()).Join(", "));
         }
@@ -155,7 +155,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndParameters(Command command)
+        public QueryBuilder<TEntity> FieldsAndParametersFrom(Command command)
         {
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
             return Append(fields?.AsFieldsAndParameters().Join(", "));
@@ -166,7 +166,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndParameters(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> FieldsAndParametersFrom(IEnumerable<Field> fields)
         {
             return Append(fields?.AsFieldsAndParameters().Join(", "));
         }
@@ -177,7 +177,7 @@ namespace RepoDb
         /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndAliasFields(Command command, string alias)
+        public QueryBuilder<TEntity> FieldsAndAliasFieldsFrom(Command command, string alias)
         {
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
@@ -189,7 +189,7 @@ namespace RepoDb
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndAliasFields(IEnumerable<Field> fields, string alias)
+        public QueryBuilder<TEntity> FieldsAndAliasFieldsFrom(IEnumerable<Field> fields, string alias)
         {
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
@@ -208,7 +208,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> GroupBy(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> GroupByFrom(IEnumerable<Field> fields)
         {
             return Append($"GROUP BY {fields?.AsFields().Join(", ")}");
         }
@@ -218,7 +218,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The conditional field object used for composition.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> HavingCount(QueryField queryField)
+        public QueryBuilder<TEntity> HavingCountFrom(QueryField queryField)
         {
             return Append($"HAVING COUNT({queryField.Field.AsField()}) {queryField.GetOperationText()} {queryField.AsParameter()}");
         }
@@ -230,6 +230,24 @@ namespace RepoDb
         public QueryBuilder<TEntity> Insert()
         {
             return Append("INSERT");
+        }
+
+        /// <summary>
+        /// Appends a word GROUP BY to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> GroupBy()
+        {
+            return Append("GROUP BY");
+        }
+
+        /// <summary>
+        /// Appends a word HAVING COUNT to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> HavingCount()
+        {
+            return Append("HAVING COUNT");
         }
 
         /// <summary>
@@ -256,7 +274,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="alias">The aliases to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> OrderBy(IEnumerable<OrderField> orderBy = null, string alias = null)
+        public QueryBuilder<TEntity> OrderByFrom(IEnumerable<OrderField> orderBy = null, string alias = null)
         {
             return (orderBy != null && orderBy.Any()) ?
                 Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :
@@ -307,7 +325,7 @@ namespace RepoDb
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> JoinQualifiers(Field field, string leftAlias, string rightAlias)
+        public QueryBuilder<TEntity> JoinQualifiersFrom(Field field, string leftAlias, string rightAlias)
         {
             return Append(field.AsJoinQualifier(leftAlias, rightAlias));
         }
@@ -322,11 +340,20 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a word TABLE to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> Table()
+        {
+            return Append("TABLE");
+        }
+
+        /// <summary>
         /// Appends the mapped entity name to the SQL Query Statement based on the mapped command.
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Table(Command command)
+        public QueryBuilder<TEntity> TableFrom(Command command)
         {
             return Append($"{DataEntityExtension.GetMappedName<TEntity>(command)}");
         }
@@ -336,7 +363,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Parameters(Command command)
+        public QueryBuilder<TEntity> ParametersFrom(Command command)
         {
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
             return Append(fields?.AsParameters().Join(", "));
@@ -347,7 +374,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Parameters(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> ParametersFrom(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParameters().Join(", "));
         }
@@ -357,7 +384,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> ParametersAsFields(Command command)
+        public QueryBuilder<TEntity> ParametersAsFieldsFrom(Command command)
         {
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
             return Append(fields?.AsParametersAsFields().Join(", "));
@@ -368,7 +395,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="fields">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> ParametersAsFields(IEnumerable<Field> fields)
+        public QueryBuilder<TEntity> ParametersAsFieldsFrom(IEnumerable<Field> fields)
         {
             return Append(fields?.AsParametersAsFields().Join(", "));
         }
@@ -383,11 +410,38 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a word TOP to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> Top()
+        {
+            return Append("TOP");
+        }
+
+        /// <summary>
+        /// Appends a word ORDER BY to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> OrderBy()
+        {
+            return Append("ORDER BY");
+        }
+
+        /// <summary>
+        /// Appends a word WHERE to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> Where()
+        {
+            return Append("WHERE");
+        }
+
+        /// <summary>
         /// Appends a word TOP and row number to the SQL Query Statement.
         /// </summary>
         /// <param name="rows">The row number to be appended.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Top(int? rows = 0)
+        public QueryBuilder<TEntity> TopFrom(int? rows = 0)
         {
             return rows > 0 ? Append($"TOP ({rows})") : this;
         }
@@ -415,7 +469,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> Where(QueryGroup queryGroup)
+        public QueryBuilder<TEntity> WhereFrom(QueryGroup queryGroup)
         {
             return (queryGroup != null) ? Append($"WHERE {((QueryGroup)queryGroup).FixParameters().GetString()}") : this;
         }
@@ -545,5 +599,15 @@ namespace RepoDb
         {
             return Append("CASE");
         }
+
+        /// <summary>
+        /// Appends a word TRUNCATE to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> Truncate()
+        {
+            return Append("TRUNCATE");
+        }
+
     }
 }

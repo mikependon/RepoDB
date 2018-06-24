@@ -56,6 +56,11 @@ namespace RepoDb.TestProject.StatementBuilders
             throw new NotImplementedException();
         }
 
+        public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
+        {
+            throw new NotImplementedException();
+        }
+
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup) where TEntity : DataEntity
         {
             throw new NotImplementedException();

@@ -401,6 +401,34 @@ namespace RepoDb.Extensions
             return IsDeletable(dataEntity.GetType());
         }
 
+        // IsTruncatable
+
+        internal static bool IsTruncatable(Type type)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Checks whether the table can be truncated.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the table is truncatable.</returns>
+        public static bool IsTruncatable<T>()
+            where T : DataEntity
+        {
+            return IsTruncatable(typeof(T));
+        }
+
+        /// <summary>
+        /// Checks whether the table can be truncated.
+        /// </summary>
+        /// <typeparam name="T">The data entity type to be checked.</typeparam>
+        /// <returns>A boolean value signifies whether the table is truncatable.</returns>
+        public static bool IsTruncatable(this DataEntity dataEntity)
+        {
+            return IsTruncatable(dataEntity.GetType());
+        }
+
         // IsInlineUpdateable
 
         internal static bool IsInlineUpdateable(Type type)

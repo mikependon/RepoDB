@@ -49,20 +49,20 @@ namespace RepoDb
                 .RowNumber()
                 .Over()
                 .OpenParen()
-                .OrderBy(orderBy)
+                .OrderByFrom(orderBy)
                 .CloseParen()
                 .As("[RowNumber],")
-                .Fields(Command.BatchQuery)
+                .FieldsFrom(Command.BatchQuery)
                 .From()
-                .Table(Command.BatchQuery)
-                .Where(where)
+                .TableFrom(Command.BatchQuery)
+                .WhereFrom(where)
                 .CloseParen()
                 .Select()
-                .Fields(fields)
+                .FieldsFrom(fields)
                 .From()
                 .WriteText("CTE")
                 .WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
-                .OrderBy(orderBy)
+                .OrderByFrom(orderBy)
                 .End();
 
             // Return the query
@@ -88,8 +88,8 @@ namespace RepoDb
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .Table(Command.Count)
-                .Where(where)
+                .TableFrom(Command.Count)
+                .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
         }
@@ -111,8 +111,8 @@ namespace RepoDb
                 .Clear()
                 .Delete()
                 .From()
-                .Table(Command.Delete)
-                .Where(where)
+                .TableFrom(Command.Delete)
+                .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
         }
@@ -133,7 +133,7 @@ namespace RepoDb
                 .Clear()
                 .Delete()
                 .From()
-                .Table(Command.DeleteAll)
+                .TableFrom(Command.DeleteAll)
                 .End();
             return queryBuilder.GetString();
         }
@@ -176,7 +176,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower());
+            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields.Any();
 
             // Check if there are fields
             if (hasFields == false)
@@ -189,7 +189,7 @@ namespace RepoDb
             {
                 var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert);
                 var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
-                    .Where(property => property != primary && insertableProperties.Contains(property))
+                    .Where(property => insertableProperties.Contains(property))
                     .Select(property => property.GetMappedName());
                 var unmatchesProperties = fields?.Where(field =>
                     inlineInsertableProperties?.FirstOrDefault(property =>
@@ -200,10 +200,12 @@ namespace RepoDb
                         $"inline insertable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert)}'.");
                 }
             }
-            if (primary != null)
+
+            // Check for the primary key
+            if (primary != null && isPrimaryIdentity)
             {
                 fields = fields?
-                    .Where(field => !(isPrimaryIdentity && field.Name.ToLower() == primary.Name.ToLower()))
+                    .Where(field => field.Name.ToLower() != primary.Name.ToLower())
                         .Select(field => field);
             }
 
@@ -213,13 +215,13 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .Table(Command.Insert)
+                .TableFrom(Command.Insert)
                 .OpenParen()
-                .Fields(fields)
+                .FieldsFrom(fields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(fields)
+                .ParametersFrom(fields)
                 .CloseParen()
                 .End();
             var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
@@ -277,14 +279,14 @@ namespace RepoDb
             // Get all target properties
             var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
             var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)
-                .Where(property => property != primary && mergeableProperties.Contains(property));
+                .Where(property => mergeableProperties.Contains(property));
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
                 var unmatchesProperties = fields?.Where(field =>
-                    inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.GetMappedName().ToLower()) == null)
-                        .Where(property => property.Name.ToLower() != primary?.GetMappedName().ToLower());
+                    inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.GetMappedName().ToLower()) == null);
+                        //.Where(property => property.Name.ToLower() != primary?.GetMappedName().ToLower());
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
@@ -336,12 +338,12 @@ namespace RepoDb
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .Table(Command.Merge)
+                .TableFrom(Command.Merge)
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFields(fields)
+                .ParametersAsFieldsFrom(fields)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -359,11 +361,11 @@ namespace RepoDb
                 .Then()
                 .Insert()
                 .OpenParen()
-                .Fields(mergeInsertableFields)
+                .FieldsFrom(mergeInsertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(mergeInsertableFields)
+                .ParametersFrom(mergeInsertableFields)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -371,7 +373,7 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFields(mergeUpdateableFields, "S")
+                .FieldsAndAliasFieldsFrom(mergeUpdateableFields, "S")
                 .End();
 
             // Return the query
@@ -408,16 +410,14 @@ namespace RepoDb
             // Get the target properties
             var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
             var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
-                .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>() &&
-                    updateableProperties.Contains(property))
+                .Where(property => property != primary && updateableProperties.Contains(property))
                 .Select(property => property.GetMappedName());
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
                 var unmatchesProperties = fields?.Where(field =>
-                    inlineUpdateableProperties?.FirstOrDefault(property =>
-                        field.Name.ToLower() == property.ToLower()) == null);
+                    inlineUpdateableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
@@ -430,10 +430,10 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Update()
-                .Table(Command.InlineUpdate)
+                .TableFrom(Command.InlineUpdate)
                 .Set()
-                .FieldsAndParameters(fields)
-                .Where(where)
+                .FieldsAndParametersFrom(fields)
+                .WhereFrom(where)
                 .End();
 
             // Return the query
@@ -477,13 +477,13 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .Table(Command.Insert)
+                .TableFrom(Command.Insert)
                 .OpenParen()
-                .Fields(fields)
+                .FieldsFrom(fields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(fields)
+                .ParametersFrom(fields)
                 .CloseParen()
                 .End();
             var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
@@ -552,12 +552,12 @@ namespace RepoDb
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .Table(Command.Merge)
+                .TableFrom(Command.Merge)
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFields(Command.None) // All fields must be included for selection
+                .ParametersAsFieldsFrom(Command.None) // All fields must be included for selection
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -575,11 +575,11 @@ namespace RepoDb
                 .Then()
                 .Insert()
                 .OpenParen()
-                .Fields(mergeInsertableFields)
+                .FieldsFrom(mergeInsertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .Parameters(mergeInsertableFields)
+                .ParametersFrom(mergeInsertableFields)
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -587,7 +587,7 @@ namespace RepoDb
                 .Then()
                 .Update()
                 .Set()
-                .FieldsAndAliasFields(mergeUpdateableFields, "S")
+                .FieldsAndAliasFieldsFrom(mergeUpdateableFields, "S")
                 .End();
 
             // Return the query
@@ -612,12 +612,33 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Select()
-                .Top(top)
-                .Fields(Command.Query)
+                .TopFrom(top)
+                .FieldsFrom(Command.Query)
                 .From()
-                .Table(Command.Query)
-                .Where(where)
-                .OrderBy(orderBy)
+                .TableFrom(Command.Query)
+                .WhereFrom(where)
+                .OrderByFrom(orderBy)
+                .End();
+            return queryBuilder.GetString();
+        }
+
+        /// <summary>
+        /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
+        /// </summary>
+        /// <typeparam name="TEntity">
+        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// </typeparam>
+        /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+        /// <returns>A string containing the composed SQL Statement for <i>Truncate</i> operation.</returns>
+        public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder)
+            where TEntity : DataEntity
+        {
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder
+                .Clear()
+                .Truncate()
+                .Table()
+                .TableFrom(Command.Delete)
                 .End();
             return queryBuilder.GetString();
         }
@@ -641,10 +662,10 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Update()
-                .Table(Command.Update)
+                .TableFrom(Command.Update)
                 .Set()
-                .FieldsAndParameters(fields)
-                .Where(where)
+                .FieldsAndParametersFrom(fields)
+                .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
         }
