@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
     /// </summary>
-    internal static class DataEntityIsPrimaryIdentityCache
+    internal static class IsPrimaryIdentityCache
     {
         private static readonly IDictionary<string, bool> _cache = new Dictionary<string, bool>();
         private static object _syncLock = new object();

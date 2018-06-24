@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constant.cs" />
-    <Compile Include="DataEntityIsPrimaryIdentityCache.cs" />
+    <Compile Include="IsPrimaryIdentityCache.cs" />
     <Compile Include="DataEntityListDataReader.cs" />
     <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />

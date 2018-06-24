@@ -84,6 +84,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Returns the first non-null occurence.
         /// </summary>
+        /// <param name="obj">The current object.</param>
         /// <param name="parameters">The list of parameters.</param>
         /// <returns>The first non-null object.</returns>
         public static object Coalesce(this object obj, params object[] parameters)

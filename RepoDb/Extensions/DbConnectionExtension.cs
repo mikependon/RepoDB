@@ -116,8 +116,7 @@ namespace RepoDb.Extensions
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null)
+            IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew(() =>
                 ExecuteQuery(connection: connection,

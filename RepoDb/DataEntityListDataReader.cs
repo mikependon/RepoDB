@@ -29,7 +29,7 @@ namespace RepoDb
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             Position = -1;
-            FieldCount = Properties.Count();
+            FieldCount = Properties.Count;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the current value from the name.
         /// </summary>
-        /// <param name="i">The name of the column.</param>
+        /// <param name="name">The name of the column.</param>
         /// <returns>The value from the column name.</returns>
         public object this[string name] { get { return this[GetOrdinal(name)]; } }
 
@@ -142,6 +142,15 @@ namespace RepoDb
             return Convert.ToByte(GetValue(i));
         }
 
+        /// <summary>
+        /// GetBytes
+        /// </summary>
+        /// <param name="i">Int</param>
+        /// <param name="fieldOffset">Int64</param>
+        /// <param name="buffer">byte[]</param>
+        /// <param name="bufferoffset">Int</param>
+        /// <param name="length">Int</param>
+        /// <returns></returns>
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
             ThrowExceptionIfNotAvailable();
@@ -159,12 +168,26 @@ namespace RepoDb
             return Convert.ToChar(GetValue(i));
         }
 
+        /// <summary>
+        /// GetChars
+        /// </summary>
+        /// <param name="i">Int</param>
+        /// <param name="fieldoffset">Int64</param>
+        /// <param name="buffer">char[]</param>
+        /// <param name="bufferoffset">Int</param>
+        /// <param name="length">Int</param>
+        /// <returns></returns>
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
         }
 
+        /// <summary>
+        /// GetData
+        /// </summary>
+        /// <param name="i">Int</param>
+        /// <returns>Int</returns>
         public IDataReader GetData(int i)
         {
             ThrowExceptionIfNotAvailable();
@@ -295,7 +318,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the index of the property based on the property name.
         /// </summary>
-        /// <param name="i">The index of the property.</param>
+        /// <param name="name">The index of the property.</param>
         /// <returns>The index of the property from property name.</returns>
         public int GetOrdinal(string name)
         {
@@ -303,6 +326,10 @@ namespace RepoDb
             return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
+        /// <summary>
+        /// Gets the table schema.
+        /// </summary>
+        /// <returns>An instance of the <i>System.Data.DataTable</i> with the table schema.</returns>
         public DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
@@ -331,10 +358,27 @@ namespace RepoDb
             return Properties[i].GetValue(Enumerator.Current);
         }
 
+        /// <summary>
+        /// Populates the values of the array of the current values of the current row.
+        /// </summary>
+        /// <param name="values">The array variable on which to populate the data.</param>
+        /// <returns></returns>
         public int GetValues(object[] values)
         {
             ThrowExceptionIfNotAvailable();
-            throw new NotSupportedException("This is not supported by this data reader.");
+            if (values == null)
+            {
+                throw new NullReferenceException("The values array must not be null.");
+            }
+            if (values.Length != FieldCount)
+            {
+                throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
+            }
+            for (var i = 0; i < Properties.Count; i++)
+            {
+                values[i] = Properties[i].GetValue(Enumerator.Current);
+            }
+            return FieldCount;
         }
 
         /// <summary>

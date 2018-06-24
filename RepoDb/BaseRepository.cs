@@ -645,9 +645,8 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
@@ -660,10 +659,9 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database targetting certain fields only.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false, IDbTransaction transaction = null)
@@ -679,9 +677,8 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
@@ -695,10 +692,9 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database targetting certain fields only in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
+        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
