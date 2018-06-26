@@ -9,6 +9,201 @@
             A class that holds the constant values for <i>RepoDb</i> library.
             </summary>
         </member>
+        <member name="T:RepoDb.Enumerations.ConnectionPersistency">
+            <summary>
+            An enumeration that defines the persistency of the <i>System.Data.Common.DbConnection</i> object used by the repository.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConnectionPersistency.PerCall">
+            <summary>
+            A new connection is being created on every call of the repository operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConnectionPersistency.Instance">
+            <summary>
+            A single connection is being used until the lifetime of the repository.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Conjunction">
+            <summary>
+            An enumeration used to define a conjuction for the query grouping. This enumeration is used at <i>RepoDb.QueryGroup</i> object.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Conjunction.And">
+            <summary>
+            The (AND) conjunction.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Conjunction.Or">
+            <summary>
+            The (OR) conjunction.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Order">
+            <summary>
+            An enumeration used to define the ordering of the query field.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Order.Ascending">
+            <summary>
+            The ascending order.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Order.Descending">
+            <summary>
+            The descending order.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Command">
+            <summary>
+            An enumeration used to define the commands for every operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.None">
+            <summary>
+            No defined command and is applicable to every commands.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Query">
+            <summary>
+            A command that is being used when querying the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Insert">
+            <summary>
+            A command that is being used when inserting the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Update">
+            <summary>
+            A command that is being used when updating the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Delete">
+            <summary>
+            A command that is being used when deleting the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Merge">
+            <summary>
+            A command that is being used when merging the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.BatchQuery">
+            <summary>
+            A command that is being used when querying the data (with batch).
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
+            <summary>
+            A command that is being used when doing an inline update on the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.BulkInsert">
+            <summary>
+            A command that is being used when updating the data, targetting certail fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Count">
+            <summary>
+            A command that is being used when counting the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.DeleteAll">
+            <summary>
+            A command that is being used when deleting all data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineInsert">
+            <summary>
+            A command that is being used when inserting the data, targetting certain fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineMerge">
+            <summary>
+            A command that is being used when merging the data, targetting certain fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Truncate">
+            <summary>
+            A command that is being used when truncating a table.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Operation">
+            <summary>
+            An enumeration used to define an operation on the query expression.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Equal">
+            <summary>
+            An equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotEqual">
+            <summary>
+            A not-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.LessThan">
+            <summary>
+            A less-than operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.GreaterThan">
+            <summary>
+            A greater-than operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.LessThanOrEqual">
+            <summary>
+            A less-than-or-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.GreaterThanOrEqual">
+            <summary>
+            A greater-than-or-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Like">
+            <summary>
+            A like operation. Defines the <i>LIKE</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotLike">
+            <summary>
+            A not-like operation. Defines the <i>NOT LIKE</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Between">
+            <summary>
+            A between operation. Defines the <i>BETWEEN</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotBetween">
+            <summary>
+            A not-between operation. Defines the <i>NOT BETWEEN</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.In">
+            <summary>
+            An in operation. Defines the <i>IN</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotIn">
+            <summary>
+            A non-in operation. Defines the <i>NOT IN</i> keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.All">
+            <summary>
+            An (AND) equation and operation. This defines that all query expression must be true.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Any">
+            <summary>
+            An (OR) equation and operation. This defines that any query expression must be true.
+            </summary>
+        </member>
         <member name="T:RepoDb.IsPrimaryIdentityCache">
             <summary>
             A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
@@ -2005,6 +2200,37 @@
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,RepoDb.Interfaces.ICache)">
+            <summary>
+            Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,RepoDb.Enumerations.ConnectionPersistency)">
+            <summary>
+            Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="connectionPersistency">
+            The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+            to <i>PerCall</i> will create a new connection object on every repository call.
+            </param>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)">
             <summary>
             Creates a new instance of <i>RepoDb.BaseRepository</i> object.
@@ -2031,6 +2257,20 @@
             <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
             <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,RepoDb.Enumerations.ConnectionPersistency)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+            <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+            <param name="connectionPersistency">
+            The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+            to <i>PerCall</i> will create a new connection object on every repository call.
+            </param>
         </member>
         <member name="P:RepoDb.BaseRepository`2.DbRepository">
             <summary>
@@ -2062,11 +2302,27 @@
             Gets the statement builder object that is being used by this repository.
             </summary>
         </member>
+        <member name="P:RepoDb.BaseRepository`2.ConnectionPersistency">
+            <summary>
+            Gets the database connection persistency used by this repository.
+            </summary>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.CreateConnection">
             <summary>
-            Creates a new instance of database connection.
+            Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+            the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+            property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
             </summary>
-            <returns>An instance of new database connection.</returns>
+            <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.CreateConnection(System.Boolean)">
+            <summary>
+            Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+            the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+            property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
+            </summary>
+            <param name="force">Set to true to forcely create a new instance of <i>System.Data.Common.DbConnection</i> object regardless of the persistency.</param>
+            <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Count(System.Data.IDbTransaction)">
             <summary>
@@ -2681,10 +2937,9 @@
             Bulk-inserting the list of <i>DataEntity</i> objects in the database.
             </summary>
             <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.BulkInsertAsync(System.Collections.Generic.IEnumerable{`0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.BulkInsertAsync(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
             </summary>
@@ -2692,7 +2947,7 @@
             <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
             converts the result back to an enumerable list of <i>DataEntity</i> object.
@@ -2703,13 +2958,12 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>
             An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
             </returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the 
             <i>System.Data.IDataReader</i> object and converts the result back to an enumerable list of <i>DataEntity</i> object.
@@ -2720,13 +2974,12 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>
             An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
             </returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteNonQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteNonQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
             returns the number of affected rows during the execution.
@@ -2737,11 +2990,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteNonQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteNonQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteNonQuery</i> method of the
             <i>System.Data.IDataReader</i> object and returns the number of affected rows during the execution.
@@ -2752,11 +3004,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteScalar(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteScalar(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
             returns the first occurence value (first column of first row) of the execution.
@@ -2767,11 +3018,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.ExecuteScalarAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.ExecuteScalarAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
             returns the first occurence value (first column of first row) of the execution.
@@ -2782,7 +3032,6 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
@@ -2813,6 +3062,37 @@
             <param name="connectionString">The connection string to be used by this repository.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.ICache)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.ITrace)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,RepoDb.Enumerations.ConnectionPersistency)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="connectionPersistency">
+            The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+            to <i>PerCall</i> will create a new connection object on every repository call.
+            </param>
+        </member>
         <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache)">
             <summary>
             Creates a new instance of <i>RepoDb.DbRepository</i> object.
@@ -2840,6 +3120,20 @@
             <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
             <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         </member>
+        <member name="M:RepoDb.DbRepository`1.#ctor(System.String,System.Nullable{System.Int32},RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,RepoDb.Enumerations.ConnectionPersistency)">
+            <summary>
+            Creates a new instance of <i>RepoDb.DbRepository</i> object.
+            </summary>
+            <param name="connectionString">The connection string to be used by this repository.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+            <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+            <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+            <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+            <param name="connectionPersistency">
+            The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+            to <i>PerCall</i> will create a new connection object on every repository call.
+            </param>
+        </member>
         <member name="P:RepoDb.DbRepository`1.ConnectionString">
             <summary>
             Gets the connection used by this repository.
@@ -2865,11 +3159,27 @@
             Gets the statement builder object that is being used by this repository.
             </summary>
         </member>
+        <member name="P:RepoDb.DbRepository`1.ConnectionPersistency">
+            <summary>
+            Gets the database connection persistency used by this repository.
+            </summary>
+        </member>
         <member name="M:RepoDb.DbRepository`1.CreateConnection">
             <summary>
-            Creates a new instance of database connection.
+            Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+            the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+            property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
             </summary>
-            <returns>An instance of new database connection.</returns>
+            <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.CreateConnection(System.Boolean)">
+            <summary>
+            Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+            the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+            property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
+            </summary>
+            <param name="force">Set to true to forcely create a new instance of <i>System.Data.Common.DbConnection</i> object regardless of the persistency.</param>
+            <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Count``1(System.Data.IDbTransaction)">
             <summary>
@@ -3541,25 +3851,23 @@
             <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BulkInsert``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.BulkInsert``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Bulk-inserting the list of <i>DataEntity</i> objects in the database.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-            <param name="transaction">The transaction to be used on this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteQuery``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteQuery``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
             converts the result back to an enumerable list of <i>DataEntity</i> object.
@@ -3571,13 +3879,12 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>
             An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteQueryAsync``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteQueryAsync``1(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the 
             <i>System.Data.IDataReader</i> object and converts the result back to an enumerable list of <i>DataEntity</i> object.
@@ -3589,13 +3896,12 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>
             An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteNonQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteNonQuery(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
             returns the number of affected rows during the execution.
@@ -3606,11 +3912,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteNonQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteNonQueryAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteNonQuery</i> method of the
             <i>System.Data.IDataReader</i> object and returns the number of affected rows during the execution.
@@ -3621,11 +3926,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteScalar(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteScalar(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
             returns the first occurence value (first column of first row) of the execution.
@@ -3636,11 +3940,10 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.ExecuteScalarAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.ExecuteScalarAsync(System.String,System.Object,System.Nullable{System.Data.CommandType},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
             returns the first occurence value (first column of first row) of the execution.
@@ -3651,189 +3954,8 @@
             defined in the <i>CommandText</i> property.
             </param>
             <param name="commandType">The command type to be used on the execution.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        </member>
-        <member name="T:RepoDb.Enumerations.Conjunction">
-            <summary>
-            An enumeration used to define a conjuction for the query grouping. This enumeration is used at <i>RepoDb.QueryGroup</i> object.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Conjunction.And">
-            <summary>
-            The (AND) conjunction.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Conjunction.Or">
-            <summary>
-            The (OR) conjunction.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Order">
-            <summary>
-            An enumeration used to define the ordering of the query field.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Order.Ascending">
-            <summary>
-            The ascending order.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Order.Descending">
-            <summary>
-            The descending order.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Command">
-            <summary>
-            An enumeration used to define the commands for every operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.None">
-            <summary>
-            No defined command and is applicable to every commands.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Query">
-            <summary>
-            A command that is being used when querying the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Insert">
-            <summary>
-            A command that is being used when inserting the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Update">
-            <summary>
-            A command that is being used when updating the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Delete">
-            <summary>
-            A command that is being used when deleting the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Merge">
-            <summary>
-            A command that is being used when merging the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BatchQuery">
-            <summary>
-            A command that is being used when querying the data (with batch).
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
-            <summary>
-            A command that is being used when doing an inline update on the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BulkInsert">
-            <summary>
-            A command that is being used when updating the data, targetting certail fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Count">
-            <summary>
-            A command that is being used when counting the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.DeleteAll">
-            <summary>
-            A command that is being used when deleting all data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineInsert">
-            <summary>
-            A command that is being used when inserting the data, targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineMerge">
-            <summary>
-            A command that is being used when merging the data, targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Truncate">
-            <summary>
-            A command that is being used when truncating a table.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Operation">
-            <summary>
-            An enumeration used to define an operation on the query expression.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Equal">
-            <summary>
-            An equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotEqual">
-            <summary>
-            A not-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.LessThan">
-            <summary>
-            A less-than operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.GreaterThan">
-            <summary>
-            A greater-than operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.LessThanOrEqual">
-            <summary>
-            A less-than-or-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.GreaterThanOrEqual">
-            <summary>
-            A greater-than-or-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Like">
-            <summary>
-            A like operation. Defines the <i>LIKE</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotLike">
-            <summary>
-            A not-like operation. Defines the <i>NOT LIKE</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Between">
-            <summary>
-            A between operation. Defines the <i>BETWEEN</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotBetween">
-            <summary>
-            A not-between operation. Defines the <i>NOT BETWEEN</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.In">
-            <summary>
-            An in operation. Defines the <i>IN</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotIn">
-            <summary>
-            A non-in operation. Defines the <i>NOT IN</i> keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.All">
-            <summary>
-            An (AND) equation and operation. This defines that all query expression must be true.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Any">
-            <summary>
-            An (OR) equation and operation. This defines that any query expression must be true.
-            </summary>
         </member>
         <member name="T:RepoDb.Parameter">
             <summary>

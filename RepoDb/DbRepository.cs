@@ -2455,8 +2455,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew<int>(() =>
                 ExecuteNonQuery(commandText: commandText,

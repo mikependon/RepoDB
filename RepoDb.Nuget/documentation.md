@@ -2,8 +2,9 @@
 
  - Only 30 seconds to Setup.
  - Massive ORM Operation supports.
- - Seriously fast because of IL.
  - Less Code and Fluent.
+ - Dynamic fast-switching for lightweight and massive ORM operations.
+ - Seriously fast because of IL programming.
  - Unique and Developer Friendly Expression Tree.
 
 ### Documentation

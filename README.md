@@ -41,28 +41,14 @@ To provide more flexibility and fast-switching development approach, whether to 
 
  - BatchQuery
  - BatchQueryAsync
+ - BulkInsert
+ - BulkInsertAsync
  - Count
  - CountAsync
- - Query
- - QueryAsync
- - Insert
- - InsertAsync
  - Delete
  - DeleteAsync
  - DeleteAll
  - DeleteAllAsync
- - Update
- - UpdateAsync
- - InlineInsert
- - InlineInsertAsync
- - InlineMerge
- - InlineMergeAsync
- - InlineUpdate
- - InlineUpdateAsync
- - Merge
- - MergeAsync
- - BulkInsert
- - BulkInsertAsync
  - ExecuteReader
  - ExecuteReaderAsync
  - ExecuteQuery
@@ -71,3 +57,19 @@ To provide more flexibility and fast-switching development approach, whether to 
  - ExecuteNonQueryAsync
  - ExecuteScalar
  - ExecuteScalarAsync
+ - InlineInsert
+ - InlineInsertAsync
+ - InlineMerge
+ - InlineMergeAsync
+ - InlineUpdate
+ - InlineUpdateAsync
+ - Insert
+ - InsertAsync
+ - Merge
+ - MergeAsync
+ - Query
+ - QueryAsync
+ - Truncate
+ - TruncateAsync
+ - Update
+ - UpdateAsync
