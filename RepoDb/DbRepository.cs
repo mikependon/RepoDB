@@ -21,6 +21,9 @@ namespace RepoDb
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public class DbRepository<TDbConnection> where TDbConnection : DbConnection
     {
+        private static object _connectionPersistencySyncLock = new object();
+        private static TDbConnection _instanceDbConnection;
+
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
         /// </summary>
@@ -72,6 +75,24 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
+            : this(connectionString, commandTimeout, cache, trace, statementBuilder, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <i>PerCall</i> will create a new connection object on every repository call.
+        /// </param>
+        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
+            ConnectionPersistency connectionPersistency)
         {
             // Properties
             ConnectionString = connectionString;
@@ -81,6 +102,7 @@ namespace RepoDb
             StatementBuilder = (statementBuilder ??
                 StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ??
                 new SqlDbStatementBuilder());
+            ConnectionPersistency = connectionPersistency;
         }
 
         /// <summary>
@@ -108,16 +130,55 @@ namespace RepoDb
         /// </summary>
         public IStatementBuilder StatementBuilder { get; }
 
+        /// <summary>
+        /// Gets the database connection persistency used by this repository.
+        /// </summary>
+        public ConnectionPersistency ConnectionPersistency { get; }
+
         // CreateConnection (TDbConnection)
 
         /// <summary>
-        /// Creates a new instance of database connection.
+        /// Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+        /// the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+        /// property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
         /// </summary>
-        /// <returns>An instance of new database connection.</returns>
+        /// <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
         public TDbConnection CreateConnection()
         {
-            var connection = Activator.CreateInstance<TDbConnection>();
-            connection.ConnectionString = ConnectionString;
+            return CreateConnection(false);
+        }
+
+        /// <summary>
+        /// Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+        /// the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+        /// property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
+        /// </summary>
+        /// <param name="force">Set to true to forcely create a new instance of <i>System.Data.Common.DbConnection</i> object regardless of the persistency.</param>
+        /// <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
+        public TDbConnection CreateConnection(bool force)
+        {
+            var connection = (TDbConnection)null;
+            if (ConnectionPersistency == ConnectionPersistency.Instance)
+            {
+                lock (_connectionPersistencySyncLock)
+                {
+                    if (_instanceDbConnection == null)
+                    {
+                        connection = Activator.CreateInstance<TDbConnection>();
+                        connection.ConnectionString = ConnectionString;
+                        _instanceDbConnection = connection;
+                    }
+                    else
+                    {
+                        connection = _instanceDbConnection;
+                    }
+                }
+            }
+            else
+            {
+                connection = Activator.CreateInstance<TDbConnection>();
+                connection.ConnectionString = ConnectionString;
+            }
             return connection;
         }
 
@@ -247,8 +308,7 @@ namespace RepoDb
             // Actual Execution
             var result = Convert.ToInt64(ExecuteScalar(commandText: commandText,
                  param: param,
-                 commandType: DataEntityExtension.GetCommandType<TEntity>(command),
-                 commandTimeout: CommandTimeout,
+                 commandType: commandType,
                  transaction: transaction));
 
             // After Execution
@@ -463,7 +523,6 @@ namespace RepoDb
             var result = ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: DataEntityExtension.GetCommandType<TEntity>(command),
-                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -736,7 +795,6 @@ namespace RepoDb
             var result = ExecuteQuery<TEntity>(commandText: commandText,
                  param: param,
                  commandType: commandType,
-                 commandTimeout: CommandTimeout,
                  transaction: transaction);
 
             // After Execution
@@ -935,7 +993,6 @@ namespace RepoDb
             var result = ExecuteScalar(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // Set back result equals to PrimaryKey type
@@ -1052,7 +1109,6 @@ namespace RepoDb
             var result = ExecuteScalar(commandText: commandText,
                 param: entity,
                 commandType: commandType,
-                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // Set back result equals to PrimaryKey type
@@ -1211,7 +1267,6 @@ namespace RepoDb
             var result = ExecuteNonQuery(commandText: commandText,
                 param: entity,
                 commandType: commandType,
-                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1345,6 +1400,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.InlineUpdate;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = StatementBuilder.CreateInlineUpdate(new QueryBuilder<TEntity>(),
                 entity.AsFields(), where, overrideIgnore);
             var param = entity?.Merge(where);
@@ -1372,8 +1428,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(command),
-                commandTimeout: CommandTimeout,
+                commandType: commandType,
                 transaction: transaction);
 
             // After Execution
@@ -1579,7 +1634,6 @@ namespace RepoDb
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: CommandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1715,7 +1769,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 commandType: commandType,
-                commandTimeout: CommandTimeout);
+                transaction: transaction);
 
             // After Execution
             if (Trace != null)
@@ -1866,7 +1920,7 @@ namespace RepoDb
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: CommandTimeout);
+                transaction: transaction);
 
             // After Execution
             if (Trace != null)
@@ -1988,8 +2042,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: null,
-                commandType: commandType,
-                commandTimeout: CommandTimeout);
+                commandType: commandType);
 
             // After Execution
             if (Trace != null)
@@ -2108,8 +2161,7 @@ namespace RepoDb
             // Actual Execution
             var result = ExecuteNonQuery(commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(command),
-                commandTimeout: CommandTimeout,
+                commandType: commandType,
                 transaction: transaction);
 
             // After Execution
@@ -2180,9 +2232,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
+        public int BulkInsert<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : DataEntity
         {
             // Validate, only supports SqlConnection
@@ -2196,53 +2247,51 @@ namespace RepoDb
 
             // Variables
             var command = Command.BulkInsert;
-            using (var connection = (transaction?.Connection ?? CreateConnection()).EnsureOpen())
+
+            // Before Execution
+            if (Trace != null)
             {
-                // Before Execution
-                if (Trace != null)
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
+                Trace.BeforeBulkInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
                 {
-                    var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
-                    Trace.BeforeBulkInsert(cancellableTraceLog);
-                    if (cancellableTraceLog.IsCancelled)
+                    if (cancellableTraceLog.IsThrowException)
                     {
-                        if (cancellableTraceLog.IsThrowException)
-                        {
-                            throw new CancelledExecutionException(command.ToString());
-                        }
-                        return 0;
+                        throw new CancelledExecutionException(command.ToString());
                     }
+                    return 0;
                 }
-
-                var result = 0;
-
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
-                // Actual Execution
-                using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
-                {
-                    using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy(ConnectionString))
-                    {
-                        sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(command);
-                        reader.Properties.ToList().ForEach(property =>
-                        {
-                            var columnName = property.GetMappedName();
-                            sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
-                        });
-                        sqlBulkCopy.WriteToServer(reader);
-                    }
-                }
-
-                // After Execution
-                if (Trace != null)
-                {
-                    Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
-                        DateTime.UtcNow.Subtract(beforeExecutionTime)));
-                }
-
-                // Result
-                return result;
             }
+
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
+            {
+                using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy(ConnectionString))
+                {
+                    sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(command);
+                    reader.Properties.ToList().ForEach(property =>
+                    {
+                        var columnName = property.GetMappedName();
+                        sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                    });
+                    sqlBulkCopy.WriteToServer(reader);
+                }
+            }
+
+            // After Execution
+            if (Trace != null)
+            {
+                Trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
         }
 
         // BulkInsertAsync
@@ -2252,14 +2301,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
+        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<int>(() =>
-                BulkInsert(entities: entities,
-                    transaction: transaction));
+                BulkInsert(entities: entities));
         }
 
         // ExecuteQuery
@@ -2275,13 +2322,11 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
-        public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -2290,7 +2335,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
-            if (transaction == null)
+            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
             {
                 connection.Dispose();
             }
@@ -2310,20 +2355,17 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
-        public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 ExecuteQuery<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    commandTimeout: commandTimeout,
                     transaction: transaction));
         }
 
@@ -2339,11 +2381,9 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int ExecuteNonQuery(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public int ExecuteNonQuery(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             var connection = (transaction?.Connection ?? CreateConnection());
             var result = connection.ExecuteNonQuery(commandText: commandText,
@@ -2351,7 +2391,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
-            if (transaction == null)
+            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
             {
                 connection.Dispose();
             }
@@ -2370,7 +2410,6 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null,
@@ -2380,7 +2419,6 @@ namespace RepoDb
                 ExecuteNonQuery(commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    commandTimeout: commandTimeout,
                     transaction: transaction));
         }
 
@@ -2396,11 +2434,9 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             var connection = (transaction?.Connection ?? CreateConnection());
             var result = connection.ExecuteScalar(commandText: commandText,
@@ -2408,7 +2444,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
-            if (transaction == null)
+            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
             {
                 connection.Dispose();
             }
@@ -2427,17 +2463,14 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return Task.Factory.StartNew<object>(() =>
                 ExecuteScalar(commandText: commandText,
                     param: param,
                     commandType: commandType,
-                    commandTimeout: commandTimeout,
                     transaction: transaction));
         }
     }

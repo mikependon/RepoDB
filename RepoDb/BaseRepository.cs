@@ -1129,12 +1129,10 @@ namespace RepoDb
         /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
         /// </summary>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int BulkInsert(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
         {
-            return DbRepository.BulkInsert<TEntity>(entities: entities,
-                transaction: transaction);
+            return DbRepository.BulkInsert<TEntity>(entities: entities);
         }
 
         // BulkInsertAsync
@@ -1145,10 +1143,9 @@ namespace RepoDb
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <param name="transaction">The transaction to be used on this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
+        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities)
         {
-            return DbRepository.BulkInsertAsync<TEntity>(entities: entities,
-                transaction: transaction);
+            return DbRepository.BulkInsertAsync<TEntity>(entities: entities);
         }
 
         // ExecuteQuery
@@ -1163,18 +1160,15 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
-        public IEnumerable<TEntity> ExecuteQuery(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> ExecuteQuery(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQuery<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1190,18 +1184,15 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
         /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
-        public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteQueryAsync<TEntity>(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1217,16 +1208,13 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int ExecuteNonQuery(string commandText, object param = null, CommandType? commandType = null, int?
-            commandTimeout = null, IDbTransaction transaction = null)
+        public int ExecuteNonQuery(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteNonQuery(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1242,16 +1230,13 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, int?
-            commandTimeout = null, IDbTransaction transaction = null)
+        public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteNonQueryAsync(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1267,16 +1252,13 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public object ExecuteScalar(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteScalar(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1292,16 +1274,13 @@ namespace RepoDb
         /// defined in the <i>CommandText</i> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null,
-            int? commandTimeout = null, IDbTransaction transaction = null)
+        public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteScalarAsync(commandText: commandText,
                 param: param,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
     }

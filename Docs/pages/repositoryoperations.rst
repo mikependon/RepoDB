@@ -198,7 +198,6 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
 
@@ -226,7 +225,6 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
 
@@ -249,7 +247,6 @@ Below are the parameters:
 
 - **commandText**: the SQL statement to be used for execution.
 - **param**: the parameters to be used for the execution. It could be an entity class or a dynamic object.
-- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
 - **transaction (optional)**: the transaction object be used when executing the command.
 

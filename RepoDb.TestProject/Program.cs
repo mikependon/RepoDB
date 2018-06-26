@@ -192,7 +192,15 @@ namespace RepoDb.TestProject
         {
             Task.Factory.StartNew(() =>
             {
+                TestRepoDbQuery(1000000);
+            });
+            Task.Factory.StartNew(() =>
+            {
                 TestRepoDbQuery(500000);
+            });
+            Task.Factory.StartNew(() =>
+            {
+                TestRepoDbQuery(300000);
             });
             Task.Factory.StartNew(() =>
             {
@@ -200,7 +208,7 @@ namespace RepoDb.TestProject
             });
             Task.Factory.StartNew(() =>
             {
-                TestRepoDbQuery(300000);
+                TestRepoDbQuery(50000);
             });
         }
 
@@ -208,7 +216,6 @@ namespace RepoDb.TestProject
         {
             var repository = new PersonRepository(RepoDbConnectionString);
             var people = (IEnumerable<Person>)null;
-
             // Combined
             people = repository.Query(new
             {
@@ -303,7 +310,7 @@ namespace RepoDb.TestProject
         private static void TestAllOperations()
         {
             // Repository
-            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
+            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, null, null, null, null, ConnectionPersistency.Instance);
 
             // Truncate
             repository.Truncate<Animal>();
