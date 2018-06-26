@@ -29,7 +29,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         public DbRepository(string connectionString)
-            : this(connectionString, null, null, null, null)
+            : this(connectionString, null, null, null, null, ConnectionPersistency.PerCall)
         {
         }
 
@@ -39,7 +39,50 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         public DbRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null, null)
+            : this(connectionString, commandTimeout, null, null, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        public DbRepository(string connectionString, ICache cache)
+            : this(connectionString, null, cache, null, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        public DbRepository(string connectionString, ITrace trace)
+            : this(connectionString, null, null, trace, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        public DbRepository(string connectionString, IStatementBuilder statementBuilder)
+            : this(connectionString, null, null, null, statementBuilder, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <i>PerCall</i> will create a new connection object on every repository call.
+        /// </param>
+        public DbRepository(string connectionString, ConnectionPersistency connectionPersistency)
+            : this(connectionString, null, null, null, null, connectionPersistency)
         {
         }
 
@@ -50,7 +93,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null, null)
+            : this(connectionString, commandTimeout, cache, null, null, ConnectionPersistency.PerCall)
         {
         }
 
@@ -62,7 +105,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
-            : this(connectionString, commandTimeout, cache, trace, null)
+            : this(connectionString, commandTimeout, cache, trace, null, ConnectionPersistency.PerCall)
         {
         }
 

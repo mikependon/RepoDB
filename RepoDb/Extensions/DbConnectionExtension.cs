@@ -60,6 +60,11 @@ namespace RepoDb.Extensions
             return connection;
         }
 
+        #region Operational Commands
+        #endregion
+
+        #region Execute Commands
+
         /// <summary>
         /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
         /// converts the result back to an enumerable list of dynamic objects.
@@ -372,5 +377,7 @@ namespace RepoDb.Extensions
                     transaction: transaction,
                     trace: trace));
         }
+
+        #endregion
     }
 }

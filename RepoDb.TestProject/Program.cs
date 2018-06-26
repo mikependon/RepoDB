@@ -310,7 +310,7 @@ namespace RepoDb.TestProject
         private static void TestAllOperations()
         {
             // Repository
-            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, null, null, null, null, ConnectionPersistency.Instance);
+            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance);
 
             // Truncate
             repository.Truncate<Animal>();

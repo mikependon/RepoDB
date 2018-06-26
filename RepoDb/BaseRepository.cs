@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
+using RepoDb.Enumerations;
 
 namespace RepoDb
 {
@@ -18,14 +19,12 @@ namespace RepoDb
     public abstract class BaseRepository<TEntity, TDbConnection> where TEntity : DataEntity
         where TDbConnection : DbConnection
     {
-        private readonly DbRepository<TDbConnection> _dbRepository;
-
         /// <summary>
         /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         public BaseRepository(string connectionString)
-            : this(connectionString, null, null, null, null)
+            : this(connectionString, null, null, null, null, ConnectionPersistency.PerCall)
         {
         }
 
@@ -35,7 +34,50 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
         public BaseRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null, null)
+            : this(connectionString, commandTimeout, null, null, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        public BaseRepository(string connectionString, ICache cache)
+            : this(connectionString, null, cache, null, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        public BaseRepository(string connectionString, ITrace trace)
+            : this(connectionString, null, null, trace, null, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        public BaseRepository(string connectionString, IStatementBuilder statementBuilder)
+            : this(connectionString, null, null, null, statementBuilder, ConnectionPersistency.PerCall)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <i>PerCall</i> will create a new connection object on every repository call.
+        /// </param>
+        public BaseRepository(string connectionString, ConnectionPersistency connectionPersistency)
+            : this(connectionString, null, null, null, null, connectionPersistency)
         {
         }
 
@@ -71,8 +113,26 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
+            : this(connectionString, commandTimeout, cache, trace, statementBuilder, ConnectionPersistency.PerCall)
         {
-            // Fields
+        }
+
+        /// <summary>
+        /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <i>RepoDb.Cache</i> interface.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <i>RepoDb.Trace</i> interface.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <i>Single</i> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <i>PerCall</i> will create a new connection object on every repository call.
+        /// </param>
+        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
+            ConnectionPersistency connectionPersistency)
+        {
+            // Properties
             ConnectionString = connectionString;
             CommandTimeout = commandTimeout;
             Cache = (cache ?? new MemoryCache());
@@ -80,16 +140,13 @@ namespace RepoDb
             StatementBuilder = (statementBuilder ??
                 StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ??
                 new SqlDbStatementBuilder());
-
-            // Repository
-            _dbRepository = new DbRepository<TDbConnection>(connectionString, commandTimeout,
-                Cache, Trace, StatementBuilder);
+            ConnectionPersistency = connectionPersistency;
         }
 
         /// <summary>
         /// Gets the underlying repository used by this repository.
         /// </summary>
-        public DbRepository<TDbConnection> DbRepository => _dbRepository;
+        public DbRepository<TDbConnection> DbRepository { get; }
 
         /// <summary>
         /// Gets the connection used by this repository.
@@ -116,16 +173,36 @@ namespace RepoDb
         /// </summary>
         public IStatementBuilder StatementBuilder { get; }
 
+        /// <summary>
+        /// Gets the database connection persistency used by this repository.
+        /// </summary>
+        public ConnectionPersistency ConnectionPersistency { get; }
+
         // CreateConnection
 
         /// <summary>
-        /// Creates a new instance of database connection.
+        /// Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+        /// the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+        /// property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
         /// </summary>
-        /// <returns>An instance of new database connection.</returns>
+        /// <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
         public TDbConnection CreateConnection()
         {
             return DbRepository.CreateConnection();
         }
+
+        /// <summary>
+        /// Creates a new instance of the database connection. If the value <i>ConnectionPersistency</i> property is <i>Instance</i>, then this will return
+        /// the <i>System.Data.Common.DbConnection</i> that is being used by the current repository instance. However, if the value of the <i>ConnectionPersistency</i>
+        /// property is <i>PerCall</i>, then this will return a new instance of the <i>System.Data.Common.DbConnection</i> object.
+        /// </summary>
+        /// <param name="force">Set to true to forcely create a new instance of <i>System.Data.Common.DbConnection</i> object regardless of the persistency.</param>
+        /// <returns>An instance of the <i>System.Data.Common.DbConnection</i> object.</returns>
+        public TDbConnection CreateConnection(bool force)
+        {
+            return DbRepository.CreateConnection(force);
+        }
+
 
         // Count
 
