@@ -22,7 +22,7 @@ namespace RepoDb
     public class DbRepository<TDbConnection> where TDbConnection : DbConnection
     {
         private static object _connectionPersistencySyncLock = new object();
-        private static TDbConnection _instanceDbConnection;
+        private TDbConnection _instanceDbConnection;
 
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DbRepository</i> object.
