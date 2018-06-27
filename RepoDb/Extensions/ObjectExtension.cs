@@ -28,7 +28,7 @@ namespace RepoDb.Extensions
             var dictionary = queryGroup?.AsObject() as ExpandoObject as IDictionary<string, object>;
             if (dictionary != null)
             {
-                foreach(var kvp in dictionary)
+                foreach (var kvp in dictionary)
                 {
                     expandObject[kvp.Key] = kvp.Value;
                 }
@@ -89,8 +89,7 @@ namespace RepoDb.Extensions
         /// <returns>The first non-null object.</returns>
         public static object Coalesce(this object obj, params object[] parameters)
         {
-            return parameters?
-                .First(param => param != null);
+            return parameters?.First(param => param != null);
         }
     }
 }

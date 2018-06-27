@@ -254,7 +254,7 @@ namespace RepoDb
         /// Counts the number of rows from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public long Count<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -267,8 +267,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public long Count<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -297,8 +297,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public long Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -311,8 +311,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public long Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -371,7 +371,7 @@ namespace RepoDb
         /// Counts the number of rows from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -384,8 +384,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public Task<long> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -399,8 +399,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -414,8 +414,8 @@ namespace RepoDb
         /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
         public Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -443,10 +443,10 @@ namespace RepoDb
         /// operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -461,14 +461,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -496,14 +496,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -518,14 +518,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -586,10 +586,10 @@ namespace RepoDb
         /// operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -604,14 +604,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -627,14 +627,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -650,14 +650,14 @@ namespace RepoDb
 
         /// <summary>
         /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
-        /// per batch defined on this operation. This operation is useful for paging purposes.
+        /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="page">The page of the batch to be used on this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
@@ -688,9 +688,9 @@ namespace RepoDb
         /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -711,10 +711,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -735,10 +735,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -780,10 +780,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -863,9 +863,9 @@ namespace RepoDb
         /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -886,10 +886,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -911,10 +911,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -936,10 +936,10 @@ namespace RepoDb
         /// Query a data from the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
-        /// <param name="top">The top number of rows to be used on this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -975,7 +975,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
@@ -1059,7 +1059,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
@@ -1091,7 +1091,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
@@ -1176,7 +1176,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
@@ -1209,7 +1209,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1227,7 +1227,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null) where TEntity : DataEntity
@@ -1331,7 +1331,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1349,7 +1349,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null) where TEntity : DataEntity
@@ -1379,9 +1379,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1410,9 +1410,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1428,9 +1428,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1492,9 +1492,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1511,9 +1511,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1530,9 +1530,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1562,7 +1562,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1578,8 +1578,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1594,8 +1594,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1631,8 +1631,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1697,7 +1697,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1712,8 +1712,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1729,8 +1729,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1746,8 +1746,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1775,7 +1775,7 @@ namespace RepoDb
         /// Deletes all data in the database based on the target <i>DataEntity</i>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1831,7 +1831,7 @@ namespace RepoDb
         /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1856,7 +1856,7 @@ namespace RepoDb
         /// Deletes all data in the database based on the target <i>DataEntity</i>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1868,8 +1868,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1882,8 +1882,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1922,8 +1922,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1982,7 +1982,7 @@ namespace RepoDb
         /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -1994,8 +1994,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2009,8 +2009,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2024,8 +2024,8 @@ namespace RepoDb
         /// Deletes a data in the database based on a given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  on this operation.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2126,7 +2126,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The entity to be merged.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2145,7 +2145,7 @@ namespace RepoDb
         /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
         /// (equation of the fields) of the source and destination tables.
         /// </param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2226,7 +2226,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The entity to be merged.</param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> MergeAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : DataEntity
@@ -2245,7 +2245,7 @@ namespace RepoDb
         /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
         /// (equation of the fields) of the source and destination tables.
         /// </param>
-        /// <param name="transaction">The transaction to be used on this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : DataEntity
