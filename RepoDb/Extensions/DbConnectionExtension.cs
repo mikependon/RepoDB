@@ -18,6 +18,8 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DbConnectionExtension
     {
+        #region Other Methods
+
         /// <summary>
         /// Creates a command object.
         /// </summary>
@@ -80,9 +82,13 @@ namespace RepoDb.Extensions
             }
         }
 
-        #region Operational Commands
+        #endregion
+
+        #region Guards
+
 
         // GuardPrimaryKey
+
         private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
             where TEntity : DataEntity
         {
@@ -92,6 +98,28 @@ namespace RepoDb.Extensions
                 throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}' for database object '{DataEntityExtension.GetMappedName<TEntity>(command)}'.");
             }
             return property;
+        }
+
+        // GuardBatchQueryable
+
+        private static void GuardBatchQueryable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsBatchQueryable<TEntity>())
+            {
+                throw new EntityNotBatchQueryableException(DataEntityExtension.GetMappedName<TEntity>(Command.BatchQuery));
+            }
+        }
+
+        // GuardBulkInsert
+
+        private static void GuardBulkInsert<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsBulkInsertable<TEntity>())
+            {
+                throw new EntityNotBulkInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.BulkInsert));
+            }
         }
 
         // GuardCountable
@@ -105,255 +133,119 @@ namespace RepoDb.Extensions
             }
         }
 
-        // Count
+        // GuardDeletable
 
-        /// <summary>
-        /// Counts the number of rows from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        private static void GuardDeletable<TEntity>()
             where TEntity : DataEntity
         {
-            return Count<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static long Count<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            var queryGroup = (QueryGroup)null;
-            if (where is QueryField)
+            if (!DataEntityExtension.IsDeletable<TEntity>())
             {
-                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
-            }
-            else if (where is QueryGroup)
-            {
-                queryGroup = (QueryGroup)where;
-            }
-            else
-            {
-                if ((bool)where?.GetType().IsGenericType)
-                {
-                    queryGroup = QueryGroup.Parse(where);
-                }
-            }
-            return Count<TEntity>(connection: connection,
-                where: queryGroup,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static long Count<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Count<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static long Count<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            // Check
-            GuardCountable<TEntity>();
-
-            // Variables
-            var command = Command.Count;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateCount(new QueryBuilder<TEntity>(), where);
-            var param = where?.AsObject();
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeCount(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(command.ToString());
-                    }
-                    return default(int);
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = Convert.ToInt64(ExecuteScalar(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                transaction: transaction));
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterCount(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        // CountAsync
-
-        /// <summary>
-        /// Counts the number of rows from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Count<TEntity>(connection: connection,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Count<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Count<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Count<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardBatchQueryable
-
-        private static void GuardBatchQueryable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsBatchQueryable<TEntity>())
-            {
-                throw new EntityNotBatchQueryableException(DataEntityExtension.GetMappedName<TEntity>(Command.BatchQuery));
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
             }
         }
+
+        // GuardDeletableAll
+
+        private static void GuardDeletableAll<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsDeletable<TEntity>())
+            {
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+            }
+        }
+
+        // GuardInlineInsertable
+
+        private static void GuardInlineInsertable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInlineInsertable<TEntity>())
+            {
+                throw new EntityNotInlineInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert));
+            }
+        }
+
+        // GuardInlineMergeable
+
+        private static void GuardInlineMergeable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInlineMergeable<TEntity>())
+            {
+                throw new EntityNotInlineMergeableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge));
+            }
+        }
+
+        // GuardInlineUpdateable
+
+        private static void GuardInlineUpdateable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
+            {
+                throw new EntityNotInlineUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate));
+            }
+        }
+
+        // GuardInsertable
+
+        private static void GuardInsertable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsInsertable<TEntity>())
+            {
+                throw new EntityNotInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.Insert));
+            }
+        }
+
+        // GuardMergeable
+
+        private static void GuardMergeable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsMergeable<TEntity>())
+            {
+                throw new EntityNotMergeableException(DataEntityExtension.GetMappedName<TEntity>(Command.Merge));
+            }
+        }
+
+        // GuardQueryable
+
+        private static void GuardQueryable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsQueryable<TEntity>())
+            {
+                throw new EntityNotQueryableException(DataEntityExtension.GetMappedName<TEntity>(Command.Query));
+            }
+        }
+
+        // GuardTruncatable
+
+        private static void GuardTruncatable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsDeletable<TEntity>())
+            {
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+            }
+        }
+
+        // GuardUpdateable
+
+        private static void GuardUpdateable<TEntity>()
+            where TEntity : DataEntity
+        {
+            if (!DataEntityExtension.IsUpdateable<TEntity>())
+            {
+                throw new EntityNotUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.Update));
+            }
+        }
+
+        #endregion
+
+        #region Operational Commands
 
         // BatchQuery
 
@@ -372,13 +264,14 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return BatchQuery<TEntity>(connection, where: (QueryGroup)null,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -400,7 +293,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -421,6 +314,7 @@ namespace RepoDb.Extensions
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -442,7 +336,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return BatchQuery<TEntity>(connection: connection,
@@ -450,6 +344,7 @@ namespace RepoDb.Extensions
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -471,7 +366,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             // Check
@@ -510,6 +405,7 @@ namespace RepoDb.Extensions
                 commandText: commandText,
                 param: param,
                 commandType: DataEntityExtension.GetCommandType<TEntity>(command),
+                commandTimeout: commandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -540,7 +436,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -548,6 +444,7 @@ namespace RepoDb.Extensions
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -569,7 +466,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -578,6 +475,7 @@ namespace RepoDb.Extensions
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -599,7 +497,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -608,6 +506,7 @@ namespace RepoDb.Extensions
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -629,7 +528,7 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -638,104 +537,146 @@ namespace RepoDb.Extensions
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
-        // GuardQueryable
+        // BulkInsert
 
-        private static void GuardQueryable<TEntity>()
+        /// <summary>
+        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
             where TEntity : DataEntity
         {
-            if (!DataEntityExtension.IsQueryable<TEntity>())
+            // Validate, only supports SqlConnection
+            if (connection.GetType() != typeof(System.Data.SqlClient.SqlConnection))
             {
-                throw new EntityNotQueryableException(DataEntityExtension.GetMappedName<TEntity>(Command.Query));
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
+
+            // Check
+            GuardBulkInsert<TEntity>();
+
+            // Variables
+            var command = Command.BulkInsert;
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
+                trace.BeforeBulkInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return 0;
+                }
+            }
+
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
+            {
+                using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection))
+                {
+                    sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(command);
+                    if (commandTimeout != null && commandTimeout.HasValue)
+                    {
+                        sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
+                    }
+                    reader.Properties.ToList().ForEach(property =>
+                    {
+                        var columnName = property.GetMappedName();
+                        sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                    });
+                    sqlBulkCopy.WriteToServer(reader);
+                }
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
         }
 
-        // Query
+        // BulkInsertAsync
 
         /// <summary>
-        /// Query a data from the database.
+        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
+        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                BulkInsert(connection: connection,
+                    entities: entities,
+                    commandTimeout: commandTimeout,
+                    trace: trace));
+        }
+
+        // Count
+
+        /// <summary>
+        /// Counts the number of rows from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        /// <returns>An integer value for the number of rows counted from the database.</returns>
+        public static long Count<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            return Query<TEntity>(connection: connection,
+            return Count<TEntity>(connection: connection,
                 where: (QueryGroup)null,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Query<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Query a data from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static long Count<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -753,76 +694,76 @@ namespace RepoDb.Extensions
                 {
                     queryGroup = QueryGroup.Parse(where);
                 }
-                else
-                {
-                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Query);
-                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
-                }
             }
-            return Query<TEntity>(connection: connection,
+            return Count<TEntity>(connection: connection,
                 where: queryGroup,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static long Count<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            // Get Cache
-            if (cacheKey != null)
-            {
-                var item = cache?.Get(cacheKey);
-                if (item != null)
-                {
-                    return (IEnumerable<TEntity>)item;
-                }
-            }
+            return Count<TEntity>(connection: connection,
+                where: where != null ? new QueryGroup(where) : null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
 
+        /// <summary>
+        /// Counts the number of rows from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static long Count<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
             // Check
-            GuardQueryable<TEntity>();
+            GuardCountable<TEntity>();
 
             // Variables
-            var command = Command.Query;
+            var command = Command.Count;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, top, orderBy);
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateCount(new QueryBuilder<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
+                trace.BeforeCount(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return null;
+                    return default(int);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -832,229 +773,252 @@ namespace RepoDb.Extensions
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQuery<TEntity>(connection: connection,
+            var result = Convert.ToInt64(ExecuteScalar(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
-                transaction: transaction);
+                commandTimeout: commandTimeout,
+                transaction: transaction));
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterCount(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Set Cache
-            if (cacheKey != null && result != null && result.Any())
-            {
-                cache?.Add(cacheKey, result);
             }
 
             // Result
             return result;
         }
 
-        // QueryAsync
+        // CountAsync
 
         /// <summary>
-        /// Query a data from the database in an asynchronous way.
+        /// Counts the number of rows from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Query<TEntity>(connection: connection,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Query<TEntity>(connection: connection,
-                    where: where,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Query<TEntity>(connection: connection,
-                    where: where,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, 
-            IDbTransaction transaction = null, string cacheKey = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Query<TEntity>(connection: connection,
-                    where: where,
-                    top: top,
-                    orderBy: orderBy,
-                    cacheKey: cacheKey,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardInsertable
-
-        private static void GuardInsertable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsInsertable<TEntity>())
-            {
-                throw new EntityNotInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.Insert));
-            }
-        }
-
-        // Insert
-
-        /// <summary>
-        /// Insert a data in the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
-        /// </returns>
-        public static object Insert<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
+        /// <returns>An integer value for the number of rows counted from the database.</returns>
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            // Check
-            GuardInsertable<TEntity>();
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(connection: connection,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder));
+        }
 
-            // Variables
-            var command = Command.Insert;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = string.Empty;
-            var param = entity?.AsObject();
+        /// <summary>
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
 
-            // Compose command text
-            if (commandType == CommandType.StoredProcedure)
+        /// <summary>
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Count<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        // Delete
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Delete<TEntity>(connection: connection,
+                where: (QueryGroup)null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Delete<TEntity>(connection: connection,
+                where: where != null ? new QueryGroup(where) : null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (QueryGroup)null;
+            if (where is QueryField)
             {
-                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
+                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
+            }
+            else if (where is QueryGroup)
+            {
+                queryGroup = (QueryGroup)where;
+            }
+            else if (where is TEntity)
+            {
+                var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
+                queryGroup = new QueryGroup(property.AsQueryField(where).AsEnumerable());
             }
             else
             {
-                if (statementBuilder is SqlDbStatementBuilder)
+                if ((bool)where?.GetType().IsGenericType)
                 {
-                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
+                    queryGroup = QueryGroup.Parse(where);
                 }
                 else
                 {
-                    // Other Sql Data Providers
-                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInsert(new QueryBuilder<TEntity>());
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
                 }
             }
+            return Delete<TEntity>(connection: connection,
+                where: queryGroup,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Delete<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardDeletable<TEntity>();
+
+            // Variables
+            var command = Command.Delete;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDelete(new QueryBuilder<TEntity>(), where);
+            var param = where?.AsObject();
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeInsert(cancellableTraceLog);
+                trace.BeforeDelete(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return null;
+                    return 0;
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -1064,19 +1028,17 @@ namespace RepoDb.Extensions
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalar(connection: connection,
+            var result = ExecuteNonQuery(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
-
-            // Set back result equals to PrimaryKey type
-            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1084,43 +1046,187 @@ namespace RepoDb.Extensions
             return result;
         }
 
-        // InsertAsync
+        // DeleteAsync
 
         /// <summary>
-        /// Insert a data in the database in an asynchronous way.
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
-        /// </returns>
-        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Insert(connection: connection,
-                    entity: entity,
+                Delete<TEntity>(connection: connection,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
-        // GuardInlineInsertable
-
-        private static void GuardInlineInsertable<TEntity>()
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            if (!DataEntityExtension.IsInlineInsertable<TEntity>())
+            return Task.Factory.StartNew(() =>
+                Delete<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Delete<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Delete<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        // DeleteAll
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int DeleteAll<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardDeletableAll<TEntity>();
+
+            // Variables
+            var command = Command.DeleteAll;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDeleteAll(new QueryBuilder<TEntity>());
+
+            // Before Execution
+            if (trace != null)
             {
-                throw new EntityNotInlineInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert));
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                trace.BeforeDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return 0;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
             }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQuery(connection: connection,
+                commandText: commandText,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        // DeleteAllAsync
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                DeleteAll<TEntity>(connection: connection,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
         }
 
         // InlineInsert
@@ -1140,8 +1246,8 @@ namespace RepoDb.Extensions
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
-        public static object InlineInsert<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static object InlineInsert<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             // Check
@@ -1198,6 +1304,7 @@ namespace RepoDb.Extensions
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
 
             // Set back result equals to PrimaryKey type
@@ -1231,28 +1338,18 @@ namespace RepoDb.Extensions
         /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
-        public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 InlineInsert<TEntity>(connection: connection,
                     entity: entity,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
-        }
-
-        // GuardInlineMergeable
-
-        private static void GuardInlineMergeable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsInlineMergeable<TEntity>())
-            {
-                throw new EntityNotInlineMergeableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge));
-            }
         }
 
         // InlineMerge
@@ -1269,14 +1366,15 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int InlineMerge<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int InlineMerge<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return InlineMerge<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: null,
                 overrideIgnore: overrideIgnore,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1296,7 +1394,8 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineMerge<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
         {
             // Check
             GuardInlineMergeable<TEntity>();
@@ -1377,6 +1476,7 @@ namespace RepoDb.Extensions
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1404,14 +1504,15 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -1431,27 +1532,18 @@ namespace RepoDb.Extensions
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     qualifiers: qualifiers,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
-        }
-
-        // GuardInlineUpdateable
-
-        private static void GuardInlineUpdateable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
-            {
-                throw new EntityNotInlineUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate));
-            }
         }
 
         // InlineUpdate
@@ -1469,8 +1561,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -1490,6 +1582,7 @@ namespace RepoDb.Extensions
                 entity: entity,
                 where: queryGroup,
                 overrideIgnore: overrideIgnore,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
         }
 
@@ -1506,14 +1599,15 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
                 where: new QueryGroup(where),
                 overrideIgnore: overrideIgnore,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1532,8 +1626,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             // Check
@@ -1574,6 +1668,7 @@ namespace RepoDb.Extensions
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -1602,8 +1697,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1611,6 +1706,7 @@ namespace RepoDb.Extensions
                     entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -1629,8 +1725,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1638,6 +1734,7 @@ namespace RepoDb.Extensions
                     entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -1656,8 +1753,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1665,161 +1762,73 @@ namespace RepoDb.Extensions
                     entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
-        // GuardUpdateable
-
-        private static void GuardUpdateable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsUpdateable<TEntity>())
-            {
-                throw new EntityNotUpdateableException(DataEntityExtension.GetMappedName<TEntity>(Command.Update));
-            }
-        }
-
-        // Update
+        // Insert
 
         /// <summary>
-        /// Updates a data in the database.
+        /// Insert a data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
-            return Update(connection: connection,
-                entity: entity,
-                where: new QueryGroup(property.AsQueryField(entity, true).AsEnumerable()),
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Update(connection: connection,
-                entity: entity,
-                where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            var queryGroup = (QueryGroup)null;
-            if (where is QueryField)
-            {
-                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
-            }
-            else if (where is QueryGroup)
-            {
-                queryGroup = (QueryGroup)where;
-            }
-            else
-            {
-                if ((bool)where?.GetType().IsGenericType)
-                {
-                    queryGroup = QueryGroup.Parse(where);
-                }
-                else
-                {
-                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
-                    queryGroup = new QueryGroup(new QueryField(property?.GetMappedName(), where).AsEnumerable());
-                }
-            }
-            return Update(connection: connection,
-                entity: entity,
-                where: queryGroup,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, IDbTransaction transaction = null,
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public static object Insert<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             // Check
-            GuardUpdateable<TEntity>();
+            GuardInsertable<TEntity>();
 
             // Variables
-            var command = Command.Update;
+            var command = Command.Insert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            if (commandType != CommandType.StoredProcedure)
+            var commandText = string.Empty;
+            var param = entity?.AsObject();
+
+            // Compose command text
+            if (commandType == CommandType.StoredProcedure)
             {
-                // Append prefix to all parameters for non StoredProcedure (this is mappable, that's why)
-                where.AppendParametersPrefix();
+                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
             }
-            var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
-            var param = entity?.AsObject(where);
+            else
+            {
+                if (statementBuilder is SqlDbStatementBuilder)
+                {
+                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
+                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
+                }
+                else
+                {
+                    // Other Sql Data Providers
+                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInsert(new QueryBuilder<TEntity>());
+                }
+            }
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeUpdate(cancellableTraceLog);
+                trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return 0;
+                    return null;
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -1829,16 +1838,20 @@ namespace RepoDb.Extensions
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteScalar(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
+
+            // Set back result equals to PrimaryKey type
+            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1846,552 +1859,33 @@ namespace RepoDb.Extensions
             return result;
         }
 
-        // UpdateAsync
+        // InsertAsync
 
         /// <summary>
-        /// Updates a data in the database in an asynchronous way.
+        /// Insert a data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Update(connection: connection,
+                Insert(connection: connection,
                     entity: entity,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Update(connection: connection,
-                    entity: entity,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Update(connection: connection,
-                    entity: entity,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Update(connection: connection,
-                    entity: entity,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardDeletable
-
-        private static void GuardDeletableAll<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
-            {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
-            }
-        }
-
-        // DeleteAll
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int DeleteAll<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            // Check
-            GuardDeletableAll<TEntity>();
-
-            // Variables
-            var command = Command.DeleteAll;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDeleteAll(new QueryBuilder<TEntity>());
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
-                trace.BeforeDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(command.ToString());
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
-                commandText: commandText,
-                commandType: commandType,
-                transaction: transaction);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        // DeleteAllAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                DeleteAll<TEntity>(connection: connection,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardDeletable
-
-        private static void GuardDeletable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
-            {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
-            }
-        }
-
-        // Delete
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Delete<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Delete<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            var queryGroup = (QueryGroup)null;
-            if (where is QueryField)
-            {
-                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
-            }
-            else if (where is QueryGroup)
-            {
-                queryGroup = (QueryGroup)where;
-            }
-            else if (where is TEntity)
-            {
-                var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
-                queryGroup = new QueryGroup(property.AsQueryField(where).AsEnumerable());
-            }
-            else
-            {
-                if ((bool)where?.GetType().IsGenericType)
-                {
-                    queryGroup = QueryGroup.Parse(where);
-                }
-                else
-                {
-                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Delete);
-                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
-                }
-            }
-            return Delete<TEntity>(connection, where: queryGroup,
-                    transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            // Check
-            GuardDeletable<TEntity>();
-
-            // Variables
-            var command = Command.Delete;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDelete(new QueryBuilder<TEntity>(), where);
-            var param = where?.AsObject();
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
-                trace.BeforeDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(command.ToString());
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                transaction: transaction);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-
-            // Result
-            return result;
-        }
-
-        // DeleteAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Delete<TEntity>(connection: connection,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Delete<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Delete<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Delete<TEntity>(connection: connection,
-                    where: where,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardTruncatable
-
-        private static void GuardTruncatable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
-            {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
-            }
-        }
-
-        // Truncate
-
-        /// <summary>
-        /// Truncates a table from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        public static void Truncate<TEntity>(this IDbConnection connection, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
-        {
-            // Check
-            GuardDeletable<TEntity>();
-
-            // Variables
-            var command = Command.Truncate;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateTruncate(new QueryBuilder<TEntity>());
-
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
-                trace.BeforeDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(command.ToString());
-                    }
-                }
-                commandText = (cancellableTraceLog?.Statement ?? commandText);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
-                commandText: commandText,
-                param: null,
-                commandType: commandType);
-
-            // After Execution
-            if (trace != null)
-            {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
-        }
-
-        // TruncateAsync
-
-        /// <summary>
-        /// Truncates a table from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        public static Task TruncateAsync<TEntity>(this IDbConnection connection, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
-        {
-            return Task.Factory.StartNew(() =>
-                Truncate<TEntity>(connection: connection,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        // GuardMergeable
-
-        private static void GuardMergeable<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsMergeable<TEntity>())
-            {
-                throw new EntityNotMergeableException(DataEntityExtension.GetMappedName<TEntity>(Command.Merge));
-            }
         }
 
         // Merge
@@ -2408,13 +1902,14 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Merge(connection: connection,
                 entity: entity,
                 qualifiers: null,
+                commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -2435,8 +1930,8 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             var command = Command.Merge;
@@ -2495,6 +1990,7 @@ namespace RepoDb.Extensions
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                commandTimeout: commandTimeout,
                 transaction: transaction);
 
             // After Execution
@@ -2522,13 +2018,14 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew<int>(() =>
                 Merge(connection: connection,
                     entity: entity,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
@@ -2549,61 +2046,583 @@ namespace RepoDb.Extensions
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Merge(connection: connection,
                     entity: entity,
                     qualifiers: qualifiers,
+                    commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
-        // GuardBulkInsert
-
-        private static void GuardBulkInsert<TEntity>()
-            where TEntity : DataEntity
-        {
-            if (!DataEntityExtension.IsBulkInsertable<TEntity>())
-            {
-                throw new EntityNotBulkInsertableException(DataEntityExtension.GetMappedName<TEntity>(Command.BulkInsert));
-            }
-        }
-
-        // BulkInsert
+        // Query
 
         /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, ITrace trace = null)
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            // Validate, only supports SqlConnection
-            if (connection.GetType() != typeof(System.Data.SqlClient.SqlConnection))
+            return Query<TEntity>(connection: connection,
+                where: (QueryGroup)null,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Query<TEntity>(connection: connection,
+                where: where != null ? new QueryGroup(where) : null,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (QueryGroup)null;
+            if (where is QueryField)
             {
-                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
+                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
+            }
+            else if (where is QueryGroup)
+            {
+                queryGroup = (QueryGroup)where;
+            }
+            else
+            {
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    queryGroup = QueryGroup.Parse(where);
+                }
+                else
+                {
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Query);
+                    queryGroup = new QueryGroup(new QueryField(property.GetMappedName(), where).AsEnumerable());
+                }
+            }
+            return Query<TEntity>(connection: connection,
+                where: queryGroup,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get(cacheKey);
+                if (item != null)
+                {
+                    return (IEnumerable<TEntity>)item;
+                }
             }
 
             // Check
-            GuardBulkInsert<TEntity>();
+            GuardQueryable<TEntity>();
 
             // Variables
-            var command = Command.BulkInsert;
+            var command = Command.Query;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, top, orderBy);
+            var param = where?.AsObject();
 
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
-                trace.BeforeBulkInsert(cancellableTraceLog);
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                trace.BeforeQuery(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteQuery<TEntity>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Set Cache
+            if (cacheKey != null && result != null && result.Any())
+            {
+                cache?.Add(cacheKey, result);
+            }
+
+            // Result
+            return result;
+        }
+
+        // QueryAsync
+
+        /// <summary>
+        /// Query a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(connection: connection,
+                    top: top,
+                    orderBy: orderBy,
+                    cacheKey: cacheKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(connection: connection,
+                    where: where,
+                    top: top,
+                    orderBy: orderBy,
+                    cacheKey: cacheKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(connection: connection,
+                    where: where,
+                    top: top,
+                    orderBy: orderBy,
+                    cacheKey: cacheKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(connection: connection,
+                    where: where,
+                    top: top,
+                    orderBy: orderBy,
+                    cacheKey: cacheKey,
+                    transaction: transaction,
+                    commandTimeout: commandTimeout,
+                    cache: cache,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        // Truncate
+
+        /// <summary>
+        /// Truncates a table from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        public static void Truncate<TEntity>(this IDbConnection connection, int? commandTimeout = null, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
+        {
+            // Check
+            GuardDeletable<TEntity>();
+
+            // Variables
+            var command = Command.Truncate;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateTruncate(new QueryBuilder<TEntity>());
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                trace.BeforeDelete(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(command.ToString());
+                    }
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = ExecuteNonQuery(connection: connection,
+                commandText: commandText,
+                param: null,
+                commandType: commandType,
+                commandTimeout: commandTimeout);
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+        }
+
+        // TruncateAsync
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        public static Task TruncateAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
+            ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Truncate<TEntity>(connection: connection,
+                    commandTimeout: commandTimeout,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        // Update
+
+        /// <summary>
+        /// Updates a data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
+            return Update(connection: connection,
+                entity: entity,
+                where: new QueryGroup(property.AsQueryField(entity, true).AsEnumerable()),
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Update(connection: connection,
+                entity: entity,
+                where: where != null ? new QueryGroup(where) : null,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, object where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            var queryGroup = (QueryGroup)null;
+            if (where is QueryField)
+            {
+                queryGroup = new QueryGroup(((QueryField)where).AsEnumerable());
+            }
+            else if (where is QueryGroup)
+            {
+                queryGroup = (QueryGroup)where;
+            }
+            else
+            {
+                if ((bool)where?.GetType().IsGenericType)
+                {
+                    queryGroup = QueryGroup.Parse(where);
+                }
+                else
+                {
+                    var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
+                    queryGroup = new QueryGroup(new QueryField(property?.GetMappedName(), where).AsEnumerable());
+                }
+            }
+            return Update(connection: connection,
+                entity: entity,
+                where: queryGroup,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int Update<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            // Check
+            GuardUpdateable<TEntity>();
+
+            // Variables
+            var command = Command.Update;
+            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            if (commandType != CommandType.StoredProcedure)
+            {
+                // Append prefix to all parameters for non StoredProcedure (this is mappable, that's why)
+                where.AppendParametersPrefix();
+            }
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                (statementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
+            var param = entity?.AsObject(where);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -2612,32 +2631,25 @@ namespace RepoDb.Extensions
                     }
                     return 0;
                 }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
             }
-
-            var result = 0;
 
             // Before Execution Time
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
-            {
-                using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection))
-                {
-                    sqlBulkCopy.DestinationTableName = DataEntityExtension.GetMappedName<TEntity>(command);
-                    reader.Properties.ToList().ForEach(property =>
-                    {
-                        var columnName = property.GetMappedName();
-                        sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
-                    });
-                    sqlBulkCopy.WriteToServer(reader);
-                }
-            }
+            var result = ExecuteNonQuery(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
+                trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2645,24 +2657,108 @@ namespace RepoDb.Extensions
             return result;
         }
 
-        // BulkInsertAsync
+        // UpdateAsync
 
         /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
+        /// Updates a data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, ITrace trace = null)
+        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                BulkInsert(connection: connection,
-                    entities: entities,
-                    trace: trace));
+                Update(connection: connection,
+                    entity: entity,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Update(connection: connection,
+                    entity: entity,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, object where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Update(connection: connection,
+                    entity: entity,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : DataEntity
+        {
+            return Task.Factory.StartNew(() =>
+                Update(connection: connection,
+                    entity: entity,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
         }
 
         #endregion

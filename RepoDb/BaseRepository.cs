@@ -1199,9 +1199,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int BulkInsert(IEnumerable<TEntity> entities, IDbTransaction transaction = null)
+        public int BulkInsert(IEnumerable<TEntity> entities)
         {
-            return DbRepository.BulkInsert<TEntity>(entities: entities);
+            return DbRepository.BulkInsert(entities: entities);
         }
 
         // BulkInsertAsync
@@ -1210,7 +1210,6 @@ namespace RepoDb
         /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
         /// </summary>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities)
         {
