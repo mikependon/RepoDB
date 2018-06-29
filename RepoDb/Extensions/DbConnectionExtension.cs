@@ -2405,8 +2405,8 @@ namespace RepoDb.Extensions
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
-                    transaction: transaction,
                     commandTimeout: commandTimeout,
+                    transaction: transaction,
                     cache: cache,
                     trace: trace,
                     statementBuilder: statementBuilder));

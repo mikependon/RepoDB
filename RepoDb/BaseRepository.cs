@@ -19,6 +19,8 @@ namespace RepoDb
     public abstract class BaseRepository<TEntity, TDbConnection> where TEntity : DataEntity
         where TDbConnection : DbConnection
     {
+        #region Constructors
+
         /// <summary>
         /// Creates a new instance of <i>RepoDb.BaseRepository</i> object.
         /// </summary>
@@ -132,51 +134,50 @@ namespace RepoDb
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
             ConnectionPersistency connectionPersistency)
         {
-            // Properties
-            ConnectionString = connectionString;
-            CommandTimeout = commandTimeout;
-            Cache = (cache ?? new MemoryCache());
-            Trace = trace;
-            StatementBuilder = (statementBuilder ??
-                StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ??
-                new SqlDbStatementBuilder());
-            ConnectionPersistency = connectionPersistency;
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets the underlying repository used by this repository.
         /// </summary>
-        public DbRepository<TDbConnection> DbRepository { get; }
+        private DbRepository<TDbConnection> DbRepository { get; set; }
 
         /// <summary>
         /// Gets the connection used by this repository.
         /// </summary>
-        public string ConnectionString { get; }
+        public string ConnectionString => DbRepository.ConnectionString;
 
         /// <summary>
         /// Gets the command timeout value in seconds that is being used by this repository on every operation.
         /// </summary>
-        public int? CommandTimeout { get; }
+        public int? CommandTimeout => DbRepository.CommandTimeout;
 
         /// <summary>
         /// Gets the cache object that is being used by this repository.
         /// </summary>
-        public ICache Cache { get; }
+        public ICache Cache => DbRepository.Cache;
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
         /// </summary>
-        public ITrace Trace { get; }
+        public ITrace Trace => DbRepository.Trace;
 
         /// <summary>
         /// Gets the statement builder object that is being used by this repository.
         /// </summary>
-        public IStatementBuilder StatementBuilder { get; }
+        public IStatementBuilder StatementBuilder => DbRepository.StatementBuilder;
 
         /// <summary>
         /// Gets the database connection persistency used by this repository.
         /// </summary>
-        public ConnectionPersistency ConnectionPersistency { get; }
+        public ConnectionPersistency ConnectionPersistency => DbRepository.ConnectionPersistency;
+
+        #endregion
+
+        #region Other Methods
 
         // CreateConnection
 
@@ -203,102 +204,9 @@ namespace RepoDb
             return DbRepository.CreateConnection(force);
         }
 
+        #endregion
 
-        // Count
-
-        /// <summary>
-        /// Counts the number of rows from the database.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public long Count(IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        // CountAsync
-
-        /// <summary>
-        /// Counts the number of rows from the database in an asynchronous way.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<long> CountAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
+        #region Operational Methods
 
         // BatchQuery
 
@@ -468,207 +376,244 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // Query
+        // BulkInsert
 
         /// <summary>
-        /// Query a data from the database.
+        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
         /// </summary>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int BulkInsert(IEnumerable<TEntity> entities)
         {
-            return DbRepository.Query<TEntity>(top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
-                transaction: transaction);
+            return DbRepository.BulkInsert(entities: entities);
+        }
+
+        // BulkInsertAsync
+
+        /// <summary>
+        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities)
+        {
+            return DbRepository.BulkInsertAsync<TEntity>(entities: entities);
+        }
+
+        // Count
+
+        /// <summary>
+        /// Counts the number of rows from the database.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of rows counted from the database.</returns>
+        public long Count(IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public long Count(object where, IDbTransaction transaction = null)
         {
-            return DbRepository.Query<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public long Count(IEnumerable<QueryField> where, IDbTransaction transaction = null)
         {
-            return DbRepository.Query<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public long Count(QueryGroup where, IDbTransaction transaction = null)
         {
-            return DbRepository.Query<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.Count<TEntity>(where: where,
                 transaction: transaction);
         }
 
-        // QueryAsync
+        // CountAsync
 
         /// <summary>
-        /// Query a data from the database in an asynchronous way.
+        /// Counts the number of rows from the database in an asynchronous way.
         /// </summary>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database.</returns>
+        public Task<long> CountAsync(IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
-                transaction: transaction);
+            return DbRepository.CountAsync<TEntity>(transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public Task<long> CountAsync(object where, IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.CountAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public Task<long> CountAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.CountAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force the repository to query from the database.
-        /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
+        public Task<long> CountAsync(QueryGroup where, IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
-                orderBy: orderBy,
-                cacheKey: cacheKey,
+            return DbRepository.CountAsync<TEntity>(where: where,
                 transaction: transaction);
         }
 
-        // Insert
+        // Delete
 
         /// <summary>
-        /// Insert a data in the database.
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
         /// </summary>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
-        /// </returns>
-        public object Insert(TEntity entity, IDbTransaction transaction = null)
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Delete(IDbTransaction transaction = null)
         {
-            return DbRepository.Insert<TEntity>(entity: entity,
+            return DbRepository.Delete<TEntity>(transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Delete(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(where: where,
                 transaction: transaction);
         }
 
-        // InsertAsync
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Delete(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(where: where,
+                transaction: transaction);
+        }
 
         /// <summary>
-        /// Insert a data in the database in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
-        /// </returns>
-        public Task<object> InsertAsync(TEntity entity, IDbTransaction transaction = null)
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Delete(QueryGroup where, IDbTransaction transaction = null)
         {
-            return DbRepository.InsertAsync<TEntity>(entity: entity,
+            return DbRepository.Delete<TEntity>(where: where,
                 transaction: transaction);
+        }
+
+        // DeleteAsync
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAsync(IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAsync(object where, IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAsync(QueryGroup where, IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        // DeleteAll
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int DeleteAll(IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(transaction: transaction);
+        }
+
+        // DeleteAllAsync
+
+        /// <summary>
+        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// </summary>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> DeleteAllAsync(IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAllAsync<TEntity>();
         }
 
         // InlineInsert
@@ -876,6 +821,293 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        // Insert
+
+        /// <summary>
+        /// Insert a data in the database.
+        /// </summary>
+        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public object Insert(TEntity entity, IDbTransaction transaction = null)
+        {
+            return DbRepository.Insert<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        // InsertAsync
+
+        /// <summary>
+        /// Insert a data in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// <i>PrimaryKey</i> property is not present.
+        /// </returns>
+        public Task<object> InsertAsync(TEntity entity, IDbTransaction transaction = null)
+        {
+            return DbRepository.InsertAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        // Merge
+
+        /// <summary>
+        /// Merges an existing <i>DataEntity</i> object in the database. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// the qualifier.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Merge(TEntity entity, IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges an existing <i>DataEntity</i> object in the database.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="qualifiers">
+        /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
+        /// (equation of the fields) of the source and destination tables.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Merge(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity>(entity: entity,
+                qualifiers: qualifiers,
+                transaction: transaction);
+        }
+
+        // MergeAsync
+
+        /// <summary>
+        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// the qualifier.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> MergeAsync(TEntity entity, IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="qualifiers">
+        /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
+        /// (equation of the fields) of the source and destination tables.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> MergeAsync(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity>(entity: entity,
+                qualifiers: qualifiers,
+                transaction: transaction);
+        }
+
+        // Query
+
+        /// <summary>
+        /// Query a data from the database.
+        /// </summary>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public IEnumerable<TEntity> Query(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity>(top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public IEnumerable<TEntity> Query(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public IEnumerable<TEntity> Query(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.Query<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        // QueryAsync
+
+        /// <summary>
+        /// Query a data from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity>(top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        {
+            return DbRepository.QueryAsync<TEntity>(where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                transaction: transaction);
+        }
+
+        // Truncate
+
+        /// <summary>
+        /// Truncates a table from the database.
+        /// </summary>
+        public void Truncate()
+        {
+            DbRepository.Truncate<TEntity>();
+        }
+
+        // TruncateAsync
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        public Task TruncateAsync()
+        {
+            return DbRepository.TruncateAsync<TEntity>();
+        }
+
         // Update
 
         /// <summary>
@@ -988,233 +1220,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // DeleteAll
+        #endregion
 
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int DeleteAll(IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(transaction: transaction);
-        }
-
-        // DeleteAllAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAllAsync<TEntity>();
-        }
-
-        // Delete
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete(IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        // DeleteAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync(object where, IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync(QueryGroup where, IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        // Truncate
-
-        /// <summary>
-        /// Truncates a table from the database.
-        /// </summary>
-        public void Truncate()
-        {
-            DbRepository.Truncate<TEntity>();
-        }
-
-        // TruncateAsync
-
-        /// <summary>
-        /// Truncates a table from the database in an asynchronous way.
-        /// </summary>
-        public Task TruncateAsync()
-        {
-            return DbRepository.TruncateAsync<TEntity>();
-        }
-
-        // Merge
-
-        /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database. By default, this operation uses the <i>PrimaryKey</i> property as
-        /// the qualifier.
-        /// </summary>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Merge(TEntity entity, IDbTransaction transaction = null)
-        {
-            return DbRepository.Merge<TEntity>(entity: entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database.
-        /// </summary>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="qualifiers">
-        /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
-        /// (equation of the fields) of the source and destination tables.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Merge(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
-        {
-            return DbRepository.Merge<TEntity>(entity: entity,
-                qualifiers: qualifiers,
-                transaction: transaction);
-        }
-
-        // MergeAsync
-
-        /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way. By default, this operation uses the <i>PrimaryKey</i> property as
-        /// the qualifier.
-        /// </summary>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync(TEntity entity, IDbTransaction transaction = null)
-        {
-            return DbRepository.MergeAsync<TEntity>(entity: entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way.
-        /// </summary>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="qualifiers">
-        /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
-        /// (equation of the fields) of the source and destination tables.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
-        {
-            return DbRepository.MergeAsync<TEntity>(entity: entity,
-                qualifiers: qualifiers,
-                transaction: transaction);
-        }
-
-        // BulkInsert
-
-        /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
-        /// </summary>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int BulkInsert(IEnumerable<TEntity> entities)
-        {
-            return DbRepository.BulkInsert(entities: entities);
-        }
-
-        // BulkInsertAsync
-
-        /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
-        /// </summary>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities)
-        {
-            return DbRepository.BulkInsertAsync<TEntity>(entities: entities);
-        }
+        #region Execute Methods
 
         // ExecuteQuery
 
@@ -1351,5 +1359,7 @@ namespace RepoDb
                 commandType: commandType,
                 transaction: transaction);
         }
+
+        #endregion
     }
 }
