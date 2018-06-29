@@ -377,7 +377,7 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateBatchQuery(new QueryBuilder<TEntity>(), where, page, rowsPerBatch, orderBy);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateBatchQuery(new QueryBuilder<TEntity>(), where, page, rowsPerBatch, orderBy);
             var param = where?.AsObject();
 
             // Before Execution
@@ -404,7 +404,7 @@ namespace RepoDb.Extensions
             var result = ExecuteQuery<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
-                commandType: DataEntityExtension.GetCommandType<TEntity>(command),
+                commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
 
@@ -749,7 +749,7 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateCount(new QueryBuilder<TEntity>(), where);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateCount(new QueryBuilder<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1004,7 +1004,7 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDelete(new QueryBuilder<TEntity>(), where);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateDelete(new QueryBuilder<TEntity>(), where);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1166,13 +1166,13 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateDeleteAll(new QueryBuilder<TEntity>());
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateDeleteAll(new QueryBuilder<TEntity>());
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
-                trace.BeforeDelete(cancellableTraceLog);
+                trace.BeforeDeleteAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -1197,7 +1197,7 @@ namespace RepoDb.Extensions
             // After Execution
             if (trace != null)
             {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterDeleteAll(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1275,7 +1275,7 @@ namespace RepoDb.Extensions
                 else
                 {
                     // Other Sql Data Providers
-                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
+                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
                 }
             }
 
@@ -1283,7 +1283,7 @@ namespace RepoDb.Extensions
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
-                trace.BeforeInsert(cancellableTraceLog);
+                trace.BeforeInlineInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -1313,7 +1313,7 @@ namespace RepoDb.Extensions
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                trace.AfterInlineInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1446,7 +1446,7 @@ namespace RepoDb.Extensions
                 else
                 {
                     // Other Sql Data Providers
-                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers,
+                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers,
                         overrideIgnore);
                 }
             }
@@ -1455,7 +1455,7 @@ namespace RepoDb.Extensions
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
-                trace.BeforeInsert(cancellableTraceLog);
+                trace.BeforeInlineMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -1482,7 +1482,7 @@ namespace RepoDb.Extensions
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                trace.AfterInlineMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1639,7 +1639,7 @@ namespace RepoDb.Extensions
             // Variables
             var command = Command.InlineUpdate;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInlineUpdate(new QueryBuilder<TEntity>(),
+            var commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineUpdate(new QueryBuilder<TEntity>(),
                 entity.AsFields(), where, overrideIgnore);
             var param = entity?.Merge(where);
 
@@ -1813,7 +1813,7 @@ namespace RepoDb.Extensions
                 else
                 {
                     // Other Sql Data Providers
-                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateInsert(new QueryBuilder<TEntity>());
+                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInsert(new QueryBuilder<TEntity>());
                 }
             }
 
@@ -1961,7 +1961,7 @@ namespace RepoDb.Extensions
                 else
                 {
                     // Other Sql Data Providers
-                    commandText = (statementBuilder ?? new SqlDbStatementBuilder()).CreateMerge(new QueryBuilder<TEntity>(), qualifiers);
+                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateMerge(new QueryBuilder<TEntity>(), qualifiers);
                 }
             }
 
@@ -2224,7 +2224,7 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, top, orderBy);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, top, orderBy);
             var param = where?.AsObject();
 
             // Before Execution
@@ -2432,13 +2432,13 @@ namespace RepoDb.Extensions
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateTruncate(new QueryBuilder<TEntity>());
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateTruncate(new QueryBuilder<TEntity>());
 
             // Before Execution
             if (trace != null)
             {
                 var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
-                trace.BeforeDelete(cancellableTraceLog);
+                trace.BeforeTruncate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
@@ -2462,7 +2462,7 @@ namespace RepoDb.Extensions
             // After Execution
             if (trace != null)
             {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterTruncate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
         }
@@ -2615,7 +2615,7 @@ namespace RepoDb.Extensions
             }
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
             var param = entity?.AsObject(where);
 
             // Before Execution
