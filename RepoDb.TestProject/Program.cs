@@ -369,6 +369,19 @@ namespace RepoDb.TestProject
                 Worth = new Random().Next(30000, 60000)
             });
 
+            for (var i = 0; i < 10; i++)
+            {
+                personId = repository.Insert(new Person()
+                {
+                    Name = $"Name: {Guid.NewGuid().ToString()}",
+                    Address = $"Address: {Guid.NewGuid().ToString()}",
+                    DateInserted = DateTime.UtcNow,
+                    DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
+                    DateUpdated = DateTime.UtcNow,
+                    Worth = new Random().Next(30000, 60000)
+                });
+            }
+
             // Verify
             Console.WriteLine($"Verify Insert with Identity PrimaryKey: {personId}");
             var person = repository.Query<Person>(personId).FirstOrDefault();
@@ -559,6 +572,8 @@ namespace RepoDb.TestProject
             Console.WriteLine($"Person Records: {repository.Count<Person>()}");
             Console.WriteLine($"Animal Records: {repository.Count<Animal>()}");
 
+            // Dispose
+            repository.Dispose();
         }
     }
 }

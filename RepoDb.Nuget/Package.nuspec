@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.1.8</version>
+    <version>1.1.9</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -12,15 +12,11 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      [Updates for v1.1.7 and v1.1.8]
-      - Supported identity primary key field identification from the database.
-      - Fixed the parallelism issues by removing the unnecessary cache classes from the library.
-      - Created a customized DataReader object for the BulkInsert operation, for future support for the .Net Core.
-      - Introduced the repository Truncate operation.
-      - Supported the inline operations for Insert, Merge and Update.
-      - Added ConnectionPersistency capability for the repositories.
-      - Built on a lower target framework 4.0 for earlier compatibility.
-      - Next release is to support the .Net Core.
+      [Updates for v1.1.9]
+      - Introduced the IDbConnection Extended Operational Methods.
+      - Optimized the DbRepository to use the IDbConnection Extended Operational Methods.
+      - Removes the DbRepository property at BaseRepository class.
+      - Made the DbRepository and BaseRepository Disposable.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

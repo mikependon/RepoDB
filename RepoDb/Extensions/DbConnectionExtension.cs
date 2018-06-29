@@ -149,9 +149,9 @@ namespace RepoDb.Extensions
         private static void GuardDeletableAll<TEntity>()
             where TEntity : DataEntity
         {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
+            if (!DataEntityExtension.IsDeletableAll<TEntity>())
             {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.DeleteAll));
             }
         }
 
@@ -226,9 +226,9 @@ namespace RepoDb.Extensions
         private static void GuardTruncatable<TEntity>()
             where TEntity : DataEntity
         {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
+            if (!DataEntityExtension.IsTruncatable<TEntity>())
             {
-                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Delete));
+                throw new EntityNotDeletableException(DataEntityExtension.GetMappedName<TEntity>(Command.Truncate));
             }
         }
 
@@ -604,6 +604,7 @@ namespace RepoDb.Extensions
                         var columnName = property.GetMappedName();
                         sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                     });
+                    connection.EnsureOpen();
                     sqlBulkCopy.WriteToServer(reader);
                 }
             }
@@ -2263,7 +2264,7 @@ namespace RepoDb.Extensions
             }
 
             // Set Cache
-            if (cacheKey != null && result != null && result.Any())
+            if (cacheKey != null && result?.Any() == true)
             {
                 cache?.Add(cacheKey, result);
             }
@@ -2425,7 +2426,7 @@ namespace RepoDb.Extensions
         public static void Truncate<TEntity>(this IDbConnection connection, int? commandTimeout = null, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
         {
             // Check
-            GuardDeletable<TEntity>();
+            GuardTruncatable<TEntity>();
 
             // Variables
             var command = Command.Truncate;

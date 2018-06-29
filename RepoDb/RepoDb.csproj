@@ -122,4 +122,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.dll" "$(SolutionDir)RepoDb.Nuget"
+xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.xml" "$(SolutionDir)RepoDb.Nuget"
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

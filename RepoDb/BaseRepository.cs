@@ -4,6 +4,7 @@ using System.Data.Common;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
+using System;
 
 namespace RepoDb
 {
@@ -16,7 +17,7 @@ namespace RepoDb
     /// object in order to be qualified as a repository entity.
     /// </typeparam>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public abstract class BaseRepository<TEntity, TDbConnection> where TEntity : DataEntity
+    public abstract class BaseRepository<TEntity, TDbConnection>: IDisposable where TEntity : DataEntity
         where TDbConnection : DbConnection
     {
         #region Constructors
@@ -171,7 +172,7 @@ namespace RepoDb
         public IStatementBuilder StatementBuilder => DbRepository.StatementBuilder;
 
         /// <summary>
-        /// Gets the database connection persistency used by this repository.
+        /// Gets the database connection persistency used by this repository. The value value is <i>ConnectionPersistency.PerCall</i>.
         /// </summary>
         public ConnectionPersistency ConnectionPersistency => DbRepository.ConnectionPersistency;
 
@@ -202,6 +203,16 @@ namespace RepoDb
         public TDbConnection CreateConnection(bool force)
         {
             return DbRepository.CreateConnection(force);
+        }
+
+        /// <summary>
+        /// Dispose the current repository instance (of type <i>RepoDb.BaseRepository</i>). It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
+        /// property is equals to <i>ConnectionPersistency.PerCall</i>. This method only manages the connection persistency for the repositories where the value
+        /// of the <i>ConnectionPersitency</i> property is equals to <i>ConnectionPersitency.Instance</i>.
+        /// </summary>
+        public void Dispose()
+        {
+            DbRepository.Dispose();
         }
 
         #endregion

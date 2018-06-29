@@ -17,7 +17,7 @@ namespace RepoDb
     /// operations.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public class DbRepository<TDbConnection> where TDbConnection : DbConnection
+    public class DbRepository<TDbConnection>: IDisposable where TDbConnection : DbConnection
     {
         #region Fields
 
@@ -180,7 +180,7 @@ namespace RepoDb
         public IStatementBuilder StatementBuilder { get; }
 
         /// <summary>
-        /// Gets the database connection persistency used by this repository.
+        /// Gets the database connection persistency used by this repository. The value value is <i>ConnectionPersistency.PerCall</i>.
         /// </summary>
         public ConnectionPersistency ConnectionPersistency { get; }
 
@@ -211,7 +211,7 @@ namespace RepoDb
         public TDbConnection CreateConnection(bool force)
         {
             var connection = (TDbConnection)null;
-            if (ConnectionPersistency == ConnectionPersistency.Instance)
+            if (force == false && ConnectionPersistency == ConnectionPersistency.Instance)
             {
                 lock (_connectionPersistencySyncLock)
                 {
@@ -233,6 +233,19 @@ namespace RepoDb
                 connection.ConnectionString = ConnectionString;
             }
             return connection;
+        }
+
+        /// <summary>
+        /// Dispose the current repository instance (of type <i>RepoDb.DbRepository</i>). It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
+        /// property is equals to <i>ConnectionPersistency.PerCall</i>. This method only manages the connection persistency for the repositories where the value
+        /// of the <i>ConnectionPersitency</i> property is equals to <i>ConnectionPersitency.Instance</i>.
+        /// </summary>
+        public void Dispose()
+        {
+            if (ConnectionPersistency== ConnectionPersistency.Instance)
+            {
+                _instanceDbConnection?.Dispose();
+            }
         }
 
         #endregion
