@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace RepoDb
+namespace RepoDb.Extensions
 {
     /// <summary>
     /// Contains the extension methods for <i>System.Data.IDbConnection</i> object.
@@ -112,11 +112,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public static long Count<TEntity>(this IDbConnection connection, IDbTransaction transaction = null,
+        public static long Count<TEntity>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
@@ -128,15 +129,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -165,15 +167,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -186,15 +189,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -255,6 +259,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -271,15 +276,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -293,15 +299,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -315,15 +322,16 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -358,6 +366,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -376,7 +385,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -385,6 +394,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -417,7 +427,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -426,6 +436,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -445,7 +456,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -454,6 +465,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -522,6 +534,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -541,7 +554,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -550,6 +563,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -570,7 +584,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -579,6 +593,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -599,7 +614,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -608,6 +623,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -645,78 +661,81 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: (QueryGroup)null,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
                 cacheKey: cacheKey,
+                transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
                 cacheKey: cacheKey,
+                transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -742,32 +761,33 @@ namespace RepoDb
             }
             return Query<TEntity>(connection: connection,
                 where: queryGroup,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
                 cacheKey: cacheKey,
+                transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             // Get Cache
@@ -842,119 +862,123 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
+                    transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
+                    transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, IDbTransaction transaction = null, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, ICache cache = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
+                    transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, 
+            IDbTransaction transaction = null, string cacheKey = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
+                    transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder));
         }
@@ -978,6 +1002,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1067,6 +1092,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1106,6 +1132,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1196,6 +1223,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1236,6 +1264,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1261,6 +1290,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1369,6 +1399,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1394,6 +1425,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1432,6 +1464,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1468,6 +1501,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1493,6 +1527,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1562,6 +1597,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1588,6 +1624,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1614,6 +1651,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1651,6 +1689,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1669,12 +1708,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1692,12 +1732,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1736,12 +1777,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1812,6 +1854,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1829,12 +1872,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1853,12 +1897,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1877,12 +1922,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1918,6 +1964,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1979,6 +2026,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2012,6 +2060,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2028,11 +2077,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2049,11 +2099,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2093,11 +2144,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2162,6 +2214,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2178,11 +2231,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2200,11 +2254,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2222,11 +2277,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2261,6 +2317,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static void Truncate<TEntity>(this IDbConnection connection, ITrace trace = null, IStatementBuilder statementBuilder = null) where TEntity : DataEntity
@@ -2314,6 +2371,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static Task TruncateAsync<TEntity>(this IDbConnection connection, ITrace trace = null, IStatementBuilder statementBuilder = null)
@@ -2345,6 +2403,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The entity to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2371,6 +2430,7 @@ namespace RepoDb
         /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
         /// (equation of the fields) of the source and destination tables.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2457,6 +2517,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The entity to be merged.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2483,6 +2544,7 @@ namespace RepoDb
         /// The list of qualifer fields to be used during merge operation. The qualifers are the fields used when qualifying the condition
         /// (equation of the fields) of the source and destination tables.
         /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2519,6 +2581,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, ITrace trace = null)
@@ -2590,6 +2653,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, ITrace trace = null)

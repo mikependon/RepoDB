@@ -264,12 +264,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -294,12 +294,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -308,12 +308,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression.
+        /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -381,12 +381,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -396,12 +396,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -411,12 +411,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on a given query expression in an asynchronous way.
+        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on a given query expression.</returns>
+        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -460,7 +460,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -495,7 +495,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -517,7 +517,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -603,7 +603,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -626,7 +626,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -649,7 +649,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch based on a given query expression in an asynchronous way. The batching will vary on the page number and number of rows
+        /// Query the data from the database by batch based on the given query expression in an asynchronous way. The batching will vary on the page number and number of rows
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
@@ -688,64 +688,61 @@ namespace RepoDb
         /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(where: (QueryGroup)null,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
-                cacheKey: cacheKey);
+                cacheKey: cacheKey,
+                transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Query<TEntity>(where: where != null ? new QueryGroup(where) : null,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
-                cacheKey: cacheKey);
+                cacheKey: cacheKey,
+                transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             var queryGroup = (QueryGroup)null;
@@ -770,27 +767,26 @@ namespace RepoDb
                 }
             }
             return Query<TEntity>(where: queryGroup,
-                transaction: transaction,
                 top: top,
                 orderBy: orderBy,
-                cacheKey: cacheKey);
+                cacheKey: cacheKey,
+                transaction: transaction);
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression.
+        /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Get Cache
@@ -863,98 +859,94 @@ namespace RepoDb
         /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IDbTransaction transaction = null, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Query<TEntity>(transaction: transaction,
-                    top: top,
+                Query<TEntity>(top: top,
                     orderBy: orderBy,
-                    cacheKey: cacheKey));
+                    cacheKey: cacheKey,
+                    transaction: transaction));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
-                    cacheKey: cacheKey));
+                    cacheKey: cacheKey,
+                    transaction: transaction));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
-                    cacheKey: cacheKey));
+                    cacheKey: cacheKey,
+                    transaction: transaction));
         }
 
         /// <summary>
-        /// Query a data from the database based on a given query expression in an asynchronous way.
+        /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null,
-            int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
-                    transaction: transaction,
                     top: top,
                     orderBy: orderBy,
-                    cacheKey: cacheKey));
+                    cacheKey: cacheKey,
+                    transaction: transaction));
         }
 
         // GuardInsertable
@@ -1574,7 +1566,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1590,7 +1582,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1627,7 +1619,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression.
+        /// Updates a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1708,7 +1700,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1725,7 +1717,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1742,7 +1734,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on a given query expression in an asynchronous way.
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
@@ -1865,7 +1857,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1879,7 +1871,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1919,7 +1911,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression.
+        /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1991,7 +1983,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -2006,7 +1998,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -2021,7 +2013,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on a given query expression in an asynchronous way.
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
