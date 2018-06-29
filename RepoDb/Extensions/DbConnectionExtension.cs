@@ -86,7 +86,6 @@ namespace RepoDb.Extensions
 
         #region Guards
 
-
         // GuardPrimaryKey
 
         private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
