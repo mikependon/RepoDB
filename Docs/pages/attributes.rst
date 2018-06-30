@@ -80,4 +80,6 @@ Below are the commands that can be defined in the `IgnoreAttribute`.
 * BatchQuery
 * InlineUpdate
 
-**Note**: All commands specified above can be defined together in a single `IgnoreAttribute` by using the pipe character (`|`) as the separator.
+All commands specified above can be defined together in a single `IgnoreAttribute` by using the pipe character (`|`) as the separator.
+
+**Note**: The `RepoDb` is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.

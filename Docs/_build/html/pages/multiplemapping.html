@@ -86,11 +86,13 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
@@ -196,13 +198,16 @@
 </div>
 <p>Below are the supported mapping for each command.</p>
 <ul class="simple">
-<li><strong>BatchQuery</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
-<li><strong>BulkInsert</strong>: only for <cite>CommandType.&lt;Text&gt;</cite>.</li>
-<li><strong>Count</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
-<li><strong>InlineUpdate</strong>: only for <cite>CommandType.&lt;Text&gt;</cite>.</li>
-<li><strong>Merge</strong>: only for <cite>CommandType.&lt;Text | Stored Procedure&gt;</cite>.</li>
+<li><strong>InlineInsert</strong>: only for <cite>CommandType.&lt;Text | TableDirect&gt;</cite>.</li>
+<li><strong>InlineMerge</strong>: only for <cite>CommandType.&lt;Text | TableDirect&gt;</cite>.</li>
+<li><strong>InlineUpdate</strong>: only for <cite>CommandType.&lt;Text | TableDirect&gt;</cite>.</li>
+<li><strong>BatchQuery</strong>: full support.</li>
+<li><strong>BulkInsert</strong>: full support.</li>
+<li><strong>Count</strong>: full support.</li>
 <li><strong>Insert</strong>: full support.</li>
 <li><strong>Delete</strong>: full support.</li>
+<li><strong>DeleteAll</strong>: full support.</li>
+<li><strong>Merge</strong>: full support.</li>
 <li><strong>Query</strong>: full support.</li>
 <li><strong>Update</strong>: full support.</li>
 </ul>

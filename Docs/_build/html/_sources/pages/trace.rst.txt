@@ -117,8 +117,8 @@ Below is the way on how to inject a Trace class in the repository.
 
 Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.
 
-Canceling an Operation
-----------------------
+Cancelling an Operation
+-----------------------
 
 To cancel an operation, simply call the `Cancel` method of type `RepoDb.CancelableTraceLog` in any `Before` operation.
 

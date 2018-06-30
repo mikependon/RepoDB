@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Type Mapping &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Connection Persistency &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Connection Object" href="connection.html" />
-    <link rel="prev" title="Multiple Entity Mapping" href="multiplemapping.html" /> 
+    <link rel="next" title="Repository Operations" href="repositoryoperations.html" />
+    <link rel="prev" title="Working with Repository" href="repository.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -85,14 +85,18 @@
 <li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Mapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Connection Persistency</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#percall-persistency">PerCall Persistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instance-persistency">Instance Persistency</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
@@ -146,13 +150,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Type Mapping</li>
+      <li>Connection Persistency</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/pages/typemapping.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/pages/connectionpersistency.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,18 +169,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="type-mapping">
-<h1>Type Mapping<a class="headerlink" href="#type-mapping" title="Permalink to this headline">¶</a></h1>
-<p>It is a feature used to map the <cite>.NET CLR Types</cite> into its equivalent <cite>System.Data.DbType</cite> database types.</p>
-<p>Code below shows how to map the <cite>System.DateTime</cite> type to a <cite>System.Data.DbType.DateTime2</cite> database type.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">DateTime2</span><span class="p">);</span>
-</pre></div>
+  <div class="section" id="connection-persistency">
+<h1>Connection Persistency<a class="headerlink" href="#connection-persistency" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="percall-persistency">
+<h2>PerCall Persistency<a class="headerlink" href="#percall-persistency" title="Permalink to this headline">¶</a></h2>
 </div>
-<p>and a <cite>System.Decimal</cite> type into <cite>System.Data.DbType.Double</cite> database type.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">AddMap</span><span class="p">(</span><span class="n">new</span> <span class="n">TypeMap</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">Double</span><span class="p">));</span>
-</pre></div>
+<div class="section" id="instance-persistency">
+<h2>Instance Persistency<a class="headerlink" href="#instance-persistency" title="Permalink to this headline">¶</a></h2>
 </div>
-<p><strong>Note</strong>: The <cite>TypeMapper</cite> class is callable anywhere in the application as it was implemented as a static class.</p>
 </div>
 
 
@@ -187,10 +187,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="connection.html" class="btn btn-neutral float-right" title="Connection Object" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="repositoryoperations.html" class="btn btn-neutral float-right" title="Repository Operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="multiplemapping.html" class="btn btn-neutral" title="Multiple Entity Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="repository.html" class="btn btn-neutral" title="Working with Repository" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

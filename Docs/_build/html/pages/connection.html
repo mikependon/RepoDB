@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Transaction" href="transaction.html" />
-    <link rel="prev" title="Working with Repository" href="repository.html" /> 
+    <link rel="next" title="Connection Operations" href="connectionoperations.html" />
+    <link rel="prev" title="Type Mapping" href="typemapping.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -86,19 +86,18 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Connection Object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#createcommand-method">CreateCommand Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ensureopen-method">EnsureOpen Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executereader-method">ExecuteReader Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executequery-method">ExecuteQuery Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executenonquery-method">ExecuteNonQuery Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executescalar-method">ExecuteScalar Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-storedprocedure">Working with StoredProcedure</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
@@ -176,229 +175,52 @@
 <p>The library has abstracted everything from <cite>ADO.NET</cite>, however, some extension methods has been developed to simplify the data access models.</p>
 <p>Below are the list of extension methods for <cite>Connection</cite> object.</p>
 <ul class="simple">
+<li><strong>CreateCommand</strong>: is used to create a command object before the actual operation execution. It returns an instance of <cite>System.Data.IDbCommand</cite> object.</li>
 <li><strong>EnsureOpen</strong>: is used to ensure that the connection object is <cite>Open</cite>. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</li>
-<li><strong>ExecuteNonQuery</strong>: is used to execute a non-queryable SQL statement. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</li>
-<li><strong>ExecuteQuery</strong>: is used to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.DataEntity</cite> object.</li>
-<li><strong>ExecuteReader</strong>: is used to execute a SQL statement query from the database in fast-forward access. This method returns an instance of <cite>System.Data.IDataReader</cite> object.</li>
-<li><strong>ExecuteScalar</strong>: is used to execute a query statement that returns single value of type <cite>System.Object</cite>.</li>
 </ul>
 <p>A repository is used to create a connection object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">();</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Use the connection here</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Use the connection here</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<div class="section" id="createcommand-method">
+<h2>CreateCommand Method<a class="headerlink" href="#createcommand-method" title="Permalink to this headline">¶</a></h2>
+<p>Creates a command object.</p>
+<p>The underlying method call of this method is the <cite>System.Data.DbConnection.CreateCommand()</cite> method.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
+<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
+<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
+</ul>
+<p>See sample codes below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CreateCommand</span><span class="p">(</span><span class="s">&quot;SELECT TOP 100 * FROM [dbo].[Customer];&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span> <span class="m">500</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
+        <span class="c1">// Use the command here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="ensureopen-method">
 <h2>EnsureOpen Method<a class="headerlink" href="#ensureopen-method" title="Permalink to this headline">¶</a></h2>
-<p>This method is used to ensure that the connection object is <cite>Open</cite>. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</p>
+<p>This method is used to ensure that the connection object is <cite>Open</cite>. The operational methods are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</p>
 <p>The underlying method call of this method is the <cite>System.Data.DbConnection.Open()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
-</ul>
 <p>See sample codes below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="c1">// No need to open the connection</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Use the connection here</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executereader-method">
-<h2>ExecuteReader Method<a class="headerlink" href="#executereader-method" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a SQL statement query from the database in fast-forward access. This method returns an instance of <cite>System.Data.IDataReader</cite> object.</p>
-<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
-</ul>
-<p>See sample codes below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="p">{</span>
-                <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process the records here</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="p">{</span>
-                <span class="k">while</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">())</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process the records here</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executequery-method">
-<h2>ExecuteQuery Method<a class="headerlink" href="#executequery-method" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a SQL statement query from the database in fast-forward access. It returns an enumerable list of <cite>dynamic</cite> or <cite>RepoDb.DataEntity</cite> object.</p>
-<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteReader()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
-</ul>
-<p>Code below returns an enumerable list of <cite>dynamic</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="n">customers</span>
-                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
-                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process each customer here</span>
-                <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="n">customers</span>
-                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
-                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process each customer here</span>
-                <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Code below returns an enumerable list of <cite>Customer</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="n">customers</span>
-                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
-                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process each customer here</span>
-                <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT * FROM [dbo].[Customer] WHERE (Id &lt;= @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span> <span class="p">}))</span>
-        <span class="n">customers</span>
-                <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
-                <span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
-                <span class="p">{</span>
-                        <span class="c1">// Process each customer here</span>
-                <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executenonquery-method">
-<h2>ExecuteNonQuery Method<a class="headerlink" href="#executenonquery-method" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a non-queryable SQL statement. It returns an <cite>int</cite> that holds the number of affected rows during the execution.</p>
-<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteNonQuery()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
-</ul>
-<p>See sample codes below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;UPDATE [dbo].[Customer] SET Name = @Name WHERE (Id = @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;UPDATE [dbo].[Customer] SET Name = @Name WHERE (Id = @Id);&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteNonQuery</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10000</span><span class="p">,</span> <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">});</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="executescalar-method">
-<h2>ExecuteScalar Method<a class="headerlink" href="#executescalar-method" title="Permalink to this headline">¶</a></h2>
-<p>This connection extension method is used to execute a query statement that returns single value of type <cite>System.Object</cite>.</p>
-<p>The underlying method call of this method is the <cite>System.Data.IDbCommand.ExecuteScalar()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>param</strong>: the parameters to be used for the execution. It could be an entity class or a dynamic object.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used on this operation.</li>
-</ul>
-<p>See sample codes below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
-<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT MAX(Id) FROM [dbo].[Customer];&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customerMaxId</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="n">commandText</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;SELECT MAX(Id) FROM [dbo].[Customer];&quot;</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">customerMaxId</span> <span class="p">=</span>  <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="n">commandText</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -430,7 +252,7 @@
 </div>
 <p>Below is the way on how to call the Stored Procedure.</p>
 <p>Calling via <cite>Repository.ExecuteQuery</cite>.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">();</span>
 <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
 <span class="n">customers</span>
         <span class="p">.</span><span class="n">ToList</span><span class="p">()</span>
@@ -441,7 +263,7 @@
 </pre></div>
 </div>
 <p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
         <span class="n">customers</span>
@@ -454,7 +276,7 @@
 </pre></div>
 </div>
 <p>Or, via independent <cite>SqlConnection</cite> object extended <cite>ExecuteQuery</cite> method that returns the list of <cite>dynamic</cite> objects.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
         <span class="n">customers</span>
@@ -467,7 +289,7 @@
 </pre></div>
 </div>
 <p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_GetCustomer]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">))</span>
         <span class="p">{</span>
@@ -491,10 +313,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="transaction.html" class="btn btn-neutral float-right" title="Transaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="connectionoperations.html" class="btn btn-neutral float-right" title="Connection Operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="repository.html" class="btn btn-neutral" title="Working with Repository" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="typemapping.html" class="btn btn-neutral" title="Type Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

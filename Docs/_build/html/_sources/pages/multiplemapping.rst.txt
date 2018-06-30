@@ -36,13 +36,16 @@ Then, below are the codes for multiple mapping.
 
 Below are the supported mapping for each command.
 
-- **BatchQuery**: only for `CommandType.<Text | Stored Procedure>`.
-- **BulkInsert**: only for `CommandType.<Text>`.
-- **Count**: only for `CommandType.<Text | Stored Procedure>`.
-- **InlineUpdate**: only for `CommandType.<Text>`.
-- **Merge**: only for `CommandType.<Text | Stored Procedure>`.
+- **InlineInsert**: only for `CommandType.<Text | TableDirect>`.
+- **InlineMerge**: only for `CommandType.<Text | TableDirect>`.
+- **InlineUpdate**: only for `CommandType.<Text | TableDirect>`.
+- **BatchQuery**: full support.
+- **BulkInsert**: full support.
+- **Count**: full support.
 - **Insert**: full support.
 - **Delete**: full support.
+- **DeleteAll**: full support.
+- **Merge**: full support.
 - **Query**: full support.
 - **Update**: full support.
 

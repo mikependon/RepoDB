@@ -11,11 +11,13 @@ RepoDb Documentation
    pages/attributes
    pages/multiplemapping
    pages/typemapping
-   pages/repository
    pages/connection
+   pages/connectionoperations
    pages/transaction
    pages/expressiontree
    pages/querygroup
+   pages/repository
+   pages/connectionpersistency
    pages/repositoryoperations
    pages/cache
    pages/trace

@@ -86,11 +86,13 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Trace</a><ul>
@@ -98,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#tracelog-entry">TraceLog Entry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cancellabletracelog-entry">CancellableTraceLog Entry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-custom-trace-object">Creating a Custom Trace Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#canceling-an-operation">Canceling an Operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cancelling-an-operation">Cancelling an Operation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
@@ -273,8 +275,8 @@
 </div>
 <p>Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.</p>
 </div>
-<div class="section" id="canceling-an-operation">
-<h2>Canceling an Operation<a class="headerlink" href="#canceling-an-operation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cancelling-an-operation">
+<h2>Cancelling an Operation<a class="headerlink" href="#cancelling-an-operation" title="Permalink to this headline">¶</a></h2>
 <p>To cancel an operation, simply call the <cite>Cancel</cite> method of type <cite>RepoDb.CancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
 <p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>

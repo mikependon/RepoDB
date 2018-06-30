@@ -86,11 +86,13 @@
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
@@ -243,8 +245,8 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable&lt;OrderField&gt; orderBy) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        var queryProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Query);
-        var batchQueryProperties = PropertyCache.Get&lt;TEntity&gt;(Command.BatchQuery)
+        var queryProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Query);
+        var batchQueryProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.BatchQuery)
                 .Where(property =&gt; queryProperties.Contains(property));
         var fields = batchQueryProperties.Select(property =&gt; new Field(property.Name));
         queryBuilder
@@ -342,9 +344,9 @@
 {
         if (overrideIgnore == false)
         {
-                var updateableProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Update);
-                var inlineUpdateableProperties = PropertyCache.Get&lt;TEntity&gt;(Command.InlineUpdate)
-                        .Where(property =&gt; property != PrimaryPropertyCache.Get&lt;TEntity&gt;() &amp;&amp; updateableProperties.Contains(property))
+                var updateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Update);
+                var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.InlineUpdate)
+                        .Where(property =&gt; property != DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;() &amp;&amp; updateableProperties.Contains(property))
                         .Select(property =&gt; property.GetMappedName());
                 var unmatchesProperties = fields?.Where(field =&gt;
                         inlineUpdateableProperties?.FirstOrDefault(property =&gt;
@@ -380,9 +382,9 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        var primary = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
         var isPrimaryIdentity = primary.IsIdentity();
-        var fields = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+        var fields = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
                 .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary))
                 .Select(p =&gt; new Field(p.Name));
         queryBuilder
@@ -421,17 +423,17 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        var primary = PrimaryPropertyCache.Get&lt;TEntity&gt;();
+        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
         var isPrimaryIdentity = primary.IsIdentity();
         if (qualifiers == null &amp;&amp; primary != null)
         {
                 qualifiers = new Field(primary?.Name).AsEnumerable();
         }
-        var insertProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+        var insertProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
                 .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary));
-        var updateProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Insert)
+        var updateProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
                 .Where(property =&gt; property != primary);
-        var mergeProperties = PropertyCache.Get&lt;TEntity&gt;(Command.Merge);
+        var mergeProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Merge);
         var mergeInsertableFields = mergeProperties
                 .Where(property =&gt; insertProperties.Contains(property))
                 .Select(property =&gt; new Field(property.Name));
@@ -525,8 +527,8 @@
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : DataEntity
 {
         queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        var fields = PropertyCache.Get&lt;TEntity&gt;(Command.Update)
-                .Where(property =&gt; property != PrimaryPropertyCache.Get&lt;TEntity&gt;())
+        var fields = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Update)
+                .Where(property =&gt; property != DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;())
                 .Select(p =&gt; new Field(p.Name));
         queryBuilder
                 .Clear()
