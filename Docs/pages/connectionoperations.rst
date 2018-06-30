@@ -1,11 +1,9 @@
-Repository Operations
+Connection Operations
 =====================
 
 .. highlight:: c#
 
-A repository contain different operations to manipulate the data from the database. All operations that repository has are just abstracted methods from the `System.Data.IDbConnection` object extended methods.
-
-Below are the list of the abstracted operations of the repository.
+A connection object contains different operations as extended methods to manipulate the data from the database. Below are the list of common operations widely used.
 
 - **BatchQuery**: is used to query a record from the database by batch. It returns an enumerable list of `DataEntity` object.
 - **BulkInsert**: is used to bulk-insert the records in the database. It returns the number of inserted rows from the database.
@@ -44,6 +42,8 @@ All operations mentioned above has its own corresponding asynchronous operation.
 - **TruncateAsync**
 - **UpdateAsync**
 
+**Note**: All operational extension methods of the `System.Data.IDbConnection` is being abstracted by both `RepoDb.DbRepository` and `RepoDb.BaseRepository` objects.
+
 BatchQuery Operation
 --------------------
 
@@ -57,25 +57,28 @@ Below are the parameters:
 - **page**: the page of the batch to be used by this operation.
 - **rowsPerBatch**: the number of rows per batch to be used by this operation.
 - **orderBy**: the order definition of the fields to be used by this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used by this operation.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an enumerable list of `DataEntity` objects.
 
 Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		repository.BatchQuery<Order>(0, 24);
+		connection.BatchQuery<Order>(0, 24);
 	}
 
 Below is the way to query by batch the data with expression.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		repository.BatchQuery<Order>(new { CustomerId = 10045, 0, 24);
+		connection.BatchQuery<Order>(new { CustomerId = 10045, 0, 24);
 	}
 
 Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.
@@ -83,13 +86,13 @@ Batching is very important when you are lazy-loading the data from the database.
 ::
 
 	var scroller = <Any Customimzed Scroller Object>
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
+	var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen();
 	var page = 0;
 	var rowsPerBatch = 24;
 
 	scroller.ScrollToEnd += (o, e) =>
 	{
-		var result = repository.BatchQuery<Order>(new { CustomerId = 10045 }, page, rowsPerBatch);
+		var result = connection.BatchQuery<Order>(new { CustomerId = 10045 }, page, rowsPerBatch);
 		Process(result);
 		page++;
 	};
@@ -98,7 +101,7 @@ Batching is very important when you are lazy-loading the data from the database.
 	{
 		// Process the orders (display on the page)
 	}
-	
+
 	void Dispose()
 	{
 		connection.Dispose();
@@ -115,13 +118,15 @@ Below are the parameters:
 
 - **entities**: the list of entities to be inserted.
 - **transaction (optional)**: the transaction object to be used when doing bulk-insert.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **trace (optional)**: the trace object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to do bulk-insert.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var entities = new List<Order>();
 		entities.Add(new Order()
@@ -140,7 +145,7 @@ Below is a sample on how to do bulk-insert.
 			CreatedDate = DateTime.UtcNow,
 			UpdatedDate = DateTime.UtcNow
 		});
-		var affectedRows = repository.BulkInsert(entities);
+		var affectedRows = connection.BulkInsert<Order>(entities);
 	}
 
 Count Operation
@@ -153,16 +158,19 @@ Counts the number of rows from the database based on the given query expression.
 Below are the parameters:
 
 - **where**: the query expression to be used  by this operation.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used by this operation.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an integer value for the number of rows counted from the database based on the given query expression.
 
 Below is a sample on how to count a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var rows = repository.Count<Customer>();
+		var rows = connection.Count<Customer>();
 	}
 
 The code snippets above will count all the `Customer` records from the database.
@@ -171,8 +179,10 @@ Below is the sample way to count a records with expression
 
 ::
 
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	var rows = repository.Count<Customer>(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 10045 } });
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var rows = connection.Count<Customer>(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 10045 } });
+	}
 
 Above code snippets will count all the `Customer` records from the database where `Id` is greater than or equals to `10045`.
 
@@ -186,19 +196,22 @@ Deletes a data in the database based on the given query expression. It returns a
 Below are the parameters:
 
 - **where**: an expression to used when deleting a record. When set to `null` it deletes all the data from the database.
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **transaction (optional)**: the transaction object to be used when deleting a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to delete a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = repository.Query<Customer>(new { Id = "251" }).FirstOrDefault();
+		var customer = connection.Query<Customer>(new { Id = "251" }).FirstOrDefault();
 		if (customer != null)
 		{
-			var affectedRows = repository.Delete<Customer>(customer);
+			var affectedRows = connection.Delete<Customer>(customer);
 		}
 	}
 
@@ -206,9 +219,9 @@ or by `PrimaryKey`
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = repository.Delete<Customer>(new { Id = 251 });
+		var affectedRows = connection.Delete<Customer>(new { Id = 251 });
 	}
 	
 Deleting a by passing a `DataEntity` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
@@ -224,16 +237,19 @@ Deletes all data in the database based on the target `DataEntity`.
 
 Below are the parameters:
 
+- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **transaction (optional)**: the transaction object to be used when deleting a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to delete all the data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = repository.DeleteAll<Customer>();
+		var customer = connection.DeleteAll<Customer>();
 	}
 
 ExecuteNonQuery Operation
@@ -248,16 +264,17 @@ Below are the parameters:
 - **commandText**: The command text to be used on the execution.
 - **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
 - **commandType (optional)**: the command type to be used on the execution.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used on the execution (if present).
 
 Below is the way on how to call the operation.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var commandText = @"UPDATE [dbo].[Order] SET Quantity = @Quantity, UpdatedDate = @UpdatedDate WHERE (CustomerId = @CustomerId);";
-		var result = repository.ExecuteNonQuery(commandText, new
+		var result = connection.ExecuteNonQuery(commandText, new
 		{
 			CustomerId = 10045,
 			Quantity = 5,
@@ -277,20 +294,48 @@ Below are the parameters:
 - **commandText**: The command text to be used on the execution.
 - **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
 - **commandType (optional)**: the command type to be used on the execution.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used on the execution (if present).
 
 Below is the way on how to call the operation.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var result = repository.ExecuteQuery<Order>("SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
+		var result = connection.ExecuteQuery<Order>("SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
 		{
 			CustomerId = 10045
 		});
 	}
-	
+
+ExecuteReader Operation
+-----------------------
+
+.. highlight:: c#
+
+Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDataReader` object and returns the instance of the data reader.
+
+Below are the parameters:
+
+- **commandText**: The command text to be used on the execution.
+- **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
+- **commandType (optional)**: the command type to be used on the execution.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **transaction (optional)**: the transaction to be used on the execution (if present).
+
+Below is the way on how to call the operation.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new { CustomerId = 10045 }))
+		{
+			// Use the data reader here
+		}
+	}
+
 ExecuteScalar Operation
 -----------------------
 
@@ -303,15 +348,16 @@ Below are the parameters:
 - **commandText**: The command text to be used on the execution.
 - **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
 - **commandType (optional)**: the command type to be used on the execution.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used on the execution (if present).
 
 Below is the way on how to call the operation.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var id = repository.ExecuteQuery<Order>("SELECT MAX([Id]) AS MaxId FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
+		var id = connection.ExecuteQuery<Order>("SELECT MAX([Id]) AS MaxId FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
 		{
 			CustomerId = 10045
 		});
@@ -328,16 +374,19 @@ Below are the parameters:
 
 - **entity**: the object that contains the targetted columns to be inserted.
 - **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: the value of the `PrimaryKey` of the newly inserted `DataEntity` object. Returns `NULL` if the `PrimaryKey` property is not present.
 
-Below is a sample on how to update a data.
+Below is a sample on how to do inline insert.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var id = repository.InlineInsert<Order>(new
+		var id = connection.InlineInsert<Order>(new
 		{
 			CustomerId = 10045,
 			ProductId = 35,
@@ -360,16 +409,57 @@ Below are the parameters:
 - **entity**: the object that contains the targetted columns to be inserted.
 - **qualifiers**: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.
 - **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to do inline merge.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = repository.InlineMerge<Order>(new
+		var affectedRows = connection.InlineMerge<Order>(new
+		{
+			Id = 10045,
+			ProductId = 35,
+			Quantity = 5,
+			UpdatedDate = DateTime.UtcNow
+		},
+		Field.From("Id"));
+	}
+
+The code snippets above will merge the `Order` record into the database by inserting the value of the `ProductId`, `Quantity` and `UpdatedDate` columns if the record with `Id` equals to `10045` is not yet in the database. Otherwise, it will update the existing records.
+
+**Note**: It is necessary to define the qualifier fields, and the qualifier fields must be present on the dynamic object passed at `entity` parameter. Please also note that the `Merge` operation is only using the `Equal` operation when merging the data in the database. Other operations of like (`GreaterThan`, `LessThan`) is not supported. One can create a advance SQL Statement or Stored Procedure for merging process and call the `ExecuteNonQuery` method instead.
+
+InlineMerge Operation
+---------------------
+
+.. highlight:: c#
+
+Merges a data in the database targetting certain fields only.
+
+Below are the parameters:
+
+- **entity**: the object that contains the targetted columns to be inserted.
+- **qualifiers**: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.
+- **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
+- **returns**: an instance of integer that holds the number of rows affected by the execution.
+
+Below is a sample on how to do inline merge.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.InlineMerge<Order>(new
 		{
 			Id = 10045,
 			ProductId = 35,
@@ -405,9 +495,9 @@ Below is a sample on how to do inline merge.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = repository.InlineUpdate<Customer>(new
+		var affectedRows = connection.InlineUpdate<Customer>(new
 		{
 			Name = "Anna Fullerton",
 			UpdatedDate = DateTime.UtcNow
@@ -435,14 +525,17 @@ Insert a data in the database.
 Below are the parameters:
 
 - **entity**: the entity object to be inserted.
-- **transaction (optional)**: the transaction object to be used when inserting a data.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to insert a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var order = new Order()
 		{
@@ -451,7 +544,7 @@ Below is a sample on how to insert a data.
 			Quantity = 2,
 			CreatedDate = DateTime.UtcNow
 		};
-		repository.Insert(order);
+		connection.Insert(order);
 	}
 
 Merge Operation
@@ -465,19 +558,22 @@ Below are the parameters:
 
 - **entity**: the entity object to be merged.
 - **qualifiers**: the list of fields to be used as the qualifiers when merging a record.
-- **transaction (optional)**: the transaction object to be used when merging a data.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to merge a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var order = repository.Query<Order>(1);
+		var order = connection.Query<Order>(1);
 		order.Quantity = 5;
 		UpdatedDate = DateTime.UtcNow;
-		repository.Merge(order, Field.Parse(new { order.Id }));
+		connection.Merge(order, Field.Parse(new { order.Id }));
 	}
 
 **Note**: The merge is a process of updating and inserting. If the data is present in the database using the qualifiers, then the existing data will be updated, otherwise, a new data will be inserted in the database.
@@ -493,64 +589,73 @@ Query a data from the database based on the given query expression.
 - **top**: the value used to return certain number of rows from the database.
 - **orderBy**: the list of fields to be used to sort the data during querying.
 - **cacheKey**: the key of the cache to check.
-- **transaction (optional)**: the transaction object to be used when querying a data.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an enumerable list of `DataEntity` object.
 
 Below is a sample on how to query a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = repository.Query<Customer>();
+		var customers = connection.Query<Customer>();
 	}
 
 Above snippet will return all the `Customer` records from the database. The data can filtered using the `where` parameter. See sample below.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = repository.Query<Order>(new { Id = 1 }).FirstOrDefault();
+		var customer = connection.Query<Order>(new { Id = 1 }).FirstOrDefault();
 	}
 
 Below is the sample on how to query with multiple columns.
 
 ::
 
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	var customers = repository.Query<Customer>(new { Id = 1, Name = "Anna Fullerton", Conjunction.Or });
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>(new { Id = 1, Name = "Anna Fullerton", Conjunction.Or });
+	}
 
 When querying a data where `Id` field is greater than 50 and less than 100. See sample expressions below.
 
 ::
 
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	var customers = repository.Query<Customer>
-	(
-		new { Id = new { Operation = Operation.Between, Value = new int[] { 50, 100 } } }
-	);
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>
+		(
+			new { Id = new { Operation = Operation.Between, Value = new int[] { 50, 100 } } }
+		);
+	}
 
 or
 
 ::
 
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
-	var customers = repository.Query<Customer>
-	(
-		new
-		{
-			Id = new
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>
+		(
+			new
 			{
-				Operation = Operation.All,
-				Value = new object[]
+				Id = new
 				{
-					new { Operation = Operation.GreaterThanOrEqual, Value = 50 },
-					new { Operation = Operation.LessThanOrEqual, Value = 100 }
-				} 
+					Operation = Operation.All,
+					Value = new object[]
+					{
+						new { Operation = Operation.GreaterThanOrEqual, Value = 50 },
+						new { Operation = Operation.LessThanOrEqual, Value = 100 }
+					} 
+				}
 			}
-		}
-	);
+		);
+	}
 
 **Note**: Querying a record using `PrimaryKey` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
 
@@ -567,13 +672,13 @@ Dynamic way:
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var orderBy = new
 		{
 			Name = Order.Descending
 		};
-		var customers = repository.Query<Customer>(new { Id = new { Operation = Operation.In, Value = new [] { 100, 200 } } }, orderBy: OrderField.Parse(orderBy));
+		var customers = connection.Query<Customer>(new { Id = new { Operation = Operation.In, Value = new [] { 100, 200 } } }, orderBy: OrderField.Parse(orderBy));
 		customers.ToList().ForEach(customer =>
 		{
 			// Process each Customer here
@@ -597,21 +702,28 @@ Dynamic way:
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = repository.Query<Customer>(new { CustomerId = new { Operation = Operation.GreaterThan, Value = 1 } }, top: 100);
+		var customers = connection.Query<Customer>(new { CustomerId = new { Operation = Operation.GreaterThan, Value = 1 } }, top: 100);
 		customers.ToList().ForEach(customer =>
 		{
 			// Process each Customer here
 		});
 	}
-
+	
 Truncate Operation
 ------------------
 
 .. highlight:: c#
 
 Truncates a table from the database.
+
+Below are the parameters:
+
+- **entity**: the entity object to be updated.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 
 Below is a sample on how to truncate a table.
 
@@ -633,21 +745,24 @@ Below are the parameters:
 
 - **entity**: the entity object to be updated.
 - **where**: an expression to used when updating a record.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
 Below is a sample on how to update a data.
 
 ::
 
-	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var order = repository.Query<Order>(new { Id = 251 }).FirstOrDefault();
+		var order = connection.Query<Order>(new { Id = 251 }).FirstOrDefault();
 		if (order != null)
 		{
 			order.Quantity = 5;
 			order.UpdateDate = DateTime.UtcNow;
-			var affectedRows = repository.Update(order);
+			var affectedRows = connection.Update(order);
 		}
 	}
 

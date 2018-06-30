@@ -135,6 +135,12 @@ namespace RepoDb
         public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
             ConnectionPersistency connectionPersistency)
         {
+            DbRepository = new DbRepository<TDbConnection>(connectionString,
+                commandTimeout,
+                cache,
+                trace,
+                statementBuilder,
+                connectionPersistency);
         }
 
         #endregion
