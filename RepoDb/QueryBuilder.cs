@@ -136,7 +136,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> FieldsFrom(Command command)
         {
-            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName().AsQuoted(true));
             return Append(fields?.ToList().AsFields().Join(", "));
         }
 
@@ -355,7 +355,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> TableFrom(Command command)
         {
-            return Append($"{DataEntityExtension.GetMappedName<TEntity>(command)}");
+            return Append($"{DataEntityExtension.GetMappedName<TEntity>(command).AsQuoted(true)}");
         }
 
         /// <summary>

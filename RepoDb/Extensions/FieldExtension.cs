@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
@@ -22,13 +21,13 @@ namespace RepoDb.Extensions
         // AsField
         internal static string AsField(this Field field)
         {
-            return $"[{field.Name}]";
+            return field.Name.AsQuoted(true);
         }
 
         // AsParameter
         internal static string AsParameter(this Field field)
         {
-            return $"@{field.Name}";
+            return $"@{field.Name.AsQuotedParameter(true)}";
         }
 
         // AsParameterAsField
@@ -46,7 +45,7 @@ namespace RepoDb.Extensions
         // AsJoinQualifier
         internal static string AsJoinQualifier(this Field field, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.[{field.Name}] = {rightAlias}.[{field.Name}]";
+            return $"{leftAlias}.{field.Name.AsQuoted(true)} = {rightAlias}.{field.Name.AsQuoted(true)}";
         }
 
         // AsFieldAndAliasField
@@ -88,5 +87,4 @@ namespace RepoDb.Extensions
         }
     }
 }
- 
- 
+

@@ -3,6 +3,7 @@ using System;
 
 namespace RepoDb.TestProject.Models
 {
+    [Map("[dbo].[Animal]")]
     public class Animal : DataEntity
     {
         public Guid Id { get; set; }

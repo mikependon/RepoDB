@@ -1138,7 +1138,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQuery``1(System.Data.IDbConnection,System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1155,7 +1155,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQuery``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1172,7 +1172,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQuery``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1189,7 +1189,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> objects.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1205,7 +1205,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1222,7 +1222,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1239,7 +1239,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1256,7 +1256,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
             <summary>
@@ -1801,7 +1801,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1821,7 +1821,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1841,7 +1841,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1861,7 +1861,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1880,7 +1880,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1900,7 +1900,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1920,7 +1920,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,System.String,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -1940,7 +1940,7 @@
             <param name="cache">The cache object to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+            <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -2493,6 +2493,20 @@
             Removes the database quotes from the string.
             </summary>
             <param name="value">The string value where the database quotes will be removed.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RepoDb.Extensions.StringExtension.AsQuoted(System.String,System.Boolean)">
+            <summary>
+            Adds a quotes to the string.
+            </summary>
+            <param name="value">The string value where the database quotes will be added.</param>
+            <returns></returns>
+        </member>
+        <member name="M:RepoDb.Extensions.StringExtension.AsQuotedParameter(System.String,System.Boolean)">
+            <summary>
+            Adds a quotes to the string as a database parameter.
+            </summary>
+            <param name="value">The string value where the database quotes will be added.</param>
             <returns></returns>
         </member>
         <member name="T:RepoDb.DataEntityMapper">
@@ -3259,7 +3273,7 @@
         </member>
         <member name="P:RepoDb.BaseRepository`2.ConnectionPersistency">
             <summary>
-            Gets the database connection persistency used by this repository.
+            Gets the database connection persistency used by this repository. The default value is <i>ConnectionPersistency.PerCall</i>.
             </summary>
         </member>
         <member name="M:RepoDb.BaseRepository`2.CreateConnection">
@@ -3281,7 +3295,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.Dispose">
             <summary>
-            Dispose the current instance of the <i>RepoDb.BaseRepository</i>. It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
+            Dispose the current repository instance (of type <i>RepoDb.BaseRepository</i>). It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
             property is equals to <i>ConnectionPersistency.PerCall</i>. This method only manages the connection persistency for the repositories where the value
             of the <i>ConnectionPersitency</i> property is equals to <i>ConnectionPersitency.Instance</i>.
             </summary>
@@ -4122,7 +4136,7 @@
         </member>
         <member name="P:RepoDb.DbRepository`1.ConnectionPersistency">
             <summary>
-            Gets the database connection persistency used by this repository.
+            Gets the database connection persistency used by this repository. The default value is <i>ConnectionPersistency.PerCall</i>.
             </summary>
         </member>
         <member name="M:RepoDb.DbRepository`1.CreateConnection">
@@ -4144,7 +4158,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.Dispose">
             <summary>
-            Dispose the current instance of the <i>RepoDb.DbRepository</i>. It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
+            Dispose the current repository instance (of type <i>RepoDb.DbRepository</i>). It is not necessary to call this method if the value of the <i>ConnectionPersistency</i>
             property is equals to <i>ConnectionPersistency.PerCall</i>. This method only manages the connection persistency for the repositories where the value
             of the <i>ConnectionPersitency</i> property is equals to <i>ConnectionPersitency.Instance</i>.
             </summary>

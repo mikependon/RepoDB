@@ -31,6 +31,43 @@ namespace RepoDb.Extensions
             return Regex.Replace(v, @"[\[\]']+", "");
         }
 
+        /// <summary>
+        /// Adds a quotes to the string.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <returns></returns>
+        public static string AsQuoted(this string value, bool trim = false)
+        {
+            if (trim)
+            {
+                value = value.Trim();
+            }
+            if (!value.StartsWith("["))
+            {
+                value = $"[{value}";
+            }
+            if (!value.EndsWith("]"))
+            {
+                value = $"{value}]";
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Adds a quotes to the string as a database parameter.
+        /// </summary>
+        /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <returns></returns>
+        public static string AsQuotedParameter(this string value, bool trim = false)
+        {
+            if (trim)
+            {
+                value = value.Trim();
+            }
+            value = value.Replace(" ", "_");
+            return value;
+        }
+
         // AsEnumerable
         internal static IEnumerable<string> AsEnumerable(this string value)
         {

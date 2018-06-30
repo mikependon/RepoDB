@@ -17,7 +17,7 @@
       - Optimized the DbRepository to use the IDbConnection Extended Operational Methods.
       - Removes the DbRepository property at BaseRepository class.
       - Made the DbRepository and BaseRepository Disposable.
-      - Supported the Connection Persistency at the Repository level.
+      - Introduced quoting on Fields and Tables when composing SQL Statements (via SqlDbStatementBuilder).
       - Documented the ConnectionPersistency, DeleteAll, InlineInsert, InlineMerge, InlineUpdate and Truncate operations.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>

@@ -1,4 +1,5 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -24,7 +25,7 @@ namespace RepoDb
         /// <param name="appendPrefix">The value to identify whether the underscope prefix will be appended.</param>
         internal Parameter(string name, object value, bool appendPrefix)
         {
-            Name = name;
+            Name = name.AsQuotedParameter(true);
             Value = value;
             if (appendPrefix)
             {
