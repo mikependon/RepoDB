@@ -605,6 +605,7 @@ namespace RepoDb.Extensions
                     });
                     connection.EnsureOpen();
                     sqlBulkCopy.WriteToServer(reader);
+                    result = reader.RecordsAffected;
                 }
             }
 
