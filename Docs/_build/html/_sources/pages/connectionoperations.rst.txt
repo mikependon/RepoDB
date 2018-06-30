@@ -710,6 +710,29 @@ Dynamic way:
 			// Process each Customer here
 		});
 	}
+	
+Truncate Operation
+------------------
+
+.. highlight:: c#
+
+Truncates a table from the database.
+
+Below are the parameters:
+
+- **entity**: the entity object to be updated.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
+- **trace (optional)**: the trace object to be used by this operation.
+- **statementBuilder (optional)**: the statement builder object to be used by this operation.
+
+Below is a sample on how to truncate a table.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Truncate<Customer>();
+	}
 
 Update Operation
 ----------------
@@ -722,6 +745,7 @@ Below are the parameters:
 
 - **entity**: the entity object to be updated.
 - **where**: an expression to used when updating a record.
+- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
 - **trace (optional)**: the trace object to be used by this operation.
 - **statementBuilder (optional)**: the statement builder object to be used by this operation.

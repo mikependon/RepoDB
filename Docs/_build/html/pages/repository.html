@@ -184,6 +184,21 @@
 <li><strong>cache (optional)</strong>: the cache object to be used by the repository. By default, the repository is using the <cite>RepoDb.MemoryCache</cite> object.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by the repository. The default is <cite>null</cite>.</li>
 <li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by the repository. By default, the repository is using the <cite>RepoDb.SqlDbStatementBuilder</cite> object.</li>
+<li><strong>connectionPersistency (optional)</strong>: the database connection persistency type. Setting to <cite>Single</cite> will make the repository re-used a single connection all throughout its lifespan. Setting to <cite>PerCall</cite> will create a new connection object on every repository call.</li>
+</ul>
+<p>Below are the properties:</p>
+<ul class="simple">
+<li><strong>ConnectionString</strong>: the connection string that is being used by this repository.</li>
+<li><strong>CommandTimeout</strong>: the command timeout value in seconds that is being used by this repository on every operation.</li>
+<li><strong>Cache</strong>: the cache object that is being used by this repository.</li>
+<li><strong>Trace</strong>: the trace object that is being used by this repository.</li>
+<li><strong>StatementBuilder</strong>: the statement builder object that is being used by this repository.</li>
+<li><strong>ConnectionPersistency</strong>: the database connection persistency used by this repository. The default value is <cite>ConnectionPersistency.PerCall</cite>.</li>
+</ul>
+<p>Below are the methods:</p>
+<ul class="simple">
+<li><strong>CreateConnection</strong>: dreates a new instance of the database connection. If the value <cite>ConnectionPersistency</cite> property is <cite>Instance</cite>, then this will return the <cite>System.Data.Common.DbConnection</cite> that is being used by the current repository instance. However, if the value of the <cite>ConnectionPersistency</cite> property is <cite>PerCall</cite>, then this will return a new instance of the <cite>System.Data.Common.DbConnection</cite> object.</li>
+<li><strong>Dispose</strong>: dispose the current repository instance (of type <cite>RepoDb.DbRepository</cite>). It is not necessary to call this method if the value of the <cite>ConnectionPersistency</cite> property is equals to <cite>ConnectionPersistency.PerCall</cite>. This method only manages the connection persistency for the repositories where the value of the <cite>ConnectionPersitency</cite> property is equals to <cite>ConnectionPersitency.Instance</cite>.</li>
 </ul>
 <p>This repository can be instantiated directly or indirectly. Indirectly means, it should be abstracted first before instantiation.</p>
 <p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
@@ -213,6 +228,20 @@
 <li><strong>cache (optional)</strong>: the cache object to be used by the repository. By default, the repository is using the <cite>RepoDb.MemoryCache</cite> object.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by the repository. The default is <cite>null</cite>.</li>
 <li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by the repository. By default, the repository is using the <cite>RepoDb.SqlDbStatementBuilder</cite> object.</li>
+</ul>
+<p>Below are the properties:</p>
+<ul class="simple">
+<li><strong>ConnectionString</strong>: the connection string that is being used by this repository.</li>
+<li><strong>CommandTimeout</strong>: the command timeout value in seconds that is being used by this repository on every operation.</li>
+<li><strong>Cache</strong>: the cache object that is being used by this repository.</li>
+<li><strong>Trace</strong>: the trace object that is being used by this repository.</li>
+<li><strong>StatementBuilder</strong>: the statement builder object that is being used by this repository.</li>
+<li><strong>ConnectionPersistency</strong>: the database connection persistency used by this repository. The default value is <cite>ConnectionPersistency.PerCall</cite>.</li>
+</ul>
+<p>Below are the methods:</p>
+<ul class="simple">
+<li><strong>CreateConnection</strong>: creates a new instance of the database connection. If the value <cite>ConnectionPersistency</cite> property is <cite>Instance</cite>, then this will return the <cite>System.Data.Common.DbConnection</cite> that is being used by the current repository instance. However, if the value of the <cite>ConnectionPersistency</cite> property is <cite>PerCall</cite>, then this will return a new instance of the <cite>System.Data.Common.DbConnection</cite> object.</li>
+<li><strong>Dispose</strong>: dispose the current repository instance (of type <cite>RepoDb.BaseRepository</cite>). It is not necessary to call this method if the value of the <cite>ConnectionPersistency</cite> property is equals to <cite>ConnectionPersistency.PerCall</cite>. This method only manages the connection persistency for the repositories where the value of the <cite>ConnectionPersitency</cite> property is equals to <cite>ConnectionPersitency.Instance</cite>.</li>
 </ul>
 <p>See sample code below on how to directly create a <cite>DbRepository</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">CustomerRepository</span> <span class="p">:</span> <span class="n">BaseRepository</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">SqlConnection</span><span class="p">&gt;</span>

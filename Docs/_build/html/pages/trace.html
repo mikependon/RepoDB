@@ -185,14 +185,18 @@
 <li><strong>AfterBulkInsert</strong>: called after the <cite>Repository.BulkInsert</cite> operation has been executed.</li>
 <li><strong>AfterCount</strong>: called after the <cite>Repository.Count</cite> operation has been executed.</li>
 <li><strong>AfterDelete</strong>: called after the <cite>Repository.Delete</cite> operation has been executed.</li>
+<li><strong>AfterDeleteAll</strong>: called after the <cite>Repository.DeleteAll</cite> operation has been executed.</li>
 <li><strong>AfterExecuteNonQuery</strong>: called after the <cite>Repository.ExecuteNonQuery</cite> operation has been executed.</li>
 <li><strong>AfterExecuteQuery</strong>: called after the <cite>Repository.ExecuteQuery</cite> operation has been executed.</li>
 <li><strong>AfterExecuteReader</strong>: called after the <cite>Repository.ExecuteReader</cite> operation has been executed.</li>
 <li><strong>AfterExecuteScalar</strong>: called after the <cite>Repository.ExecuteScalar</cite> operation has been executed.</li>
+<li><strong>AfterInlineInsert</strong>: called after the <cite>Repository.InlineInsert</cite> operation has been executed.</li>
+<li><strong>AfterInlineMerge</strong>: called after the <cite>Repository.InlineMerge</cite> operation has been executed.</li>
 <li><strong>AfterInlineUpdate</strong>: called after the <cite>Repository.InlineUpdate</cite> operation has been executed.</li>
 <li><strong>AfterInsert</strong>: called after the <cite>Repository.Insert</cite> operation has been executed.</li>
 <li><strong>AfterMerge</strong>: called after the <cite>Repository.Merge</cite> operation has been executed.</li>
 <li><strong>AfterQuery</strong>: called after the <cite>Repository.Query</cite> operation has been executed.</li>
+<li><strong>AfterTruncate</strong>: called after the <cite>Repository.Truncate</cite> operation has been executed.</li>
 <li><strong>AfterUpdate</strong>: called after the <cite>Repository.Update</cite> operation has been executed.</li>
 </ul>
 <p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.TraceLog</cite>.</p>
@@ -201,14 +205,18 @@
 <li><strong>BeforeBulkInsert</strong>: called before the <cite>Repository.BulkInsert</cite> actual execution.</li>
 <li><strong>BeforeCount</strong>: called before the <cite>Repository.Count</cite> actual execution.</li>
 <li><strong>BeforeDelete</strong>: called before the <cite>Repository.Delete</cite> actual execution.</li>
+<li><strong>BeforeDeleteAll</strong>: called before the <cite>Repository.DeleteAll</cite> actual execution.</li>
 <li><strong>BeforeExecuteNonQuery</strong>: called before the <cite>Repository.ExecuteNonQuery</cite> actual execution.</li>
 <li><strong>BeforeExecuteQuery</strong>: called before the <cite>Repository.ExecuteQuery</cite> actual execution.</li>
 <li><strong>BeforeExecuteReader</strong>: called before the <cite>Repository.ExecuteReader</cite> actual execution.</li>
 <li><strong>BeforeExecuteScalar</strong>: called before the <cite>Repository.ExecuteScalar</cite> actual execution.</li>
+<li><strong>BeforeInlineInsert</strong>: called before the <cite>Repository.InlineInsert</cite> actual execution.</li>
+<li><strong>BeforeInlineMerge</strong>: called before the <cite>Repository.InlineMerge</cite> actual execution.</li>
 <li><strong>BeforeInlineUpdate</strong>: called before the <cite>Repository.InlineUpdate</cite> actual execution.</li>
 <li><strong>BeforeInsert</strong>: called before the <cite>Repository.Insert</cite> actual execution.</li>
 <li><strong>BeforeMerge</strong>: called before the <cite>Repository.Merge</cite> actual execution.</li>
 <li><strong>BeforeQuery</strong>: called before the <cite>Repository.Query</cite> actual execution.</li>
+<li><strong>BeforeTruncate</strong>: called before the <cite>Repository.Truncate</cite> actual execution.</li>
 <li><strong>BeforeUpdate</strong>: called before the <cite>Repository.Update</cite> actual execution.</li>
 </ul>
 <p>Note: All trace methods mentioned above accepts the parameter named <cite>log</cite> of type <cite>RepoDb.CancellableTraceLog</cite>.</p>
@@ -265,12 +273,7 @@
 </div>
 <p>Below is the way on how to inject a Trace class in the repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">trace</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NorthwindDatabaseTrace</span><span class="p">();</span>
-<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
-        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
-        <span class="k">null</span><span class="p">,</span> <span class="c1">// cache</span>
-        <span class="n">trace</span><span class="p">,</span> <span class="c1">// trace</span>
-        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
-<span class="p">);</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">trace</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.</p>

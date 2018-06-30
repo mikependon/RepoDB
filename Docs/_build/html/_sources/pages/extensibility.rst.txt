@@ -8,6 +8,6 @@ RepoDb is highly extensible for RDBMS only. Below are the objects that can be ex
 - Statement Builder
 - Repository
 
-RepoDb can be extended to support various data providers like Oracle, MySql, PostgreSQL and Ole Databases.
+RepoDb can be extended to support various data providers like Oracle, MySql, PostgreSQL and OleDb Databases.
 
 RepoDb is an ORM for RDBMS and cannot be extended for NoSql Databases. 

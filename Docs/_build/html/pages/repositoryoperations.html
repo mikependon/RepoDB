@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#limiting-the-query-result">Limiting the Query Result</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#truncate-operation">Truncate Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update-operation">Update Operation</a></li>
 </ul>
 </li>
@@ -418,7 +419,7 @@
 <li><strong>transaction (optional)</strong>: the transaction to be used on the execution (if present).</li>
 </ul>
 <p>Below is the way on how to call the operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span>
         <span class="p">{</span>
@@ -676,6 +677,17 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="truncate-operation">
+<h2>Truncate Operation<a class="headerlink" href="#truncate-operation" title="Permalink to this headline">¶</a></h2>
+<p>Truncates a table from the database.</p>
+<p>Below is a sample on how to truncate a table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">Truncate</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="update-operation">

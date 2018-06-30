@@ -283,7 +283,7 @@ Below is the way on how to call the operation.
 
 ::
 
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
 		var result = repository.ExecuteQuery<Order>("SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
 		{
@@ -604,6 +604,22 @@ Dynamic way:
 		{
 			// Process each Customer here
 		});
+	}
+
+Truncate Operation
+------------------
+
+.. highlight:: c#
+
+Truncates a table from the database.
+
+Below is a sample on how to truncate a table.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Truncate<Customer>();
 	}
 
 Update Operation

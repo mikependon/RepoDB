@@ -341,12 +341,7 @@ RETURN $result
 <p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
 <p>Below is the way on how to inject the custom <cite>Cache</cite> object to a repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
-<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span>
-        <span class="m">0</span><span class="p">,</span> <span class="c1">// commandTimeout</span>
-        <span class="n">fileCache</span><span class="p">,</span> <span class="c1">// cache</span>
-        <span class="k">null</span><span class="p">,</span> <span class="c1">// trace</span>
-        <span class="k">null</span><span class="p">,</span> <span class="c1">// statementBuilder</span>
-<span class="p">);</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span><span class="n">fileCache</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the <cite>Cache</cite> object manager of the <cite>Query</cite> operation.</p>

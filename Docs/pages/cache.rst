@@ -220,12 +220,7 @@ Below is the way on how to inject the custom `Cache` object to a repository.
 ::
 
 	var fileCache = new FileCache();
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"
-		0, // commandTimeout
-		fileCache, // cache
-		null, // trace
-		null, // statementBuilder
-	);
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;",fileCache);
 
 Upon creating a repository, the `fileCache` variable is being passed in the `cache` parameter. This signals the repository to use the `FileCache` class as the `Cache` object manager of the `Query` operation.
 

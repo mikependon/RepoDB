@@ -178,7 +178,7 @@ namespace RepoDb
         public IStatementBuilder StatementBuilder => DbRepository.StatementBuilder;
 
         /// <summary>
-        /// Gets the database connection persistency used by this repository. The value value is <i>ConnectionPersistency.PerCall</i>.
+        /// Gets the database connection persistency used by this repository. The default value is <i>ConnectionPersistency.PerCall</i>.
         /// </summary>
         public ConnectionPersistency ConnectionPersistency => DbRepository.ConnectionPersistency;
 

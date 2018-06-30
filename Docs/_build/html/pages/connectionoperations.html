@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#limiting-the-query-result">Limiting the Query Result</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#truncate-operation">Truncate Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update-operation">Update Operation</a></li>
 </ul>
 </li>
@@ -773,6 +774,24 @@
 </div>
 </div>
 </div>
+<div class="section" id="truncate-operation">
+<h2>Truncate Operation<a class="headerlink" href="#truncate-operation" title="Permalink to this headline">¶</a></h2>
+<p>Truncates a table from the database.</p>
+<p>Below are the parameters:</p>
+<ul class="simple">
+<li><strong>entity</strong>: the entity object to be updated.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
+<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
+<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
+</ul>
+<p>Below is a sample on how to truncate a table.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">Truncate</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="update-operation">
 <h2>Update Operation<a class="headerlink" href="#update-operation" title="Permalink to this headline">¶</a></h2>
 <p>Updates a data in the database based on the given query expression.</p>
@@ -780,6 +799,7 @@
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be updated.</li>
 <li><strong>where</strong>: an expression to used when updating a record.</li>
+<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
 <li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>

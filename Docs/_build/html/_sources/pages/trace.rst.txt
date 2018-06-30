@@ -18,14 +18,18 @@ The `ITrace` interface has the following methods.
 - **AfterBulkInsert**: called after the `Repository.BulkInsert` operation has been executed.
 - **AfterCount**: called after the `Repository.Count` operation has been executed.
 - **AfterDelete**: called after the `Repository.Delete` operation has been executed.
+- **AfterDeleteAll**: called after the `Repository.DeleteAll` operation has been executed.
 - **AfterExecuteNonQuery**: called after the `Repository.ExecuteNonQuery` operation has been executed.
 - **AfterExecuteQuery**: called after the `Repository.ExecuteQuery` operation has been executed.
 - **AfterExecuteReader**: called after the `Repository.ExecuteReader` operation has been executed.
 - **AfterExecuteScalar**: called after the `Repository.ExecuteScalar` operation has been executed.
+- **AfterInlineInsert**: called after the `Repository.InlineInsert` operation has been executed.
+- **AfterInlineMerge**: called after the `Repository.InlineMerge` operation has been executed.
 - **AfterInlineUpdate**: called after the `Repository.InlineUpdate` operation has been executed.
 - **AfterInsert**: called after the `Repository.Insert` operation has been executed.
 - **AfterMerge**: called after the `Repository.Merge` operation has been executed.
 - **AfterQuery**: called after the `Repository.Query` operation has been executed.
+- **AfterTruncate**: called after the `Repository.Truncate` operation has been executed.
 - **AfterUpdate**: called after the `Repository.Update` operation has been executed.
  
 Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.TraceLog`.
@@ -34,14 +38,18 @@ Note: All trace methods mentioned above accepts the parameter named `log` of typ
 - **BeforeBulkInsert**: called before the `Repository.BulkInsert` actual execution.
 - **BeforeCount**: called before the `Repository.Count` actual execution.
 - **BeforeDelete**: called before the `Repository.Delete` actual execution.
+- **BeforeDeleteAll**: called before the `Repository.DeleteAll` actual execution.
 - **BeforeExecuteNonQuery**: called before the `Repository.ExecuteNonQuery` actual execution.
 - **BeforeExecuteQuery**: called before the `Repository.ExecuteQuery` actual execution.
 - **BeforeExecuteReader**: called before the `Repository.ExecuteReader` actual execution.
 - **BeforeExecuteScalar**: called before the `Repository.ExecuteScalar` actual execution.
+- **BeforeInlineInsert**: called before the `Repository.InlineInsert` actual execution.
+- **BeforeInlineMerge**: called before the `Repository.InlineMerge` actual execution.
 - **BeforeInlineUpdate**: called before the `Repository.InlineUpdate` actual execution.
 - **BeforeInsert**: called before the `Repository.Insert` actual execution.
 - **BeforeMerge**: called before the `Repository.Merge` actual execution.
 - **BeforeQuery**: called before the `Repository.Query` actual execution.
+- **BeforeTruncate**: called before the `Repository.Truncate` actual execution.
 - **BeforeUpdate**: called before the `Repository.Update` actual execution.
  
 Note: All trace methods mentioned above accepts the parameter named `log` of type `RepoDb.CancellableTraceLog`.
@@ -108,12 +116,7 @@ Below is the way on how to inject a Trace class in the repository.
 ::
 
 	var trace = new NorthwindDatabaseTrace();
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"
-		0, // commandTimeout
-		null, // cache
-		trace, // trace
-		null, // statementBuilder
-	);
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", trace);
 
 Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.
 
