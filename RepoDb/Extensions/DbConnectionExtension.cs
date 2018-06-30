@@ -261,7 +261,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -290,7 +290,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -333,7 +333,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -363,7 +363,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> objects.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -433,7 +433,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -463,7 +463,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -494,7 +494,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -525,7 +525,7 @@ namespace RepoDb.Extensions
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2079,7 +2079,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2113,7 +2113,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2147,7 +2147,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2202,7 +2202,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2291,7 +2291,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2325,7 +2325,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2360,7 +2360,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
             ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
@@ -2395,7 +2395,7 @@ namespace RepoDb.Extensions
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
             int? commandTimeout = null, IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
