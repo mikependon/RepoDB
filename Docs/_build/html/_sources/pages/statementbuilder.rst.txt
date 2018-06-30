@@ -50,7 +50,7 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 			queryBuilder.Where(where);
 		}
             
-		// Add the LIMIT (TOP in SQL Server)
+		// Add the ROWNUM (TOP in SQL Server)
 		if (top > 0)
 		{
 			// In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM <=(Rows)

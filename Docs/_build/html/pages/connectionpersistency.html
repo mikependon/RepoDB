@@ -171,11 +171,92 @@
             
   <div class="section" id="connection-persistency">
 <h1>Connection Persistency<a class="headerlink" href="#connection-persistency" title="Permalink to this headline">¶</a></h1>
+<p>A connection persistency is flag that is being used by the repository object when it comes to the database connection object persistency. When creating a repository, the value can be passed in the constructor.</p>
+<p>The value is residing at <cite>RepoDb.Enumerations.ConnectionPersistency</cite> enumeration.</p>
+<p>Below is a sample code to pass the connection persistency value.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">ConnectionPersistency</span><span class="p">.</span><span class="n">Instance</span><span class="p">))</span>
+<span class="p">{</span>
+        <span class="c1">// Call the operations here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <div class="section" id="percall-persistency">
 <h2>PerCall Persistency<a class="headerlink" href="#percall-persistency" title="Permalink to this headline">¶</a></h2>
+<p>A new instance of a connection is being <cite>Instantiated</cite> and <cite>Disposed</cite> on every call of the repository operation. This is the default persistency value of the repository.</p>
+<p>See sample codes below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
+<span class="p">{</span>
+
+        <span class="c1">// Query the customers</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">top</span><span class="p">:</span> <span class="m">10</span><span class="p">,</span> <span class="n">orderBy</span><span class="p">:</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span> <span class="p">}));</span>
+
+        <span class="c1">// Iterate the Customers and query their respective Orders</span>
+        <span class="n">customers</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+
+                <span class="c1">// Query the Customer Orders</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+
+                <span class="c1">// Iterates the Orders</span>
+                <span class="n">orders</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+
+                        <span class="c1">// Update the Order updated date</span>
+                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+
+                <span class="p">});</span>
+
+        <span class="p">});</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The codes above creates multiple connection from the data database during every call of the repository operations.</p>
+<p>The new connection object has been created at this point.</p>
+<ul class="simple">
+<li>When querying the recent 10 <cite>Customer</cite> records from the database.</li>
+<li>When querying every <cite>Order</cite> of the <cite>Customer</cite>.</li>
+<li>When doing an inline-update operation on the <cite>UpdatedDate</cite> field of each <cite>Order</cite> record.</li>
+</ul>
+<p>If every <cite>Customer</cite> object has 2 <cite>Order</cite> records each, then the number of connection created is of total 31 new database connection.</p>
+<p><strong>Note</strong>: It is not necesarry to call the <cite>Dispose</cite> method of the repository if the value of the <cite>ConnectionPersistency</cite> is <cite>PerCall</cite> as the operation is disposing each connection object after use.</p>
 </div>
 <div class="section" id="instance-persistency">
 <h2>Instance Persistency<a class="headerlink" href="#instance-persistency" title="Permalink to this headline">¶</a></h2>
+<p>A single connection object is being used until the lifetime of the repository. Repository lifetime is of until the <cite>Dispose</cite> method has been called.</p>
+<p>See sample codes below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">ConnectionPersistency</span><span class="p">.</span><span class="n">Instance</span><span class="p">))</span>
+<span class="p">{</span>
+
+        <span class="c1">// Query the customers</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">top</span><span class="p">:</span> <span class="m">10</span><span class="p">,</span> <span class="n">orderBy</span><span class="p">:</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Descending</span> <span class="p">}));</span>
+
+        <span class="c1">// Iterate the Customers and query their respective Orders</span>
+        <span class="n">customers</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">customer</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+
+                <span class="c1">// Query the Customer Orders</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+
+                <span class="c1">// Iterates the Orders</span>
+                <span class="n">orders</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+
+                        <span class="c1">// Update the Order updated date</span>
+                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+
+                <span class="p">});</span>
+
+        <span class="p">});</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the code above, notice that the value of <cite>ConnectionPersistency.Instance</cite> was passed. This signals the repository to only used single connection object until its lifetime ends.</p>
+<p>In all the repository operation calls above, only single connection is being used.</p>
+<p>The first database connection is not created immediately in the constructor. It is being created when the first repository operation method was called. In the code above, the database connection was only created at the time of querying the list of the <cite>Customer</cite>.</p>
+<p>The succeeding operation calls only reused the connection object created on the first call.</p>
+<p><strong>Note</strong>: The <cite>Repository.Dispose()</cite> method must be after using the repository to avoid an orphaned open database connection.</p>
 </div>
 </div>
 

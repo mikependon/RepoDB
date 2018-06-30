@@ -17,6 +17,8 @@
       - Optimized the DbRepository to use the IDbConnection Extended Operational Methods.
       - Removes the DbRepository property at BaseRepository class.
       - Made the DbRepository and BaseRepository Disposable.
+      - Supported the Connection Persistency at the Repository level.
+      - Documented the ConnectionPersistency, DeleteAll, InlineInsert, InlineMerge, InlineUpdate and Truncate operations.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

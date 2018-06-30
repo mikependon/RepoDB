@@ -49,10 +49,22 @@ See sample codes below.
 
 ::
 
+	// Variables
+	var customers = (IEnumerable<Customer>)null;
+
+	// Open a connection
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		
+		// Create a command object
 		var command = connection.CreateCommand("SELECT TOP 100 * FROM [dbo].[Customer];", CommandType.Text, 500, null);
-		// Use the command here
+		
+		// Execute the reader, abstracting the ADO.Net features here
+		using (var reader = command.ExecuteReader())
+		{
+			// Iterate the reader and place back the result to the list
+			customers = RepoDb.Reflection.DataReaderConverter.ToEnumerable<Customer>((DbDataReader)reader);
+		}
 	}
 
 EnsureOpen Method

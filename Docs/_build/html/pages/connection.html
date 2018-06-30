@@ -205,10 +205,22 @@
 <li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
 </ul>
 <p>See sample codes below.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Variables</span>
+<span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="k">null</span><span class="p">;</span>
+
+<span class="c1">// Open a connection</span>
+<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
+
+        <span class="c1">// Create a command object</span>
         <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CreateCommand</span><span class="p">(</span><span class="s">&quot;SELECT TOP 100 * FROM [dbo].[Customer];&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span> <span class="m">500</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
-        <span class="c1">// Use the command here</span>
+
+        <span class="c1">// Execute the reader, abstracting the ADO.Net features here</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">command</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">())</span>
+        <span class="p">{</span>
+                <span class="c1">// Iterate the reader and place back the result to the list</span>
+                <span class="n">customers</span> <span class="p">=</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">Reflection</span><span class="p">.</span><span class="n">DataReaderConverter</span><span class="p">.</span><span class="n">ToEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;((</span><span class="n">DbDataReader</span><span class="p">)</span><span class="n">reader</span><span class="p">);</span>
+        <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>

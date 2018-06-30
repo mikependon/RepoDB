@@ -222,7 +222,7 @@
                 queryBuilder.Where(where);
         }
 
-        // Add the LIMIT (TOP in SQL Server)
+        // Add the ROWNUM (TOP in SQL Server)
         if (top &gt; 0)
         {
                 // In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM &lt;=(Rows)
