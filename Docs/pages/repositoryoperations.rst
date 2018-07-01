@@ -75,7 +75,7 @@ Below is the way to query by batch the data with expression.
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		repository.BatchQuery<Order>(new { CustomerId = 10045, 0, 24);
+		repository.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
 	}
 
 Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.
@@ -195,7 +195,7 @@ Below is a sample on how to delete a data.
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var customer = repository.Query<Customer>(new { Id = "251" }).FirstOrDefault();
+		var customer = repository.Query<Customer>(251).FirstOrDefault();
 		if (customer != null)
 		{
 			var affectedRows = repository.Delete<Customer>(customer);
@@ -208,7 +208,7 @@ or by `PrimaryKey`
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var affectedRows = repository.Delete<Customer>(new { Id = 251 });
+		var affectedRows = repository.Delete<Customer>(251);
 	}
 	
 Deleting a by passing a `DataEntity` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
@@ -511,7 +511,7 @@ Above snippet will return all the `Customer` records from the database. The data
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var customer = repository.Query<Order>(new { Id = 1 }).FirstOrDefault();
+		var customer = repository.Query<Order>(105).FirstOrDefault();
 	}
 
 Below is the sample on how to query with multiple columns.
@@ -642,7 +642,7 @@ Below is a sample on how to update a data.
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var order = repository.Query<Order>(new { Id = 251 }).FirstOrDefault();
+		var order = repository.Query<Order>(105).FirstOrDefault();
 		if (order != null)
 		{
 			order.Quantity = 5;

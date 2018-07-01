@@ -236,7 +236,7 @@
 <p>Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows per batch defined by this operation. This operation is useful for paging purposes.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
 <li><strong>page</strong>: the page of the batch to be used by this operation.</li>
 <li><strong>rowsPerBatch</strong>: the number of rows per batch to be used by this operation.</li>
 <li><strong>orderBy</strong>: the order definition of the fields to be used by this operation.</li>
@@ -256,7 +256,7 @@
 <p>Below is the way to query by batch the data with expression.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -326,7 +326,7 @@
 <p>Counts the number of rows from the database based on the given query expression.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction to be used by this operation.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
@@ -355,7 +355,7 @@
 <p>Deletes a data in the database based on the given query expression. It returns an instance of integer that holds the number of rows affected by the execution.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where</strong>: an expression to used when deleting a record. When set to <cite>null</cite> it deletes all the data from the database.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when deleting a record. When set to <cite>null</cite> it deletes all the data from the database.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when deleting a data.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
@@ -365,7 +365,7 @@
 <p>Below is a sample on how to delete a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="s">&quot;251&quot;</span> <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">251</span><span class="p">).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">customer</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">customer</span><span class="p">);</span>
@@ -376,7 +376,7 @@
 <p>or by <cite>PrimaryKey</cite></p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span> <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Delete</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">251</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -589,7 +589,7 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>where</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
 <li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
@@ -672,7 +672,7 @@
 <h2>Query Operation<a class="headerlink" href="#query-operation" title="Permalink to this headline">¶</a></h2>
 <p>Query a data from the database based on the given query expression.</p>
 <ul class="simple">
-<li><strong>where</strong>: an expression to used to filter the data.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: an expression to used to filter the data.</li>
 <li><strong>top</strong>: the value used to return certain number of rows from the database.</li>
 <li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
 <li><strong>cacheKey</strong>: the key of the cache to check.</li>
@@ -692,7 +692,7 @@
 <p>Above snippet will return all the <cite>Customer</cite> records from the database. The data can filtered using the <cite>where</cite> parameter. See sample below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">105</span><span class="p">).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -798,7 +798,7 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be updated.</li>
-<li><strong>where</strong>: an expression to used when updating a record.</li>
+<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when updating a record.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
@@ -808,7 +808,7 @@
 <p>Below is a sample on how to update a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span> <span class="p">}).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">105</span><span class="p">).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">order</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
         <span class="p">{</span>
                 <span class="n">order</span><span class="p">.</span><span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>

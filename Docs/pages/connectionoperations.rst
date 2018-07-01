@@ -78,7 +78,7 @@ Below is the way to query by batch the data with expression.
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.BatchQuery<Order>(new { CustomerId = 10045, 0, 24);
+		connection.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
 	}
 
 Batching is very important when you are lazy-loading the data from the database. Below is a sample event listener for scroll (objects), doing the batch queries and post-process the data.
@@ -208,7 +208,7 @@ Below is a sample on how to delete a data.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = connection.Query<Customer>(new { Id = "251" }).FirstOrDefault();
+		var customer = connection.Query<Customer>(251).FirstOrDefault();
 		if (customer != null)
 		{
 			var affectedRows = connection.Delete<Customer>(customer);
@@ -221,7 +221,7 @@ or by `PrimaryKey`
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(new { Id = 251 });
+		var affectedRows = connection.Delete<Customer>(251);
 	}
 	
 Deleting a by passing a `DataEntity` will throw a `PrimaryFieldNotFoundException` exception back to the caller if the `PrimaryKey` is not found from the entity.
@@ -610,7 +610,7 @@ Above snippet will return all the `Customer` records from the database. The data
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = connection.Query<Order>(new { Id = 1 }).FirstOrDefault();
+		var customer = connection.Query<Order>(105).FirstOrDefault();
 	}
 
 Below is the sample on how to query with multiple columns.
@@ -757,7 +757,7 @@ Below is a sample on how to update a data.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var order = connection.Query<Order>(new { Id = 251 }).FirstOrDefault();
+		var order = connection.Query<Order>(105).FirstOrDefault();
 		if (order != null)
 		{
 			order.Quantity = 5;
