@@ -53,7 +53,7 @@ Query the data from the database by batch based on the given query expression. T
 
 Below are the parameters:
 
-- **where**: the query expression to be used  by this operation.
+- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
 - **page**: the page of the batch to be used by this operation.
 - **rowsPerBatch**: the number of rows per batch to be used by this operation.
 - **orderBy**: the order definition of the fields to be used by this operation.
@@ -152,7 +152,7 @@ Counts the number of rows from the database based on the given query expression.
 
 Below are the parameters:
 
-- **where**: the query expression to be used  by this operation.
+- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
 - **transaction (optional)**: the transaction to be used by this operation.
 - **returns**: an integer value for the number of rows counted from the database based on the given query expression.
 
@@ -185,7 +185,7 @@ Deletes a data in the database based on the given query expression. It returns a
 
 Below are the parameters:
 
-- **where**: an expression to used when deleting a record. When set to `null` it deletes all the data from the database.
+- **where/whereOrPrimaryKey**: an expression to used when deleting a record. When set to `null` it deletes all the data from the database.
 - **transaction (optional)**: the transaction object to be used when deleting a data.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 
@@ -393,7 +393,7 @@ Updates a data in the database targetting certain fields only.
 Below are the parameters:
 
 - **entity**: the object that contains the targetted columns to be inserted.
-- **where**: the query expression to be used  by this operation.
+- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
 - **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
 - **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
@@ -489,7 +489,7 @@ Query Operation
 
 Query a data from the database based on the given query expression.
 
-- **where**: an expression to used to filter the data.
+- **where/whereOrPrimaryKey**: an expression to used to filter the data.
 - **top**: the value used to return certain number of rows from the database.
 - **orderBy**: the list of fields to be used to sort the data during querying.
 - **cacheKey**: the key of the cache to check.
@@ -632,7 +632,7 @@ Updates a data in the database based on the given query expression.
 Below are the parameters:
 
 - **entity**: the entity object to be updated.
-- **where**: an expression to used when updating a record.
+- **where/whereOrPrimaryKey**: an expression to used when updating a record.
 - **transaction (optional)**: the transaction object to be used when updating a data.
 - **returns**: an instance of integer that holds the number of rows affected by the execution.
 

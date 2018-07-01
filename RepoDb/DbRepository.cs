@@ -295,13 +295,13 @@ namespace RepoDb
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
+        public IEnumerable<TEntity> BatchQuery<TEntity>(object whereOrPrimaryKey, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
@@ -309,7 +309,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.BatchQuery<TEntity>(where: where,
+            var result = connection.BatchQuery<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -432,18 +432,18 @@ namespace RepoDb
         /// per batch defined by this operation. This operation is useful for paging purposes.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object whereOrPrimaryKey, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                BatchQuery<TEntity>(where: where,
+                BatchQuery<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -574,10 +574,10 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count<TEntity>(object where, IDbTransaction transaction = null)
+        public long Count<TEntity>(object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Create a connection
@@ -585,6 +585,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Count<TEntity>(commandTimeout: CommandTimeout,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
@@ -678,14 +679,14 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
+        public Task<long> CountAsync<TEntity>(object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Count<TEntity>(where: where,
+                Count<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     transaction: transaction));
         }
 
@@ -783,17 +784,17 @@ namespace RepoDb
         /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete<TEntity>(object where, IDbTransaction transaction = null)
+        public int Delete<TEntity>(object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Delete<TEntity>(where: where,
+            var result = connection.Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -873,14 +874,14 @@ namespace RepoDb
         /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(object where, IDbTransaction transaction = null)
+        public Task<int> DeleteAsync<TEntity>(object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Delete<TEntity>(where: where,
+                Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     transaction: transaction));
         }
 
@@ -1116,11 +1117,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public int InlineUpdate<TEntity>(object entity, object whereOrPrimaryKey, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Create a connection
@@ -1128,7 +1129,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
-                where: where,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -1220,16 +1221,16 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public Task<int> InlineUpdateAsync<TEntity>(object entity, object whereOrPrimaryKey, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(entity: entity,
-                    where: where,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
                     overrideIgnore: overrideIgnore,
                     transaction: transaction));
         }
@@ -1502,7 +1503,7 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -1511,14 +1512,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Query<TEntity>(where: where,
+            var result = connection.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 top: top,
                 orderBy: orderBy,
                 cacheKey: cacheKey,
@@ -1630,7 +1631,7 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -1639,11 +1640,11 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrPrimaryKey, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
-                Query<TEntity>(where: where,
+                Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
@@ -1779,10 +1780,10 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Update<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
+        public int Update<TEntity>(TEntity entity, object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             // Create a connection
@@ -1790,7 +1791,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Update<TEntity>(entity: entity,
-                where: where,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1877,15 +1878,15 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
+        public Task<int> UpdateAsync<TEntity>(TEntity entity, object whereOrPrimaryKey, IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Update<TEntity>(entity: entity,
-                    where: where,
+                    whereOrPrimaryKey: whereOrPrimaryKey,
                     transaction: transaction));
         }
 

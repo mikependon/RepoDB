@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.1.9</version>
+    <version>1.1.10</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -12,7 +12,8 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      [Updates for v1.1.9]
+      [Updates for v1.1.10]
+      - Stable Build
       - Introduced the IDbConnection Extended Operational Methods.
       - Optimized the DbRepository to use the IDbConnection Extended Operational Methods.
       - Removes the DbRepository property at BaseRepository class.
