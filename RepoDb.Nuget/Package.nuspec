@@ -12,14 +12,7 @@
     <projectUrl>https://github.com/mikependon/RepoDb</projectUrl>
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <releaseNotes>
-      [Updates for v1.1.10]
-      - Stable Build
-      - Introduced the IDbConnection Extended Operational Methods.
-      - Optimized the DbRepository to use the IDbConnection Extended Operational Methods.
-      - Removes the DbRepository property at BaseRepository class.
-      - Made the DbRepository and BaseRepository Disposable.
-      - Introduced quoting on Fields and Tables when composing SQL Statements (via SqlDbStatementBuilder).
-      - Documented the ConnectionPersistency, DeleteAll, InlineInsert, InlineMerge, InlineUpdate and Truncate operations.
+      - Candidate for Beta Release
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
