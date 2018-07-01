@@ -35,6 +35,7 @@ namespace RepoDb.Extensions
         /// Adds a quotes to the string.
         /// </summary>
         /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string first before unquoting.</param>
         /// <returns></returns>
         public static string AsQuoted(this string value, bool trim = false)
         {
@@ -57,6 +58,7 @@ namespace RepoDb.Extensions
         /// Adds a quotes to the string as a database parameter.
         /// </summary>
         /// <param name="value">The string value where the database quotes will be added.</param>
+        /// <param name="trim">The boolean value that indicates whether to trim the string first before unquoting.</param>
         /// <returns></returns>
         public static string AsQuotedParameter(this string value, bool trim = false)
         {
