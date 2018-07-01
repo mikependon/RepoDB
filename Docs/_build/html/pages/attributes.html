@@ -189,7 +189,7 @@
 <div class="section" id="ignoring-a-property">
 <h2>Ignoring a Property<a class="headerlink" href="#ignoring-a-property" title="Permalink to this headline">¶</a></h2>
 <p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<p>Example: If the type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property <cite>Created</cite> will be excluded on the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
+<p>Example: If the type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property <cite>CreatedDate</cite> will be excluded on the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
 <p>Below is a sample class that has certain columns with <cite>Ignore</cite> attributes defined.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span>
@@ -220,16 +220,21 @@
 <span class="n">UPDATE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span> <span class="n">SET</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="p">=</span> <span class="n">@Name</span> <span class="n">WHERE</span> <span class="p">(.....);</span> <span class="c1">// WHERE part will vary on the expression passed during the calls</span>
 </pre></div>
 </div>
-<p>Below are the commands that can be defined in the <cite>IgnoreAttribute</cite>.</p>
+<p>Below are the list of commands that can be defined in the <cite>IgnoreAttribute</cite>.</p>
 <ul class="simple">
 <li>None</li>
-<li>Query</li>
-<li>Insert</li>
-<li>Update</li>
-<li>Delete</li>
-<li>Merge</li>
 <li>BatchQuery</li>
+<li>BulkInsert</li>
+<li>Count</li>
+<li>Delete</li>
+<li>DeleteAll</li>
+<li>InlineMerge</li>
+<li>InlineInsert</li>
 <li>InlineUpdate</li>
+<li>Insert</li>
+<li>Merge</li>
+<li>Query</li>
+<li>Update</li>
 </ul>
 <p>All commands specified above can be defined together in a single <cite>IgnoreAttribute</cite> by using the pipe character (<cite>|</cite>) as the separator.</p>
 <p><strong>Note</strong>: The <cite>RepoDb</cite> is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.</p>

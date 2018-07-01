@@ -42,11 +42,12 @@ Below are the supported mapping for each command.
 - **BatchQuery**: full support.
 - **BulkInsert**: full support.
 - **Count**: full support.
-- **Insert**: full support.
 - **Delete**: full support.
 - **DeleteAll**: full support.
+- **Insert**: full support.
 - **Merge**: full support.
 - **Query**: full support.
+- **Truncate**: full support.
 - **Update**: full support.
 
 Attempt to map to a wrong command would throw an `System.InvalidOperationException` back to the caller.

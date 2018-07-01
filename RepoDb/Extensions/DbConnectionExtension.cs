@@ -115,7 +115,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                if ((bool)whereOrPrimaryKey?.GetType().IsGenericType)
+                if (whereOrPrimaryKey?.GetType().IsGenericType == true)
                 {
                     queryGroup = QueryGroup.Parse(whereOrPrimaryKey);
                 }
@@ -128,10 +128,6 @@ namespace RepoDb.Extensions
                         queryGroup = new QueryGroup(queryField.AsEnumerable());
                     }
                 }
-            }
-            if (queryGroup == null)
-            {
-                queryGroup = QueryGroup.Parse(whereOrPrimaryKey);
             }
             return queryGroup;
         }

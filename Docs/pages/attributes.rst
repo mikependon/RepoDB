@@ -29,7 +29,7 @@ Ignoring a Property
 
 An `IgnoreAttribute` is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at `RepoDb.Attributes` namespace.
 
-Example: If the type command `Insert` and `Update` is defined on the `IgnoreAttribute` of the class property named `CreatedDate`, then the property `Created` will be excluded on the `Insert` and `Update` operation of the repository.
+Example: If the type command `Insert` and `Update` is defined on the `IgnoreAttribute` of the class property named `CreatedDate`, then the property `CreatedDate` will be excluded on the `Insert` and `Update` operation of the repository.
 
 Below is a sample class that has certain columns with `Ignore` attributes defined.
 
@@ -69,16 +69,21 @@ When the operation `Repository.Update` is called, then following SQL statement w
 	// Ignoring the `Id` and `CreatedDate` fields in Update operation
 	UPDATE [dbo].[Customer] SET [Name] = @Name WHERE (.....); // WHERE part will vary on the expression passed during the calls
 
-Below are the commands that can be defined in the `IgnoreAttribute`.
+Below are the list of commands that can be defined in the `IgnoreAttribute`.
 
 * None
-* Query
-* Insert
-* Update
-* Delete
-* Merge
 * BatchQuery
+* BulkInsert
+* Count
+* Delete
+* DeleteAll
+* InlineMerge
+* InlineInsert
 * InlineUpdate
+* Insert
+* Merge
+* Query
+* Update
 
 All commands specified above can be defined together in a single `IgnoreAttribute` by using the pipe character (`|`) as the separator.
 

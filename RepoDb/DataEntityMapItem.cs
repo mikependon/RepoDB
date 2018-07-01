@@ -49,6 +49,7 @@ namespace RepoDb
                 case Command.Insert:
                 case Command.Merge:
                 case Command.Query:
+                case Command.Truncate:
                 case Command.Update:
                     error = false;
                     break;

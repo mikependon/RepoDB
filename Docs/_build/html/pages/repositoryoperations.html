@@ -386,7 +386,7 @@
 </div>
 <div class="section" id="executenonquery-operation">
 <h2>ExecuteNonQuery Operation<a class="headerlink" href="#executenonquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteNonQuery</cite> method of the <cite>System.Data.IDataReader</cite> object and returns the number of affected rows during the execution.</p>
+<p>Executes a query from the database. It uses the underlying <cite>ExecuteNonQuery</cite> method of the <cite>System.Data.IDbCommand</cite> object and returns the number of affected rows during the execution.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: The command text to be used on the execution.</li>
@@ -410,7 +410,7 @@
 </div>
 <div class="section" id="executequery-operation">
 <h2>ExecuteQuery Operation<a class="headerlink" href="#executequery-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteReader</cite> method of the <cite>System.Data.IDataReader</cite> object and converts the result back to an enumerable list of <cite>DataEntity</cite> object.</p>
+<p>Executes a query from the database. It uses the underlying <cite>ExecuteReader</cite> method of the <cite>System.Data.IDbCommand</cite> object and converts the result back to an enumerable list of <cite>DataEntity</cite> object.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: The command text to be used on the execution.</li>
@@ -431,7 +431,7 @@
 </div>
 <div class="section" id="executescalar-operation">
 <h2>ExecuteScalar Operation<a class="headerlink" href="#executescalar-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteScalar</cite> method of the <cite>System.Data.IDataReader</cite> object and returns the first occurence value (first column of first row) of the execution.</p>
+<p>Executes a query from the database. It uses the underlying <cite>ExecuteScalar</cite> method of the <cite>System.Data.IDbCommand</cite> object and returns the first occurence value (first column of first row) of the execution.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>commandText</strong>: The command text to be used on the execution.</li>

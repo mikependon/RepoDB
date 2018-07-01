@@ -257,7 +257,7 @@ ExecuteNonQuery Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteNonQuery` method of the `System.Data.IDataReader` object and returns the number of affected rows during the execution.
+Executes a query from the database. It uses the underlying `ExecuteNonQuery` method of the `System.Data.IDbCommand` object and returns the number of affected rows during the execution.
 
 Below are the parameters:
 
@@ -287,7 +287,7 @@ ExecuteQuery Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDataReader` object and converts the result back to an enumerable list of `DataEntity` object.
+Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDbCommand` object and converts the result back to an enumerable list of `DataEntity` object.
 
 Below are the parameters:
 
@@ -314,7 +314,7 @@ ExecuteReader Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDataReader` object and returns the instance of the data reader.
+Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDbCommand` object and returns the instance of the data reader.
 
 Below are the parameters:
 
@@ -341,7 +341,7 @@ ExecuteScalar Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteScalar` method of the `System.Data.IDataReader` object and returns the first occurence value (first column of first row) of the execution.
+Executes a query from the database. It uses the underlying `ExecuteScalar` method of the `System.Data.IDbCommand` object and returns the first occurence value (first column of first row) of the execution.
 
 Below are the parameters:
 
