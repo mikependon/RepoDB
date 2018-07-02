@@ -204,6 +204,205 @@
             An (OR) equation and operation. This defines that any query expression must be true.
             </summary>
         </member>
+        <member name="T:RepoDb.Exceptions.InvalidQueryExpressionException">
+            <summary>
+            An exception that is being thrown when the query expression passed is not valid.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.InvalidQueryExpressionException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.InvalidQueryExpressionException</i> object.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.DuplicateDataEntityMapException">
+            <summary>
+            An exception that is being thrown if the duplicate mapping for data entity is found.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.DuplicateDataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.DuplicateDataEntityMapException</i> object.
+            </summary>
+            <param name="command">The command of the data entity mapping.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotBigCountableException">
+            <summary>
+            An exception that is being thrown if the data entity is not countable (big).
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotBigCountableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBigCountableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotCountableException">
+            <summary>
+            An exception that is being thrown if the data entity is not countable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotCountableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotCountableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotBatchQueryableException">
+            <summary>
+            An exception that is being thrown if the data entity is not batch queryable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotBatchQueryableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBatchQueryableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.DataEntityMapException">
+            <summary>
+            An exception that is being thrown for any data entity mapping related exception.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.DataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.DataEntityMapException</i> object.
+            </summary>
+            <param name="command">The command of the data entity mapping.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotInlineInsertableException">
+            <summary>
+            An exception that is being thrown if the data entity is not inline insertable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotInlineInsertableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineInsertableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotInlineMergeableException">
+            <summary>
+            An exception that is being thrown if the data entity is not inline mergeable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotInlineMergeableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineMergeableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotInlineUpdateableException">
+            <summary>
+            An exception that is being thrown if the data entity is not inline updateable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotInlineUpdateableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineUpdateableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.PrimaryFieldNotFoundException">
+            <summary>
+            An exception that is being thrown of the validation for primary key has been called and the primary key is not
+            found from the data entity.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.PrimaryFieldNotFoundException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.PrimaryFieldNotFoundException</i> object.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.CancelledExecutionException">
+            <summary>
+            An exception that is being thrown when the operation has been cancelled during the tracing.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.CancelledExecutionException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.CancelledExecutionException</i> object.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.DuplicateTypeMapException">
+            <summary>
+            An exception that is being thrown if the duplicate type mapping is found.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.DuplicateTypeMapException.#ctor(System.Type)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.DuplicateTypeMapException</i> object.
+            </summary>
+            <param name="type">The type being mapped.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotBulkInsertableException">
+            <summary>
+            An exception that is being thrown if the data entity is not bulk insertable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotBulkInsertableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBulkInsertableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotInsertableException">
+            <summary>
+            An exception that is being thrown if the data entity is not insertable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotInsertableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInsertableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotMergeableException">
+            <summary>
+            An exception that is being thrown if the data entity is not mergeable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotMergeableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotMergeableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotUpdateableException">
+            <summary>
+            An exception that is being thrown if the data entity is not updateable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotUpdateableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotUpdateableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotDeletableException">
+            <summary>
+            An exception that is being thrown if the data entity is not deletable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotDeletableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotDeletableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
+        <member name="T:RepoDb.Exceptions.EntityNotQueryableException">
+            <summary>
+            An exception that is being thrown if the data entity is not queryable.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Exceptions.EntityNotQueryableException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Exceptions.EntityNotQueryableException</i> object.
+            </summary>
+            <param name="name">The type name or the mapped name of the entity.</param>
+        </member>
         <member name="T:RepoDb.IsPrimaryIdentityCache">
             <summary>
             A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
@@ -530,194 +729,6 @@
             </summary>
             <param name="command">The command specified on this mapping.</param>
             <returns>An instance of <i>RepoDb.DataEntityMap</i> that holds the mapping.</returns>
-        </member>
-        <member name="T:RepoDb.Exceptions.DuplicateDataEntityMapException">
-            <summary>
-            An exception that is being thrown if the duplicate mapping for data entity is found.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.DuplicateDataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.DuplicateDataEntityMapException</i> object.
-            </summary>
-            <param name="command">The command of the data entity mapping.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotBigCountableException">
-            <summary>
-            An exception that is being thrown if the data entity is not countable (big).
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotBigCountableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBigCountableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotCountableException">
-            <summary>
-            An exception that is being thrown if the data entity is not countable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotCountableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotCountableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotBatchQueryableException">
-            <summary>
-            An exception that is being thrown if the data entity is not batch queryable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotBatchQueryableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBatchQueryableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.DataEntityMapException">
-            <summary>
-            An exception that is being thrown for any data entity mapping related exception.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.DataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.DataEntityMapException</i> object.
-            </summary>
-            <param name="command">The command of the data entity mapping.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotInlineInsertableException">
-            <summary>
-            An exception that is being thrown if the data entity is not inline insertable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotInlineInsertableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineInsertableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotInlineMergeableException">
-            <summary>
-            An exception that is being thrown if the data entity is not inline mergeable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotInlineMergeableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineMergeableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotInlineUpdateableException">
-            <summary>
-            An exception that is being thrown if the data entity is not inline updateable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotInlineUpdateableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineUpdateableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.PrimaryFieldNotFoundException">
-            <summary>
-            An exception that is being thrown of the validation for primary key has been called and the primary key is not
-            found from the data entity.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.PrimaryFieldNotFoundException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.PrimaryFieldNotFoundException</i> object.
-            </summary>
-            <param name="message">The exception message.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.CancelledExecutionException">
-            <summary>
-            An exception that is being thrown when the operation has been cancelled during the tracing.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.CancelledExecutionException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.CancelledExecutionException</i> object.
-            </summary>
-            <param name="message">The exception message.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.DuplicateTypeMapException">
-            <summary>
-            An exception that is being thrown if the duplicate type mapping is found.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.DuplicateTypeMapException.#ctor(System.Type)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.DuplicateTypeMapException</i> object.
-            </summary>
-            <param name="type">The type being mapped.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotBulkInsertableException">
-            <summary>
-            An exception that is being thrown if the data entity is not bulk insertable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotBulkInsertableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotBulkInsertableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotInsertableException">
-            <summary>
-            An exception that is being thrown if the data entity is not insertable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotInsertableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotInsertableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotMergeableException">
-            <summary>
-            An exception that is being thrown if the data entity is not mergeable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotMergeableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotMergeableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotUpdateableException">
-            <summary>
-            An exception that is being thrown if the data entity is not updateable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotUpdateableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotUpdateableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotDeletableException">
-            <summary>
-            An exception that is being thrown if the data entity is not deletable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotDeletableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotDeletableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.EntityNotQueryableException">
-            <summary>
-            An exception that is being thrown if the data entity is not queryable.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.EntityNotQueryableException.#ctor(System.String)">
-            <summary>
-            Creates a new instance of <i>RepoDb.Exceptions.EntityNotQueryableException</i> object.
-            </summary>
-            <param name="name">The type name or the mapped name of the entity.</param>
         </member>
         <member name="T:RepoDb.Extensions.MemberInfoExtension">
             <summary>

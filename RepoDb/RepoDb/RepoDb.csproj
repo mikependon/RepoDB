@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Constant.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
+    <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="IsPrimaryIdentityCache.cs" />
     <Compile Include="DataEntityListDataReader.cs" />
     <Compile Include="DataEntityMapItem.cs" />
