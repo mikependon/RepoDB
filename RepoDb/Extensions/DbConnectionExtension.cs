@@ -1232,7 +1232,7 @@ namespace RepoDb.Extensions
         // InlineInsert
 
         /// <summary>
-        /// Inserts a data in the database targetting certain fields only.
+        /// Inserts a data in the database by targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1324,7 +1324,7 @@ namespace RepoDb.Extensions
         // InlineInsertAsync
 
         /// <summary>
-        /// Inserts a data in the database targetting certain fields only in an asynchronous way.
+        /// Inserts a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1355,7 +1355,7 @@ namespace RepoDb.Extensions
         // InlineMerge
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1381,7 +1381,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only.
+        /// Merges a data in the database by targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1493,7 +1493,7 @@ namespace RepoDb.Extensions
         // InlineMergeAsync
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1519,7 +1519,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only in an asynchronous way.
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1549,7 +1549,7 @@ namespace RepoDb.Extensions
         // InlineUpdate
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1575,7 +1575,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1602,7 +1602,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1673,7 +1673,7 @@ namespace RepoDb.Extensions
         // InlineUpdateAsync
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1701,7 +1701,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1729,7 +1729,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1759,7 +1759,7 @@ namespace RepoDb.Extensions
         // Insert
 
         /// <summary>
-        /// Insert a data in the database.
+        /// Inserts a data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1850,7 +1850,7 @@ namespace RepoDb.Extensions
         // InsertAsync
 
         /// <summary>
-        /// Insert a data in the database in an asynchronous way.
+        /// Inserts a data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>

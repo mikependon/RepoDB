@@ -66,32 +66,32 @@
         </member>
         <member name="F:RepoDb.Enumerations.Command.Query">
             <summary>
-            A command that is being used when querying the data.
+            A command that is being used when querying a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Insert">
             <summary>
-            A command that is being used when inserting the data.
+            A command that is being used when inserting a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Update">
             <summary>
-            A command that is being used when updating the data.
+            A command that is being used when updating a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Delete">
             <summary>
-            A command that is being used when deleting the data.
+            A command that is being used when deleting a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Merge">
             <summary>
-            A command that is being used when merging the data.
+            A command that is being used when merging a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.BatchQuery">
             <summary>
-            A command that is being used when querying the data (with batch).
+            A command that is being used when batch-querying a data.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
@@ -101,7 +101,7 @@
         </member>
         <member name="F:RepoDb.Enumerations.Command.BulkInsert">
             <summary>
-            A command that is being used when updating the data, targetting certail fields only.
+            A command that is being used when updating a data by targetting certain fields only.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Count">
@@ -116,12 +116,12 @@
         </member>
         <member name="F:RepoDb.Enumerations.Command.InlineInsert">
             <summary>
-            A command that is being used when inserting the data, targetting certain fields only.
+            A command that is being used when inserting a data by targetting certain fields only.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.InlineMerge">
             <summary>
-            A command that is being used when merging the data, targetting certain fields only.
+            A command that is being used when merging a data by targetting certain fields only.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Command.Truncate">
@@ -1421,7 +1421,7 @@
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="where">The query expression or primary key value to be used by this operation.</param>
+            <param name="where">The query expression or primary key value to be used by this operation. When is set to <i>NULL</i>, it deletes all the data from the database.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -1518,7 +1518,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Inserts a data in the database targetting certain fields only.
+            Inserts a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1535,7 +1535,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineInsertAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Inserts a data in the database targetting certain fields only in an asynchronous way.
+            Inserts a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1552,7 +1552,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Merges a data in the database targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1566,7 +1566,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Merges a data in the database targetting certain fields only.
+            Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1581,7 +1581,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1595,7 +1595,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way.
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1610,7 +1610,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1625,7 +1625,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1640,7 +1640,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1655,7 +1655,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1670,7 +1670,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1685,7 +1685,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1700,7 +1700,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.Insert``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Insert a data in the database.
+            Inserts a data in the database.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -1716,7 +1716,7 @@
         </member>
         <member name="M:RepoDb.Extensions.DbConnectionExtension.InsertAsync``1(System.Data.IDbConnection,``0,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Insert a data in the database in an asynchronous way.
+            Inserts a data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
@@ -3522,7 +3522,7 @@
             <summary>
             Deletes a data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="where">The query expression or primary key value to be used by this operation.</param>
+            <param name="where">The query expression or primary key value to be used by this operation. When is set to <i>NULL</i>, it deletes all the data from the database.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -3558,7 +3558,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineInsert(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Inserts a data in the database targetting certain fields only.
+            Inserts a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
             <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -3570,7 +3570,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineInsertAsync(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Inserts a data in the database targetting certain fields only.
+            Inserts a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
             <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -3582,7 +3582,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
             <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -3591,7 +3591,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only.
+            Merges a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
@@ -3601,7 +3601,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
             <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -3610,7 +3610,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way.
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
@@ -3620,7 +3620,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
@@ -3630,7 +3630,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
@@ -3640,7 +3640,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
@@ -3650,7 +3650,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
@@ -3660,7 +3660,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
@@ -3670,7 +3670,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
@@ -3680,7 +3680,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.Insert(`0,System.Data.IDbTransaction)">
             <summary>
-            Insert a data in the database.
+            Inserts a data in the database.
             </summary>
             <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
@@ -3691,7 +3691,7 @@
         </member>
         <member name="M:RepoDb.BaseRepository`2.InsertAsync(`0,System.Data.IDbTransaction)">
             <summary>
-            Insert a data in the database in an asynchronous way.
+            Inserts a data in the database in an asynchronous way.
             </summary>
             <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
@@ -4418,7 +4418,7 @@
             Deletes a data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-            <param name="where">The query expression or primary key value to be used by this operation.</param>
+            <param name="where">The query expression or primary key value to be used by this operation. When is set to <i>NULL</i>, it deletes all the data from the database.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -4449,7 +4449,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineInsert``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Inserts a data in the database targetting certain fields only.
+            Inserts a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
@@ -4462,7 +4462,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Inserts a data in the database targetting certain fields only in an asynchronous way.
+            Inserts a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
@@ -4475,7 +4475,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
@@ -4485,7 +4485,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only.
+            Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
@@ -4496,7 +4496,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+            Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
@@ -4506,7 +4506,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Merges a data in the database targetting certain fields only in an asynchronous way.
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
@@ -4517,7 +4517,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4528,7 +4528,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4539,7 +4539,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only.
+            Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4550,7 +4550,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4561,7 +4561,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4572,7 +4572,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
-            Updates a data in the database targetting certain fields only in an asynchronous way.
+            Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
@@ -4583,7 +4583,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.Insert``1(``0,System.Data.IDbTransaction)">
             <summary>
-            Insert a data in the database.
+            Inserts a data in the database.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
@@ -4595,7 +4595,7 @@
         </member>
         <member name="M:RepoDb.DbRepository`1.InsertAsync``1(``0,System.Data.IDbTransaction)">
             <summary>
-            Insert a data in the database in an asynchronous way.
+            Inserts a data in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="entity">The <i>DataEntity</i> object to be inserted.</param>

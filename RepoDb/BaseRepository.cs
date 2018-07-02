@@ -636,7 +636,7 @@ namespace RepoDb
         // InlineInsert
 
         /// <summary>
-        /// Inserts a data in the database targetting certain fields only.
+        /// Inserts a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -655,7 +655,7 @@ namespace RepoDb
         // InlineInsertAsync
 
         /// <summary>
-        /// Inserts a data in the database targetting certain fields only.
+        /// Inserts a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -674,7 +674,7 @@ namespace RepoDb
         // InlineMerge
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -688,7 +688,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only.
+        /// Merges a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
@@ -706,7 +706,7 @@ namespace RepoDb
         // InlineMergeAsync
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
@@ -721,7 +721,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database targetting certain fields only in an asynchronous way.
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
@@ -741,7 +741,7 @@ namespace RepoDb
         // InlineUpdate
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
@@ -757,7 +757,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -773,7 +773,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only.
+        /// Updates a data in the database by targetting certain fields only.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -791,7 +791,7 @@ namespace RepoDb
         // InlineUpdateAsync
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
@@ -807,7 +807,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -823,7 +823,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database targetting certain fields only in an asynchronous way.
+        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -841,7 +841,7 @@ namespace RepoDb
         // Insert
 
         /// <summary>
-        /// Insert a data in the database.
+        /// Inserts a data in the database.
         /// </summary>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -858,7 +858,7 @@ namespace RepoDb
         // InsertAsync
 
         /// <summary>
-        /// Insert a data in the database in an asynchronous way.
+        /// Inserts a data in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>

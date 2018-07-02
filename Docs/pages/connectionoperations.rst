@@ -368,7 +368,7 @@ InlineInsert Operation
 
 .. highlight:: c#
 
-Inserts a data in the database targetting certain fields only.
+Inserts a data in the database by targetting certain fields only.
 
 Below are the parameters:
 
@@ -402,7 +402,7 @@ InlineMerge Operation
 
 .. highlight:: c#
 
-Merges a data in the database targetting certain fields only.
+Merges a data in the database by targetting certain fields only.
 
 Below are the parameters:
 
@@ -440,7 +440,7 @@ InlineMerge Operation
 
 .. highlight:: c#
 
-Merges a data in the database targetting certain fields only.
+Merges a data in the database by targetting certain fields only.
 
 Below are the parameters:
 
@@ -478,7 +478,7 @@ InlineUpdate Operation
 
 .. highlight:: c#
 
-Updates a data in the database targetting certain fields only.
+Updates a data in the database by targetting certain fields only.
 
 Below are the parameters:
 
@@ -520,7 +520,7 @@ Insert Operation
 
 .. highlight:: c#
 
-Insert a data in the database.
+Inserts a data in the database.
 
 Below are the parameters:
 
