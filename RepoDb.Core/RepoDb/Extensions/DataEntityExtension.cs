@@ -45,6 +45,7 @@ namespace RepoDb.Extensions
         internal static IEnumerable<PropertyInfo> GetPropertiesFor(Type type, Command command)
         {
             return type
+                .GetTypeInfo()
                 .GetProperties()
                 .Where(property => !property.IsIgnored(command));
         }
@@ -108,6 +109,7 @@ namespace RepoDb.Extensions
         internal static PropertyInfo GetPropertyByAttribute(Type type, Type attributeType)
         {
             return type
+                .GetTypeInfo()
                 .GetProperties()
                 .FirstOrDefault(property => property.GetCustomAttribute(attributeType) != null);
         }
@@ -133,22 +135,30 @@ namespace RepoDb.Extensions
                 return property;
             }
 
+            var info = type.GetTypeInfo();
+            
             // Id Property
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
+            property = info
+                .GetProperties()
+                .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Type.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
+            property = info
+                .GetProperties()
+                .FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Mapping.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
+            property = info
+                .GetProperties()
+                .FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;

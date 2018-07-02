@@ -3,8 +3,10 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
+using System.Collections;
 
 namespace RepoDb
 {
@@ -12,8 +14,17 @@ namespace RepoDb
     /// A data reader object used to manipulate the enumerable list of <i>DataEntity</i> objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the <i>DataEntity</i></typeparam>
-    public class DataEntityListDataReader<TEntity> : IDataReader where TEntity : DataEntity
+    public class DataEntityListDataReader<TEntity> : DbDataReader where TEntity : DataEntity
     {
+        #region Fields
+
+        private bool _isClosed = false;
+        private bool _isDisposed = false;
+        private int _position = -1;
+        private int _recordsAffected = -1;
+
+        #endregion
+
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DataEntityListDataReader</i> object.
         /// </summary>
@@ -25,15 +36,31 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The entities could not be null.");
             }
+
+            // Fields
+            _isClosed = false;
+            _isDisposed = false;
+            _position = -1;
+            _recordsAffected = -1;
+
+            // Properties
             Properties = DataEntityExtension.GetPropertiesFor<TEntity>(command).ToList();
             Enumerator = entities.GetEnumerator();
             Entities = entities;
-            Position = -1;
             FieldCount = Properties.Count;
         }
 
         /// <summary>
-        /// Gets the current <i>DataEntity</i> list enumerator used by this <i>DataReader</i>.
+        /// Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
+        /// </summary>
+        /// <returns>The enumerator object of the current collection.</returns>
+        public override IEnumerator GetEnumerator()
+        {
+            return Entities?.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
         /// </summary>
         public IEnumerator<TEntity> Enumerator { get; private set; }
 
@@ -50,64 +77,68 @@ namespace RepoDb
         /// <summary>
         /// Gets the current position of the enumerator.
         /// </summary>
-        public int Position { get; private set; }
+        public int Position { get { return _position; } }
 
         /// <summary>
         /// Gets the current value from the index.
         /// </summary>
         /// <param name="i">The index of the column.</param>
         /// <returns>The value from the column index.</returns>
-        public object this[int i] { get { return GetValue(i); } }
+        public override object this[int i] { get { return GetValue(i); } }
 
         /// <summary>
         /// Gets the current value from the name.
         /// </summary>
         /// <param name="name">The name of the column.</param>
         /// <returns>The value from the column name.</returns>
-        public object this[string name] { get { return this[GetOrdinal(name)]; } }
+        public override object this[string name] { get { return this[GetOrdinal(name)]; } }
 
         /// <summary>
         /// Gets the depth value.
         /// </summary>
-        public int Depth { get; private set; }
+        public override int Depth { get; }
 
         /// <summary>
         /// Gets the value that indicates whether the current reader is closed.
         /// </summary>
-        public bool IsClosed { get; private set; }
+        public override bool IsClosed { get { return _isClosed; } }
 
         /// <summary>
         /// Gets the value that indicates whether the current reader is already disposed.
         /// </summary>
-        public bool IsDisposed { get; private set; }
+        public bool IsDisposed { get { return _isDisposed; } }
 
         /// <summary>
         /// Gets the number of rows affected by the iteration.
         /// </summary>
-        public int RecordsAffected { get; private set; }
+        public override int RecordsAffected { get { return _recordsAffected; } }
 
         /// <summary>
         /// Gets the number of properties the <i>DataEntity</i> object has.
         /// </summary>
-        public int FieldCount { get; }
+        public override int FieldCount { get; }
+
+        public override bool HasRows => throw new NotImplementedException();
 
         /// <summary>
         /// Closes the current data reader.
         /// </summary>
-        public void Close()
+        public override void Close()
         {
-            IsClosed = true;
-            IsDisposed = true;
+            _isClosed = true;
         }
 
         /// <summary>
         /// Disposes the current data reader.
         /// </summary>
-        public void Dispose()
+        public new void Dispose()
         {
+            base.Dispose();
             Entities = null;
             Properties = null;
             Enumerator = null;
+            Close();
+            _isDisposed = true;
         }
 
         /// <summary>
@@ -116,8 +147,9 @@ namespace RepoDb
         public void Reset()
         {
             ThrowExceptionIfNotAvailable();
-            Position = -1;
             Enumerator = Entities.GetEnumerator();
+            _position = -1;
+            _recordsAffected = -1;
         }
 
         /// <summary>
@@ -125,7 +157,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public bool GetBoolean(int i)
+        public override bool GetBoolean(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToBoolean(GetValue(i));
@@ -136,7 +168,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public byte GetByte(int i)
+        public override byte GetByte(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToByte(GetValue(i));
@@ -151,7 +183,7 @@ namespace RepoDb
         /// <param name="bufferoffset">Int</param>
         /// <param name="length">Int</param>
         /// <returns></returns>
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+        public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
@@ -162,7 +194,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public char GetChar(int i)
+        public override char GetChar(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToChar(GetValue(i));
@@ -177,7 +209,7 @@ namespace RepoDb
         /// <param name="bufferoffset">Int</param>
         /// <param name="length">Int</param>
         /// <returns></returns>
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
@@ -188,7 +220,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">Int</param>
         /// <returns>Int</returns>
-        public IDataReader GetData(int i)
+        public new IDataReader GetData(int i)
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
@@ -199,7 +231,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The property type name from the property index.</returns>
-        public string GetDataTypeName(int i)
+        public override string GetDataTypeName(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Properties[i].PropertyType.Name;
@@ -210,7 +242,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public DateTime GetDateTime(int i)
+        public override DateTime GetDateTime(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToDateTime(GetValue(i));
@@ -221,7 +253,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public decimal GetDecimal(int i)
+        public override decimal GetDecimal(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToDecimal(GetValue(i));
@@ -232,7 +264,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public double GetDouble(int i)
+        public override double GetDouble(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToDouble(GetValue(i));
@@ -243,7 +275,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The property type from the property index.</returns>
-        public Type GetFieldType(int i)
+        public override Type GetFieldType(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Properties[i].PropertyType;
@@ -254,7 +286,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public float GetFloat(int i)
+        public override float GetFloat(int i)
         {
             ThrowExceptionIfNotAvailable();
             return float.Parse(GetValue(i)?.ToString());
@@ -265,7 +297,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public Guid GetGuid(int i)
+        public override Guid GetGuid(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Guid.Parse(GetValue(i)?.ToString());
@@ -276,7 +308,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public short GetInt16(int i)
+        public override short GetInt16(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToInt16(GetValue(i));
@@ -287,7 +319,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public int GetInt32(int i)
+        public override int GetInt32(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToInt32(GetValue(i));
@@ -298,7 +330,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public long GetInt64(int i)
+        public override long GetInt64(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToInt64(GetValue(i));
@@ -309,7 +341,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The name from the property index.</returns>
-        public string GetName(int i)
+        public override string GetName(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Properties[i].GetMappedName();
@@ -320,7 +352,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The index of the property.</param>
         /// <returns>The index of the property from property name.</returns>
-        public int GetOrdinal(string name)
+        public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotAvailable();
             return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
@@ -330,7 +362,7 @@ namespace RepoDb
         /// Gets the table schema.
         /// </summary>
         /// <returns>An instance of the <i>System.Data.DataTable</i> with the table schema.</returns>
-        public DataTable GetSchemaTable()
+        public override DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
@@ -341,7 +373,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public string GetString(int i)
+        public override string GetString(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Convert.ToString(GetValue(i));
@@ -352,7 +384,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public object GetValue(int i)
+        public override object GetValue(int i)
         {
             ThrowExceptionIfNotAvailable();
             return Properties[i].GetValue(Enumerator.Current);
@@ -363,7 +395,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="values">The array variable on which to populate the data.</param>
         /// <returns></returns>
-        public int GetValues(object[] values)
+        public override int GetValues(object[] values)
         {
             ThrowExceptionIfNotAvailable();
             if (values == null)
@@ -386,7 +418,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public bool IsDBNull(int i)
+        public override bool IsDBNull(int i)
         {
             ThrowExceptionIfNotAvailable();
             return GetValue(i) == DBNull.Value;
@@ -396,7 +428,7 @@ namespace RepoDb
         /// Forwards the data reader to the next result.
         /// </summary>
         /// <returns>Returns true if the forward operation is successful.</returns>
-        public bool NextResult()
+        public override bool NextResult()
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
@@ -406,11 +438,11 @@ namespace RepoDb
         /// Forward the pointer into the next record.
         /// </summary>
         /// <returns>A value that indicates whether the movement is successful.</returns>
-        public bool Read()
+        public override bool Read()
         {
             ThrowExceptionIfNotAvailable();
-            Position++;
-            RecordsAffected++;
+            _position++;
+            _recordsAffected++;
             return Enumerator.MoveNext();
         }
 
