@@ -5,9 +5,59 @@ VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "RepoDb\RepoDb.csproj", "{A31A38C8-603E-4499-A5C1-4A6366864EA7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{98D41360-3B1C-408D-A273-DABD2E20DC3B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Tests", "RepoDb.Tests", "{98D41360-3B1C-408D-A273-DABD2E20DC3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Tests", "RepoDb.Tests\RepoDb.Tests.csproj", "{E04CF93F-91F8-49DE-940E-D920E28ECDE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{45B62C42-5ECA-42B6-B8F1-7809AB961959}"
+	ProjectSection(SolutionItems) = preProject
+		RepoDb.Nuget\documentation.md = RepoDb.Nuget\documentation.md
+		RepoDb.Nuget\nuget.exe = RepoDb.Nuget\nuget.exe
+		RepoDb.Nuget\Package.nuspec = RepoDb.Nuget\Package.nuspec
+		README.md = README.md
+		RepoDb.Nuget\readme.txt = RepoDb.Nuget\readme.txt
+		RepoDb.Nuget\RepoDb.dll = RepoDb.Nuget\RepoDb.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{728FEBE2-F12A-496A-AF1D-B888CFF53DE9}"
+	ProjectSection(SolutionItems) = preProject
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.TestProject", "RepoDb.TestProject\RepoDb.TestProject.csproj", "{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6837AEC8-8A8C-48EE-9338-62D972BC4DB0}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\index.rst = Docs\index.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\pages\attributes.rst = Docs\pages\attributes.rst
+		Docs\pages\cache.rst = Docs\pages\cache.rst
+		Docs\pages\connection.rst = Docs\pages\connection.rst
+		Docs\pages\connectionoperations.rst = Docs\pages\connectionoperations.rst
+		Docs\pages\connectionpersistency.rst = Docs\pages\connectionpersistency.rst
+		Docs\pages\contact.rst = Docs\pages\contact.rst
+		Docs\pages\dataentity.rst = Docs\pages\dataentity.rst
+		Docs\pages\expressiontree.rst = Docs\pages\expressiontree.rst
+		Docs\pages\extensibility.rst = Docs\pages\extensibility.rst
+		Docs\pages\installation.rst = Docs\pages\installation.rst
+		Docs\pages\introduction.rst = Docs\pages\introduction.rst
+		Docs\pages\mapattribute.rst = Docs\pages\mapattribute.rst
+		Docs\pages\multiplemapping.rst = Docs\pages\multiplemapping.rst
+		Docs\pages\performance.rst = Docs\pages\performance.rst
+		Docs\pages\querygroup.rst = Docs\pages\querygroup.rst
+		Docs\pages\repository.rst = Docs\pages\repository.rst
+		Docs\pages\repositoryoperations.rst = Docs\pages\repositoryoperations.rst
+		Docs\pages\statementbuilder.rst = Docs\pages\statementbuilder.rst
+		Docs\pages\support.rst = Docs\pages\support.rst
+		Docs\pages\trace.rst = Docs\pages\trace.rst
+		Docs\pages\transaction.rst = Docs\pages\transaction.rst
+		Docs\pages\typemapping.rst = Docs\pages\typemapping.rst
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,11 +73,16 @@ Global
 		{E04CF93F-91F8-49DE-940E-D920E28ECDE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E04CF93F-91F8-49DE-940E-D920E28ECDE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E04CF93F-91F8-49DE-940E-D920E28ECDE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E5D8CB4-D7EB-402D-BB30-0B211B2DC6FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E04CF93F-91F8-49DE-940E-D920E28ECDE5} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
+		{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
 	EndGlobalSection
 EndGlobal

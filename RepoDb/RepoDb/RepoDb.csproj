@@ -124,8 +124,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Release (
-xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.dll" "$(SolutionDir)RepoDb.Nuget"
-xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.xml" "$(SolutionDir)RepoDb.Nuget"
+xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.dll" "%25RepoDbNugetPath%25"
+xcopy /Y "$(ProjectDir)$(OutDir)RepoDb.xml" "%25RepoDbNugetPath%25"
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>
