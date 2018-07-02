@@ -3,6 +3,7 @@ using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -83,6 +84,7 @@ namespace RepoDb
         public string GetOperationText()
         {
             var textAttribute = typeof(Operation)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == Operation.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
@@ -106,7 +108,7 @@ namespace RepoDb
             {
                 throw new ArgumentNullException($"Value must not be null.");
             }
-            var properties = value.GetType().GetProperties();
+            var properties = value.GetType().GetTypeInfo().GetProperties();
             var operationProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
             var valueProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
             if (operationProperty == null)
@@ -147,7 +149,7 @@ namespace RepoDb
                 {
                     throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). The count should be 2.");
                 }
-                if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
                 {
                     throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
                 }
@@ -163,7 +165,7 @@ namespace RepoDb
             if (value.GetType().IsArray)
             {
                 var values = ((Array)value).AsEnumerable().ToList();
-                if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
                 {
                     throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
                 }
@@ -176,7 +178,7 @@ namespace RepoDb
 
         private static void ValidateOtherOperations(string fieldName, Operation operation, object value)
         {
-            if (value.GetType().IsGenericType)
+            if (value.GetType().GetTypeInfo().IsGenericType)
             {
                 throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
             }

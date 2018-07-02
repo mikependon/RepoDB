@@ -205,7 +205,7 @@ namespace RepoDb.Extensions
         internal static string GetMappedName(Type type, Command command)
         {
             return DataEntityMapper.For(type)?.Get(command)?.Name ??
-                type.GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
+                type.GetTypeInfo().GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
         }
 
         /// <summary>
@@ -243,6 +243,7 @@ namespace RepoDb.Extensions
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             dataEntity.GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .ToList()
                 .ForEach(property =>

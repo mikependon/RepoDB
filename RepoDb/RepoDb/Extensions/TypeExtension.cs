@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace RepoDb.Extensions
 {
@@ -15,8 +16,8 @@ namespace RepoDb.Extensions
         /// <returns>The custom attribute.</returns>
         public static T GetCustomAttribute<T>(this Type type) where T : Attribute
         {
-            var attributes =type.GetCustomAttributes(typeof(T), false);
-            return attributes?.Length > 0 ? (T)attributes[0] : null;
+            var attributes = type.GetCustomAttributes(typeof(T), false);
+            return attributes?.Any() == true ? (T)attributes[0] : null;
         }
     }
 }

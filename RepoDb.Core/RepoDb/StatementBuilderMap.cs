@@ -2,6 +2,7 @@
 using RepoDb.Interfaces;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -21,7 +22,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder to be used for mapping.</param>
         public StatementBuilderMap(Type dbConnectionType, IStatementBuilder statementBuilder)
         {
-            if (!dbConnectionType.IsSubclassOf(typeof(IDbConnection)) && !dbConnectionType.IsSubclassOf(typeof(DbConnection)))
+            var info = dbConnectionType.GetTypeInfo();
+            if (!info.IsSubclassOf(typeof(IDbConnection)) && !info.IsSubclassOf(typeof(DbConnection)))
             {
                 throw new ArgumentException($"Argument 'dbConnectionType' must be a sub class of '{typeof(DbConnection).FullName}'.");
             }

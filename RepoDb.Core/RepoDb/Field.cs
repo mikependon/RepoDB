@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -56,6 +57,7 @@ namespace RepoDb
             }
             var list = new List<Field>();
             obj.GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .ToList()
                 .ForEach(property =>

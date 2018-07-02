@@ -4,6 +4,7 @@ using System.Linq;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Attributes;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -66,6 +67,7 @@ namespace RepoDb
         public string GetConjunctionText()
         {
             var textAttribute = typeof(Conjunction)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == Conjunction.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
@@ -156,15 +158,13 @@ namespace RepoDb
                         {
                             continue;
                         }
-                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
-                            StringComparison.InvariantCultureIgnoreCase))
+                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name, StringComparison.CurrentCultureIgnoreCase))
                         {
                             var fieldValue = ((Parameter)cQueryField.Parameter);
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
-                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name,
-                        StringComparison.InvariantCultureIgnoreCase));
+                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name, StringComparison.CurrentCultureIgnoreCase));
                 }
             }
             _isFixed = true;
@@ -194,19 +194,19 @@ namespace RepoDb
             var queryFields = new List<QueryField>();
             var queryGroups = new List<QueryGroup>();
             var conjunction = Conjunction.And;
-            obj.GetType().GetProperties().ToList().ForEach(property =>
+            obj.GetType().GetTypeInfo().GetProperties().ToList().ForEach(property =>
             {
                 var fieldName = property.Name;
-                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.CurrentCultureIgnoreCase))
                 {
                     conjunction = (Conjunction)property.GetValue(obj);
                 }
-                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
+                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var value = property.GetValue(obj);
                     if (value is Array)
                     {
-                        Array.ForEach((object[])value, (item) =>
+                        ((object[])value).ToList().ForEach(item =>
                         {
                             queryGroups.Add(Parse(item));
                         });
@@ -220,16 +220,17 @@ namespace RepoDb
                 {
                     var value = property.GetValue(obj);
                     var type = value?.GetType();
-                    if (type?.IsGenericType == false)
+                    var info = type?.GetTypeInfo();
+                    if (info.IsGenericType == false)
                     {
                         queryFields.Add(new QueryField(fieldName, value));
                     }
                     else
                     {
-                        var operationProperty = type?
+                        var operationProperty = info
                             .GetProperties()
                             .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
-                        var valueProperty = type?
+                        var valueProperty = info
                             .GetProperties()
                             .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
                         if (operationProperty == null)
@@ -300,7 +301,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                    if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
                     {
                         throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
                     }
@@ -317,7 +318,7 @@ namespace RepoDb
             if (value.GetType().IsArray)
             {
                 var values = ((Array)value).AsEnumerable().ToList();
-                if (values.Any(v => v == null || (bool)v?.GetType().IsGenericType))
+                if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
                 {
                     throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
                 }
@@ -330,7 +331,7 @@ namespace RepoDb
 
         private static void ValidateOtherOperations(string fieldName, Operation operation, object value)
         {
-            if (value.GetType().IsGenericType)
+            if (value.GetType().GetTypeInfo().IsGenericType)
             {
                 throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
             }

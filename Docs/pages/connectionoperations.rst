@@ -435,44 +435,6 @@ The code snippets above will merge the `Order` record into the database by inser
 
 **Note**: It is necessary to define the qualifier fields, and the qualifier fields must be present on the dynamic object passed at `entity` parameter. Please also note that the `Merge` operation is only using the `Equal` operation when merging the data in the database. Other operations of like (`GreaterThan`, `LessThan`) is not supported. One can create a advance SQL Statement or Stored Procedure for merging process and call the `ExecuteNonQuery` method instead.
 
-InlineMerge Operation
----------------------
-
-.. highlight:: c#
-
-Merges a data in the database by targetting certain fields only.
-
-Below are the parameters:
-
-- **entity**: the object that contains the targetted columns to be inserted.
-- **qualifiers**: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.
-- **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
-- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
-- **transaction (optional)**: the transaction object to be used when updating a data.
-- **trace (optional)**: the trace object to be used by this operation.
-- **statementBuilder (optional)**: the statement builder object to be used by this operation.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to do inline merge.
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var affectedRows = connection.InlineMerge<Order>(new
-		{
-			Id = 10045,
-			ProductId = 35,
-			Quantity = 5,
-			UpdatedDate = DateTime.UtcNow
-		},
-		Field.From("Id"));
-	}
-
-The code snippets above will merge the `Order` record into the database by inserting the value of the `ProductId`, `Quantity` and `UpdatedDate` columns if the record with `Id` equals to `10045` is not yet in the database. Otherwise, it will update the existing records.
-
-**Note**: It is necessary to define the qualifier fields, and the qualifier fields must be present on the dynamic object passed at `entity` parameter. Please also note that the `Merge` operation is only using the `Equal` operation when merging the data in the database. Other operations of like (`GreaterThan`, `LessThan`) is not supported. One can create a advance SQL Statement or Stored Procedure for merging process and call the `ExecuteNonQuery` method instead.
-
 InlineUpdate Operation
 ----------------------
 

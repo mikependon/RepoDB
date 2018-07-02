@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -19,6 +20,7 @@ namespace RepoDb.Extensions
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             obj?.GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .ToList()
                 .ForEach(property =>
@@ -52,7 +54,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var properties = obj.GetType().GetProperties().ToList();
+                var properties = obj.GetType().GetTypeInfo().GetProperties().ToList();
                 properties.ForEach(property =>
                 {
                     list.Add(new QueryField(property.Name, property.GetValue(obj)));

@@ -14,27 +14,27 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class MemberInfoExtension
     {
-        /// <summary>
-        /// Gets a custom attribute defined on the member.
-        /// </summary>
-        /// <typeparam name="T">The custom attribute that is defined into the property.</typeparam>
-        /// <param name="property">The type of where the custom attribute is defined.</param>
-        /// <returns>The custom attribute.</returns>
-        public static T GetCustomAttribute<T>(this MemberInfo property) where T : Attribute
-        {
-            return (T)GetCustomAttribute(property, typeof(T));
-        }
+        ///// <summary>
+        ///// Gets a custom attribute defined on the member.
+        ///// </summary>
+        ///// <typeparam name="T">The custom attribute that is defined into the property.</typeparam>
+        ///// <param name="property">The type of where the custom attribute is defined.</param>
+        ///// <returns>The custom attribute.</returns>
+        //public static T GetCustomAttribute<T>(this MemberInfo property) where T : Attribute
+        //{
+        //    return (T)GetCustomAttribute(property, typeof(T));
+        //}
 
-        /// <summary>
-        /// Gets a custom attribute defined on the member.
-        /// </summary>
-        /// <param name="property">The type of where the custom attribute is defined.</param>
-        /// <param name="type">The custom attribute that is defined into the member.</param>
-        /// <returns>The custom attribute.</returns>
-        public static Attribute GetCustomAttribute(this MemberInfo property, Type type)
-        {
-            var attributes = property.GetCustomAttributes(type, false);
-            return attributes?.Length > 0 ? (Attribute)attributes[0] : null;
-        }
+        ///// <summary>
+        ///// Gets a custom attribute defined on the member.
+        ///// </summary>
+        ///// <param name="property">The type of where the custom attribute is defined.</param>
+        ///// <param name="type">The custom attribute that is defined into the member.</param>
+        ///// <returns>The custom attribute.</returns>
+        //public static Attribute GetCustomAttribute(this MemberInfo property, Type type)
+        //{
+        //    var attributes = property.GetCustomAttributes(type, false)?.ToArray();
+        //    return attributes?.Any() == true ? attributes[0] : null;
+        //}
     }
 }

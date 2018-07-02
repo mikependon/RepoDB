@@ -29,7 +29,7 @@ namespace RepoDb.Reflection
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
                 entityType,
                 new[] { typeof(DbDataReader) },
-                typeof(Assembly).Module,
+                typeof(Assembly).GetTypeInfo().Module,
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
 
@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
             ilGenerator.DeclareLocal(typeof(object));
 
             // Create instance of the object type
-            ilGenerator.Emit(OpCodes.Newobj, entityType.GetConstructor(Type.EmptyTypes));
+            ilGenerator.Emit(OpCodes.Newobj, entityType.GetTypeInfo().GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Iterate the properties
@@ -76,12 +76,12 @@ namespace RepoDb.Reflection
 
             // Load the value base on the ordinal
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("get_Item", new[] { typeof(int) }));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetTypeInfo().GetMethod("get_Item", new[] { typeof(int) }));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Load the resulted Value and DBNull.Value for comparisson
             ilGenerator.Emit(OpCodes.Ldloc, 1);
-            ilGenerator.Emit(OpCodes.Ldsfld, typeof(DBNull).GetField("Value"));
+            ilGenerator.Emit(OpCodes.Ldsfld, typeof(DBNull).GetTypeInfo().GetField("Value"));
             ilGenerator.Emit(OpCodes.Ceq);
             ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
 
@@ -90,14 +90,14 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldloc, 1);
 
             // Switch which method of Convert are going to used
-            var convertMethod = typeof(Convert).GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
-                typeof(Convert).GetMethod($"ToString", new[] { typeof(object) });
+            var convertMethod = typeof(Convert).GetTypeInfo().GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
+                typeof(Convert).GetTypeInfo().GetMethod($"ToString", new[] { typeof(object) });
             ilGenerator.Emit(OpCodes.Call, convertMethod);
 
             // Parse if it is Guid
             if (propertyType == typeof(Guid))
             {
-                ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetMethod("Parse", new[] { typeof(string) }));
+                ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) }));
             }
 
             // Check for nullable based on the underlying type
@@ -107,7 +107,7 @@ namespace RepoDb.Reflection
                 var nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
 
                 // Create a new instance of Nullable<T> object
-                ilGenerator.Emit(OpCodes.Newobj, nullableType.GetConstructor(new[] { propertyType }));
+                ilGenerator.Emit(OpCodes.Newobj, nullableType.GetTypeInfo().GetConstructor(new[] { propertyType }));
             }
 
             // Call the (Property.Set) or (Property = Value)
@@ -138,7 +138,7 @@ namespace RepoDb.Reflection
             ilGenerator.DeclareLocal(typeof(object));
 
             // Create instance of the object type
-            ilGenerator.Emit(OpCodes.Newobj, returnType.GetConstructor(Type.EmptyTypes));
+            ilGenerator.Emit(OpCodes.Newobj, returnType.GetTypeInfo().GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Iterate the fields
@@ -163,14 +163,14 @@ namespace RepoDb.Reflection
             // Get the column name by ordinal
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
 
-            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("GetName", new[] { typeof(int) }));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetTypeInfo().GetMethod("GetName", new[] { typeof(int) }));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
             // Call the reader[] method
             ilGenerator.Emit(OpCodes.Ldarg, 0);
             ilGenerator.Emit(OpCodes.Ldc_I4, ordinal);
-            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetMethod("get_Item", new[] { typeof(int) }));
-            ilGenerator.Emit(OpCodes.Call, typeof(ObjectConverter).GetMethod("DbNullToNull", new[] { typeof(object) }));
+            ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetTypeInfo().GetMethod("get_Item", new[] { typeof(int) }));
+            ilGenerator.Emit(OpCodes.Call, typeof(ObjectConverter).GetTypeInfo().GetMethod("DbNullToNull", new[] { typeof(object) }));
             ilGenerator.Emit(OpCodes.Stloc, 2);
 
             // Load the object instance
@@ -179,7 +179,7 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldloc, 2);
 
             // Add the value
-            ilGenerator.Emit(OpCodes.Call, typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) }));
+            ilGenerator.Emit(OpCodes.Call, typeof(IDictionary<string, object>).GetTypeInfo().GetMethod("Add", new[] { typeof(string), typeof(object) }));
         }
     }
 }

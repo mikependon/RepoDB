@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -40,6 +41,7 @@ namespace RepoDb
         public string GetOrderText()
         {
             var textAttribute = typeof(Order)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == Order.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
@@ -66,6 +68,7 @@ namespace RepoDb
             var list = new List<OrderField>();
             obj
                 .GetType()
+                .GetTypeInfo()
                 .GetProperties()
                 .ToList()
                 .ForEach(property =>

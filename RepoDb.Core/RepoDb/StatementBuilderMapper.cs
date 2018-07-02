@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -38,7 +39,8 @@ namespace RepoDb
         /// <returns>An instance of <i>RepoDb.Interfaces.StatementBuilderMap</i> defined on the mapping.</returns>
         public static StatementBuilderMap Get(Type dbConnectionType)
         {
-            if (!dbConnectionType.IsSubclassOf(typeof(IDbConnection)) && !dbConnectionType.IsSubclassOf(typeof(DbConnection)))
+            var info = dbConnectionType.GetTypeInfo();
+            if (!info.IsSubclassOf(typeof(IDbConnection)) && !info.IsSubclassOf(typeof(DbConnection)))
             {
                 throw new ArgumentException($"Argument 'dbConnectionType' must be a sub class of '{typeof(DbConnection).FullName}'.");
             }

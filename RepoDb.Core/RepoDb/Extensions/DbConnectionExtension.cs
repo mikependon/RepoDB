@@ -115,7 +115,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                if (where?.GetType().IsGenericType == true)
+                if (where?.GetType().GetTypeInfo().IsGenericType == true)
                 {
                     queryGroup = QueryGroup.Parse(where);
                 }
@@ -1406,7 +1406,7 @@ namespace RepoDb.Extensions
 
             // Variables
             var command = Command.InlineMerge;
-            var entityProperties = entity?.GetType().GetProperties();
+            var entityProperties = entity?.GetType().GetTypeInfo().GetProperties();
 
             // Force to use the PrimaryKey
             if (qualifiers == null)

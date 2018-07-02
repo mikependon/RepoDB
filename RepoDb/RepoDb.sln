@@ -30,33 +30,33 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.TestProject", "RepoD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6837AEC8-8A8C-48EE-9338-62D972BC4DB0}"
 	ProjectSection(SolutionItems) = preProject
-		Docs\index.rst = Docs\index.rst
+		..\Docs\index.rst = ..\Docs\index.rst
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B}"
 	ProjectSection(SolutionItems) = preProject
-		Docs\pages\attributes.rst = Docs\pages\attributes.rst
-		Docs\pages\cache.rst = Docs\pages\cache.rst
-		Docs\pages\connection.rst = Docs\pages\connection.rst
-		Docs\pages\connectionoperations.rst = Docs\pages\connectionoperations.rst
-		Docs\pages\connectionpersistency.rst = Docs\pages\connectionpersistency.rst
-		Docs\pages\contact.rst = Docs\pages\contact.rst
-		Docs\pages\dataentity.rst = Docs\pages\dataentity.rst
-		Docs\pages\expressiontree.rst = Docs\pages\expressiontree.rst
-		Docs\pages\extensibility.rst = Docs\pages\extensibility.rst
-		Docs\pages\installation.rst = Docs\pages\installation.rst
-		Docs\pages\introduction.rst = Docs\pages\introduction.rst
-		Docs\pages\mapattribute.rst = Docs\pages\mapattribute.rst
-		Docs\pages\multiplemapping.rst = Docs\pages\multiplemapping.rst
-		Docs\pages\performance.rst = Docs\pages\performance.rst
-		Docs\pages\querygroup.rst = Docs\pages\querygroup.rst
-		Docs\pages\repository.rst = Docs\pages\repository.rst
-		Docs\pages\repositoryoperations.rst = Docs\pages\repositoryoperations.rst
-		Docs\pages\statementbuilder.rst = Docs\pages\statementbuilder.rst
-		Docs\pages\support.rst = Docs\pages\support.rst
-		Docs\pages\trace.rst = Docs\pages\trace.rst
-		Docs\pages\transaction.rst = Docs\pages\transaction.rst
-		Docs\pages\typemapping.rst = Docs\pages\typemapping.rst
+		..\Docs\pages\attributes.rst = ..\Docs\pages\attributes.rst
+		..\Docs\pages\cache.rst = ..\Docs\pages\cache.rst
+		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
+		..\Docs\pages\connectionoperations.rst = ..\Docs\pages\connectionoperations.rst
+		..\Docs\pages\connectionpersistency.rst = ..\Docs\pages\connectionpersistency.rst
+		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
+		..\Docs\pages\dataentity.rst = ..\Docs\pages\dataentity.rst
+		..\Docs\pages\expressiontree.rst = ..\Docs\pages\expressiontree.rst
+		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
+		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst
+		..\Docs\pages\introduction.rst = ..\Docs\pages\introduction.rst
+		..\Docs\pages\mapattribute.rst = ..\Docs\pages\mapattribute.rst
+		..\Docs\pages\multiplemapping.rst = ..\Docs\pages\multiplemapping.rst
+		..\Docs\pages\performance.rst = ..\Docs\pages\performance.rst
+		..\Docs\pages\querygroup.rst = ..\Docs\pages\querygroup.rst
+		..\Docs\pages\repository.rst = ..\Docs\pages\repository.rst
+		..\Docs\pages\repositoryoperations.rst = ..\Docs\pages\repositoryoperations.rst
+		..\Docs\pages\statementbuilder.rst = ..\Docs\pages\statementbuilder.rst
+		..\Docs\pages\support.rst = ..\Docs\pages\support.rst
+		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
+		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
+		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
 	EndProjectSection
 EndProject
 Global

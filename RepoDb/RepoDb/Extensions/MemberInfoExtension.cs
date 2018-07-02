@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
         public static Attribute GetCustomAttribute(this MemberInfo property, Type type)
         {
             var attributes = property.GetCustomAttributes(type, false);
-            return attributes?.Length > 0 ? (Attribute)attributes[0] : null;
+            return attributes?.Any() == true ? (Attribute)attributes[0] : null;
         }
     }
 }
