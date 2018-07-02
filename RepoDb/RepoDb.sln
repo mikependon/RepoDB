@@ -9,16 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Tests", "RepoDb.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Tests", "RepoDb.Tests\RepoDb.Tests.csproj", "{E04CF93F-91F8-49DE-940E-D920E28ECDE5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{45B62C42-5ECA-42B6-B8F1-7809AB961959}"
-	ProjectSection(SolutionItems) = preProject
-		RepoDb.Nuget\documentation.md = RepoDb.Nuget\documentation.md
-		RepoDb.Nuget\nuget.exe = RepoDb.Nuget\nuget.exe
-		RepoDb.Nuget\Package.nuspec = RepoDb.Nuget\Package.nuspec
-		README.md = README.md
-		RepoDb.Nuget\readme.txt = RepoDb.Nuget\readme.txt
-		RepoDb.Nuget\RepoDb.dll = RepoDb.Nuget\RepoDb.dll
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{728FEBE2-F12A-496A-AF1D-B888CFF53DE9}"
 	ProjectSection(SolutionItems) = preProject
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
@@ -57,6 +47,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7
 		..\Docs\pages\trace.rst = ..\Docs\pages\trace.rst
 		..\Docs\pages\transaction.rst = ..\Docs\pages\transaction.rst
 		..\Docs\pages\typemapping.rst = ..\Docs\pages\typemapping.rst
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{C88AB92A-52E2-4868-A8CC-8CA41F332281}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Nuget\documentation.md = ..\RepoDb.Nuget\documentation.md
+		..\RepoDb.Nuget\install.txt = ..\RepoDb.Nuget\install.txt
+		..\RepoDb.Nuget\nuget.exe = ..\RepoDb.Nuget\nuget.exe
+		..\RepoDb.Nuget\Package.nuspec = ..\RepoDb.Nuget\Package.nuspec
+		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
+		..\RepoDb.Nuget\RepoDb.dll = ..\RepoDb.Nuget\RepoDb.dll
+		..\RepoDb.Nuget\RepoDb.xml = ..\RepoDb.Nuget\RepoDb.xml
 	EndProjectSection
 EndProject
 Global
