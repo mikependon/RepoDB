@@ -53,7 +53,7 @@ Query the data from the database by batch based on the given query expression. T
 
 Below are the parameters:
 
-- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
+- **where**: The query expression or primary key value to be used by this operation.
 - **page**: the page of the batch to be used by this operation.
 - **rowsPerBatch**: the number of rows per batch to be used by this operation.
 - **orderBy**: the order definition of the fields to be used by this operation.
@@ -157,7 +157,7 @@ Counts the number of rows from the database based on the given query expression.
 
 Below are the parameters:
 
-- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
+- **where**: The query expression or primary key value to be used by this operation.
 - **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction to be used by this operation.
 - **trace (optional)**: the trace object to be used by this operation.
@@ -195,7 +195,7 @@ Deletes a data in the database based on the given query expression. It returns a
 
 Below are the parameters:
 
-- **where/whereOrPrimaryKey**: an expression to used when deleting a record. When set to `null` it deletes all the data from the database.
+- **where**: The query expression or primary key value to be used by this operation. When is set to `NULL`, it deletes all the data from the database.
 - **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
 - **transaction (optional)**: the transaction object to be used when deleting a data.
 - **trace (optional)**: the trace object to be used by this operation.
@@ -483,7 +483,7 @@ Updates a data in the database targetting certain fields only.
 Below are the parameters:
 
 - **entity**: the object that contains the targetted columns to be inserted.
-- **where/whereOrPrimaryKey**: the query expression to be used  by this operation.
+- **where**: The query expression or primary key value to be used by this operation.
 - **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
 - **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
@@ -585,7 +585,7 @@ Query Operation
 
 Query a data from the database based on the given query expression.
 
-- **where/whereOrPrimaryKey**: an expression to used to filter the data.
+- **where**: The query expression or primary key value to be used by this operation.
 - **top**: the value used to return certain number of rows from the database.
 - **orderBy**: the list of fields to be used to sort the data during querying.
 - **cacheKey**: the key of the cache to check.
@@ -744,7 +744,7 @@ Updates a data in the database based on the given query expression.
 Below are the parameters:
 
 - **entity**: the entity object to be updated.
-- **where/whereOrPrimaryKey**: an expression to used when updating a record.
+- **where**: The query expression or primary key value to be used by this operation.
 - **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
 - **transaction (optional)**: the transaction object to be used when updating a data.
 - **trace (optional)**: the trace object to be used by this operation.
