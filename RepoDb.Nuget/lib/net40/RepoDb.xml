@@ -430,9 +430,15 @@
             <param name="entities">The list of the <i>DataEntity</i> object to be used for manipulation.</param>
             <param name="command">The type of command to be used by this data reader.</param>
         </member>
+        <member name="M:RepoDb.DataEntityListDataReader`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
+            </summary>
+            <returns>The enumerator object of the current collection.</returns>
+        </member>
         <member name="P:RepoDb.DataEntityListDataReader`1.Enumerator">
             <summary>
-            Gets the current <i>DataEntity</i> list enumerator used by this <i>DataReader</i>.
+            Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
             </summary>
         </member>
         <member name="P:RepoDb.DataEntityListDataReader`1.Entities">
@@ -487,6 +493,11 @@
         <member name="P:RepoDb.DataEntityListDataReader`1.FieldCount">
             <summary>
             Gets the number of properties the <i>DataEntity</i> object has.
+            </summary>
+        </member>
+        <member name="P:RepoDb.DataEntityListDataReader`1.HasRows">
+            <summary>
+            Gets a value that signify whether the current data reader has data entities.
             </summary>
         </member>
         <member name="M:RepoDb.DataEntityListDataReader`1.Close">

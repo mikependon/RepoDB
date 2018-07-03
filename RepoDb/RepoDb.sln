@@ -56,8 +56,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuge
 		..\RepoDb.Nuget\nuget.exe = ..\RepoDb.Nuget\nuget.exe
 		..\RepoDb.Nuget\Package.nuspec = ..\RepoDb.Nuget\Package.nuspec
 		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
-		..\RepoDb.Nuget\RepoDb.dll = ..\RepoDb.Nuget\RepoDb.dll
-		..\RepoDb.Nuget\RepoDb.xml = ..\RepoDb.Nuget\RepoDb.xml
 	EndProjectSection
 EndProject
 Global

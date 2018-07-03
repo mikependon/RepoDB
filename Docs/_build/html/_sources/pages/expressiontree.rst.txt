@@ -20,16 +20,26 @@ Certain repository operations are using the expression trees.
 - Repository.ExecuteNonQuery
 - Repository.ExecuteQuery
 - Repository.ExecuteScalar
+- Repository.InlineInsert
+- Repository.InlineMerge
 - Repository.InlineUpdate
 - Repository.Query
 - Repository.Update
 
 Certain connection extension methods are using the expression trees.
 
+- DbConnection.BatchQuery
+- DbConnection.Count
+- DbConnection.Delete
 - DbConnection.ExecuteNonQuery
 - DbConnection.ExecuteQuery
 - DbConnection.ExecuteReader
 - DbConnection.ExecuteScalar
+- DbConnection.InlineInsert
+- DbConnection.InlineMerge
+- DbConnection.InlineUpdate
+- DbConnection.Query
+- DbConnection.Update
 
 There are two ways of building the expression trees, the explicit way by using `QueryGroup` objects and dynamic way by using `dynamic` objects.
 

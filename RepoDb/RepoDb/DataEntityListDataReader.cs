@@ -118,7 +118,10 @@ namespace RepoDb
         /// </summary>
         public override int FieldCount { get; }
 
-        public override bool HasRows => throw new NotImplementedException();
+        /// <summary>
+        /// Gets a value that signify whether the current data reader has data entities.
+        /// </summary>
+        public override bool HasRows => Entities?.Count() > 0;
 
         /// <summary>
         /// Closes the current data reader.

@@ -99,7 +99,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#executescalar-operation">ExecuteScalar Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inlineinsert-operation">InlineInsert Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inlinemerge-operation">InlineMerge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">InlineMerge Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inlineupdate-operation">InlineUpdate Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#insert-operation">Insert Operation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#merge-operation">Merge Operation</a></li>
@@ -236,7 +235,7 @@
 <p>Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows per batch defined by this operation. This operation is useful for paging purposes.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>page</strong>: the page of the batch to be used by this operation.</li>
 <li><strong>rowsPerBatch</strong>: the number of rows per batch to be used by this operation.</li>
 <li><strong>orderBy</strong>: the order definition of the fields to be used by this operation.</li>
@@ -326,7 +325,7 @@
 <p>Counts the number of rows from the database based on the given query expression.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction to be used by this operation.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
@@ -355,7 +354,7 @@
 <p>Deletes a data in the database based on the given query expression. It returns an instance of integer that holds the number of rows affected by the execution.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when deleting a record. When set to <cite>null</cite> it deletes all the data from the database.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation. When is set to <cite>NULL</cite>, it deletes all the data from the database.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when deleting a data.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
@@ -495,7 +494,7 @@
 </div>
 <div class="section" id="inlineinsert-operation">
 <h2>InlineInsert Operation<a class="headerlink" href="#inlineinsert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Inserts a data in the database targetting certain fields only.</p>
+<p>Inserts a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
@@ -523,38 +522,7 @@
 </div>
 <div class="section" id="inlinemerge-operation">
 <h2>InlineMerge Operation<a class="headerlink" href="#inlinemerge-operation" title="Permalink to this headline">¶</a></h2>
-<p>Merges a data in the database targetting certain fields only.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>qualifiers</strong>: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</li>
-<li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to do inline merge.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span>
-        <span class="p">{</span>
-                <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span><span class="p">,</span>
-                <span class="n">ProductId</span> <span class="p">=</span> <span class="m">35</span><span class="p">,</span>
-                <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
-                <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
-        <span class="p">},</span>
-        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">));</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>The code snippets above will merge the <cite>Order</cite> record into the database by inserting the value of the <cite>ProductId</cite>, <cite>Quantity</cite> and <cite>UpdatedDate</cite> columns if the record with <cite>Id</cite> equals to <cite>10045</cite> is not yet in the database. Otherwise, it will update the existing records.</p>
-<p><strong>Note</strong>: It is necessary to define the qualifier fields, and the qualifier fields must be present on the dynamic object passed at <cite>entity</cite> parameter. Please also note that the <cite>Merge</cite> operation is only using the <cite>Equal</cite> operation when merging the data in the database. Other operations of like (<cite>GreaterThan</cite>, <cite>LessThan</cite>) is not supported. One can create a advance SQL Statement or Stored Procedure for merging process and call the <cite>ExecuteNonQuery</cite> method instead.</p>
-</div>
-<div class="section" id="id1">
-<h2>InlineMerge Operation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>Merges a data in the database targetting certain fields only.</p>
+<p>Merges a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
@@ -585,11 +553,11 @@
 </div>
 <div class="section" id="inlineupdate-operation">
 <h2>InlineUpdate Operation<a class="headerlink" href="#inlineupdate-operation" title="Permalink to this headline">¶</a></h2>
-<p>Updates a data in the database targetting certain fields only.</p>
+<p>Updates a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
@@ -618,7 +586,7 @@
 </div>
 <div class="section" id="insert-operation">
 <h2>Insert Operation<a class="headerlink" href="#insert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Insert a data in the database.</p>
+<p>Inserts a data in the database.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be inserted.</li>
@@ -672,7 +640,7 @@
 <h2>Query Operation<a class="headerlink" href="#query-operation" title="Permalink to this headline">¶</a></h2>
 <p>Query a data from the database based on the given query expression.</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used to filter the data.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>top</strong>: the value used to return certain number of rows from the database.</li>
 <li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
 <li><strong>cacheKey</strong>: the key of the cache to check.</li>
@@ -798,7 +766,7 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be updated.</li>
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when updating a record.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
 <li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>

@@ -234,7 +234,7 @@
 <p>Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows per batch defined by this operation. This operation is useful for paging purposes.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>page</strong>: the page of the batch to be used by this operation.</li>
 <li><strong>rowsPerBatch</strong>: the number of rows per batch to be used by this operation.</li>
 <li><strong>orderBy</strong>: the order definition of the fields to be used by this operation.</li>
@@ -319,7 +319,7 @@
 <p>Counts the number of rows from the database based on the given query expression.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>transaction (optional)</strong>: the transaction to be used by this operation.</li>
 <li><strong>returns</strong>: an integer value for the number of rows counted from the database based on the given query expression.</li>
 </ul>
@@ -343,7 +343,7 @@
 <p>Deletes a data in the database based on the given query expression. It returns an instance of integer that holds the number of rows affected by the execution.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when deleting a record. When set to <cite>null</cite> it deletes all the data from the database.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation. When is set to <cite>NULL</cite>, it deletes all the data from the database.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when deleting a data.</li>
 <li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
 </ul>
@@ -452,7 +452,7 @@
 </div>
 <div class="section" id="inlineinsert-operation">
 <h2>InlineInsert Operation<a class="headerlink" href="#inlineinsert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Inserts a data in the database targetting certain fields only.</p>
+<p>Inserts a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
@@ -477,7 +477,7 @@
 </div>
 <div class="section" id="inlinemerge-operation">
 <h2>InlineMerge Operation<a class="headerlink" href="#inlinemerge-operation" title="Permalink to this headline">¶</a></h2>
-<p>Merges a data in the database targetting certain fields only.</p>
+<p>Merges a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
@@ -505,11 +505,11 @@
 </div>
 <div class="section" id="inlineupdate-operation">
 <h2>InlineUpdate Operation<a class="headerlink" href="#inlineupdate-operation" title="Permalink to this headline">¶</a></h2>
-<p>Updates a data in the database targetting certain fields only.</p>
+<p>Updates a data in the database by targetting certain fields only.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>where/whereOrPrimaryKey</strong>: the query expression to be used  by this operation.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
 <li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
@@ -538,7 +538,7 @@
 </div>
 <div class="section" id="insert-operation">
 <h2>Insert Operation<a class="headerlink" href="#insert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Insert a data in the database.</p>
+<p>Inserts a data in the database.</p>
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be inserted.</li>
@@ -586,7 +586,7 @@
 <h2>Query Operation<a class="headerlink" href="#query-operation" title="Permalink to this headline">¶</a></h2>
 <p>Query a data from the database based on the given query expression.</p>
 <ul class="simple">
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used to filter the data.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>top</strong>: the value used to return certain number of rows from the database.</li>
 <li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
 <li><strong>cacheKey</strong>: the key of the cache to check.</li>
@@ -696,7 +696,7 @@
 <p>Below are the parameters:</p>
 <ul class="simple">
 <li><strong>entity</strong>: the entity object to be updated.</li>
-<li><strong>where/whereOrPrimaryKey</strong>: an expression to used when updating a record.</li>
+<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
 <li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
 <li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
 </ul>
