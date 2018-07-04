@@ -1,5 +1,4 @@
-﻿using RepoDb.Attributes;
-using System;
+﻿using System;
 
 namespace RepoDb.TestProject.Models
 {

@@ -42,7 +42,7 @@ namespace RepoDb
             var target = Get(typeMap.Type);
             if (target != null)
             {
-                throw new DuplicateTypeMapException(target.Type);
+                throw new DuplicateTypeMapException($"A mapping for type '{target.Type.FullName}' is already defined. It is currently mapped to '{target.DbType.GetType().FullName}' database type.");
             }
             _typeMaps.Add(typeMap);
         }

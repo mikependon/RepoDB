@@ -104,39 +104,64 @@ namespace RepoDb
 
         internal static QueryField Parse(string fieldName, object value)
         {
+            // The value must always be present
             if (value == null)
             {
-                throw new ArgumentNullException($"Value must not be null.");
+                throw new ArgumentNullException($"The value must not be null for field '{fieldName}'.");
             }
+
+            // Another dynamic object type, get the 'Operation' property
             var properties = value.GetType().GetTypeInfo().GetProperties();
-            var operationProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
-            var valueProperty = properties.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
+            var operationProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
+
+            // The property 'Operation' must always be present
             if (operationProperty == null)
             {
-                throw new InvalidOperationException($"Operation property must be present.");
+                throw new InvalidOperationException($"Operation property must be present for field '{fieldName}'.");
             }
+
+            // The property operatoin must be of type 'RepoDb.Enumerations.Operation'
             if (operationProperty.PropertyType != typeof(Operation))
             {
-                throw new InvalidOperationException($"Operation property must be of type '{typeof(Operation).FullName}'.");
+                throw new InvalidOperationException($"The 'Operation' property for field '{fieldName}' must be of type '{typeof(Operation).FullName}'.");
             }
+
+            // The 'Value' property must always be present
+            var valueProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
+
+            // Check for the 'Value' property
             if (valueProperty == null)
             {
-                throw new InvalidOperationException($"Value property must be present for field {fieldName.AsField()}.");
+                throw new InvalidOperationException($"The 'Value' property for dynamic type query must be present at field '{fieldName}'.");
             }
+
+            // Get the 'Operation' and the 'Value' value
             var operation = (Operation)operationProperty.GetValue(value);
             value = valueProperty.GetValue(value);
+
+            // Identify the 'Operation' and parse the correct value
             if (operation == Operation.Between || operation == Operation.NotBetween)
             {
+
+                // Special case: (Field.Name = new { Operation = Operation.<Between|NotBetween>, Value = new [] { value1, value2 })
                 ValidateBetweenOperations(fieldName, operation, value);
+
             }
             else if (operation == Operation.In || operation == Operation.NotIn)
             {
+
+                // Special case: (Field.Name = new { Operation = Operation.<In|NotIn>, Value = new [] { value1, value2 })
                 ValidateInOperations(fieldName, operation, value);
+
             }
             else
             {
+
+                // Other Operations
                 ValidateOtherOperations(fieldName, operation, value);
             }
+
+            // Return
             return new QueryField(fieldName, operation, value);
         }
 

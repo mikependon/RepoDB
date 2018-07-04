@@ -157,14 +157,14 @@ namespace RepoDb
                             continue;
                         }
                         if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
-                            StringComparison.InvariantCultureIgnoreCase))
+                            StringComparison.CurrentCultureIgnoreCase))
                         {
                             var fieldValue = ((Parameter)cQueryField.Parameter);
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
                     secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name,
-                        StringComparison.InvariantCultureIgnoreCase));
+                        StringComparison.CurrentCultureIgnoreCase));
                 }
             }
             _isFixed = true;
@@ -187,26 +187,41 @@ namespace RepoDb
         /// <returns></returns>
         public static QueryGroup Parse(object obj)
         {
+            // Cannot further optimize and shortify this method, this one works like a charm for now.
+
+            // Check for value
             if (obj == null)
             {
                 throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
+
+            // Variables
             var queryFields = new List<QueryField>();
             var queryGroups = new List<QueryGroup>();
             var conjunction = Conjunction.And;
-            obj.GetType().GetProperties().ToList().ForEach(property =>
+
+            // Iterate every property
+            var objectProperties = obj.GetType().GetProperties();
+            objectProperties.ToList().ForEach(property =>
             {
                 var fieldName = property.Name;
-                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.InvariantCultureIgnoreCase))
+
+                // Identify the fields
+                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.CurrentCultureIgnoreCase))
                 {
+
+                    // Conjunction
                     conjunction = (Conjunction)property.GetValue(obj);
+
                 }
-                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.InvariantCultureIgnoreCase))
+                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.CurrentCultureIgnoreCase))
                 {
+
+                    // Child QueryGroups
                     var value = property.GetValue(obj);
                     if (value is Array)
                     {
-                        Array.ForEach((object[])value, (item) =>
+                        ((Array)value).AsEnumerable().ToList().ForEach(item =>
                         {
                             queryGroups.Add(Parse(item));
                         });
@@ -215,77 +230,121 @@ namespace RepoDb
                     {
                         queryGroups.Add(Parse(value));
                     }
+
                 }
                 else
                 {
+
+                    // Other pre-defined fields
                     var value = property.GetValue(obj);
                     var type = value?.GetType();
-                    if (type?.IsGenericType == false)
+
+                    if (type?.IsGenericType == false || value == null)
                     {
+
+                        // Most likely, (Field.Name = <value|null>)
                         queryFields.Add(new QueryField(fieldName, value));
+
                     }
                     else
                     {
-                        var operationProperty = type?
-                            .GetProperties()
-                            .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
-                        var valueProperty = type?
-                            .GetProperties()
-                            .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
+                        // Another dynamic object type, get the 'Operation' property
+                        var properties = type?.GetProperties();
+                        var operationProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
+
+                        // The property 'Operation' must always be present
                         if (operationProperty == null)
                         {
-                            throw new InvalidOperationException($"Operation property must be present.");
+                            throw new InvalidOperationException($"The 'Operation' property must be present for field '{property.Name}'.");
                         }
+
+                        // The property operatoin must be of type 'RepoDb.Enumerations.Operation'
                         if (operationProperty.PropertyType != typeof(Operation))
                         {
-                            throw new InvalidOperationException($"Operation property must be of type '{typeof(Operation).FullName}'.");
+                            throw new InvalidOperationException($"The 'Operation' property for field '{property.Name}' must be of type '{typeof(Operation).FullName}'.");
                         }
+
+                        // The 'Value' property must always be present
+                        var valueProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
+
+                        // Check for the 'Value' property
                         if (valueProperty == null)
                         {
-                            throw new InvalidOperationException($"Value property must be present.");
+                            throw new InvalidOperationException($"The 'Value' property for dynamic type query must be present at field '{property.Name}'.");
                         }
+
+                        // Get the 'Operation' and the 'Value' value
                         var operation = (Operation)operationProperty.GetValue(value);
                         value = valueProperty.GetValue(value);
-                        if (value == null)
+
+                        // For other operation, the 'Value' property must be present
+                        if (value == null && (operation != Operation.Equal && operation != Operation.NotEqual))
                         {
-                            throw new InvalidOperationException($"Value property must not be null.");
+                            throw new InvalidOperationException($"The value property '{valueProperty.Name}' must not be null.");
                         }
-                        if (operation == Operation.All || operation == Operation.Any)
+
+                        // Identify the 'Operation' and parse the correct value
+                        if ((operation == Operation.Equal || operation == Operation.NotEqual) && value == null)
                         {
+
+                            // Most likely, new { Field.Name = { Operation = Operation.<Equal|NotEqual>, Value = (object)null } }
+                            // It should be (IS NULL) or (IS NOT NULL) in SQL Statement
+                            queryFields.Add(QueryField.Parse(fieldName, value));
+
+                        }
+                        else if (operation == Operation.All || operation == Operation.Any)
+                        {
+
+                            // Special case: All (AND), Any (OR)
                             if (value.GetType().IsArray)
                             {
-                                var qfs = new List<QueryField>();
+                                var childQueryGroupFields = new List<QueryField>();
                                 ((Array)value).AsEnumerable().ToList().ForEach(underlyingValue =>
                                 {
-                                    qfs.Add(QueryField.Parse(fieldName, underlyingValue));
+                                    childQueryGroupFields.Add(QueryField.Parse(fieldName, underlyingValue));
                                 });
-                                var queryGroup = new QueryGroup(qfs, null, operation == Operation.All ? Conjunction.And : Conjunction.Or);
+                                var queryGroup = new QueryGroup(childQueryGroupFields, null, operation == Operation.All ? Conjunction.And : Conjunction.Or);
                                 queryGroups.Add(queryGroup);
                             }
                             else
                             {
                                 queryFields.Add(QueryField.Parse(fieldName, value));
                             }
+
                         }
                         else
                         {
+
                             if (operation == Operation.Between || operation == Operation.NotBetween)
                             {
+
+                                // Special case: (Field.Name = new { Operation = Operation.<Between|NotBetween>, Value = new [] { value1, value2 })
                                 ValidateBetweenOperations(fieldName, operation, value);
+
                             }
                             else if (operation == Operation.In || operation == Operation.NotIn)
                             {
+
+                                // Special case: (Field.Name = new { Operation = Operation.<In|NotIn>, Value = new [] { value1, value2 })
                                 ValidateInOperations(fieldName, operation, value);
+
                             }
                             else
                             {
+
+                                // Other Operations
                                 ValidateOtherOperations(fieldName, operation, value);
+
                             }
+
+                            // Add the field values
                             queryFields.Add(new QueryField(fieldName, operation, value));
                         }
                     }
                 }
             });
+
+            // Return
             return new QueryGroup(queryFields, queryGroups, conjunction);
         }
 

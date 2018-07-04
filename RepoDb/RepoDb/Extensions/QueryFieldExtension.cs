@@ -116,7 +116,7 @@ namespace RepoDb.Extensions
 
         internal static bool Has(this IEnumerable<QueryField> queryFields, string name)
         {
-            return Has(queryFields, name, StringComparison.InvariantCultureIgnoreCase);
+            return Has(queryFields, name, StringComparison.CurrentCultureIgnoreCase);
         }
 
         // AsObject

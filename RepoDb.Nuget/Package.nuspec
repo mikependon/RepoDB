@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.2.0-beta1</version>
+    <version>1.2.0-beta2</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,7 +10,9 @@
     <description>A dynamic, lightweight and fast repo-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      Beta Release 1
+      Beta Release 2
+      - Stabilizing: Enabled the (Field.Name = (object)null)
+      - Stabilizing: Enabled the Repository.Query if PrimaryKey is not Present
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

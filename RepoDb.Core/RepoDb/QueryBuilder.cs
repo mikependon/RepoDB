@@ -471,7 +471,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> WhereFrom(QueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append($"WHERE {((QueryGroup)queryGroup).FixParameters().GetString()}") : this;
+            return (queryGroup != null) ? Append($"WHERE {queryGroup.FixParameters().GetString()}") : this;
         }
 
         /// <summary>

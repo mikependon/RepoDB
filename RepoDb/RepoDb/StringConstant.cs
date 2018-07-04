@@ -8,7 +8,7 @@
         // Strings
         public static readonly string And = "And";
         public static readonly string As = "As";
-        public static readonly string BetweenLeft = "LeftValue";
+        public static readonly string BetweenLeft = "BetweenLeft";
         public static readonly string BetweenRight = "BetweenRight";
         public static readonly string ColumnName = "ColumnName";
         public static readonly string Conjunction = "Conjunction";

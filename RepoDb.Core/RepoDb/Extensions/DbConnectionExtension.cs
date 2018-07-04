@@ -2143,7 +2143,6 @@ namespace RepoDb.Extensions
             ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : DataEntity
         {
-            GetAndGuardPrimaryKey<TEntity>(Command.Query);
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return Query<TEntity>(connection: connection,
                 where: queryGroup,

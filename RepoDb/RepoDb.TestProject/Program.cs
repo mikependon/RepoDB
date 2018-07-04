@@ -19,9 +19,9 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //InventoryMain();
+            InventoryMain();
             //RepoDbMain();
-            TestAllOperations();
+            //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             //TestParallelism();
             Console.ReadLine();
@@ -29,43 +29,45 @@ namespace RepoDb.TestProject
 
         public static void InventoryMain()
         {
-            var repository = new DbRepository<SqlConnection>(InventoryConnectionString, null, null, new InventoryDbTrace());
-            var customers = repository.Query<CustomerDto>();
-            customers.ToList().ForEach(customer =>
+            using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
-                var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                rows = Convert.ToInt32(repository.Insert(customer));
-                rows = repository.Update(customer);
-                rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+                var customers = repository.Query<CustomerDto>();
+                customers.ToList().ForEach(customer =>
+                {
+                    var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                    rows = Convert.ToInt32(repository.Insert(customer));
+                    rows = repository.Update(customer);
+                    rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
                 // Customer
                 Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
                 // Orders
                 var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
-                orders.ToList().ForEach(order =>
-                {
-                    Console.WriteLine($"   Order: {order.OrderNumber}, " +
-                        $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
+                    orders.ToList().ForEach(order =>
+                    {
+                        Console.WriteLine($"   Order: {order.OrderNumber}, " +
+                            $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
                     // OrderItem
                     var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
-                    if (orderItem != null)
-                    {
+                        if (orderItem != null)
+                        {
                         // Product
                         var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
-                        if (product != null)
-                        {
-                            Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
+                            if (product != null)
+                            {
+                                Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
                             // Supplier
                             var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
-                            if (supplier != null)
-                            {
-                                Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
+                                if (supplier != null)
+                                {
+                                    Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
+                                }
                             }
                         }
-                    }
-                });
+                    });
                 //Console.ReadLine();
             });
+            }
             Console.ReadLine();
         }
 
@@ -368,19 +370,6 @@ namespace RepoDb.TestProject
                 DateUpdated = DateTime.UtcNow,
                 Worth = new Random().Next(30000, 60000)
             });
-
-            for (var i = 0; i < 10; i++)
-            {
-                personId = repository.Insert(new Person()
-                {
-                    Name = $"Name: {Guid.NewGuid().ToString()}",
-                    Address = $"Address: {Guid.NewGuid().ToString()}",
-                    DateInserted = DateTime.UtcNow,
-                    DateOfBirth = DateTime.UtcNow.Date.AddYears(-32),
-                    DateUpdated = DateTime.UtcNow,
-                    Worth = new Random().Next(30000, 60000)
-                });
-            }
 
             // Verify
             Console.WriteLine($"Verify Insert with Identity PrimaryKey: {personId}");

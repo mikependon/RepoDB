@@ -331,11 +331,11 @@
             An exception that is being thrown if the duplicate type mapping is found.
             </summary>
         </member>
-        <member name="M:RepoDb.Exceptions.DuplicateTypeMapException.#ctor(System.Type)">
+        <member name="M:RepoDb.Exceptions.DuplicateTypeMapException.#ctor(System.String)">
             <summary>
             Creates a new instance of <i>RepoDb.Exceptions.DuplicateTypeMapException</i> object.
             </summary>
-            <param name="type">The type being mapped.</param>
+            <param name="message">The exception message.</param>
         </member>
         <member name="T:RepoDb.Exceptions.EntityNotBulkInsertableException">
             <summary>

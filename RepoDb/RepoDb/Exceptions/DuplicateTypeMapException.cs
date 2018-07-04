@@ -10,8 +10,8 @@ namespace RepoDb.Exceptions
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Exceptions.DuplicateTypeMapException</i> object.
         /// </summary>
-        /// <param name="type">The type being mapped.</param>
-        public DuplicateTypeMapException(Type type)
-            : base($"Duplicate Type Map: {type.Name} ({type.Namespace ?? type.FullName})") { }
+        /// <param name="message">The exception message.</param>
+        public DuplicateTypeMapException(string message)
+            : base(message) { }
     }
 }
