@@ -19,11 +19,12 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            InventoryMain();
+            //InventoryMain();
             //RepoDbMain();
             //TestAllOperations();
-            //TestInNotInBetweenNotBetweenAnyAllOperation();
+            TestInNotInBetweenNotBetweenAnyAllOperation();
             //TestParallelism();
+            Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
@@ -39,25 +40,25 @@ namespace RepoDb.TestProject
                     rows = repository.Update(customer);
                     rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
-                // Customer
-                Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
-                // Orders
-                var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
+                    // Customer
+                    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
+                    // Orders
+                    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
                     orders.ToList().ForEach(order =>
                     {
                         Console.WriteLine($"   Order: {order.OrderNumber}, " +
                             $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
-                    // OrderItem
-                    var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
+                        // OrderItem
+                        var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
                         if (orderItem != null)
                         {
-                        // Product
-                        var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
+                            // Product
+                            var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
                             if (product != null)
                             {
                                 Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
-                            // Supplier
-                            var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
+                                // Supplier
+                                var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
                                 if (supplier != null)
                                 {
                                     Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
@@ -65,8 +66,8 @@ namespace RepoDb.TestProject
                             }
                         }
                     });
-                //Console.ReadLine();
-            });
+                    //Console.ReadLine();
+                });
             }
             Console.ReadLine();
         }
@@ -227,9 +228,9 @@ namespace RepoDb.TestProject
                     Value = new object[]
                     {
                         new { Operation = Operation.In, Value = new int[]{ 5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009, 5010 } },
-                        new { Operation = Operation.NotIn, Value = new int[]{ 5002, 5003, 5009 } },
-                        new { Operation = Operation.Between, Value = new object[]{ 5001, 5010 } },
-                        new { Operation = Operation.NotBetween, Value = new int[]{ 5006, 5010 } }
+                        new { Operation = Operation.NotIn, Value = new int[] { 5002, 5003, 5009 } },
+                        new { Operation = Operation.Between, Value = new object[] { 5001, 5010 } },
+                        new { Operation = Operation.NotBetween, Value = new int[] { 5006, 5010 } }
                     }
                 }
             });
@@ -238,7 +239,11 @@ namespace RepoDb.TestProject
             // In
             people = repository.Query(new
             {
-                Id = new { Operation = Operation.In, Value = new[] { 6000, 6001, 6002, 6003, 6004, 6005 } }
+                Id = new
+                {
+                    Operation = Operation.In,
+                    Value = new[] { 6000, 6001, 6002, 6003, 6004, 6005 }
+                }
             });
             // Expect: 6000, 6001, 6002, 6003, 6004, 6005
 

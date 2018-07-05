@@ -5533,9 +5533,8 @@
         </member>
         <member name="M:RepoDb.QueryGroup.GetString">
             <summary>
-            Gets the stringified format of the current instance. A formatted string for field-operation-parameter will be returned conjuncted by
-            the value of the <i>Conjunction</i> property. Example, if the (Field=FirstName and the Operation=Like and the Conjunction=AND) then the
-            following stringified string will be returned: (FirstName NOT LIKE @FirstName AND ....).
+            Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
+            conjuncted by the value of the <i>Conjunction</i> property.
             </summary>
             <returns>A stringified formatted-text of the current instance.</returns>
         </member>

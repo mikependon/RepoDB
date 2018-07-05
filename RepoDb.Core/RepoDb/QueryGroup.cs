@@ -54,10 +54,7 @@ namespace RepoDb
         {
             QueryFields?
                 .ToList()
-                .ForEach(queryField =>
-                {
-                    ((QueryField)queryField).AppendParameterPrefix();
-                });
+                .ForEach(queryField => queryField.AppendParameterPrefix());
         }
 
         /// <summary>
@@ -75,9 +72,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the stringified format of the current instance. A formatted string for field-operation-parameter will be returned conjuncted by
-        /// the value of the <i>Conjunction</i> property. Example, if the (Field=FirstName and the Operation=Like and the Conjunction=AND) then the
-        /// following stringified string will be returned: (FirstName NOT LIKE @FirstName AND ....).
+        /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
+        /// conjuncted by the value of the <i>Conjunction</i> property.
         /// </summary>
         /// <returns>A stringified formatted-text of the current instance.</returns>
         public string GetString()
@@ -158,13 +154,15 @@ namespace RepoDb
                         {
                             continue;
                         }
-                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name, StringComparison.CurrentCultureIgnoreCase))
+                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
+                            StringComparison.CurrentCultureIgnoreCase))
                         {
                             var fieldValue = ((Parameter)cQueryField.Parameter);
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
-                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name, StringComparison.CurrentCultureIgnoreCase));
+                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name,
+                        StringComparison.CurrentCultureIgnoreCase));
                 }
             }
             _isFixed = true;
@@ -209,14 +207,11 @@ namespace RepoDb
                 // Identify the fields
                 if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.CurrentCultureIgnoreCase))
                 {
-
                     // Conjunction
                     conjunction = (Conjunction)property.GetValue(obj);
-
                 }
                 else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.CurrentCultureIgnoreCase))
                 {
-
                     // Child QueryGroups
                     var value = property.GetValue(obj);
                     if (value is Array)
@@ -230,26 +225,22 @@ namespace RepoDb
                     {
                         queryGroups.Add(Parse(value));
                     }
-
                 }
                 else
                 {
-
                     // Other pre-defined fields
                     var value = property.GetValue(obj);
-                    var type = value?.GetType().GetTypeInfo();
+                    var type = value?.GetType();
 
-                    if (type?.IsGenericType == false || value == null)
+                    if (type?.GetTypeInfo().IsGenericType == false || value == null)
                     {
-
                         // Most likely, (Field.Name = <value|null>)
                         queryFields.Add(new QueryField(fieldName, value));
-
                     }
                     else
                     {
                         // Another dynamic object type, get the 'Operation' property
-                        var properties = type?.GetProperties();
+                        var properties = type?.GetTypeInfo().GetProperties();
                         var operationProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
 
                         // The property 'Operation' must always be present
@@ -286,15 +277,12 @@ namespace RepoDb
                         // Identify the 'Operation' and parse the correct value
                         if ((operation == Operation.Equal || operation == Operation.NotEqual) && value == null)
                         {
-
                             // Most likely, new { Field.Name = { Operation = Operation.<Equal|NotEqual>, Value = (object)null } }
                             // It should be (IS NULL) or (IS NOT NULL) in SQL Statement
                             queryFields.Add(QueryField.Parse(fieldName, value));
-
                         }
                         else if (operation == Operation.All || operation == Operation.Any)
                         {
-
                             // Special case: All (AND), Any (OR)
                             if (value.GetType().IsArray)
                             {
@@ -310,31 +298,24 @@ namespace RepoDb
                             {
                                 queryFields.Add(QueryField.Parse(fieldName, value));
                             }
-
                         }
                         else
                         {
 
                             if (operation == Operation.Between || operation == Operation.NotBetween)
                             {
-
                                 // Special case: (Field.Name = new { Operation = Operation.<Between|NotBetween>, Value = new [] { value1, value2 })
                                 ValidateBetweenOperations(fieldName, operation, value);
-
                             }
                             else if (operation == Operation.In || operation == Operation.NotIn)
                             {
-
                                 // Special case: (Field.Name = new { Operation = Operation.<In|NotIn>, Value = new [] { value1, value2 })
                                 ValidateInOperations(fieldName, operation, value);
-
                             }
                             else
                             {
-
                                 // Other Operations
                                 ValidateOtherOperations(fieldName, operation, value);
-
                             }
 
                             // Add the field values
@@ -350,48 +331,94 @@ namespace RepoDb
 
         private static void ValidateBetweenOperations(string fieldName, Operation operation, object value)
         {
-            if (value.GetType().IsArray)
+            var valid = false;
+
+            // Make sure it is an Array
+            if (value?.GetType().IsArray == true)
             {
-                var values = ((Array)value).AsEnumerable().ToList();
-                if (values.Count != 2)
+                var values = ((Array)value)
+                    .AsEnumerable()
+                    .ToList();
+
+                // The items must only be 2. There should be no NULL and no generic types
+                if (values.Count == 2)
                 {
-                    throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). The count should be 2.");
+                    valid = !values.Any(v => v == null || v?.GetType().GetTypeInfo().IsGenericType == true);
                 }
-                else
+
+                // All type must be the same
+                if (valid)
                 {
-                    if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
+                    var type = values.First().GetType();
+                    values.ForEach(v =>
                     {
-                        throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
-                    }
+                        if (valid == false) return;
+                        valid = v?.GetType() == type;
+                    });
                 }
             }
-            else
+
+            // Throw an error if not valid
+            if (valid == false)
             {
-                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). Expecting an array values.");
+                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array of 2 values with identitcal data types.");
             }
         }
 
         private static void ValidateInOperations(string fieldName, Operation operation, object value)
         {
-            if (value.GetType().IsArray)
+            var valid = false;
+
+            // Make sure it is an array
+            if (value?.GetType().IsArray == true)
             {
-                var values = ((Array)value).AsEnumerable().ToList();
-                if (values.Any(v => v == null || (bool)v?.GetType().GetTypeInfo().IsGenericType))
+                var values = ((Array)value)
+                    .AsEnumerable()
+                    .ToList();
+
+                // Make sure there is not NULL and no generic types
+                valid = !values.Any(v => v == null || v?.GetType().GetTypeInfo().IsGenericType == true);
+
+                // All type must be the same
+                if (valid)
                 {
-                    throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
+                    var type = values.First().GetType();
+                    values.ForEach(v =>
+                    {
+                        if (valid == false) return;
+                        valid = v?.GetType() == type;
+                    });
                 }
             }
-            else
+
+            // Throw an error if not valid
+            if (valid == false)
             {
-                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}). Expecting an array values.");
+                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array values with identitcal data types.");
             }
         }
 
         private static void ValidateOtherOperations(string fieldName, Operation operation, object value)
         {
-            if (value.GetType().GetTypeInfo().IsGenericType)
+            var valid = false;
+
+            // Special for Equal and NonEqual
+            if ((operation == Operation.Equal || operation == Operation.NotEqual) && value == null)
             {
-                throw new InvalidOperationException($"Invalid value for field {fieldName.AsField()} (Operation: {operation.ToString()}).");
+                // Most likely new QueryField("Field.Name", null) or new { FieldName = (object)null }.
+                // The SQL must be (@FieldName IS <NOT> NULL)
+                valid = true;
+            }
+            else
+            {
+                // Must not be a generic
+                valid = (value?.GetType().GetTypeInfo().IsGenericType == false);
+            }
+
+            // Throw an error if not valid
+            if (valid == false)
+            {
+                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
         }
     }
