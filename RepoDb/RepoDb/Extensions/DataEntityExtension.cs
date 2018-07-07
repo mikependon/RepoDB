@@ -41,23 +41,23 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        // GetRecursiveData
+        // GetDataEntityChildrenData
 
         /// <summary>
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <param name="type">The type of the target <i>DataEntity</i>.</param>
         /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData(Type type)
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(Type type)
         {
-            return type
+            return type?
                 .GetProperties()
                 .Where(property => property.IsRecursive())
-                .Select(property => new RecursiveData()
+                .Select(property => new DataEntityChildListData()
                 {
-                    ChildDataType = property.PropertyType.GetGenericArguments().First(),
-                    ParentDataType = type,
-                    Property = property
+                    ChildListType = property.PropertyType.GetGenericArguments().First(),
+                    ParentDataEntityType = type,
+                    ChildListProperty = property
                 });
         }
 
@@ -66,9 +66,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the target <i>DataEntity</i>.</typeparam>
         /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData<T>() where T : DataEntity
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData<T>() where T : DataEntity
         {
-            return GetRecursiveData(typeof(T));
+            return GetDataEntityChildrenData(typeof(T));
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dataEntity">The target <i>DataEntity</i> object.</param>
         /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData(this DataEntity dataEntity)
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(this DataEntity dataEntity)
         {
-            return GetRecursiveData(dataEntity.GetType());
+            return GetDataEntityChildrenData(dataEntity.GetType());
         }
 
         // GetPropertiesFor

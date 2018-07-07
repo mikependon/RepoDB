@@ -2306,24 +2306,25 @@ namespace RepoDb
                 cache?.Add(cacheKey, result);
             }
 
-            #region Recursive
-
             // Check the recursiveness
             if (recursive == true && result?.Any() == true)
             {
-                var what = DataEntityExtension.GetRecursiveData<TEntity>();
-                QueryRecursive<TEntity>(connection: connection,
-                    what: what,
-                    result: result,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: cache,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    recursive: recursive);
-            }
+                var what = DataEntityExtension.GetDataEntityChildrenData<TEntity>();
 
-            #endregion
+                // Recurse only if we have children
+                if (what != null && what.Any() == true)
+                {
+                    QueryChildData<TEntity>(connection: connection,
+                        what: what,
+                        result: result,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        cache: cache,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        recursive: recursive);
+                }
+            }
 
             // Result
             return result;
@@ -2334,7 +2335,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="what">The list of the recursive data to be queried.</param>
+        /// <param name="what">The list of the children data list to be queried.</param>
         /// <param name="result">The result from previous query of the parent <i>DataEntity</i> objects.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2345,8 +2346,7 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
-        /// <param name="recursive"></param>
-        private static void QueryRecursive<TEntity>(this IDbConnection connection, IEnumerable<RecursiveData> what, IEnumerable<TEntity> result,
+        private static void QueryChildData<TEntity>(this IDbConnection connection, IEnumerable<DataEntityChildListData> what, IEnumerable<TEntity> result,
             int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool recursive = false)
             where TEntity : DataEntity
@@ -2355,28 +2355,47 @@ namespace RepoDb
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
             var foreign = $"{DataEntityExtension.GetMappedName<TEntity>(command).AsUnquoted()}{primary.GetMappedName()}";
+            var childItemDataList = new List<DataEntityChildItemData>();
 
-            // Iterate the list of recursive data
-            what?
-                .ToList()
-                .ForEach(recursiveData =>
+            // Add all the keys
+            result?.ToList().ForEach(entity =>
+            {
+                childItemDataList.Add(new DataEntityChildItemData(primary.GetValue(entity), entity));
+            });
+
+            // Split the list
+            var splittedList = new List<IEnumerable<DataEntityChildItemData>>();
+            var itemsPerList = 200;
+            for (var index = 0; index < childItemDataList.Count; index += itemsPerList)
+            {
+                splittedList.Add(childItemDataList.Skip(index).Take(itemsPerList));
+            }
+
+            // Iterate the splitted list
+            splittedList.ForEach(list =>
+            {
+                // Iterate the list of recursive data
+                what?.ToList().ForEach(recursiveData =>
                 {
                     // Check if the property can be written
-                    if (recursiveData.Property.CanWrite == false)
+                    if (recursiveData.ChildListProperty.CanWrite == false)
                     {
-                        throw new InvalidOperationException($"Property '{recursiveData.Property.Name}' from type '{recursiveData.ParentDataType.FullName}' is read-only.");
+                        throw new InvalidOperationException($"Property '{recursiveData.ChildListProperty.Name}' from type '{recursiveData.ParentDataEntityType.FullName}' is read-only.");
                     }
 
-                    // Get the foreign property attribute
-                    var dictionary = new Dictionary<object, DataEntity>();
-
-                    // Get all the keys
-                    result.ToList().ForEach(entity => dictionary.Add(primary.GetValue(entity), entity));
-
                     // Set the query expresssion
-                    var foreignAttribute = recursiveData.Property.GetCustomAttribute<Attributes.ForeignAttribute>();
+                    var foreignAttribute = recursiveData.ChildListProperty.GetCustomAttribute<Attributes.ForeignAttribute>();
                     foreign = foreignAttribute?.Name ?? foreign;
-                    var context = new QueryGroup(new QueryField(foreign, Operation.In, dictionary.Keys.ToArray()).AsEnumerable());
+
+                    // Check for the foreign property
+                    var foreignProperty = recursiveData.ChildListType.GetProperty(foreign.AsUnquoted());
+                    if (foreignProperty == null)
+                    {
+                        throw new MissingFieldException($"Foreign property '{foreign}' from type '{recursiveData.ChildListType.FullName}' is not found.");
+                    }
+
+                    // Set the context with the given keys
+                    var context = new QueryGroup(new QueryField(foreign, Operation.In, list.Select(item => item.Key).ToArray()).AsEnumerable());
 
                     // Parameters
                     var parameters = new object[]
@@ -2394,38 +2413,44 @@ namespace RepoDb
                         recursive // recursive
                     };
 
-                    // Get the method
-                    var method = typeof(DbConnectionExtension).GetMethod("QueryData", BindingFlags.Static | BindingFlags.NonPublic);
-                    method = method.MakeGenericMethod(recursiveData.ChildDataType);
-
-                    // Query the data
+                    // Get the method and query the data
+                    var bindings = (BindingFlags.Static | BindingFlags.NonPublic);
+                    var method = typeof(DbConnectionExtension).GetMethod("QueryData", bindings).MakeGenericMethod(recursiveData.ChildListType);
                     var recursiveResult = Enumerable.OfType<DataEntity>((IEnumerable)method.Invoke(connection, parameters)).ToList();
-                    var foreignProperty = recursiveData.ChildDataType.GetProperty(foreign.AsUnquoted());
 
-                    // Set back the result
-                    if (recursiveResult.Any() == true)
+                    // Break the current iteration if there is no result
+                    if (recursiveResult.Any() == false)
                     {
-                        // Dynamic create a type
-                        var enumerableType = typeof(List<>).MakeGenericType(recursiveData.ChildDataType);
-                        var addMethod = enumerableType.GetMethod("Add");
+                        return;
+                    }
 
-                        // Iterate the current result
-                        foreach (var kvp in dictionary)
+                    // Iterate the current result
+                    foreach (var item in list)
+                    {
+                        // Create the list item if not yet present
+                        if (item.List == null)
                         {
-                            // Extreme reflection, need to optimize soon
-                            var entityList = Activator.CreateInstance(enumerableType);
-                            var childEntities = recursiveResult
-                                .Where(entity => kvp.Key.Equals(foreignProperty.GetValue(entity)))
-                                .ToList();
-
-                            // Iterate each child entity
-                            childEntities.ForEach(childEntity => addMethod.Invoke(entityList, new[] { childEntity }));
-
-                            // Set back the value
-                            recursiveData.Property.SetValue(kvp.Value, entityList);
+                            var enumerableType = typeof(List<>).MakeGenericType(recursiveData.ChildListType);
+                            item.List = Activator.CreateInstance(enumerableType);
+                            item.AddMethod = enumerableType.GetMethod("Add");
                         }
+
+                        // Extreme reflection, need to optimize soon
+                        var childEntities = recursiveResult
+                            .Where(entity => item.Key.Equals(Convert.ChangeType(foreignProperty.GetValue(entity), primary.PropertyType)))
+                            .ToList();
+
+                        // Iterate each child entity
+                        childEntities?.ForEach(childEntity =>
+                        {
+                            item.AddMethod.Invoke(item.List, new[] { childEntity });
+                        });
+
+                        // Set back the value
+                        recursiveData.ChildListProperty.SetValue(item.DataEntity, item.List);
                     }
                 });
+            });
         }
 
         // QueryAsync

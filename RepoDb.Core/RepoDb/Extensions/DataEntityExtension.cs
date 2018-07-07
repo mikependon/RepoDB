@@ -41,24 +41,24 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        // GetRecursiveData
+        // GetDataEntityChildrenData
 
         /// <summary>
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <param name="type">The type of the target <i>DataEntity</i>.</param>
         /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData(Type type)
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(Type type)
         {
-            return type
+            return type?
                 .GetTypeInfo()
                 .GetProperties()
                 .Where(property => property.IsRecursive())
-                .Select(property => new RecursiveData()
+                .Select(property => new DataEntityChildListData()
                 {
-                    ChildDataType = property.PropertyType.GetTypeInfo().GetGenericArguments().First(),
-                    ParentDataType = type,
-                    Property = property
+                    ChildListType = property.PropertyType.GetTypeInfo().GetGenericArguments().First(),
+                    ParentDataEntityType = type,
+                    ChildListProperty = property
                 });
         }
 
@@ -66,20 +66,20 @@ namespace RepoDb.Extensions
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <typeparam name="T">The type of the target <i>DataEntity</i>.</typeparam>
-        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData<T>() where T : DataEntity
+        /// <returns>An enumerable list of <i>DataEntityChildListData</i> object.</returns>
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData<T>() where T : DataEntity
         {
-            return GetRecursiveData(typeof(T));
+            return GetDataEntityChildrenData(typeof(T));
         }
 
         /// <summary>
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <param name="dataEntity">The target <i>DataEntity</i> object.</param>
-        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
-        internal static IEnumerable<RecursiveData> GetRecursiveData(this DataEntity dataEntity)
+        /// <returns>An enumerable list of <i>DataEntityChildListData</i> object.</returns>
+        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(this DataEntity dataEntity)
         {
-            return GetRecursiveData(dataEntity.GetType());
+            return GetDataEntityChildrenData(dataEntity.GetType());
         }
 
         // GetPropertiesFor

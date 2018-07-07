@@ -4,7 +4,7 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.2.0-beta3</Version>
+    <Version>1.2.0-beta4</Version>
     <Authors>Michael Pendon</Authors>
     <Company />
     <Product />
@@ -19,8 +19,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.2.0.3</AssemblyVersion>
-    <FileVersion>1.2.0.3</FileVersion>
+    <AssemblyVersion>1.2.0.4</AssemblyVersion>
+    <FileVersion>1.2.0.4</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

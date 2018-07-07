@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Constant.cs" />
+    <Compile Include="DataEntityChildItemData.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
     <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="DataEntityMapper.cs" />
-    <Compile Include="RecursiveData.cs" />
+    <Compile Include="DataEntityChildListData.cs" />
     <Compile Include="SqlDbHelper.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />

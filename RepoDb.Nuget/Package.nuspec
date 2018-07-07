@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.2.0-beta3</version>
+    <version>1.2.0-beta4</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,9 +10,8 @@
     <description>A dynamic, lightweight and fast repo-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      Beta Release 3
-      - Stabilizing: Added additional validator for query expressions.
-      - Stabilizing: Enabling the NULL values for Field when composing a query expression.
+      Beta Release 4
+      - Stabilization: Enabled the Recursive Query feature.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
