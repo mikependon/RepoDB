@@ -21,8 +21,8 @@ namespace RepoDb.TestProject
         {
             //InventoryMain();
             //RepoDbMain();
-            //TestAllOperations();
-            TestInNotInBetweenNotBetweenAnyAllOperation();
+            TestAllOperations();
+            //TestInNotInBetweenNotBetweenAnyAllOperation();
             //TestParallelism();
             Console.WriteLine("Done!");
             Console.ReadLine();

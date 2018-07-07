@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Reflection.Delegates;
 using System;
@@ -40,18 +41,29 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Newobj, entityType.GetTypeInfo().GetConstructor(Type.EmptyTypes));
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
+            // Matching the fields
+            var fields = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+            var matchedCount = 0;
+
             // Iterate the properties
             DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query)
                 .Where(property => property.CanWrite)
                 .ToList()
                 .ForEach(property =>
                 {
-                    var ordinal = reader.GetOrdinal(property.GetMappedName());
+                    var ordinal = fields.IndexOf(property.GetMappedName());
                     if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
+                        matchedCount++;
                     }
                 });
+
+            // Throw an error if there are no matching atleast one
+            if (matchedCount == 0)
+            {
+                throw new NoMatchedFieldsException($"There is no matching fields between the result set of the data reader and the type '{typeof(TEntity).FullName}'.");
+            }
 
             // Return the TEntity instance value
             ilGenerator.Emit(OpCodes.Ldloc, 0);
