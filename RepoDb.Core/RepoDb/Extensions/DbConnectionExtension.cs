@@ -11,7 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace RepoDb.Extensions
+namespace RepoDb
 {
     /// <summary>
     /// Contains the extension methods for <i>System.Data.IDbConnection</i> object.
