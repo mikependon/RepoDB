@@ -32,16 +32,19 @@ namespace RepoDb.TestProject
         {
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
-                var customers = repository.Query<CustomerDto>(top: 2, recursive: true);
-                var c = customers;
+                var current = DateTime.UtcNow;
+                var customers = repository.Query<CustomerDto>(recursive: true);
+                var lapsedInSeconds = (DateTime.UtcNow - current).TotalSeconds;
+                Console.WriteLine($"Recursive query lapsed for total of {lapsedInSeconds} second(s).");
+                //var customers = repository.Query<CustomerDto>();
                 //customers.ToList().ForEach(customer =>
                 //{
-                //    var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                //    rows = Convert.ToInt32(repository.Insert(customer));
-                //    rows = repository.Update(customer);
-                //    rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+                //    //var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                //    //rows = Convert.ToInt32(repository.Insert(customer));
+                //    //rows = repository.Update(customer);
+                //    //rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
-                //    // Customer
+                //    //// Customer
                 //    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
                 //    // Orders
                 //    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });

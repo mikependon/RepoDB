@@ -13,7 +13,7 @@ namespace RepoDb.TestProject.Models
         public string City { get; set; }
         public string Country { get; set; }
         public string Phone { get; set; }
-        [Foreign("CustomerId")]
+        //[Foreign("CustomerId")]
         public IEnumerable<OrderDto> Orders { get; set; }
     }
 }
