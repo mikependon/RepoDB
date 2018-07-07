@@ -180,7 +180,7 @@ namespace RepoDb
         /// FirstName = new { Operation = Operation.Like, Value = "An%" },
         /// UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
         /// </param>
-        /// <returns></returns>
+        /// <returns>An instance of the <i>RepoDb.QueryGroup</i> object that contains the parsed query expression.</returns>
         public static QueryGroup Parse(object obj)
         {
             // Cannot further optimize and shortify this method, this one works like a charm for now.

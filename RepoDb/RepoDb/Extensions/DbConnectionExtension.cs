@@ -148,7 +148,7 @@ namespace RepoDb
             var property = DataEntityExtension.GetPrimaryProperty<TEntity>();
             if (property == null)
             {
-                throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}' for database object '{DataEntityExtension.GetMappedName<TEntity>(command)}'.");
+                throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}'.");
             }
             return property;
         }
@@ -2070,15 +2070,21 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
+            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool recursive = false) where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: (QueryGroup)null,
                 top: top,
                 orderBy: orderBy,
+                recursive: recursive,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2104,10 +2110,15 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+             IStatementBuilder statementBuilder = null, bool recursive = false) where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
@@ -2118,7 +2129,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                recursive: recursive);
         }
 
         /// <summary>
@@ -2138,10 +2150,15 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool recursive = false) where TEntity : DataEntity
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return Query<TEntity>(connection: connection,
@@ -2153,7 +2170,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                recursive: recursive);
         }
 
         /// <summary>
@@ -2173,9 +2191,56 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
+            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool recursive = false)
+            where TEntity : DataEntity
+        {
+            return QueryData<TEntity>(connection: connection,
+                where: where,
+                top: top,
+                orderBy: orderBy,
+                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                recursive: recursive);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to <i>NULL</i> would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
+        /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
+        private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
+            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool recursive = false)
             where TEntity : DataEntity
         {
             // Get Cache
@@ -2240,6 +2305,71 @@ namespace RepoDb
                 cache?.Add(cacheKey, result);
             }
 
+            #region Recursive
+
+            // Check the recursiveness
+            if (recursive == true && result?.Any() == true)
+            {
+                // Variables for recursive
+                var primary = GetAndGuardPrimaryKey<TEntity>(command);
+                var foreign = $"{DataEntityExtension.GetMappedName<TEntity>(command).AsUnquoted()}{primary.GetMappedName()}";
+                var recursiveDatas = DataEntityExtension.GetRecursiveData<TEntity>();
+
+                // Iterate the list of recursive data
+                recursiveDatas?
+                    .ToList()
+                    .ForEach(recursiveData =>
+                    {
+                        // Check if the property can be written
+                        if (recursiveData.Property.CanWrite == false)
+                        {
+                            throw new InvalidOperationException($"Property '{recursiveData.Property.Name}' from type '{recursiveData.ParentDataType.FullName}' is read-only.");
+                        }
+
+                        // Get the foreign property attribute
+                        var foreignProperty = recursiveData.Property.GetCustomAttribute<Attributes.ForeignAttribute>();
+                        foreign = foreignProperty?.Name ?? foreign;
+
+                        // Iterate the result
+                        result
+                            .ToList()
+                            .ForEach(entity =>
+                            {
+                                // Primary key value and query context
+                                var primaryKey = primary.GetValue(entity);
+                                var context = new QueryGroup(new QueryField(foreign, primaryKey).AsEnumerable());
+
+                                // Parameters
+                                var parameters = new object[]
+                                {
+                                    connection, // connection
+                                    context, // where
+                                    null, // top
+                                    null, // orderBy
+                                    null, // cacheKey
+                                    commandTimeout, // commandTimeout
+                                    transaction, // transaction
+                                    cache, // cache
+                                    trace, // trace
+                                    statementBuilder, // statementBuilder
+                                    recursive // recursive
+                                };
+
+                                // Get the method
+                                var method = typeof(DbConnectionExtension).GetMethod("QueryData", BindingFlags.Static | BindingFlags.NonPublic);
+                                method = method.MakeGenericMethod(recursiveData.ChildDataType);
+
+                                // Query the data
+                                var recursiveResult = method.Invoke(connection, parameters);
+
+                                // Set back the result
+                                recursiveData.Property.SetValue(entity, recursiveResult);
+                            });
+                    });
+            }
+
+            #endregion
+
             // Result
             return result;
         }
@@ -2262,10 +2392,15 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
+            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+             IStatementBuilder statementBuilder = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2276,7 +2411,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: cache,
                     trace: trace,
-                    statementBuilder: statementBuilder));
+                    statementBuilder: statementBuilder,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -2296,9 +2432,14 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool recursive = false)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -2311,7 +2452,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: cache,
                     trace: trace,
-                    statementBuilder: statementBuilder));
+                    statementBuilder: statementBuilder,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -2331,10 +2473,15 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : DataEntity
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
+            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2346,7 +2493,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: cache,
                     trace: trace,
-                    statementBuilder: statementBuilder));
+                    statementBuilder: statementBuilder,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -2366,9 +2514,14 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
+            IEnumerable<OrderField> orderBy = null, int? commandTimeout = null, IDbTransaction transaction = null, string cacheKey = null,
+            ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool recursive = false)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -2381,7 +2534,8 @@ namespace RepoDb
                     transaction: transaction,
                     cache: cache,
                     trace: trace,
-                    statementBuilder: statementBuilder));
+                    statementBuilder: statementBuilder,
+                    recursive: recursive));
         }
 
         // Truncate

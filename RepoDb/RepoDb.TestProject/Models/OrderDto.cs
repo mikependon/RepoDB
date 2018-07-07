@@ -1,6 +1,7 @@
 ﻿using RepoDb;
 using System;
 using RepoDb.Attributes;
+using System.Collections.Generic;
 
 namespace RepoDb.TestProject.Models
 {
@@ -12,5 +13,7 @@ namespace RepoDb.TestProject.Models
         public string OrderNumber { get; set; }
         public int? CustomerId { get; set; }
         public decimal? TotalAmount { get; set; }
+        [Foreign("[OrderId]")]
+        public IEnumerable<OrderItemDto> OrderItems { get; set; }
     }
 }

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
-using System.Linq;
 using RepoDb.Enumerations;
 
 namespace RepoDb
@@ -17,7 +15,7 @@ namespace RepoDb
     /// operations.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public class DbRepository<TDbConnection>: IDisposable where TDbConnection : DbConnection
+    public class DbRepository<TDbConnection> : IDisposable where TDbConnection : DbConnection
     {
         #region Fields
 
@@ -242,7 +240,7 @@ namespace RepoDb
         /// </summary>
         public void Dispose()
         {
-            if (ConnectionPersistency== ConnectionPersistency.Instance)
+            if (ConnectionPersistency == ConnectionPersistency.Instance)
             {
                 _instanceDbConnection?.Dispose();
             }
@@ -1432,9 +1430,13 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public IEnumerable<TEntity> Query<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+            IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1447,7 +1449,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: Cache,
                 trace: Trace,
-                statementBuilder: StatementBuilder);
+                statementBuilder: StatementBuilder,
+                recursive: recursive);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1471,9 +1474,13 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1487,7 +1494,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: Cache,
                 trace: Trace,
-                statementBuilder: StatementBuilder);
+                statementBuilder: StatementBuilder,
+                recursive: recursive);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1511,9 +1519,13 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public IEnumerable<TEntity> Query<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1527,7 +1539,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: Cache,
                 trace: Trace,
-                statementBuilder: StatementBuilder);
+                statementBuilder: StatementBuilder,
+                recursive: recursive);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1551,9 +1564,13 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1567,7 +1584,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: Cache,
                 trace: Trace,
-                statementBuilder: StatementBuilder);
+                statementBuilder: StatementBuilder,
+                recursive: recursive);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1592,15 +1610,20 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
-                    transaction: transaction));
+                    transaction: transaction,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -1615,16 +1638,21 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
-                    transaction: transaction));
+                    transaction: transaction,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -1639,16 +1667,21 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
-                    transaction: transaction));
+                    transaction: transaction,
+                    recursive: recursive));
         }
 
         /// <summary>
@@ -1663,16 +1696,21 @@ namespace RepoDb
         /// to <i>NULL</i> would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// be included in the result of the query. The default value is <i>False</i>.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, IDbTransaction transaction = null)
-            where TEntity : DataEntity
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
                     top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
-                    transaction: transaction));
+                    transaction: transaction,
+                    recursive: recursive));
         }
 
         // Truncate

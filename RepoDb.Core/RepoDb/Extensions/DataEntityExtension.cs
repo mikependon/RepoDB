@@ -41,13 +41,54 @@ namespace RepoDb.Extensions
             return value;
         }
 
+        // GetRecursiveData
+
+        /// <summary>
+        /// Gets the recursive data of the target <i>DataEntity</i> object.
+        /// </summary>
+        /// <param name="type">The type of the target <i>DataEntity</i>.</param>
+        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
+        internal static IEnumerable<RecursiveData> GetRecursiveData(Type type)
+        {
+            return type
+                .GetTypeInfo()
+                .GetProperties()
+                .Where(property => property.IsRecursive())
+                .Select(property => new RecursiveData()
+                {
+                    ChildDataType = property.PropertyType.GetTypeInfo().GetGenericArguments().First(),
+                    ParentDataType = type,
+                    Property = property
+                });
+        }
+
+        /// <summary>
+        /// Gets the recursive data of the target <i>DataEntity</i> object.
+        /// </summary>
+        /// <typeparam name="T">The type of the target <i>DataEntity</i>.</typeparam>
+        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
+        internal static IEnumerable<RecursiveData> GetRecursiveData<T>() where T : DataEntity
+        {
+            return GetRecursiveData(typeof(T));
+        }
+
+        /// <summary>
+        /// Gets the recursive data of the target <i>DataEntity</i> object.
+        /// </summary>
+        /// <param name="dataEntity">The target <i>DataEntity</i> object.</param>
+        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
+        internal static IEnumerable<RecursiveData> GetRecursiveData(this DataEntity dataEntity)
+        {
+            return GetRecursiveData(dataEntity.GetType());
+        }
+
         // GetPropertiesFor
         internal static IEnumerable<PropertyInfo> GetPropertiesFor(Type type, Command command)
         {
             return type
                 .GetTypeInfo()
                 .GetProperties()
-                .Where(property => !property.IsIgnored(command));
+                .Where(property => !property.IsIgnored(command) && !property.IsRecursive());
         }
 
         /// <summary>

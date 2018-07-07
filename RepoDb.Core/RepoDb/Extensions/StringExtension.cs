@@ -66,7 +66,7 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            value = value.Replace(" ", "_");
+            value = value.AsUnquoted().Replace(" ", "_");
             return value;
         }
 

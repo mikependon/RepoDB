@@ -19,9 +19,9 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //InventoryMain();
+            InventoryMain();
             //RepoDbMain();
-            TestAllOperations();
+            //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             //TestParallelism();
             Console.WriteLine("Done!");
@@ -32,42 +32,43 @@ namespace RepoDb.TestProject
         {
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
-                var customers = repository.Query<CustomerDto>();
-                customers.ToList().ForEach(customer =>
-                {
-                    var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                    rows = Convert.ToInt32(repository.Insert(customer));
-                    rows = repository.Update(customer);
-                    rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
+                var customers = repository.Query<CustomerDto>(top: 2, recursive: true);
+                var c = customers;
+                //customers.ToList().ForEach(customer =>
+                //{
+                //    var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
+                //    rows = Convert.ToInt32(repository.Insert(customer));
+                //    rows = repository.Update(customer);
+                //    rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
 
-                    // Customer
-                    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
-                    // Orders
-                    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
-                    orders.ToList().ForEach(order =>
-                    {
-                        Console.WriteLine($"   Order: {order.OrderNumber}, " +
-                            $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
-                        // OrderItem
-                        var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
-                        if (orderItem != null)
-                        {
-                            // Product
-                            var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
-                            if (product != null)
-                            {
-                                Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
-                                // Supplier
-                                var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
-                                if (supplier != null)
-                                {
-                                    Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
-                                }
-                            }
-                        }
-                    });
-                    //Console.ReadLine();
-                });
+                //    // Customer
+                //    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
+                //    // Orders
+                //    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
+                //    orders.ToList().ForEach(order =>
+                //    {
+                //        Console.WriteLine($"   Order: {order.OrderNumber}, " +
+                //            $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
+                //        // OrderItem
+                //        var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
+                //        if (orderItem != null)
+                //        {
+                //            // Product
+                //            var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
+                //            if (product != null)
+                //            {
+                //                Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
+                //                // Supplier
+                //                var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
+                //                if (supplier != null)
+                //                {
+                //                    Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
+                //                }
+                //            }
+                //        }
+                //    });
+                //    //Console.ReadLine();
+                //});
             }
             Console.ReadLine();
         }
