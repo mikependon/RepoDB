@@ -79,15 +79,15 @@ Below are the properties of `CancellableTraceLog` object.
 
 In the screenshot below, you can see a highlighted query expression.
 
-.. image:: /images/trace_code.PNG
+.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_code.PNG
 
 If the trace is enabled, it would create a statement in the background. This statement can be modified during debugging.
 
-.. image:: /images/trace_watch_statement.PNG
+.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_watch_statement.PNG
 
 And also, the parameters can be modified as well.
 
-.. image:: /images/trace_watch_parameter.PNG
+.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_watch_parameter.PNG
 
 Creating a Custom Trace Object
 ------------------------------
