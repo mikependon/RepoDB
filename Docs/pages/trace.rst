@@ -78,16 +78,16 @@ Below are the properties of `CancellableTraceLog` object.
 - **IsThrowException**: a property used to identify whether an exception is thrown after cancelation. Exception being thrown is of type `RepoDb.Exceptions.CancelledExecutionException`.
 
 In the screenshot below, you can see a highlighted query expression.
-
-.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_code.PNG
+	
+.. image:: ../images/trace_code.PNG
 
 If the trace is enabled, it would create a statement in the background. This statement can be modified during debugging.
-
-.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_watch_statement.PNG
+	
+.. image:: ../images/trace_watch_statement.PNG
 
 And also, the parameters can be modified as well.
-
-.. image:: https://github.com/mikependon/RepoDb/blob/master/Docs/images/trace_watch_parameter.PNG
+	
+.. image:: ../images/trace_watch_parameter.PNG
 
 Creating a Custom Trace Object
 ------------------------------
