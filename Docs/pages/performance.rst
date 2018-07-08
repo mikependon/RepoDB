@@ -62,7 +62,7 @@ For inserting 500 rows in 500 interation.
 	RepoDb.Insert: 4.857 secs for 500 rows.
 	RepoDb.BulkInsert: 0.011 secs for 500 rows.
 	
-.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_insert_500_rows.png
+.. image:: ../images/perf_benchmark_insert_500_rows.PNG
 
 For inserting 1000 rows in 1000 interation.
 
@@ -72,7 +72,7 @@ For inserting 1000 rows in 1000 interation.
 	RepoDb.Insert: 10.706 secs for 1000 rows.
 	RepoDb.BulkInsert: 0.012 secs for 1000 rows.
 	
-.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_insert_1k_rows.png
+.. image:: ../images/perf_benchmark_insert_1k_rows.PNG
 
 For querying 100K rows.
 
@@ -82,7 +82,7 @@ For querying 100K rows.
 	RepoDb.DbRepository.Query<Employee>: 0.596 secs for 100000 rows.
 	Dapper.Query (Dynamic): 0.636 secs for 100000 rows.
 	
-.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_100k_rows.png
+.. image:: ../images/perf_benchmark_query_100k_rows.PNG
 
 For querying 500K rows.
 
@@ -92,7 +92,7 @@ For querying 500K rows.
 	RepoDb.DbRepository.Query<Employee>: 3.055 secs for 500000 rows.
 	Dapper.Query (Dynamic): 3.276 secs for 500000 rows.
 	
-.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_500k_rows.png
+.. image:: ../images/perf_benchmark_query_500k_rows.PNG
 
 For querying 1M rows.
 
@@ -102,7 +102,7 @@ For querying 1M rows.
 	RepoDb.DbRepository.Query<Employee>: 6.048 secs for 1000000 rows.
 	Dapper.Query (Dynamic): 5.991 secs for 1000000 rows.
 	
-.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_1m_rows.png
+.. image:: ../images/perf_benchmark_query_1m_rows.PNG
 
 Our performance benchmark tool can be downloaded at https://github.com/mikependon/RepoDb/tree/master/Docs.
 
