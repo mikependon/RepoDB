@@ -199,7 +199,7 @@
 <li><strong>Key</strong>: the key of the cache. It returns a <cite>System.String</cite> type.</li>
 <li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
 <li><strong>CreatedDate</strong>: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a <cite>System.DateTime</cite> object.</li>
-<li><strong>Expiration</strong>: the expiration date of this cache item.. It returns a <cite>System.DateTime</cite> object.</li>
+<li><strong>Expiration</strong>: the expiration date of this cache item. It returns a <cite>System.DateTime</cite> object.</li>
 </ul>
 <p>Below are the methods of <cite>CacheItem</cite> object.</p>
 <ul class="simple">
@@ -222,7 +222,6 @@ END IF
 RETURN $result
 </pre></div>
 </div>
-<p>Below is the way on how to query and cache the <cite>Stock</cite> data from the database with caching enabled.</p>
 <div class="section" id="creating-a-cache-entry">
 <h2>Creating a Cache Entry<a class="headerlink" href="#creating-a-cache-entry" title="Permalink to this headline">¶</a></h2>
 <p>The snippets below declared a variable named <cite>cacheKey</cite>. The value of this variable acts as the key value of the items to be cached by the repository.</p>

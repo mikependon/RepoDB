@@ -6,7 +6,7 @@ A dynamic, lightweight and fast repo-based ORM .NET Library.
 Goal
 ----
 
-We aim to limit the implementation of SQL Statements in the .NET application.
+To be the fastest and easy-to-use lightweight ORM.
 
 Vision
 ------

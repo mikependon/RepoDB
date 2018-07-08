@@ -11,7 +11,7 @@ Click [here](https://repodb.readthedocs.io/en/latest/index.html) for the complet
 
 ### Goal
 
-We aim to limit the implementation of SQL Statements in the .NET application.
+To be the fastest and easy-to-use lightweight ORM.
 
 ### Vision
 

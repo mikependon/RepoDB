@@ -256,7 +256,7 @@
 <p>In all the repository operation calls above, only single connection is being used.</p>
 <p>The first database connection is not created immediately in the constructor. It is being created when the first repository operation method was called. In the code above, the database connection was only created at the time of querying the list of the <cite>Customer</cite>.</p>
 <p>The succeeding operation calls only reused the connection object created on the first call.</p>
-<p><strong>Note</strong>: The <cite>Repository.Dispose()</cite> method must be after using the repository to avoid an orphaned open database connection.</p>
+<p><strong>Note</strong>: The <cite>Repository.Dispose()</cite> method must be called after using the repository to avoid an orphaned open database connection.</p>
 </div>
 </div>
 

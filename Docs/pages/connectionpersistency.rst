@@ -108,4 +108,4 @@ The first database connection is not created immediately in the constructor. It 
 
 The succeeding operation calls only reused the connection object created on the first call.
 
-**Note**: The `Repository.Dispose()` method must be after using the repository to avoid an orphaned open database connection.
+**Note**: The `Repository.Dispose()` method must be called after using the repository to avoid an orphaned open database connection.

@@ -29,7 +29,7 @@ Below are the properties of `CacheItem` object.
 - **Key**: the key of the cache. It returns a `System.String` type.
 - **Value**: the cached object of the item. It returns a `System.Object` type. It can be casted back to a defined object type.
 - **CreatedDate**: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a `System.DateTime` object.
-- **Expiration**: the expiration date of this cache item.. It returns a `System.DateTime` object.
+- **Expiration**: the expiration date of this cache item. It returns a `System.DateTime` object.
 
 Below are the methods of `CacheItem` object.
 
@@ -55,8 +55,6 @@ The repository caching operation is of the `pseudo` below.
 			Value = $result
 	END IF
 	RETURN $result
-
-Below is the way on how to query and cache the `Stock` data from the database with caching enabled.
 
 Creating a Cache Entry
 ----------------------

@@ -109,7 +109,7 @@ BulkInsert Operation
 
 .. highlight:: c#
 
-Bulk-inserting the list of <i>DataEntity</i> objects in the database.
+Bulk-inserting the list of `DataEntity` objects in the database.
 
 Below are the parameters:
 

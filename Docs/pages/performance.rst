@@ -58,57 +58,54 @@ For inserting 500 rows in 500 interation.
 
 ::
 
-	Dapper.Insert: 2.2524948 for 500 rows.
-	RepoDb.Insert: 2.4751717 for 500 rows.
-	RepoDb.BulkInsert: 0.0312229 for 500 rows.
+	Dapper.Insert: 4.934 secs for 500 rows.
+	RepoDb.Insert: 4.857 secs for 500 rows.
+	RepoDb.BulkInsert: 0.011 secs for 500 rows.
 	
-.. image:: ../images/perf_benchmark_insert_500_rows.png
+.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_insert_500_rows.png
 
 For inserting 1000 rows in 1000 interation.
 
 ::
 
-	Dapper.Insert: 4.5111358 for 1000 rows.
-	RepoDb.Insert: 4.8044364 for 1000 rows.
-	RepoDb.BulkInsert: 0.0221467 for 1000 rows.
+	Dapper.Insert: 11.241 secs for 1000 rows.
+	RepoDb.Insert: 10.706 secs for 1000 rows.
+	RepoDb.BulkInsert: 0.012 secs for 1000 rows.
 	
-.. image:: ../images/perf_benchmark_insert_1k_rows.png
+.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_insert_1k_rows.png
 
 For querying 100K rows.
 
 ::
 
-	Dapper.Query<Employee>: 0.7167928 for 100000 rows.
-	RepoDb.DbRepository.Query<Employee>: 0.6705296 for 100000 rows.
-	Dapper.Query (Dynamic): 0.8864116 for 100000 rows.
-	RepoDb.Connection.ExecuteQuery (Dynamic - No IL): 1.2674217 for 100000 rows.
+	Dapper.Query<Employee>: 0.661 secs for 100000 rows.
+	RepoDb.DbRepository.Query<Employee>: 0.596 secs for 100000 rows.
+	Dapper.Query (Dynamic): 0.636 secs for 100000 rows.
 	
-.. image:: ../images/perf_benchmark_query_100k_rows.png
+.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_100k_rows.png
 
 For querying 500K rows.
 
 ::
 
-	Dapper.Query<Employee>: 3.7871821 for 500000 rows.
-	RepoDb.DbRepository.Query<Employee>: 3.6779512 for 500000 rows.
-	Dapper.Query (Dynamic): 3.7625469 for 500000 rows.
-	RepoDb.Connection.ExecuteQuery (Dynamic - No IL): 6.5918586 for 500000 rows.
+	Dapper.Query<Employee>: 3.168 secs for 500000 rows.
+	RepoDb.DbRepository.Query<Employee>: 3.055 secs for 500000 rows.
+	Dapper.Query (Dynamic): 3.276 secs for 500000 rows.
 	
-.. image:: ../images/perf_benchmark_query_500k_rows.png
+.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_500k_rows.png
 
 For querying 1M rows.
 
 ::
 
-	Dapper.Query<Employee>: 7.5485485 for 1000000 rows.
-	RepoDb.DbRepository.Query<Employee>: 7.5019162 for 1000000 rows.
-	Dapper.Query (Dynamic): 8.0423502 for 1000000 rows.
-	RepoDb.Connection.ExecuteQuery (Dynamic - No IL): 13.1152323 for 1000000 rows.
+	Dapper.Query<Employee>: 6.277 secs for 1000000 rows.
+	RepoDb.DbRepository.Query<Employee>: 6.048 secs for 1000000 rows.
+	Dapper.Query (Dynamic): 5.991 secs for 1000000 rows.
 	
-.. image:: ../images/perf_benchmark_query_1m_rows.png
-
-Currently, `Dapper` is much more faster in `Insert` operation, but we find `RepoDb` much faster in `Query` operation.
+.. image:: https://github.com/mikependon/RepoDb/tree/master/Docs/images/perf_benchmark_query_1m_rows.png
 
 Our performance benchmark tool can be downloaded at https://github.com/mikependon/RepoDb/tree/master/Docs.
 
 The team is doing its best effort to further optimize the performance of the library. Stay stuned!
+
+**Note**: I personally had discovered a more optimal way than the current performance of RepoDb. I can even make the performance fast enough with additional 40% performance gain (10 secs to be 6 secs) to be exact. I just could not release it as the code is a bit buggy at the 'Guid, Double, Decimal, Binary and other SQL Data Types'.
