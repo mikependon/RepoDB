@@ -215,35 +215,35 @@
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">:</span> <span class="m">0.011</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">500</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_insert_500_rows.PNG" src="../_images/perf_benchmark_insert_500_rows.PNG" />
+<img alt="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_insert_500_rows.png" src="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_insert_500_rows.png" />
 <p>For inserting 1000 rows in 1000 interation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">Dapper</span><span class="p">.</span><span class="n">Insert</span><span class="p">:</span> <span class="m">11.241</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">Insert</span><span class="p">:</span> <span class="m">10.706</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">:</span> <span class="m">0.012</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_insert_1k_rows.PNG" src="../_images/perf_benchmark_insert_1k_rows.PNG" />
+<img alt="https://github.com/mikependon/RepoDb/blob/master/Docs/images/images/perf_benchmark_insert_1k_rows.png" src="https://github.com/mikependon/RepoDb/blob/master/Docs/images/images/perf_benchmark_insert_1k_rows.png" />
 <p>For querying 100K rows.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">0.661</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">100000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">DbRepository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">0.596</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">100000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span> <span class="p">(</span><span class="n">Dynamic</span><span class="p">):</span> <span class="m">0.636</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">100000</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_query_100k_rows.PNG" src="../_images/perf_benchmark_query_100k_rows.PNG" />
+<img alt="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_100k_rows.png" src="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_100k_rows.png" />
 <p>For querying 500K rows.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">3.168</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">500000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">DbRepository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">3.055</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">500000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span> <span class="p">(</span><span class="n">Dynamic</span><span class="p">):</span> <span class="m">3.276</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">500000</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_query_500k_rows.PNG" src="../_images/perf_benchmark_query_500k_rows.PNG" />
+<img alt="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_500k_rows.png" src="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_500k_rows.png" />
 <p>For querying 1M rows.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">6.277</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">RepoDb</span><span class="p">.</span><span class="n">DbRepository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;:</span> <span class="m">6.048</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000000</span> <span class="n">rows</span><span class="p">.</span>
 <span class="n">Dapper</span><span class="p">.</span><span class="n">Query</span> <span class="p">(</span><span class="n">Dynamic</span><span class="p">):</span> <span class="m">5.991</span> <span class="n">secs</span> <span class="k">for</span> <span class="m">1000000</span> <span class="n">rows</span><span class="p">.</span>
 </pre></div>
 </div>
-<img alt="../_images/perf_benchmark_query_1m_rows.PNG" src="../_images/perf_benchmark_query_1m_rows.PNG" />
+<img alt="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_1m_rows.png" src="https://github.com/mikependon/RepoDb/blob/master/Docs/images/perf_benchmark_query_1m_rows.png" />
 <p>Our performance benchmark tool can be downloaded at <a class="reference external" href="https://github.com/mikependon/RepoDb/tree/master/Docs">https://github.com/mikependon/RepoDb/tree/master/Docs</a>.</p>
 <p>The team is doing its best effort to further optimize the performance of the library. Stay stuned!</p>
 <p><strong>Note</strong>: I personally had discovered a more optimal way than the current performance of RepoDb. I can even make the performance fast enough with additional 40% performance gain (10 secs to be 6 secs) to be exact. I just could not release it as the code is a bit buggy at the ‘Guid, Double, Decimal, Binary and other SQL Data Types’.</p>
