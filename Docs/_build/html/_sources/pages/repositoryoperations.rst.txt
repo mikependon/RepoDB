@@ -126,15 +126,13 @@ Below is a sample on how to do bulk-insert.
 		var entities = new List<Order>();
 		entities.Add(new Order()
 		{
-			Id = 251,
 			Quantity = 2,
 			ProductId = 12,
 			CreatedDate = DateTime.UtcNow,
 			UpdatedDate = DateTime.UtcNow
 		});
-		entities.Add(new Stock()
+		entities.Add(new Order()
 		{
-			Id = 251,
 			Quantity = 25,
 			ProductId = 15,
 			CreatedDate = DateTime.UtcNow,
@@ -311,10 +309,7 @@ Below is the way on how to call the operation.
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var id = repository.ExecuteQuery<Order>("SELECT MAX([Id]) AS MaxId FROM [dbo].[Order] WHERE CustomerId = @CustomerId;", new
-		{
-			CustomerId = 10045
-		});
+		var id = repository.ExecuteScalar("SELECT MAX([Id]) AS MaxId FROM [dbo].[Order]");
 	}
 
 InlineInsert Operation

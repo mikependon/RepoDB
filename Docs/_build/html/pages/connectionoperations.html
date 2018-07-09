@@ -301,15 +301,13 @@
         <span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
         <span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
         <span class="p">{</span>
-                <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
                 <span class="n">ProductId</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
                 <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
                 <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">});</span>
-        <span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Stock</span><span class="p">()</span>
+        <span class="n">entities</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
         <span class="p">{</span>
-                <span class="n">Id</span> <span class="p">=</span> <span class="m">251</span><span class="p">,</span>
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
                 <span class="n">ProductId</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
                 <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">,</span>
@@ -484,10 +482,7 @@
 <p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxId FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span>
-        <span class="p">{</span>
-                <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span>
-        <span class="p">});</span>
+        <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxId FROM [dbo].[Order]&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>

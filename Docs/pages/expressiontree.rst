@@ -3,7 +3,7 @@ Expression Tree
 
 .. highlight:: c#
 
-The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `System.QueryGroup` objects.
+The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `RepoDb.QueryGroup` objects.
 
 Objects used for composing the expression tree.
 
