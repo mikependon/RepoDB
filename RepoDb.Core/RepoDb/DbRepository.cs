@@ -1434,9 +1434,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
-            IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1450,7 +1454,8 @@ namespace RepoDb
                 cache: Cache,
                 trace: Trace,
                 statementBuilder: StatementBuilder,
-                recursive: recursive);
+                recursive: recursive,
+                recursionDepth: recursionDepth);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1478,9 +1483,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1495,7 +1504,8 @@ namespace RepoDb
                 cache: Cache,
                 trace: Trace,
                 statementBuilder: StatementBuilder,
-                recursive: recursive);
+                recursive: recursive,
+                recursionDepth: recursionDepth);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1523,9 +1533,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1540,7 +1554,8 @@ namespace RepoDb
                 cache: Cache,
                 trace: Trace,
                 statementBuilder: StatementBuilder,
-                recursive: recursive);
+                recursive: recursive,
+                recursionDepth: recursionDepth);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1568,9 +1583,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1585,7 +1604,8 @@ namespace RepoDb
                 cache: Cache,
                 trace: Trace,
                 statementBuilder: StatementBuilder,
-                recursive: recursive);
+                recursive: recursive,
+                recursionDepth: recursionDepth);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -1614,16 +1634,21 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(top: top,
                     orderBy: orderBy,
                     cacheKey: cacheKey,
                     transaction: transaction,
-                    recursive: recursive));
+                    recursive: recursive,
+                    recursionDepth: recursionDepth));
         }
 
         /// <summary>
@@ -1642,9 +1667,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1652,7 +1681,8 @@ namespace RepoDb
                     orderBy: orderBy,
                     cacheKey: cacheKey,
                     transaction: transaction,
-                    recursive: recursive));
+                    recursive: recursive,
+                    recursionDepth: recursionDepth));
         }
 
         /// <summary>
@@ -1671,9 +1701,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1681,7 +1715,8 @@ namespace RepoDb
                     orderBy: orderBy,
                     cacheKey: cacheKey,
                     transaction: transaction,
-                    recursive: recursive));
+                    recursive: recursive,
+                    recursionDepth: recursionDepth));
         }
 
         /// <summary>
@@ -1700,9 +1735,13 @@ namespace RepoDb
         /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
-            string cacheKey = null, IDbTransaction transaction = null, bool recursive = false) where TEntity : DataEntity
+            string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1710,7 +1749,8 @@ namespace RepoDb
                     orderBy: orderBy,
                     cacheKey: cacheKey,
                     transaction: transaction,
-                    recursive: recursive));
+                    recursive: recursive,
+                    recursionDepth: recursionDepth));
         }
 
         // Truncate

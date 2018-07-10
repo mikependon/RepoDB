@@ -10,18 +10,16 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DataEntityChildItemData</i> object.
         /// </summary>
-        /// <param name="key">The value of the primary key of the <i>DataEntity</i> object.</param>
         /// <param name="dataEntity">The instance of the <i>DataEntity</i> object.</param>
-        public DataEntityChildItemData(object key, object dataEntity)
+        public DataEntityChildItemData(object dataEntity)
         {
-            Key = key;
             DataEntity = dataEntity;
         }
 
         /// <summary>
-        /// Gets the primary key value of the <i>DataEntity</i> object.
+        /// Gets or sets the primary key value of the <i>DataEntity</i> object.
         /// </summary>
-        public object Key { get; }
+        public object Key { get; set; }
 
         /// <summary>
         /// Gets the <i>DataEntity</i> object.

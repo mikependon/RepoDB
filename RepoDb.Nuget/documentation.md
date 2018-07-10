@@ -29,6 +29,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 ### What's with RepoDb?
 
  - Operations (Asynchronous)
+ - Recursive Query
  - Type Mapping
  - Field Mapping
  - Multiple Mapping

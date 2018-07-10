@@ -33,7 +33,7 @@ namespace RepoDb.TestProject
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
                 var current = DateTime.UtcNow;
-                var customers = repository.Query<CustomerDto>(recursive: true);
+                var customers = repository.Query<CustomerDto>(recursive: true, recursionDepth: 5);
                 var lapsedInSeconds = (DateTime.UtcNow - current).TotalSeconds;
                 Console.WriteLine($"Recursive query lapsed for total of {lapsedInSeconds} second(s).");
                 //var customers = repository.Query<CustomerDto>();
