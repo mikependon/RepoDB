@@ -10,7 +10,7 @@ Link: https://repodb.readthedocs.io/en/latest/
 
 ### Goal
 
-We aim to limit the implementation of SQL Statements in the .NET application.
+To be the fastest and easy-to-use lightweight ORM.
 
 ### Vision
 
@@ -29,6 +29,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 
  - Operations (Asynchronous)
  - Recursive Query
+ - Cyclomatic Complexity
  - Type Mapping
  - Field Mapping
  - Multiple Mapping

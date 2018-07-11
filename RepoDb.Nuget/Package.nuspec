@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.2.0-beta4</version>
+    <version>1.2.0-beta5</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,8 +10,8 @@
     <description>A dynamic, lightweight and fast repo-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      Beta Release 4
-      - Stabilization: Enabled the Recursive Query feature.
+      Beta Release 5
+      - Stabilization: Enabled the recursive query, recursion depth and cyclomatic stack overflow complexity features.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
@@ -19,7 +19,7 @@
     <licenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <repository type="Github" url="https://github.com/mikependon/RepoDb" />
     <dependencies>
-      <group targetFramework=".NETStandard1.3">
+      <group targetFramework=".NETStandard1.5">
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
         <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Data.SqlClient" version="4.5.1" exclude="Build,Analyzers" />

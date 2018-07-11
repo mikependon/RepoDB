@@ -30,6 +30,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 
  - Operations (Asynchronous)
  - Recursive Query
+ - Cyclomatic Complexity
  - Type Mapping
  - Field Mapping
  - Multiple Mapping

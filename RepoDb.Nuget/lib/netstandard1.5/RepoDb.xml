@@ -6,17 +6,30 @@
     <members>
         <member name="T:RepoDb.Attributes.ForeignAttribute">
             <summary>
-            An attribute used to define a foreign property for the recursive property of the <i>DataEntity</i> object.
+            An attribute used to define a foreign relationship for the recursive property of the <i>DataEntity</i> object.
             </summary>
         </member>
         <member name="M:RepoDb.Attributes.ForeignAttribute.#ctor(System.String)">
             <summary>
             Creates a new instance of <i>RepoDb.Attributes.ForeignAttribute</i> object.
             </summary>
+            <param name="childFieldName">The field name for the child <i>DataEntity</i> object.</param>
         </member>
-        <member name="P:RepoDb.Attributes.ForeignAttribute.Name">
+        <member name="M:RepoDb.Attributes.ForeignAttribute.#ctor(System.String,System.String)">
             <summary>
-            Gets the name defined on this foreign attribute.
+            Creates a new instance of <i>RepoDb.Attributes.ForeignAttribute</i> object.
+            </summary>
+            <param name="parentFieldName">The field name for the parent <i>DataEntity</i> object.</param>
+            <param name="childFieldName">The field name for the child <i>DataEntity</i> object.</param>
+        </member>
+        <member name="P:RepoDb.Attributes.ForeignAttribute.ChildFieldName">
+            <summary>
+            Gets the field name of the child data entity.
+            </summary>
+        </member>
+        <member name="P:RepoDb.Attributes.ForeignAttribute.ParentFieldName">
+            <summary>
+            Gets the field name of the parent data entity.
             </summary>
         </member>
         <member name="T:RepoDb.Attributes.IgnoreAttribute">
@@ -665,7 +678,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
@@ -680,9 +693,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -698,9 +715,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -716,9 +737,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.Query(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -734,9 +759,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
@@ -751,9 +780,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -769,9 +802,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -787,9 +824,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -804,6 +845,10 @@
             <param name="recursive">
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
+            </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
@@ -1063,6 +1108,21 @@
             A class that holds the constant values for <i>RepoDb</i> library.
             </summary>
         </member>
+        <member name="F:RepoDb.Constant.CacheItemExpirationInMinutes">
+            <summary>
+            The default value of the cache expiration in minutes.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Constant.RecursiveQueryBatchCount">
+            <summary>
+            The batches used when querying the data from the database in the recursive query operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Constant.RecursiveMaxRecursion">
+            <summary>
+            The maximum recursion for the recursive query operation.
+            </summary>
+        </member>
         <member name="T:RepoDb.DataEntity">
             <summary>
             Acts as the base class of all <i>DataEntity</i> object.
@@ -1073,31 +1133,20 @@
             A class that handles the information of the <i>DataEntity</i> child item data.
             </summary>
         </member>
-        <member name="M:RepoDb.DataEntityChildItemData.#ctor(System.Object,System.Object)">
+        <member name="M:RepoDb.DataEntityChildItemData.#ctor(System.Object)">
             <summary>
             Creates a new instance of <i>RepoDb.DataEntityChildItemData</i> object.
             </summary>
-            <param name="key">The value of the primary key of the <i>DataEntity</i> object.</param>
             <param name="dataEntity">The instance of the <i>DataEntity</i> object.</param>
         </member>
         <member name="P:RepoDb.DataEntityChildItemData.Key">
             <summary>
-            Gets the primary key value of the <i>DataEntity</i> object.
+            Gets or sets the primary key value of the <i>DataEntity</i> object.
             </summary>
         </member>
         <member name="P:RepoDb.DataEntityChildItemData.DataEntity">
             <summary>
             Gets the <i>DataEntity</i> object.
-            </summary>
-        </member>
-        <member name="P:RepoDb.DataEntityChildItemData.List">
-            <summary>
-            Gets or sets the list object to be used.
-            </summary>
-        </member>
-        <member name="P:RepoDb.DataEntityChildItemData.AddMethod">
-            <summary>
-            Gets or sets the <i>MethodInfo</i> object used that is pointed to the current list.
             </summary>
         </member>
         <member name="T:RepoDb.DataEntityChildListData">
@@ -2111,7 +2160,7 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
@@ -2127,9 +2176,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -2146,9 +2199,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -2165,9 +2222,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.Query``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -2184,9 +2245,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
@@ -2202,9 +2267,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -2221,9 +2290,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -2240,9 +2313,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Boolean)">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -2258,6 +2335,10 @@
             <param name="recursive">
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
+            </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
@@ -4192,7 +4273,7 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
@@ -4213,9 +4294,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -4237,9 +4322,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -4261,9 +4350,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -4285,9 +4378,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryData``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryData``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -4309,9 +4406,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryChildData``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.DataEntityChildListData},System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryChildData``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.DataEntityChildListData},System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression recursively.
             </summary>
@@ -4328,8 +4429,12 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
@@ -4350,9 +4455,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -4374,9 +4483,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -4398,9 +4511,13 @@
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
             </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+            </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,System.String,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,System.String,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
@@ -4421,6 +4538,10 @@
             <param name="recursive">
             The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
             be included in the result of the query. The default value is <i>False</i>.
+            </param>
+            <param name="recursionDepth">
+            Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+            child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>

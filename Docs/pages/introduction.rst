@@ -28,6 +28,7 @@ What's with RepoDb?
 
 * Operations (Asynchronous)
 * Recursive Query
+* Cyclomatic Complexity
 * Type Mapping
 * Field Mapping
 * Multiple Mapping
