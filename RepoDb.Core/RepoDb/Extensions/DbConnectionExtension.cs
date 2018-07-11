@@ -2338,7 +2338,6 @@ namespace RepoDb
                 // Recurse only if we have children
                 if (what != null && what.Any() == true)
                 {
-                    var maxRecursion = 15;
                     QueryChildData<TEntity>(connection: connection,
                         what: what,
                         result: result,
@@ -2348,7 +2347,8 @@ namespace RepoDb
                         trace: trace,
                         statementBuilder: statementBuilder,
                         recursive: recursive,
-                        recursionDepth: recursionDepth > maxRecursion ? maxRecursion : recursionDepth);
+                        recursionDepth: recursionDepth > Constant.RecursiveMaxRecursion ?
+                            Constant.RecursiveMaxRecursion : recursionDepth);
                 }
             }
 
@@ -2387,20 +2387,13 @@ namespace RepoDb
             var entityName = DataEntityExtension.GetMappedName<TEntity>(command).AsUnquoted();
             var primaryKey = primary.GetMappedName().AsUnquoted();
             var foreignKey = $"{entityName}{primaryKey}";
-            var childItemDataList = new List<DataEntityChildItemData>();
-
-            // Add all the keys
-            result?.ToList().ForEach(entity =>
-            {
-                childItemDataList.Add(new DataEntityChildItemData(entity));
-            });
 
             // Split the list
+            var childItemDataList = result.Select(entity => new DataEntityChildItemData(entity)).ToList();
             var splittedList = new List<IEnumerable<DataEntityChildItemData>>();
-            var itemsPerList = 256;
-            for (var index = 0; index < childItemDataList.Count; index += itemsPerList)
+            for (var index = 0; index < childItemDataList.Count; index += Constant.RecursiveQueryBatchCount)
             {
-                splittedList.Add(childItemDataList.Skip(index).Take(itemsPerList));
+                splittedList.Add(childItemDataList.Skip(index).Take(Constant.RecursiveQueryBatchCount));
             }
 
             // Iterate the splitted list
@@ -2472,15 +2465,12 @@ namespace RepoDb
                     }
 
                     // Iterate the current result
-                    foreach (var item in list)
+                    list.ToList().ForEach(item =>
                     {
-                        // Create the list item if not yet present
-                        if (item.List == null)
-                        {
-                            var enumerableType = typeof(List<>).MakeGenericType(recursiveData.ChildListType);
-                            item.List = Activator.CreateInstance(enumerableType);
-                            item.AddMethod = enumerableType.GetTypeInfo().GetMethod("Add");
-                        }
+                        // Create a list
+                        var enumerableType = typeof(List<>).MakeGenericType(recursiveData.ChildListType);
+                        var childList = Activator.CreateInstance(enumerableType);
+                        var addMethod = enumerableType.GetTypeInfo().GetMethod("Add");
 
                         // Extreme reflection, need to optimize soon
                         var childEntities = recursiveResult
@@ -2490,12 +2480,12 @@ namespace RepoDb
                         // Iterate each child entity
                         childEntities?.ForEach(childEntity =>
                         {
-                            item.AddMethod.Invoke(item.List, new[] { childEntity });
+                            addMethod.Invoke(childList, new[] { childEntity });
                         });
 
                         // Set back the value
-                        recursiveData.ChildListProperty.SetValue(item.DataEntity, item.List);
-                    }
+                        recursiveData.ChildListProperty.SetValue(item.DataEntity, childList);
+                    });
                 });
             });
         }

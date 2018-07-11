@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace RepoDb
+﻿namespace RepoDb
 {
     /// <summary>
     /// A class that handles the information of the <i>DataEntity</i> child item data.
@@ -25,15 +23,5 @@ namespace RepoDb
         /// Gets the <i>DataEntity</i> object.
         /// </summary>
         public object DataEntity { get; }
-
-        /// <summary>
-        /// Gets or sets the list object to be used.
-        /// </summary>
-        public object List { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <i>MethodInfo</i> object used that is pointed to the current list.
-        /// </summary>
-        public MethodInfo AddMethod { get; set; }
     }
 }
