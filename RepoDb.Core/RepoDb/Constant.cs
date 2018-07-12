@@ -18,6 +18,6 @@
         /// <summary>
         /// The maximum recursion for the recursive query operation.
         /// </summary>
-        public static readonly int RecursiveMaxRecursion = 256;
+        public static readonly int RecursiveMaxRecursion = 15;
     }
 }
