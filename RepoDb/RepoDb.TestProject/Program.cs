@@ -1,14 +1,10 @@
 ﻿using System;
-using Dapper;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using RepoDb.Extensions;
 using RepoDb.Enumerations;
 using RepoDb.TestProject.Models;
-using RepoDb.TestProject.Tracers;
 using RepoDb.TestProject.Repositories;
-using System.Threading.Tasks;
 
 namespace RepoDb.TestProject
 {
@@ -19,16 +15,14 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //InventoryMain();
-            //RepoDbMain();
+            //TestInventory();
             TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
-            //TestParallelism();
             Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
-        public static void InventoryMain()
+        public static void TestInventory()
         {
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
@@ -74,149 +68,6 @@ namespace RepoDb.TestProject
                 //});
             }
             Console.ReadLine();
-        }
-
-        public static void RepoDbMain()
-        {
-            //DataEntityMapper.For<Person>()
-            //    .On(Command.Query, "[dbo].[Person]")
-            //    .On(Command.Delete, "[dbo].[sp_delete_person]", CommandType.StoredProcedure)
-            //    .On(Command.Insert, "[dbo].[Person]")
-            //    .On(Command.Update, "[dbo].[sp_update_person]", CommandType.StoredProcedure)
-            //    .On(Command.BulkInsert, "[dbo].[Person]");
-
-            Console.WriteLine("Started");
-            //TestBulkInsert();
-            var rows = 1000000;
-            TestDapper(rows);
-            TestEntityFramework(rows);
-            TestRepoDbQuery(rows);
-            //TestRepoDbExecuteQuery(rows);
-            //TestDapperLoop();
-            //TestRepoDbQueryLoop();
-            //TestInNotInBetweenNotBetweenAnyAllOperation();
-            //TestInlineUpdate();
-            //TestCrud();
-            //TestBatchQuery();
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadLine();
-        }
-
-        private static void TestBulkInsert()
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
-            var rows = 500000;
-            var now = DateTime.UtcNow;
-            Console.WriteLine($"RepoDb.DbRepository.BulkInsert({rows})");
-            people = repository.Query(top: rows);
-            repository.BulkInsert(people);
-            Console.WriteLine($"RepoDb: Bulk inserted {rows} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestDapper(int rows)
-        {
-            var people = (IEnumerable<Person>)null;
-            var now = DateTime.UtcNow;
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("Dapper.DbConnection.Query<T>");
-            using (var connection = new SqlConnection(RepoDbConnectionString))
-            {
-                people = connection.Query<Person>(sql: $"SELECT TOP {rows} * FROM [dbo].[Person];");
-            }
-            Console.WriteLine($"Dapper: {people.Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestEntityFramework(int rows)
-        {
-            var now = DateTime.UtcNow;
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("EntityFramework.Database.SqlQuery<T>");
-            var context = new System.Data.Entity.DbContext(RepoDbConnectionString);
-            var people = context.Database.SqlQuery<Person>($"SELECT TOP {rows} * FROM [dbo].[Person];");
-            Console.WriteLine($"EntityFramework: {people.Where((p) => true).Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestRepoDbQuery(int rows)
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
-            var now = DateTime.UtcNow;
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("RepoDb.DbRepository.Query");
-            people = repository.Query(top: rows);
-            Console.WriteLine($"RepoDb: {people.Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestRepoDbExecuteQuery(int rows)
-        {
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("RepoDb.Extensions.DbConnectionExtension.ExecuteQuery");
-            using (var connection = new SqlConnection(RepoDbConnectionString))
-            {
-                var now = DateTime.UtcNow;
-                var objects = connection.ExecuteQuery($"SELECT TOP {rows} * FROM [dbo].[Person];");
-                Console.WriteLine($"RepoDb: {objects.Count()} rows for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-            }
-        }
-
-        private static void TestDapperLoop()
-        {
-            var people = (IEnumerable<Person>)null;
-            var loops = 0;
-            var now = DateTime.UtcNow;
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("Dapper: Looping Query Execution");
-            using (var connection = new SqlConnection(RepoDbConnectionString))
-            {
-                while (loops < 500)
-                {
-                    people = connection.Query<Person>(sql: $"SELECT TOP {10} * FROM [dbo].[Person];");
-                    loops++;
-                }
-            }
-            Console.WriteLine($"Dapper: {loops} loops (top 10 rows each) for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestRepoDbQueryLoop()
-        {
-            var repository = new PersonRepository(RepoDbConnectionString);
-            var people = (IEnumerable<Person>)null;
-            var loops = 0;
-            var now = DateTime.UtcNow;
-            Console.WriteLine(new string(char.Parse("-"), 50));
-            Console.WriteLine("RepoDb: Looping Query Execution");
-            while (loops < 500)
-            {
-                people = repository.Query(top: 10);
-                loops++;
-            }
-            Console.WriteLine($"RepoDb: {loops} loops (top 10 rows each) for {(DateTime.UtcNow - now).TotalSeconds} second(s).");
-        }
-
-        private static void TestParallelism()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                TestRepoDbQuery(1000000);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                TestRepoDbQuery(500000);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                TestRepoDbQuery(300000);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                TestRepoDbQuery(100000);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                TestRepoDbQuery(50000);
-            });
         }
 
         private static void TestInNotInBetweenNotBetweenAnyAllOperation()

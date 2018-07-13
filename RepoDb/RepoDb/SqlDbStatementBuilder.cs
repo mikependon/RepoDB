@@ -35,7 +35,7 @@ namespace RepoDb
             var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
             var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
                 .Where(property => queryProperties.Contains(property));
-            var fields = batchQueryProperties.Select(property => new Field(property.Name));
+            var fields = batchQueryProperties.Select(property => new Field(property.GetMappedName()));
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -52,7 +52,7 @@ namespace RepoDb
                 .OrderByFrom(orderBy)
                 .CloseParen()
                 .As("[RowNumber],")
-                .FieldsFrom(Command.BatchQuery)
+                .FieldsFrom(fields)
                 .From()
                 .TableFrom(Command.BatchQuery)
                 .WhereFrom(where)

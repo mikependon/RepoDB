@@ -324,7 +324,7 @@ namespace RepoDb
             });
 
             // Return
-            return new QueryGroup(queryFields, queryGroups, conjunction);
+            return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
         }
 
         private static void ValidateBetweenOperations(string fieldName, Operation operation, object value)
