@@ -7,45 +7,20 @@ namespace RepoDb.UnitTests
     [TestFixture]
     public class SqlDbStatementBuilderTest
     {
-
-        #region Sub Classes
-
         #region CreateBatchQuery
 
-        private class CreateBatchQueryClass1 : DataEntity
+        private class TestCreateBatchQueryWithoutAttributesClass : DataEntity
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
-
-        [Map("Customer")]
-        private class CreateBatchQueryClass2 : DataEntity
-        {
-            public int Field1 { get; set; }
-            public int Field2 { get; set; }
-        }
-
-        [Map("Customer")]
-        private class CreateBatchQueryClass3 : DataEntity
-        {
-            public int Field1 { get; set; }
-
-            [Map("Field3")]
-            public int Field2 { get; set; }
-        }
-
-        #endregion
-
-        #endregion
-
-        #region CreateBatchQuery
 
         [Test]
         public void TestCreateBatchQueryWithoutAttributes()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<CreateBatchQueryClass1>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithoutAttributesClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -59,7 +34,7 @@ namespace RepoDb.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [CreateBatchQueryClass1] " +
+                $"FROM [TestCreateBatchQueryWithoutAttributesClass] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -68,13 +43,19 @@ namespace RepoDb.UnitTests
             Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
+        
+        private class TestCreateBatchQueryWithExpressionsClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public int Field2 { get; set; }
+        }
 
         [Test]
-        public void TestCreateBatchQueryWithExpression()
+        public void TestCreateBatchQueryWithExpressions()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<CreateBatchQueryClass1>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithExpressionsClass>();
             var where = QueryGroup.Parse(new
             {
                 Field1 = "Test"
@@ -92,7 +73,7 @@ namespace RepoDb.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [CreateBatchQueryClass1] " +
+                $"FROM [TestCreateBatchQueryWithExpressionsClass] " +
                 $"WHERE ([Field1] = @Field1) " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
@@ -103,12 +84,18 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, statement);
         }
 
+        private class TestCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public int Field2 { get; set; }
+        }
+
         [Test]
         public void TestCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributes()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<CreateBatchQueryClass1>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Descending,
@@ -123,7 +110,7 @@ namespace RepoDb.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] DESC, [Field2] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [CreateBatchQueryClass1] " +
+                $"FROM [TestCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -133,12 +120,19 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, statement);
         }
 
+        [Map("ClassName")]
+        private class TestCreateBatchQueryWithClassMappingClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public int Field2 { get; set; }
+        }
+
         [Test]
         public void TestCreateBatchQueryWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<CreateBatchQueryClass2>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithClassMappingClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -152,7 +146,7 @@ namespace RepoDb.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [Customer] " +
+                $"FROM [ClassName] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -162,12 +156,58 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, statement);
         }
 
+        [Map("ClassName")]
+        private class TestCreateBatchQueryWithFieldMappingsClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            [Map("NewField2")]
+            public int Field2 { get; set; }
+        }
+
         [Test]
-        public void TestCreateBatchQueryWithFieldMapping()
+        public void TestCreateBatchQueryWithFieldMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<CreateBatchQueryClass3>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithFieldMappingsClass>();
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var statement = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+
+            // Assert
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [NewField2] " +
+                $"FROM [ClassName] " +
+                $") " +
+                $"SELECT [Field1], [NewField2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"ORDER BY [Field1] ASC ;";
+            Assert.IsNotEmpty(statement);
+            Assert.AreEqual(expected, statement);
+        }
+
+        [Map("ClassName")]
+        private class TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBatchQueryCommandClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            [RepoDb.Attributes.Ignore(Command.BatchQuery)]
+            public int Field2 { get; set; }
+            public int Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBatchQueryCommand()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBatchQueryCommandClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -181,7 +221,85 @@ namespace RepoDb.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field3] " +
-                $"FROM [Customer] " +
+                $"FROM [ClassName] " +
+                $") " +
+                $"SELECT [Field1], [Field3] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"ORDER BY [Field1] ASC ;";
+            Assert.IsNotEmpty(statement);
+            Assert.AreEqual(expected, statement);
+        }
+
+        [Map("ClassName")]
+        private class TestCreateBatchQueryWithFieldMappingsAndWithIgnoredQueryCommandClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            [RepoDb.Attributes.Ignore(Command.Query)]
+            public int Field2 { get; set; }
+            public int Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateBatchQueryWithFieldMappingsAndWithIgnoredQueryCommand()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithFieldMappingsAndWithIgnoredQueryCommandClass>();
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var statement = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+
+            // Assert
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field3] " +
+                $"FROM [ClassName] " +
+                $") " +
+                $"SELECT [Field1], [Field3] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"ORDER BY [Field1] ASC ;";
+            Assert.IsNotEmpty(statement);
+            Assert.AreEqual(expected, statement);
+        }
+
+        [Map("ClassName")]
+        private class TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommandClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            [RepoDb.Attributes.Ignore(Command.Query)]
+            public int Field2 { get; set; }
+            public int Field3 { get; set; }
+            [RepoDb.Attributes.Ignore(Command.BatchQuery)]
+            public int Field4 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommand()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommandClass>();
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var statement = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+
+            // Assert
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field3] " +
+                $"FROM [ClassName] " +
                 $") " +
                 $"SELECT [Field1], [Field3] " +
                 $"FROM CTE " +
@@ -192,6 +310,5 @@ namespace RepoDb.UnitTests
         }
 
         #endregion
-
     }
 }
