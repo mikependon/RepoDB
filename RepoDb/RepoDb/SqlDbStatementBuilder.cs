@@ -175,28 +175,48 @@ namespace RepoDb
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
             where TEntity : DataEntity
         {
+            // Check for the fields presence
+            if (fields == null)
+            {
+                throw new NullReferenceException("The target fields must be present.");
+            }
+
+            // Check for all the fields
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
+            var unmatchesFields = fields?.Where(field =>
+                properties?.FirstOrDefault(property =>
+                    field.Name.ToLower() == property.ToLower()) == null);
+            if (unmatchesFields?.Count() > 0)
+            {
+                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    $"present at type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields.Any();
+            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields?.Any() == true;
 
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline insertable fields found at type '{typeof(TEntity).FullName}'.");
+                throw new InvalidOperationException($"No inline insertable fields for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert)}'.");
             }
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
-                var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert);
+                var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+                    .Select(property => property.GetMappedName()); ;
                 var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
-                    .Where(property => insertableProperties.Contains(property))
-                    .Select(property => property.GetMappedName());
-                var unmatchesProperties = fields?.Where(field =>
+                    .Select(property => property.GetMappedName())
+                    .Where(property => insertableProperties.Contains(property));
+                unmatchesFields = fields?.Where(field =>
                     inlineInsertableProperties?.FirstOrDefault(property =>
                         field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatchesProperties.Count() > 0)
+                if (unmatchesFields?.Count() > 0)
                 {
-                    throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
                         $"inline insertable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert)}'.");
                 }
             }
@@ -274,22 +294,66 @@ namespace RepoDb
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
             where TEntity : DataEntity
         {
+            // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primaryMappedName = primary?.GetMappedName();
+
+            // Check for the fields presence
+            if (fields == null)
+            {
+                throw new NullReferenceException("The target fields must be present.");
+            }
+
+            // Check for the qualifiers presence
+            if (primary == null && qualifiers == null)
+            {
+                throw new NullReferenceException("The qualifiers must be present.");
+            }
+
+            // Check for all the fields
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
+            var unmatchesFields = fields?.Where(field =>
+                properties?.FirstOrDefault(property =>
+                    field.Name.ToLower() == property.ToLower()) == null);
+            if (unmatchesFields?.Count() > 0)
+            {
+                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    $"present at type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Check for all the qualifiers
+            var unmatchesQualifiers = qualifiers?.Where(field =>
+                properties?.FirstOrDefault(property =>
+                    field.Name.ToLower() == property.ToLower()) == null);
+            if (unmatchesQualifiers?.Count() > 0)
+            {
+                throw new InvalidOperationException($"The qualifiers '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    $"present at type '{typeof(TEntity).FullName}'.");
+            }
 
             // Get all target properties
-            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
-            var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)
+            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
+                .Select(property => property.GetMappedName());
+            var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)?
+                .Select(property => property.GetMappedName())
                 .Where(property => mergeableProperties.Contains(property));
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
-                var unmatchesProperties = fields?.Where(field =>
-                    inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.GetMappedName().ToLower()) == null);
-                        //.Where(property => property.Name.ToLower() != primary?.GetMappedName().ToLower());
-                if (unmatchesProperties.Count() > 0)
+                unmatchesFields = fields?.Where(field =>
+                    inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatchesFields?.Count() > 0)
                 {
-                    throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
+                    throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"inline mergeable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge)}'.");
+                }
+                unmatchesQualifiers = qualifiers?.Where(field =>
+                    inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatchesQualifiers?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
                         $"inline mergeable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge)}'.");
                 }
             }
@@ -297,28 +361,30 @@ namespace RepoDb
             // Use the primary for qualifiers if there is no any
             if (qualifiers == null && primary != null)
             {
-                qualifiers = Field.From(primary.GetMappedName());
+                qualifiers = Field.From(primaryMappedName);
             }
 
             // Get all target fields
             var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Where(property => !(isPrimaryIdentity && property == primary));
+                .Select(property => property.GetMappedName())
+                .Where(property => !(isPrimaryIdentity && property == primaryMappedName));
             var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Where(property => property != primary);
+                .Select(property => property.GetMappedName())
+                .Where(property => property != primaryMappedName);
             var mergeInsertableFields = mergeableProperties
                 .Where(property => insertableProperties.Contains(property) &&
                     mergeableProperties.Contains(property) &&
                         inlineMergeableProperties.Contains(property))
                 .Where(property =>
-                    fields.Any(field => field.Name.ToLower() == property.GetMappedName().ToLower()))
-                .Select(property => new Field(property.Name));
+                    fields.Any(field => field.Name.ToLower() == property.ToLower()))
+                .Select(property => new Field(property));
             var mergeUpdateableFields = mergeableProperties
                 .Where(property => updateableProperties.Contains(property) &&
                     mergeableProperties.Contains(property) &&
                         inlineMergeableProperties.Contains(property))
                 .Where(property =>
-                    fields.Any(field => field.Name.ToLower() == property.GetMappedName().ToLower()))
-                .Select(property => new Field(property.Name));
+                    fields.Any(field => field.Name.ToLower() == property.ToLower()))
+                .Select(property => new Field(property));
 
             // Check if there are inline mergeable fields (for insert)
             if (!mergeInsertableFields.Any())
