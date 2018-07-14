@@ -9,16 +9,6 @@ namespace RepoDb.UnitTests
     public class OrderFieldTest
     {
         [Test]
-        public void Test01_ThrowExceptionIfFieldValueIsNotAnOrderType()
-        {
-            // Prepare
-            var orderBy = new { Id = "NotAnOrderType" };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () => OrderField.Parse(orderBy));
-        }
-
-        [Test]
         public void TestAscending()
         {
             // Prepare
@@ -67,5 +57,16 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("Value", orderField.Last().Name);
             Assert.AreEqual(Order.Descending, orderField.Last().Order);
         }
+
+        [Test]
+        public void ThrowExceptionIfFieldValueIsNotAnOrderType()
+        {
+            // Prepare
+            var orderBy = new { Id = "NotAnOrderType" };
+
+            // Act/Assert
+            Assert.Throws(typeof(InvalidOperationException), () => OrderField.Parse(orderBy));
+        }
+
     }
 }

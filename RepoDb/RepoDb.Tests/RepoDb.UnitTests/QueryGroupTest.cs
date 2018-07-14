@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
-using System;
-using System.Linq;
 
 namespace RepoDb.UnitTests
 {
@@ -234,10 +232,12 @@ namespace RepoDb.UnitTests
         public void ThrowExceptionIfBetweenOperationValuesLengthIsNotEqualsTo2()
         {
             // Setup
-            var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, 2, 3 } } };
+            var expression1 = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1 } } };
+            var expression2 = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, 2, 3 } } };
 
             // Act/Assert
-            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression1));
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression2));
         }
 
         // NotBetween
@@ -279,10 +279,12 @@ namespace RepoDb.UnitTests
         public void ThrowExceptionIfNotBetweenOperationValuesLengthIsNotEqualsTo2()
         {
             // Setup
-            var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1, 2, 3 } } };
+            var expression1 = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1 } } };
+            var expression2 = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1, 2, 3 } } };
 
             // Act/Assert
-            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression1));
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression2));
         }
 
         // In

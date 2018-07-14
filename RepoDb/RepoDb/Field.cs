@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -39,7 +40,15 @@ namespace RepoDb
         /// <returns>An enumerable of <i>RepoDb.Field</i> object.</returns>
         public static IEnumerable<Field> From(params string[] fields)
         {
-            return fields.ToList().Select(field => new Field(field));
+            if (fields == null)
+            {
+                throw new NullReferenceException($"List of fields must not be null.");
+            }
+            if (fields.Any(field => string.IsNullOrEmpty(field.Trim())))
+            {
+                throw new NullReferenceException($"Field name must not be null.");
+            }
+            return fields.Select(field => new Field(field));
         }
 
         /// <summary>
@@ -52,17 +61,18 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                throw new InvalidOperationException("Parameter 'obj' cannot be null.");
+                throw new NullReferenceException("Parameter 'obj' cannot be null.");
             }
-            var list = new List<Field>();
-            obj.GetType()
-                .GetProperties()
-                .ToList()
-                .ForEach(property =>
-                {
-                    list.Add(new Field(property.Name));
-                });
-            return list;
+            if (obj.GetType().IsGenericType == false)
+            {
+                throw new InvalidOperationException("Parameter 'obj' must be dynamic type.");
+            }
+            var properties = obj.GetType().GetProperties();
+            if (properties?.Any() == false)
+            {
+                throw new InvalidOperationException("Parameter 'obj' must have atleast one property.");
+            }
+            return properties.Select(property => new Field(property.GetMappedName()));
         }
     }
 }
