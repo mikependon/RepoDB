@@ -9,18 +9,18 @@ namespace RepoDb.UnitTests
     {
         #region CreateBatchQuery
 
-        private class TestCreateBatchQueryWithoutAttributesClass : DataEntity
+        private class TestCreateBatchQueryWithoutMappingsClass : DataEntity
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
 
         [Test]
-        public void TestCreateBatchQueryWithoutAttributes()
+        public void TestCreateBatchQueryWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithoutAttributesClass>();
+            var queryBuilder = new QueryBuilder<TestCreateBatchQueryWithoutMappingsClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -40,10 +40,9 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
-        
+
         private class TestCreateBatchQueryWithExpressionsClass : DataEntity
         {
             public int Field1 { get; set; }
@@ -80,7 +79,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -116,7 +114,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] DESC, [Field2] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -152,7 +149,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -189,7 +185,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -227,7 +222,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -265,7 +259,6 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
             Assert.AreEqual(expected, statement);
         }
 
@@ -305,7 +298,49 @@ namespace RepoDb.UnitTests
                 $"FROM CTE " +
                 $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
                 $"ORDER BY [Field1] ASC ;";
-            Assert.IsNotEmpty(statement);
+            Assert.AreEqual(expected, statement);
+        }
+
+        #endregion
+
+        #region CreateCount
+
+        private class TestCreateCountWithoutMappingsClass : DataEntity
+        {
+        }
+
+        [Test]
+        public void TestCreateCountWithoutMappings()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateCountWithoutMappingsClass>();
+
+            // Act
+            var statement = statementBuilder.CreateCount(queryBuilder, null);
+
+            // Assert
+            var expected = $"SELECT COUNT_BIG (1) AS [Counted] FROM [TestCreateCountWithoutMappingsClass] ;";
+            Assert.AreEqual(expected, statement);
+        }
+
+        [Map("ClassName")]
+        private class TestCreateCountWitClassMappingsClass : DataEntity
+        {
+        }
+
+        [Test]
+        public void TestCreateCountWitClassMappings()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateCountWitClassMappingsClass>();
+
+            // Act
+            var statement = statementBuilder.CreateCount(queryBuilder, null);
+
+            // Assert
+            var expected = $"SELECT COUNT_BIG (1) AS [Counted] FROM [ClassName] ;";
             Assert.AreEqual(expected, statement);
         }
 
