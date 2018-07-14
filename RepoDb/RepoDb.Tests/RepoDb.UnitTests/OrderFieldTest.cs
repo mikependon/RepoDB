@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RepoDb.Enumerations;
+using System;
 using System.Linq;
 
 namespace RepoDb.UnitTests
@@ -8,12 +9,22 @@ namespace RepoDb.UnitTests
     public class OrderFieldTest
     {
         [Test]
+        public void Test01_ThrowExceptionIfFieldValueIsNotAnOrderType()
+        {
+            // Prepare
+            var orderBy = new { Id = "NotAnOrderType" };
+
+            // Act/Assert
+            Assert.Throws(typeof(InvalidOperationException), () => OrderField.Parse(orderBy));
+        }
+
+        [Test]
         public void TestAscending()
         {
             // Prepare
             var orderBy = new { Id = Order.Ascending };
 
-            // Acts
+            // Act
             var orderField = OrderField.Parse(orderBy);
 
             // Assert
@@ -29,7 +40,7 @@ namespace RepoDb.UnitTests
             // Prepare
             var orderBy = new { Id = Order.Descending };
 
-            // Acts
+            // Act
             var orderField = OrderField.Parse(orderBy);
 
             // Assert
@@ -45,7 +56,7 @@ namespace RepoDb.UnitTests
             // Prepare
             var orderBy = new { Id = Order.Ascending, Value = Order.Descending };
 
-            // Acts
+            // Act
             var orderField = OrderField.Parse(orderBy);
 
             // Assert

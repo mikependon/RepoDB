@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Linq;
@@ -117,13 +118,13 @@ namespace RepoDb
             // The property 'Operation' must always be present
             if (operationProperty == null)
             {
-                throw new InvalidOperationException($"Operation property must be present for field ''{fieldName}''.");
+                throw new InvalidQueryExpressionException($"Operation property must be present for field ''{fieldName}''.");
             }
 
             // The property operatoin must be of type 'RepoDb.Enumerations.Operation'
             if (operationProperty.PropertyType != typeof(Operation))
             {
-                throw new InvalidOperationException($"The 'Operation' property for field ''{fieldName}'' must be of type '{typeof(Operation).FullName}'.");
+                throw new InvalidQueryExpressionException($"The 'Operation' property for field ''{fieldName}'' must be of type '{typeof(Operation).FullName}'.");
             }
 
             // The 'Value' property must always be present
@@ -132,7 +133,7 @@ namespace RepoDb
             // Check for the 'Value' property
             if (valueProperty == null)
             {
-                throw new InvalidOperationException($"The 'Value' property for dynamic type query must be present at field ''{fieldName}''.");
+                throw new InvalidQueryExpressionException($"The 'Value' property for dynamic type query must be present at field ''{fieldName}''.");
             }
 
             // Get the 'Operation' and the 'Value' value
@@ -192,7 +193,7 @@ namespace RepoDb
             // Throw an error if not valid
             if (valid == false)
             {
-                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array of 2 values with identitcal data types.");
+                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array of 2 values with identitcal data types.");
             }
         }
 
@@ -225,7 +226,7 @@ namespace RepoDb
             // Throw an error if not valid
             if (valid == false)
             {
-                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array values with identitcal data types.");
+                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array values with identitcal data types.");
             }
         }
 
@@ -249,7 +250,7 @@ namespace RepoDb
             // Throw an error if not valid
             if (valid == false)
             {
-                throw new InvalidOperationException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
+                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
         }
     }

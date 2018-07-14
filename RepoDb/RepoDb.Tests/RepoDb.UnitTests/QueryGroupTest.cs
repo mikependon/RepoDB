@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using System;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace RepoDb.UnitTests
     [TestFixture]
     public class QueryGroupTest
     {
-        #region
+        // Expression
 
         [Test]
         public void Test01_SingleExpression()
@@ -20,13 +21,21 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            Assert.IsNotNull(queryGroup);
-            Assert.AreEqual(1, queryGroup.QueryFields.Count());
-            Assert.AreEqual(0, queryGroup.QueryGroups.Count());
+            Assert.AreEqual("([Field1] = @Field1)", queryGroup.GetString());
         }
 
         [Test]
-        public void Test02_MultipleExpressions()
+        public void Test02_ThrowExceptionIfConjuectionIsNotAConjunctionType()
+        {
+            // Setup
+            var expression = new { Conjunction = "NotAConjunctionType", Field1 = 1 };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void Test03_MultipleExpressions()
         {
             // Setup
             var expression = new { Field1 = 1, Field2 = 2, Field3 = 3 };
@@ -35,10 +44,23 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            Assert.IsNotNull(queryGroup);
-            Assert.AreEqual(3, queryGroup.QueryFields.Count());
-            Assert.AreEqual(0, queryGroup.QueryGroups.Count());
+            Assert.AreEqual("([Field1] = @Field1 AND [Field2] = @Field2 AND [Field3] = @Field3)", queryGroup.GetString());
         }
+
+        [Test]
+        public void Test04_MultipleExpressionsForConjunctionOr()
+        {
+            // Setup
+            var expression = new { Conjunction = Conjunction.Or, Field1 = 1, Field2 = 2, Field3 = 3 };
+
+            // Act
+            var queryGroup = QueryGroup.Parse(expression);
+
+            // Assert
+            Assert.AreEqual("([Field1] = @Field1 OR [Field2] = @Field2 OR [Field3] = @Field3)", queryGroup.GetString());
+        }
+
+        // No Operation
 
         [Test]
         public void TestNoOperation()
@@ -50,11 +72,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Equal, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] = @Field1)", queryGroup.GetString());
         }
+
+        // Equal
 
         [Test]
         public void TestEqualOperation()
@@ -66,11 +87,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Equal, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] = @Field1)", queryGroup.GetString());
         }
+
+        // NotEqual
 
         [Test]
         public void TestNotEqualOperation()
@@ -82,11 +102,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.NotEqual, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] <> @Field1)", queryGroup.GetString()); // !=
         }
+
+        // LessThan
 
         [Test]
         public void TestLessThanOperation()
@@ -98,11 +117,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.LessThan, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] < @Field1)", queryGroup.GetString());
         }
+
+        // GreaterThan
 
         [Test]
         public void TestGreaterThanOperation()
@@ -114,11 +132,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.GreaterThan, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] > @Field1)", queryGroup.GetString());
         }
+
+        // LessThanOrEqual
 
         [Test]
         public void TestLessThanOrEqualOperation()
@@ -130,11 +147,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.LessThanOrEqual, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] <= @Field1)", queryGroup.GetString());
         }
+
+        // GreaterThanOrEqual
 
         [Test]
         public void TestGreaterThanOrEqualOperation()
@@ -146,11 +162,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.GreaterThanOrEqual, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] >= @Field1)", queryGroup.GetString());
         }
+
+        // Like
 
         [Test]
         public void TestLikeOperation()
@@ -162,11 +177,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Like, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] LIKE @Field1)", queryGroup.GetString());
         }
+
+        // NotLike
 
         [Test]
         public void TestNotLikeOperation()
@@ -178,11 +192,10 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.NotLike, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual("([Field1] NOT LIKE @Field1)", queryGroup.GetString());
         }
+
+        // Between
 
         [Test]
         public void TestBetweenOperation()
@@ -194,11 +207,40 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Between, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual($"([Field1] BETWEEN @Field1_BetweenLeft AND @Field1_BetweenRight)", queryGroup.GetString());
         }
+
+        [Test]
+        public void ThrowExceptionIfBetweenOperationValueIsNotAnArray()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.Between, Value = "NotAnArray" } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfBetweenOperationValuesAreNotOnTheSameTypes()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, "2" } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfBetweenOperationValuesLengthIsNotEqualsTo2()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, 2, 3 } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        // NotBetween
 
         [Test]
         public void TestNotBetweenOperation()
@@ -210,43 +252,110 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.NotBetween, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual($"([Field1] NOT BETWEEN @Field1_BetweenLeft AND @Field1_BetweenRight)", queryGroup.GetString());
         }
+
+        [Test]
+        public void ThrowExceptionIfNotBetweenOperationValueIsNotAnArray()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = "NotAnArray" } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfNotBetweenOperationValuesAreNotOnTheSameTypes()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1, "2" } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfNotBetweenOperationValuesLengthIsNotEqualsTo2()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1, 2, 3 } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        // In
 
         [Test]
         public void TestInOperation()
         {
             // Setup
-            var expression = new { Field1 = new { Operation = Operation.In, Value = new[] { 1, 2 } } };
+            var expression = new { Field1 = new { Operation = Operation.In, Value = new[] { 1, 2, 3 } } };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.In, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual($"([Field1] IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))", queryGroup.GetString());
         }
+
+        [Test]
+        public void ThrowExceptionIfInOperationValueIsNotAnArray()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.In, Value = "NotAnArray" } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfInOperationValuesAreNotOnTheSameTypes()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.In, Value = new object[] { 1, "2" } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        // NotIn
 
         [Test]
         public void TestNotInOperation()
         {
             // Setup
-            var expression = new { Field1 = new { Operation = Operation.NotIn, Value = new[] { 1, 2 } } };
+            var expression = new { Field1 = new { Operation = Operation.NotIn, Value = new[] { 1, 2, 3 } } };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.NotIn, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
+            Assert.AreEqual($"([Field1] NOT IN (@Field1_In_0, @Field1_In_1, @Field1_In_2))", queryGroup.GetString());
         }
+
+        [Test]
+        public void ThrowExceptionIfNotInOperationValueIsNotAnArray()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotIn, Value = "NotAnArray" } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        [Test]
+        public void ThrowExceptionIfNotInOperationValuesAreNotOnTheSameTypes()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotIn, Value = new object[] { 1, "2" } } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        // All
 
         [Test]
         public void TestAllOperation()
@@ -269,18 +378,21 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            var queryGroups = queryGroup.QueryGroups.ToList();
-            Assert.AreEqual(0, queryFields.Count());
-            Assert.AreEqual(1, queryGroups.Count());
-            queryFields = queryGroups[0].QueryFields.ToList(); // Specialized for All
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Equal, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name);
-            Assert.AreEqual("Field1", queryFields[1].Field.Name); // @Field1 
-            Assert.AreEqual(Operation.NotEqual, queryFields[1].Operation);
-            Assert.AreEqual("Field1_1", queryFields[1].Parameter.Name); // @Field1_1
+            // Must be inside of another group as the ALL fields must be grouped by itself
+            Assert.AreEqual($"(([Field1] = @Field1 AND [Field1] <> @Field1_1))", queryGroup.GetString());
         }
+
+        [Test]
+        public void ThrowExceptionIfAllOperationValueIsNotAnExpressionOrAnArrayOfExpressions()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.All, Value = "NotAnExpressionsOrAnArrayOfExpressions" } };
+
+            // Act/Assert
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
+        }
+
+        // Any
 
         [Test]
         public void TestAnyOperation()
@@ -290,7 +402,7 @@ namespace RepoDb.UnitTests
             {
                 Field1 = new
                 {
-                    Operation = Operation.All,
+                    Operation = Operation.Any,
                     Value = new[]
                     {
                         new { Operation = Operation.Equal, Value = 1 },
@@ -303,101 +415,18 @@ namespace RepoDb.UnitTests
             var queryGroup = QueryGroup.Parse(expression);
 
             // Assert
-            var queryFields = queryGroup.QueryFields.ToList();
-            var queryGroups = queryGroup.QueryGroups.ToList();
-            Assert.AreEqual(0, queryFields.Count());
-            Assert.AreEqual(1, queryGroups.Count());
-            queryFields = queryGroups[0].QueryFields.ToList(); // Specialized for Any
-            Assert.AreEqual("Field1", queryFields[0].Field.Name);
-            Assert.AreEqual(Operation.Equal, queryFields[0].Operation);
-            Assert.AreEqual("Field1", queryFields[0].Parameter.Name); // @Field1
-            Assert.AreEqual("Field1", queryFields[1].Field.Name);
-            Assert.AreEqual(Operation.NotEqual, queryFields[1].Operation);
-            Assert.AreEqual("Field1_1", queryFields[1].Parameter.Name); // @Field_1
-        }
-
-        #endregion
-
-        #region Values
-
-        [Test]
-        public void ThrowExceptionIfBetweenOperationValueIsNotAnArray()
-        {
-            // Setup
-            var expression = new { Field1 = new { Operation = Operation.Between, Value = "NotAnArray" } };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
-        }
-
-        [Test]
-        public void ThrowExceptionIfNotBetweenOperationValueIsNotAnArray()
-        {
-            // Setup
-            var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = "NotAnArray" } };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
-        }
-
-        [Test]
-        public void ThrowExceptionIfInOperationValueIsNotAnArray()
-        {
-            // Setup
-            var expression = new { Field1 = new { Operation = Operation.In, Value = "NotAnArray" } };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
-        }
-
-        [Test]
-        public void ThrowExceptionIfNotInOperationValueIsNotAnArray()
-        {
-            // Setup
-            var expression = new { Field1 = new { Operation = Operation.NotIn, Value = "NotAnArray" } };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
-        }
-
-        [Test]
-        public void ThrowExceptionIfAllOperationValueIsNotAnArrayOfExpressions()
-        {
-            // Setup
-            var expression = new { Field1 = new { Operation = Operation.All, Value = "NotAnArrayOfExpressions" } };
-
-            // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
+            // Must be inside of another group as the OR fields must be grouped by itself
+            Assert.AreEqual($"(([Field1] = @Field1 OR [Field1] <> @Field1_1))", queryGroup.GetString());
         }
 
         [Test]
         public void ThrowExceptionIfAnyOperationValueIsNotAnArrayOfExpressions()
         {
             // Setup
-            var expression = new { Field1 = new { Operation = Operation.Any, Value = "NotAnArrayOfExpressions" } };
+            var expression = new { Field1 = new { Operation = Operation.Any, Value = "NotAnExpressionsOrAnArrayOfExpressions" } };
 
             // Act/Assert
-            Assert.Throws(typeof(InvalidOperationException), () =>
-            {
-                QueryGroup.Parse(expression);
-            });
+            Assert.Throws<InvalidQueryExpressionException>(() => QueryGroup.Parse(expression));
         }
-
-        #endregion
     }
 }
