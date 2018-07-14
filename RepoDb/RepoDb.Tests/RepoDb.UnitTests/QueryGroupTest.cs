@@ -10,7 +10,7 @@ namespace RepoDb.UnitTests
         // Expression
 
         [Test]
-        public void Test01_SingleExpression()
+        public void TestSingleExpression()
         {
             // Setup
             var expression = new { Field1 = 1 };
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
         }
 
         [Test]
-        public void Test02_ThrowExceptionIfConjuectionIsNotAConjunctionType()
+        public void TestThrowExceptionIfConjunctionIsNotAConjunctionType()
         {
             // Setup
             var expression = new { Conjunction = "NotAConjunctionType", Field1 = 1 };
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests
         }
 
         [Test]
-        public void Test03_MultipleExpressions()
+        public void TestMultipleExpressions()
         {
             // Setup
             var expression = new { Field1 = 1, Field2 = 2, Field3 = 3 };
@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests
         }
 
         [Test]
-        public void Test04_MultipleExpressionsForConjunctionOr()
+        public void TestMultipleExpressionsForConjunctionOr()
         {
             // Setup
             var expression = new { Conjunction = Conjunction.Or, Field1 = 1, Field2 = 2, Field3 = 3 };

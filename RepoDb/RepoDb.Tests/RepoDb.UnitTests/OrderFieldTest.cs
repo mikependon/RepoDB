@@ -67,6 +67,5 @@ namespace RepoDb.UnitTests
             // Act/Assert
             Assert.Throws(typeof(InvalidOperationException), () => OrderField.Parse(orderBy));
         }
-
     }
 }

@@ -130,6 +130,5 @@ namespace RepoDb.UnitTests
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => Field.Parse(obj));
         }
-
     }
 }
