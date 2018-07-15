@@ -328,7 +328,7 @@ namespace RepoDb
                     field.Name.ToLower() == property.ToLower()) == null);
             if (unmatchesQualifiers?.Count() > 0)
             {
-                throw new InvalidOperationException($"The qualifiers '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
@@ -600,26 +600,41 @@ namespace RepoDb
         internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
             where TEntity : DataEntity
         {
+            // Check for all the fields
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
+            var unmatchesQualifiers = qualifiers?.Where(field =>
+                properties?.FirstOrDefault(property =>
+                    field.Name.ToLower() == property.ToLower()) == null);
+            if (unmatchesQualifiers?.Count() > 0)
+            {
+                throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                    $"present at type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primaryKeyName = primary.GetMappedName();
 
             // Add the primary key as the default qualifier
             if (qualifiers == null && primary != null)
             {
-                qualifiers = Field.From(primary.GetMappedName());
+                qualifiers = Field.From(primaryKeyName);
             }
 
             // Get the target properties
-            var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Where(property => !(isPrimaryIdentity && property == primary));
-            var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
-                .Where(property => property != primary);
-            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge);
-            var mergeInsertableFields = mergeableProperties
-                .Where(property => insertableProperties.Contains(property))
-                .Select(property => new Field(property.Name));
-            var mergeUpdateableFields = mergeableProperties
-                .Where(property => updateableProperties.Contains(property))
-                .Select(property => new Field(property.Name));
+            var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+                .Select(property => property.GetMappedName())
+                .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryKeyName?.ToLower()));
+            var mergerableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
+                .Select(property => property.GetMappedName())
+                .Where(field => field.ToLower() != primaryKeyName?.ToLower());
+            var mergeInsertableFields = mergerableFields
+                .Where(field => insertableFields.Contains(field))
+                .Select(field => new Field(field));
+            var mergeUpdateableFields = mergerableFields
+                .Where(field => mergerableFields.Contains(field))
+                .Select(field => new Field(field));
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();

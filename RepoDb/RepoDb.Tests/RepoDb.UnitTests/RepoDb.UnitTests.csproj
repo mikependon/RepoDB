@@ -57,6 +57,7 @@
     <Compile Include="SqlDbStatementBuilderTest\CreateDeleteAllTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateInlineInsertTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateDeleteTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateMergeTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateInsertTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateInlineUpdateTest.cs" />
   </ItemGroup>
