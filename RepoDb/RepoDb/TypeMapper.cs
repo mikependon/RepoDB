@@ -61,11 +61,21 @@ namespace RepoDb
         public static void AddMap(TypeMap typeMap, bool force = false)
         {
             var target = Get(typeMap.Type);
-            if (target != null && force == false)
+            if (target == null)
             {
-                throw new DuplicateTypeMapException($"A mapping for type '{target.Type.FullName}' is already defined. It is currently mapped to '{target.DbType.GetType().FullName}' database type.");
+                _typeMaps.Add(typeMap);
             }
-            _typeMaps.Add(typeMap);
+            else
+            {
+                if (force == false)
+                {
+                    throw new DuplicateTypeMapException($"A mapping for type '{target.Type.FullName}' is already defined. It is currently mapped to '{target.DbType.GetType().FullName}' database type.");
+                }
+                else
+                {
+                    target.SetDbType(typeMap.DbType);
+                }
+            }
         }
 
         /// <summary>
@@ -86,6 +96,20 @@ namespace RepoDb
         public static TypeMap Get<T>()
         {
             return Get(typeof(T));
+        }
+
+        /// <summary>
+        /// Removes a mapping of targetted .NET CLR Type from the collection.
+        /// </summary>
+        /// <param name="type">The .NET CLR Type mapping to be removed.</param>
+        public static void RemoveMap(Type type)
+        {
+            var map = Get(type);
+            if (map == null)
+            {
+                throw new InvalidOperationException($"The type mapping for type '{type.FullName}' is not found.");
+            }
+            _typeMaps.Remove(map);
         }
     }
 }
