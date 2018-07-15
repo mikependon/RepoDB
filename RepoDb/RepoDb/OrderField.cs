@@ -61,7 +61,7 @@ namespace RepoDb
         {
             if (obj == null)
             {
-                return null;
+                throw new NullReferenceException("The 'obj' must not be null.");
             }
             var list = new List<OrderField>();
             obj
