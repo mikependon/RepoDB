@@ -544,7 +544,7 @@ namespace RepoDb
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary))
-                .Select(p => new Field(p.Name));
+                .Select(property => new Field(property.GetMappedName()));
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();

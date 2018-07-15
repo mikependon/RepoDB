@@ -332,16 +332,14 @@ namespace RepoDb
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
-            // Get all target properties
-            var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
-                .Select(property => property.GetMappedName());
-            var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)?
-                .Select(property => property.GetMappedName())
-                .Where(property => mergeableProperties.Contains(property));
-
             // Check for the unmatches
             if (overrideIgnore == false)
             {
+                var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
+                    .Select(property => property.GetMappedName());
+                var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)?
+                    .Select(property => property.GetMappedName())
+                    .Where(property => mergeableProperties.Contains(property));
                 unmatchesFields = fields?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesFields?.Count() > 0)
@@ -365,26 +363,16 @@ namespace RepoDb
             }
 
             // Get all target fields
-            var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
+            var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Select(property => property.GetMappedName())
-                .Where(property => !(isPrimaryIdentity && property == primaryMappedName));
-            var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
+                .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryMappedName?.ToLower()));
+            var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
                 .Select(property => property.GetMappedName())
-                .Where(property => property != primaryMappedName);
-            var mergeInsertableFields = mergeableProperties
-                .Where(property => insertableProperties.Contains(property) &&
-                    mergeableProperties.Contains(property) &&
-                        inlineMergeableProperties.Contains(property))
-                .Where(property =>
-                    fields.Any(field => field.Name.ToLower() == property.ToLower()))
-                .Select(property => new Field(property));
-            var mergeUpdateableFields = mergeableProperties
-                .Where(property => updateableProperties.Contains(property) &&
-                    mergeableProperties.Contains(property) &&
-                        inlineMergeableProperties.Contains(property))
-                .Where(property =>
-                    fields.Any(field => field.Name.ToLower() == property.ToLower()))
-                .Select(property => new Field(property));
+                .Where(field => field.ToLower() != primaryMappedName?.ToLower());
+            var mergeInsertableFields = fields
+                .Where(field => overrideIgnore == true || insertableFields.Contains(field.Name));
+            var mergeUpdateableFields = fields
+                .Where(field => overrideIgnore == true || updateableFields.Contains(field.Name));
 
             // Check if there are inline mergeable fields (for insert)
             if (!mergeInsertableFields.Any())
@@ -464,26 +452,47 @@ namespace RepoDb
             QueryGroup where, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
+            // Check for the fields presence
+            if (fields == null)
+            {
+                throw new NullReferenceException("The target fields must be present.");
+            }
+
+            // Check for all the fields
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
+            var unmatchesFields = fields?.Where(field =>
+                properties?.FirstOrDefault(property =>
+                    field.Name.ToLower() == property.ToLower()) == null);
+            if (unmatchesFields?.Count() > 0)
+            {
+                throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
+                    $"present at type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower());
+            var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) == true;
 
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline updatable fields found at type '{typeof(TEntity).FullName}'.");
+                throw new InvalidOperationException($"No inline updatable fields for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}'.");
             }
 
-            // Get the target properties
-            var updateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
-            var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
-                .Where(property => property != primary && updateableProperties.Contains(property))
-                .Select(property => property.GetMappedName());
+            // Append prefix to all parameters
+            where?.AppendParametersPrefix();
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
+                var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
+                    .Select(property => property.GetMappedName());
+                var inlineUpdateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
+                    .Select(property => property.GetMappedName())
+                    .Where(field => field.ToLower() != primary?.GetMappedName().ToLower() && updateableFields.Contains(field));
                 var unmatchesProperties = fields?.Where(field =>
-                    inlineUpdateableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
+                    inlineUpdateableFields?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
@@ -722,6 +731,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            where?.AppendParametersPrefix();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
                 .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>())
                 .Select(p => new Field(p.Name));

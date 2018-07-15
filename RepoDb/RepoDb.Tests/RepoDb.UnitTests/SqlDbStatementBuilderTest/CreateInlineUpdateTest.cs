@@ -153,6 +153,68 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
+        private class TestCreateInlineUpdateOverrideIgnoreForInlineUpdateClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.InlineUpdate)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineUpdateOverrideIgnoreForInlineUpdate()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineUpdateOverrideIgnoreForInlineUpdateClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var expression = new { Field1 = 1 };
+
+            // Act
+            var queryGroup = QueryGroup.Parse(expression);
+            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup, true);
+            var expected = $"" +
+                $"UPDATE [TestCreateInlineUpdateOverrideIgnoreForInlineUpdateClass] " +
+                $"SET [Field1] = @Field1, " +
+                $"[Field2] = @Field2, " +
+                $"[Field3] = @Field3 " +
+                $"WHERE ([Field1] = @_Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestCreateInlineUpdateOverrideIgnoreForUpdateClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Update)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineUpdateOverrideIgnoreForUpdate()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineUpdateOverrideIgnoreForUpdateClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var expression = new { Field1 = 1 };
+
+            // Act
+            var queryGroup = QueryGroup.Parse(expression);
+            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup, true);
+            var expected = $"" +
+                $"UPDATE [TestCreateInlineUpdateOverrideIgnoreForUpdateClass] " +
+                $"SET [Field1] = @Field1, " +
+                $"[Field2] = @Field2, " +
+                $"[Field3] = @Field3 " +
+                $"WHERE ([Field1] = @_Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         private class ThrowExceptionAtInlineUpdateIfFieldsAreNullClass : DataEntity
         {
         }
