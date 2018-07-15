@@ -1,15 +1,31 @@
-﻿
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'RepoDB')
+﻿IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'RepoDBTest')
 BEGIN
-	CREATE DATABASE RepoDB;
+	CREATE DATABASE RepoDBTest;
 END
 GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS [dbo].[OrderDetail];
-DROP TABLE IF EXISTS [dbo].[Order];
-DROP TABLE IF EXISTS [dbo].[Customer];
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'OrderDetail'))
+BEGIN
+	DROP TABLE [dbo].[OrderDetail];
+END
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Order'))
+BEGIN
+	DROP TABLE [dbo].[Order];
+END
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Customer'))
+BEGIN
+	DROP TABLE [dbo].[Customer];
+END
 GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
@@ -115,7 +131,7 @@ DBCC CHECKIDENT ([Order], RESEED, 1);
 DBCC CHECKIDENT ([OrderDetail], RESEED, 1);
 GO
 
-DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Person]);
+DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Customer]);
 SET @counter = COALESCE(@counter, 1);
 WHILE (@counter < 10)
 BEGIN

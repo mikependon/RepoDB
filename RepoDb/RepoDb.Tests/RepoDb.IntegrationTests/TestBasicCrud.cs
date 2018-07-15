@@ -40,10 +40,10 @@ namespace RepoDb.IntegrationTests
             };
 
             //act
-            repository.Insert(fixtureData);
+            var id = repository.Insert(fixtureData);
 
             //assert
-            var customer = repository.Query<Customer>(new { GlobalId = fixtureData.GlobalId }).FirstOrDefault();
+            var customer = repository.Query<Customer>(id).FirstOrDefault(); //new { GlobalId = fixtureData.GlobalId }).FirstOrDefault();
             customer.ShouldNotBeNull();
             customer.Id.ShouldNotBe(0);
             customer.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -55,7 +55,7 @@ namespace RepoDb.IntegrationTests
             customer.IsActive.ShouldBe(fixtureData.IsActive);
             //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
             //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            customer.LastUserId.ShouldBe(fixtureData.FirstName);
+            customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
         [Test]
@@ -92,8 +92,8 @@ namespace RepoDb.IntegrationTests
             savedData.Email.ShouldBe(fixtureData.Email);
             savedData.IsActive.ShouldBe(fixtureData.IsActive);
             //savedData.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            savedData.LastUserId.ShouldBe(fixtureData.FirstName);
+            //savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
         [Test]
@@ -144,8 +144,8 @@ namespace RepoDb.IntegrationTests
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
             //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            customer.LastUserId.ShouldBe(fixtureData.FirstName);
+            //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
         [Test]
