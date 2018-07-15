@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
@@ -16,6 +17,7 @@ namespace RepoDb.IntegrationTests
         [SetUp]
         public void Setup()
         {
+            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
             SetupHelper.InitDatabase();
         }
 
@@ -35,6 +37,7 @@ namespace RepoDb.IntegrationTests
                 IsActive = true,
                 Email = "juandelacruz@gmai.com",
                 //DateInsertedUtc = DateTime.UtcNow,
+                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -43,7 +46,9 @@ namespace RepoDb.IntegrationTests
             var id = repository.Insert(fixtureData);
 
             //assert
-            var customer = repository.Query<Customer>(id).FirstOrDefault(); //new { GlobalId = fixtureData.GlobalId }).FirstOrDefault();
+            var customer = repository.Query<Customer>(id).FirstOrDefault();
+
+            //assert
             customer.ShouldNotBeNull();
             customer.Id.ShouldNotBe(0);
             customer.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -95,7 +100,7 @@ namespace RepoDb.IntegrationTests
             //savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
-
+        
         [Test]
         public void TestDelete()
         {
@@ -177,4 +182,3 @@ namespace RepoDb.IntegrationTests
         }
     }
 }
-
