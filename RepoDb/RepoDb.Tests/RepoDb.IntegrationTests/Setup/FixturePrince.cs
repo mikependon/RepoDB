@@ -11,7 +11,6 @@ namespace RepoDb.IntegrationTests.Setup
         public void Setup()
         {
             TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            //SetupHelper.CleanDatabase();
             SetupHelper.InitDatabase();
         }
 

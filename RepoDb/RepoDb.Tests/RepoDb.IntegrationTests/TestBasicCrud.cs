@@ -12,6 +12,12 @@ namespace RepoDb.IntegrationTests
     [TestFixture]
     public class TestBasicCrud : FixturePrince
     {
+        [SetUp]
+        public void SetupCrudTables()
+        {
+            SetupHelper.ExecuteEmbeddedSqlFile("RepoDb.IntegrationTests.Setup.RefreshDB.sql");
+        }
+
         [Test]
         public void TestInsert()
         {
@@ -27,7 +33,6 @@ namespace RepoDb.IntegrationTests
                 Address = "San Lorenzo, Makati, Philippines 4225",
                 IsActive = true,
                 Email = "juandelacruz@gmai.com",
-                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -48,7 +53,6 @@ namespace RepoDb.IntegrationTests
             customer.Address.ShouldBe(fixtureData.Address);
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
-            customer.DateInsertedUtc.ShouldNotBeNull();
             customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
@@ -67,7 +71,6 @@ namespace RepoDb.IntegrationTests
                 Address = "San Lorenzo, Makati, Philippines 4225-EDITED",
                 IsActive = true,
                 Email = "juandelacruz@gmai.com-EDITED",
-                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };

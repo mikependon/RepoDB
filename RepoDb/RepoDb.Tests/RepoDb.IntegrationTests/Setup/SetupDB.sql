@@ -36,6 +36,12 @@ BEGIN
 END
 GO
 
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TestTable'))
+BEGIN
+	DROP TABLE [dbo].[TestTable];
+END
+GO
+
 --------------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE [dbo].[Customer](
@@ -130,45 +136,6 @@ REFERENCES [dbo].[Order] ([Id])
 GO
 
 ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_Order]
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-DBCC CHECKIDENT ([Customer], RESEED, 1);
-DBCC CHECKIDENT ([Order], RESEED, 1);
-DBCC CHECKIDENT ([OrderDetail], RESEED, 1);
-GO
-
-DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Customer]);
-SET @counter = COALESCE(@counter, 1);
-WHILE (@counter < 10)
-BEGIN
-
-	INSERT INTO [dbo].[Customer](
-	 [GlobalId]
-	,[FirstName]
-	,[LastName]
-	,[MiddleName]
-	,[Address]
-	,[Email]
-	,[IsActive]
-	,[DateInsertedUtc]
-	,[LastUpdatedUtc]
-	,[LastUserId]
-	) VALUES (
-	 NEWID()
-	,'Juan'
-	,'dela Cruz'
-	,'Pinto'
-	,'San Lorenzo, Makati, Philippines'
-	,'juandelacruz@gmail.com'
-	,1
-	,GETUTCDATE()
-	,GETUTCDATE()
-	,SYSTEM_USER
-	);
-	SET @counter = @counter + 1;
-END
 GO
 
 --------------------------------------------------------------------------------------------------------------------------------------

@@ -7,15 +7,14 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using RepoDb.Extensions;
 
-namespace RepoDb.IntegrationTests.Setup {
+namespace RepoDb.IntegrationTests.Setup
+{
     public static class SetupHelper
     {
-        public static void InitDatabase()
+        public static void ExecuteEmbeddedSqlFile(string resourceName)
         {
             string script;
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "RepoDb.IntegrationTests.Setup.SetupDB.sql";
-
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
             {
@@ -35,6 +34,12 @@ namespace RepoDb.IntegrationTests.Setup {
                     }
                 }
             }
+        }
+
+        public static void InitDatabase()
+        {
+            var resourceName = "RepoDb.IntegrationTests.Setup.SetupDB.sql";
+            ExecuteEmbeddedSqlFile(resourceName);
         }
 
         public static void CleanDatabase()
