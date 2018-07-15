@@ -1,5 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Data;
 
 namespace RepoDb
@@ -28,6 +27,15 @@ namespace RepoDb
         /// <summary>
         /// Gets the database type used for mapping.
         /// </summary>
-        public DbType DbType { get; }
+        public DbType DbType { get; private set; }
+
+        /// <summary>
+        /// Internally sets the value of the <i>DbType</i> property.
+        /// </summary>
+        /// <param name="dbType">The value of the <i>DbType</i>.</param>
+        internal void SetDbType(DbType dbType)
+        {
+            DbType = dbType;
+        }
     }
 }
