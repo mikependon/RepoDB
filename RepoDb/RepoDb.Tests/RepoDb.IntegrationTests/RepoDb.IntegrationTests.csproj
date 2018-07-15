@@ -55,7 +55,6 @@
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
-    <Compile Include="TestBasicCrud.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Setup\SetupDB.sql" />

@@ -51,7 +51,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderFieldTest.cs" />
     <Compile Include="QueryGroupTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateBatchQueryTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateInlineMergeTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateCountTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateDeleteAllTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateInlineInsertTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateDeleteTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
