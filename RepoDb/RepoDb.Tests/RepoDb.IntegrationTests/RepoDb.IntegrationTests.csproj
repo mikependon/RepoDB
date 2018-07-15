@@ -54,9 +54,16 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setup\Constants.cs" />
+    <Compile Include="Setup\FixturePrince.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
     <Compile Include="TestBasicCrud.cs" />
+    <Compile Include="TestBlobTypeMapping.cs" />
+    <Compile Include="TestGeographyTypeMapping.cs" />
+    <Compile Include="TestGeometryTypeMapping.cs" />
+    <Compile Include="TestStringTypeMapping.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Setup\SetupDB.sql" />
@@ -70,6 +77,9 @@
       <Project>{A31A38C8-603E-4499-A5C1-4A6366864EA7}</Project>
       <Name>RepoDb</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Setup\hello-world.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

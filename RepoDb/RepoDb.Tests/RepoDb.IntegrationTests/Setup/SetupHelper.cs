@@ -8,11 +8,6 @@ using System.Text.RegularExpressions;
 using RepoDb.Extensions;
 
 namespace RepoDb.IntegrationTests.Setup {
-    public static class Constants
-    {
-        public static readonly string TestDatabase = @"Server=.;Database=REPODBTST;Integrated Security=True;";
-    }
-
     public static class SetupHelper
     {
         public static void InitDatabase()
@@ -49,6 +44,7 @@ namespace RepoDb.IntegrationTests.Setup {
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[OrderDetail];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Order];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Customer];");
+                connection.ExecuteNonQuery("DELETE FROM [dbo].[TypeMap];");
 
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([OrderDetail], RESEED, 1);");
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([Order], RESEED, 1);");

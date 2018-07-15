@@ -10,15 +10,8 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestBasicCrud
+    public class TestBasicCrud : FixturePrince
     {
-        [SetUp]
-        public void Setup()
-        {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
-        }
-
         [Test]
         public void TestInsert()
         {
@@ -181,12 +174,6 @@ namespace RepoDb.IntegrationTests
             savedData.IsActive.ShouldBe(fixtureData.IsActive);
             savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
-        }
-
-        [TearDown]
-        public void Cleanup()
-        {
-            SetupHelper.CleanDatabase();
         }
     }
 }
