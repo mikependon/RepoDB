@@ -48,7 +48,7 @@ namespace RepoDb
                         dbCommand.CreateParameters(new
                         {
                             ColumnName = columnName,
-                            TableName = mappedName
+                            TableName = mappedName.AsUnquoted()
                         });
 
                         // Execute and set the result

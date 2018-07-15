@@ -1788,7 +1788,7 @@ namespace RepoDb
             var command = Command.Insert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = string.Empty;
-            var param = entity?.AsObject();
+            var param = entity?.AsObject(command);
 
             // Compose command text
             if (commandType == CommandType.StoredProcedure)
