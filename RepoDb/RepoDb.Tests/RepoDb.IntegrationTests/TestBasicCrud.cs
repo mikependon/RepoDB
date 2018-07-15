@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
+using RepoDb;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
-using System.Data;
 
 namespace RepoDb.IntegrationTests
 {
@@ -33,17 +35,20 @@ namespace RepoDb.IntegrationTests
                 MiddleName = "Pinto",
                 Address = "San Lorenzo, Makati, Philippines 4225",
                 IsActive = true,
-                Email = "juandelacruz@gmail.com",
+                Email = "juandelacruz@gmai.com",
+                //DateInsertedUtc = DateTime.UtcNow,
                 DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
 
             //act
-            repository.Insert(fixtureData);
+            var id = repository.Insert(fixtureData);
 
             //assert
-            var customer = repository.Query<Customer>(new { GlobalId = fixtureData.GlobalId }).FirstOrDefault();
+            var customer = repository.Query<Customer>(id).FirstOrDefault();
+
+            //assert
             customer.ShouldNotBeNull();
             customer.Id.ShouldNotBe(0);
             customer.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -53,15 +58,9 @@ namespace RepoDb.IntegrationTests
             customer.Address.ShouldBe(fixtureData.Address);
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
-
-            // This would really not equal as you ignore this in the insertion, but is defaulted in the database
-            customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-
-            // This has been fixed by the TypeMapper.AddMap
-            customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-
-            // This must be Environment.UserName
-            customer.LastUserId.ShouldBe(fixtureData.FirstName);
+            //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
+            //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
         [Test]
@@ -98,10 +97,10 @@ namespace RepoDb.IntegrationTests
             savedData.Email.ShouldBe(fixtureData.Email);
             savedData.IsActive.ShouldBe(fixtureData.IsActive);
             //savedData.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            savedData.LastUserId.ShouldBe(fixtureData.FirstName);
+            //savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
-
+        
         [Test]
         public void TestDelete()
         {
@@ -150,8 +149,8 @@ namespace RepoDb.IntegrationTests
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
             //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            customer.LastUserId.ShouldBe(fixtureData.FirstName);
+            //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
         [Test]

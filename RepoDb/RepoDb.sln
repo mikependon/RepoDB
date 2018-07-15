@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb", "RepoDb\RepoDb.csproj", "{A31A38C8-603E-4499-A5C1-4A6366864EA7}"
 EndProject
@@ -90,5 +90,11 @@ Global
 		{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
 		{E638F4A1-FFD7-4643-B806-16059120B7F0} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
 		{DDC83F13-2D4B-416A-957D-ED7B9A30DA1C} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
+<<<<<<< HEAD
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A2CDDAD3-7C25-4343-AFC6-0FF7CAD1B560}
+=======
+>>>>>>> 64e178417989e4f9bc3ef5d9f77f8364946e7745
 	EndGlobalSection
 EndGlobal
