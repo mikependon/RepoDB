@@ -10,18 +10,21 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestBlobTypeMapping : FixturePrince
+    public class TestBlobDataTypeMapping : FixturePrince
     {
         [Test]
         public void BinaryTypeMap()
         {
             //arrange
             var baseText = @"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-            byte[] baseBytes = Encoding.ASCII.GetBytes(baseText);
+            byte[] baseByteData = Encoding.ASCII.GetBytes(baseText);
 
             var fixtureData = new Models.TypeMapBlob
             {
-                binary_column = baseBytes,
+                binary_column = baseByteData,
+                image_column = baseByteData,
+                varbinary_column = baseByteData,
+                varbinarymax_column = baseByteData
             };
 
             //act
@@ -36,6 +39,11 @@ namespace RepoDb.IntegrationTests
 
             var resulText = Encoding.ASCII.GetString(saveData.binary_column);
             resulText.ShouldBe(baseText);
+
+            saveData.binary_column.ShouldBe(fixtureData.binary_column);
+            saveData.image_column.ShouldBe(fixtureData.image_column);
+            saveData.varbinary_column.ShouldBe(fixtureData.varbinary_column);
+            saveData.varbinarymax_column.ShouldBe(fixtureData.varbinarymax_column);
         }
 
         [Test]

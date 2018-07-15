@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,6 @@ namespace RepoDb.IntegrationTests.Models
 
         public long? bigint_column { get; set; }
 
-        //public byte?[] binary_column { get; set; }
-
         public bool? bit_column { get; set; }
 
         public string char_column { get; set; }
@@ -34,14 +33,6 @@ namespace RepoDb.IntegrationTests.Models
         public decimal? decimal_column { get; set; }
 
         public double? float_column { get; set; }
-
-        //public UNKNOWN_geography geography_column { get; set; }
-
-        //public UNKNOWN_geometry geometry_column { get; set; }
-
-        //public UNKNOWN_hierarchyid hierarchyid_column { get; set; }
-
-        //public byte?[] image_column { get; set; }
 
         public int? int_column { get; set; }
 
@@ -65,8 +56,6 @@ namespace RepoDb.IntegrationTests.Models
 
         public decimal? smallmoney_column { get; set; }
 
-        //public UNKNOWN_sql_variant sql_variant_column { get; set; }
-
         public string text_column { get; set; }
 
         public TimeSpan? time_column { get; set; }
@@ -75,16 +64,9 @@ namespace RepoDb.IntegrationTests.Models
 
         public Guid? uniqueidentifier { get; set; }
 
-        //public byte?[] varbinary_column { get; set; }
-
-        //public byte?[] varbinarymax_column { get; set; }
-
         public string varchar_column { get; set; }
 
         public string varcharmax_column { get; set; }
-
-        //public string xml_column { get; set; }
-
     }
 
     [Map("[dbo].[TypeMap]")]
@@ -109,5 +91,26 @@ namespace RepoDb.IntegrationTests.Models
         public Guid SessionId { get; set; }
 
         public string xml_column { get; set; }
+    }
+
+    [Map("[dbo].[TypeMap]")]
+    public class TypeMapSpatial : DataEntity
+    {
+        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
+        public Guid SessionId { get; set; }
+
+        public object geography_column { get; set; }
+
+        public object geometry_column { get; set; }
+    }
+    [Map("[dbo].[TypeMap]")]
+    public class TypeMapUnsupported : DataEntity
+    {
+        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
+        public Guid SessionId { get; set; }
+
+        public object hierarchyid_column { get; set; }
+
+        public object sql_variant_column { get; set; }
     }
 }

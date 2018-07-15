@@ -60,10 +60,9 @@
     <Compile Include="Setup\FixturePrince.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
     <Compile Include="TestBasicCrud.cs" />
-    <Compile Include="TestBlobTypeMapping.cs" />
-    <Compile Include="TestGeographyTypeMapping.cs" />
-    <Compile Include="TestGeometryTypeMapping.cs" />
-    <Compile Include="TestStringTypeMapping.cs" />
+    <Compile Include="TestBlobDataTypeMapping.cs" />
+    <Compile Include="TestSpatialDataTypeMapping.cs" />
+    <Compile Include="TestStringDataTypeMapping.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Setup\SetupDB.sql" />

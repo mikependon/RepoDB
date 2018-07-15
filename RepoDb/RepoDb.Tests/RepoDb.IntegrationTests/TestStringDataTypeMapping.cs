@@ -9,7 +9,7 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestStringTypeMapping: FixturePrince
+    public class TestStringDataTypeMapping: FixturePrince
     {
         [Test]
         public void TestStringDataTypesInsert()
