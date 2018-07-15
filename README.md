@@ -1,16 +1,13 @@
 ## RepoDb
 
-A dynamic, lightweight and fast repo-based ORM .NET Library.
+A dynamic, lightweight, and fast repo-based ORM .NET Library.
 
-### Package
-Link: https://www.nuget.org/packages/RepoDb
-
-### Documentation
-Link: https://repodb.readthedocs.io/en/latest/
+Package: https://www.nuget.org/packages/RepoDb  
+Documentation: https://repodb.readthedocs.io/en/latest/
 
 ### Goal
 
-To be the fastest and easy-to-use lightweight ORM.
+To be the fastest and easiest-to-use lightweight ORM.
 
 ### Vision
 
@@ -18,26 +15,26 @@ To provide more flexibility and fast-switching development approach, whether to 
 
 ### Principles
 
- - We will keep it simple as possible (KISS principle)
- - We will help developers to be more focus on SOLID principle
- - We will make it fast as possible
- - We will make it more flexible
- - We will never ever do try-catch inside the library
- - We will never make complex implementations (specially for complex Join Queries)
+ - Keep it as simple as possible (KISS principle)
+ - Help developers be more focused on the SOLID principle
+ - Make it fast as possible
+ - Make it more flexible
+ - Never use try-catch inside the library
+ - Never create complex implementations (especially for complex Join Queries)
 
 ### What's with RepoDb?
 
- - Operations (Asynchronous)
- - Recursive Query
+ - Caching
  - Cyclomatic Complexity
- - Type Mapping
+ - Expression Tree
  - Field Mapping
  - Multiple Mapping
- - Expression Tree
- - Caching
- - Tracing
+ - Operations (Asynchronous)
+ - Recursive Query
  - SQL Statement Builder
+ - Tracing
  - Transactions
+ - Type Mapping
 
 ### Operations
 
