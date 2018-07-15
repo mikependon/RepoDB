@@ -1626,9 +1626,6 @@ namespace RepoDb
             // Check
             GuardInlineUpdateable<TEntity>();
 
-            // Append prefix to all parameters
-            where.AppendParametersPrefix();
-
             // Variables
             var command = Command.InlineUpdate;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
@@ -1936,7 +1933,7 @@ namespace RepoDb
             // Variables
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = string.Empty;
-            var param = entity?.AsObject();
+            var param = entity?.AsObject(command);
 
             // Compose command text
             if (commandType == CommandType.StoredProcedure)
@@ -2852,15 +2849,10 @@ namespace RepoDb
             // Variables
             var command = Command.Update;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            if (commandType != CommandType.StoredProcedure)
-            {
-                // Append prefix to all parameters for non StoredProcedure (this is mappable, that's why)
-                where.AppendParametersPrefix();
-            }
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
                 (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
-            var param = entity?.AsObject(where);
+            var param = entity?.AsObject(where, command);
 
             // Before Execution
             if (trace != null)

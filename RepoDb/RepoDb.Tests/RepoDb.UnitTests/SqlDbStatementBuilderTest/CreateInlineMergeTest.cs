@@ -206,6 +206,138 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
+        private class TestCreateInlineMergeWithOverrideIgnoreFromInlineMergeClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.InlineMerge)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineMergeWithOverrideIgnoreFromInlineMerge()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineMergeWithOverrideIgnoreFromInlineMergeClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From(new[] { "Field1" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers, true);
+            var expected = $"" +
+                $"MERGE [TestCreateInlineMergeWithOverrideIgnoreFromInlineMergeClass] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( @Field1, @Field2, @Field3 ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestCreateInlineMergeWithOverrideIgnoreFromMergeClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Merge)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineMergeWithOverrideIgnoreFromMerge()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineMergeWithOverrideIgnoreFromMergeClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From(new[] { "Field1" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers, true);
+            var expected = $"" +
+                $"MERGE [TestCreateInlineMergeWithOverrideIgnoreFromMergeClass] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( @Field1, @Field2, @Field3 ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestCreateInlineMergeWithOverrideIgnoreFromInsertClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Insert)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineMergeWithOverrideIgnoreFromInsert()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineMergeWithOverrideIgnoreFromInsertClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From(new[] { "Field1" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers, true);
+            var expected = $"" +
+                $"MERGE [TestCreateInlineMergeWithOverrideIgnoreFromInsertClass] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( @Field1, @Field2, @Field3 ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestCreateInlineMergeWithOverrideIgnoreFromUpdateClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Update)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineMergeWithOverrideIgnoreFromUpdate()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineMergeWithOverrideIgnoreFromUpdateClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From(new[] { "Field1" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers, true);
+            var expected = $"" +
+                $"MERGE [TestCreateInlineMergeWithOverrideIgnoreFromUpdateClass] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( @Field1, @Field2, @Field3 ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         private class ThrowExceptionAtCreateInlineMergeIfTheFieldsAreNullClass : DataEntity
         {
             public int Field1 { get; set; }
@@ -321,6 +453,27 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var queryBuilder = new QueryBuilder<ThrowExceptionAtCreateInlineMergeIfTheQualifiersContainsAnIgnoreInlineMergeFieldsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
             var qualifiers = Field.From(new[] { "Field1", "Field3" });
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers));
+        }
+
+        private class ThrowExceptionAtCreateInlineMergeIfFieldIsIgnoreInlineMergeClass : DataEntity
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.InlineMerge)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtCreateInlineMergeIfFieldIsIgnoreInlineMerge()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtCreateInlineMergeIfFieldIsIgnoreInlineMergeClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From(new[] { "Field1", "Field2" });
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers));

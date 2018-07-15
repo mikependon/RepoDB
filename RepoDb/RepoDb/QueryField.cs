@@ -74,7 +74,7 @@ namespace RepoDb
         /// </summary>
         internal void AppendParameterPrefix()
         {
-            ((Parameter)Parameter)?.AppendPrefix();
+            Parameter?.AppendPrefix();
         }
 
         /// <summary>
