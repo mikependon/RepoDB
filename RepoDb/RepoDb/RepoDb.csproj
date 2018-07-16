@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ForeignAttribute.cs" />
+    <Compile Include="Attributes\TypeMap.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DataEntityChildItemData.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="DataEntityMap.cs" />
-    <Compile Include="TypeMap.cs" />
+    <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />
   </ItemGroup>
   <ItemGroup />

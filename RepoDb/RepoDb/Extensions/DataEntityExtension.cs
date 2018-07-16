@@ -269,7 +269,7 @@ namespace RepoDb.Extensions
         /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <param name="queryGroup">The query group to be merged.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup)
+        internal static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup)
         {
             return AsObject(dataEntity, queryGroup, Command.None);
         }
@@ -281,7 +281,7 @@ namespace RepoDb.Extensions
         /// <param name="queryGroup">The query group to be merged.</param>
         /// <param name="command">The target command type to be used for the object transformation.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup, Command command)
+        internal static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup, Command command)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             var properties = GetPropertiesFor(dataEntity.GetType(), command);
@@ -307,7 +307,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity)
+        internal static object AsObject(this DataEntity dataEntity)
         {
             return AsObject(dataEntity, null, Command.None);
         }
@@ -318,7 +318,7 @@ namespace RepoDb.Extensions
         /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <param name="command">The target command type to be used for the object transformation.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity, Command command)
+        internal static object AsObject(this DataEntity dataEntity, Command command)
         {
             return AsObject(dataEntity, null, command);
         }

@@ -802,12 +802,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = Convert.ToInt64(ExecuteScalar(connection: connection,
+            var result = Convert.ToInt64(ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction));
+                transaction: transaction,
+                entityType: typeof(TEntity)));
 
             // After Execution
             if (trace != null)
@@ -1033,12 +1034,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -1193,11 +1195,12 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -1305,12 +1308,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalar(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // Set back result equals to PrimaryKey type
             result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
@@ -1477,12 +1481,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -1654,12 +1659,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -1785,7 +1791,7 @@ namespace RepoDb
             var command = Command.Insert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = string.Empty;
-            var param = entity?.AsObject(command);
+            var param = entity.AsObject(command);
 
             // Compose command text
             if (commandType == CommandType.StoredProcedure)
@@ -1828,12 +1834,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalar(connection: connection,
+            var result = ExecuteScalarInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // Set back result equals to PrimaryKey type
             result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
@@ -1976,12 +1983,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -2712,11 +2720,12 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: null,
                 commandType: commandType,
-                commandTimeout: commandTimeout);
+                commandTimeout: commandTimeout,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -2875,12 +2884,13 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteNonQuery(connection: connection,
+            var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity));
 
             // After Execution
             if (trace != null)
@@ -3028,14 +3038,14 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Actual Execution
-            using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
+            using (var reader = ExecuteReader(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction))
             {
-                command.CreateParameters(param);
-                using (var reader = command.ExecuteReader())
-                {
-                    //var result = reader.AsEnumerable();
-                    return DataReaderConverter.ToEnumerable((DbDataReader)reader);
-                }
+                return DataReaderConverter.ToEnumerable((DbDataReader)reader);
             }
         }
 
@@ -3100,7 +3110,8 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Actual Execution
-            using (var reader = ExecuteReader(connection, commandText, param, commandType, commandTimeout, transaction))
+            using (var reader = ExecuteReaderInternal(connection, commandText, param, 
+                commandType, commandTimeout, transaction, typeof(TEntity)))
             {
                 return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
             }
@@ -3160,6 +3171,38 @@ namespace RepoDb
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
+        {
+            return ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: null);
+        }
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the instance of the data reader.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="entityType">The type of data entity where to map the current param types.</param>
+        /// <returns>An instance of the data reader object.</returns>
+        internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            Type entityType = null)
         {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
@@ -3223,6 +3266,38 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
+            return ExecuteNonQueryInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: null);
+        }
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the number of affected rows during the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="entityType">The type of data entity where to map the current param types.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        internal static int ExecuteNonQueryInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            Type entityType = null)
+        {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
@@ -3285,13 +3360,45 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
+            return ExecuteScalarInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: null);
+        }
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <i>CommandText</i> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="entityType">The type of data entity where to map the current param types.</param>
+        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        internal static object ExecuteScalarInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            Type entityType = null)
+        {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
-                command.CreateParameters(param);
+                command.CreateParameters(param, entityType);
                 return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
         }

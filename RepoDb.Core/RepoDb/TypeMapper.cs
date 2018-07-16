@@ -11,17 +11,17 @@ namespace RepoDb
     /// </summary>
     public static class TypeMapper
     {
-        private static readonly IList<TypeMap> _typeMaps = new List<TypeMap>();
+        private static readonly IList<TypeMapItem> _typeMapItems = new List<TypeMapItem>();
 
         static TypeMapper()
         {
-            new List<TypeMap>();
+            new List<TypeMapItem>();
         }
 
         /// <summary>
         /// Gets the list of type-mapping objects.
         /// </summary>
-        public static IEnumerable<TypeMap> TypeMaps => _typeMaps;
+        public static IEnumerable<TypeMapItem> TypeMaps => _typeMapItems;
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
@@ -41,29 +41,29 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void AddMap(Type type, DbType dbType, bool force = false)
         {
-            AddMap(new TypeMap(type, dbType), force);
+            AddMap(new TypeMapItem(type, dbType), force);
         }
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
-        /// <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
-        public static void AddMap(TypeMap typeMap)
+        /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
+        public static void AddMap(TypeMapItem item)
         {
-            AddMap(typeMap, false);
+            AddMap(item, false);
         }
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
-        /// <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
+        /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void AddMap(TypeMap typeMap, bool force = false)
+        public static void AddMap(TypeMapItem item, bool force = false)
         {
-            var target = Get(typeMap.Type);
+            var target = Get(item.Type);
             if (target == null)
             {
-                _typeMaps.Add(typeMap);
+                _typeMapItems.Add(item);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    target.SetDbType(typeMap.DbType);
+                    target.SetDbType(item.DbType);
                 }
             }
         }
@@ -83,9 +83,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type used for mapping.</param>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static TypeMap Get(Type type)
+        public static TypeMapItem Get(Type type)
         {
-            return _typeMaps.FirstOrDefault(t => t.Type == type);
+            return _typeMapItems.FirstOrDefault(t => t.Type == type);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
-        public static TypeMap Get<T>()
+        public static TypeMapItem Get<T>()
         {
             return Get(typeof(T));
         }
@@ -104,12 +104,12 @@ namespace RepoDb
         /// <param name="type">The .NET CLR Type mapping to be removed.</param>
         public static void RemoveMap(Type type)
         {
-            var map = Get(type);
-            if (map == null)
+            var item = Get(type);
+            if (item == null)
             {
                 throw new InvalidOperationException($"The type mapping for type '{type.FullName}' is not found.");
             }
-            _typeMaps.Remove(map);
+            _typeMapItems.Remove(item);
         }
     }
 }
