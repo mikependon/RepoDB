@@ -44,7 +44,7 @@ namespace RepoDb
             {
                 throw new NullReferenceException($"List of fields must not be null.");
             }
-            if (fields.Any(field => string.IsNullOrEmpty(field.Trim())))
+            if (fields.Any(field => string.IsNullOrEmpty(field?.Trim())))
             {
                 throw new NullReferenceException($"Field name must not be null.");
             }
