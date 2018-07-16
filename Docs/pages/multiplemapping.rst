@@ -28,7 +28,7 @@ Then, below are the codes for multiple mapping.
 ::
 
 	DataEntityMapper.For<Stock>()
-		.On(Command.Insert, "[dbo].[sp_QueryCustomer]", CommandType.StoredProcedure)
+		.On(Command.Insert, "[dbo].[sp_InsertCustomer]", CommandType.StoredProcedure)
 		.On(Command.Delete, "[dbo].[sp_DeleteCustomer]", CommandType.StoredProcedure)
 		.On(Command.Query, "[dbo].[vw_Customer]")
 		.On(Command.Update, "[dbo].[Customer]")
