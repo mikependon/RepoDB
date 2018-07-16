@@ -18,9 +18,6 @@ namespace RepoDb.UnitTests
             var orderField = OrderField.Parse(orderBy);
 
             // Assert
-            Assert.IsNotNull(orderField);
-            Assert.AreEqual(1, orderField.Count());
-            Assert.AreEqual("Id", orderField.First().Name);
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
         }
 
@@ -34,9 +31,6 @@ namespace RepoDb.UnitTests
             var orderField = OrderField.Parse(orderBy);
 
             // Assert
-            Assert.IsNotNull(orderField);
-            Assert.AreEqual(1, orderField.Count());
-            Assert.AreEqual("Id", orderField.First().Name);
             Assert.AreEqual(Order.Descending, orderField.First().Order);
         }
 
@@ -50,22 +44,28 @@ namespace RepoDb.UnitTests
             var orderField = OrderField.Parse(orderBy);
 
             // Assert
-            Assert.IsNotNull(orderField);
-            Assert.AreEqual(2, orderField.Count());
-            Assert.AreEqual("Id", orderField.First().Name);
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
-            Assert.AreEqual("Value", orderField.Last().Name);
             Assert.AreEqual(Order.Descending, orderField.Last().Order);
         }
 
         [Test]
-        public void ThrowExceptionIfFieldValueIsNotAnOrderType()
+        public void ThrowExceptionIfTheFieldValueIsNotAnOrderType()
         {
             // Prepare
             var orderBy = new { Id = "NotAnOrderType" };
 
             // Act/Assert
             Assert.Throws(typeof(InvalidOperationException), () => OrderField.Parse(orderBy));
+        }
+
+        [Test]
+        public void ThrowExceptionIfTheObjectIsNull()
+        {
+            // Prepare
+            var orderBy = (object)null;
+
+            // Act/Assert
+            Assert.Throws(typeof(NullReferenceException), () => OrderField.Parse(orderBy));
         }
     }
 }

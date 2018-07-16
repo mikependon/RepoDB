@@ -1626,9 +1626,6 @@ namespace RepoDb
             // Check
             GuardInlineUpdateable<TEntity>();
 
-            // Append prefix to all parameters
-            where.AppendParametersPrefix();
-
             // Variables
             var command = Command.InlineUpdate;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);

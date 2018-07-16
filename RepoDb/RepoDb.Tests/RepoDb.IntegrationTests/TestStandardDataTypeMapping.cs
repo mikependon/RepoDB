@@ -115,11 +115,11 @@ namespace RepoDb.IntegrationTests
             saveData.ShouldNotBeNull();
             saveData.date_column.ShouldBe(fixtureData.date_column);
             //TODO: RepoDB returns Unspecified king while test data is Utc
-            saveData.datetime_column.ShouldBe(fixtureData.datetime_column);
-            saveData.datetime2_column.ShouldBe(fixtureData.datetime2_column);
+            saveData.datetime_column.ShouldBeEx(fixtureData.datetime_column);
+            saveData.datetime2_column.ShouldBeEx(fixtureData.datetime2_column);
             //TODO: RepoDB probonly unsupported data type
             //saveData.datetimeoffset_column.ShouldBe(fixtureData.datetimeoffset_column);
-            saveData.smalldatetime_column.ShouldBe(fixtureData.smalldatetime_column);
+            saveData.smalldatetime_column.ShouldBeEx(fixtureData.smalldatetime_column);
             //TODO: RepoDB probonly unsupported data type
             saveData.time_column.Value.TotalMilliseconds.ShouldBe(fixtureData.time_column.Value.TotalMilliseconds);
         }

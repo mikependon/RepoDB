@@ -6,14 +6,14 @@ namespace RepoDb
     /// <summary>
     /// A type mapping object that holds the mapping between the .NET CLR Types and database types.
     /// </summary>
-    public class TypeMap
+    public class TypeMapItem
     {
         /// <summary>
         /// Creates a a new instance of <i>RepoDb.TypeMap</i> object.
         /// </summary>
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="dbType">The database type to map (typeof <i>System.Data.DbType</i>).</param>
-        public TypeMap(Type type, DbType dbType)
+        public TypeMapItem(Type type, DbType dbType)
         {
             Type = type;
             DbType = dbType;

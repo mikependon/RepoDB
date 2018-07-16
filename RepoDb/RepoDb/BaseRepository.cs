@@ -941,8 +941,8 @@ namespace RepoDb
         /// <summary>
         /// Query a data from the database.
         /// </summary>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -957,11 +957,11 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null,
+        public IEnumerable<TEntity> Query(IEnumerable<OrderField> orderBy = null, int? top = 0, string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
-            return DbRepository.Query<TEntity>(top: top,
-                orderBy: orderBy,
+            return DbRepository.Query<TEntity>(orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -972,8 +972,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -988,12 +988,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(object where, int? top = 0, IEnumerable<OrderField> orderBy = null, string cacheKey = null, 
+        public IEnumerable<TEntity> Query(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,  string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1004,8 +1004,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1020,12 +1020,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1036,8 +1036,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1052,12 +1052,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public IEnumerable<TEntity> Query(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.Query<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1069,8 +1069,8 @@ namespace RepoDb
         /// <summary>
         /// Query a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1085,11 +1085,11 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
-            return DbRepository.QueryAsync<TEntity>(top: top,
-                orderBy: orderBy,
+            return DbRepository.QueryAsync<TEntity>(orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1100,8 +1100,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1116,12 +1116,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(object where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1132,8 +1132,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1148,12 +1148,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,
@@ -1164,8 +1164,8 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force the repository to query from the database.
@@ -1180,12 +1180,12 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction,
                 recursive: recursive,

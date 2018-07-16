@@ -280,12 +280,23 @@ namespace RepoDb.Extensions
         /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <param name="queryGroup">The query group to be merged.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup)
+        internal static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup)
+        {
+            return AsObject(dataEntity, queryGroup, Command.None);
+        }
+
+        /// <summary>
+        /// Converts the <i>DataEntity</i> object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// </summary>
+        /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
+        /// <param name="queryGroup">The query group to be merged.</param>
+        /// <param name="command">The target command type to be used for the object transformation.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
+        internal static object AsObject(this DataEntity dataEntity, QueryGroup queryGroup, Command command)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            dataEntity.GetType()
-                .GetTypeInfo()
-                .GetProperties()
+            var properties = GetPropertiesFor(dataEntity.GetType(), command);
+            properties?
                 .ToList()
                 .ForEach(property =>
                 {
@@ -307,9 +318,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        public static object AsObject(this DataEntity dataEntity)
+        internal static object AsObject(this DataEntity dataEntity)
         {
-            return AsObject(dataEntity, null);
+            return AsObject(dataEntity, null, Command.None);
+        }
+
+        /// <summary>
+        /// Converts the <i>DataEntity</i> object into a dynamic object.
+        /// </summary>
+        /// <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
+        /// <param name="command">The target command type to be used for the object transformation.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
+        internal static object AsObject(this DataEntity dataEntity, Command command)
+        {
+            return AsObject(dataEntity, null, command);
         }
 
         // IsBatchQueryable

@@ -75,12 +75,16 @@ namespace RepoDb.IntegrationTests.Models
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
+        //[MapDbType(SqlDbType.Binary)]
         public byte[] binary_column { get; set; }
 
+        //[MapDbType(SqlDbType.Image)]
         public byte[] image_column { get; set; }
 
+        //[MapDbType(SqlDbType.VarBinary)]
         public byte[] varbinary_column { get; set; }
 
+        //[MapDbType(SqlDbType.VarBinary)]
         public byte[] varbinarymax_column { get; set; }
     }
 

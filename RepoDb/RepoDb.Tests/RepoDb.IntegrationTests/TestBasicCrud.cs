@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using RepoDb.IntegrationTests.Extensions;
 using Shouldly;
 
 namespace RepoDb.IntegrationTests
@@ -53,7 +54,7 @@ namespace RepoDb.IntegrationTests
             customer.Address.ShouldBe(fixtureData.Address);
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
-            customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            fixtureData.LastUpdatedUtc.ShouldBeEx(customer.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 

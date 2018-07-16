@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using System;
+using System.Data;
 
 namespace RepoDb.TestProject.Models
 {
@@ -8,6 +9,7 @@ namespace RepoDb.TestProject.Models
     {
         public Guid Id { get; set; }
 
+        [TypeMap(DbType.String)]
         public string Name { get; set; }
 
         public string Address { get; set; }
