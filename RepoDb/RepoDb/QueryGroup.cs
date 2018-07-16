@@ -284,7 +284,7 @@ namespace RepoDb
                         {
                             // Most likely, new { Field.Name = { Operation = Operation.<Equal|NotEqual>, Value = (object)null } }
                             // It should be (IS NULL) or (IS NOT NULL) in SQL Statement
-                            queryFields.Add(QueryField.Parse(fieldName, value));
+                            queryFields.Add(new QueryField(fieldName, operation, value));
                         }
                         else if (operation == Operation.All || operation == Operation.Any)
                         {
