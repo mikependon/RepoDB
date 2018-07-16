@@ -2065,8 +2065,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2085,15 +2085,14 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
-            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: (QueryGroup)null,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2110,8 +2109,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2130,15 +2129,14 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
-             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Query<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2155,8 +2153,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2175,16 +2173,15 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return Query<TEntity>(connection: connection,
                 where: queryGroup,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2201,8 +2198,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2221,16 +2218,15 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
-            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
         {
             return QueryData<TEntity>(connection: connection,
                 where: where,
-                top: top,
                 orderBy: orderBy,
+                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2247,8 +2243,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2267,9 +2263,8 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
-            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+        private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+            string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
         {
@@ -2502,8 +2497,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2522,15 +2517,14 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, int? commandTimeout = null,
-            IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
-             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
-                    top: top,
                     orderBy: orderBy,
+                    top: top,
                     cacheKey: cacheKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -2547,8 +2541,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2567,16 +2561,16 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null, int? commandTimeout = null,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, ICache cache = null, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    top: top,
                     orderBy: orderBy,
+                    top: top,
                     cacheKey: cacheKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -2593,8 +2587,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2613,16 +2607,15 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, string cacheKey = null, ICache cache = null,
-            int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    top: top,
                     orderBy: orderBy,
+                    top: top,
                     cacheKey: cacheKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -2639,8 +2632,8 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to <i>NULL</i> would force to query from the database.
@@ -2659,16 +2652,15 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0,
-            IEnumerable<OrderField> orderBy = null, int? commandTimeout = null, IDbTransaction transaction = null, string cacheKey = null,
-            ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
+            IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
-                    top: top,
                     orderBy: orderBy,
+                    top: top,
                     cacheKey: cacheKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -3110,7 +3102,7 @@ namespace RepoDb
             ValidateTransactionConnectionObject(connection, transaction);
 
             // Actual Execution
-            using (var reader = ExecuteReaderInternal(connection, commandText, param, 
+            using (var reader = ExecuteReaderInternal(connection, commandText, param,
                 commandType, commandTimeout, transaction, typeof(TEntity)))
             {
                 return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
