@@ -94,14 +94,18 @@ namespace RepoDb.IntegrationTests
         {
             //arrange
             var baseTime = DateTime.UtcNow.Date.AddHours(10).AddMinutes(20).AddSeconds(30).AddMilliseconds(123456789);
+
+            var dateTimeOffset = new DateTimeOffset(2007, 11, 22, 16, 0, 0, new TimeSpan(-5, 0, 0));
+            var time = baseTime.TimeOfDay;
+
             var fixtureData = new Models.TypeMap
             {
                 date_column = baseTime.Date,
                 datetime_column = baseTime,
                 datetime2_column = baseTime,
-                datetimeoffset_column = baseTime,
+                datetimeoffset_column = dateTimeOffset,
                 smalldatetime_column = baseTime,
-                time_column = baseTime.TimeOfDay
+                time_column = time
             };
 
             //act
@@ -114,13 +118,10 @@ namespace RepoDb.IntegrationTests
             var saveData = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
             saveData.date_column.ShouldBe(fixtureData.date_column);
-            //TODO: RepoDB returns Unspecified king while test data is Utc
             saveData.datetime_column.ShouldBeEx(fixtureData.datetime_column);
             saveData.datetime2_column.ShouldBeEx(fixtureData.datetime2_column);
-            //TODO: RepoDB probonly unsupported data type
-            //saveData.datetimeoffset_column.ShouldBe(fixtureData.datetimeoffset_column);
+            saveData.datetimeoffset_column.ShouldBe(fixtureData.datetimeoffset_column);
             saveData.smalldatetime_column.ShouldBeEx(fixtureData.smalldatetime_column);
-            //TODO: RepoDB probonly unsupported data type
             saveData.time_column.Value.TotalMilliseconds.ShouldBe(fixtureData.time_column.Value.TotalMilliseconds);
         }
 

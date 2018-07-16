@@ -143,7 +143,7 @@ GO
 CREATE TABLE [dbo].[TypeMap](
 	[SessionId] [uniqueidentifier] NOT NULL,
 	[bigint_column] [bigint] NULL,
-	[binary_column] [binary](255) NULL,
+	[binary_column] [binary](4000) NULL,
 	[bit_column] [bit] NULL,
 	[char_column] [char](32) NULL,
 	[date_column] [date] NULL,
@@ -173,7 +173,7 @@ CREATE TABLE [dbo].[TypeMap](
 	[timestamp_column] [timestamp] NULL,
 	[tinyint_column] [tinyint] NULL,
 	[uniqueidentifier] [uniqueidentifier] NULL,
-	[varbinary_column] [varbinary](50) NULL,
+	[varbinary_column] [varbinary](4000) NULL,
 	[varbinarymax_column] [varbinary](max) NULL,
 	[varchar_column] [varchar](255) NULL,
 	[varcharmax_column] [varchar](max) NULL,

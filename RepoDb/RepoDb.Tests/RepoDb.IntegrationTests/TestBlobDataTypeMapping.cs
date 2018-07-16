@@ -7,13 +7,15 @@ using NUnit.Framework;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
 
+//https://stackoverflow.com/questions/425389/c-sharp-equivalent-of-sql-server-datatypes
+
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
     public class TestBlobDataTypeMapping : FixturePrince
     {
         [Test]
-        public void BinaryTypeMap()
+        public void BlobStringTypeMap()
         {
             //arrange
             var baseText = @"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
@@ -40,14 +42,14 @@ namespace RepoDb.IntegrationTests
             var resulText = Encoding.ASCII.GetString(saveData.binary_column);
             resulText.ShouldBe(baseText);
 
-            saveData.binary_column.ShouldBe(fixtureData.binary_column);
-            saveData.image_column.ShouldBe(fixtureData.image_column);
-            saveData.varbinary_column.ShouldBe(fixtureData.varbinary_column);
-            saveData.varbinarymax_column.ShouldBe(fixtureData.varbinarymax_column);
+            saveData.binary_column.SequenceEqual(fixtureData.binary_column).ShouldBe(true);
+            saveData.image_column.SequenceEqual(fixtureData.image_column).ShouldBe(true);
+            saveData.varbinary_column.SequenceEqual(fixtureData.varbinary_column).ShouldBe(true);
+            saveData.varbinarymax_column.SequenceEqual(fixtureData.varbinarymax_column).ShouldBe(true);
         }
 
         [Test]
-        public void ImageTypeMap()
+        public void BlobImageTypeMap()
         {
             //arrange
             var resourceName = "RepoDb.IntegrationTests.Setup.hello-world.png";
@@ -55,7 +57,6 @@ namespace RepoDb.IntegrationTests
             
             var fixtureData = new Models.TypeMapBlob
             {
-                binary_column = baseByteData,
                 image_column = baseByteData,
                 varbinary_column = baseByteData,
                 varbinarymax_column = baseByteData
@@ -70,10 +71,9 @@ namespace RepoDb.IntegrationTests
             //assert
             var saveData = sut.Query<Models.TypeMapBlob>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
-            saveData.binary_column.ShouldBe(fixtureData.binary_column);
-            saveData.image_column.ShouldBe(fixtureData.image_column);
-            saveData.varbinary_column.ShouldBe(fixtureData.varbinary_column);
-            saveData.varbinarymax_column.ShouldBe(fixtureData.varbinarymax_column);
+            saveData.image_column.SequenceEqual(fixtureData.image_column).ShouldBe(true);
+            saveData.varbinary_column.SequenceEqual(fixtureData.varbinary_column).ShouldBe(true);
+            saveData.varbinarymax_column.SequenceEqual(fixtureData.varbinarymax_column).ShouldBe(true);
         }
 
         public static byte[] ExtractResource(string filename)
