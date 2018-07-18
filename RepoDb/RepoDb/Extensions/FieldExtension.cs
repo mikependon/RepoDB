@@ -30,6 +30,12 @@ namespace RepoDb.Extensions
             return $"@{field.Name.AsQuotedParameter(true)}";
         }
 
+        // AsAliasField
+        internal static string AsAliasField(this Field field, string alias)
+        {
+            return $"{alias}.{field.Name.AsQuoted(true)}";
+        }
+
         // AsParameterAsField
         internal static string AsParameterAsField(this Field field)
         {
@@ -66,6 +72,12 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsParameters(this IEnumerable<Field> fields)
         {
             return fields?.Select(field => field.AsParameter());
+        }
+
+        // AsAliasFields
+        internal static IEnumerable<string> AsAliasFields(this IEnumerable<Field> fields, string alias)
+        {
+            return fields?.Select(field => field.AsAliasField(alias));
         }
 
         // AsParametersAsFields

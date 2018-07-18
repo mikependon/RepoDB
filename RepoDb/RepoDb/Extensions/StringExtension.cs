@@ -94,6 +94,12 @@ namespace RepoDb.Extensions
             return $"@{value.AsUnquoted()}";
         }
 
+        // AsAliasField
+        internal static string AsAliasField(this string value, string alias)
+        {
+            return $"{alias}.[{value.AsUnquoted()}]";
+        }
+
         // AsParameterAsField
         internal static string AsParameterAsField(this string value)
         {
@@ -124,6 +130,12 @@ namespace RepoDb.Extensions
         internal static IEnumerable<string> AsParameters(this IEnumerable<string> values)
         {
             return values?.Select(value => value.AsParameter());
+        }
+
+        // AsAliasFields
+        internal static IEnumerable<string> AsAliasFields(this IEnumerable<string> values, string alias)
+        {
+            return values?.Select(value => value.AsAliasField(alias));
         }
 
         // AsParametersAsFields

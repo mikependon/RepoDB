@@ -372,16 +372,17 @@ namespace RepoDb
             var mergeInsertableFields = fields
                 .Where(field => overrideIgnore == true || insertableFields.Contains(field.Name));
             var mergeUpdateableFields = fields
-                .Where(field => overrideIgnore == true || updateableFields.Contains(field.Name));
+                .Where(field => overrideIgnore == true || updateableFields.Contains(field.Name) &&
+                    qualifiers?.FirstOrDefault(qualifier => qualifier.Name.ToLower() == field.Name.ToLower()) == null);
 
             // Check if there are inline mergeable fields (for insert)
-            if (!mergeInsertableFields.Any())
+            if (mergeInsertableFields.Any() == false)
             {
                 throw new InvalidOperationException($"No inline mergeable fields (for insert) found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Check if there are inline mergeable fields (for update)
-            if (!mergeUpdateableFields.Any())
+            if (mergeUpdateableFields.Any() == false)
             {
                 throw new InvalidOperationException($"No inline mergeable fields (for update) found at type '{typeof(TEntity).FullName}'.");
             }
@@ -419,7 +420,7 @@ namespace RepoDb
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
+                .AsAliasFieldsFrom(mergeInsertableFields, "S")
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -584,7 +585,7 @@ namespace RepoDb
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
         {
-            return CreateMerge(queryBuilder, qualifiers);
+            return CreateMerge(queryBuilder, qualifiers, false);
         }
 
         /// <summary>
@@ -601,7 +602,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
                 .Select(property => property.GetMappedName());
             var unmatchesQualifiers = qualifiers?.Where(field =>
                 properties?.FirstOrDefault(property =>
@@ -614,7 +615,7 @@ namespace RepoDb
 
             // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            var primaryKeyName = primary.GetMappedName();
+            var primaryKeyName = primary?.GetMappedName();
 
             // Add the primary key as the default qualifier
             if (qualifiers == null && primary != null)
@@ -622,18 +623,27 @@ namespace RepoDb
                 qualifiers = Field.From(primaryKeyName);
             }
 
+            // Throw an exception if there is no qualifiers defined
+            if (qualifiers == null || qualifiers?.Any() == false)
+            {
+                throw new InvalidOperationException("There are no qualifier fields defined.");
+            }
+
             // Get the target properties
             var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Select(property => property.GetMappedName())
                 .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryKeyName?.ToLower()));
-            var mergerableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
+            var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
                 .Select(property => property.GetMappedName())
                 .Where(field => field.ToLower() != primaryKeyName?.ToLower());
-            var mergeInsertableFields = mergerableFields
+            var mergeableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
+                .Select(property => property.GetMappedName());
+            var mergeInsertableFields = mergeableFields
                 .Where(field => insertableFields.Contains(field))
                 .Select(field => new Field(field));
-            var mergeUpdateableFields = mergerableFields
-                .Where(field => mergerableFields.Contains(field))
+            var mergeUpdateableFields = mergeableFields
+                .Where(field => updateableFields.Contains(field) &&
+                    qualifiers?.FirstOrDefault(qualifier => qualifier.Name.ToLower() == field.ToLower()) == null)
                 .Select(field => new Field(field));
 
             // Build the SQL Statement
@@ -647,7 +657,7 @@ namespace RepoDb
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom(Command.None) // All fields must be included for selection
+                .ParametersAsFieldsFrom(Command.Merge)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -669,7 +679,7 @@ namespace RepoDb
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
+                .AsAliasFieldsFrom(mergeInsertableFields, "S")
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()

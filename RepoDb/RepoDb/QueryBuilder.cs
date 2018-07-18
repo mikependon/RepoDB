@@ -195,6 +195,29 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a stringified fields to the SQL Query Statement by command with aliases.
+        /// </summary>
+        /// <param name="command">The mapped command where to get all the fields to be stringified.</param>
+        /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> AsAliasFieldsFrom(Command command, string alias)
+        {
+            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(command)?.Select(property => property.GetMappedName());
+            return Append(fields?.AsAliasFields(alias).Join(", "));
+        }
+
+        /// <summary>
+        /// Appends a stringified fields to the SQL Query Statement by command with aliases.
+        /// </summary>
+        /// <param name="fields">The list fields to be stringified.</param>
+        /// <param name="alias">The alias to be prepended for each field.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder<TEntity> AsAliasFieldsFrom(IEnumerable<Field> fields, string alias)
+        {
+            return Append(fields?.AsAliasFields(alias).Join(", "));
+        }
+
+        /// <summary>
         /// Appends a word FROM to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>

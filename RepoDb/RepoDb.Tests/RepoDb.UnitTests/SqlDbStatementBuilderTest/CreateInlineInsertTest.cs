@@ -24,7 +24,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [TestCreateInlineInsertWithoutMappingsClass] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -53,7 +53,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -83,7 +83,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [Field1], [Field2], [Field4] ) " +
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [TestCreateInlineInsertWithIdClass] " +
                 $"( [Field2], [Field3] ) " +
@@ -139,7 +139,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [TestCreateInlineInsertWithIdentifiedPrimaryKeyClass] " +
                 $"( [Field2], [Field3] ) " +
@@ -168,7 +168,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [Field2], [Field3] ) " +
@@ -198,7 +198,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields);
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [Field2], [Field3] ) " +
@@ -282,7 +282,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var queryBuilder = new QueryBuilder<ThrowExceptionAtInlineInsertIfFieldsAreNullClass>();
 
             // Act/Assert
-            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateInlineInsert(queryBuilder, null));
+            Assert.Throws<NullReferenceException>(() => statementBuilder.CreateInlineInsert(queryBuilder, null, false));
         }
 
         private class ThrowExceptionAtInlineInsertIfAtleastOneFieldIsMissingAtDataEntityClass : DataEntity
@@ -300,7 +300,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field3" });
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields));
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields, false));
         }
 
         private class ThrowExceptionAtInlineInsertIfAFieldIsMissingAtDataEntityMappingsClass : DataEntity
@@ -319,7 +319,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field3" });
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields));
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields, false));
         }
 
         private class ThrowExceptionAtInlineInsertIfAFieldIsIgnoredAtInsertOperationClass : DataEntity
@@ -339,7 +339,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields));
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields, false));
         }
 
         private class ThrowExceptionAtInlineInsertIfAFieldIsIgnoredAtInlineInsertOperationClass : DataEntity
@@ -359,7 +359,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
-            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields));
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInlineInsert(queryBuilder, fields, false));
         }
     }
 }
