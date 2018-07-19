@@ -107,10 +107,10 @@ namespace RepoDb
             }
             else if (where is TEntity)
             {
-                var primaryProperty = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                if (primaryProperty != null)
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                if (primary != null)
                 {
-                    var queryField = primaryProperty.AsQueryField(where);
+                    var queryField = primary.AsQueryField(where);
                     queryGroup = new QueryGroup(queryField.AsEnumerable());
                 }
             }
@@ -122,10 +122,10 @@ namespace RepoDb
                 }
                 else
                 {
-                    var primaryProperty = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                    if (primaryProperty != null)
+                    var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                    if (primary != null)
                     {
-                        var queryField = new QueryField(primaryProperty.GetMappedName(), where);
+                        var queryField = new QueryField(primary.GetMappedName(), where);
                         queryGroup = new QueryGroup(queryField.AsEnumerable());
                     }
                 }
@@ -1273,17 +1273,26 @@ namespace RepoDb
             }
             else
             {
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
-                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(),
-                        overrideIgnore, isPrimaryIdentity);
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                    }
+                    commandText = sqlStatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore, isPrimaryIdentity);
                 }
                 else
                 {
-                    // Other Sql Data Providers
-                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
+                    commandText = statementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
                 }
             }
 
@@ -1412,29 +1421,7 @@ namespace RepoDb
             // Variables
             var command = Command.InlineMerge;
             var entityProperties = entity?.GetType().GetProperties();
-
-            // Force to use the PrimaryKey
-            if (qualifiers == null)
-            {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                var hasError = (primary != null) && (entityProperties?.Any(property => property.Name.ToLower() == primary?.GetMappedName().ToLower()) == false);
-                if (hasError)
-                {
-                    throw new PrimaryFieldNotFoundException($"Merge operation could proceed with missing primary key. Either specify a qualifier or " +
-                        $"include the primary key in the dynamic entity.");
-                }
-            }
-
-            // All qualifiers must be present in the dynamic entity
-            var missingFields = qualifiers?.Where(qualifier => entityProperties.FirstOrDefault(property =>
-                property.GetMappedName().ToLower() == qualifier.Name.ToLower()) == null);
-            if (missingFields?.Count() > 0)
-            {
-                throw new MissingFieldException($"All qualifier fields must be presented in the given dynamic entity object. " +
-                    $"The missing field(s) are {missingFields.Select(f => f.AsField()).Join(", ")}.");
-            }
-
-            // Other variables
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = string.Empty;
 
@@ -1445,18 +1432,25 @@ namespace RepoDb
             }
             else
             {
+                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
-                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(),
-                        qualifiers, overrideIgnore, isPrimaryIdentity);
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                    }
+                    commandText = sqlStatementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers, overrideIgnore, isPrimaryIdentity);
                 }
                 else
                 {
-                    // Other Sql Data Providers
-                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers,
-                        overrideIgnore);
+                    commandText = statementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers, overrideIgnore);
                 }
             }
 
@@ -1800,16 +1794,26 @@ namespace RepoDb
             }
             else
             {
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
-                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                    }
+                    commandText = sqlStatementBuilder.CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
                 }
                 else
                 {
-                    // Other Sql Data Providers
-                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInsert(new QueryBuilder<TEntity>());
+                    commandText = statementBuilder.CreateInsert(new QueryBuilder<TEntity>());
                 }
             }
 
@@ -1949,16 +1953,27 @@ namespace RepoDb
             }
             else
             {
+
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
-                    // Cache only if the 'isIdentity' is not defined, only for SQL Server
-                    var isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    commandText = ((SqlDbStatementBuilder)statementBuilder).CreateMerge(new QueryBuilder<TEntity>(), qualifiers, isPrimaryIdentity);
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                    }
+                    commandText = sqlStatementBuilder.CreateMerge(new QueryBuilder<TEntity>(), qualifiers, isPrimaryIdentity);
                 }
                 else
                 {
-                    // Other Sql Data Providers
-                    commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateMerge(new QueryBuilder<TEntity>(), qualifiers);
+                    commandText = statementBuilder.CreateMerge(new QueryBuilder<TEntity>(), qualifiers);
                 }
             }
 

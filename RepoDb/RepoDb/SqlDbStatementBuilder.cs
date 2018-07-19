@@ -154,7 +154,14 @@ namespace RepoDb
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -272,7 +279,14 @@ namespace RepoDb
         public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -527,7 +541,14 @@ namespace RepoDb
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : DataEntity
         {
-            return CreateInsert(queryBuilder, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInsert(queryBuilder, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -585,7 +606,14 @@ namespace RepoDb
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
         {
-            return CreateMerge(queryBuilder, qualifiers, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateMerge(queryBuilder, qualifiers, isPrimaryIdentity);
         }
 
         /// <summary>

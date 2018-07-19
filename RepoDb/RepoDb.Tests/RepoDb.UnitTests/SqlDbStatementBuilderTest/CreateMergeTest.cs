@@ -381,10 +381,83 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateMerge(queryBuilder, qualifiers));
         }
 
-        [Test]
-        public void ContinueCreateMergeUnitTestHere()
+
+        private class ThrowExceptionAtMergeIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
         {
-            throw new NotImplementedException();
+            [Primary]
+            public int Field1 { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtMergeIfTheIdentityFieldIsNotThePrimaryKeyField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtMergeIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
+        {
+            public int ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
+        {
+            public int Id { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        [Map("ClassName")]
+        private class ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
+        {
+            public int ClassNameId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassMappingIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtMergeIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
         }
     }
 }

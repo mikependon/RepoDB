@@ -146,28 +146,56 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithClassIdClass : DataEntity
+        private class TestCreateInsertWithClassIdFieldClass : DataEntity
         {
-            public int TestCreateInsertWithClassIdClassId { get; set; }
+            public int TestCreateInsertWithClassIdFieldClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [Test]
-        public void TestCreateInsertWithClassId()
+        public void TestCreateInsertWithClassIdField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithClassIdClass>();
+            var queryBuilder = new QueryBuilder<TestCreateInsertWithClassIdFieldClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithClassIdClass] " +
-                $"( [TestCreateInsertWithClassIdClassId], [Field2], [Field3] ) " +
+                $"INSERT INTO [TestCreateInsertWithClassIdFieldClass] " +
+                $"( [TestCreateInsertWithClassIdFieldClassId], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @TestCreateInsertWithClassIdClassId, @Field2, @Field3 ) ; " +
-                $"SELECT @TestCreateInsertWithClassIdClassId AS [Result] ;";
+                $"( @TestCreateInsertWithClassIdFieldClassId, @Field2, @Field3 ) ; " +
+                $"SELECT @TestCreateInsertWithClassIdFieldClassId AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestCreateInsertWithPrimaryKeyFieldClass : DataEntity
+        {
+            [Primary]
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInsertWithPrimaryKeyField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInsertWithPrimaryKeyFieldClass>();
+
+            // Act
+            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var expected = $"" +
+                $"INSERT INTO [TestCreateInsertWithPrimaryKeyFieldClass] " +
+                $"( [Field1], [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
+                $"SELECT @Field1 AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -199,6 +227,84 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
+        {
+            [Primary]
+            public int Field1 { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
+        {
+            public int ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
+        {
+            public int Id { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        [Map("ClassName")]
+        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
+        {
+            public int ClassNameId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
         }
     }
 }

@@ -231,6 +231,33 @@ namespace RepoDb.Extensions
             return GetPrimaryProperty(dataEntity.GetType());
         }
 
+        // GetIdentityProperty
+        internal static PropertyInfo GetIdentityProperty(Type type)
+        {
+            return GetPropertyByAttribute(type, typeof(IdentityAttribute));
+        }
+
+        /// <summary>
+        /// Gets the identity property of the <i>DataEntity</i> object.
+        /// </summary>
+        /// <typeparam name="T">The type of the data entity where to get the identity property.</typeparam>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as an identity property of the data entity.</returns>
+        public static PropertyInfo GetIdentityProperty<T>()
+            where T : DataEntity
+        {
+            return GetIdentityProperty(typeof(T));
+        }
+
+        /// <summary>
+        /// Gets the identity property of the <i>DataEntity</i> object.
+        /// </summary>
+        /// <param name="dataEntity">The instance of data entity where to get the primary key property.</param>
+        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
+        public static PropertyInfo GetIdentityProperty(this DataEntity dataEntity)
+        {
+            return GetIdentityProperty(dataEntity.GetType());
+        }
+
         // GetMappedName
         internal static string GetMappedName(Type type, Command command)
         {

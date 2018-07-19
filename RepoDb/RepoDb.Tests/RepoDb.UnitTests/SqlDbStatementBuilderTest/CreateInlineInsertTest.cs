@@ -123,36 +123,36 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInlineInsertWithIdentifiedPrimaryKeyClass : DataEntity
+        private class TestCreateInlineInsertWithClassIdClass : DataEntity
         {
-            public int TestCreateInlineInsertWithIdentifiedPrimaryKeyClassId { get; set; }
+            public int TestCreateInlineInsertWithClassIdClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [Test]
-        public void TestCreateInlineInsertWithIdentifiedPrimaryKey()
+        public void TestCreateInlineInsertWithClassId()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInlineInsertWithIdentifiedPrimaryKeyClass>();
+            var queryBuilder = new QueryBuilder<TestCreateInlineInsertWithClassIdClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
             var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInlineInsertWithIdentifiedPrimaryKeyClass] " +
+                $"INSERT INTO [TestCreateInlineInsertWithClassIdClass] " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT @TestCreateInlineInsertWithIdentifiedPrimaryKeyClassId AS [Result] ;";
+                $"SELECT @TestCreateInlineInsertWithClassIdClassId AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestCreateInlineInsertWithIdentifiedPrimaryKeyFromMappingClass : DataEntity
+        private class TestCreateInlineInsertWithClassIdFromMappingClass : DataEntity
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -160,11 +160,11 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInlineInsertWithIdentifiedPrimaryKeyFromMapping()
+        public void TestCreateInlineInsertWithClassIdFromMapping()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInlineInsertWithIdentifiedPrimaryKeyFromMappingClass>();
+            var queryBuilder = new QueryBuilder<TestCreateInlineInsertWithClassIdFromMappingClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
             // Act
@@ -225,15 +225,15 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
             var queryBuilder = new QueryBuilder<TestCreateInlineInsertOverrideIgnoreFromInsertOperationClass>();
-            var fields = Field.From(new[] { "Field2", "Field3" });
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
             var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, true);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
-                $"( [Field2], [Field3] ) " +
+                $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
@@ -255,21 +255,127 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
             var queryBuilder = new QueryBuilder<TestCreateInlineInsertOverrideIgnoreFromInlineInsertOperationClass>();
-            var fields = Field.From(new[] { "Field2", "Field3" });
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
             var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, true);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
-                $"( [Field2], [Field3] ) " +
+                $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
+                $"( @Field1, @Field2, @Field3 ) ; " +
                 $"SELECT NULL AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
+        private class TestCreateInlineInsertWithPrimaryIdentityClass : DataEntity
+        {
+            [Primary, Identity]
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestCreateInlineInsertWithPrimaryIdentity()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestCreateInlineInsertWithPrimaryIdentityClass>();
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+
+            // Act
+            var actual = statementBuilder.CreateInlineInsert(queryBuilder, fields, false);
+            var expected = $"" +
+                $"INSERT INTO [TestCreateInlineInsertWithPrimaryIdentityClass] " +
+                $"( [Field2], [Field3] ) " +
+                $"VALUES " +
+                $"( @Field2, @Field3 ) ; " +
+                $"SELECT SCOPE_IDENTITY() AS [Result] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
+        {
+            [Primary]
+            public int Field1 { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotThePrimaryKeyField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
+        {
+            public int ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        private class ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
+        {
+            public int Id { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
+
+        [Map("ClassName")]
+        private class ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
+        {
+            public int ClassNameId { get; set; }
+            [Identity]
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassMappingIdField()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionAtInlineInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
+        }
         private class ThrowExceptionAtInlineInsertIfFieldsAreNullClass : DataEntity
         {
         }
