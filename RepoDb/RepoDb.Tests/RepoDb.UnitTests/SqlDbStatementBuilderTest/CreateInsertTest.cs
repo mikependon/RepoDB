@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestFixture]
     public class CreateInsertTest
     {
-        private class TestCreateInsertWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass : DataEntity
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -16,16 +16,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithoutMappings()
+        public void TestWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithoutMappingsClass] " +
+                $"INSERT INTO [TestWithoutMappingsClass] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestCreateInsertWithClassMappingClass : DataEntity
+        private class TestWithClassMappingClass : DataEntity
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -44,11 +44,11 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithClassMapping()
+        public void TestWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithFieldMappingsClass : DataEntity
+        private class TestWithFieldMappingsClass : DataEntity
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -72,16 +72,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithFieldMappings()
+        public void TestWithFieldMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithFieldMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithFieldMappingsClass] " +
+                $"INSERT INTO [TestWithFieldMappingsClass] " +
                 $"( [Field1], [Field2], [Field4] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field4 ) ; " +
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithIgnoreFieldClass : DataEntity
+        private class TestWithIgnoreFieldClass : DataEntity
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -100,16 +100,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithIgnoreField()
+        public void TestWithIgnoreField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithIgnoreFieldClass>();
+            var queryBuilder = new QueryBuilder<TestWithIgnoreFieldClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithIgnoreFieldClass] " +
+                $"INSERT INTO [TestWithIgnoreFieldClass] " +
                 $"( [Field1], [Field2] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2 ) ; " +
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithIdClass : DataEntity
+        private class TestWithIdClass : DataEntity
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -127,16 +127,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithId()
+        public void TestWithId()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithIdClass>();
+            var queryBuilder = new QueryBuilder<TestWithIdClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithIdClass] " +
+                $"INSERT INTO [TestWithIdClass] " +
                 $"( [Id], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Id, @Field2, @Field3 ) ; " +
@@ -146,34 +146,34 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithClassIdFieldClass : DataEntity
+        private class TestWithClassIdFieldClass : DataEntity
         {
-            public int TestCreateInsertWithClassIdFieldClassId { get; set; }
+            public int TestWithClassIdFieldClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [Test]
-        public void TestCreateInsertWithClassIdField()
+        public void TestWithClassIdField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithClassIdFieldClass>();
+            var queryBuilder = new QueryBuilder<TestWithClassIdFieldClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithClassIdFieldClass] " +
-                $"( [TestCreateInsertWithClassIdFieldClassId], [Field2], [Field3] ) " +
+                $"INSERT INTO [TestWithClassIdFieldClass] " +
+                $"( [TestWithClassIdFieldClassId], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @TestCreateInsertWithClassIdFieldClassId, @Field2, @Field3 ) ; " +
-                $"SELECT @TestCreateInsertWithClassIdFieldClassId AS [Result] ;";
+                $"( @TestWithClassIdFieldClassId, @Field2, @Field3 ) ; " +
+                $"SELECT @TestWithClassIdFieldClassId AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateInsertWithPrimaryKeyFieldClass : DataEntity
+        private class TestWithPrimaryKeyFieldClass : DataEntity
         {
             [Primary]
             public int Field1 { get; set; }
@@ -182,16 +182,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithPrimaryKeyField()
+        public void TestWithPrimaryKeyField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithPrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder<TestWithPrimaryKeyFieldClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
             var expected = $"" +
-                $"INSERT INTO [TestCreateInsertWithPrimaryKeyFieldClass] " +
+                $"INSERT INTO [TestWithPrimaryKeyFieldClass] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
@@ -202,7 +202,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestCreateInsertWithClassMappingIdClass : DataEntity
+        private class TestWithClassMappingIdClass : DataEntity
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -210,11 +210,11 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestCreateInsertWithClassMappingId()
+        public void TestWithClassMappingId()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateInsertWithClassMappingIdClass>();
+            var queryBuilder = new QueryBuilder<TestWithClassMappingIdClass>();
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder);
@@ -229,7 +229,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
         {
             [Primary]
             public int Field1 { get; set; }
@@ -239,36 +239,36 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyField()
+        public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
         }
 
-        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
         {
-            public int ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
+            public int ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
             [Identity]
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [Test]
-        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdField()
+        public void ThrowExceptionIfTheIdentityFieldIsNotTheClassIdField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass>();
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
         }
 
-        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
         {
             public int Id { get; set; }
             [Identity]
@@ -277,18 +277,18 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdField()
+        public void ThrowExceptionIfTheIdentityFieldIsNotTheIdField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass>();
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));
         }
 
         [Map("ClassName")]
-        private class ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
         {
             public int ClassNameId { get; set; }
             [Identity]
@@ -297,11 +297,11 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdField()
+        public void ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdField()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionAtInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
 
             // Act/Assert
             Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateInsert(queryBuilder));

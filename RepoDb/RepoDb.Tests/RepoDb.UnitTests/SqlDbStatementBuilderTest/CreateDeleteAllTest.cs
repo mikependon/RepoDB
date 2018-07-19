@@ -6,38 +6,38 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestFixture]
     public class CreateDeleteAllTest
     {
-        private class TestCreateDeleteAllWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestCreateDeleteAllWithoutMappings()
+        public void TestWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateDeleteAllWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateDeleteAll(queryBuilder);
             var expected = $"" +
                 $"DELETE " +
-                $"FROM [TestCreateDeleteAllWithoutMappingsClass] ;";
+                $"FROM [TestWithoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestCreateDeleteAllWithMappingsClass : DataEntity
+        private class TestWithMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestCreateDeleteAllWithMappings()
+        public void TestWithMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateDeleteAllWithMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateDeleteAll(queryBuilder);

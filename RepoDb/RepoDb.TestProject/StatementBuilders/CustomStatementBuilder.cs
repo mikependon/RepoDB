@@ -51,7 +51,7 @@ namespace RepoDb.TestProject.StatementBuilders
             throw new NotImplementedException();
         }
 
-        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
+        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup queryGroup, IEnumerable<OrderField> orderBy = null, int? top = 0) where TEntity : DataEntity
         {
             throw new NotImplementedException();
         }

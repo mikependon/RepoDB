@@ -6,38 +6,38 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestFixture]
     public class CreateCountTest
     {
-        private class TestCreateCountWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestCreateCountWithoutMappings()
+        public void TestWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateCountWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateCount(queryBuilder, null);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
-                $"FROM [TestCreateCountWithoutMappingsClass] ;";
+                $"FROM [TestWithoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestCreateCountWitClassMappingsClass : DataEntity
+        private class TestWitClassMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestCreateCountWitClassMappings()
+        public void TestWitClassMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateCountWitClassMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWitClassMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateCount(queryBuilder, null);
@@ -49,16 +49,16 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestCreateCountWithExpressionsClass : DataEntity
+        private class TestWithExpressionsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestCountWithExpressions()
+        public void TestWithExpressions()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestCreateCountWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder<TestWithExpressionsClass>();
             var expression = new { Field1 = 1 };
 
             // Act
@@ -66,7 +66,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var actual = statementBuilder.CreateCount(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
-                $"FROM [TestCreateCountWithExpressionsClass] " +
+                $"FROM [TestWithExpressionsClass] " +
                 $"WHERE ([Field1] = @Field1) ;";
 
             // Assert

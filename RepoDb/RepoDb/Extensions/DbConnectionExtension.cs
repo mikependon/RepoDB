@@ -2301,7 +2301,7 @@ namespace RepoDb
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, top, orderBy);
+                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, orderBy, top);
             var param = where?.AsObject();
 
             // Before Execution
