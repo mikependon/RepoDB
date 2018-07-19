@@ -37,6 +37,12 @@ namespace RepoDb
                 .Where(property => queryProperties.Contains(property));
             var fields = batchQueryProperties.Select(property => new Field(property.GetMappedName()));
 
+            // Validate the fields
+            if (fields?.Any() == false)
+            {
+                throw new InvalidOperationException($"No batch queryable fields found from type '{typeof(TEntity).FullName}'.");
+            }
+
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder

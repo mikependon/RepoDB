@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using System;
 
 namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
 {
@@ -298,6 +299,44 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        private class ThrowExceptionIfThereAreNoQueryableFieldsClass : DataEntity
+        {
+        }
+
+        [Test]
+        public void ThrowExceptionIfThereAreNoQueryableFields()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateBatchQuery(queryBuilder, queryGroup, 0, 10, null));
+        }
+
+        private class ThrowExceptionIfAllFieldsWereIgnoredClass : DataEntity
+        {
+            [Attributes.Ignore(Command.Query)]
+            public int Field1 { get; set; }
+            [Attributes.Ignore(Command.Query)]
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Query)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionIfAllFieldsWereIgnored()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfAllFieldsWereIgnoredClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateBatchQuery(queryBuilder, queryGroup, 0, 10, null));
         }
     }
 }

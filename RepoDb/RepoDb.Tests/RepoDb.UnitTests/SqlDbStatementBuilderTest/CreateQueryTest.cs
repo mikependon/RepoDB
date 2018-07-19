@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingsClass : DataEntity
+        private class TestWithClassMappingClass : DataEntity
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -42,11 +42,11 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Test]
-        public void TestWithClassMappings()
+        public void TestWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
@@ -316,5 +316,43 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         /*******************************/
+
+        private class ThrowExceptionIfThereAreNoQueryableFieldsClass : DataEntity
+        {
+        }
+
+        [Test]
+        public void ThrowExceptionIfThereAreNoQueryableFields()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateQuery(queryBuilder, queryGroup));
+        }
+
+        private class ThrowExceptionIfAllFieldsWereIgnoredClass : DataEntity
+        {
+            [Attributes.Ignore(Command.Query)]
+            public int Field1 { get; set; }
+            [Attributes.Ignore(Command.Query)]
+            public string Field2 { get; set; }
+            [Attributes.Ignore(Command.Query)]
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void ThrowExceptionIfAllFieldsWereIgnored()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<ThrowExceptionIfAllFieldsWereIgnoredClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act/Assert
+            Assert.Throws<InvalidOperationException>(() => statementBuilder.CreateQuery(queryBuilder, queryGroup));
+        }
     }
 }
