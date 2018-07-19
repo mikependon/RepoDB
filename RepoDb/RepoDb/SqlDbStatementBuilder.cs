@@ -491,8 +491,15 @@ namespace RepoDb
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
-            // Variables
+            // Important fields
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables
             var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) == true;
 
             // Check if there are fields
@@ -795,11 +802,22 @@ namespace RepoDb
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
             where TEntity : DataEntity
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
+            if (properties?.Any() == false)
+            {
+                throw new InvalidOperationException($"No updateable fields found from type '{typeof(TEntity).FullName}'.");
+            }
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var fields = properties
+                .Where(property => property != primary && property != identity)
+                .Select(p => new Field(p.GetMappedName()));
             where?.AppendParametersPrefix();
-            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>())
-                .Select(p => new Field(p.Name));
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
                 .Update()

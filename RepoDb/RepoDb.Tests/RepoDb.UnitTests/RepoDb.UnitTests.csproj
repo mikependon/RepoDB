@@ -53,6 +53,7 @@
     <Compile Include="QueryGroupTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateBatchQueryTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateQueryTest.cs" />
+    <Compile Include="SqlDbStatementBuilderTest\CreateUpdateTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateTruncateTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateInlineMergeTest.cs" />
     <Compile Include="SqlDbStatementBuilderTest\CreateCountTest.cs" />
