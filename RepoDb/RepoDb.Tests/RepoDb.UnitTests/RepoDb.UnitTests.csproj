@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enumerations\ConjunctionTextTest.cs" />
+    <Compile Include="Enumerations\OrderTextTest.cs" />
     <Compile Include="Enumerations\OperationTextTest.cs" />
     <Compile Include="FieldTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
