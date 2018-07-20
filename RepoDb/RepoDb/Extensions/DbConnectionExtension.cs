@@ -1955,7 +1955,6 @@ namespace RepoDb
             }
             else
             {
-
                 var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
                 var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
                 if (identity != null && identity != primary)
