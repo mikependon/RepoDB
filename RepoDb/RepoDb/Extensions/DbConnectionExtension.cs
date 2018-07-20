@@ -1575,6 +1575,8 @@ namespace RepoDb
                 where: queryGroup,
                 overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
                 transaction: transaction);
         }
 
