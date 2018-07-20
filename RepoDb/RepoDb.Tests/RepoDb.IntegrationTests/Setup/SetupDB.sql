@@ -30,6 +30,20 @@ GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TypeMap'))
+BEGIN
+	DROP TABLE [dbo].[TypeMap];
+END
+GO
+
+IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TestTable'))
+BEGIN
+	DROP TABLE [dbo].[TestTable];
+END
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
 CREATE TABLE [dbo].[Customer](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[GlobalId] [uniqueidentifier] NOT NULL,
@@ -126,39 +140,51 @@ GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-DBCC CHECKIDENT ([Customer], RESEED, 1);
-DBCC CHECKIDENT ([Order], RESEED, 1);
-DBCC CHECKIDENT ([OrderDetail], RESEED, 1);
+CREATE TABLE [dbo].[TypeMap](
+	[SessionId] [uniqueidentifier] NOT NULL,
+	[bigint_column] [bigint] NULL,
+	[binary_column] [binary](4000) NULL,
+	[bit_column] [bit] NULL,
+	[char_column] [char](32) NULL,
+	[date_column] [date] NULL,
+	[datetime_column] [datetime] NULL,
+	[datetime2_column] [datetime2](7) NULL,
+	[datetimeoffset_column] [datetimeoffset](7) NULL,
+	[decimal_column] [decimal](18, 4) NULL,
+	[float_column] [float] NULL,
+	[geography_column] [geography] NULL,
+	[geometry_column] [geometry] NULL,
+	[hierarchyid_column] [hierarchyid] NULL,
+	[image_column] [image] NULL,
+	[int_column] [int] NULL,
+	[money_column] [money] NULL,
+	[nchar_column] [nchar](32) NULL,
+	[ntext_column] [ntext] NULL,
+	[numeric_column] [numeric](18, 4) NULL,
+	[nvarchar_column] [nvarchar](50) NULL,
+	[nvarcharmax_column] [nvarchar](max) NULL,
+	[real_column] [real] NULL,
+	[smalldatetime_column] [smalldatetime] NULL,
+	[smallint_column] [smallint] NULL,
+	[smallmoney_column] [smallmoney] NULL,
+	[sql_variant_column] [sql_variant] NULL,
+	[text_column] [text] NULL,
+	[time_column] [time](7) NULL,
+	[timestamp_column] [timestamp] NULL,
+	[tinyint_column] [tinyint] NULL,
+	[uniqueidentifier] [uniqueidentifier] NULL,
+	[varbinary_column] [varbinary](4000) NULL,
+	[varbinarymax_column] [varbinary](max) NULL,
+	[varchar_column] [varchar](255) NULL,
+	[varcharmax_column] [varchar](max) NULL,
+	[xml_column] [xml] NULL,
+ CONSTRAINT [PK_TypeMap] PRIMARY KEY CLUSTERED 
+(
+	[SessionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Customer]);
-SET @counter = COALESCE(@counter, 1);
-WHILE (@counter < 10)
-BEGIN
-
-	INSERT INTO [dbo].[Customer](
-	 [GlobalId]
-	,[FirstName]
-	,[LastName]
-	,[MiddleName]
-	,[Address]
-	,[Email]
-	,[IsActive]
-	,[DateInsertedUtc]
-	,[LastUpdatedUtc]
-	,[LastUserId]
-	) VALUES (
-	 NEWID()
-	,'Juan'
-	,'dela Cruz'
-	,'Pinto'
-	,'San Lorenzo, Makati, Philippines'
-	,'juandelacruz@gmail.com'
-	,1
-	,GETUTCDATE()
-	,GETUTCDATE()
-	,SYSTEM_USER
-	);
-	SET @counter = @counter + 1;
-END
+ALTER TABLE [dbo].[TypeMap] ADD  CONSTRAINT [DF_TypeMap_SessionId]  DEFAULT (newid()) FOR [SessionId]
 GO
+

@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using NUnit.Framework;
-using RepoDb;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using RepoDb.IntegrationTests.Extensions;
 using Shouldly;
 
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestBasicCrud
+    public class TestBasicCrud : FixturePrince
     {
         [SetUp]
-        public void Setup()
+        public void SetupCrudTables()
         {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
+            SetupHelper.ExecuteEmbeddedSqlFile("RepoDb.IntegrationTests.Setup.RefreshDB.sql");
         }
 
         [Test]
@@ -36,17 +34,15 @@ namespace RepoDb.IntegrationTests
                 Address = "San Lorenzo, Makati, Philippines 4225",
                 IsActive = true,
                 Email = "juandelacruz@gmai.com",
-                //DateInsertedUtc = DateTime.UtcNow,
-                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
 
             //act
-            var id = repository.Insert(fixtureData);
+            var returnedId = repository.Insert(fixtureData);
 
             //assert
-            var customer = repository.Query<Customer>(id).FirstOrDefault();
+            var customer = repository.Query<Customer>(new { Id = returnedId }).FirstOrDefault();
 
             //assert
             customer.ShouldNotBeNull();
@@ -58,8 +54,7 @@ namespace RepoDb.IntegrationTests
             customer.Address.ShouldBe(fixtureData.Address);
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
-            //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            fixtureData.LastUpdatedUtc.ShouldBeEx(customer.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
@@ -77,7 +72,6 @@ namespace RepoDb.IntegrationTests
                 Address = "San Lorenzo, Makati, Philippines 4225-EDITED",
                 IsActive = true,
                 Email = "juandelacruz@gmai.com-EDITED",
-                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -86,7 +80,7 @@ namespace RepoDb.IntegrationTests
             repository.Update(fixtureData, new { fixtureData.Id });
 
             //assert
-            var savedData = repository.Query<Customer>(fixtureData.Id).FirstOrDefault();
+            var savedData = repository.Query<Customer>(new { fixtureData.Id }).FirstOrDefault();
             savedData.ShouldNotBeNull();
             savedData.Id.ShouldNotBe(0);
             savedData.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -96,32 +90,32 @@ namespace RepoDb.IntegrationTests
             savedData.Address.ShouldBe(fixtureData.Address);
             savedData.Email.ShouldBe(fixtureData.Email);
             savedData.IsActive.ShouldBe(fixtureData.IsActive);
-            //savedData.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            //savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
-        
+
         [Test]
         public void TestDelete()
         {
-            //arrange
-
-            //act
+            //arrange and act
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var rowsAffected = repository.Delete<Customer>(new { Id = 1 });
 
             //assert
             rowsAffected.ShouldBe(1);
+            var savedData = repository.Query<Customer>(new { Id = 1 }).FirstOrDefault();
+            savedData.ShouldBeNull();
         }
 
         [Test]
-        public void TestMergeExpectInsert()
+        public void TestMergeInsert()
         {
             //arrange
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
 
             var fixtureData = new Customer
             {
+                Id = 99,
                 GlobalId = Guid.NewGuid(),
                 FirstName = "Juan-MERGED",
                 LastName = "de la Cruz-MERGED",
@@ -129,7 +123,6 @@ namespace RepoDb.IntegrationTests
                 Address = "San Lorenzo, Makati, Philippines 4225-MERGED",
                 IsActive = true,
                 Email = "juandelacruz@gmai.com-MERGED",
-                DateInsertedUtc = DateTime.UtcNow,
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -138,7 +131,7 @@ namespace RepoDb.IntegrationTests
             repository.Merge(fixtureData);
 
             //assert
-            var customer = repository.Query<Customer>(new { GlobalId = fixtureData.GlobalId }).FirstOrDefault();
+            var customer = repository.Query<Customer>(new { fixtureData.GlobalId }).FirstOrDefault();
             customer.ShouldNotBeNull();
             customer.Id.ShouldNotBe(0);
             customer.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -148,37 +141,44 @@ namespace RepoDb.IntegrationTests
             customer.Address.ShouldBe(fixtureData.Address);
             customer.Email.ShouldBe(fixtureData.Email);
             customer.IsActive.ShouldBe(fixtureData.IsActive);
-            //customer.DateInsertedUtc.ShouldBe(fixtureData.DateInsertedUtc);
-            //customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
-
+        
         [Test]
-        public void TestMergeExpectDelete()
+        public void TestMergeUpdate()
         {
             //arrange
+            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
+            var fixtureData = new Customer
+            {
+                Id = 1,
+                FirstName = "Juan-MERGED",
+                LastName = "de la Cruz-MERGED",
+                MiddleName = "Pinto-MERGED",
+                Address = "San Lorenzo, Makati, Philippines 4225-MERGED",
+                IsActive = true,
+                Email = "juandelacruz@gmai.com-MERGED",
+                LastUpdatedUtc = DateTime.UtcNow,
+                LastUserId = $"{Environment.UserName}-MERGED"
+            };
 
             //act
-            throw new NotImplementedException();
+            repository.Merge(fixtureData);
 
-            //assert            
-        }
-
-        [Test]
-        public void TestMergeExpectUpdate()
-        {
-            //arrange
-
-            //act
-            throw new NotImplementedException();
-
-            //assert            
-        }
-
-        [TearDown]
-        public void Cleanup()
-        {
-            SetupHelper.CleanDatabase();
+            //assert
+            var savedData = repository.Query<Customer>(new { fixtureData.Id }).FirstOrDefault();
+            savedData.ShouldNotBeNull();
+            savedData.Id.ShouldNotBe(0);
+            savedData.GlobalId.ShouldBe(fixtureData.GlobalId);
+            savedData.FirstName.ShouldBe(fixtureData.FirstName);
+            savedData.LastName.ShouldBe(fixtureData.LastName);
+            savedData.MiddleName.ShouldBe(fixtureData.MiddleName);
+            savedData.Address.ShouldBe(fixtureData.Address);
+            savedData.Email.ShouldBe(fixtureData.Email);
+            savedData.IsActive.ShouldBe(fixtureData.IsActive);
+            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
     }
 }

@@ -7,20 +7,14 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using RepoDb.Extensions;
 
-namespace RepoDb.IntegrationTests.Setup {
-    public static class Constants
-    {
-        public static readonly string TestDatabase = @"Server=.;Database=REPODBTST;Integrated Security=True;";
-    }
-
+namespace RepoDb.IntegrationTests.Setup
+{
     public static class SetupHelper
     {
-        public static void InitDatabase()
+        public static void ExecuteEmbeddedSqlFile(string resourceName)
         {
             string script;
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "RepoDb.IntegrationTests.Setup.SetupDB.sql";
-
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
             {
@@ -42,6 +36,12 @@ namespace RepoDb.IntegrationTests.Setup {
             }
         }
 
+        public static void InitDatabase()
+        {
+            var resourceName = "RepoDb.IntegrationTests.Setup.SetupDB.sql";
+            ExecuteEmbeddedSqlFile(resourceName);
+        }
+
         public static void CleanDatabase()
         {
             using (var connection = new SqlConnection(Constants.TestDatabase))
@@ -49,6 +49,7 @@ namespace RepoDb.IntegrationTests.Setup {
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[OrderDetail];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Order];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Customer];");
+                connection.ExecuteNonQuery("DELETE FROM [dbo].[TypeMap];");
 
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([OrderDetail], RESEED, 1);");
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([Order], RESEED, 1);");
