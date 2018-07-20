@@ -7,6 +7,7 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[Order]")]
     public class Order : DataEntity
     {
+        [Attributes.Identity]
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate), Map("Id")]
         public int Id { get; set; }
 

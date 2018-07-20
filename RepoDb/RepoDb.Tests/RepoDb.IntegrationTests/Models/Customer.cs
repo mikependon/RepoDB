@@ -8,7 +8,8 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[Customer]")]
     public class Customer : DataEntity
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate), Map("Id")]
+        [Attributes.Identity]
+        [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate), Map("Id")]
         public int Id { get; set; }
 
         public Guid GlobalId { get; set; }

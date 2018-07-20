@@ -115,6 +115,7 @@ namespace RepoDb.IntegrationTests
 
             var fixtureData = new Customer
             {
+                Id = 99,
                 GlobalId = Guid.NewGuid(),
                 FirstName = "Juan-MERGED",
                 LastName = "de la Cruz-MERGED",

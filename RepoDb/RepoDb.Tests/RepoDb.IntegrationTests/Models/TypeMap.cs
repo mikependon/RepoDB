@@ -13,7 +13,7 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMap: DataEntity
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
+        [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public long? bigint_column { get; set; }
