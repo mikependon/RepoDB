@@ -37,6 +37,12 @@ namespace RepoDb
                 .Where(property => queryProperties.Contains(property));
             var fields = batchQueryProperties.Select(property => new Field(property.GetMappedName()));
 
+            // Validate the fields
+            if (fields?.Any() == false)
+            {
+                throw new InvalidOperationException($"No batch queryable fields found from type '{typeof(TEntity).FullName}'.");
+            }
+
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
@@ -154,7 +160,14 @@ namespace RepoDb
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -272,7 +285,14 @@ namespace RepoDb
         public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -372,16 +392,17 @@ namespace RepoDb
             var mergeInsertableFields = fields
                 .Where(field => overrideIgnore == true || insertableFields.Contains(field.Name));
             var mergeUpdateableFields = fields
-                .Where(field => overrideIgnore == true || updateableFields.Contains(field.Name));
+                .Where(field => overrideIgnore == true || updateableFields.Contains(field.Name) &&
+                    qualifiers?.FirstOrDefault(qualifier => qualifier.Name.ToLower() == field.Name.ToLower()) == null);
 
             // Check if there are inline mergeable fields (for insert)
-            if (!mergeInsertableFields.Any())
+            if (mergeInsertableFields.Any() == false)
             {
                 throw new InvalidOperationException($"No inline mergeable fields (for insert) found at type '{typeof(TEntity).FullName}'.");
             }
 
             // Check if there are inline mergeable fields (for update)
-            if (!mergeUpdateableFields.Any())
+            if (mergeUpdateableFields.Any() == false)
             {
                 throw new InvalidOperationException($"No inline mergeable fields (for update) found at type '{typeof(TEntity).FullName}'.");
             }
@@ -419,7 +440,7 @@ namespace RepoDb
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
+                .AsAliasFieldsFrom(mergeInsertableFields, "S")
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -470,8 +491,15 @@ namespace RepoDb
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
-            // Variables
+            // Important fields
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables
             var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) == true;
 
             // Check if there are fields
@@ -526,7 +554,14 @@ namespace RepoDb
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : DataEntity
         {
-            return CreateInsert(queryBuilder, false);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateInsert(queryBuilder, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -584,7 +619,14 @@ namespace RepoDb
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
         {
-            return CreateMerge(queryBuilder, qualifiers);
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var isPrimaryIdentity = (identity != null) && identity == primary;
+            return CreateMerge(queryBuilder, qualifiers, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -601,7 +643,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
                 .Select(property => property.GetMappedName());
             var unmatchesQualifiers = qualifiers?.Where(field =>
                 properties?.FirstOrDefault(property =>
@@ -614,7 +656,7 @@ namespace RepoDb
 
             // Variables
             var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-            var primaryKeyName = primary.GetMappedName();
+            var primaryKeyName = primary?.GetMappedName();
 
             // Add the primary key as the default qualifier
             if (qualifiers == null && primary != null)
@@ -622,18 +664,27 @@ namespace RepoDb
                 qualifiers = Field.From(primaryKeyName);
             }
 
+            // Throw an exception if there is no qualifiers defined
+            if (qualifiers == null || qualifiers?.Any() == false)
+            {
+                throw new InvalidOperationException("There are no qualifier fields defined.");
+            }
+
             // Get the target properties
             var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Select(property => property.GetMappedName())
                 .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryKeyName?.ToLower()));
-            var mergerableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
+            var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
                 .Select(property => property.GetMappedName())
                 .Where(field => field.ToLower() != primaryKeyName?.ToLower());
-            var mergeInsertableFields = mergerableFields
+            var mergeableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
+                .Select(property => property.GetMappedName());
+            var mergeInsertableFields = mergeableFields
                 .Where(field => insertableFields.Contains(field))
                 .Select(field => new Field(field));
-            var mergeUpdateableFields = mergerableFields
-                .Where(field => mergerableFields.Contains(field))
+            var mergeUpdateableFields = mergeableFields
+                .Where(field => updateableFields.Contains(field) &&
+                    qualifiers?.FirstOrDefault(qualifier => qualifier.Name.ToLower() == field.ToLower()) == null)
                 .Select(field => new Field(field));
 
             // Build the SQL Statement
@@ -647,7 +698,7 @@ namespace RepoDb
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom(Command.None) // All fields must be included for selection
+                .ParametersAsFieldsFrom(Command.Merge)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -669,7 +720,7 @@ namespace RepoDb
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
+                .AsAliasFieldsFrom(mergeInsertableFields, "S")
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -692,18 +743,24 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
+        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
-        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
+        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0)
             where TEntity : DataEntity
         {
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
+            if (properties?.Any() == false)
+            {
+                throw new InvalidOperationException($"No queryable fields found from type '{typeof(TEntity).FullName}'.");
+            }
+            var fields = properties?.Select(property => new Field(property.GetMappedName().AsQuoted(true)));
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
                 .Select()
                 .TopFrom(top)
-                .FieldsFrom(Command.Query)
+                .FieldsFrom(fields)
                 .From()
                 .TableFrom(Command.Query)
                 .WhereFrom(where)
@@ -745,11 +802,22 @@ namespace RepoDb
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
             where TEntity : DataEntity
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
+            if (properties?.Any() == false)
+            {
+                throw new InvalidOperationException($"No updateable fields found from type '{typeof(TEntity).FullName}'.");
+            }
+            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            if (identity != null && identity != primary)
+            {
+                throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+            }
+            var fields = properties
+                .Where(property => property != primary && property != identity)
+                .Select(p => new Field(p.GetMappedName()));
             where?.AppendParametersPrefix();
-            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Where(property => property != DataEntityExtension.GetPrimaryProperty<TEntity>())
-                .Select(p => new Field(p.Name));
+            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
                 .Update()

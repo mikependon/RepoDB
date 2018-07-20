@@ -4,46 +4,44 @@ using RepoDb.Attributes;
 namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
 {
     [TestFixture]
-    public class CreateDeleteAllTest
+    public class CreateTruncateTest
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithhoutMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestWithoutMappings()
+        public void TestWithhoutMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithhoutMappingsClass>();
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder);
+            var actual = statementBuilder.CreateTruncate(queryBuilder);
             var expected = $"" +
-                $"DELETE " +
-                $"FROM [TestWithoutMappingsClass] ;";
+                $"TRUNCATE TABLE [TestWithhoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestWithMappingsClass : DataEntity
+        private class TestWithClassMappingsClass : DataEntity
         {
         }
 
         [Test]
-        public void TestWithMappings()
+        public void TestWithClassMappings()
         {
             // Setup
             var statementBuilder = new SqlDbStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestWithClassMappingsClass>();
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder);
+            var actual = statementBuilder.CreateTruncate(queryBuilder);
             var expected = $"" +
-                $"DELETE " +
-                $"FROM [ClassName] ;";
+                $"TRUNCATE TABLE [ClassName] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
