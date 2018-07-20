@@ -98,28 +98,43 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
 
             // Load the DataEntity instance
-            ilGenerator.Emit(OpCodes.Ldloc, 0);
-            ilGenerator.Emit(OpCodes.Ldloc, 1);
+            ilGenerator.Emit(OpCodes.Ldloc, 0); // DataEntity
+            ilGenerator.Emit(OpCodes.Ldloc, 1); // Object
 
             // Switch which method of Convert are going to used
-            var convertMethod = typeof(Convert).GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
-                typeof(Convert).GetMethod($"ToString", new[] { typeof(object) });
-            ilGenerator.Emit(OpCodes.Call, convertMethod);
-
-            // Parse if it is Guid
-            if (propertyType == typeof(Guid))
+            if (propertyType.FullName == "System.DateTimeOffset")
             {
-                ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetMethod("Parse", new[] { typeof(string) }));
+                //ilGenerator.Emit(OpCodes.Ldarg_2, 1); // Object
+                //var changeTypeMethod = typeof(Convert).GetMethod($"ChangeType", new[] { typeof(object), typeof(Type) });
+                //ilGenerator.Emit(OpCodes.Call, changeTypeMethod);
+                ilGenerator.Emit(OpCodes.Box, propertyType);
+                ilGenerator.Emit(OpCodes.Ldtoken, propertyType);
             }
-
-            // Check for nullable based on the underlying type
-            if (underlyingType != null)
+            else if (propertyType.FullName == "System.Byte[]")
             {
-                // Get the type of Nullable<T> object
-                var nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
+                // Do nothing
+            }
+            else
+            {
+                var convertMethod = typeof(Convert).GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
+                typeof(Convert).GetMethod($"ToString", new[] { typeof(object) });
+                ilGenerator.Emit(OpCodes.Call, convertMethod);
 
-                // Create a new instance of Nullable<T> object
-                ilGenerator.Emit(OpCodes.Newobj, nullableType.GetConstructor(new[] { propertyType }));
+                // Parse if it is Guid
+                if (propertyType == typeof(Guid))
+                {
+                    ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetMethod("Parse", new[] { typeof(string) }));
+                }
+
+                // Check for nullable based on the underlying type
+                if (underlyingType != null)
+                {
+                    // Get the type of Nullable<T> object
+                    var nullableType = typeof(Nullable<>).MakeGenericType(propertyType);
+
+                    // Create a new instance of Nullable<T> object
+                    ilGenerator.Emit(OpCodes.Newobj, nullableType.GetConstructor(new[] { propertyType }));
+                }
             }
 
             // Call the (Property.Set) or (Property = Value)

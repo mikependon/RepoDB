@@ -6,6 +6,7 @@ using System.Text;
 using NUnit.Framework;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
+using System;
 
 //https://stackoverflow.com/questions/425389/c-sharp-equivalent-of-sql-server-datatypes
 
@@ -39,10 +40,12 @@ namespace RepoDb.IntegrationTests
             var saveData = sut.Query<Models.TypeMapBlob>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
 
-            var resulText = Encoding.ASCII.GetString(saveData.binary_column);
-            resulText.ShouldBe(baseText);
+            var binary_column = saveData.binary_column.Take(fixtureData.binary_column.Length);
+            var resulText = Encoding.ASCII.GetString(binary_column?.ToArray());
 
-            saveData.binary_column.SequenceEqual(fixtureData.binary_column).ShouldBe(true);
+            resulText.ShouldBe(baseText);
+            binary_column?.SequenceEqual(fixtureData.binary_column).ShouldBe(true);
+
             saveData.image_column.SequenceEqual(fixtureData.image_column).ShouldBe(true);
             saveData.varbinary_column.SequenceEqual(fixtureData.varbinary_column).ShouldBe(true);
             saveData.varbinarymax_column.SequenceEqual(fixtureData.varbinarymax_column).ShouldBe(true);
@@ -54,7 +57,7 @@ namespace RepoDb.IntegrationTests
             //arrange
             var resourceName = "RepoDb.IntegrationTests.Setup.hello-world.png";
             var baseByteData = ExtractResource(resourceName);
-            
+
             var fixtureData = new Models.TypeMapBlob
             {
                 image_column = baseByteData,
