@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using System;
 
 namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
@@ -207,6 +208,33 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             var expected = $"" +
                 $"UPDATE [TestWithIdentityFieldClass] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class TestWithExpressionClass : DataEntity
+        {
+            [Primary, Identity]
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [Test]
+        public void TestWithExpression()
+        {
+            // Setup
+            var statementBuilder = new SqlDbStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestWithExpressionClass>();
+            var queryGroup = QueryGroup.Parse(new { Field1 = 1, Field4 = new { Operation = Operation.GreaterThan, Value = 2 } });
+
+            // Act
+            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var expected = $"" +
+                $"UPDATE [TestWithExpressionClass] " +
+                $"SET [Field2] = @Field2, [Field3] = @Field3 " +
+                $"WHERE ([Field1] = @_Field1 AND [Field4] > @_Field4) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
