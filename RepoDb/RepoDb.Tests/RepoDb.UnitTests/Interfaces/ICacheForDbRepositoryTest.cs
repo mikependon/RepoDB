@@ -7,7 +7,7 @@ using RepoDb.UnitTests.CustomObjects;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestFixture]
-    public class ICacheTest
+    public class ICacheForDbRepositoryTest
     {
         private class CacheEntity : DataEntity
         {
@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [Test]
-        public void TestQuery()
+        public void TestQueryCacheKey()
         {
             // Prepare
             var cache = new Mock<ICache>();
