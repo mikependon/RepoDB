@@ -30,7 +30,18 @@ namespace RepoDb
         /// <param name="value">The value of the cache.</param>
         public void Add(string key, object value)
         {
-            Add(new CacheItem(key, value));
+            Add(key, value, Constant.DefaultCacheItemExpirationInMinutes);
+        }
+
+        /// <summary>
+        /// Adds a cache item value.
+        /// </summary>
+        /// <param name="key">The key to the cache.</param>
+        /// <param name="value">The value of the cache.</param>
+        /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+        public void Add(string key, object value, int expirationInMinutes)
+        {
+            Add(new CacheItem(key, value, expirationInMinutes));
         }
 
         /// <summary>
@@ -142,8 +153,7 @@ namespace RepoDb
         /// <returns>The cached item based on the given key.</returns>
         protected CacheItem GetItem(string key)
         {
-            return _cacheList.FirstOrDefault(cacheItem =>
-                string.Equals(cacheItem.Key, key, StringComparison.CurrentCulture));
+            return _cacheList.FirstOrDefault(cacheItem => cacheItem.Key == key);
         }
     }
 }

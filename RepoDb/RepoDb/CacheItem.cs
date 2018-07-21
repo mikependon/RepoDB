@@ -27,11 +27,12 @@ namespace RepoDb
         {
             if (expirationInMinutes < 0)
             {
-                throw new ArgumentOutOfRangeException("Expiration in minutes.");
+                throw new ArgumentOutOfRangeException("Expiration in minutes must not be negative values.");
             }
             Key = key;
             Value = value;
             CreatedDate = DateTime.UtcNow;
+            Expiration = CreatedDate.AddMinutes(expirationInMinutes);
         }
 
         /// <summary>
@@ -42,12 +43,13 @@ namespace RepoDb
         {
             if (!IsExpired())
             {
-                throw new InvalidOperationException($"The current item is not yet expired.");
+                throw new InvalidOperationException($"Cannot update the item that is not yet expired.");
             }
             else
             {
                 Value = item.Value;
                 CreatedDate = DateTime.UtcNow;
+                Expiration = CreatedDate.AddMinutes(Constant.DefaultCacheItemExpirationInMinutes);
             }
         }
 
@@ -78,7 +80,7 @@ namespace RepoDb
         /// <returns>A boolean value that indicate whether this cache value is expired.</returns>
         public bool IsExpired()
         {
-            return DateTime.UtcNow > Expiration;
+            return DateTime.UtcNow >= Expiration;
         }
     }
 }

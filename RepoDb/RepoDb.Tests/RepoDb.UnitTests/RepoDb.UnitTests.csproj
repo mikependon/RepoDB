@@ -78,6 +78,7 @@
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForDbRepositoryTest.cs" />
+    <Compile Include="MemoryCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderFieldTest.cs" />
     <Compile Include="QueryGroupTest.cs" />
