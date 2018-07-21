@@ -8,7 +8,7 @@
     <Authors>Michael Pendon</Authors>
     <Company />
     <Product />
-    <Description>A dynamic, lightweight and fast repo-based ORM .NET Library.</Description>
+    <Description>A dynamic, lightweight, and fast repo-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
     <PackageReleaseNotes>Beta Release 5
