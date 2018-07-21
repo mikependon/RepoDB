@@ -8,9 +8,9 @@ using System.Collections.Generic;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestFixture]
-    public class IStatementBuilderTest
+    public class IStatementBuilderForDbRepositoryTest
     {
-        private class StatementBuilderEntity : DataEntity
+        public class StatementBuilderEntity : DataEntity
         {
             [Primary, Identity]
             public int Id { get; set; }

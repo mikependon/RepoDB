@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestFixture]
     public class ITraceForDbRepositoryTest
     {
-        private class TraceEntity : DataEntity
+        public class TraceEntity : DataEntity
         {
             [Primary, Identity]
             public int Id { get; set; }
