@@ -618,7 +618,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int DeleteAll(IDbTransaction transaction = null)
         {
-            return DbRepository.Delete<TEntity>(transaction: transaction);
+            return DbRepository.DeleteAll<TEntity>(transaction: transaction);
         }
 
         // DeleteAllAsync
