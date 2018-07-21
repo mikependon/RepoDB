@@ -72,6 +72,7 @@
     <Compile Include="CustomObjects\CustomDbConnection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Interfaces\IStatementBuilderTest.cs" />
     <Compile Include="Interfaces\ITraceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderFieldTest.cs" />

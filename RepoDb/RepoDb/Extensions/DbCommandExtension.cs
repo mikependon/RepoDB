@@ -60,12 +60,12 @@ namespace RepoDb.Extensions
                     if (mappedToEntityType != null)
                     {
                         var property = mappedToEntityType.GetProperty(item.Key);
-                        dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType;
+                        dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                            TypeMapper.Get(property.PropertyType)?.DbType; ;
                     }
                     else
                     {
-                        var propertyType = item.Value?.GetType();
-                        dbType = TypeMapper.Get(propertyType)?.DbType;
+                        dbType = TypeMapper.Get(item.Value?.GetType())?.DbType;
                     }
                     command.Parameters.Add(command.CreateParameter(item.Key, item.Value, dbType));
                 }
