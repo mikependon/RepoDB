@@ -21,10 +21,9 @@ namespace RepoDb.IntegrationTests
         {
 
             //arrange
-            var geometry1 = "LINESTRING(-122.360 47.656, -122.343 47.656)";
             var fixtureData = new Models.TypeMapSpatial
             {
-                geometry_column = null
+                geometry_column = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
             //act
