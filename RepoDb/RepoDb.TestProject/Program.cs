@@ -15,8 +15,8 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //TestInventory();
-            TestAllOperations();
+            TestInventory();
+            //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
@@ -24,6 +24,7 @@ namespace RepoDb.TestProject
 
         public static void TestInventory()
         {
+
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
                 var current = DateTime.UtcNow;

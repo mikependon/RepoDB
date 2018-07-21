@@ -13,7 +13,7 @@ namespace RepoDb
         /// <param name="key">The key of the cache.</param>
         /// <param name="value">The value of the cache.</param>
         public CacheItem(string key, object value)
-            : this(key, value, Constant.CacheItemExpirationInMinutes)
+            : this(key, value, Constant.DefaultCacheItemExpirationInMinutes)
         {
         }
 

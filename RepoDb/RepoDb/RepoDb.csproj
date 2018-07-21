@@ -68,6 +68,7 @@
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
+    <Compile Include="RecursionManager.cs" />
     <Compile Include="SqlDbHelper.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />

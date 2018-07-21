@@ -2349,6 +2349,13 @@ namespace RepoDb
             // Check the recursiveness
             if (recursive == true && result?.Any() == true && (recursionDepth == null || recursionDepth >= 1))
             {
+                // Make sure less than or equals
+                if (recursionDepth > RecursionManager.RecursiveQueryMaxRecursion)
+                {
+                    throw new InvalidOperationException("Recursion depth must not be greater than defined maximum recursion.");
+                }
+
+                // Get the child entities
                 var what = DataEntityExtension.GetDataEntityChildrenData<TEntity>();
 
                 // Recurse only if we have children
@@ -2363,8 +2370,7 @@ namespace RepoDb
                         trace: trace,
                         statementBuilder: statementBuilder,
                         recursive: recursive,
-                        recursionDepth: recursionDepth > Constant.RecursiveMaxRecursion ?
-                            Constant.RecursiveMaxRecursion : recursionDepth);
+                        recursionDepth: recursionDepth);
                 }
             }
 
@@ -2407,9 +2413,10 @@ namespace RepoDb
             // Split the list
             var childItemDataList = result.Select(entity => new DataEntityChildItemData(entity)).ToList();
             var splittedList = new List<IEnumerable<DataEntityChildItemData>>();
-            for (var index = 0; index < childItemDataList.Count; index += Constant.RecursiveQueryBatchCount)
+            var batchCount = RecursionManager.RecursiveQueryBatchCount;
+            for (var index = 0; index < childItemDataList.Count; index += batchCount)
             {
-                splittedList.Add(childItemDataList.Skip(index).Take(Constant.RecursiveQueryBatchCount));
+                splittedList.Add(childItemDataList.Skip(index).Take(batchCount));
             }
 
             // Iterate the splitted list

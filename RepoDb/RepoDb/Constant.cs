@@ -8,16 +8,16 @@
         /// <summary>
         /// The default value of the cache expiration in minutes.
         /// </summary>
-        public static readonly int CacheItemExpirationInMinutes = 180;
+        public static readonly int DefaultCacheItemExpirationInMinutes = 180;
 
         /// <summary>
-        /// The batches used when querying the data from the database in the recursive query operation.
+        /// The default number of batches used when querying the data from the database in the recursive query operation.
         /// </summary>
-        public static readonly int RecursiveQueryBatchCount = 256;
+        public static readonly int DefaultRecursiveQueryBatchCount = 256;
 
         /// <summary>
-        /// The maximum recursion for the recursive query operation.
+        /// The default maximum recursion for the recursive query operation.
         /// </summary>
-        public static readonly int RecursiveMaxRecursion = 15;
+        public static readonly int DefaultRecursiveQueryMaxRecursion = 15;
     }
 }
