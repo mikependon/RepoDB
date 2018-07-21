@@ -75,6 +75,5 @@ To provide more flexibility and fast-switching development approach, whether to 
 
 ### Unsupported Query DataTypes ##
 
-- BLOB data types (binary, varbinary, image)
 - Spatial data types (geography, geometry)
 - DataTimeOffset
