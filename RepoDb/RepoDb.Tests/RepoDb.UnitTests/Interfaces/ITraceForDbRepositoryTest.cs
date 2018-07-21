@@ -7,7 +7,7 @@ using RepoDb.UnitTests.CustomObjects;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestFixture]
-    public class ITraceTest
+    public class ITraceForDbRepositoryTest
     {
         private class TraceEntity : DataEntity
         {
