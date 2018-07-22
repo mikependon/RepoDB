@@ -115,17 +115,11 @@ namespace RepoDb.Reflection
                 var parseMethod = (MethodInfo)null;
 
                 // Switch to the correct parser method
-                if (propertyType == typeof(Guid))
+                if (propertyType == typeof(Guid) ||
+                    propertyType == typeof(DateTimeOffset) ||
+                    propertyType == typeof(TimeSpan))
                 {
-                    parseMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
-                }
-                else if (propertyType == typeof(DateTimeOffset))
-                {
-                    parseMethod = typeof(DateTimeOffset).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
-                }
-                else if (propertyType == typeof(TimeSpan))
-                {
-                    parseMethod = typeof(TimeSpan).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                    parseMethod = propertyType.GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
                 }
 
                 // Do the parse if set
