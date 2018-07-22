@@ -58,8 +58,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DateTimeExtension.cs" />
+    <Compile Include="Models\RecursiveCustomer.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\RecursiveOrder.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\RecursiveOrderDetail.cs" />
     <Compile Include="Models\OrderDetail.cs" />
     <Compile Include="Models\TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="TestBlobDataTypeMapping.cs" />
     <Compile Include="TestBulkOps.cs" />
     <Compile Include="TestInlineCrud.cs" />
+    <Compile Include="TestRecursiveQuery.cs" />
     <Compile Include="TestSpatialDataTypeMapping.cs" />
     <Compile Include="TestStandardDataTypeMapping.cs" />
   </ItemGroup>

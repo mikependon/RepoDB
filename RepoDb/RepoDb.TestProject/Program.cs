@@ -28,18 +28,13 @@ namespace RepoDb.TestProject
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
             {
                 var current = DateTime.UtcNow;
-                var customer = repository.Query<CustomerDto>(top: 10, recursive: true, recursionDepth: 5);
+                var customer = repository.Query<CustomerDto>(recursive: true, recursionDepth: 5);
                 var lapsedInSeconds = (DateTime.UtcNow - current).TotalSeconds;
                 Console.WriteLine($"Recursive query lapsed for total of {lapsedInSeconds} second(s).");
                 //var customers = repository.Query<CustomerDto>();
                 //customers.ToList().ForEach(customer =>
                 //{
-                //    //var rows = repository.InlineUpdate<CustomerDto>(new { customer.FirstName }, new { customer.Id }, true);
-                //    //rows = Convert.ToInt32(repository.Insert(customer));
-                //    //rows = repository.Update(customer);
-                //    //rows = repository.Merge(customer, Field.Parse(new { customer.Id }));
-
-                //    //// Customer
+                //    // Customer
                 //    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
                 //    // Orders
                 //    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
