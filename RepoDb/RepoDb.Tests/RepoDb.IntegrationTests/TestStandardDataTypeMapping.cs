@@ -113,7 +113,7 @@ namespace RepoDb.IntegrationTests
             var returnedId = sut.Insert(fixtureData);
 
             //TODO: support guid primary key
-
+            
             //assert
             var saveData = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();

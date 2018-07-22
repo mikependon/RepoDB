@@ -13,13 +13,25 @@ namespace RepoDb.IntegrationTests
         [Test]
         public void TestGeographyDataType()
         {
-            throw new NotImplementedException();
+            //arrange
+            var fixtureData = new Models.TypeMapSpatial
+            {
+                geography_column = "POLYGON ((0 0, 50 0, 50 50, 0 50, 0 0))"
+            };
+
+            //act
+            var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
+            var returnedId = sut.Insert(fixtureData);
+
+            //assert
+            var saveData = sut.Query<Models.TypeMapSpatial>(top: 1).FirstOrDefault();
+            saveData.ShouldNotBeNull();
+            saveData.geography_column.ShouldBe(fixtureData.geography_column);
         }
 
         [Test]
         public void TestGeometryDataType()
         {
-
             //arrange
             var fixtureData = new Models.TypeMapSpatial
             {
