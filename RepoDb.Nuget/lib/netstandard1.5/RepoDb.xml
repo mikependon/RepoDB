@@ -32,6 +32,16 @@
             Gets the field name of the parent data entity.
             </summary>
         </member>
+        <member name="T:RepoDb.Attributes.IdentityAttribute">
+            <summary>
+            An attribute used to define an identity property for the <i>DataEntity</i> object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Attributes.IdentityAttribute.#ctor">
+            <summary>
+            Creates a new instance of <i>RepoDb.Attributes.IdentityAttribute</i> object.
+            </summary>
+        </member>
         <member name="T:RepoDb.Attributes.IgnoreAttribute">
             <summary>
             An attribute used to define a class property or any <i>DataEntity</i> object properties to be marked as ignoreable
@@ -89,6 +99,22 @@
         <member name="P:RepoDb.Attributes.TextAttribute.Text">
             <summary>
             Gets a value of the text.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Attributes.TypeMapAttribute">
+            <summary>
+            An attribute used to define a mapping of <i>DataEntity</i> property type into its equivalent database type.
+            </summary>
+        </member>
+        <member name="M:RepoDb.Attributes.TypeMapAttribute.#ctor(System.Data.DbType)">
+            <summary>
+            Creates a new instance of <i>RepoDb.Attributes.TypeMapAttribute</i> object.
+            </summary>
+            <param name="dbType">A target database type.</param>
+        </member>
+        <member name="P:RepoDb.Attributes.TypeMapAttribute.DbType">
+            <summary>
+            Gets a database type that is currently mapped.
             </summary>
         </member>
         <member name="T:RepoDb.BaseRepository`2">
@@ -678,12 +704,12 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -699,13 +725,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -721,13 +747,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -743,13 +769,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.Query(RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -765,12 +791,12 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -786,13 +812,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -808,13 +834,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -830,13 +856,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -1108,19 +1134,19 @@
             A class that holds the constant values for <i>RepoDb</i> library.
             </summary>
         </member>
-        <member name="F:RepoDb.Constant.CacheItemExpirationInMinutes">
+        <member name="F:RepoDb.Constant.DefaultCacheItemExpirationInMinutes">
             <summary>
             The default value of the cache expiration in minutes.
             </summary>
         </member>
-        <member name="F:RepoDb.Constant.RecursiveQueryBatchCount">
+        <member name="F:RepoDb.Constant.DefaultRecursiveQueryBatchCount">
             <summary>
-            The batches used when querying the data from the database in the recursive query operation.
+            The default number of batches used when querying the data from the database in the recursive query operation.
             </summary>
         </member>
-        <member name="F:RepoDb.Constant.RecursiveMaxRecursion">
+        <member name="F:RepoDb.Constant.DefaultRecursiveQueryMaxRecursion">
             <summary>
-            The maximum recursion for the recursive query operation.
+            The default maximum recursion for the recursive query operation.
             </summary>
         </member>
         <member name="T:RepoDb.DataEntity">
@@ -2160,13 +2186,13 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2182,14 +2208,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2205,14 +2231,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2228,14 +2254,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.Query``1(RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2251,13 +2277,13 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2273,14 +2299,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2296,14 +2322,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -2319,14 +2345,14 @@
             </param>
             <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force the repository to query from the database.
@@ -3027,6 +3053,20 @@
             <param name="dataEntity">The instance of data entity where to get the primary key property.</param>
             <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.DataEntityExtension.GetIdentityProperty``1">
+            <summary>
+            Gets the identity property of the <i>DataEntity</i> object.
+            </summary>
+            <typeparam name="T">The type of the data entity where to get the identity property.</typeparam>
+            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as an identity property of the data entity.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DataEntityExtension.GetIdentityProperty(RepoDb.DataEntity)">
+            <summary>
+            Gets the identity property of the <i>DataEntity</i> object.
+            </summary>
+            <param name="dataEntity">The instance of data entity where to get the primary key property.</param>
+            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetMappedName``1(RepoDb.Enumerations.Command)">
             <summary>
             Gets the mapped name of the data entity type on a target command. The identification process it to check the <i>RepoDb.Attributes.MapAttribute</i>
@@ -3053,11 +3093,28 @@
             <param name="queryGroup">The query group to be merged.</param>
             <returns>An instance of converted dynamic object.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(RepoDb.DataEntity,RepoDb.QueryGroup,RepoDb.Enumerations.Command)">
+            <summary>
+            Converts the <i>DataEntity</i> object into a dynamic object. During the conversion, the passed query groups are being merged.
+            </summary>
+            <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
+            <param name="queryGroup">The query group to be merged.</param>
+            <param name="command">The target command type to be used for the object transformation.</param>
+            <returns>An instance of converted dynamic object.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(RepoDb.DataEntity)">
             <summary>
             Converts the <i>DataEntity</i> object into a dynamic object.
             </summary>
             <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
+            <returns>An instance of converted dynamic object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(RepoDb.DataEntity,RepoDb.Enumerations.Command)">
+            <summary>
+            Converts the <i>DataEntity</i> object into a dynamic object.
+            </summary>
+            <param name="dataEntity">The <i>DataEntity</i> object to be converted.</param>
+            <param name="command">The target command type to be used for the object transformation.</param>
             <returns>An instance of converted dynamic object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.IsBatchQueryable``1">
@@ -3250,6 +3307,31 @@
             <summary>
             Contains the extension methods for <i>System.Data.IDbCommand</i> object.
             </summary>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameter(System.Data.IDbCommand,System.String,System.Object,System.Nullable{System.Data.DbType})">
+            <summary>
+            Creates a parameter for a command object.
+            </summary>
+            <param name="command">The command object instance to be used.</param>
+            <param name="name">The name of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <param name="dbType">The database type of the parameter.</param>
+            <returns>An instance of the newly created parameter object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Object)">
+            <summary>
+            Creates a parameter for a command object.
+            </summary>
+            <param name="command">The command object instance to be used.</param>
+            <param name="param">The object to be used when creating the parameters.</param>
+        </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Object,System.Type)">
+            <summary>
+            Creates a parameter from object by mapping the property from the target entity type.
+            </summary>
+            <param name="command">The command object to be used.</param>
+            <param name="param">The object to be used when creating the parameters.</param>
+            <param name="mappedToEntityType">The target type where to map the parameters.</param>
         </member>
         <member name="T:RepoDb.Extensions.FieldExtension">
             <summary>
@@ -4273,14 +4355,14 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4300,15 +4382,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4328,15 +4410,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4356,15 +4438,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4391,8 +4473,8 @@
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4434,14 +4516,14 @@
             child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
             </param>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4461,15 +4543,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4489,15 +4571,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression or primary key value to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4517,15 +4599,15 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,System.String,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Data.IDbTransaction,System.String,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the <i>DataEntity</i> object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to <i>NULL</i> would force to query from the database.
@@ -4765,6 +4847,23 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of the data reader object.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+            <summary>
+            Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+            returns the instance of the data reader.
+            </summary>
+            <param name="connection">The connection to be used during execution.</param>
+            <param name="commandText">The command text to be used on the execution.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <i>CommandText</i> property.
+            </param>
+            <param name="commandType">The command type to be used on the execution.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <param name="entityType">The type of data entity where to map the current param types.</param>
+            <returns>An instance of the data reader object.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
@@ -4797,6 +4896,23 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+            <summary>
+            Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+            returns the number of affected rows during the execution.
+            </summary>
+            <param name="connection">The connection to be used during execution.</param>
+            <param name="commandText">The command text to be used on the execution.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <i>CommandText</i> property.
+            </param>
+            <param name="commandType">The command type to be used on the execution.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <param name="entityType">The type of data entity where to map the current param types.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in asynchronous way. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
@@ -4827,6 +4943,23 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+            <summary>
+            Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+            returns the first occurence value (first column of first row) of the execution.
+            </summary>
+            <param name="connection">The connection to be used during execution.</param>
+            <param name="commandText">The command text to be used on the execution.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <i>CommandText</i> property.
+            </param>
+            <param name="commandType">The command type to be used on the execution.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace)">
@@ -5051,7 +5184,7 @@
             <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32})">
             <summary>
             Creates a SQL Statement for repository <i>Query</i> operation.
             </summary>
@@ -5060,8 +5193,8 @@
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
-            <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
             <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
+            <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         </member>
         <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder{``0})">
@@ -5328,6 +5461,14 @@
             <param name="key">The key to the cache.</param>
             <param name="value">The value of the cache.</param>
         </member>
+        <member name="M:RepoDb.MemoryCache.Add(System.String,System.Object,System.Int32)">
+            <summary>
+            Adds a cache item value.
+            </summary>
+            <param name="key">The key to the cache.</param>
+            <param name="value">The value of the cache.</param>
+            <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+        </member>
         <member name="M:RepoDb.MemoryCache.Add(RepoDb.CacheItem)">
             <summary>
             Adds a cache item value.
@@ -5590,6 +5731,22 @@
         <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
             <summary>
             Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
+            </summary>
+            <param name="fields">The list fields to be stringified.</param>
+            <param name="alias">The alias to be prepended for each field.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(RepoDb.Enumerations.Command,System.String)">
+            <summary>
+            Appends a stringified fields to the SQL Query Statement by command with aliases.
+            </summary>
+            <param name="command">The mapped command where to get all the fields to be stringified.</param>
+            <param name="alias">The alias to be prepended for each field.</param>
+            <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
+            <summary>
+            Appends a stringified fields to the SQL Query Statement by command with aliases.
             </summary>
             <param name="fields">The list fields to be stringified.</param>
             <param name="alias">The alias to be prepended for each field.</param>
@@ -6015,6 +6172,35 @@
             </param>
             <returns>An instance of the <i>RepoDb.QueryGroup</i> object that contains the parsed query expression.</returns>
         </member>
+        <member name="T:RepoDb.RecursionManager">
+            <summary>
+            A manager class for recursive query.
+            </summary>
+        </member>
+        <member name="P:RepoDb.RecursionManager.RecursiveQueryBatchCount">
+            <summary>
+            Gets the batches count used by the repository (recursive query) operation. The default value is
+            equals to <i>RepoDb.Constant.DefaultRecursiveQueryBatchCount</i> value.
+            </summary>
+        </member>
+        <member name="P:RepoDb.RecursionManager.RecursiveQueryMaxRecursion">
+            <summary>
+            Gets the maximum recursion that the repository (recursion depth) can execute. The default value is
+            equals to <i>RepoDb.Constant.DefaultRecursiveMaxRecursion</i> value.
+            </summary>
+        </member>
+        <member name="M:RepoDb.RecursionManager.SetRecursiveMaximumRecursion(System.Int32)">
+            <summary>
+            Sets the maximum recursion value of the repository (recursion depth) execution.
+            </summary>
+            <param name="maximumRecursion">The value of the maximum recursion.</param>
+        </member>
+        <member name="M:RepoDb.RecursionManager.SetRecursiveQueryBatchCount(System.Int32)">
+            <summary>
+            Sets the batches count to be used by the repository (recursion query) operation.
+            </summary>
+            <param name="batchCount">The value of the batches count.</param>
+        </member>
         <member name="T:RepoDb.Reflection.DataReaderConverter">
             <summary>
             A static classed used to convert the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
@@ -6273,7 +6459,7 @@
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlDbStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField})">
+        <member name="M:RepoDb.SqlDbStatementBuilder.CreateQuery``1(RepoDb.QueryBuilder{``0},RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32})">
             <summary>
             Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
             </summary>
@@ -6282,8 +6468,8 @@
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="where">The query expression for SQL statement.</param>
-            <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
             <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
+            <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
             <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         </member>
         <member name="M:RepoDb.SqlDbStatementBuilder.CreateTruncate``1(RepoDb.QueryBuilder{``0})">
@@ -6398,27 +6584,33 @@
             Gets the actual length of the operation execution.
             </summary>
         </member>
-        <member name="T:RepoDb.TypeMap">
+        <member name="T:RepoDb.TypeMapItem">
             <summary>
             A type mapping object that holds the mapping between the .NET CLR Types and database types.
             </summary>
         </member>
-        <member name="M:RepoDb.TypeMap.#ctor(System.Type,System.Data.DbType)">
+        <member name="M:RepoDb.TypeMapItem.#ctor(System.Type,System.Data.DbType)">
             <summary>
             Creates a a new instance of <i>RepoDb.TypeMap</i> object.
             </summary>
             <param name="type">The .NET CLR Type to be mapped.</param>
             <param name="dbType">The database type to map (typeof <i>System.Data.DbType</i>).</param>
         </member>
-        <member name="P:RepoDb.TypeMap.Type">
+        <member name="P:RepoDb.TypeMapItem.Type">
             <summary>
             Gets the .NET CLR Type used for mapping.
             </summary>
         </member>
-        <member name="P:RepoDb.TypeMap.DbType">
+        <member name="P:RepoDb.TypeMapItem.DbType">
             <summary>
             Gets the database type used for mapping.
             </summary>
+        </member>
+        <member name="M:RepoDb.TypeMapItem.SetDbType(System.Data.DbType)">
+            <summary>
+            Internally sets the value of the <i>DbType</i> property.
+            </summary>
+            <param name="dbType">The value of the <i>DbType</i>.</param>
         </member>
         <member name="T:RepoDb.TypeMapper">
             <summary>
@@ -6437,11 +6629,26 @@
             <param name="type">The .NET CLR Type to be mapped.</param>
             <param name="dbType">The database type where to map the .NET CLR Type.</param>
         </member>
-        <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.TypeMap)">
+        <member name="M:RepoDb.TypeMapper.AddMap(System.Type,System.Data.DbType,System.Boolean)">
             <summary>
             Adds a mapping between .NET CLR Type and database type.
             </summary>
-            <param name="typeMap">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
+            <param name="type">The .NET CLR Type to be mapped.</param>
+            <param name="dbType">The database type where to map the .NET CLR Type.</param>
+            <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        </member>
+        <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.TypeMapItem)">
+            <summary>
+            Adds a mapping between .NET CLR Type and database type.
+            </summary>
+            <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
+        </member>
+        <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.TypeMapItem,System.Boolean)">
+            <summary>
+            Adds a mapping between .NET CLR Type and database type.
+            </summary>
+            <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
+            <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         </member>
         <member name="M:RepoDb.TypeMapper.Get(System.Type)">
             <summary>
@@ -6456,6 +6663,12 @@
             </summary>
             <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
             <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
+        </member>
+        <member name="M:RepoDb.TypeMapper.RemoveMap(System.Type)">
+            <summary>
+            Removes a mapping of targetted .NET CLR Type from the collection.
+            </summary>
+            <param name="type">The .NET CLR Type mapping to be removed.</param>
         </member>
     </members>
 </doc>

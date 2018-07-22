@@ -2514,12 +2514,7 @@ namespace RepoDb
 
                         // Extreme reflection, need to optimize soon
                         var childEntities = recursiveResult
-                            .Where(entity =>
-                            {
-                                var foreignValue = Convert.ChangeType(foreignProperty.GetValue(entity), parentFieldProperty.PropertyType);
-                                var matched = Equals(item.Key, foreignValue);
-                                return matched;
-                            })
+                            .Where(entity => Equals(item.Key, foreignProperty.GetValue(entity)))
                             .ToList();
 
                         // Iterate each child entity

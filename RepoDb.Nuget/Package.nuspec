@@ -2,16 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.2.0-beta5</version>
+    <version>1.2.0-beta6</version>
     <authors>Michael Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <title>RepoDb</title>
-    <description>A dynamic, lightweight and fast repo-based ORM .NET Library.</description>
+    <description>A dynamic, lightweight, and fast repo-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      Beta Release 5
-      - Stabilization: Enabled the recursive query, recursion depth and cyclomatic stack overflow complexity features.
+      Beta Release 6
+      - Introduced Unit Testing
+      - Introduced Integration Testing
+      - Bug fixes and stabilization during extensive Unit Testing and Regression Testing
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

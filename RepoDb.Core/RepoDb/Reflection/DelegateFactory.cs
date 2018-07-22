@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Reflection.Delegates;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
@@ -101,14 +102,22 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldloc, 1);
 
             // Switch which method of Convert are going to used
-            var convertMethod = typeof(Convert).GetTypeInfo().GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
-                typeof(Convert).GetTypeInfo().GetMethod($"ToString", new[] { typeof(object) });
-            ilGenerator.Emit(OpCodes.Call, convertMethod);
-
-            // Parse if it is Guid
-            if (propertyType == typeof(Guid))
+            var ignorableTypes = new[]
             {
-                ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) }));
+                "System.Byte[]",
+                "System.DateTimeOffset"
+            };
+            if (ignorableTypes.Contains(propertyType.FullName) == false)
+            {
+                var convertMethod = typeof(Convert).GetTypeInfo().GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
+                    typeof(Convert).GetTypeInfo().GetMethod($"ToString", new[] { typeof(object) });
+                ilGenerator.Emit(OpCodes.Call, convertMethod);
+
+                // Parse if it is Guid
+                if (propertyType == typeof(Guid))
+                {
+                    ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) }));
+                }
             }
 
             // Check for nullable based on the underlying type

@@ -107,7 +107,7 @@ namespace RepoDb.Reflection
                 "System.Byte[]",
                 "System.DateTimeOffset"
             };
-            if (propertyType.FullName != "System.Byte[]")
+            if (ignorableTypes.Contains(propertyType.FullName) == false)
             {
                 var convertMethod = typeof(Convert).GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
                     typeof(Convert).GetMethod($"ToString", new[] { typeof(object) });
