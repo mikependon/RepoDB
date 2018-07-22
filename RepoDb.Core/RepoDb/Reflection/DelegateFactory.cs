@@ -102,21 +102,36 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Ldloc, 1);
 
             // Switch which method of Convert are going to used
-            var ignorableTypes = new[]
+            if (propertyType != typeof(byte[]))
             {
-                "System.Byte[]",
-                "System.DateTimeOffset"
-            };
-            if (ignorableTypes.Contains(propertyType.FullName) == false)
-            {
+                // Get the proper convert method
                 var convertMethod = typeof(Convert).GetTypeInfo().GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
                     typeof(Convert).GetTypeInfo().GetMethod($"ToString", new[] { typeof(object) });
+
+                // Convert the value
                 ilGenerator.Emit(OpCodes.Call, convertMethod);
 
                 // Parse if it is Guid
+                var parseMethod = (MethodInfo)null;
+
+                // Switch to the correct parser method
                 if (propertyType == typeof(Guid))
                 {
-                    ilGenerator.Emit(OpCodes.Call, typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) }));
+                    parseMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                }
+                else if (propertyType == typeof(DateTimeOffset))
+                {
+                    parseMethod = typeof(DateTimeOffset).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                }
+                else if (propertyType == typeof(TimeSpan))
+                {
+                    parseMethod = typeof(TimeSpan).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                }
+
+                // Do the parse if set
+                if (parseMethod != null)
+                {
+                    ilGenerator.Emit(OpCodes.Call, parseMethod);
                 }
             }
 
