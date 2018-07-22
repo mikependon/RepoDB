@@ -2345,12 +2345,25 @@ namespace RepoDb
             }
 
             // Check the recursiveness
-            if (recursive == true && result?.Any() == true && (recursionDepth == null || recursionDepth >= 1))
+            if (recursive == true && result?.Any() == true)
             {
-                // Make sure less than or equals
-                if (recursionDepth > RecursionManager.RecursiveQueryMaxRecursion)
+                // Set recursion depth by default if not yet set
+                if (recursionDepth == null)
                 {
-                    throw new InvalidOperationException("Recursion depth must not be greater than defined maximum recursion.");
+                    recursionDepth = RecursionManager.RecursiveQueryMaxRecursion;
+                }
+                else
+                {
+                    // Make sure less than or equals
+                    if (recursionDepth < 0)
+                    {
+                        throw new InvalidOperationException("Recursion depth value must not be greater negative values.");
+                    }
+                    // Make sure less than or equals
+                    else if (recursionDepth > RecursionManager.RecursiveQueryMaxRecursion)
+                    {
+                        throw new InvalidOperationException("Recursion depth must not be greater than defined maximum recursion.");
+                    }
                 }
 
                 // Get the child entities
@@ -2401,6 +2414,12 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
         {
+            // Filter the recursion
+            if (recursionDepth == 0)
+            {
+                return;
+            }
+
             // Variables for recursive
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
@@ -2495,7 +2514,12 @@ namespace RepoDb
 
                         // Extreme reflection, need to optimize soon
                         var childEntities = recursiveResult
-                            .Where(entity => item.Key.Equals(foreignProperty.GetValue(entity)))
+                            .Where(entity =>
+                            {
+                                var foreignValue = Convert.ChangeType(foreignProperty.GetValue(entity), parentFieldProperty.PropertyType);
+                                var matched = Equals(item.Key, foreignValue);
+                                return matched;
+                            })
                             .ToList();
 
                         // Iterate each child entity
