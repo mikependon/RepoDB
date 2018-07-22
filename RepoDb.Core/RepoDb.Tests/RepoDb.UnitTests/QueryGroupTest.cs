@@ -77,6 +77,22 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // No Operation for IS NULL
+
+        [Test]
+        public void TestNoOperationForIsNull()
+        {
+            // Setup
+            var expression = new { Field1 = (object)null };
+
+            // Act
+            var actual = QueryGroup.Parse(expression).GetString();
+            var expected = "([Field1] IS NULL)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         // Equal
 
         [Test]
@@ -93,6 +109,22 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // Equal for IS NULL
+
+        [Test]
+        public void TestEqualOperationForIsNull()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.Equal, Value = (object)null } };
+
+            // Act
+            var actual = QueryGroup.Parse(expression).GetString();
+            var expected = "([Field1] IS NULL)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         // NotEqual
 
         [Test]
@@ -104,6 +136,22 @@ namespace RepoDb.UnitTests
             // Act
             var actual = QueryGroup.Parse(expression).GetString();
             var expected = "([Field1] <> @Field1)"; // !=
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // NotEqual of IS NOT NULL
+
+        [Test]
+        public void TestNotEqualOperationForIsNotNull()
+        {
+            // Setup
+            var expression = new { Field1 = new { Operation = Operation.NotEqual, Value = (object)null } };
+
+            // Act
+            var actual = QueryGroup.Parse(expression).GetString();
+            var expected = "([Field1] IS NOT NULL)";
 
             // Assert
             Assert.AreEqual(expected, actual);
