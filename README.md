@@ -17,7 +17,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 
  - Keep it as simple as possible (KISS principle)
  - Help developers be more focused on the SOLID principle
- - Make it fast as possible
+ - Make it as fast as possible
  - Make it more flexible
  - Never use try-catch inside the library
  - Never create complex implementations (especially for complex Join Queries)
@@ -73,6 +73,3 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Update
  - UpdateAsync
 
-### Unsupported Query DataTypes ##
-
-- DataTimeOffset
