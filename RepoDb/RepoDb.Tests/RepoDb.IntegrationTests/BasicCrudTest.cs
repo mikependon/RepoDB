@@ -11,7 +11,7 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestBasicCrud : FixturePrince
+    public class BasicCrudTest : FixturePrince
     {
         [SetUp]
         public void SetupCrudTables()

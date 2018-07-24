@@ -69,13 +69,13 @@
     <Compile Include="Setup\Constants.cs" />
     <Compile Include="Setup\FixturePrince.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
-    <Compile Include="TestBasicCrud.cs" />
-    <Compile Include="TestBlobDataTypeMapping.cs" />
-    <Compile Include="TestBulkOps.cs" />
-    <Compile Include="TestInlineCrud.cs" />
-    <Compile Include="TestRecursiveQuery.cs" />
-    <Compile Include="TestSpatialDataTypeMapping.cs" />
-    <Compile Include="TestStandardDataTypeMapping.cs" />
+    <Compile Include="BasicCrudTest.cs" />
+    <Compile Include="BlobDataTypeMappingTest.cs" />
+    <Compile Include="BulkOpsTest.cs" />
+    <Compile Include="InlineCrudTest.cs" />
+    <Compile Include="RecursiveQueryTest.cs" />
+    <Compile Include="SpatialDataTypeMappingTest.cs" />
+    <Compile Include="StandardDataTypeMappingTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Setup\SetupDB.sql" />

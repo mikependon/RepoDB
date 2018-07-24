@@ -8,7 +8,7 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestSpatialDataTypeMapping : FixturePrince
+    public class SpatialDataTypeMappingTest : FixturePrince
     {
         [Test]
         public void TestGeographyDataType()

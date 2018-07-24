@@ -13,7 +13,7 @@ using System;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestBlobDataTypeMapping : FixturePrince
+    public class BlobDataTypeMappingTest : FixturePrince
     {
         [Test]
         public void BlobStringTypeMap()

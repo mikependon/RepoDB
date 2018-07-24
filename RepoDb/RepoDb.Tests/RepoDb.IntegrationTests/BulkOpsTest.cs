@@ -11,7 +11,7 @@ using Shouldly;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture()]
-    public class TestBulkOps : FixturePrince
+    public class BulkOpsTest : FixturePrince
     {
         [Test]
         public void TestBulkInsert()

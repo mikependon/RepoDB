@@ -8,7 +8,7 @@ using System.Linq;
 namespace RepoDb.IntegrationTests
 {
     [TestFixture]
-    public class TestRecursiveQuery
+    public class RecursiveQueryTest
     {
         private readonly DbRepository<SqlConnection> repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
 
