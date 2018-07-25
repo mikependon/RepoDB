@@ -1,10 +1,10 @@
 ## RepoDb
 
-A dynamic, lightweight and fast repo-based ORM .NET Library.
+A dynamic, lightweight, and fast repo-based ORM .NET Library.
 
 ### Goal
 
-To be the fastest and easy-to-use lightweight ORM.
+To be the fastest and the easiest-to-use lightweight ORM.
 
 ### Vision
 
