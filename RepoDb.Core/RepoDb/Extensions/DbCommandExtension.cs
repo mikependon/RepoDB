@@ -81,7 +81,7 @@ namespace RepoDb.Extensions
                     {
                         var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                             TypeMapper.Get(property.PropertyType)?.DbType;
-                        command.Parameters.Add(command.CreateParameter(property.Name, property.GetValue(param), dbType));
+                        command.Parameters.Add(command.CreateParameter(property.GetMappedName(), property.GetValue(param), dbType));
                     });
             }
         }
