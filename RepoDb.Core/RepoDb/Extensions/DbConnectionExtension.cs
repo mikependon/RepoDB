@@ -3077,7 +3077,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                return DataReaderConverter.ToEnumerable((DbDataReader)reader);
+                return DataReaderConverter.ToEnumerable((DbDataReader)reader).ToList();
             }
         }
 
@@ -3145,7 +3145,7 @@ namespace RepoDb
             using (var reader = ExecuteReaderInternal(connection, commandText, param,
                 commandType, commandTimeout, transaction, typeof(TEntity)))
             {
-                return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader);
+                return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
             }
         }
 

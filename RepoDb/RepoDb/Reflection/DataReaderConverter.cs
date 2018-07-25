@@ -34,18 +34,14 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : DataEntity
         {
-            if (reader==null)
+            if (reader != null && reader.HasRows)
             {
-                return null;
+                var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
+                while (reader.Read())
+                {
+                    yield return @delegate(reader);
+                }
             }
-            var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
-            var list = new List<TEntity>();
-            while (reader.Read())
-            {
-                var entity = @delegate(reader);
-                list.Add(entity);
-            }
-            return list;
         }
 
         /// <summary>
@@ -55,18 +51,14 @@ namespace RepoDb.Reflection
         /// <returns>An array of <i>System.Dynamic.ExpandoObject</i> objects.</returns>
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader)
         {
-            if (reader == null)
+            if (reader != null && reader.HasRows)
             {
-                return null;
+                var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
+                while (reader.Read())
+                {
+                    yield return @delegate(reader);
+                }
             }
-            var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
-            var list = new List<dynamic>();
-            while (reader.Read())
-            {
-                var expandoObject = @delegate(reader);
-                list.Add(expandoObject);
-            }
-            return list;
         }
     }
 }
