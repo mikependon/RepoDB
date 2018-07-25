@@ -158,7 +158,7 @@ namespace RepoDb
                         if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
                             StringComparison.CurrentCultureIgnoreCase))
                         {
-                            var fieldValue = ((Parameter)cQueryField.Parameter);
+                            var fieldValue = cQueryField.Parameter;
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
