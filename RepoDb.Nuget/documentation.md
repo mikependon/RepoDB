@@ -11,7 +11,7 @@ Click [here](https://repodb.readthedocs.io/en/latest/index.html) for the complet
 
 ### Goal
 
-To be the fastest and easy-to-use lightweight ORM.
+To be the fastest and the easiest-to-use lightweight ORM.
 
 ### Vision
 
