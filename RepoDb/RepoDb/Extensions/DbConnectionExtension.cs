@@ -74,12 +74,9 @@ namespace RepoDb
         /// <param name="transaction"></param>
         private static void ValidateTransactionConnectionObject(this IDbConnection connection, IDbTransaction transaction)
         {
-            if (transaction != null)
+            if (transaction != null && transaction.Connection != connection)
             {
-                if (transaction.Connection != connection)
-                {
-                    throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
-                }
+                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
             }
         }
 
@@ -3068,9 +3065,6 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            // Check Transaction
-            ValidateTransactionConnectionObject(connection, transaction);
-
             // Actual Execution
             using (var reader = ExecuteReader(connection: connection,
                 commandText: commandText,
@@ -3140,9 +3134,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
             where TEntity : DataEntity
         {
-            // Check Transaction
-            ValidateTransactionConnectionObject(connection, transaction);
-
             // Actual Execution
             using (var reader = ExecuteReaderInternal(connection, commandText, param,
                 commandType, commandTimeout, transaction, typeof(TEntity)))
