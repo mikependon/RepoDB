@@ -3232,12 +3232,56 @@ namespace RepoDb
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
+            // Identify target statement, for now, only support the param with single parameter that is an array
+            var property = param?.GetType().GetProperties().FirstOrDefault();
+            var arrayValues = (IEnumerable<object>)null;
+
+            // Get the values for the arrays
+            if (property != null && property.PropertyType.IsArray)
+            {
+                arrayValues = ((Array)property.GetValue(param)).AsEnumerable();
+                commandText = ToRawSqlWithArrayParams(commandText, property.Name, arrayValues);
+            }
+
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
-                command.CreateParameters(param);
+                // Identify target statement, for now, only support array with single parameters
+                if (arrayValues != null)
+                {
+                    command.CreateParametersFromArray(property.Name, arrayValues);
+                }
+                else
+                {
+                    // Add the parameters
+                    command.CreateParameters(param);
+                }
+
+                // Execute the reader
                 return command.ExecuteReader();
             }
+        }
+
+        /// <summary>
+        /// Converts the command text into a raw SQL with Array Parameters.
+        /// </summary>
+        /// <param name="commandText">The current command text where the raw sql parameters will be replaced.</param>
+        /// <param name="parameterName">The name of the parameter to be replaced.</param>
+        /// <param name="values">The array of the values.</param>
+        /// <returns></returns>
+        private static string ToRawSqlWithArrayParams(string commandText, string parameterName, IEnumerable<object> values)
+        {
+            if (commandText.IndexOf(parameterName) >= 0)
+            {
+                var length = values != null ? values.Count() : 0;
+                var parameters = new string[length];
+                for (var i = 0; i < length; i++)
+                {
+                    parameters[i] = $"{parameterName}{i}".AsParameter();
+                }
+                commandText = commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
+            }
+            return commandText;
         }
 
         /// <summary>

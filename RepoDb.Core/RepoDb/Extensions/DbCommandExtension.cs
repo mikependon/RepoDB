@@ -37,6 +37,22 @@ namespace RepoDb.Extensions
         /// Creates a parameter for a command object.
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
+        /// <param name="parameterName">The name of the parameter to be replaced.</param>
+        /// <param name="values">The array of the values.</param>
+        internal static void CreateParametersFromArray(this IDbCommand command, string parameterName, IEnumerable<object> values)
+        {
+            var list = values != null ? values.ToList() : null;
+            for (var i = 0; i < list?.Count; i++)
+            {
+                var parameter = command.CreateParameter($"{parameterName}{i}".AsParameter(), list[i]);
+                command.Parameters.Add(parameter);
+            }
+        }
+
+        /// <summary>
+        /// Creates a parameter for a command object.
+        /// </summary>
+        /// <param name="command">The command object instance to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command, object param)
         {
