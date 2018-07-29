@@ -16,9 +16,11 @@ namespace RepoDb.IntegrationTests.Setup
             string script;
             var assembly = Assembly.GetExecutingAssembly();
             using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream ?? throw new InvalidOperationException()))
             {
-                script = reader.ReadToEnd();
+                using (var reader = new StreamReader(stream))
+                {
+                    script = reader.ReadToEnd();
+                }
             }
 
             using (var connection = new SqlConnection(Constants.TestDatabase))
