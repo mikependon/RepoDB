@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using System.Collections.Concurrent;
 
 namespace RepoDb
 {
@@ -9,8 +9,7 @@ namespace RepoDb
     /// </summary>
     internal static class IsPrimaryIdentityCache
     {
-        private static readonly IDictionary<string, bool> _cache = new Dictionary<string, bool>();
-        private static object _syncLock = new object();
+        private static readonly ConcurrentDictionary<string, bool> _cache = new ConcurrentDictionary<string, bool>();
 
         /// <summary>
         /// Gets the <i>RepoDb.Attributes.MapAttribute.Name</i> value implemented on the data entity on a target command.
@@ -24,21 +23,14 @@ namespace RepoDb
         {
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}".ToLower();
             var value = false;
-            lock (_syncLock)
+            if (!_cache.TryGetValue(key, out value))
             {
-                if (_cache.ContainsKey(key))
+                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                if (primary != null)
                 {
-                    value = _cache[key];
+                    value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.GetMappedName());
                 }
-                else
-                {
-                    var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                    if (primary != null)
-                    {
-                        value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.Name);
-                    }
-                    _cache.Add(key, value);
-                }
+                _cache.TryAdd(key, value);
             }
             return value;
         }

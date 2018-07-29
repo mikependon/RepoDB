@@ -1572,6 +1572,8 @@ namespace RepoDb
                 where: queryGroup,
                 overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
+                trace: trace,
+                statementBuilder: statementBuilder,
                 transaction: transaction);
         }
 
@@ -2274,7 +2276,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of <i>DataEntity</i> object.</returns>
-        private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null,
+        private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : DataEntity
@@ -2297,7 +2299,7 @@ namespace RepoDb
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateQuery(new QueryBuilder<TEntity>(), where, orderBy, top);
+                CommandTextCache.GetForQuery<TEntity>(connection, where, orderBy, top, statementBuilder);
             var param = where?.AsObject();
 
             // Before Execution
