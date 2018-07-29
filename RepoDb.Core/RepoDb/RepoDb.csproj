@@ -4,18 +4,17 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.2.0-beta6</Version>
-    <Authors>Michael Pendon</Authors>
-    <Company />
-    <Product />
+    <Version>1.2.0</Version>
+    <Authors>Michael Camara Pendon, Rodel E. Dagumampan</Authors>
+    <Company>RepoDb</Company>
+    <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and fast repo-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>Beta Release 5
-- Stabilization: Enabled the recursive query, recursion depth and cyclomatic stack overflow complexity features.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
+    <PackageReleaseNotes>Stable Release (v1.2.0)</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>

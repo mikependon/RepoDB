@@ -1129,6 +1129,23 @@
             </summary>
             <param name="throwException">If true, an exception will be thrown.</param>
         </member>
+        <member name="T:RepoDb.CommandTextCache">
+            <summary>
+            A class used to cache the composed command text used by the library.
+            </summary>
+        </member>
+        <member name="M:RepoDb.CommandTextCache.GetForQuery``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Gets a command text from the cache based on the combination of the arguments.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="connection">The connection object used on this operation.</param>
+            <param name="where">The query expression used on this operation.</param>
+            <param name="orderBy">The fields ordering used on this operation.</param>
+            <param name="top">The row filtering used on this operation.</param>
+            <param name="statementBuilder">The statement builder used on this operation.</param>
+            <returns>The cached command text.</returns>
+        </member>
         <member name="T:RepoDb.Constant">
             <summary>
             A class that holds the constant values for <i>RepoDb</i> library.
@@ -3318,6 +3335,14 @@
             <param name="dbType">The database type of the parameter.</param>
             <returns>An instance of the newly created parameter object.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParametersFromArray(System.Data.IDbCommand,System.String,System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Creates a parameter for a command object.
+            </summary>
+            <param name="command">The command object instance to be used.</param>
+            <param name="parameterName">The name of the parameter to be replaced.</param>
+            <param name="values">The array of the values.</param>
+        </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Object)">
             <summary>
             Creates a parameter for a command object.
@@ -3344,11 +3369,6 @@
             </summary>
             <param name="field">The field to be converted.</param>
             <returns>An enumerable list of field.</returns>
-        </member>
-        <member name="T:RepoDb.Extensions.MemberInfoExtension">
-            <summary>
-            Contains the extension methods for <i>System.Reflection.MemberInfo</i> object.
-            </summary>
         </member>
         <member name="T:RepoDb.Extensions.ObjectExtension">
             <summary>
@@ -3651,11 +3671,6 @@
             <param name="value">The string value where the database quotes will be added.</param>
             <param name="trim">The boolean value that indicates whether to trim the string first before unquoting.</param>
             <returns></returns>
-        </member>
-        <member name="T:RepoDb.Extensions.TypeExtension">
-            <summary>
-            Contains the extension methods type <i>System.Type</i> object.
-            </summary>
         </member>
         <member name="T:RepoDb.DbConnectionExtension">
             <summary>
@@ -4466,7 +4481,7 @@
             </param>
             <returns>An enumerable list of <i>DataEntity</i> object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryData``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
+        <member name="M:RepoDb.DbConnectionExtension.QueryData``1(System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ICache,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder,System.Nullable{System.Boolean},System.Nullable{System.Int32})">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
@@ -4863,6 +4878,15 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An instance of the data reader object.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ToRawSqlWithArrayParams(System.String,System.String,System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Converts the command text into a raw SQL with Array Parameters.
+            </summary>
+            <param name="commandText">The current command text where the raw sql parameters will be replaced.</param>
+            <param name="parameterName">The name of the parameter to be replaced.</param>
+            <param name="values">The array of the values.</param>
+            <returns></returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
