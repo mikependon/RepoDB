@@ -45,7 +45,7 @@ namespace RepoDb
                 .GetCustomAttribute<TextAttribute>();
             return textAttribute.Text;
         }
-
+        
         // Static Methods
 
         /// <summary>
