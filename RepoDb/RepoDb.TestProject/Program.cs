@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using RepoDb.Enumerations;
 using RepoDb.TestProject.Models;
 using RepoDb.TestProject.Repositories;
+using System.Threading.Tasks;
 
 namespace RepoDb.TestProject
 {
@@ -15,11 +16,20 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            TestInventory();
-            //TestAllOperations();
+            TestParallelism();
+            //TestInventory();
+            TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
+        }
+
+        public static void TestParallelism()
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                Task.Factory.StartNew(() => TestQuerySingle(i));
+            }
         }
 
         public static void TestInventory()
@@ -165,6 +175,15 @@ namespace RepoDb.TestProject
             true);
         }
 
+        private static void TestQuerySingle(int id)
+        {
+            using (var connection = new SqlConnection(RepoDbConnectionString).EnsureOpen())
+            {
+                var people = connection.Query<Person>(new { Id = id });
+                Console.WriteLine($"Query Single for Id {id} is now completed!");
+            }
+        }
+
         private static void TestAllOperations()
         {
             // Repository
@@ -174,8 +193,8 @@ namespace RepoDb.TestProject
             repository.Truncate<Animal>();
 
             // Count
-            Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
-            Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");
+            //Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
+            //Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");
 
             // BatchQuery
             Console.WriteLine("BatchQuery Person");
@@ -190,7 +209,7 @@ namespace RepoDb.TestProject
                     Operation = Operation.GreaterThan,
                     Value = 100
                 }
-            }, top: 100000);
+            }, top: 1000);
 
             // BulkInsert
             Console.WriteLine("BulkInsert Person: 100K");
