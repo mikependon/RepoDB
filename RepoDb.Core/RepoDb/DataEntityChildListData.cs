@@ -12,12 +12,12 @@ namespace RepoDb
         /// The property of the <i>DataEntity</i> children list.
         /// </summary>
         public PropertyInfo ChildListProperty { get; set; }
-
+        
         /// <summary>
         /// The type of the child <i>DataEntity</i>.
         /// </summary>
         public Type ChildListType { get; set; }
-
+        
         /// <summary>
         /// The type of the parent <i>DataEntity</i>.
         /// </summary>

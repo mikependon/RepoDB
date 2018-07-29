@@ -1488,7 +1488,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
@@ -1538,7 +1538,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public IEnumerable<TEntity> Query<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
@@ -1588,7 +1588,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             // Create a connection
@@ -1672,7 +1672,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1706,7 +1706,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
@@ -1740,7 +1740,7 @@ namespace RepoDb
         /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null) where TEntity : DataEntity
         {
             return Task.Factory.StartNew(() =>
