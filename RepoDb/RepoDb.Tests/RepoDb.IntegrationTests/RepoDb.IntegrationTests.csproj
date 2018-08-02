@@ -67,6 +67,7 @@
     <Compile Include="Models\TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawSqlTest.cs" />
+    <Compile Include="QueryCacheTest.cs" />
     <Compile Include="Setup\Constants.cs" />
     <Compile Include="Setup\FixturePrince.cs" />
     <Compile Include="Setup\SetupHelper.cs" />

@@ -194,6 +194,7 @@ namespace RepoDb.IntegrationTests
                     recursive: true,
                     recursionDepth: -1));
         }
+
         [Test]
         public void ThrowExceptionOnPassingRecursionDepthGreaterThanTheSettings()
         {
