@@ -2287,7 +2287,7 @@ namespace RepoDb
                 var item = cache?.Get(cacheKey);
                 if (item != null)
                 {
-                    return (IEnumerable<TEntity>)item;
+                    return (IEnumerable<TEntity>)item.Value;
                 }
             }
 
