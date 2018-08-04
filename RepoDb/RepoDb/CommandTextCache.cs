@@ -22,7 +22,10 @@ namespace RepoDb
             if (_queryCache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
-                commandText = statementBuilder.CreateQuery(new QueryBuilder<TEntity>(), request.Where, request.OrderBy, request.Top);
+                commandText = statementBuilder.CreateQuery<TEntity>(new QueryBuilder<TEntity>(),
+                    request.Where,
+                    request.OrderBy,
+                    request.Top);
                 _queryCache.TryAdd(request, commandText);
             }
             return commandText;

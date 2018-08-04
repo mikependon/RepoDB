@@ -75,6 +75,7 @@
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
+    <Compile Include="Requests\BaseRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="RecursionManager.cs" />
     <Compile Include="SqlDbHelper.cs" />
