@@ -11,10 +11,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsToString()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
+            var objA = new Field("FieldName");
 
             // Act
-            var equal = Equals(fieldA, "FieldName");
+            var equal = Equals(objA, "FieldName");
 
             // Assert
             Assert.IsTrue(equal);
@@ -24,10 +24,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestNotEqualsToImproperString()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
+            var objA = new Field("FieldName");
 
             // Act
-            var equal = Equals(fieldA, "fieldname");
+            var equal = Equals(objA, "fieldname");
 
             // Assert
             Assert.IsFalse(equal);
@@ -37,11 +37,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeEquality()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
-            var fieldB = new Field("FieldName");
+            var objA = new Field("FieldName");
+            var objB = new Field("FieldName");
 
             // Act
-            var equal = (fieldA.GetHashCode() == fieldB.GetHashCode());
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -51,10 +51,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeEqualityFromString()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
+            var objA = new Field("FieldName");
 
             // Act
-            var equal = (fieldA.GetHashCode() == "FieldName".GetHashCode());
+            var equal = (objA.GetHashCode() == "FieldName".GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -64,10 +64,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeInequalityFromImproperString()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
+            var objA = new Field("FieldName");
 
             // Act
-            var equal = (fieldA.GetHashCode() == "fieldname".GetHashCode());
+            var equal = (objA.GetHashCode() == "fieldname".GetHashCode());
 
             // Assert
             Assert.IsFalse(equal);
@@ -77,11 +77,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualOperator()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
-            var fieldB = new Field("FieldName");
+            var objA = new Field("FieldName");
+            var objB = new Field("FieldName");
 
             // Act
-            var equal = (fieldA == fieldB);
+            var equal = (objA == objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -91,11 +91,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsMethod()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
-            var fieldB = new Field("FieldName");
+            var objA = new Field("FieldName");
+            var objB = new Field("FieldName");
 
             // Act
-            var equal = Equals(fieldA, fieldB);
+            var equal = Equals(objA, objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -105,13 +105,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestArrayListContains()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
-            var fieldB = new Field("FieldName");
+            var objA = new Field("FieldName");
+            var objB = new Field("FieldName");
             var list = new ArrayList();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -121,13 +121,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGenericListContains()
         {
             // Prepare
-            var fieldA = new Field("FieldName");
-            var fieldB = new Field("FieldName");
+            var objA = new Field("FieldName");
+            var objB = new Field("FieldName");
             var list = new List<Field>();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);

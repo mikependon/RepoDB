@@ -15,7 +15,7 @@ namespace RepoDb
     public class QueryGroup : IEquatable<QueryGroup>
     {
         private bool _isFixed = false;
-        private int? _hasCode = null;
+        private int? _hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryGroup</i> object.
@@ -435,9 +435,9 @@ namespace RepoDb
         public override int GetHashCode()
         {
             // Make sure to check if this is already taken
-            if (!ReferenceEquals(null, _hasCode))
+            if (!ReferenceEquals(null, _hashCode))
             {
-                return _hasCode.Value;
+                return _hashCode.Value;
             }
 
             // Set the default value (should not be nullable for better performance)
@@ -465,7 +465,7 @@ namespace RepoDb
             hashCode += Conjunction.GetHashCode();
 
             // Set back the hashcode value
-            _hasCode = hashCode;
+            _hashCode = hashCode;
 
             // Return the actual hash code
             return hashCode;

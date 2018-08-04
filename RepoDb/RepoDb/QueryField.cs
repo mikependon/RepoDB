@@ -13,6 +13,8 @@ namespace RepoDb
     /// </summary>
     public class QueryField : IEquatable<QueryField>
     {
+        private int? _hashCode = null;
+
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryField</i> object./
         /// </summary>
@@ -260,7 +262,12 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode();
+            if (!ReferenceEquals(null, _hashCode))
+            {
+                return _hashCode.Value;
+            }
+            _hashCode = (Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode());
+            return _hashCode.Value;
         }
 
         /// <summary>

@@ -12,11 +12,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeEquality()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Ascending);
 
             // Act
-            var equal = (fieldA.GetHashCode() == fieldB.GetHashCode());
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -26,10 +26,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeInequalityFromImproperString()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
 
             // Act
-            var equal = (fieldA.GetHashCode() == "fieldname".GetHashCode());
+            var equal = (objA.GetHashCode() == "fieldname".GetHashCode());
 
             // Assert
             Assert.IsFalse(equal);
@@ -39,11 +39,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualOperator()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Ascending);
 
             // Act
-            var equal = (fieldA == fieldB);
+            var equal = (objA == objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -53,11 +53,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsMethod()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Ascending);
 
             // Act
-            var equal = Equals(fieldA, fieldB);
+            var equal = Equals(objA, objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -67,13 +67,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestArrayListContains()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Ascending);
             var list = new ArrayList();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -83,13 +83,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGenericListContains()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Ascending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Ascending);
             var list = new List<OrderField>();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -99,11 +99,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualOperatorInequalityByOrder()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Descending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Descending);
 
             // Act
-            var equal = (fieldA == fieldB);
+            var equal = (objA == objB);
 
             // Assert
             Assert.IsFalse(equal);
@@ -113,11 +113,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsMethodInequalityByOrder()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Descending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Descending);
 
             // Act
-            var equal = Equals(fieldA, fieldB);
+            var equal = Equals(objA, objB);
 
             // Assert
             Assert.IsFalse(equal);
@@ -127,13 +127,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestArrayListContainsInequalityByOrder()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Descending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Descending);
             var list = new ArrayList();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsFalse(equal);
@@ -143,13 +143,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGenericListContainsInequalityByOrder()
         {
             // Prepare
-            var fieldA = new OrderField("OrderFieldName", Order.Ascending);
-            var fieldB = new OrderField("OrderFieldName", Order.Descending);
+            var objA = new OrderField("OrderFieldName", Order.Ascending);
+            var objB = new OrderField("OrderFieldName", Order.Descending);
             var list = new List<OrderField>();
 
             // Act
-            list.Add(fieldA);
-            var equal = list.Contains(fieldB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsFalse(equal);

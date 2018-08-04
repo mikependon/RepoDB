@@ -1,44 +1,19 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Enumerations;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace RepoDb.UnitTests.Comparers
 {
     [TestClass]
-    public class FieldComparerTest
+    public class QueryFieldComparerTest
     {
-        [TestMethod]
-        public void TestEqualsToString()
-        {
-            // Prepare
-            var objA = new Field("FieldName");
-
-            // Act
-            var equal = Equals(objA, "FieldName");
-
-            // Assert
-            Assert.IsTrue(equal);
-        }
-
-        [TestMethod]
-        public void TestNotEqualsToImproperString()
-        {
-            // Prepare
-            var objA = new Field("FieldName");
-
-            // Act
-            var equal = Equals(objA, "fieldname");
-
-            // Assert
-            Assert.IsFalse(equal);
-        }
-
         [TestMethod]
         public void TestGetHashCodeEquality()
         {
             // Prepare
-            var objA = new Field("FieldName");
-            var objB = new Field("FieldName");
+            var objA = new QueryField("FieldName", "Value1");
+            var objB = new QueryField("FieldName", "Value2");
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -48,26 +23,28 @@ namespace RepoDb.UnitTests.Comparers
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityFromString()
+        public void TestGetHashCodeEqualityWithOperation()
         {
             // Prepare
-            var objA = new Field("FieldName");
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2");
 
             // Act
-            var equal = (objA.GetHashCode() == "FieldName".GetHashCode());
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityFromImproperString()
+        public void TestGetHashCodeInequalityWithDifferentOperation()
         {
             // Prepare
-            var objA = new Field("FieldName");
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.NotEqual, "Value2");
 
             // Act
-            var equal = (objA.GetHashCode() == "fieldname".GetHashCode());
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
 
             // Assert
             Assert.IsFalse(equal);
@@ -77,8 +54,8 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualOperator()
         {
             // Prepare
-            var objA = new Field("FieldName");
-            var objB = new Field("FieldName");
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2");
 
             // Act
             var equal = (objA == objB);
@@ -91,8 +68,8 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsMethod()
         {
             // Prepare
-            var objA = new Field("FieldName");
-            var objB = new Field("FieldName");
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2");
 
             // Act
             var equal = Equals(objA, objB);
@@ -105,8 +82,8 @@ namespace RepoDb.UnitTests.Comparers
         public void TestArrayListContains()
         {
             // Prepare
-            var objA = new Field("FieldName");
-            var objB = new Field("FieldName");
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2");
             var list = new ArrayList();
 
             // Act
@@ -121,9 +98,9 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGenericListContains()
         {
             // Prepare
-            var objA = new Field("FieldName");
-            var objB = new Field("FieldName");
-            var list = new List<Field>();
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1");
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2");
+            var list = new List<QueryField>();
 
             // Act
             list.Add(objA);

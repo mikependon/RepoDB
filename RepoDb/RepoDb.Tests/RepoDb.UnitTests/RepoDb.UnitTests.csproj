@@ -71,6 +71,8 @@
     <Compile Include="Comparers\OrderFieldComparerTest.cs" />
     <Compile Include="Comparers\ParameterComparerTest.cs" />
     <Compile Include="Comparers\FieldComparerTest.cs" />
+    <Compile Include="Comparers\QueryGroupComparerTest.cs" />
+    <Compile Include="Comparers\QueryFieldComparerTest.cs" />
     <Compile Include="CustomObjects\CustomDbCommand.cs">
       <SubType>Component</SubType>
     </Compile>

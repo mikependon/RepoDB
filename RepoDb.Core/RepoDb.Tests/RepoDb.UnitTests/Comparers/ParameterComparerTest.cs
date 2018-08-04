@@ -11,10 +11,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsToString()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = Equals(ParameterA, "ParameterName");
+            var equal = Equals(objA, "ParameterName");
 
             // Assert
             Assert.IsTrue(equal);
@@ -24,10 +24,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestNotEqualsToImproperString()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = Equals(ParameterA, "Parametername");
+            var equal = Equals(objA, "Parametername");
 
             // Assert
             Assert.IsFalse(equal);
@@ -37,11 +37,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeEquality()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
-            var ParameterB = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
+            var objB = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (ParameterA.GetHashCode() == ParameterB.GetHashCode());
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -51,10 +51,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeEqualityFromString()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (ParameterA.GetHashCode() == "ParameterName".GetHashCode());
+            var equal = (objA.GetHashCode() == "ParameterName".GetHashCode());
 
             // Assert
             Assert.IsTrue(equal);
@@ -64,10 +64,10 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGetHashCodeInequalityFromImproperString()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (ParameterA.GetHashCode() == "Parametername".GetHashCode());
+            var equal = (objA.GetHashCode() == "Parametername".GetHashCode());
 
             // Assert
             Assert.IsFalse(equal);
@@ -77,11 +77,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualOperator()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
-            var ParameterB = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
+            var objB = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (ParameterA == ParameterB);
+            var equal = (objA == objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -91,11 +91,11 @@ namespace RepoDb.UnitTests.Comparers
         public void TestEqualsMethod()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
-            var ParameterB = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
+            var objB = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = Equals(ParameterA, ParameterB);
+            var equal = Equals(objA, objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -105,13 +105,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestArrayListContains()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
-            var ParameterB = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
+            var objB = new Parameter("ParameterName", new object());
             var list = new ArrayList();
 
             // Act
-            list.Add(ParameterA);
-            var equal = list.Contains(ParameterB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);
@@ -121,13 +121,13 @@ namespace RepoDb.UnitTests.Comparers
         public void TestGenericListContains()
         {
             // Prepare
-            var ParameterA = new Parameter("ParameterName", new object());
-            var ParameterB = new Parameter("ParameterName", new object());
+            var objA = new Parameter("ParameterName", new object());
+            var objB = new Parameter("ParameterName", new object());
             var list = new List<Parameter>();
 
             // Act
-            list.Add(ParameterA);
-            var equal = list.Contains(ParameterB);
+            list.Add(objA);
+            var equal = list.Contains(objB);
 
             // Assert
             Assert.IsTrue(equal);
