@@ -93,7 +93,7 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            return Name.GetHashCode() == obj?.GetHashCode();
+            return GetHashCode() == obj?.GetHashCode();
         }
 
         /// <summary>

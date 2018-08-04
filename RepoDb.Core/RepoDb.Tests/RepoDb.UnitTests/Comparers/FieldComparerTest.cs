@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Comparers
             var fieldA = new Field("FieldName");
 
             // Act
-            var equal = (Equals(fieldA, "FieldName"));
+            var equal = Equals(fieldA, "FieldName");
 
             // Assert
             Assert.IsTrue(equal);
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests.Comparers
             var fieldA = new Field("FieldName");
 
             // Act
-            var equal = (Equals(fieldA, "fieldname"));
+            var equal = Equals(fieldA, "fieldname");
 
             // Assert
             Assert.IsFalse(equal);

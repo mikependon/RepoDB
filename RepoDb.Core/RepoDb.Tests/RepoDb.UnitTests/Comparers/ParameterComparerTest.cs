@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Comparers
             var ParameterA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (Equals(ParameterA, "ParameterName"));
+            var equal = Equals(ParameterA, "ParameterName");
 
             // Assert
             Assert.IsTrue(equal);
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests.Comparers
             var ParameterA = new Parameter("ParameterName", new object());
 
             // Act
-            var equal = (Equals(ParameterA, "Parametername"));
+            var equal = Equals(ParameterA, "Parametername");
 
             // Assert
             Assert.IsFalse(equal);
