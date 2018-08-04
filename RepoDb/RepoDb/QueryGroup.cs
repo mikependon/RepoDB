@@ -12,9 +12,10 @@ namespace RepoDb
     /// A widely-used object for defining the groupings for the query expressions. This object is used by most of the repository operations
     /// to define the filtering and query expressions for the actual execution.
     /// </summary>
-    public class QueryGroup
+    public class QueryGroup : IEquatable<QueryGroup>
     {
         private bool _isFixed = false;
+        private int? _hasCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryGroup</i> object.
@@ -423,6 +424,97 @@ namespace RepoDb
             {
                 throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
+        }
+
+        // Equality and comparers
+
+        /// <summary>
+        /// Returns the hashcode for this <i>QueryGroup</i>.
+        /// </summary>
+        /// <returns>The hashcode value.</returns>
+        public override int GetHashCode()
+        {
+            // Make sure to check if this is already taken
+            if (!ReferenceEquals(null, _hasCode))
+            {
+                return _hasCode.Value;
+            }
+
+            // Set the default value (should not be nullable for better performance)
+            var hashCode = 0;
+
+            // Iterates the child query field
+            if (!ReferenceEquals(null, QueryFields))
+            {
+                QueryFields.ToList().ForEach(queryField =>
+                {
+                    hashCode += queryField.GetHashCode();
+                });
+            }
+
+            // Iterates the child query groups
+            if (!ReferenceEquals(null, QueryGroups))
+            {
+                QueryGroups.ToList().ForEach(queryGroup =>
+                {
+                    hashCode += queryGroup.GetHashCode();
+                });
+            }
+
+            // Set with conjunction
+            hashCode += Conjunction.GetHashCode();
+
+            // Set back the hashcode value
+            _hasCode = hashCode;
+
+            // Return the actual hash code
+            return hashCode;
+        }
+
+        /// <summary>
+        /// Compares the <i>QueryGroup</i> object equality against the given target object.
+        /// </summary>
+        /// <param name="obj">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equals.</returns>
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the <i>QueryGroup</i> object equality against the given target object.
+        /// </summary>
+        /// <param name="other">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public bool Equals(QueryGroup other)
+        {
+            return GetHashCode() == other?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the equality of the two <i>QueryGroup</i> objects.
+        /// </summary>
+        /// <param name="objA">The first <i>QueryGroup</i> object.</param>
+        /// <param name="objB">The second <i>QueryGroup</i> object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public static bool operator ==(QueryGroup objA, QueryGroup objB)
+        {
+            if (ReferenceEquals(null, objA))
+            {
+                return ReferenceEquals(null, objB);
+            }
+            return objA?.GetHashCode() == objB?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the inequality of the two <i>QueryGroup</i> objects.
+        /// </summary>
+        /// <param name="objA">The first <i>QueryGroup</i> object.</param>
+        /// <param name="objB">The second <i>QueryGroup</i> object.</param>
+        /// <returns>True if the instances are not equal.</returns>
+        public static bool operator !=(QueryGroup objA, QueryGroup objB)
+        {
+            return (objA == objB) == false;
         }
     }
 }
