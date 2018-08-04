@@ -1,11 +1,12 @@
 ﻿using RepoDb.Extensions;
+using System;
 
 namespace RepoDb
 {
     /// <summary>
     /// An object that holds the value of the field parameter.
     /// </summary>
-    public sealed class Parameter
+    public sealed class Parameter : IEquatable<Parameter>
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.Parameter</i> object.
