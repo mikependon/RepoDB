@@ -266,8 +266,24 @@ namespace RepoDb
             {
                 return _hashCode.Value;
             }
-            _hashCode = (Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode());
-            return _hashCode.Value;
+
+            // Use the non nullable for perf purposes
+            var hashCode = 0;
+
+            // Set in the combination of the properties
+            hashCode += (Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode());
+
+            // Identity the length of the values (this vary)
+            if (Operation == Operation.In && !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
+            {
+                hashCode += ((Array)Parameter.Value).Length.GetHashCode();
+            }
+
+            // Set back the value
+            _hashCode = hashCode;
+
+            // Return the value
+            return hashCode;
         }
 
         /// <summary>

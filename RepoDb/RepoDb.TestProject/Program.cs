@@ -16,7 +16,7 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            TestParallelism();
+            //TestParallelism();
             //TestInventory();
             TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
@@ -186,6 +186,16 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
+            using (var r = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance))
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    var where = new { Id = i };
+                    r.Query<Person>(where);
+                }
+            }
+            return;
+
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance);
 

@@ -3,6 +3,7 @@ using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
+using RepoDb.Requests;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -2297,9 +2298,10 @@ namespace RepoDb
             // Variables
             var command = Command.Query;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new QueryRequest(typeof(TEntity), connection, where, orderBy, top, statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) :
-                CommandTextCache.GetForQuery<TEntity>(connection, where, orderBy, top, statementBuilder);
+                DataEntityExtension.GetMappedName<TEntity>(command) : 
+                CommandTextCache.GetForQuery<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution

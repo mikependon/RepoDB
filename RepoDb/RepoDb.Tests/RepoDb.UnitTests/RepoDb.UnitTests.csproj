@@ -68,6 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Comparers\QueryRequestComparerTest.cs" />
     <Compile Include="Comparers\OrderFieldComparerTest.cs" />
     <Compile Include="Comparers\ParameterComparerTest.cs" />
     <Compile Include="Comparers\FieldComparerTest.cs" />
