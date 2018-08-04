@@ -1,26 +1,24 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using System;
 using System.Linq;
 using System.Reflection;
 
 namespace RepoDb.UnitTests
 {
-    [TestFixture]
+    [TestClass]
     public class OrderTextTest
     {
         private TextAttribute GetOrderTextAttribute(Order order)
         {
             return typeof(Order)
-                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == order.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
         }
 
-        [Test]
+        [TestMethod]
         public void TestAscending()
         {
             // Prepare
@@ -33,7 +31,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("ASC", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestDescending()
         {
             // Prepare

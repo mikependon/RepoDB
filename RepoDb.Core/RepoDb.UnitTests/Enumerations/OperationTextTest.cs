@@ -1,26 +1,24 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using System;
 using System.Linq;
 using System.Reflection;
 
 namespace RepoDb.UnitTests
 {
-    [TestFixture]
+    [TestClass]
     public class OperationTextTest
     {
         private TextAttribute GetOperationTextAttribute(Operation operation)
         {
             return typeof(Operation)
-                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == operation.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();
         }
 
-        [Test]
+        [TestMethod]
         public void TestEqual()
         {
             // Prepare
@@ -33,7 +31,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("=", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestNotEqual()
         {
             // Prepare
@@ -46,7 +44,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("<>", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestLessThan()
         {
             // Prepare
@@ -59,7 +57,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("<", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestGreaterThan()
         {
             // Prepare
@@ -72,7 +70,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(">", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestLessThanOrEqual()
         {
             // Prepare
@@ -85,7 +83,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("<=", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestGreaterThanOrEqual()
         {
             // Prepare
@@ -98,7 +96,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(">=", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestLike()
         {
             // Prepare
@@ -111,7 +109,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("LIKE", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestNotLike()
         {
             // Prepare
@@ -124,7 +122,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("NOT LIKE", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestBetween()
         {
             // Prepare
@@ -137,7 +135,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("BETWEEN", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestNotBetween()
         {
             // Prepare
@@ -150,7 +148,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("NOT BETWEEN", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestIn()
         {
             // Prepare
@@ -163,7 +161,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("IN", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestNotIn()
         {
             // Prepare
@@ -176,7 +174,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("NOT IN", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestAll()
         {
             // Prepare
@@ -189,7 +187,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("AND", parsed.Text);
         }
 
-        [Test]
+        [TestMethod]
         public void TestAny()
         {
             // Prepare
