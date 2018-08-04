@@ -8,38 +8,26 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the Query operation arguments.
     /// </summary>
-    internal class QueryRequest : IEquatable<QueryRequest>
+    internal class QueryRequest : BaseRequest, IEquatable<QueryRequest>
     {
         private int? _hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>QueryRequest</i> object.
         /// </summary>
-        /// <param name="connection">The connection object.</param>
         /// <param name="entityType">The entity type.</param>
+        /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
-        /// <param name="statementBuilder">The statement builder.</param>
         /// <param name="top">The filter for the rows.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
         public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy, int? top, IStatementBuilder statementBuilder = null)
+            : base(entityType, connection, statementBuilder)
         {
-            EntityType = entityType;
-            Connection = connection;
             Where = where;
             OrderBy = orderBy;
             Top = top;
-            StatementBuilder = statementBuilder;
         }
-
-        /// <summary>
-        /// Gets the entity type.
-        /// </summary>
-        public Type EntityType { get; }
-
-        /// <summary>
-        /// Gets the connection object.
-        /// </summary>
-        public IDbConnection Connection { get; }
 
         /// <summary>
         /// Gets the query expression used.
@@ -55,11 +43,6 @@ namespace RepoDb.Requests
         /// Gets the filter for the rows.
         /// </summary>
         public int? Top { get; }
-
-        /// <summary>
-        /// Gets the statement builder.
-        /// </summary>
-        public IStatementBuilder StatementBuilder { get; }
 
         // Equality and comparers
 
