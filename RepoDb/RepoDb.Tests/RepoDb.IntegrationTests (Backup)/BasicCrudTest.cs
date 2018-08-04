@@ -1,33 +1,25 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using NUnit.Framework;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.IntegrationTests.Extensions;
 using Shouldly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
-    public class BasicCrudTest
+    [TestFixture]
+    public class BasicCrudTest : FixturePrince
     {
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
+        [SetUp]
+        public void SetupCrudTables()
         {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
             SetupHelper.ExecuteEmbeddedSqlFile("RepoDb.IntegrationTests.Setup.RefreshDB.sql");
         }
 
-        [ClassCleanup]
-        public static void ClassCleanup()
-        {
-            SetupHelper.CleanDatabase();
-        }
-
-        [TestMethod]
+        [Test]
         public void TestInsert()
         {
             //arrange
@@ -36,12 +28,12 @@ namespace RepoDb.IntegrationTests
             var fixtureData = new Customer
             {
                 GlobalId = Guid.NewGuid(),
-                FirstName = "FirstName",
-                LastName = "LastName",
-                MiddleName = "MiddleName",
-                Address = "Address",
+                FirstName = "Juan",
+                LastName = "de la Cruz",
+                MiddleName = "Pinto",
+                Address = "San Lorenzo, Makati, Philippines 4225",
                 IsActive = true,
-                Email = "Test@Email.com",
+                Email = "juandelacruz@gmai.com",
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -66,7 +58,7 @@ namespace RepoDb.IntegrationTests
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
-        [TestMethod]
+        [Test]
         public void TestUpdate()
         {
             //arrange
@@ -74,12 +66,12 @@ namespace RepoDb.IntegrationTests
             var fixtureData = new Customer
             {
                 Id = 1,
-                FirstName = "FirstName-EDITED",
-                LastName = "LastName-EDITED",
-                MiddleName = "MiddleName-EDITED",
-                Address = "Address-EDITED",
+                FirstName = "Juan-EDITED",
+                LastName = "de la Cruz-EDITED",
+                MiddleName = "Pinto-EDITED",
+                Address = "San Lorenzo, Makati, Philippines 4225-EDITED",
                 IsActive = true,
-                Email = "Test@Email.com-EDITED",
+                Email = "juandelacruz@gmai.com-EDITED",
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -102,7 +94,7 @@ namespace RepoDb.IntegrationTests
             savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDelete()
         {
             //arrange and act
@@ -115,7 +107,7 @@ namespace RepoDb.IntegrationTests
             savedData.ShouldBeNull();
         }
 
-        [TestMethod]
+        [Test]
         public void TestMergeInsert()
         {
             //arrange
@@ -125,13 +117,12 @@ namespace RepoDb.IntegrationTests
             {
                 Id = 99,
                 GlobalId = Guid.NewGuid(),
-                FirstName = "FirstName-MERGED",
-                LastName = "LastName-MERGED",
-                MiddleName = "MiddleName-MERGED",
-                Address = "Address-MERGED",
+                FirstName = "Juan-MERGED",
+                LastName = "de la Cruz-MERGED",
+                MiddleName = "Pinto-MERGED",
+                Address = "San Lorenzo, Makati, Philippines 4225-MERGED",
                 IsActive = true,
-                Email = "Test@Email.com-MERGED",
-                DateInsertedUtc = DateTime.UtcNow,
+                Email = "juandelacruz@gmai.com-MERGED",
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = Environment.UserName
             };
@@ -154,30 +145,31 @@ namespace RepoDb.IntegrationTests
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
         
-        [TestMethod]
+        [Test]
         public void TestMergeUpdate()
         {
             //arrange
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var fixtureData = new Customer
             {
-                GlobalId = Guid.NewGuid(),
-                FirstName = "FirstName-MERGED",
-                LastName = "LastName-MERGED",
+                Id = 1,
+                FirstName = "Juan-MERGED",
+                LastName = "de la Cruz-MERGED",
                 MiddleName = "Pinto-MERGED",
-                Address = "Address-MERGED",
+                Address = "San Lorenzo, Makati, Philippines 4225-MERGED",
                 IsActive = true,
-                Email = "Test@Email.com-MERGED",
+                Email = "juandelacruz@gmai.com-MERGED",
                 LastUpdatedUtc = DateTime.UtcNow,
                 LastUserId = $"{Environment.UserName}-MERGED"
             };
 
             //act
-            repository.Merge(fixtureData, Field.From("GlobalId"));
+            repository.Merge(fixtureData);
 
             //assert
-            var savedData = repository.Query<Customer>(new { fixtureData.GlobalId }).FirstOrDefault();
+            var savedData = repository.Query<Customer>(new { fixtureData.Id }).FirstOrDefault();
             savedData.ShouldNotBeNull();
+            savedData.Id.ShouldNotBe(0);
             savedData.GlobalId.ShouldBe(fixtureData.GlobalId);
             savedData.FirstName.ShouldBe(fixtureData.FirstName);
             savedData.LastName.ShouldBe(fixtureData.LastName);

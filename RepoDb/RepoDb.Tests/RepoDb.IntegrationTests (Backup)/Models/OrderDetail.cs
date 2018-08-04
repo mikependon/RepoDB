@@ -9,6 +9,7 @@ namespace RepoDb.IntegrationTests.Models
     public class OrderDetail : DataEntity
     {
         [Identity]
+        //[Ignore(Command.Insert | Command.Update | Command.InlineUpdate), Map("Id")]
         public int Id { get; set; }
         public Guid GlobalId { get; set; }
         public int OrderId { get; set; }

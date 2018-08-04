@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -9,10 +8,10 @@ using System.Linq;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
+    [TestFixture]
     public class RawSqlTest
     {
-        [TestMethod]
+        [Test]
         public void TestQueryRawSqlWithArrayParameters()
         {
             // Prepare

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
+    [TestFixture]
     public class QueryCacheTest
     {
-        [TestMethod]
+        [Test]
         public void TestQueryWithCacheKey()
         {
             // Setup
@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests
             Assert.IsNotNull(actual);
         }
 
-        [TestMethod]
+        [Test]
         public void TestQueryWithCacheKeyAndManuallyClearingACache()
         {
             // Setup
@@ -98,7 +98,7 @@ namespace RepoDb.IntegrationTests
             Assert.IsNull(actual);
         }
 
-        [TestMethod]
+        [Test]
         public void TestQueryWithCacheKeyAndManuallyRemovingACache()
         {
             // Setup
@@ -144,25 +144,30 @@ namespace RepoDb.IntegrationTests
             Assert.IsNull(actual);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void ThrowExceptionOnRemovingNonExistingCache()
         {
             // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
 
             // Act/Assert
-            repository.Cache.Remove("NonExistingKey");
+            Assert.Throws<InvalidOperationException>(() =>
+                repository.Cache.Remove("NonExistingKey"));
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        [Test]
         public void ThrowExceptionOnAddingMultipleCacheKey()
         {
             // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
 
             // Act/Assert
-            repository.Cache.Add("Key", "Value");
-            repository.Cache.Add("Key", "Value");
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                repository.Cache.Add("Key", "Value");
+                repository.Cache.Add("Key", "Value");
+            });
         }
+
     }
 }

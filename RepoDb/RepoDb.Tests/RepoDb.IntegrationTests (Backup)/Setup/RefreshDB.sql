@@ -9,36 +9,32 @@ DBCC CHECKIDENT ([OrderDetail], RESEED, 1);
 GO
 
 DECLARE @counter INT = (SELECT MAX(Id) FROM [dbo].[Customer]);
-
 SET @counter = COALESCE(@counter, 1);
-
 WHILE (@counter < 10)
 BEGIN
-	INSERT INTO [dbo].[Customer]
-	(
-		[GlobalId]
-		, [FirstName]
-		, [LastName]
-		, [MiddleName]
-		, [Address]
-		, [Email]
-		, [IsActive]
-		, [DateInsertedUtc]
-		, [LastUpdatedUtc]
-		, [LastUserId]
-	)
-	VALUES
-	(
-		NEWID()
-		, 'FirstName'
-		, 'LastName'
-		, 'MiddleName'
-		, 'Address'
-		, 'Test@Email.com'
-		, 1
-		, GETUTCDATE()
-		, GETUTCDATE()
-		, SYSTEM_USER
+
+	INSERT INTO [dbo].[Customer](
+	 [GlobalId]
+	,[FirstName]
+	,[LastName]
+	,[MiddleName]
+	,[Address]
+	,[Email]
+	,[IsActive]
+	,[DateInsertedUtc]
+	,[LastUpdatedUtc]
+	,[LastUserId]
+	) VALUES (
+	 NEWID()
+	,'Juan'
+	,'dela Cruz'
+	,'Pinto'
+	,'San Lorenzo, Makati, Philippines'
+	,'juandelacruz@gmail.com'
+	,1
+	,GETUTCDATE()
+	,GETUTCDATE()
+	,SYSTEM_USER
 	);
 	SET @counter = @counter + 1;
 END

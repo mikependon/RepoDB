@@ -58,6 +58,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{EECB6031-487B-4E8A-9034-71402FF2E5B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECB6031-487B-4E8A-9034-71402FF2E5B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,6 +89,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5C628DB7-16F4-4D3A-ACB3-B2ADB140A58B} = {6837AEC8-8A8C-48EE-9338-62D972BC4DB0}
 		{4EF9CD35-0848-4461-99DA-1586FBD5ADF8} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
+		{EECB6031-487B-4E8A-9034-71402FF2E5B2} = {98D41360-3B1C-408D-A273-DABD2E20DC3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2CDDAD3-7C25-4343-AFC6-0FF7CAD1B560}

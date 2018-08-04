@@ -2,32 +2,18 @@
 using System.Data.SqlClient;
 using System.Linq;
 using AutoFixture;
+using NUnit.Framework;
 using RepoDb.Attributes;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestFixture]
-    public class BulkOpsTest
+    [TestFixture()]
+    public class BulkOpsTest : FixturePrince
     {
-        [ClassInitialize]
-        public static void Initialize(TestContext context)
-        {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
-        }
-
-        [ClassCleanup]
-        public static void Cleanup()
-        {
-            SetupHelper.CleanDatabase();
-        }
-
-        [TestMethod]
+        [Test]
         public void TestBulkInsert()
         {
             //arrange
@@ -35,11 +21,11 @@ namespace RepoDb.IntegrationTests
 
             var fixture = new Fixture();
             var fixtureDataList = fixture.Build<Customer>()
-                .With(x => x.FirstName, "FirstName")
+                .With(x => x.FirstName, "Juan")
                 .With(x => x.LastName, "dela Cruz")
                 .With(x => x.MiddleName, "Pinto")
-                .With(x => x.Address, "Address")
-                .With(x => x.Email, "Test@Emaill.com")
+                .With(x => x.Address, "San Lorenzo, Makati, Philippines 4225")
+                .With(x => x.Email, "juandelacruz@gmail.com")
                 .With(x => x.LastUpdatedUtc, DateTime.UtcNow)
                 .With(x => x.LastUserId, Environment.UserName)
                 .CreateMany(100);
@@ -67,7 +53,7 @@ namespace RepoDb.IntegrationTests
 
         }
 
-        [TestMethod]
+        [Test]
         public void TestBulkInsertWithUnorderedColumns()
         {
             //arrange
@@ -82,7 +68,7 @@ namespace RepoDb.IntegrationTests
 
             var fixture = new Fixture();
             var fixtureData = fixture.Build<TestTable>()
-                .With(x => x.FullName, "FirstName dela Cruz Pinto")
+                .With(x => x.FullName, "Juan dela Cruz Pinto")
                 .With(x => x.Age, 25)
                 .With(x => x.BirthDate, new DateTime(1993, 1, 1))
                 .CreateMany(10);

@@ -1,6 +1,7 @@
 ﻿using System;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using System.Collections.Generic;
 
 namespace RepoDb.IntegrationTests.Models
 {
@@ -8,6 +9,7 @@ namespace RepoDb.IntegrationTests.Models
     public class Customer : DataEntity
     {
         [Identity]
+        //[Ignore(Command.Insert | Command.Update | Command.InlineUpdate), Map("Id")]
         public long Id { get; set; }
         public Guid GlobalId { get; set; }
         public string FirstName { get; set; }

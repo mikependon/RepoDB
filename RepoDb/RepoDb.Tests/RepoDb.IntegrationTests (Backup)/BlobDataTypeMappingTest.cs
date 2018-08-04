@@ -7,30 +7,15 @@ using NUnit.Framework;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data;
 
 //https://stackoverflow.com/questions/425389/c-sharp-equivalent-of-sql-server-datatypes
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
-    public class BlobDataTypeMappingTest
+    [TestFixture]
+    public class BlobDataTypeMappingTest : FixturePrince
     {
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            SetupHelper.CleanDatabase();
-        }
-
-        [TestMethod]
+        [Test]
         public void BlobStringTypeMap()
         {
             //arrange
@@ -66,7 +51,7 @@ namespace RepoDb.IntegrationTests
             saveData.varbinarymax_column.SequenceEqual(fixtureData.varbinarymax_column).ShouldBe(true);
         }
 
-        [TestMethod]
+        [Test]
         public void BlobImageTypeMap()
         {
             //arrange

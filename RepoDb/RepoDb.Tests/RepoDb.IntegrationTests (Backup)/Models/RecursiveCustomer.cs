@@ -1,11 +1,12 @@
 ﻿using System;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using System.Collections.Generic;
 
 namespace RepoDb.IntegrationTests.Models
 {
     [Map("[dbo].[Customer]")]
-    public class Customer : DataEntity
+    public class RecursiveCustomer : DataEntity
     {
         [Identity]
         public long Id { get; set; }
@@ -20,5 +21,12 @@ namespace RepoDb.IntegrationTests.Models
         [Attributes.Ignore(Command.Update | Command.Insert)]
         public DateTime DateInsertedUtc { get; set; }
         public string LastUserId { get; set; }
+
+        /*
+         * Recursive
+         */
+
+        // Child Orders
+        public IEnumerable<RecursiveOrder> Orders { get; set; }
     }
 }

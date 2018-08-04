@@ -1,30 +1,16 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using System.Linq;
+using NUnit.Framework;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Data;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
-    public class SpatialDataTypeMappingTest
+    [TestFixture]
+    public class SpatialDataTypeMappingTest : FixturePrince
     {
-        [ClassInitialize]
-        public static void Initialize(TestContext context)
-        {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            SetupHelper.CleanDatabase();
-        }
-
-        [TestMethod]
+        [Test]
         public void TestGeographyDataType()
         {
             //arrange
@@ -43,7 +29,7 @@ namespace RepoDb.IntegrationTests
             saveData.geography_column.ShouldBe(fixtureData.geography_column);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGeometryDataType()
         {
             //arrange

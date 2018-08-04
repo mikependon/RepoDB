@@ -2,31 +2,17 @@
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NUnit.Framework;
 using RepoDb.IntegrationTests.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data;
 
 namespace RepoDb.IntegrationTests
 {
-    [TestClass]
-    public class StandardDataTypeMappingTest
+    [TestFixture]
+    public class StandardDataTypeMappingTest : FixturePrince
     {
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            TypeMapper.AddMap(typeof(DateTime), DbType.DateTime2, true);
-            SetupHelper.InitDatabase();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            SetupHelper.CleanDatabase();
-        }
-
-        [TestMethod]
+        [Test]
         public void TestStringDataTypesInsert()
         {
             //arrange
@@ -61,9 +47,10 @@ namespace RepoDb.IntegrationTests
             saveData.varchar_column.ShouldBe(fixtureData.varchar_column);
             saveData.varcharmax_column.ShouldBe(fixtureData.varcharmax_column);
             saveData.uniqueidentifier.ShouldBe(fixtureData.uniqueidentifier);
+
         }
 
-        [TestMethod]
+        [Test]
         public void TestNumericDataTypesInsert()
         {
             //arrange
@@ -102,7 +89,7 @@ namespace RepoDb.IntegrationTests
             saveData.tinyint_column.ShouldBe(fixtureData.tinyint_column);
         }
 
-        [TestMethod]
+        [Test]
         public void TestDateTimeDataTypes()
         {
             //arrange
@@ -138,7 +125,7 @@ namespace RepoDb.IntegrationTests
             saveData.time_column.Value.TotalMilliseconds.ShouldBe(fixtureData.time_column.Value.TotalMilliseconds);
         }
 
-        [TestMethod]
+        [Test]
         public void TestXmlDataTypeInsert()
         {
             //arrange
