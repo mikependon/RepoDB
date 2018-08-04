@@ -145,23 +145,21 @@ namespace RepoDb
                 var secondList = new List<QueryField>(firstList);
                 for (var i = 0; i < firstList.Count; i++)
                 {
-                    var QueryField = firstList[i];
+                    var queryField = firstList[i];
                     for (var c = 0; c < secondList.Count; c++)
                     {
                         var cQueryField = secondList[c];
-                        if (QueryField == cQueryField)
+                        if (ReferenceEquals(queryField, cQueryField))
                         {
                             continue;
                         }
-                        if (string.Equals(QueryField.Field.Name, cQueryField.Field.Name,
-                            StringComparison.CurrentCultureIgnoreCase))
+                        if (queryField.Field.Equals(cQueryField.Field))
                         {
                             var fieldValue = cQueryField.Parameter;
                             fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
                         }
                     }
-                    secondList.RemoveAll(queryField => string.Equals(QueryField.Field.Name, queryField.Field.Name,
-                        StringComparison.CurrentCultureIgnoreCase));
+                    secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
                 }
             }
             _isFixed = true;
