@@ -9,9 +9,9 @@ namespace RepoDb
 {
     /// <summary>
     /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Field</i>),
-    /// parameter (<i>RepoDb.Parameter</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
+    /// parameter (<i>RepoDb.QueryField</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
     /// </summary>
-    public class QueryField
+    public class QueryField : IEquatable<QueryField>
     {
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryField</i> object./
@@ -250,6 +250,63 @@ namespace RepoDb
             {
                 throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
+        }
+
+        // Equality and comparers
+
+        /// <summary>
+        /// Returns the hashcode for this <i>QueryField</i>.
+        /// </summary>
+        /// <returns>The hashcode value.</returns>
+        public override int GetHashCode()
+        {
+            return Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the <i>QueryField</i> object equality against the given target object.
+        /// </summary>
+        /// <param name="obj">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equals.</returns>
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the <i>QueryField</i> object equality against the given target object.
+        /// </summary>
+        /// <param name="other">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public bool Equals(QueryField other)
+        {
+            return GetHashCode() == other?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the equality of the two <i>QueryField</i> objects.
+        /// </summary>
+        /// <param name="objA">The first <i>QueryField</i> object.</param>
+        /// <param name="objB">The second <i>QueryField</i> object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public static bool operator ==(QueryField objA, QueryField objB)
+        {
+            if (ReferenceEquals(null, objA))
+            {
+                return ReferenceEquals(null, objB);
+            }
+            return objA?.GetHashCode() == objB?.GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the inequality of the two <i>QueryField</i> objects.
+        /// </summary>
+        /// <param name="objA">The first <i>QueryField</i> object.</param>
+        /// <param name="objB">The second <i>QueryField</i> object.</param>
+        /// <returns>True if the instances are not equal.</returns>
+        public static bool operator !=(QueryField objA, QueryField objB)
+        {
+            return (objA == objB) == false;
         }
     }
 }

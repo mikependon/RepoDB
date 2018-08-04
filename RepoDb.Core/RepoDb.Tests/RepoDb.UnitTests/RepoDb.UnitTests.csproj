@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparers\FieldComparerTest.cs" />
+    <Compile Include="Comparers\OrderFieldComparerTest.cs" />
     <Compile Include="Comparers\ParameterComparerTest.cs" />
     <Compile Include="CustomObjects\CustomDbCommand.cs">
       <SubType>Component</SubType>
