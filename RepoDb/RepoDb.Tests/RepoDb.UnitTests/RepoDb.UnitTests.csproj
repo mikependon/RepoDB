@@ -68,6 +68,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Comparers\ParameterComparerTest.cs" />
+    <Compile Include="Comparers\FieldComparerTest.cs" />
     <Compile Include="CustomObjects\CustomDbCommand.cs">
       <SubType>Component</SubType>
     </Compile>
