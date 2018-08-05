@@ -2875,9 +2875,13 @@ namespace RepoDb
             // Variables
             var command = Command.Update;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new UpdateRequest(typeof(TEntity),
+                connection,
+                where,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateUpdate(new QueryBuilder<TEntity>(), where);
+                CommandTextCache.GetUpdateText<TEntity>(request);
             var param = entity?.AsObject(where, command);
 
             // Before Execution

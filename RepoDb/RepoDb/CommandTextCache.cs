@@ -26,12 +26,13 @@ namespace RepoDb
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
-                commandText = statementBuilder.CreateDelete(new QueryBuilder<TEntity>(),
-                    request.Where);
+                commandText = statementBuilder.CreateDelete(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where);
                 _cache.TryAdd(request, commandText);
             }
             return commandText;
         }
+
         /// <summary>
         /// Gets a command text from the cache for <i>Insert</i> operation.
         /// </summary>
@@ -60,11 +61,12 @@ namespace RepoDb
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.Insert);
                     }
-                    commandText = sqlStatementBuilder.CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
+                    commandText = sqlStatementBuilder.CreateInsert(queryBuilder: new QueryBuilder<TEntity>(),
+                        isPrimaryIdentity: isPrimaryIdentity);
                 }
                 else
                 {
-                    commandText = statementBuilder.CreateInsert(new QueryBuilder<TEntity>());
+                    commandText = statementBuilder.CreateInsert(queryBuilder: new QueryBuilder<TEntity>());
                 }
                 _cache.TryAdd(request, commandText);
             }
@@ -85,10 +87,31 @@ namespace RepoDb
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
-                commandText = statementBuilder.CreateQuery(new QueryBuilder<TEntity>(),
-                    request.Where,
-                    request.OrderBy,
-                    request.Top);
+                commandText = statementBuilder.CreateQuery(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where,
+                    orderBy: request.OrderBy,
+                    top: request.Top);
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for <i>Update</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetUpdateText<TEntity>(UpdateRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateUpdate(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where);
                 _cache.TryAdd(request, commandText);
             }
             return commandText;

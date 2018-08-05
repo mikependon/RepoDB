@@ -78,6 +78,7 @@
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
+    <Compile Include="Requests\UpdateRequest.cs" />
     <Compile Include="Requests\DeleteRequest.cs" />
     <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
