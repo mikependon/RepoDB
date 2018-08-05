@@ -1006,9 +1006,13 @@ namespace RepoDb
             // Variables
             var command = Command.Delete;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new DeleteRequest(typeof(TEntity),
+                connection,
+                where,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateDelete(new QueryBuilder<TEntity>(), where);
+                CommandTextCache.GetDeleteText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1789,7 +1793,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                CommandTextCache.Get<TEntity>(request);
+                CommandTextCache.GetInsertText<TEntity>(request);
             var param = entity.AsObject(command);
 
             // Before Execution
@@ -2281,7 +2285,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                CommandTextCache.Get<TEntity>(request);
+                CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution

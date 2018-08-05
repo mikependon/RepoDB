@@ -13,12 +13,12 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<BaseRequest, string> _cache = new ConcurrentDictionary<BaseRequest, string>();
 
         /// <summary>
-        /// Gets a command text from the cache for <i>Query</i> operation.
+        /// Gets a command text from the cache for <i>Delete</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string Get<TEntity>(QueryRequest request) where TEntity : DataEntity
+        public static string GetDeleteText<TEntity>(DeleteRequest request) where TEntity : DataEntity
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -26,22 +26,19 @@ namespace RepoDb
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
-                commandText = statementBuilder.CreateQuery(new QueryBuilder<TEntity>(),
-                    request.Where,
-                    request.OrderBy,
-                    request.Top);
+                commandText = statementBuilder.CreateDelete(new QueryBuilder<TEntity>(),
+                    request.Where);
                 _cache.TryAdd(request, commandText);
             }
             return commandText;
         }
-
         /// <summary>
         /// Gets a command text from the cache for <i>Insert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string Get<TEntity>(InsertRequest request) where TEntity : DataEntity
+        public static string GetInsertText<TEntity>(InsertRequest request) where TEntity : DataEntity
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -69,6 +66,29 @@ namespace RepoDb
                 {
                     commandText = statementBuilder.CreateInsert(new QueryBuilder<TEntity>());
                 }
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for <i>Query</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetQueryText<TEntity>(QueryRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateQuery(new QueryBuilder<TEntity>(),
+                    request.Where,
+                    request.OrderBy,
+                    request.Top);
                 _cache.TryAdd(request, commandText);
             }
             return commandText;
