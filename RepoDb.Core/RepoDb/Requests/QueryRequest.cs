@@ -6,7 +6,7 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the Query operation arguments.
+    /// A class that holds the value of the <i>Query</i> operation arguments.
     /// </summary>
     internal class QueryRequest : BaseRequest, IEquatable<QueryRequest>
     {
@@ -59,7 +59,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = EntityType.FullName.GetHashCode();
+            var hashCode = $"Query.{EntityType.FullName}".GetHashCode();
 
             // Add the expression
             if (!ReferenceEquals(null, Where))

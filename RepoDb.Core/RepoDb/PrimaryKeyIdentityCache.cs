@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
     /// </summary>
-    internal static class IsPrimaryIdentityCache
+    internal static class PrimaryKeyIdentityCache
     {
         private static readonly ConcurrentDictionary<string, bool> _cache = new ConcurrentDictionary<string, bool>();
 
@@ -21,11 +21,11 @@ namespace RepoDb
         public static bool Get<TEntity>(string connectionString, Command command)
             where TEntity : DataEntity
         {
-            var key = $"{typeof(TEntity).FullName}.{command.ToString()}".ToLower();
+            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             var value = false;
             if (!_cache.TryGetValue(key, out value))
             {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
                     value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.GetMappedName());

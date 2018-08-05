@@ -26,7 +26,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            var primary = GetPrimaryProperty<T>();
+            var primary = PrimaryKeyCache.Get<T>();
             if (primary != null)
             {
                 if (primary.PropertyType == typeof(Guid))
@@ -66,7 +66,7 @@ namespace RepoDb.Extensions
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <typeparam name="T">The type of the target <i>DataEntity</i>.</typeparam>
-        /// <returns>An enumerable list of <i>DataEntityChildListData</i> object.</returns>
+        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
         internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData<T>() where T : DataEntity
         {
             return GetDataEntityChildrenData(typeof(T));
@@ -76,7 +76,7 @@ namespace RepoDb.Extensions
         /// Gets the recursive data of the target <i>DataEntity</i> object.
         /// </summary>
         /// <param name="dataEntity">The target <i>DataEntity</i> object.</param>
-        /// <returns>An enumerable list of <i>DataEntityChildListData</i> object.</returns>
+        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
         internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(this DataEntity dataEntity)
         {
             return GetDataEntityChildrenData(dataEntity.GetType());
@@ -176,30 +176,22 @@ namespace RepoDb.Extensions
                 return property;
             }
 
-            var info = type.GetTypeInfo();
-            
             // Id Property
-            property = info
-                .GetProperties()
-                .FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
+            property = type.GetTypeInfo().GetProperties().FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Type.Name + Id
-            property = info
-                .GetProperties()
-                .FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
+            property = type.GetTypeInfo().GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;
             }
 
             // Mapping.Name + Id
-            property = info
-                .GetProperties()
-                .FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
+            property = type.GetTypeInfo().GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
             if (property != null)
             {
                 return property;

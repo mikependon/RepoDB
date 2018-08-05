@@ -160,7 +160,7 @@ namespace RepoDb
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {
@@ -207,7 +207,7 @@ namespace RepoDb
             }
 
             // Variables
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields?.Any() == true;
 
             // Check if there are fields
@@ -285,7 +285,7 @@ namespace RepoDb
         public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {
@@ -315,7 +315,7 @@ namespace RepoDb
             where TEntity : DataEntity
         {
             // Variables
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var primaryMappedName = primary?.GetMappedName();
 
             // Check for the fields presence
@@ -492,7 +492,7 @@ namespace RepoDb
             }
 
             // Important fields
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {
@@ -554,7 +554,7 @@ namespace RepoDb
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {
@@ -576,7 +576,7 @@ namespace RepoDb
         internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity && property == primary))
                 .Select(property => new Field(property.GetMappedName()));
@@ -619,7 +619,7 @@ namespace RepoDb
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
             where TEntity : DataEntity
         {
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {
@@ -655,7 +655,7 @@ namespace RepoDb
             }
 
             // Variables
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var primaryKeyName = primary?.GetMappedName();
 
             // Add the primary key as the default qualifier
@@ -807,7 +807,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"No updateable fields found from type '{typeof(TEntity).FullName}'.");
             }
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
             if (identity != null && identity != primary)
             {

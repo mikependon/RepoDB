@@ -26,7 +26,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            var primary = GetPrimaryProperty<T>();
+            var primary = PrimaryKeyCache.Get<T>();
             if (primary != null)
             {
                 if (primary.PropertyType == typeof(Guid))

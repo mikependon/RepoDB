@@ -54,13 +54,15 @@
     <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
+    <Compile Include="IdentityCache.cs" />
+    <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
     <Compile Include="Constant.cs" />
     <Compile Include="DataEntityChildItemData.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
     <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
-    <Compile Include="IsPrimaryIdentityCache.cs" />
+    <Compile Include="PrimaryKeyIdentityCache.cs" />
     <Compile Include="DataEntityListDataReader.cs" />
     <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
+    <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="RecursionManager.cs" />
     <Compile Include="SqlDbHelper.cs" />

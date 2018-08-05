@@ -105,7 +105,7 @@ namespace RepoDb
             }
             else if (where is TEntity)
             {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
                     var queryField = primary.AsQueryField(where);
@@ -120,7 +120,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                    var primary = PrimaryKeyCache.Get<TEntity>();
                     if (primary != null)
                     {
                         var queryField = new QueryField(primary.GetMappedName(), where);
@@ -144,7 +144,7 @@ namespace RepoDb
         private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
             where TEntity : DataEntity
         {
-            var property = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var property = PrimaryKeyCache.Get<TEntity>();
             if (property == null)
             {
                 throw new PrimaryFieldNotFoundException($"No primary key found at type '{typeof(TEntity).FullName}'.");
@@ -1271,7 +1271,7 @@ namespace RepoDb
             }
             else
             {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
                 if (identity != null && identity != primary)
                 {
@@ -1284,7 +1284,7 @@ namespace RepoDb
                     var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
                     }
                     commandText = sqlStatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore, isPrimaryIdentity);
                 }
@@ -1419,7 +1419,7 @@ namespace RepoDb
             // Variables
             var command = Command.InlineMerge;
             var entityProperties = entity?.GetType().GetProperties();
-            var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
             var commandText = string.Empty;
 
@@ -1442,7 +1442,7 @@ namespace RepoDb
                     var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
                     }
                     commandText = sqlStatementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers, overrideIgnore, isPrimaryIdentity);
                 }
@@ -1784,38 +1784,13 @@ namespace RepoDb
             // Variables
             var command = Command.Insert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = string.Empty;
+            var request = new InsertRequest(typeof(TEntity),
+                connection,
+                statementBuilder);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                CommandTextCache.Get<TEntity>(request);
             var param = entity.AsObject(command);
-
-            // Compose command text
-            if (commandType == CommandType.StoredProcedure)
-            {
-                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
-            }
-            else
-            {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
-                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
-                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
-                if (statementBuilder is SqlDbStatementBuilder)
-                {
-                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    }
-                    commandText = sqlStatementBuilder.CreateInsert(new QueryBuilder<TEntity>(), isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInsert(new QueryBuilder<TEntity>());
-                }
-            }
 
             // Before Execution
             if (trace != null)
@@ -1953,7 +1928,7 @@ namespace RepoDb
             }
             else
             {
-                var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
+                var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
                 if (identity != null && identity != primary)
                 {
@@ -1966,7 +1941,7 @@ namespace RepoDb
                     var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = IsPrimaryIdentityCache.Get<TEntity>(connection.ConnectionString, command);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
                     }
                     commandText = sqlStatementBuilder.CreateMerge(new QueryBuilder<TEntity>(), qualifiers, isPrimaryIdentity);
                 }
@@ -2298,10 +2273,15 @@ namespace RepoDb
             // Variables
             var command = Command.Query;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var request = new QueryRequest(typeof(TEntity), connection, where, orderBy, top, statementBuilder);
+            var request = new QueryRequest(typeof(TEntity),
+                connection,
+                where,
+                orderBy,
+                top,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                DataEntityExtension.GetMappedName<TEntity>(command) : 
-                CommandTextCache.GetForQuery<TEntity>(request);
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                CommandTextCache.Get<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -2358,7 +2338,7 @@ namespace RepoDb
                     // Make sure less than or equals
                     if (recursionDepth < 0)
                     {
-                        throw new InvalidOperationException("Recursion depth value must not be greater negative values.");
+                        throw new InvalidOperationException("Recursion depth value must not be a negative value.");
                     }
                     // Make sure less than or equals
                     else if (recursionDepth > RecursionManager.RecursiveQueryMaxRecursion)
