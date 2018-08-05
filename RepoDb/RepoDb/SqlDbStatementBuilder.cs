@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
-        public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy)
+        public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
             where TEntity : DataEntity
         {
             var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
@@ -84,7 +84,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
-        public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -109,7 +109,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
-        public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -157,7 +157,7 @@ namespace RepoDb
         /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
-        public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
+        public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
@@ -184,7 +184,7 @@ namespace RepoDb
         /// </param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
-        internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
+        internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
             where TEntity : DataEntity
         {
@@ -282,7 +282,7 @@ namespace RepoDb
         /// be ignored on the inline merge operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
-        public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
+        public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
@@ -310,8 +310,8 @@ namespace RepoDb
         /// </param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
-        internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+        internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null,
+            bool? overrideIgnore = false, bool? isPrimaryIdentity = false)
             where TEntity : DataEntity
         {
             // Variables
@@ -385,7 +385,7 @@ namespace RepoDb
             // Get all target fields
             var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Select(property => property.GetMappedName())
-                .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryMappedName?.ToLower()));
+                .Where(field => !(isPrimaryIdentity == true && field.ToLower() == primaryMappedName?.ToLower()));
             var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
                 .Select(property => property.GetMappedName())
                 .Where(field => field.ToLower() != primaryMappedName?.ToLower());
@@ -469,8 +469,8 @@ namespace RepoDb
         /// be ignored on the inline update operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
-        public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
-            QueryGroup where, bool? overrideIgnore = false)
+        public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
+            QueryGroup where = null, bool? overrideIgnore = false)
             where TEntity : DataEntity
         {
             // Check for the fields presence
@@ -573,12 +573,12 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
-        internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
+        internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool? isPrimaryIdentity = null)
             where TEntity : DataEntity
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Where(property => !(isPrimaryIdentity && property == primary))
+                .Where(property => !(isPrimaryIdentity == true && property == primary))
                 .Select(property => new Field(property.GetMappedName()));
 
             // Build the SQL Statement
@@ -596,7 +596,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
+            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -616,7 +616,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
-        public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
+        public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers = null)
             where TEntity : DataEntity
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
@@ -746,7 +746,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
         /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
-        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0)
+        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
             where TEntity : DataEntity
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
@@ -799,7 +799,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
-        public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);

@@ -13,7 +13,52 @@ namespace RepoDb
         private static readonly ConcurrentDictionary<BaseRequest, string> _cache = new ConcurrentDictionary<BaseRequest, string>();
 
         /// <summary>
-        /// Gets a command text from the cache for <i>Delete</i> operation.
+        /// Gets a command text from the cache for the <i>BatchQuery</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetBatchQueryText<TEntity>(BatchQueryRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateBatchQuery(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where,
+                    page: request.Page,
+                    rowsPerBatch: request.RowsPerBatch,
+                    orderBy: request.OrderBy);
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>Count</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetCountText<TEntity>(CountRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateCount(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where);
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>Delete</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -34,7 +79,27 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for <i>Insert</i> operation.
+        /// Gets a command text from the cache for the <i>DeleteAll</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetDeleteAllText<TEntity>(DeleteAllRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateDeleteAll(queryBuilder: new QueryBuilder<TEntity>());
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>Insert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -74,7 +139,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for <i>Query</i> operation.
+        /// Gets a command text from the cache for the <i>Query</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -97,7 +162,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for <i>Update</i> operation.
+        /// Gets a command text from the cache for the <i>Update</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>

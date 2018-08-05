@@ -415,9 +415,16 @@ namespace RepoDb
             // Variables
             var command = Command.BatchQuery;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new BatchQueryRequest(typeof(TEntity),
+                connection,
+                where,
+                page,
+                rowsPerBatch,
+                orderBy,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateBatchQuery(new QueryBuilder<TEntity>(), where, page, rowsPerBatch, orderBy);
+                CommandTextCache.GetBatchQueryText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -774,9 +781,13 @@ namespace RepoDb
             // Variables
             var command = Command.Count;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new CountRequest(typeof(TEntity),
+                connection,
+                where,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateCount(new QueryBuilder<TEntity>(), where);
+                CommandTextCache.GetCountText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1173,9 +1184,12 @@ namespace RepoDb
             // Variables
             var command = Command.DeleteAll;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new DeleteAllRequest(typeof(TEntity),
+                connection,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateDeleteAll(new QueryBuilder<TEntity>());
+                CommandTextCache.GetDeleteAllText<TEntity>(request);
 
             // Before Execution
             if (trace != null)

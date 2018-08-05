@@ -21,7 +21,7 @@ namespace RepoDb.Interfaces
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
-        string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy)
+        string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
-        string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
-        string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace RepoDb.Interfaces
         /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
-        string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
+        string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, bool? overrideIgnore = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace RepoDb.Interfaces
         /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
-        string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
+        string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace RepoDb.Interfaces
         /// be ignored on the inline update operation in SQL Statement composition.
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
-        string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, QueryGroup where, bool? overrideIgnore = false)
+        string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, QueryGroup where = null, bool? overrideIgnore = false)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
-        string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
+        string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers = null)
             where TEntity : DataEntity;
 
         /// <summary>
@@ -143,8 +143,9 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
         /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
-        string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0)
+        string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
             where TEntity : DataEntity;
+
         /// <summary>
         /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
         /// </summary>
@@ -164,7 +165,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
-        string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where)
+        string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : DataEntity;
     }
 }
