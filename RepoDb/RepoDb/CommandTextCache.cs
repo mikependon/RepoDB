@@ -99,6 +99,119 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Gets a command text from the cache for the <i>InlineInsert</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInlineInsertText<TEntity>(InlineInsertRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var primary = PrimaryKeyCache.Get<TEntity>();
+                var identity = IdentityCache.Get<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                if (statementBuilder is SqlDbStatementBuilder)
+                {
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.InlineInsert);
+                    }
+                    commandText = sqlStatementBuilder.CreateInlineInsert(queryBuilder: new QueryBuilder<TEntity>(),
+                        fields: request.Fields,
+                        overrideIgnore: request.OverrideIgnore,
+                        isPrimaryIdentity: isPrimaryIdentity);
+                }
+                else
+                {
+                    commandText = statementBuilder.CreateInlineInsert(queryBuilder: new QueryBuilder<TEntity>(),
+                        fields: request.Fields,
+                        overrideIgnore: request.OverrideIgnore);
+                }
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>InlineMerge</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInlineMergeText<TEntity>(InlineMergeRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var primary = PrimaryKeyCache.Get<TEntity>();
+                var identity = IdentityCache.Get<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                if (statementBuilder is SqlDbStatementBuilder)
+                {
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.InlineMerge);
+                    }
+                    commandText = sqlStatementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
+                        fields: request.Fields,
+                        qualifiers: request.Qualifiers,
+                        overrideIgnore: request.OverrideIgnore,
+                        isPrimaryIdentity: isPrimaryIdentity);
+                }
+                else
+                {
+                    commandText = statementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
+                        fields: request.Fields,
+                        qualifiers: request.Qualifiers,
+                        overrideIgnore: request.OverrideIgnore);
+                }
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>InlineUpdate</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetInlineUpdateText<TEntity>(InlineUpdateRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateInlineUpdate(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where,
+                    fields: request.Fields,
+                    overrideIgnore: request.OverrideIgnore);
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
         /// Gets a command text from the cache for the <i>Insert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>

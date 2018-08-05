@@ -1280,37 +1280,14 @@ namespace RepoDb
             // Variables
             var command = Command.InlineInsert;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = string.Empty;
-
-            // Compose command text
-            if (commandType == CommandType.StoredProcedure)
-            {
-                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
-            }
-            else
-            {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
-                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
-                if (statementBuilder is SqlDbStatementBuilder)
-                {
-                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    }
-                    commandText = sqlStatementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore, isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInlineInsert(new QueryBuilder<TEntity>(), entity?.AsFields(), overrideIgnore);
-                }
-            }
+            var request = new InlineInsertRequest(typeof(TEntity),
+                connection,
+                entity?.AsFields(),
+                overrideIgnore,
+                statementBuilder);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                CommandTextCache.GetInlineInsertText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -1439,36 +1416,15 @@ namespace RepoDb
             var entityProperties = entity?.GetType().GetProperties();
             var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = string.Empty;
-
-            // Compose command text
-            if (commandType == CommandType.StoredProcedure)
-            {
-                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
-            }
-            else
-            {
-                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
-                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
-                if (statementBuilder is SqlDbStatementBuilder)
-                {
-                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    }
-                    commandText = sqlStatementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers, overrideIgnore, isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateInlineMerge(new QueryBuilder<TEntity>(), entity?.AsFields(), qualifiers, overrideIgnore);
-                }
-            }
+            var request = new InlineMergeRequest(typeof(TEntity),
+                connection,
+                entity?.AsFields(),
+                qualifiers,
+                overrideIgnore,
+                statementBuilder);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                CommandTextCache.GetInlineMergeText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -1646,8 +1602,13 @@ namespace RepoDb
             // Variables
             var command = Command.InlineUpdate;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateInlineUpdate(new QueryBuilder<TEntity>(),
-                entity.AsFields(), where, overrideIgnore);
+            var request = new InlineUpdateRequest(typeof(TEntity),
+                connection,
+                where,
+                entity?.AsFields(),
+                overrideIgnore,
+                statementBuilder);
+            var commandText = CommandTextCache.GetInlineUpdateText<TEntity>(request);
             var param = entity?.Merge(where);
 
             // Before Execution

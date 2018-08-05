@@ -80,6 +80,9 @@
     <Compile Include="Requests\BaseRequest.cs" />
     <Compile Include="Requests\CountRequest.cs" />
     <Compile Include="Requests\BatchQueryRequest.cs" />
+    <Compile Include="Requests\InlineUpdateRequest.cs" />
+    <Compile Include="Requests\InlineMergeRequest.cs" />
+    <Compile Include="Requests\InlineInsertRequest.cs" />
     <Compile Include="Requests\MergeRequest.cs" />
     <Compile Include="Requests\TruncateRequest.cs" />
     <Compile Include="Requests\DeleteAllRequest.cs" />
