@@ -1936,38 +1936,14 @@ namespace RepoDb
 
             // Variables
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-            var commandText = string.Empty;
+            var request = new MergeRequest(typeof(TEntity),
+                connection,
+                qualifiers,
+                statementBuilder);
+            var commandText = commandType == CommandType.StoredProcedure ?
+                DataEntityExtension.GetMappedName<TEntity>(command) :
+                CommandTextCache.GetMergeText<TEntity>(request);
             var param = entity?.AsObject(command);
-
-            // Compose command text
-            if (commandType == CommandType.StoredProcedure)
-            {
-                commandText = DataEntityExtension.GetMappedName<TEntity>(command);
-            }
-            else
-            {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
-                if (identity != null && identity != primary)
-                {
-                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
-                }
-                var isPrimaryIdentity = (identity != null);
-                statementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder());
-                if (statementBuilder is SqlDbStatementBuilder)
-                {
-                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
-                    if (isPrimaryIdentity == false)
-                    {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(connection.ConnectionString, command);
-                    }
-                    commandText = sqlStatementBuilder.CreateMerge(new QueryBuilder<TEntity>(), qualifiers, isPrimaryIdentity);
-                }
-                else
-                {
-                    commandText = statementBuilder.CreateMerge(new QueryBuilder<TEntity>(), qualifiers);
-                }
-            }
 
             // Before Execution
             if (trace != null)
@@ -2728,9 +2704,12 @@ namespace RepoDb
             // Variables
             var command = Command.Truncate;
             var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var request = new TruncateRequest(typeof(TEntity),
+                connection,
+                statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
-                (statementBuilder ?? StatementBuilderMapper.Get(connection?.GetType())?.StatementBuilder ?? new SqlDbStatementBuilder()).CreateTruncate(new QueryBuilder<TEntity>());
+                CommandTextCache.GetTruncateText<TEntity>(request);
 
             // Before Execution
             if (trace != null)

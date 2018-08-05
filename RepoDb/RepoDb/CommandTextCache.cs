@@ -139,6 +139,48 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Gets a command text from the cache for the <i>Merge</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetMergeText<TEntity>(MergeRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var primary = PrimaryKeyCache.Get<TEntity>();
+                var identity = IdentityCache.Get<TEntity>();
+                if (identity != null && identity != primary)
+                {
+                    throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
+                }
+                var isPrimaryIdentity = (identity != null);
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                if (statementBuilder is SqlDbStatementBuilder)
+                {
+                    var sqlStatementBuilder = ((SqlDbStatementBuilder)statementBuilder);
+                    if (isPrimaryIdentity == false)
+                    {
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.Merge);
+                    }
+                    commandText = sqlStatementBuilder.CreateMerge(queryBuilder: new QueryBuilder<TEntity>(),
+                        qualifiers: request.Qualifiers,
+                        isPrimaryIdentity: isPrimaryIdentity);
+                }
+                else
+                {
+                    commandText = statementBuilder.CreateMerge(queryBuilder: new QueryBuilder<TEntity>(),
+                        qualifiers: request.Qualifiers);
+                }
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
         /// Gets a command text from the cache for the <i>Query</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
@@ -156,6 +198,26 @@ namespace RepoDb
                     where: request.Where,
                     orderBy: request.OrderBy,
                     top: request.Top);
+                _cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the <i>Truncate</i> operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetTruncateText<TEntity>(TruncateRequest request) where TEntity : DataEntity
+        {
+            var commandText = (string)null;
+            if (_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = (request.StatementBuilder ??
+                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
+                    new SqlDbStatementBuilder());
+                commandText = statementBuilder.CreateTruncate(queryBuilder: new QueryBuilder<TEntity>());
                 _cache.TryAdd(request, commandText);
             }
             return commandText;
