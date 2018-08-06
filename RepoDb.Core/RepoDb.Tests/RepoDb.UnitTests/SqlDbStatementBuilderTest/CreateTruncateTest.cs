@@ -6,7 +6,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateTruncateTest
     {
-        private class TestWithhoutMappingsClass : DataEntity
+        private class TestWithhoutMappingsClass
         {
         }
 
@@ -27,7 +27,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingsClass : DataEntity
+        private class TestWithClassMappingsClass
         {
         }
 

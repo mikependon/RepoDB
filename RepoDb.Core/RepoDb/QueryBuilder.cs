@@ -10,7 +10,8 @@ namespace RepoDb
     /// An object used to compose a SQL Query Statement.
     /// </summary>
     /// <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
-    public class QueryBuilder<TEntity> where TEntity : DataEntity
+    public class QueryBuilder<TEntity>
+        where TEntity : class
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 

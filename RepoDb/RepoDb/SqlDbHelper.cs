@@ -12,7 +12,7 @@ namespace RepoDb
     internal static class SqlDbHelper
     {
         /// <summary>
-        /// Checks whether the column is identity.
+        /// Checks whether the target column is an identity field from the database.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connectionString">The connection string object to be used.</param>

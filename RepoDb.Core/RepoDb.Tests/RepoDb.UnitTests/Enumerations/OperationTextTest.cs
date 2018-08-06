@@ -13,6 +13,7 @@ namespace RepoDb.UnitTests
         private TextAttribute GetOperationTextAttribute(Operation operation)
         {
             return typeof(Operation)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == operation.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();

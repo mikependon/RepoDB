@@ -13,6 +13,7 @@ namespace RepoDb.UnitTests
         private TextAttribute GetOrderTextAttribute(Order order)
         {
             return typeof(Order)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == order.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();

@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     public class CreateBatchQueryTest
     {
 
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
@@ -43,7 +43,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionsClass : DataEntity
+        private class TestWithExpressionsClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithMultipleOrderedColumnsAndWithoutAttributesClass : DataEntity
+        private class TestWithMultipleOrderedColumnsAndWithoutAttributesClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
@@ -118,7 +118,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass : DataEntity
+        private class TestWithClassMappingClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsClass : DataEntity
+        private class TestWithFieldMappingsClass
         {
             public int Field1 { get; set; }
             [Map("Field3")]
@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsAndWithIgnoredBatchQueryCommandClass : DataEntity
+        private class TestWithFieldMappingsAndWithIgnoredBatchQueryCommandClass
         {
             public int Field1 { get; set; }
             [Attributes.Ignore(Command.BatchQuery)]
@@ -226,7 +226,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsAndWithIgnoredQueryCommandClass : DataEntity
+        private class TestWithFieldMappingsAndWithIgnoredQueryCommandClass
         {
             public int Field1 { get; set; }
             [Attributes.Ignore(Command.Query)]
@@ -263,7 +263,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommandClass : DataEntity
+        private class TestWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommandClass
         {
             public int Field1 { get; set; }
             [Attributes.Ignore(Command.Query)]
@@ -301,7 +301,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfThereAreNoQueryableFieldsClass : DataEntity
+        private class ThrowExceptionIfThereAreNoQueryableFieldsClass
         {
         }
 
@@ -317,7 +317,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateBatchQuery(queryBuilder, queryGroup, 0, 10, null);
         }
 
-        private class ThrowExceptionIfAllFieldsWereIgnoredClass : DataEntity
+        private class ThrowExceptionIfAllFieldsWereIgnoredClass
         {
             [Attributes.Ignore(Command.Query)]
             public int Field1 { get; set; }

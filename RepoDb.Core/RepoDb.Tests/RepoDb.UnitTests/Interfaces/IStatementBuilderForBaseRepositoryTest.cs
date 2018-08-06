@@ -10,7 +10,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class IStatementBuilderForBaseRepositoryTest
     {
-        public class StatementBuilderEntity : DataEntity
+        public class StatementBuilderEntity
         {
             [Primary, Identity]
             public int Id { get; set; }

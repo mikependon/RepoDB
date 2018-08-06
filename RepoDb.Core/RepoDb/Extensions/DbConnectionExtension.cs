@@ -2219,7 +2219,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey);
+                var item = cache?.Get(cacheKey, false);
                 if (item != null)
                 {
                     return (IEnumerable<TEntity>)item.Value;

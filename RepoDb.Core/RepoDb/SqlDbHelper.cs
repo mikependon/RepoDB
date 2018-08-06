@@ -12,27 +12,27 @@ namespace RepoDb
     internal static class SqlDbHelper
     {
         /// <summary>
-        /// Checks whether the column is identity.
+        /// Checks whether the target column is an identity field from the database.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="connectionString">The connection string object to be used.</param>
         /// <param name="command">The target command.</param>
         /// <param name="columnName">The name of the column.</param>
         /// <returns>A boolean value indicating the identification of the column.</returns>
-        public static bool IsIdentity<T>(string connectionString, Command command, string columnName)
-            where T : DataEntity
+        public static bool IsIdentity<TEntity>(string connectionString, Command command, string columnName)
+            where TEntity : class
         {
             var isIdentity = false;
 
             // Open a connection
             using (var connection = new SqlConnection(connectionString).EnsureOpen())
             {
-                var commandType = DataEntityExtension.GetCommandType<T>(command);
+                var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
 
                 // Check for the command type
                 if (commandType != CommandType.StoredProcedure)
                 {
-                    var mappedName = DataEntityExtension.GetMappedName<T>(command);
+                    var mappedName = DataEntityExtension.GetMappedName<TEntity>(command);
                     var commandText = @"
                         SELECT CONVERT(INT, c.is_identity) AS IsIdentity
                         FROM [sys].[columns] c

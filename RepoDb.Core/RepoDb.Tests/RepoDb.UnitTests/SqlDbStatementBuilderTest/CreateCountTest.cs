@@ -6,7 +6,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateCountTest
     {
-        private class TestWithhoutMappingsClass : DataEntity
+        private class TestWithhoutMappingsClass
         {
         }
 
@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingsClass : DataEntity
+        private class TestWithClassMappingsClass
         {
         }
 
@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithhExpressionsClass : DataEntity
+        private class TestWithhExpressionsClass
         {
         }
 

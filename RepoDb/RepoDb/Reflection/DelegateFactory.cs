@@ -76,6 +76,7 @@ namespace RepoDb.Reflection
         }
 
         private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property)
+			where TEntity : class
         {
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);

@@ -19,6 +19,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetBatchQueryText<TEntity>(BatchQueryRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -43,6 +44,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetCountText<TEntity>(CountRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -64,6 +66,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetDeleteText<TEntity>(DeleteRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -85,6 +88,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetDeleteAllText<TEntity>(DeleteAllRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -105,6 +109,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetInlineInsertText<TEntity>(InlineInsertRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -149,6 +154,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetInlineMergeText<TEntity>(InlineMergeRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -195,6 +201,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetInlineUpdateText<TEntity>(InlineUpdateRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -218,6 +225,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetInsertText<TEntity>(InsertRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -258,6 +266,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetMergeText<TEntity>(MergeRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -300,6 +309,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetQueryText<TEntity>(QueryRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -323,6 +333,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetTruncateText<TEntity>(TruncateRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -343,6 +354,7 @@ namespace RepoDb
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
         public static string GetUpdateText<TEntity>(UpdateRequest request)
+            where TEntity : class
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)

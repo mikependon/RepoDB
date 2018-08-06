@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.DataEntity</i> object into database object.
+    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a data entity object into database object.
     /// </summary>
     public class DataEntityMapItem
     {

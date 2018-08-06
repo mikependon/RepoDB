@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RepoDb.Interfaces;
 using System.Linq;
 using System.Collections;
+using System.Collections.Concurrent;
 
 namespace RepoDb
 {
@@ -12,15 +13,14 @@ namespace RepoDb
     /// </summary>
     public class MemoryCache : ICache
     {
-        private static object _syncLock = new object();
-        private readonly IList<CacheItem> _cacheList;
+        private readonly ConcurrentDictionary<string, CacheItem> _cache;
 
         /// <summary>
         /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
         /// </summary>
         public MemoryCache()
         {
-            _cacheList = new List<CacheItem>();
+            _cache = new ConcurrentDictionary<string, CacheItem>();
         }
 
         /// <summary>
@@ -28,9 +28,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
-        public void Add(string key, object value)
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        public void Add(string key, object value, bool throwException = true)
         {
-            Add(key, value, Constant.DefaultCacheItemExpirationInMinutes);
+            Add(key, value, Constant.DefaultCacheItemExpirationInMinutes, throwException);
         }
 
         /// <summary>
@@ -39,37 +40,34 @@ namespace RepoDb
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
         /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
-        public void Add(string key, object value, int expirationInMinutes)
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        public void Add(string key, object value, int expirationInMinutes, bool throwException = true)
         {
-            Add(new CacheItem(key, value, expirationInMinutes));
+            Add(new CacheItem(key, value, expirationInMinutes), throwException);
         }
 
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
-        /// <param name="item">
-        /// The cache item to be added in the collection. This object must implement the <i>RepoDb.CacheItem</i> interface.
-        /// </param>
-        public void Add(CacheItem item)
+        /// <param name="item">The cache item to be added in the collection.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        public void Add(CacheItem item, bool throwException = true)
         {
-            lock (_syncLock)
+            var cacheItem = GetItem(item.Key, false);
+            if (cacheItem == null)
             {
-                var cacheItem = GetItem(item.Key);
-                if (cacheItem == null)
+                if (_cache.TryAdd(item.Key, item) == false && throwException == true)
                 {
-                    _cacheList.Add(item);
+                    throw new InvalidOperationException($"Fail to add an item into the cache for the key {item.Key}.");
                 }
-                else
+            }
+            else
+            {
+                if (!cacheItem.IsExpired())
                 {
-                    if (!cacheItem.IsExpired())
-                    {
-                        throw new InvalidOperationException($"An existing cache for key '{item.Key}' already exists.");
-                    }
-                    else
-                    {
-                        cacheItem.UpdateFrom(item);
-                    }
+                    throw new InvalidOperationException($"An existing cache for key '{item.Key}' already exists.");
                 }
+                cacheItem.UpdateFrom(item);
             }
         }
 
@@ -78,7 +76,7 @@ namespace RepoDb
         /// </summary>
         public void Clear()
         {
-            _cacheList.Clear();
+            _cache.Clear();
         }
 
         /// <summary>
@@ -97,12 +95,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the cache object to be retrieved.</param>
         /// <returns>A cached item object from the cache collection based on the given key.</returns>
-        public CacheItem Get(string key)
+        /// <param name="throwException">Throws an exception if the item is not found.</param>
+        public CacheItem Get(string key, bool throwException = true)
         {
-            var cacheItem = GetItem(key);
-            if (cacheItem != null && !cacheItem.IsExpired())
+            var item = GetItem(key, throwException);
+            if (item != null && !item.IsExpired())
             {
-                return cacheItem;
+                return item;
             }
             return null;
         }
@@ -113,8 +112,9 @@ namespace RepoDb
         /// <returns></returns>
         public IEnumerator<CacheItem> GetEnumerator()
         {
-            return _cacheList
-                .Where(cacheItem => !cacheItem.IsExpired())
+            return _cache
+                .Where(item => !item.Value.IsExpired())
+                .Select(item => item.Value)
                 .GetEnumerator();
         }
 
@@ -130,19 +130,14 @@ namespace RepoDb
         /// <summary>
         /// Removes the item from the cache collection.
         /// </summary>
-        /// <param name="key">
-        /// The key of the item to be removed from the cache collection. If the given key is not present, this method will ignore it.
-        /// </param>
-        public void Remove(string key)
+        /// <param name="key">The key of the item to be removed from the cache collection.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
+        public void Remove(string key, bool throwException = true)
         {
-            var item = GetItem(key);
-            if (item != null)
+            var item = (CacheItem)null;
+            if (_cache.TryRemove(key, out item) == false && throwException == true)
             {
-                _cacheList.Remove(item);
-            }
-            else
-            {
-                throw new InvalidOperationException($"The cache item with '{key}' is not found.");
+                throw new InvalidOperationException($"Failed to remove an item with key '{key}'.");
             }
         }
 
@@ -151,9 +146,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the cached item.</param>
         /// <returns>The cached item based on the given key.</returns>
-        protected CacheItem GetItem(string key)
+        /// <param name="throwException">Throws an exception if the item is not found.</param>
+        protected CacheItem GetItem(string key, bool throwException = true)
         {
-            return _cacheList.FirstOrDefault(cacheItem => cacheItem.Key == key);
+            var value = (CacheItem)null;
+            if (_cache.TryGetValue(key, out value) == false && throwException == true)
+            {
+                throw new InvalidOperationException($"No item found with key '{key}'.");
+            }
+            return value;
         }
     }
 }

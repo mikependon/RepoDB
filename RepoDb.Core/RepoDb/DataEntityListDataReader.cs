@@ -11,10 +11,11 @@ using System.Collections;
 namespace RepoDb
 {
     /// <summary>
-    /// A data reader object used to manipulate the enumerable list of <i>DataEntity</i> objects.
+    /// A data reader object used to manipulate the enumerable list of data entity objects.
     /// </summary>
-    /// <typeparam name="TEntity">The type of the <i>DataEntity</i></typeparam>
-    public class DataEntityListDataReader<TEntity> : DbDataReader where TEntity : DataEntity
+    /// <typeparam name="TEntity">The type of the data entity</typeparam>
+    public class DataEntityListDataReader<TEntity> : DbDataReader
+        where TEntity :class
     {
         #region Fields
 
@@ -28,7 +29,7 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <i>RepoDb.DataEntityListDataReader</i> object.
         /// </summary>
-        /// <param name="entities">The list of the <i>DataEntity</i> object to be used for manipulation.</param>
+        /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="command">The type of command to be used by this data reader.</param>
         public DataEntityListDataReader(IEnumerable<TEntity> entities, Command command)
         {
@@ -51,7 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
+        /// Returns an enumerator that iterates through a collection of data entity objects.
         /// </summary>
         /// <returns>The enumerator object of the current collection.</returns>
         public override IEnumerator GetEnumerator()
@@ -60,17 +61,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Returns an enumerator that iterates through a collection of <i>DataEntity</i> objects.
+        /// Returns an enumerator that iterates through a collection of data entity objects.
         /// </summary>
         public IEnumerator<TEntity> Enumerator { get; private set; }
 
         /// <summary>
-        /// Gets the list of <i>DataEntity</i> objects.
+        /// Gets the list of data entity objects.
         /// </summary>
         public IEnumerable<TEntity> Entities { get; private set; }
 
         /// <summary>
-        /// Gets the properties of <i>DataEntity</i> object.
+        /// Gets the properties of data entity object.
         /// </summary>
         public IList<PropertyInfo> Properties { get; private set; }
 
@@ -114,7 +115,7 @@ namespace RepoDb
         public override int RecordsAffected { get { return _recordsAffected; } }
 
         /// <summary>
-        /// Gets the number of properties the <i>DataEntity</i> object has.
+        /// Gets the number of properties the data entity object has.
         /// </summary>
         public override int FieldCount { get; }
 

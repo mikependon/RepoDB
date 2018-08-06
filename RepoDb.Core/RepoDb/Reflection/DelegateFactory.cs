@@ -24,7 +24,8 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
-        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader) where TEntity : DataEntity
+        public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
+            where TEntity : class
         {
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,
@@ -74,7 +75,8 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToDataEntityDelegate<TEntity>));
         }
 
-        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property) where TEntity : DataEntity
+        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property)
+			where TEntity : class
         {
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);

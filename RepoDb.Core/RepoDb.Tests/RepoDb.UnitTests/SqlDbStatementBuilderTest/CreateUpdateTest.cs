@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateUpdateTest
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingsClass : DataEntity
+        private class TestWithClassMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingClass : DataEntity
+        private class TestWithFieldMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithPrimaryKeyFieldClass : DataEntity
+        private class TestWithPrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIdClass : DataEntity
+        private class TestWithIdClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -136,7 +136,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithClassIdClass : DataEntity
+        private class TestWithClassIdClass
         {
             public int TestWithClassIdClassId { get; set; }
             public string Field2 { get; set; }
@@ -162,7 +162,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingIdClass : DataEntity
+        private class TestWithClassMappingIdClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -187,7 +187,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIdentityFieldClass : DataEntity
+        private class TestWithIdentityFieldClass
         {
             [Primary, Identity]
             public int Field1 { get; set; }
@@ -213,7 +213,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionClass : DataEntity
+        private class TestWithExpressionClass
         {
             [Primary, Identity]
             public int Field1 { get; set; }
@@ -240,7 +240,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass
         {
             [Identity]
             public int Field1 { get; set; }

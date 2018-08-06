@@ -7,12 +7,11 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a <i>RepoDb.DataEntity</i> object into database object.
+    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a data entity object into database object.
     /// </summary>
     public class DataEntityMapItem
     {
-        private readonly IDictionary<Command, DataEntityMap> _cache;
-        private static readonly object _syncLock = new object();
+        private readonly Dictionary<Command, DataEntityMap> _cache;
 
         /// <summary>
         /// Creates an instance of <i>RepoDb.DataEntityMapItem</i> class.
@@ -84,16 +83,13 @@ namespace RepoDb
             Validate(command, map);
 
             // Check and Add
-            lock (_syncLock)
+            if (_cache.ContainsKey(command))
             {
-                if (_cache.ContainsKey(command))
-                {
-                    throw new DuplicateDataEntityMapException(command);
-                }
-                else
-                {
-                    _cache.Add(command, map);
-                }
+                throw new DuplicateDataEntityMapException(command);
+            }
+            else
+            {
+                _cache.Add(command, map);
             }
 
             // Return

@@ -19,7 +19,7 @@ namespace RepoDb
         /// <param name="command">The target command.</param>
         /// <returns>A boolean value indicating the identification of the column.</returns>
         public static bool Get<TEntity>(string connectionString, Command command)
-            where TEntity : DataEntity
+           where TEntity : class
         {
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             var value = false;

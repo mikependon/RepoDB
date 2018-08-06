@@ -13,6 +13,7 @@ namespace RepoDb.UnitTests
         private TextAttribute GetConjunctionTextAttribute(Conjunction conjunction)
         {
             return typeof(Conjunction)
+                .GetTypeInfo()
                 .GetMembers()
                 .First(member => member.Name.ToLower() == conjunction.ToString().ToLower())
                 .GetCustomAttribute<TextAttribute>();

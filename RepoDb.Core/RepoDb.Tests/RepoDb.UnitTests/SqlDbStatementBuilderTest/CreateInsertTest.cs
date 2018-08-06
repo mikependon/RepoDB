@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateInsertTest
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass : DataEntity
+        private class TestWithClassMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingsClass : DataEntity
+        private class TestWithFieldMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIgnoreFieldClass : DataEntity
+        private class TestWithIgnoreFieldClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIdClass : DataEntity
+        private class TestWithIdClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithClassIdFieldClass : DataEntity
+        private class TestWithClassIdFieldClass
         {
             public int TestWithClassIdFieldClassId { get; set; }
             public string Field2 { get; set; }
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithPrimaryKeyFieldClass : DataEntity
+        private class TestWithPrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -202,7 +202,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingIdClass : DataEntity
+        private class TestWithClassMappingIdClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -229,7 +229,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -249,7 +249,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInsert(queryBuilder);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass
         {
             public int ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
             [Identity]
@@ -268,7 +268,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInsert(queryBuilder);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass
         {
             public int Id { get; set; }
             [Identity]
@@ -288,7 +288,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass
         {
             public int ClassNameId { get; set; }
             [Identity]

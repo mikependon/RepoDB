@@ -6,7 +6,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateDeleteAllTest
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
         }
 
@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithMappingsClass : DataEntity
+        private class TestWithMappingsClass
         {
         }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that manage the mappings of a <i>RepoDb.DataEntity</i> object into database object.
+    /// A class that manage the mappings of the data entity object against database object.
     /// </summary>
     public static class DataEntityMapper
     {
@@ -38,10 +38,10 @@ namespace RepoDb
         /// <summary>
         /// Creates a new entity and database mapping.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type where to apply the mapping.</typeparam>
+        /// <typeparam name="TEntity">The data entity type where to apply the mapping.</typeparam>
         /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         public static DataEntityMapItem For<TEntity>()
-
+            where TEntity : class
         {
             return For(typeof(TEntity));
         }

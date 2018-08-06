@@ -17,16 +17,17 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Converts the value to the type of the primary property of the target data entity.
         /// </summary>
-        /// <typeparam name="T">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="value">The value to be converted.</param>
         /// <returns>The converted value to primary property type.</returns>
-        internal static object ValueToPrimaryType<T>(object value)
+        internal static object ValueToPrimaryType<TEntity>(object value)
+            where TEntity : class
         {
             if (value == null || value == DBNull.Value)
             {
                 return null;
             }
-            var primary = PrimaryKeyCache.Get<T>();
+            var primary = PrimaryKeyCache.Get<TEntity>();
             if (primary != null)
             {
                 if (primary.PropertyType == typeof(Guid))
