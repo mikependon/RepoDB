@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateQueryTest
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass : DataEntity
+        private class TestWithClassMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingClass : DataEntity
+        private class TestWithFieldMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIgnoredFieldClass : DataEntity
+        private class TestWithIgnoredFieldClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithTopClass : DataEntity
+        private class TestWithTopClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -136,7 +136,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionClass : DataEntity
+        private class TestWithExpressionClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -172,7 +172,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
          * missing fields, then, simply show the exception
          */
 
-        private class TestWithAscendingOrderFieldsClass : DataEntity
+        private class TestWithAscendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -199,7 +199,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithDescendingOrderFieldsClass : DataEntity
+        private class TestWithDescendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -226,7 +226,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithAscendingAndDescendingOrderFieldsClass : DataEntity
+        private class TestWithAscendingAndDescendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -257,7 +257,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithDescendingAndAscendingOrderFieldsClass : DataEntity
+        private class TestWithDescendingAndAscendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -288,7 +288,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithAnyFieldsAtExpressionClass : DataEntity
+        private class TestWithAnyFieldsAtExpressionClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -317,7 +317,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
 
         /*******************************/
 
-        private class ThrowExceptionIfThereAreNoQueryableFieldsClass : DataEntity
+        private class ThrowExceptionIfThereAreNoQueryableFieldsClass
         {
         }
 
@@ -333,7 +333,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateQuery(queryBuilder, queryGroup);
         }
 
-        private class ThrowExceptionIfAllFieldsWereIgnoredClass : DataEntity
+        private class ThrowExceptionIfAllFieldsWereIgnoredClass
         {
             [Attributes.Ignore(Command.Query)]
             public int Field1 { get; set; }

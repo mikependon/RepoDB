@@ -14,6 +14,6 @@ Below is a sample code for a `Customer` data entity object.
 
 ::
 
-	public class Customer : DataEntity
+	public class Customer
 	{
 	}

@@ -46,7 +46,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type where to apply the mapping.</typeparam>
         /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         public static DataEntityMapItem For<TEntity>()
-            where TEntity : DataEntity
+           
         {
             return For(typeof(TEntity));
         }

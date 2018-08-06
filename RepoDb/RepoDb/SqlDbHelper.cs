@@ -20,7 +20,6 @@ namespace RepoDb
         /// <param name="columnName">The name of the column.</param>
         /// <returns>A boolean value indicating the identification of the column.</returns>
         public static bool IsIdentity<T>(string connectionString, Command command, string columnName)
-            where T : DataEntity
         {
             var isIdentity = false;
 

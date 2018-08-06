@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace RepoDb.TestProject.Models
 {
     [Map("[dbo].[Order]")]
-    public class OrderDto : DataEntity
+    public class OrderDto
     {
         public int Id { get; set; }
         public DateTime? OrderDate { get; set; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RepoDb.TestProject.Models
 {
     [Map("Customer")]
-    public class CustomerDto : DataEntity
+    public class CustomerDto
     {
         [Primary]
         public int Id { get; set; }

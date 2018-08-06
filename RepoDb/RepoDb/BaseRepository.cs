@@ -10,14 +10,14 @@ namespace RepoDb
 {
     /// <summary>
     /// An inherritable base object for all <b>Entity-Based Repositories</b>. This object is usually being inheritted if the 
-    /// derived class is meant for entity-based operations with corresponding <i>DataEntity</i> object for data manipulations.
+    /// derived class is meant for entity-based operations with corresponding data entity object for data manipulations.
     /// </summary>
     /// <typeparam name="TEntity">
-    /// The type of <i>DataEntity</i> object to be mapped on this repository. This object must inherit the <i>RepoDb.DataEntity</i>
+    /// The type of data entity object to be mapped on this repository. This object must inherit the <i>RepoDb.DataEntity</i>
     /// object in order to be qualified as a repository entity.
     /// </typeparam>
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
-    public abstract class BaseRepository<TEntity, TDbConnection> : IDisposable where TEntity : DataEntity
+    public abstract class BaseRepository<TEntity, TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {
         #region Constructors
@@ -235,7 +235,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -255,7 +255,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -276,7 +276,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -297,7 +297,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -319,7 +319,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -339,7 +339,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -360,7 +360,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -381,7 +381,7 @@ namespace RepoDb
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
         {
@@ -396,7 +396,7 @@ namespace RepoDb
         // BulkInsert
 
         /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database.
+        /// Bulk-inserting the list of data entity objects in the database.
         /// </summary>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -408,7 +408,7 @@ namespace RepoDb
         // BulkInsertAsync
 
         /// <summary>
-        /// Bulk-inserting the list of <i>DataEntity</i> objects in the database in an asynchronous way.
+        /// Bulk-inserting the list of data entity objects in the database in an asynchronous way.
         /// </summary>
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -516,7 +516,7 @@ namespace RepoDb
         // Delete
 
         /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// Deletes all data in the database based on the target data entity.
         /// </summary>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -564,7 +564,7 @@ namespace RepoDb
         // DeleteAsync
 
         /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// Deletes all data in the database based on the target data entity in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -612,7 +612,7 @@ namespace RepoDb
         // DeleteAll
 
         /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i>.
+        /// Deletes all data in the database based on the target data entity.
         /// </summary>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -624,7 +624,7 @@ namespace RepoDb
         // DeleteAllAsync
 
         /// <summary>
-        /// Deletes all data in the database based on the target <i>DataEntity</i> in an asynchronous way.
+        /// Deletes all data in the database based on the target data entity in an asynchronous way.
         /// </summary>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -638,11 +638,11 @@ namespace RepoDb
         /// <summary>
         /// Inserts a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public object InlineInsert(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
@@ -657,11 +657,11 @@ namespace RepoDb
         /// <summary>
         /// Inserts a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be inserted.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public Task<object> InlineInsertAsync(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
@@ -676,7 +676,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database by targetting certain fields only. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
+        /// <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -690,7 +690,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
+        /// <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -708,7 +708,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> that contains the targetted columns to be merged.</param>
+        /// <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -723,7 +723,7 @@ namespace RepoDb
         /// <summary>
         /// Merges a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be merged.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -743,7 +743,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -759,7 +759,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -775,7 +775,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -793,7 +793,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -809,7 +809,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -825,7 +825,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database by targetting certain fields only in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The dynamic <i>DataEntity</i> object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -843,10 +843,10 @@ namespace RepoDb
         /// <summary>
         /// Inserts a data in the database.
         /// </summary>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public object Insert(TEntity entity, IDbTransaction transaction = null)
@@ -860,10 +860,10 @@ namespace RepoDb
         /// <summary>
         /// Inserts a data in the database in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The <i>DataEntity</i> object to be inserted.</param>
+        /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted <i>DataEntity</i> object. Returns <i>NULL</i> if the 
+        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public Task<object> InsertAsync(TEntity entity, IDbTransaction transaction = null)
@@ -875,7 +875,7 @@ namespace RepoDb
         // Merge
 
         /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// Merges an existing data entity object in the database. By default, this operation uses the <i>PrimaryKey</i> property as
         /// the qualifier.
         /// </summary>
         /// <param name="entity">The entity to be merged.</param>
@@ -888,7 +888,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database.
+        /// Merges an existing data entity object in the database.
         /// </summary>
         /// <param name="entity">The entity to be merged.</param>
         /// <param name="qualifiers">
@@ -907,7 +907,7 @@ namespace RepoDb
         // MergeAsync
 
         /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// Merges an existing data entity object in the database in an asynchronous way. By default, this operation uses the <i>PrimaryKey</i> property as
         /// the qualifier.
         /// </summary>
         /// <param name="entity">The entity to be merged.</param>
@@ -920,7 +920,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing <i>DataEntity</i> object in the database in an asynchronous way.
+        /// Merges an existing data entity object in the database in an asynchronous way.
         /// </summary>
         /// <param name="entity">The entity to be merged.</param>
         /// <param name="qualifiers">
@@ -949,14 +949,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(IEnumerable<OrderField> orderBy = null, int? top = 0, string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -980,14 +980,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,  string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1012,14 +1012,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1044,14 +1044,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1077,14 +1077,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1108,14 +1108,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1140,14 +1140,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1172,14 +1172,14 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="recursive">
-        /// The value that indicates whether the child <i>DataEntity</i> objects defined in the target <i>DataEntity</i> object will
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
         /// be included in the result of the query. The default value is <i>False</i>.
         /// </param>
         /// <param name="recursionDepth">
         /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
-        /// child data entities defined on the targetted <i>DataEntity</i>. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
-        /// <returns>An enumerable list of An enumerable list of <i>DataEntity</i> object.</returns>
+        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
@@ -1217,7 +1217,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update(TEntity entity, IDbTransaction transaction = null)
@@ -1229,7 +1229,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1243,7 +1243,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1257,7 +1257,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1273,7 +1273,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync(TEntity entity, IDbTransaction transaction = null)
@@ -1285,7 +1285,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1299,7 +1299,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1313,7 +1313,7 @@ namespace RepoDb
         /// <summary>
         /// Updates a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="entity">The instance of <i>DataEntity</i> object to be updated.</param>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -1332,7 +1332,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
-        /// converts the result back to an enumerable list of <i>DataEntity</i> object.
+        /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
@@ -1342,7 +1342,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public IEnumerable<TEntity> ExecuteQuery(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
@@ -1356,7 +1356,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the 
-        /// <i>System.Data.IDataReader</i> object and converts the result back to an enumerable list of <i>DataEntity</i> object.
+        /// <i>System.Data.IDataReader</i> object and converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
@@ -1366,7 +1366,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of <i>DataEntity</i> object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {

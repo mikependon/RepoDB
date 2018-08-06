@@ -15,11 +15,11 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An instance <i>RepoDb.DataEntity</i> object.</returns>
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
-            where TEntity : DataEntity
+           
         {
             if (reader == null)
             {
-                return null;
+                return default(TEntity);
             }
             var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
             return @delegate(reader);
@@ -32,7 +32,7 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An array of <i>RepoDb.DataEntity</i> objects.</returns>
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
-            where TEntity : DataEntity
+           
         {
             if (reader != null && reader.HasRows)
             {

@@ -8,7 +8,7 @@ A `PrimaryAttribute` is used to define the class property to become the primary 
 ::
 
 	[Map("[dbo].[Customer]")]
-	public class Customer : DataEntity
+	public class Customer
 	{
 		[Primary]
 		public int Id { get; set; }
@@ -36,7 +36,7 @@ Below is a sample class that has certain columns with `Ignore` attributes define
 ::
 
 	[Map("[dbo].[Customer]")]
-	public class Customer : DataEntity
+	public class Customer
 	{
 		[Primary]
 		[Ignore(Command.Insert | Command.Update)]

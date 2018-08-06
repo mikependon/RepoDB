@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 
@@ -11,7 +7,7 @@ namespace RepoDb.IntegrationTests.Models
 {
     //https://stackoverflow.com/questions/5873170/generate-class-from-database-table
     [Map("[dbo].[TypeMap]")]
-    public class TypeMap: DataEntity
+    public class TypeMap
     {
         [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
@@ -70,7 +66,7 @@ namespace RepoDb.IntegrationTests.Models
     }
 
     [Map("[dbo].[TypeMap]")]
-    public class TypeMapBlob : DataEntity
+    public class TypeMapBlob
     {
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
@@ -86,7 +82,7 @@ namespace RepoDb.IntegrationTests.Models
     }
 
     [Map("[dbo].[TypeMap]")]
-    public class TypeMapXml : DataEntity
+    public class TypeMapXml
     {
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
@@ -95,7 +91,7 @@ namespace RepoDb.IntegrationTests.Models
     }
 
     [Map("[dbo].[TypeMap]")]
-    public class TypeMapSpatial : DataEntity
+    public class TypeMapSpatial
     {
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
@@ -105,7 +101,7 @@ namespace RepoDb.IntegrationTests.Models
         public object geometry_column { get; set; }
     }
     [Map("[dbo].[TypeMap]")]
-    public class TypeMapUnsupported : DataEntity
+    public class TypeMapUnsupported
     {
         [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }

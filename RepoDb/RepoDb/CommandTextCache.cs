@@ -18,7 +18,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetBatchQueryText<TEntity>(BatchQueryRequest request) where TEntity : DataEntity
+        public static string GetBatchQueryText<TEntity>(BatchQueryRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -42,7 +42,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetCountText<TEntity>(CountRequest request) where TEntity : DataEntity
+        public static string GetCountText<TEntity>(CountRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -63,7 +63,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteText<TEntity>(DeleteRequest request) where TEntity : DataEntity
+        public static string GetDeleteText<TEntity>(DeleteRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -84,7 +84,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetDeleteAllText<TEntity>(DeleteAllRequest request) where TEntity : DataEntity
+        public static string GetDeleteAllText<TEntity>(DeleteAllRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -104,7 +104,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInlineInsertText<TEntity>(InlineInsertRequest request) where TEntity : DataEntity
+        public static string GetInlineInsertText<TEntity>(InlineInsertRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -148,7 +148,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInlineMergeText<TEntity>(InlineMergeRequest request) where TEntity : DataEntity
+        public static string GetInlineMergeText<TEntity>(InlineMergeRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -194,7 +194,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInlineUpdateText<TEntity>(InlineUpdateRequest request) where TEntity : DataEntity
+        public static string GetInlineUpdateText<TEntity>(InlineUpdateRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -217,7 +217,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetInsertText<TEntity>(InsertRequest request) where TEntity : DataEntity
+        public static string GetInsertText<TEntity>(InsertRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -257,7 +257,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetMergeText<TEntity>(MergeRequest request) where TEntity : DataEntity
+        public static string GetMergeText<TEntity>(MergeRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -299,7 +299,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetQueryText<TEntity>(QueryRequest request) where TEntity : DataEntity
+        public static string GetQueryText<TEntity>(QueryRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -322,7 +322,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetTruncateText<TEntity>(TruncateRequest request) where TEntity : DataEntity
+        public static string GetTruncateText<TEntity>(TruncateRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)
@@ -342,7 +342,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
         /// <returns>The cached command text.</returns>
-        public static string GetUpdateText<TEntity>(UpdateRequest request) where TEntity : DataEntity
+        public static string GetUpdateText<TEntity>(UpdateRequest request)
         {
             var commandText = (string)null;
             if (_cache.TryGetValue(request, out commandText) == false)

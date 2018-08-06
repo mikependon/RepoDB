@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace RepoDb.IntegrationTests.Models
 {
     [Map("[dbo].[Customer]")]
-    public class RecursiveCustomer : DataEntity
+    public class RecursiveCustomer
     {
         [Identity]
         public long Id { get; set; }

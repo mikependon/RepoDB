@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace RepoDb.TestProject.Models
 {
     [Map("OrderItem")]
-    public class OrderItemDto : DataEntity
+    public class OrderItemDto
     {
         public int Id { get; set; }
         public int? OrderId { get; set; }

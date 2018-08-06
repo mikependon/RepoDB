@@ -15,7 +15,7 @@ Below is a sample code that maps a class named `Customer` into a table named `[d
 ::
 
 	[Map("[dbo].[Customer]")]
-	public class Customer : DataEntity
+	public class Customer
 	{
 	}
 
@@ -31,7 +31,7 @@ Below is a sample code that maps the property named `Id` into an `CustomerId` fi
 ::
 
 	[Map("[dbo].[Customer]")]
-	public class Customer : DataEntity
+	public class Customer
 	{
 		[Map("CustomerId")]
 		public int Id { get; set; }

@@ -21,7 +21,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>BatchQuery</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -30,7 +30,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
         public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
-            where TEntity : DataEntity
+           
         {
             var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
             var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
@@ -79,13 +79,13 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Count</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
         public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-            where TEntity : DataEntity
+           
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
@@ -104,13 +104,13 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Delete</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
         public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-            where TEntity : DataEntity
+           
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
@@ -127,12 +127,12 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>DeleteAll</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>DeleteAll</i> operation.</returns>
         public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
-            where TEntity : DataEntity
+           
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
@@ -148,7 +148,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
@@ -158,7 +158,7 @@ namespace RepoDb
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, bool? overrideIgnore = false)
-            where TEntity : DataEntity
+           
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
@@ -174,7 +174,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
@@ -186,7 +186,7 @@ namespace RepoDb
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
         internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
-            where TEntity : DataEntity
+           
         {
             // Check for the fields presence
             if (fields == null)
@@ -272,7 +272,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
@@ -283,7 +283,7 @@ namespace RepoDb
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
         public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = false)
-            where TEntity : DataEntity
+           
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
@@ -299,7 +299,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
@@ -312,7 +312,7 @@ namespace RepoDb
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
         internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null,
             bool? overrideIgnore = false, bool? isPrimaryIdentity = false)
-            where TEntity : DataEntity
+           
         {
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
@@ -459,7 +459,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
@@ -471,7 +471,7 @@ namespace RepoDb
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
         public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
             QueryGroup where = null, bool? overrideIgnore = false)
-            where TEntity : DataEntity
+           
         {
             // Check for the fields presence
             if (fields == null)
@@ -547,12 +547,12 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
-            where TEntity : DataEntity
+           
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
@@ -568,13 +568,13 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool? isPrimaryIdentity = null)
-            where TEntity : DataEntity
+           
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
@@ -611,13 +611,13 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers = null)
-            where TEntity : DataEntity
+           
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
             var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
@@ -633,14 +633,14 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
-            where TEntity : DataEntity
+           
         {
             // Check for all the fields
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
@@ -739,7 +739,7 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
@@ -747,7 +747,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
-            where TEntity : DataEntity
+           
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
             if (properties?.Any() == false)
@@ -773,12 +773,12 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Truncate</i> operation.</returns>
         public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder)
-            where TEntity : DataEntity
+           
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
@@ -794,13 +794,13 @@ namespace RepoDb
         /// Creates a SQL Statement for repository <i>Update</i> operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
-        /// The <i>DataEntity</i> object bound for the SQL Statement to be created.
+        /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-            where TEntity : DataEntity
+           
         {
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
             if (properties?.Any() == false)

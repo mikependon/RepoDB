@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace RepoDb.IntegrationTests.Models
 {
     [Map("[dbo].[Order]")]
-    public class Order : DataEntity
+    public class Order
     {
         [Identity(), Map("Id")]
         public int Id { get; set; }

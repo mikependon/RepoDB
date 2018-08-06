@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.Interfaces
     [TestClass]
     public class ICacheForDbRepositoryTest
     {
-        public class CacheEntity : DataEntity
+        public class CacheEntity
         {
             [Primary, Identity]
             public int Id { get; set; }

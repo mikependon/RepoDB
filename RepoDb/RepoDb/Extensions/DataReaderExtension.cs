@@ -14,7 +14,6 @@ namespace RepoDb.Extensions
     public static class DataReaderExtension
     {
         internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
-            where T : DataEntity
         {
             var properties = DataEntityExtension.GetPropertiesFor<T>(Command.None)
                 .Where(property => property.CanWrite);

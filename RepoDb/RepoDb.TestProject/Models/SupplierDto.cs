@@ -4,7 +4,7 @@ namespace RepoDb.TestProject.Models
 {
 
     [Map("Supplier")]
-    public class SupplierDto : DataEntity
+    public class SupplierDto
     {
         public int Id { get; set; }
         public string CompanyName { get; set; }

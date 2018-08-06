@@ -4,7 +4,7 @@ using System;
 
 namespace RepoDb.TestProject.Models
 {
-    public class Person : DataEntity
+    public class Person
     {
         public long Id { get; set; }
 

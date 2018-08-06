@@ -5,7 +5,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.IntegrationTests.Models
 {
     [Map("[dbo].[Customer]")]
-    public class Customer : DataEntity
+    public class Customer
     {
         [Identity]
         public long Id { get; set; }

@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.TestProject.Models
 {
     [Map("[dbo].[Animal]")]
-    public class Animal : DataEntity
+    public class Animal
     {
         public Guid Id { get; set; }
 

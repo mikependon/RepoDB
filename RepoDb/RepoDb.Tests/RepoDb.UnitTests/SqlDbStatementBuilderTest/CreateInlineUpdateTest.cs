@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
     [TestClass]
     public class CreateInlineUpdate
     {
-        private class TestWithoutMappingsClass : DataEntity
+        private class TestWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass : DataEntity
+        private class TestWithClassMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsClass : DataEntity
+        private class TestWithFieldMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionsClass : DataEntity
+        private class TestWithExpressionsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingsAndExpressionsClass : DataEntity
+        private class TestWithFieldMappingsAndExpressionsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestOverrideIgnoreForInlineUpdateClass : DataEntity
+        private class TestOverrideIgnoreForInlineUpdateClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -184,7 +184,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestOverrideIgnoreForUpdateClass : DataEntity
+        private class TestOverrideIgnoreForUpdateClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -215,7 +215,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfTheTargetFieldsAreNullClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldsAreNullClass
         {
         }
 
@@ -230,7 +230,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, null, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsMissingAtDataEntityClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsMissingAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -249,7 +249,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsIgnoreInlineUpdateAtDataEntityClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsIgnoreInlineUpdateAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -269,7 +269,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsIgnoreUpdateAtDataEntityClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsIgnoreUpdateAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -289,7 +289,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldMappingIsDifferentAtDataEntityClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldMappingIsDifferentAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -309,7 +309,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsThePrimaryKeyFieldClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsThePrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -329,7 +329,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsTheClassIdClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsTheClassIdClass
         {
             public int ThrowExceptionIfTheTargetFieldIsTheClassIdClassId { get; set; }
             public string Field2 { get; set; }
@@ -349,7 +349,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
         }
 
         [Map("ClassName")]
-        private class ThrowExceptionIfTheTargetFieldIsAClassMappingIdClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsAClassMappingIdClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -368,7 +368,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsTheIdClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsTheIdClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -387,7 +387,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsAnIdentityClass : DataEntity
+        private class ThrowExceptionIfTheTargetFieldIsAnIdentityClass
         {
             [Primary, Identity]
             public int Field1 { get; set; }
@@ -407,7 +407,7 @@ namespace RepoDb.UnitTests.SqlDbStatementBuilderTest
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass : DataEntity
+        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass
         {
             [Identity]
             public int Field1 { get; set; }
