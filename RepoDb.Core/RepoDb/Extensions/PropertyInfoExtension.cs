@@ -80,14 +80,18 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Checks whether the property info is a recursive property of the <i>DataEntity</i> object.
+        /// Checks whether the property info is a recursive property of the data entity object.
         /// </summary>
         /// <param name="property">The instance of the propery info to be checked.</param>
-        /// <returns>A boolean value that signifies whether the property info is a recursive property of the <i>DataEntity</i> object.</returns>
+        /// <returns>A boolean value that signifies whether the property info is a recursive property of the data entity object.</returns>
         public static bool IsRecursive(this PropertyInfo property)
         {
-            var args = property.PropertyType.GetTypeInfo().GetGenericArguments();
-            return (args != null && args.Length > 0 && args[0].GetTypeInfo().IsSubclassOf(typeof(DataEntity)));
+            var args = property.PropertyType.GetGenericArguments();
+            return (args != null && args.Length > 0) &&
+                (
+                    property.PropertyType != typeof(Nullable<>) &&
+                    property.PropertyType.Name != "Nullable`1"
+                );
         }
 
         /// <summary>

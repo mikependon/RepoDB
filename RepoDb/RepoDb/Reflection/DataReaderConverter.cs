@@ -9,13 +9,13 @@ namespace RepoDb.Reflection
     public static class DataReaderConverter
     {
         /// <summary>
-        /// Converts the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
+        /// Converts the <i>System.Data.Common.DbDataReader</i> into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An instance <i>RepoDb.DataEntity</i> object.</returns>
         public static TEntity AsEntity<TEntity>(DbDataReader reader)
-           
+            where TEntity : class
         {
             if (reader == null)
             {
@@ -32,7 +32,7 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An array of <i>RepoDb.DataEntity</i> objects.</returns>
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
-           
+            where TEntity : class
         {
             if (reader != null && reader.HasRows)
             {

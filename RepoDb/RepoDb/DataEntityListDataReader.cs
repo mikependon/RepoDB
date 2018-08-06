@@ -15,6 +15,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
     public class DataEntityListDataReader<TEntity> : DbDataReader
+        where TEntity :class
     {
         #region Fields
 

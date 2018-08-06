@@ -24,13 +24,13 @@ namespace RepoDb.UnitTests.Interfaces
             var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", cache.Object);
 
             // Setup
-            cache.Setup(c => c.Get(It.IsAny<string>()));
+            cache.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<bool>()));
 
             // Act
             repository.Object.Query<CacheEntity>(cacheKey: "MemoryCacheKey");
 
             // Assert
-            cache.Verify(c => c.Get(It.IsAny<string>()), Times.Once);
+            cache.Verify(c => c.Get(It.IsAny<string>(), It.IsAny<bool>()), Times.Once);
         }
     }
 }

@@ -264,7 +264,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -301,7 +301,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -339,7 +339,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -377,7 +377,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -416,7 +416,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(page: page,
@@ -438,7 +438,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(where: where,
@@ -461,7 +461,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(where: where,
@@ -484,7 +484,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(where: where,
@@ -503,7 +503,7 @@ namespace RepoDb
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
@@ -532,7 +532,7 @@ namespace RepoDb
         /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BulkInsert<TEntity>(entities: entities));
@@ -547,7 +547,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public long Count<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -576,7 +576,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -606,7 +606,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -636,7 +636,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public long Count<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -667,7 +667,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(transaction: transaction));
@@ -681,7 +681,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(where: where,
@@ -696,7 +696,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(where: where,
@@ -711,7 +711,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(where: where,
@@ -727,7 +727,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -756,7 +756,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -786,7 +786,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -816,7 +816,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Delete<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -847,7 +847,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(transaction: transaction));
@@ -861,7 +861,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
@@ -876,7 +876,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
@@ -891,7 +891,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(where: where,
@@ -907,7 +907,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int DeleteAll<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -937,7 +937,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 DeleteAll<TEntity>(transaction: transaction));
@@ -957,7 +957,7 @@ namespace RepoDb
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public object InlineInsert<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -994,7 +994,7 @@ namespace RepoDb
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineInsert<TEntity>(entity: entity,
@@ -1013,7 +1013,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1047,6 +1047,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1081,7 +1082,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(entity: entity,
@@ -1100,6 +1101,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(entity: entity,
@@ -1120,7 +1122,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1154,7 +1156,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1188,7 +1190,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1224,7 +1226,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, object where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(entity: entity,
@@ -1243,7 +1245,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(entity: entity,
@@ -1262,7 +1264,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(entity: entity,
@@ -1284,7 +1286,7 @@ namespace RepoDb
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public object Insert<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1319,7 +1321,7 @@ namespace RepoDb
         /// <i>PrimaryKey</i> property is not present.
         /// </returns>
         public Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Insert<TEntity>(entity: entity,
@@ -1337,7 +1339,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Merge<TEntity>(entity: entity,
                 qualifiers: null,
@@ -1356,7 +1358,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1390,7 +1392,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> MergeAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Merge<TEntity>(entity: entity,
@@ -1409,7 +1411,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Merge<TEntity>(entity: entity,
@@ -1441,6 +1443,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<OrderField> orderBy = null, int? top = 0, string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1488,8 +1491,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1538,8 +1542,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1588,8 +1593,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public IEnumerable<TEntity> Query<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1641,6 +1647,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(orderBy: orderBy,
@@ -1672,8 +1679,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1706,8 +1714,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1740,8 +1749,9 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(where: where,
@@ -1760,6 +1770,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         public void Truncate<TEntity>()
+            where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
@@ -1783,7 +1794,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         public Task TruncateAsync<TEntity>()
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Truncate<TEntity>());
@@ -1799,7 +1810,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1830,7 +1841,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1862,7 +1873,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1894,7 +1905,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -1927,7 +1938,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update<TEntity>(entity: entity,
@@ -1943,7 +1954,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update<TEntity>(entity: entity,
@@ -1960,7 +1971,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, object where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update<TEntity>(entity: entity,
@@ -1977,7 +1988,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update<TEntity>(entity: entity,
@@ -2007,7 +2018,7 @@ namespace RepoDb
         /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public IEnumerable<TEntity> ExecuteQuery<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -2047,7 +2058,7 @@ namespace RepoDb
         /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
         /// </returns>
         public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 ExecuteQuery<TEntity>(commandText: commandText,

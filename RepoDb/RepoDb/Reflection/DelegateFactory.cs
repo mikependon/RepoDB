@@ -25,6 +25,7 @@ namespace RepoDb.Reflection
         /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
         /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
+            where TEntity : class
         {
             var entityType = typeof(TEntity);
             var dynamicMethod = new DynamicMethod(StringConstant.DynamicMethod,

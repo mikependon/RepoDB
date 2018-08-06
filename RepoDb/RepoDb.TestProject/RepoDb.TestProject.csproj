@@ -62,7 +62,6 @@
     <Compile Include="Models\CustomerDto.cs" />
     <Compile Include="Models\Animal.cs" />
     <Compile Include="Repositories\AnimalRepository.cs" />
-    <Compile Include="StatementBuilders\CustomStatementBuilder.cs" />
     <Compile Include="Tracers\SharedTrace.cs" />
     <Compile Include="Tracers\InventoryDbTrace.cs" />
     <Compile Include="Models\OrderDto.cs" />
@@ -87,6 +86,8 @@
       <Name>RepoDb</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="StatementBuilders\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

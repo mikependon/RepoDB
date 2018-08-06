@@ -19,6 +19,7 @@ namespace RepoDb
     /// <typeparam name="TDbConnection">The type of the <i>System.Data.Common.DbConnection</i> object.</typeparam>
     public abstract class BaseRepository<TEntity, TDbConnection> : IDisposable
         where TDbConnection : DbConnection
+        where TEntity : class
     {
         #region Constructors
 

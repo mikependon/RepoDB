@@ -17,6 +17,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <returns>The cached primary property.</returns>
         public static PropertyInfo Get<TEntity>()
+            where TEntity : class
         {
             var type = typeof(TEntity);
             var key = type.FullName;

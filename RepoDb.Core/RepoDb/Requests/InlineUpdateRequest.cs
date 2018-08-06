@@ -2,31 +2,32 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the <i>Query</i> operation arguments.
+    /// A class that holds the value of the <i>InlineUpdate</i> operation arguments.
     /// </summary>
-    internal class QueryRequest : BaseRequest, IEquatable<QueryRequest>
+    internal class InlineUpdateRequest : BaseRequest, IEquatable<InlineUpdateRequest>
     {
         private int? _hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>QueryRequest</i> object.
+        /// Creates a new instance of <i>InlineUpdateRequest</i> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
-        /// <param name="orderBy">The list of order fields.</param>
-        /// <param name="top">The filter for the rows.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="overrideIgnore">The value whether to override the ignored fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null, IStatementBuilder statementBuilder = null)
+        public InlineUpdateRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<Field> fields = null, bool? overrideIgnore = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Where = where;
-            OrderBy = orderBy;
-            Top = top;
+            Fields = fields;
+            OverrideIgnore = overrideIgnore;
         }
 
         /// <summary>
@@ -35,19 +36,19 @@ namespace RepoDb.Requests
         public QueryGroup Where { get; }
 
         /// <summary>
-        /// Gets the list of the order fields.
+        /// Gets the target fields.
         /// </summary>
-        public IEnumerable<OrderField> OrderBy { get; }
+        public IEnumerable<Field> Fields { get; set; }
 
         /// <summary>
-        /// Gets the filter for the rows.
+        /// Gets the value whether to override the ignored fields.
         /// </summary>
-        public int? Top { get; }
+        public bool? OverrideIgnore { get; set; }
 
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>QueryRequest</i>.
+        /// Returns the hashcode for this <i>InlineUpdateRequest</i>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -59,24 +60,27 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"Query.{EntityType.FullName}".GetHashCode();
+            var hashCode = $"InlineUpdate.{EntityType.FullName}".GetHashCode();
 
-            // Add the expression
-            if (!ReferenceEquals(null, Where))
+            // Get the expression hashcode
+            if (Where != null)
             {
                 hashCode += Where.GetHashCode();
             }
 
-            // Add the order fields
-            if (!ReferenceEquals(null, OrderBy))
+            // Get the qualifier fields
+            if (Fields != null)
             {
-                hashCode += OrderBy.GetHashCode();
+                Fields.ToList().ForEach(field =>
+                {
+                    hashCode += field.GetHashCode();
+                });
             }
 
-            // Add the filter
-            if (!ReferenceEquals(null, Top))
+            // Override ignore hashcode
+            if (OverrideIgnore != null)
             {
-                hashCode += Top.GetHashCode();
+                hashCode += OverrideIgnore.GetHashCode();
             }
 
             // Set back the hash code value
@@ -87,7 +91,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>QueryRequest</i> object equality against the given target object.
+        /// Compares the <i>InlineUpdateRequest</i> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -97,22 +101,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>QueryRequest</i> object equality against the given target object.
+        /// Compares the <i>InlineUpdateRequest</i> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryRequest other)
+        public bool Equals(InlineUpdateRequest other)
         {
             return GetHashCode() == other?.GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>QueryRequest</i> objects.
+        /// Compares the equality of the two <i>InlineUpdateRequest</i> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryRequest</i> object.</param>
-        /// <param name="objB">The second <i>QueryRequest</i> object.</param>
+        /// <param name="objA">The first <i>InlineUpdateRequest</i> object.</param>
+        /// <param name="objB">The second <i>InlineUpdateRequest</i> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryRequest objA, QueryRequest objB)
+        public static bool operator ==(InlineUpdateRequest objA, InlineUpdateRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -122,12 +126,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>QueryRequest</i> objects.
+        /// Compares the inequality of the two <i>InlineUpdateRequest</i> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryRequest</i> object.</param>
-        /// <param name="objB">The second <i>QueryRequest</i> object.</param>
+        /// <param name="objA">The first <i>InlineUpdateRequest</i> object.</param>
+        /// <param name="objB">The second <i>InlineUpdateRequest</i> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryRequest objA, QueryRequest objB)
+        public static bool operator !=(InlineUpdateRequest objA, InlineUpdateRequest objB)
         {
             return (objA == objB) == false;
         }

@@ -49,13 +49,12 @@ namespace RepoDb.Extensions
         // AsInParameter
         internal static string AsInParameter(this QueryField queryField)
         {
-            var values = ((Array)queryField.Parameter.Value)?.OfType<object>().ToList();
-            var parameters = new List<string>();
-            for (var i = 0; i < values.Count; i++)
-            {
-                parameters.Add($"@{queryField.Parameter.Name}_{StringConstant.In}_{i}");
-            }
-            return $"({parameters.Join(", ")})";
+            var array = ((Array)queryField.Parameter.Value);
+            var value = array
+                .OfType<object>()
+                .Select((qf, i) => $"@{queryField.Parameter.Name}_{StringConstant.In}_{i}")
+                .Join(", ");
+            return $"({value})";
         }
 
         // AsFieldAndParameter

@@ -3,7 +3,7 @@
 namespace RepoDb.Exceptions
 {
     /// <summary>
-    /// An exception that is being thrown when the operation extraction of the <i>System.Data.Common.DbDataReader</i> into <i>DataEntity</i> object 
+    /// An exception that is being thrown when the operation extraction of the <i>System.Data.Common.DbDataReader</i> into data entity object 
     /// does not matched atleast one of the field from the result set.
     /// </summary>
     public class NoMatchedFieldsException : Exception

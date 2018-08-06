@@ -1,6 +1,4 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Interfaces;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,10 +13,10 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DataReaderExtension
     {
-        internal static IEnumerable<T> AsEnumerable<T>(this IDataReader reader)
-            where T : DataEntity
+        internal static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
+            where TEntity : class
         {
-            var properties = DataEntityExtension.GetPropertiesFor<T>(Command.None)
+            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)
                 .Where(property => property.CanWrite);
             var dictionary = new Dictionary<int, PropertyInfo>();
             for (var i = 0; i < reader.FieldCount; i++)
@@ -29,10 +27,10 @@ namespace RepoDb.Extensions
                     dictionary.Add(i, property);
                 }
             }
-            var list = new List<T>();
+            var list = new List<TEntity>();
             while (reader.Read())
             {
-                var obj = Activator.CreateInstance<T>();
+                var obj = Activator.CreateInstance<TEntity>();
                 foreach (var kvp in dictionary)
                 {
                     var value = reader.IsDBNull(kvp.Key) ? null : reader.GetValue(kvp.Key);

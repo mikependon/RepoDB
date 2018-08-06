@@ -8,13 +8,11 @@ namespace RepoDb
     /// </summary>
     public static class DataEntityMapper
     {
-        private static readonly IDictionary<Type, DataEntityMapItem> _cache;
-        private static readonly object _syncLock;
+        private static readonly Dictionary<Type, DataEntityMapItem> _cache;
 
         static DataEntityMapper()
         {
             _cache = new Dictionary<Type, DataEntityMapItem>();
-            _syncLock = new object();
         }
 
         /// <summary>
@@ -25,17 +23,14 @@ namespace RepoDb
         internal static DataEntityMapItem For(Type type)
         {
             var value = (DataEntityMapItem)null;
-            lock (_syncLock)
+            if (_cache.ContainsKey(type))
             {
-                if (_cache.ContainsKey(type))
-                {
-                    value = _cache[type];
-                }
-                else
-                {
-                    value = new DataEntityMapItem();
-                    _cache.Add(type, value);
-                }
+                value = _cache[type];
+            }
+            else
+            {
+                value = new DataEntityMapItem();
+                _cache.Add(type, value);
             }
             return value;
         }
@@ -46,7 +41,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type where to apply the mapping.</typeparam>
         /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
         public static DataEntityMapItem For<TEntity>()
-           
+
         {
             return For(typeof(TEntity));
         }

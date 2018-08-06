@@ -22,7 +22,7 @@ namespace RepoDb.Interfaces
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
         string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Count</i> operation.
@@ -34,7 +34,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
         string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Delete</i> operation.
@@ -46,7 +46,7 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
         string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>DeleteAll</i> operation.
@@ -57,7 +57,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>DeleteAll</i> operation.</returns>
         string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
@@ -73,7 +73,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
         string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, bool? overrideIgnore = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
@@ -90,7 +90,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
         string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation.
@@ -107,7 +107,7 @@ namespace RepoDb.Interfaces
         /// </param>
         /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
         string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, QueryGroup where = null, bool? overrideIgnore = false)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Insert</i> operation.
@@ -118,7 +118,7 @@ namespace RepoDb.Interfaces
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
         string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Merge</i> operation.
@@ -130,7 +130,7 @@ namespace RepoDb.Interfaces
         /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
         string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Query</i> operation.
@@ -144,7 +144,7 @@ namespace RepoDb.Interfaces
         /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
         string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
-           ;
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
@@ -154,7 +154,8 @@ namespace RepoDb.Interfaces
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Truncate</i> operation.</returns>
-        string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder);
+        string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder)
+            where TEntity : class;
 
         /// <summary>
         /// Creates a SQL Statement for repository <i>Update</i> operation.
@@ -166,6 +167,6 @@ namespace RepoDb.Interfaces
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
         string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
-           ;
+            where TEntity : class;
     }
 }

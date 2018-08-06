@@ -3,7 +3,7 @@
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define an identity property for the <i>DataEntity</i> object.
+    /// An attribute used to define an identity property for the data entity object.
     /// </summary>
     public class IdentityAttribute : Attribute
     {

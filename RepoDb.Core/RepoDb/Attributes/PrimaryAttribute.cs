@@ -3,7 +3,7 @@
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a primary property for the <i>DataEntity</i> object.
+    /// An attribute used to define a primary property for the data entity object.
     /// </summary>
     public class PrimaryAttribute : Attribute
     {

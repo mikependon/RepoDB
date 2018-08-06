@@ -88,6 +88,7 @@ namespace RepoDb
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
         /// <returns></returns>
         private static QueryGroup WhereToQueryGroup<TEntity>(object where)
+            where TEntity : class
         {
             if (where == null)
             {
@@ -142,7 +143,7 @@ namespace RepoDb
         // GuardPrimaryKey
 
         private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
-           
+            where TEntity : class
         {
             var property = PrimaryKeyCache.Get<TEntity>();
             if (property == null)
@@ -155,7 +156,7 @@ namespace RepoDb
         // GuardBatchQueryable
 
         private static void GuardBatchQueryable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsBatchQueryable<TEntity>())
             {
@@ -166,7 +167,7 @@ namespace RepoDb
         // GuardBulkInsert
 
         private static void GuardBulkInsert<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsBulkInsertable<TEntity>())
             {
@@ -177,7 +178,7 @@ namespace RepoDb
         // GuardCountable
 
         private static void GuardCountable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsCountable<TEntity>())
             {
@@ -188,7 +189,7 @@ namespace RepoDb
         // GuardDeletable
 
         private static void GuardDeletable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
             {
@@ -199,7 +200,7 @@ namespace RepoDb
         // GuardDeletableAll
 
         private static void GuardDeletableAll<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsDeletableAll<TEntity>())
             {
@@ -210,7 +211,7 @@ namespace RepoDb
         // GuardInlineInsertable
 
         private static void GuardInlineInsertable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsInlineInsertable<TEntity>())
             {
@@ -221,7 +222,7 @@ namespace RepoDb
         // GuardInlineMergeable
 
         private static void GuardInlineMergeable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsInlineMergeable<TEntity>())
             {
@@ -232,7 +233,7 @@ namespace RepoDb
         // GuardInlineUpdateable
 
         private static void GuardInlineUpdateable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
             {
@@ -243,7 +244,7 @@ namespace RepoDb
         // GuardInsertable
 
         private static void GuardInsertable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsInsertable<TEntity>())
             {
@@ -254,7 +255,7 @@ namespace RepoDb
         // GuardMergeable
 
         private static void GuardMergeable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsMergeable<TEntity>())
             {
@@ -265,7 +266,7 @@ namespace RepoDb
         // GuardQueryable
 
         private static void GuardQueryable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
@@ -276,7 +277,7 @@ namespace RepoDb
         // GuardTruncatable
 
         private static void GuardTruncatable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsTruncatable<TEntity>())
             {
@@ -287,7 +288,7 @@ namespace RepoDb
         // GuardUpdateable
 
         private static void GuardUpdateable<TEntity>()
-           
+            where TEntity : class
         {
             if (!DataEntityExtension.IsUpdateable<TEntity>())
             {
@@ -317,7 +318,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return BatchQuery<TEntity>(connection, where: (QueryGroup)null,
                 page: page,
@@ -346,7 +347,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return BatchQuery<TEntity>(connection: connection,
@@ -377,7 +378,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
                 where: new QueryGroup(where),
@@ -407,7 +408,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity objects.</returns>
         public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardBatchQueryable<TEntity>();
@@ -484,7 +485,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(connection: connection,
@@ -514,7 +515,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, object where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(connection: connection,
@@ -545,7 +546,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(connection: connection,
@@ -576,7 +577,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BatchQuery<TEntity>(connection: connection,
@@ -602,7 +603,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
-           
+            where TEntity : class
         {
             // Validate, only supports SqlConnection
             if (connection.GetType() != typeof(System.Data.SqlClient.SqlConnection))
@@ -680,7 +681,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BulkInsert(connection: connection,
@@ -703,7 +704,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public static long Count<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Count<TEntity>(connection: connection,
                 where: (QueryGroup)null,
@@ -726,7 +727,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return Count<TEntity>(connection: connection,
@@ -750,7 +751,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Count<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
@@ -773,7 +774,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardCountable<TEntity>();
@@ -844,7 +845,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(connection: connection,
@@ -867,7 +868,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(connection: connection,
@@ -891,7 +892,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(connection: connection,
@@ -915,7 +916,7 @@ namespace RepoDb
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Count<TEntity>(connection: connection,
@@ -940,7 +941,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
                 where: (QueryGroup)null,
@@ -963,7 +964,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
@@ -986,7 +987,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             GetAndGuardPrimaryKey<TEntity>(Command.Delete);
             var queryGroup = WhereToQueryGroup<TEntity>(where);
@@ -1009,7 +1010,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardDeletable<TEntity>();
@@ -1080,7 +1081,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(connection: connection,
@@ -1103,7 +1104,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(connection: connection,
@@ -1127,7 +1128,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, object where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(connection: connection,
@@ -1151,7 +1152,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Delete<TEntity>(connection: connection,
@@ -1176,7 +1177,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int DeleteAll<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardDeletableAll<TEntity>();
@@ -1243,7 +1244,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 DeleteAll<TEntity>(connection: connection,
@@ -1272,7 +1273,7 @@ namespace RepoDb
         /// </returns>
         public static object InlineInsert<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardInlineInsertable<TEntity>();
@@ -1351,7 +1352,7 @@ namespace RepoDb
         /// </returns>
         public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineInsert<TEntity>(connection: connection,
@@ -1379,7 +1380,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineMerge<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return InlineMerge<TEntity>(connection: connection,
                 entity: entity,
@@ -1406,7 +1407,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineMerge<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardInlineMergeable<TEntity>();
@@ -1482,7 +1483,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(connection: connection,
@@ -1509,7 +1510,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineMerge<TEntity>(connection: connection,
@@ -1539,7 +1540,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return InlineUpdate<TEntity>(connection: connection,
@@ -1567,7 +1568,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
@@ -1594,7 +1595,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardInlineUpdateable<TEntity>();
@@ -1668,7 +1669,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, object where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(connection: connection,
@@ -1696,7 +1697,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(connection: connection,
@@ -1724,7 +1725,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 InlineUpdate<TEntity>(connection: connection,
@@ -1755,7 +1756,7 @@ namespace RepoDb
         /// </returns>
         public static object Insert<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardInsertable<TEntity>();
@@ -1832,7 +1833,7 @@ namespace RepoDb
         /// </returns>
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Insert(connection: connection,
@@ -1859,7 +1860,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Merge(connection: connection,
                 entity: entity,
@@ -1887,7 +1888,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Merge<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             var command = Command.Merge;
 
@@ -1962,7 +1963,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew<int>(() =>
                 Merge(connection: connection,
@@ -1990,7 +1991,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Merge(connection: connection,
@@ -2032,6 +2033,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Query<TEntity>(connection: connection,
                 where: (QueryGroup)null,
@@ -2076,6 +2078,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Query<TEntity>(connection: connection,
                 where: where != null ? new QueryGroup(where) : null,
@@ -2120,6 +2123,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             var queryGroup = WhereToQueryGroup<TEntity>(where);
             return Query<TEntity>(connection: connection,
@@ -2165,7 +2169,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
-           
+            where TEntity : class
         {
             return QueryData<TEntity>(connection: connection,
                 where: where,
@@ -2210,12 +2214,12 @@ namespace RepoDb
         private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
-           
+            where TEntity : class
         {
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get(cacheKey);
+                var item = cache?.Get(cacheKey, false);
                 if (item != null)
                 {
                     return (IEnumerable<TEntity>)item.Value;
@@ -2348,7 +2352,7 @@ namespace RepoDb
         private static void QueryChildData<TEntity>(this IDbConnection connection, IEnumerable<DataEntityChildListData> what, IEnumerable<TEntity> result,
             int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
-           
+            where TEntity : class
         {
             // Filter the recursion
             if (recursionDepth == 0)
@@ -2496,6 +2500,7 @@ namespace RepoDb
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2540,7 +2545,7 @@ namespace RepoDb
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2586,6 +2591,7 @@ namespace RepoDb
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2630,7 +2636,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
             IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
@@ -2658,6 +2664,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static void Truncate<TEntity>(this IDbConnection connection, int? commandTimeout = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : class
         {
             // Check
             GuardTruncatable<TEntity>();
@@ -2718,7 +2725,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static Task TruncateAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Truncate<TEntity>(connection: connection,
@@ -2742,7 +2749,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
             return Update(connection: connection,
@@ -2768,7 +2775,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Update(connection: connection,
                 entity: entity,
@@ -2793,7 +2800,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection, TEntity entity, object where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
 
             GetAndGuardPrimaryKey<TEntity>(Command.Update);
@@ -2821,7 +2828,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             // Check
             GuardUpdateable<TEntity>();
@@ -2893,7 +2900,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update(connection: connection,
@@ -2918,7 +2925,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update(connection: connection,
@@ -2944,7 +2951,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, object where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update(connection: connection,
@@ -2970,7 +2977,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 Update(connection: connection,
@@ -3076,7 +3083,7 @@ namespace RepoDb
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             // Actual Execution
             using (var reader = ExecuteReaderInternal(connection, commandText, param,
@@ -3109,7 +3116,7 @@ namespace RepoDb
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
-           
+            where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 ExecuteQuery<TEntity>(connection: connection,

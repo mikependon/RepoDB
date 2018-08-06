@@ -1,7 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using RepoDb.Requests;
-using System;
+﻿using RepoDb.Extensions;
 using System.Collections.Concurrent;
 using System.Reflection;
 
@@ -20,6 +17,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <returns>The cached identity property.</returns>
         public static PropertyInfo Get<TEntity>()
+            where TEntity : class
         {
             var type = typeof(TEntity);
             var key = type.FullName;

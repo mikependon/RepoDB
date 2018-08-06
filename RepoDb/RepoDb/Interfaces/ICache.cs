@@ -12,15 +12,24 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
-        void Add(string key, object value);
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        void Add(string key, object value, bool throwException = true);
 
         /// <summary>
         /// Adds a cache item value.
         /// </summary>
-        /// <param name="item">
-        /// The cache item to be added in the collection.
-        /// </param>
-        void Add(CacheItem item);
+        /// <param name="key">The key to the cache.</param>
+        /// <param name="value">The value of the cache.</param>
+        /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        void Add(string key, object value, int expirationInMinutes, bool throwException = true);
+
+        /// <summary>
+        /// Adds a cache item value.
+        /// </summary>
+        /// <param name="item">The cache item to be added in the collection.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
+        void Add(CacheItem item, bool throwException = true);
 
         /// <summary>
         /// Clears the collection of the cache.
@@ -38,15 +47,15 @@ namespace RepoDb.Interfaces
         /// Gets an object from the cache collection.
         /// </summary>
         /// <param name="key">The key of the cache object to be retrieved.</param>
-        /// <returns>An object from the cache collection based on the given key.</returns>
-        CacheItem Get(string key);
+        /// <returns>A cached item object from the cache collection based on the given key.</returns>
+        /// <param name="throwException">Throws an exception if the item is not found.</param>
+        CacheItem Get(string key, bool throwException = true);
 
         /// <summary>
         /// Removes the item from the cache collection.
         /// </summary>
-        /// <param name="key">
-        /// The key of the item to be removed from the cache collection. If the given key is not present, this method will ignore it.
-        /// </param>
-        void Remove(string key);
+        /// <param name="key">The key of the item to be removed from the cache collection.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to remove an item.</param>
+        void Remove(string key, bool throwException = true);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using System;
 
 namespace RepoDb.Exceptions
 {

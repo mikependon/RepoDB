@@ -11,6 +11,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TEntity">An entity where the SQL Query Statement is bound to.</typeparam>
     public class QueryBuilder<TEntity>
+        where TEntity : class
     {
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
