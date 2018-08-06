@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     internal static class CommandTextCache
     {
-        private static readonly ConcurrentDictionary<BaseRequest, string> _cache = new ConcurrentDictionary<BaseRequest, string>();
+        private static readonly ConcurrentDictionary<BaseRequest, string> m_cache = new ConcurrentDictionary<BaseRequest, string>();
 
         /// <summary>
         /// Gets a command text from the cache for the <i>BatchQuery</i> operation.
@@ -22,7 +22,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
@@ -32,7 +32,7 @@ namespace RepoDb
                     page: request.Page,
                     rowsPerBatch: request.RowsPerBatch,
                     orderBy: request.OrderBy);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -47,14 +47,14 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
                 commandText = statementBuilder.CreateCount(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -69,14 +69,14 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
                 commandText = statementBuilder.CreateDelete(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -91,13 +91,13 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
                 commandText = statementBuilder.CreateDeleteAll(queryBuilder: new QueryBuilder<TEntity>());
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -112,7 +112,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
@@ -142,7 +142,7 @@ namespace RepoDb
                         fields: request.Fields,
                         overrideIgnore: request.OverrideIgnore);
                 }
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -157,7 +157,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
@@ -189,7 +189,7 @@ namespace RepoDb
                         qualifiers: request.Qualifiers,
                         overrideIgnore: request.OverrideIgnore);
                 }
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -204,7 +204,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
@@ -213,7 +213,7 @@ namespace RepoDb
                     where: request.Where,
                     fields: request.Fields,
                     overrideIgnore: request.OverrideIgnore);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -228,7 +228,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
@@ -254,7 +254,7 @@ namespace RepoDb
                 {
                     commandText = statementBuilder.CreateInsert(queryBuilder: new QueryBuilder<TEntity>());
                 }
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -269,7 +269,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
@@ -297,7 +297,7 @@ namespace RepoDb
                     commandText = statementBuilder.CreateMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         qualifiers: request.Qualifiers);
                 }
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -312,7 +312,7 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
@@ -321,7 +321,7 @@ namespace RepoDb
                     where: request.Where,
                     orderBy: request.OrderBy,
                     top: request.Top);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -336,13 +336,13 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
                 commandText = statementBuilder.CreateTruncate(queryBuilder: new QueryBuilder<TEntity>());
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }
@@ -357,14 +357,14 @@ namespace RepoDb
             where TEntity : class
         {
             var commandText = (string)null;
-            if (_cache.TryGetValue(request, out commandText) == false)
+            if (m_cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = (request.StatementBuilder ??
                     StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
                     new SqlDbStatementBuilder());
                 commandText = statementBuilder.CreateUpdate(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
-                _cache.TryAdd(request, commandText);
+                m_cache.TryAdd(request, commandText);
             }
             return commandText;
         }

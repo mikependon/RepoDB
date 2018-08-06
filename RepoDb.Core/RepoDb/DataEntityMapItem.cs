@@ -11,14 +11,14 @@ namespace RepoDb
     /// </summary>
     public class DataEntityMapItem
     {
-        private readonly Dictionary<Command, DataEntityMap> _cache;
+        private readonly Dictionary<Command, DataEntityMap> m_cache;
 
         /// <summary>
         /// Creates an instance of <i>RepoDb.DataEntityMapItem</i> class.
         /// </summary>
         public DataEntityMapItem()
         {
-            _cache = new Dictionary<Command, DataEntityMap>();
+            m_cache = new Dictionary<Command, DataEntityMap>();
         }
 
         /// <summary>
@@ -83,13 +83,13 @@ namespace RepoDb
             Validate(command, map);
 
             // Check and Add
-            if (_cache.ContainsKey(command))
+            if (m_cache.ContainsKey(command))
             {
                 throw new DuplicateDataEntityMapException(command);
             }
             else
             {
-                _cache.Add(command, map);
+                m_cache.Add(command, map);
             }
 
             // Return
@@ -104,9 +104,9 @@ namespace RepoDb
         public DataEntityMap Get(Command command)
         {
             var result = (DataEntityMap)null;
-            if (_cache.ContainsKey(command))
+            if (m_cache.ContainsKey(command))
             {
-                result = _cache[command];
+                result = m_cache[command];
             }
             return result;
         }

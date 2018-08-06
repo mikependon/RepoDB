@@ -11,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public static class TypeMapper
     {
-        private static readonly IList<TypeMapItem> _cache = new List<TypeMapItem>();
+        private static readonly IList<TypeMapItem> m_cache = new List<TypeMapItem>();
 
         static TypeMapper()
         {
@@ -21,7 +21,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the list of type-mapping objects.
         /// </summary>
-        public static IEnumerable<TypeMapItem> TypeMaps => _cache;
+        public static IEnumerable<TypeMapItem> TypeMaps => m_cache;
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
@@ -63,7 +63,7 @@ namespace RepoDb
             var target = Get(item.Type);
             if (target == null)
             {
-                _cache.Add(item);
+                m_cache.Add(item);
             }
             else
             {
@@ -85,7 +85,7 @@ namespace RepoDb
         /// <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         public static TypeMapItem Get(Type type)
         {
-            return _cache.FirstOrDefault(t => t.Type == type);
+            return m_cache.FirstOrDefault(t => t.Type == type);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"The type mapping for type '{type.FullName}' is not found.");
             }
-            _cache.Remove(item);
+            m_cache.Remove(item);
         }
     }
 }

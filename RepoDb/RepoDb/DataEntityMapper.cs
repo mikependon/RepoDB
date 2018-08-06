@@ -8,11 +8,11 @@ namespace RepoDb
     /// </summary>
     public static class DataEntityMapper
     {
-        private static readonly Dictionary<Type, DataEntityMapItem> _cache;
+        private static readonly Dictionary<Type, DataEntityMapItem> m_cache;
 
         static DataEntityMapper()
         {
-            _cache = new Dictionary<Type, DataEntityMapItem>();
+            m_cache = new Dictionary<Type, DataEntityMapItem>();
         }
 
         /// <summary>
@@ -23,14 +23,14 @@ namespace RepoDb
         internal static DataEntityMapItem For(Type type)
         {
             var value = (DataEntityMapItem)null;
-            if (_cache.ContainsKey(type))
+            if (m_cache.ContainsKey(type))
             {
-                value = _cache[type];
+                value = m_cache[type];
             }
             else
             {
                 value = new DataEntityMapItem();
-                _cache.Add(type, value);
+                m_cache.Add(type, value);
             }
             return value;
         }

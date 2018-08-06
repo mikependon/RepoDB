@@ -13,7 +13,7 @@ namespace RepoDb
     public class QueryBuilder<TEntity>
         where TEntity : class
     {
-        private readonly StringBuilder _stringBuilder = new StringBuilder();
+        private readonly StringBuilder m_stringBuilder = new StringBuilder();
 
         /// <summary>
         /// Stringify the current object.
@@ -35,7 +35,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public string GetString()
         {
-            return _stringBuilder.ToString();
+            return m_stringBuilder.ToString();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> Clear()
         {
-            _stringBuilder.Clear();
+            m_stringBuilder.Clear();
             return this;
         }
 
@@ -78,7 +78,7 @@ namespace RepoDb
 
         private QueryBuilder<TEntity> Append(string value)
         {
-            _stringBuilder.Append(_stringBuilder.Length > 0 ? $" {value}" : value);
+            m_stringBuilder.Append(m_stringBuilder.Length > 0 ? $" {value}" : value);
             return this;
         }
 

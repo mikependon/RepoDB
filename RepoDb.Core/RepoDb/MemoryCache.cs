@@ -13,14 +13,14 @@ namespace RepoDb
     /// </summary>
     public class MemoryCache : ICache
     {
-        private readonly ConcurrentDictionary<string, CacheItem> _cache;
+        private readonly ConcurrentDictionary<string, CacheItem> m_cache;
 
         /// <summary>
         /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
         /// </summary>
         public MemoryCache()
         {
-            _cache = new ConcurrentDictionary<string, CacheItem>();
+            m_cache = new ConcurrentDictionary<string, CacheItem>();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace RepoDb
             var cacheItem = GetItem(item.Key, false);
             if (cacheItem == null)
             {
-                if (_cache.TryAdd(item.Key, item) == false && throwException == true)
+                if (m_cache.TryAdd(item.Key, item) == false && throwException == true)
                 {
                     throw new InvalidOperationException($"Fail to add an item into the cache for the key {item.Key}.");
                 }
@@ -76,7 +76,7 @@ namespace RepoDb
         /// </summary>
         public void Clear()
         {
-            _cache.Clear();
+            m_cache.Clear();
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace RepoDb
         /// <returns></returns>
         public IEnumerator<CacheItem> GetEnumerator()
         {
-            return _cache
+            return m_cache
                 .Where(item => !item.Value.IsExpired())
                 .Select(item => item.Value)
                 .GetEnumerator();
@@ -135,7 +135,7 @@ namespace RepoDb
         public void Remove(string key, bool throwException = true)
         {
             var item = (CacheItem)null;
-            if (_cache.TryRemove(key, out item) == false && throwException == true)
+            if (m_cache.TryRemove(key, out item) == false && throwException == true)
             {
                 throw new InvalidOperationException($"Failed to remove an item with key '{key}'.");
             }
@@ -150,7 +150,7 @@ namespace RepoDb
         protected CacheItem GetItem(string key, bool throwException = true)
         {
             var value = (CacheItem)null;
-            if (_cache.TryGetValue(key, out value) == false && throwException == true)
+            if (m_cache.TryGetValue(key, out value) == false && throwException == true)
             {
                 throw new InvalidOperationException($"No item found with key '{key}'.");
             }

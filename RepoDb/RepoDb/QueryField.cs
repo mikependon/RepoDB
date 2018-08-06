@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public class QueryField : IEquatable<QueryField>
     {
-        private int? _hashCode = null;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryField</i> object./
@@ -262,9 +262,9 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            if (!ReferenceEquals(null, _hashCode))
+            if (!ReferenceEquals(null, m_hashCode))
             {
-                return _hashCode.Value;
+                return m_hashCode.Value;
             }
 
             // Use the non nullable for perf purposes
@@ -280,7 +280,7 @@ namespace RepoDb
             }
 
             // Set back the value
-            _hashCode = hashCode;
+            m_hashCode = hashCode;
 
             // Return the value
             return hashCode;

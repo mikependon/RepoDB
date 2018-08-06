@@ -16,14 +16,12 @@ namespace RepoDb
     /// </summary>
     public static class StatementBuilderMapper
     {
-        private static readonly object _syncLock;
-        private static readonly IList<StatementBuilderMap> _maps;
+        private static readonly IList<StatementBuilderMap> m_maps;
 
         static StatementBuilderMapper()
         {
             // Properties
-            _syncLock = new object();
-            _maps = new List<StatementBuilderMap>();
+            m_maps = new List<StatementBuilderMap>();
 
             // Default for SqlDbConnection
             Map(typeof(SqlConnection), new SqlDbStatementBuilder());
@@ -44,7 +42,7 @@ namespace RepoDb
             {
                 throw new ArgumentException($"Argument 'dbConnectionType' must be a sub class of '{typeof(DbConnection).FullName}'.");
             }
-            return _maps.FirstOrDefault(m => m.DbConnectionType == dbConnectionType);
+            return m_maps.FirstOrDefault(m => m.DbConnectionType == dbConnectionType);
         }
 
         /// <summary>
@@ -60,17 +58,14 @@ namespace RepoDb
         /// </param>
         public static void Map(Type dbConnectionType, IStatementBuilder statementBuilder)
         {
-            lock (_syncLock)
+            var map = Get(dbConnectionType);
+            if (map != null)
             {
-                var map = Get(dbConnectionType);
-                if (map != null)
-                {
-                    throw new InvalidOperationException($"An existing mapping for type {dbConnectionType.Name} is already exists.");
-                }
-                else
-                {
-                    _maps.Add(new StatementBuilderMap(dbConnectionType, statementBuilder));
-                }
+                throw new InvalidOperationException($"An existing mapping for type {dbConnectionType.Name} is already exists.");
+            }
+            else
+            {
+                m_maps.Add(new StatementBuilderMap(dbConnectionType, statementBuilder));
             }
         }
     }

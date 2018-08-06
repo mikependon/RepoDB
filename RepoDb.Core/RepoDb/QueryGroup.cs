@@ -15,8 +15,8 @@ namespace RepoDb
     /// </summary>
     public class QueryGroup : IEquatable<QueryGroup>
     {
-        private bool _isFixed = false;
-        private int? _hashCode = null;
+        private bool m_isFixed = false;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>RepoDb.QueryGroup</i> object.
@@ -136,7 +136,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         internal QueryGroup FixParameters()
         {
-            if (_isFixed)
+            if (m_isFixed)
             {
                 return this;
             }
@@ -165,7 +165,7 @@ namespace RepoDb
                     secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
                 }
             }
-            _isFixed = true;
+            m_isFixed = true;
             return this;
         }
 
@@ -437,9 +437,9 @@ namespace RepoDb
         public override int GetHashCode()
         {
             // Make sure to check if this is already taken
-            if (!ReferenceEquals(null, _hashCode))
+            if (!ReferenceEquals(null, m_hashCode))
             {
-                return _hashCode.Value;
+                return m_hashCode.Value;
             }
 
             // Set the default value (should not be nullable for better performance)
@@ -467,7 +467,7 @@ namespace RepoDb
             hashCode += Conjunction.GetHashCode();
 
             // Set back the hashcode value
-            _hashCode = hashCode;
+            m_hashCode = hashCode;
 
             // Return the actual hash code
             return hashCode;

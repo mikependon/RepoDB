@@ -19,10 +19,10 @@ namespace RepoDb
     {
         #region Fields
 
-        private bool _isClosed = false;
-        private bool _isDisposed = false;
-        private int _position = -1;
-        private int _recordsAffected = -1;
+        private bool m_isClosed = false;
+        private bool m_isDisposed = false;
+        private int m_position = -1;
+        private int m_recordsAffected = -1;
 
         #endregion
 
@@ -39,10 +39,10 @@ namespace RepoDb
             }
 
             // Fields
-            _isClosed = false;
-            _isDisposed = false;
-            _position = -1;
-            _recordsAffected = -1;
+            m_isClosed = false;
+            m_isDisposed = false;
+            m_position = -1;
+            m_recordsAffected = -1;
 
             // Properties
             Properties = DataEntityExtension.GetPropertiesFor<TEntity>(command).ToList();
@@ -78,7 +78,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the current position of the enumerator.
         /// </summary>
-        public int Position { get { return _position; } }
+        public int Position { get { return m_position; } }
 
         /// <summary>
         /// Gets the current value from the index.
@@ -102,17 +102,17 @@ namespace RepoDb
         /// <summary>
         /// Gets the value that indicates whether the current reader is closed.
         /// </summary>
-        public override bool IsClosed { get { return _isClosed; } }
+        public override bool IsClosed { get { return m_isClosed; } }
 
         /// <summary>
         /// Gets the value that indicates whether the current reader is already disposed.
         /// </summary>
-        public bool IsDisposed { get { return _isDisposed; } }
+        public bool IsDisposed { get { return m_isDisposed; } }
 
         /// <summary>
         /// Gets the number of rows affected by the iteration.
         /// </summary>
-        public override int RecordsAffected { get { return _recordsAffected; } }
+        public override int RecordsAffected { get { return m_recordsAffected; } }
 
         /// <summary>
         /// Gets the number of properties the data entity object has.
@@ -129,7 +129,7 @@ namespace RepoDb
         /// </summary>
         public override void Close()
         {
-            _isClosed = true;
+            m_isClosed = true;
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace RepoDb
             Properties = null;
             Enumerator = null;
             Close();
-            _isDisposed = true;
+            m_isDisposed = true;
         }
 
         /// <summary>
@@ -152,8 +152,8 @@ namespace RepoDb
         {
             ThrowExceptionIfNotAvailable();
             Enumerator = Entities.GetEnumerator();
-            _position = -1;
-            _recordsAffected = -1;
+            m_position = -1;
+            m_recordsAffected = -1;
         }
 
         /// <summary>
@@ -445,8 +445,8 @@ namespace RepoDb
         public override bool Read()
         {
             ThrowExceptionIfNotAvailable();
-            _position++;
-            _recordsAffected++;
+            m_position++;
+            m_recordsAffected++;
             return Enumerator.MoveNext();
         }
 

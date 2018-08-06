@@ -11,7 +11,7 @@ namespace RepoDb.Requests
     /// </summary>
     internal class InlineUpdateRequest : BaseRequest, IEquatable<InlineUpdateRequest>
     {
-        private int? _hashCode = null;
+        private int? m_hashCode = null;
 
         /// <summary>
         /// Creates a new instance of <i>InlineUpdateRequest</i> object.
@@ -54,9 +54,9 @@ namespace RepoDb.Requests
         public override int GetHashCode()
         {
             // Make sure to return if it is already provided
-            if (!ReferenceEquals(null, _hashCode))
+            if (!ReferenceEquals(null, m_hashCode))
             {
-                return _hashCode.Value;
+                return m_hashCode.Value;
             }
 
             // Get first the entity hash code
@@ -84,7 +84,7 @@ namespace RepoDb.Requests
             }
 
             // Set back the hash code value
-            _hashCode = hashCode;
+            m_hashCode = hashCode;
 
             // Return the actual value
             return hashCode;

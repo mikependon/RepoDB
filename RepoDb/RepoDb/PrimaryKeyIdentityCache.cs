@@ -9,7 +9,7 @@ namespace RepoDb
     /// </summary>
     internal static class PrimaryKeyIdentityCache
     {
-        private static readonly ConcurrentDictionary<string, bool> _cache = new ConcurrentDictionary<string, bool>();
+        private static readonly ConcurrentDictionary<string, bool> m_cache = new ConcurrentDictionary<string, bool>();
 
         /// <summary>
         /// Gets the <i>RepoDb.Attributes.MapAttribute.Name</i> value implemented on the data entity on a target command.
@@ -23,14 +23,14 @@ namespace RepoDb
         {
             var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             var value = false;
-            if (!_cache.TryGetValue(key, out value))
+            if (!m_cache.TryGetValue(key, out value))
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
                     value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.GetMappedName());
                 }
-                _cache.TryAdd(key, value);
+                m_cache.TryAdd(key, value);
             }
             return value;
         }
