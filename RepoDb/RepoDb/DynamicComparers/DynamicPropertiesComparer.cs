@@ -58,12 +58,10 @@ namespace RepoDb.DynamicComparers
 
                 // Get the properties
                 var isEqual = false;
-                var propertiesOfTypeA = objA
-                    .Type
+                var propertiesOfTypeA = typeof(TypeA)
                     .GetProperties()
                     .Select(p => p.Name);
-                var propertiesOfTypeB = objB
-                    .Type
+                var propertiesOfTypeB = typeof(TypeB)
                     .GetProperties()
                     .Select(p => p.Name);
 

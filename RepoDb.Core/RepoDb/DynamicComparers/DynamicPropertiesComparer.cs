@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb.DynamicComparers
 {
@@ -58,12 +59,12 @@ namespace RepoDb.DynamicComparers
 
                 // Get the properties
                 var isEqual = false;
-                var propertiesOfTypeA = objA
-                    .Type
+                var propertiesOfTypeA = typeof(TypeA)
+                    .GetTypeInfo()
                     .GetProperties()
                     .Select(p => p.Name);
-                var propertiesOfTypeB = objB
-                    .Type
+                var propertiesOfTypeB = typeof(TypeB)
+                    .GetTypeInfo()
                     .GetProperties()
                     .Select(p => p.Name);
 
