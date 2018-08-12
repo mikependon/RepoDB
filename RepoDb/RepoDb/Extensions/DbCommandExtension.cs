@@ -107,7 +107,7 @@ namespace RepoDb.Extensions
         /// <returns>The underlying type.</returns>
         private static Type GetUnderlyingType(Type type)
         {
-            return Nullable.GetUnderlyingType(type) ?? type;
+            return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
         }
     }
 }
