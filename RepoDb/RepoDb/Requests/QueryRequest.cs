@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace RepoDb.Requests
 {
@@ -70,7 +71,10 @@ namespace RepoDb.Requests
             // Add the order fields
             if (!ReferenceEquals(null, OrderBy))
             {
-                hashCode += OrderBy.GetHashCode();
+                OrderBy.ToList().ForEach(order =>
+                {
+                    hashCode += order.GetHashCode();
+                });
             }
 
             // Add the filter
