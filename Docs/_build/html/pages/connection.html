@@ -81,12 +81,11 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Connection Object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-connection">Creating a Connection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#createcommand-method">CreateCommand Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ensureopen-method">EnsureOpen Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-storedprocedure">Working with StoredProcedure</a></li>
@@ -172,13 +171,10 @@
             
   <div class="section" id="connection-object">
 <h1>Connection Object<a class="headerlink" href="#connection-object" title="Permalink to this headline">¶</a></h1>
-<p>The library has abstracted everything from <cite>ADO.NET</cite>, however, some extension methods has been developed to simplify the data access models.</p>
-<p>Below are the list of extension methods for <cite>Connection</cite> object.</p>
-<ul class="simple">
-<li><strong>CreateCommand</strong>: is used to create a command object before the actual operation execution. It returns an instance of <cite>System.Data.IDbCommand</cite> object.</li>
-<li><strong>EnsureOpen</strong>: is used to ensure that the connection object is <cite>Open</cite>. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</li>
-</ul>
-<p>A repository is used to create a connection object.</p>
+<p>The library has abstracted everything from <cite>ADO.NET</cite> when it comes to the connection object.</p>
+<div class="section" id="creating-a-connection">
+<h2>Creating a Connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>
+<p>Via repository:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">();</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">CreateConnection</span><span class="p">().</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -186,50 +182,34 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Or, in a tradional way with independent <cite>SqlConnection</cite> object extended method.</p>
+<p>Or, the traditional way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Use the connection here</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
 <div class="section" id="createcommand-method">
 <h2>CreateCommand Method<a class="headerlink" href="#createcommand-method" title="Permalink to this headline">¶</a></h2>
 <p>Creates a command object.</p>
-<p>The underlying method call of this method is the <cite>System.Data.DbConnection.CreateCommand()</cite> method.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: the SQL statement to be used for execution.</li>
-<li><strong>commandType (optional)</strong>: the type of command to be used whether it is a <cite>Text</cite>, <cite>StoredProcedure</cite> or <cite>TableDirect</cite>.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>transaction (optional)</strong>: the transaction object be used when executing the command.</li>
-</ul>
-<p>See sample codes below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Variables</span>
 <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="p">(</span><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;)</span><span class="k">null</span><span class="p">;</span>
 
 <span class="c1">// Open a connection</span>
 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-
         <span class="c1">// Create a command object</span>
         <span class="kt">var</span> <span class="n">command</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">CreateCommand</span><span class="p">(</span><span class="s">&quot;SELECT TOP 100 * FROM [dbo].[Customer];&quot;</span><span class="p">,</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">Text</span><span class="p">,</span> <span class="m">500</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
 
-        <span class="c1">// Execute the reader, abstracting the ADO.Net features here</span>
-        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">command</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">())</span>
-        <span class="p">{</span>
-                <span class="c1">// Iterate the reader and place back the result to the list</span>
-                <span class="n">customers</span> <span class="p">=</span> <span class="n">RepoDb</span><span class="p">.</span><span class="n">Reflection</span><span class="p">.</span><span class="n">DataReaderConverter</span><span class="p">.</span><span class="n">ToEnumerable</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;((</span><span class="n">DbDataReader</span><span class="p">)</span><span class="n">reader</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span class="c1">// Use the command object here</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="ensureopen-method">
 <h2>EnsureOpen Method<a class="headerlink" href="#ensureopen-method" title="Permalink to this headline">¶</a></h2>
-<p>This method is used to ensure that the connection object is <cite>Open</cite>. The operational methods are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.</p>
-<p>The underlying method call of this method is the <cite>System.Data.DbConnection.Open()</cite> method.</p>
-<p>See sample codes below.</p>
+<p>Is used to ensure that the connection object is in <cite>Open</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="c1">// Use the connection here</span>

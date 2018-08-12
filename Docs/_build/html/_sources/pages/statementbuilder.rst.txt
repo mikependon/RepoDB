@@ -35,7 +35,7 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 
 ::
 
-	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : DataEntity
+	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity
 	{
 		// Create an initial SELECT statement
 		queryBuilder.Clear()
@@ -83,7 +83,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : DataEntity
+	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity
 	{
 		var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
 		var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
@@ -138,7 +138,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
+	public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -169,7 +169,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
+	public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -197,7 +197,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
+	public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -227,14 +227,14 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 ::
 
 	public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
 	}
 
 	internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
 		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 		var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields.Any();
@@ -315,14 +315,14 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 ::
 
 	public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
 	}
 
 	internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers,
 		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 
@@ -450,7 +450,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 	public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
 		QueryGroup where, bool? overrideIgnore = false)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 		var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower());
@@ -510,13 +510,13 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 ::
 
 	public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		return CreateInsert(queryBuilder, false);
 	}
 
 	internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 		var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
@@ -566,13 +566,13 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 ::
 
 	public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		return CreateMerge(queryBuilder, qualifiers);
 	}
 
 	internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		var primary = DataEntityExtension.GetPrimaryProperty<TEntity>();
 
@@ -662,7 +662,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 ::
 
 	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
-		where TEntity : DataEntity
+		where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -693,7 +693,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : DataEntity
+	public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		queryBuilder
@@ -721,7 +721,7 @@ See below the actual implementation of `SqlDbStatementBuilder` object for `Creat
 
 ::
 
-	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : DataEntity
+	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
 	{
 		queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
 		var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)

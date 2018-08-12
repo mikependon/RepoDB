@@ -1,13 +1,43 @@
 Property Attributes
 ===================
 
-.. highlight:: c#
+The library supports different attributes to support the custom implementation as per scenario basis.
 
-A `PrimaryAttribute` is used to define the class property to become the primary property of the `DataEntity` object. Located at `RepoDb.Attributes` namespace.
+Map Attribute
+-------------
+
+Is used to map an equivalent object from the database.
+
+.. highlight:: c#
 
 ::
 
 	[Map("[dbo].[Customer]")]
+	public class Customer
+	{
+	}
+
+It is also used to map an equivalent column from the database.
+
+.. highlight:: c#
+
+::
+
+	public class Customer
+	{
+		[Map("CustomerId")]
+		public int Id { get; set; }
+	}
+
+Primary Attribute
+-----------------
+
+Used to define a primary key from the class object.
+
+.. highlight:: c#
+
+::
+
 	public class Customer
 	{
 		[Primary]
@@ -22,24 +52,51 @@ The following primary property identification processed will be used in any case
 
 If all of the conditions above were not met, then the `DataEntity` will have no primary property. It somehow fails if the repository operation of like `Delete` and `Update` has been called without explicitly specifying the expressions for the `WHERE` parameter.
 
-Ignoring a Property
--------------------
+Identity Attribute
+------------------
+
+Used to define an identity key from the class object.
 
 .. highlight:: c#
 
-An `IgnoreAttribute` is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at `RepoDb.Attributes` namespace.
+::
 
-Example: If the type command `Insert` and `Update` is defined on the `IgnoreAttribute` of the class property named `CreatedDate`, then the property `CreatedDate` will be excluded on the `Insert` and `Update` operation of the repository.
+	public class Customer
+	{
+		[Identity]
+		public int Id { get; set; }
+	}
 
-Below is a sample class that has certain columns with `Ignore` attributes defined.
+DbType Attribute
+----------------
+
+Is used to define a property-level mapping of database type.
+
+.. highlight:: c#
 
 ::
 
-	[Map("[dbo].[Customer]")]
 	public class Customer
 	{
 		[Primary]
-		[Ignore(Command.Insert | Command.Update)]
+		public int Id { get; set; }
+
+		[TypeMap(DbType.Binary)]
+		public byte[] Image { get; set; }
+	}
+
+Ignore Attribute
+----------------
+
+Is used to ignore certain properties from the actual database operation.
+
+.. highlight:: c#
+
+::
+
+	public class Customer
+	{
+		[Primary, Ignore(Command.Insert | Command.Update)]
 		public int Id { get; set; }
 		
 		public string Name { get; set; }
@@ -69,7 +126,7 @@ When the operation `Repository.Update` is called, then following SQL statement w
 	// Ignoring the `Id` and `CreatedDate` fields in Update operation
 	UPDATE [dbo].[Customer] SET [Name] = @Name WHERE (.....); // WHERE part will vary on the expression passed during the calls
 
-Below are the list of commands that can be defined in the `IgnoreAttribute`.
+Below are the list of operational commands that can be defined in the `IgnoreAttribute`.
 
 * None
 * BatchQuery

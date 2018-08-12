@@ -81,8 +81,6 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
@@ -232,20 +230,6 @@
 <p><strong>Note</strong>: All operational extension methods of the <cite>System.Data.IDbConnection</cite> is being abstracted by both <cite>RepoDb.DbRepository</cite> and <cite>RepoDb.BaseRepository</cite> objects.</p>
 <div class="section" id="batchquery-operation">
 <h2>BatchQuery Operation<a class="headerlink" href="#batchquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows per batch defined by this operation. This operation is useful for paging purposes.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
-<li><strong>page</strong>: the page of the batch to be used by this operation.</li>
-<li><strong>rowsPerBatch</strong>: the number of rows per batch to be used by this operation.</li>
-<li><strong>orderBy</strong>: the order definition of the fields to be used by this operation.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used by this operation.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an enumerable list of <cite>DataEntity</cite> objects.</li>
-</ul>
-<p>Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">BatchQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">0</span><span class="p">,</span> <span class="m">24</span><span class="p">);</span>
@@ -286,16 +270,6 @@
 </div>
 <div class="section" id="bulkinsert-operation">
 <h2>BulkInsert Operation<a class="headerlink" href="#bulkinsert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Bulk-inserting the list of &lt;i&gt;DataEntity&lt;/i&gt; objects in the database.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entities</strong>: the list of entities to be inserted.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when doing bulk-insert.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to do bulk-insert.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">entities</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
@@ -320,17 +294,6 @@
 </div>
 <div class="section" id="count-operation">
 <h2>Count Operation<a class="headerlink" href="#count-operation" title="Permalink to this headline">¶</a></h2>
-<p>Counts the number of rows from the database based on the given query expression.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used by this operation.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an integer value for the number of rows counted from the database based on the given query expression.</li>
-</ul>
-<p>Below is a sample on how to count a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">rows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
@@ -349,17 +312,6 @@
 </div>
 <div class="section" id="delete-operation">
 <h2>Delete Operation<a class="headerlink" href="#delete-operation" title="Permalink to this headline">¶</a></h2>
-<p>Deletes a data in the database based on the given query expression. It returns an instance of integer that holds the number of rows affected by the execution.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation. When is set to <cite>NULL</cite>, it deletes all the data from the database.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when deleting a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to delete a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="m">251</span><span class="p">).</span><span class="n">FirstOrDefault</span><span class="p">();</span>
@@ -382,16 +334,6 @@
 </div>
 <div class="section" id="deleteall-operation">
 <h2>DeleteAll Operation<a class="headerlink" href="#deleteall-operation" title="Permalink to this headline">¶</a></h2>
-<p>Deletes all data in the database based on the target <cite>DataEntity</cite>.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used when executing the query in the database.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when deleting a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to delete all the data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">DeleteAll</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
@@ -401,16 +343,6 @@
 </div>
 <div class="section" id="executenonquery-operation">
 <h2>ExecuteNonQuery Operation<a class="headerlink" href="#executenonquery-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteNonQuery</cite> method of the <cite>System.Data.IDbCommand</cite> object and returns the number of affected rows during the execution.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: The command text to be used on the execution.</li>
-<li><strong>param (optional)</strong>: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the <cite>CommandText</cite> property.</li>
-<li><strong>commandType (optional)</strong>: the command type to be used on the execution.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used on the execution (if present).</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">@&quot;UPDATE [dbo].[Order] SET Quantity = @Quantity, UpdatedDate = @UpdatedDate WHERE (CustomerId = @CustomerId);&quot;</span><span class="p">;</span>
@@ -426,16 +358,6 @@
 </div>
 <div class="section" id="executequery-operation">
 <h2>ExecuteQuery Operation<a class="headerlink" href="#executequery-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteReader</cite> method of the <cite>System.Data.IDbCommand</cite> object and converts the result back to an enumerable list of <cite>DataEntity</cite> object.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: The command text to be used on the execution.</li>
-<li><strong>param (optional)</strong>: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the <cite>CommandText</cite> property.</li>
-<li><strong>commandType (optional)</strong>: the command type to be used on the execution.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used on the execution (if present).</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span>
@@ -448,16 +370,6 @@
 </div>
 <div class="section" id="executereader-operation">
 <h2>ExecuteReader Operation<a class="headerlink" href="#executereader-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteReader</cite> method of the <cite>System.Data.IDbCommand</cite> object and returns the instance of the data reader.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: The command text to be used on the execution.</li>
-<li><strong>param (optional)</strong>: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the <cite>CommandText</cite> property.</li>
-<li><strong>commandType (optional)</strong>: the command type to be used on the execution.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used on the execution (if present).</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">}))</span>
@@ -470,16 +382,6 @@
 </div>
 <div class="section" id="executescalar-operation">
 <h2>ExecuteScalar Operation<a class="headerlink" href="#executescalar-operation" title="Permalink to this headline">¶</a></h2>
-<p>Executes a query from the database. It uses the underlying <cite>ExecuteScalar</cite> method of the <cite>System.Data.IDbCommand</cite> object and returns the first occurence value (first column of first row) of the execution.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>commandText</strong>: The command text to be used on the execution.</li>
-<li><strong>param (optional)</strong>: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the <cite>CommandText</cite> property.</li>
-<li><strong>commandType (optional)</strong>: the command type to be used on the execution.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction to be used on the execution (if present).</li>
-</ul>
-<p>Below is the way on how to call the operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxId FROM [dbo].[Order]&quot;</span><span class="p">);</span>
@@ -489,18 +391,6 @@
 </div>
 <div class="section" id="inlineinsert-operation">
 <h2>InlineInsert Operation<a class="headerlink" href="#inlineinsert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Inserts a data in the database by targetting certain fields only.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: the value of the <cite>PrimaryKey</cite> of the newly inserted <cite>DataEntity</cite> object. Returns <cite>NULL</cite> if the <cite>PrimaryKey</cite> property is not present.</li>
-</ul>
-<p>Below is a sample on how to do inline insert.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span>
@@ -517,19 +407,6 @@
 </div>
 <div class="section" id="inlinemerge-operation">
 <h2>InlineMerge Operation<a class="headerlink" href="#inlinemerge-operation" title="Permalink to this headline">¶</a></h2>
-<p>Merges a data in the database by targetting certain fields only.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>qualifiers</strong>: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</li>
-<li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to do inline merge.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span>
@@ -548,19 +425,6 @@
 </div>
 <div class="section" id="inlineupdate-operation">
 <h2>InlineUpdate Operation<a class="headerlink" href="#inlineupdate-operation" title="Permalink to this headline">¶</a></h2>
-<p>Updates a data in the database by targetting certain fields only.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the object that contains the targetted columns to be inserted.</li>
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
-<li><strong>overrideIgnore (optional)</strong>: set to <cite>true</cite> if to allow the insert operation on the properties with <cite>RepoDb.Attributes.IgnoreAttribute</cite> defined.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to do inline merge.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
@@ -581,17 +445,6 @@
 </div>
 <div class="section" id="insert-operation">
 <h2>Insert Operation<a class="headerlink" href="#insert-operation" title="Permalink to this headline">¶</a></h2>
-<p>Inserts a data in the database.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be inserted.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to insert a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Order</span><span class="p">()</span>
@@ -608,18 +461,6 @@
 </div>
 <div class="section" id="merge-operation">
 <h2>Merge Operation<a class="headerlink" href="#merge-operation" title="Permalink to this headline">¶</a></h2>
-<p>Merges an existing <cite>DataEntity</cite> object in the database.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be merged.</li>
-<li><strong>qualifiers</strong>: the list of fields to be used as the qualifiers when merging a record.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to merge a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">1</span><span class="p">);</span>
@@ -633,19 +474,6 @@
 </div>
 <div class="section" id="query-operation">
 <h2>Query Operation<a class="headerlink" href="#query-operation" title="Permalink to this headline">¶</a></h2>
-<p>Query a data from the database based on the given query expression.</p>
-<ul class="simple">
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
-<li><strong>top</strong>: the value used to return certain number of rows from the database.</li>
-<li><strong>orderBy</strong>: the list of fields to be used to sort the data during querying.</li>
-<li><strong>cacheKey</strong>: the key of the cache to check.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an enumerable list of <cite>DataEntity</cite> object.</li>
-</ul>
-<p>Below is a sample on how to query a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
@@ -700,8 +528,6 @@
 <p><strong>Note</strong>: Querying a record using <cite>PrimaryKey</cite> will throw a <cite>PrimaryFieldNotFoundException</cite> exception back to the caller if the <cite>PrimaryKey</cite> is not found from the entity.</p>
 <div class="section" id="ordering-the-result">
 <h3>Ordering the Result<a class="headerlink" href="#ordering-the-result" title="Permalink to this headline">¶</a></h3>
-<p>An ordering is the way of sorting the result of your query in <cite>Ascending</cite> or <cite>Descending</cite> order, depending on the qualifier fields.</p>
-<p>Below is a sample snippet that returns the <cite>Customer</cite> records ordered by <cite>ParentId</cite> field in ascending manner and <cite>Name</cite> field is in <cite>descending</cite> manner.</p>
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -722,8 +548,6 @@
 </div>
 <div class="section" id="limiting-the-query-result">
 <h3>Limiting the Query Result<a class="headerlink" href="#limiting-the-query-result" title="Permalink to this headline">¶</a></h3>
-<p>A top parameter is used to limit the result when querying a data from the database.</p>
-<p>Below is a sample way on how to use the top parameter.</p>
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
@@ -739,15 +563,6 @@
 </div>
 <div class="section" id="truncate-operation">
 <h2>Truncate Operation<a class="headerlink" href="#truncate-operation" title="Permalink to this headline">¶</a></h2>
-<p>Truncates a table from the database.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be updated.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-</ul>
-<p>Below is a sample on how to truncate a table.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">Truncate</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
@@ -757,18 +572,6 @@
 </div>
 <div class="section" id="update-operation">
 <h2>Update Operation<a class="headerlink" href="#update-operation" title="Permalink to this headline">¶</a></h2>
-<p>Updates a data in the database based on the given query expression.</p>
-<p>Below are the parameters:</p>
-<ul class="simple">
-<li><strong>entity</strong>: the entity object to be updated.</li>
-<li><strong>where</strong>: The query expression or primary key value to be used by this operation.</li>
-<li><strong>commandTimeout (optional)</strong>: the command timeout in seconds to be used on the execution.</li>
-<li><strong>transaction (optional)</strong>: the transaction object to be used when updating a data.</li>
-<li><strong>trace (optional)</strong>: the trace object to be used by this operation.</li>
-<li><strong>statementBuilder (optional)</strong>: the statement builder object to be used by this operation.</li>
-<li><strong>returns</strong>: an instance of integer that holds the number of rows affected by the execution.</li>
-</ul>
-<p>Below is a sample on how to update a data.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">105</span><span class="p">).</span><span class="n">FirstOrDefault</span><span class="p">();</span>

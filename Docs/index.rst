@@ -6,8 +6,6 @@ RepoDb Documentation
 
    pages/introduction
    pages/installation
-   pages/dataentity
-   pages/mapattribute
    pages/attributes
    pages/multiplemapping
    pages/typemapping

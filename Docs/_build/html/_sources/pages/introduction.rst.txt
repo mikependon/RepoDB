@@ -1,7 +1,7 @@
 Introduction to RepoDb
 ======================
 
-A dynamic, lightweight and fast repo-based ORM .NET Library.
+A dynamic, lightweight and fast repository-based ORM .NET Library.
 
 Goal
 ----
@@ -28,7 +28,6 @@ What's with RepoDb?
 
 * Operations (Asynchronous)
 * Recursive Query
-* Cyclomatic Complexity
 * Type Mapping
 * Field Mapping
 * Multiple Mapping

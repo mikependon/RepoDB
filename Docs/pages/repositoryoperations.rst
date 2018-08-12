@@ -49,19 +49,6 @@ BatchQuery Operation
 
 .. highlight:: c#
 
-Query the data from the database by batch based on the given query expression. The batching will vary on the page number and number of rows per batch defined by this operation. This operation is useful for paging purposes.
-
-Below are the parameters:
-
-- **where**: The query expression or primary key value to be used by this operation.
-- **page**: the page of the batch to be used by this operation.
-- **rowsPerBatch**: the number of rows per batch to be used by this operation.
-- **orderBy**: the order definition of the fields to be used by this operation.
-- **transaction (optional)**: the transaction to be used by this operation.
-- **returns**: an enumerable list of `DataEntity` objects.
-
-Below is a sample on how to query the first batch of data from the database where the number of rows per batch is 24.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -109,16 +96,6 @@ BulkInsert Operation
 
 .. highlight:: c#
 
-Bulk-inserting the list of `DataEntity` objects in the database.
-
-Below are the parameters:
-
-- **entities**: the list of entities to be inserted.
-- **transaction (optional)**: the transaction object to be used when doing bulk-insert.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to do bulk-insert.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -146,16 +123,6 @@ Count Operation
 
 .. highlight:: c#
 
-Counts the number of rows from the database based on the given query expression.
-
-Below are the parameters:
-
-- **where**: The query expression or primary key value to be used by this operation.
-- **transaction (optional)**: the transaction to be used by this operation.
-- **returns**: an integer value for the number of rows counted from the database based on the given query expression.
-
-Below is a sample on how to count a data.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -178,16 +145,6 @@ Delete Operation
 ----------------
 
 .. highlight:: c#
-
-Deletes a data in the database based on the given query expression. It returns an instance of integer that holds the number of rows affected by the execution.
-
-Below are the parameters:
-
-- **where**: The query expression or primary key value to be used by this operation. When is set to `NULL`, it deletes all the data from the database.
-- **transaction (optional)**: the transaction object to be used when deleting a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to delete a data.
 
 ::
 
@@ -216,17 +173,6 @@ Deleting a by passing a `DataEntity` will throw a `PrimaryFieldNotFoundException
 DeleteAll Operation
 -------------------
 
-.. highlight:: c#
-
-Deletes all data in the database based on the target `DataEntity`.
-
-Below are the parameters:
-
-- **transaction (optional)**: the transaction object to be used when deleting a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to delete all the data.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -238,17 +184,6 @@ ExecuteNonQuery Operation
 -------------------------
 
 .. highlight:: c#
-
-Executes a query from the database. It uses the underlying `ExecuteNonQuery` method of the `System.Data.IDbCommand` object and returns the number of affected rows during the execution.
-
-Below are the parameters:
-
-- **commandText**: The command text to be used on the execution.
-- **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
-- **commandType (optional)**: the command type to be used on the execution.
-- **transaction (optional)**: the transaction to be used on the execution (if present).
-
-Below is the way on how to call the operation.
 
 ::
 
@@ -268,17 +203,6 @@ ExecuteQuery Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteReader` method of the `System.Data.IDbCommand` object and converts the result back to an enumerable list of `DataEntity` object.
-
-Below are the parameters:
-
-- **commandText**: The command text to be used on the execution.
-- **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
-- **commandType (optional)**: the command type to be used on the execution.
-- **transaction (optional)**: the transaction to be used on the execution (if present).
-
-Below is the way on how to call the operation.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -294,17 +218,6 @@ ExecuteScalar Operation
 
 .. highlight:: c#
 
-Executes a query from the database. It uses the underlying `ExecuteScalar` method of the `System.Data.IDbCommand` object and returns the first occurence value (first column of first row) of the execution.
-
-Below are the parameters:
-
-- **commandText**: The command text to be used on the execution.
-- **param (optional)**: The dynamic object to be used as parameter. This object must contain all the values for all the parameters defined in the `CommandText` property.
-- **commandType (optional)**: the command type to be used on the execution.
-- **transaction (optional)**: the transaction to be used on the execution (if present).
-
-Below is the way on how to call the operation.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -316,17 +229,6 @@ InlineInsert Operation
 ----------------------
 
 .. highlight:: c#
-
-Inserts a data in the database by targetting certain fields only.
-
-Below are the parameters:
-
-- **entity**: the object that contains the targetted columns to be inserted.
-- **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
-- **transaction (optional)**: the transaction object to be used when updating a data.
-- **returns**: the value of the `PrimaryKey` of the newly inserted `DataEntity` object. Returns `NULL` if the `PrimaryKey` property is not present.
-
-Below is a sample on how to update a data.
 
 ::
 
@@ -347,18 +249,6 @@ InlineMerge Operation
 ---------------------
 
 .. highlight:: c#
-
-Merges a data in the database by targetting certain fields only.
-
-Below are the parameters:
-
-- **entity**: the object that contains the targetted columns to be inserted.
-- **qualifiers**: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.
-- **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
-- **transaction (optional)**: the transaction object to be used when updating a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to do inline merge.
 
 ::
 
@@ -382,21 +272,6 @@ InlineUpdate Operation
 ----------------------
 
 .. highlight:: c#
-
-Updates a data in the database by targetting certain fields only.
-
-Below are the parameters:
-
-- **entity**: the object that contains the targetted columns to be inserted.
-- **where**: The query expression or primary key value to be used by this operation.
-- **overrideIgnore (optional)**: set to `true` if to allow the insert operation on the properties with `RepoDb.Attributes.IgnoreAttribute` defined.
-- **commandTimeout (optional)**: the command timeout in seconds to be used on the execution.
-- **transaction (optional)**: the transaction object to be used when updating a data.
-- **trace (optional)**: the trace object to be used by this operation.
-- **statementBuilder (optional)**: the statement builder object to be used by this operation.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to do inline merge.
 
 ::
 
@@ -425,16 +300,6 @@ Insert Operation
 
 .. highlight:: c#
 
-Inserts a data in the database.
-
-Below are the parameters:
-
-- **entity**: the entity object to be inserted.
-- **transaction (optional)**: the transaction object to be used when inserting a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to insert a data.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -454,17 +319,6 @@ Merge Operation
 
 .. highlight:: c#
 
-Merges an existing `DataEntity` object in the database.
-
-Below are the parameters:
-
-- **entity**: the entity object to be merged.
-- **qualifiers**: the list of fields to be used as the qualifiers when merging a record.
-- **transaction (optional)**: the transaction object to be used when merging a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to merge a data.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
@@ -481,17 +335,6 @@ Query Operation
 ---------------
 
 .. highlight:: c#
-
-Query a data from the database based on the given query expression.
-
-- **where**: The query expression or primary key value to be used by this operation.
-- **top**: the value used to return certain number of rows from the database.
-- **orderBy**: the list of fields to be used to sort the data during querying.
-- **cacheKey**: the key of the cache to check.
-- **transaction (optional)**: the transaction object to be used when querying a data.
-- **returns**: an enumerable list of `DataEntity` object.
-
-Below is a sample on how to query a data.
 
 ::
 
@@ -554,10 +397,6 @@ Ordering the Result
 
 .. highlight:: c#
 
-An ordering is the way of sorting the result of your query in `Ascending` or `Descending` order, depending on the qualifier fields.
-
-Below is a sample snippet that returns the `Customer` records ordered by `ParentId` field in ascending manner and `Name` field is in `descending` manner.
-
 Dynamic way:
 
 ::
@@ -584,10 +423,6 @@ Limiting the Query Result
 
 .. highlight:: c#
 
-A top parameter is used to limit the result when querying a data from the database.
-
-Below is a sample way on how to use the top parameter.
-
 Dynamic way:
 
 ::
@@ -606,10 +441,6 @@ Truncate Operation
 
 .. highlight:: c#
 
-Truncates a table from the database.
-
-Below is a sample on how to truncate a table.
-
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
@@ -621,17 +452,6 @@ Update Operation
 ----------------
 
 .. highlight:: c#
-
-Updates a data in the database based on the given query expression.
-
-Below are the parameters:
-
-- **entity**: the entity object to be updated.
-- **where**: The query expression or primary key value to be used by this operation.
-- **transaction (optional)**: the transaction object to be used when updating a data.
-- **returns**: an instance of integer that holds the number of rows affected by the execution.
-
-Below is a sample on how to update a data.
 
 ::
 

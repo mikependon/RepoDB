@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Multiple Entity Mapping" href="multiplemapping.html" />
-    <link rel="prev" title="Mapping with MapAttribute" href="mapattribute.html" /> 
+    <link rel="prev" title="Installation Steps" href="installation.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -81,10 +81,12 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataentity.html">Creating a DataEntity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mapattribute.html">Mapping with MapAttribute</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Property Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ignoring-a-property">Ignoring a Property</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#map-attribute">Map Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primary-attribute">Primary Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#identity-attribute">Identity Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dbtype-attribute">DbType Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
@@ -170,9 +172,29 @@
             
   <div class="section" id="property-attributes">
 <h1>Property Attributes<a class="headerlink" href="#property-attributes" title="Permalink to this headline">¶</a></h1>
-<p>A <cite>PrimaryAttribute</cite> is used to define the class property to become the primary property of the <cite>DataEntity</cite> object. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
+<p>The library supports different attributes to support the custom implementation as per scenario basis.</p>
+<div class="section" id="map-attribute">
+<h2>Map Attribute<a class="headerlink" href="#map-attribute" title="Permalink to this headline">¶</a></h2>
+<p>Is used to map an equivalent object from the database.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is also used to map an equivalent column from the database.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Map(&quot;CustomerId&quot;)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="primary-attribute">
+<h2>Primary Attribute<a class="headerlink" href="#primary-attribute" title="Permalink to this headline">¶</a></h2>
+<p>Used to define a primary key from the class object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -186,16 +208,38 @@
 <li>If both properties are not present, it then checks for the <cite>Mapped.Name</cite> + <cite>Id</cite> property. In the case above, it should be <cite>CustomerId</cite>. If present, it will then become the default property.</li>
 </ol>
 <p>If all of the conditions above were not met, then the <cite>DataEntity</cite> will have no primary property. It somehow fails if the repository operation of like <cite>Delete</cite> and <cite>Update</cite> has been called without explicitly specifying the expressions for the <cite>WHERE</cite> parameter.</p>
-<div class="section" id="ignoring-a-property">
-<h2>Ignoring a Property<a class="headerlink" href="#ignoring-a-property" title="Permalink to this headline">¶</a></h2>
-<p>An <cite>IgnoreAttribute</cite> is used to mark a class property to be ignoreable during the actual execution of the repository operation. Located at <cite>RepoDb.Attributes</cite> namespace.</p>
-<p>Example: If the type command <cite>Insert</cite> and <cite>Update</cite> is defined on the <cite>IgnoreAttribute</cite> of the class property named <cite>CreatedDate</cite>, then the property <cite>CreatedDate</cite> will be excluded on the <cite>Insert</cite> and <cite>Update</cite> operation of the repository.</p>
-<p>Below is a sample class that has certain columns with <cite>Ignore</cite> attributes defined.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
-<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span> <span class="p">:</span> <span class="n">DataEntity</span>
+</div>
+<div class="section" id="identity-attribute">
+<h2>Identity Attribute<a class="headerlink" href="#identity-attribute" title="Permalink to this headline">¶</a></h2>
+<p>Used to define an identity key from the class object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Identity]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dbtype-attribute">
+<h2>DbType Attribute<a class="headerlink" href="#dbtype-attribute" title="Permalink to this headline">¶</a></h2>
+<p>Is used to define a property-level mapping of database type.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
 <span class="na">        [Primary]</span>
-<span class="na">        [Ignore(Command.Insert | Command.Update)]</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="na">        [TypeMap(DbType.Binary)]</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Image</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ignore-attribute">
+<h2>Ignore Attribute<a class="headerlink" href="#ignore-attribute" title="Permalink to this headline">¶</a></h2>
+<p>Is used to ignore certain properties from the actual database operation.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+<span class="na">        [Primary, Ignore(Command.Insert | Command.Update)]</span>
         <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
         <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
@@ -220,7 +264,7 @@
 <span class="n">UPDATE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span> <span class="n">SET</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="p">=</span> <span class="n">@Name</span> <span class="n">WHERE</span> <span class="p">(.....);</span> <span class="c1">// WHERE part will vary on the expression passed during the calls</span>
 </pre></div>
 </div>
-<p>Below are the list of commands that can be defined in the <cite>IgnoreAttribute</cite>.</p>
+<p>Below are the list of operational commands that can be defined in the <cite>IgnoreAttribute</cite>.</p>
 <ul class="simple">
 <li>None</li>
 <li>BatchQuery</li>
@@ -252,7 +296,7 @@
         <a href="multiplemapping.html" class="btn btn-neutral float-right" title="Multiple Entity Mapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mapattribute.html" class="btn btn-neutral" title="Mapping with MapAttribute" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral" title="Installation Steps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

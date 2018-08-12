@@ -3,14 +3,12 @@ Connection Object
 
 .. highlight:: c#
 
-The library has abstracted everything from `ADO.NET`, however, some extension methods has been developed to simplify the data access models.
+The library has abstracted everything from `ADO.NET` when it comes to the connection object.
 
-Below are the list of extension methods for `Connection` object.
+Creating a Connection
+---------------------
 
-- **CreateCommand**: is used to create a command object before the actual operation execution. It returns an instance of `System.Data.IDbCommand` object.
-- **EnsureOpen**: is used to ensure that the connection object is `Open`. The repository operations are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.
-
-A repository is used to create a connection object.
+Via repository:
 
 ::
 
@@ -20,7 +18,7 @@ A repository is used to create a connection object.
 		// Use the connection here
 	}
 
-Or, in a tradional way with independent `SqlConnection` object extended method.
+Or, the traditional way:
 
 ::
 
@@ -36,17 +34,6 @@ CreateCommand Method
 
 Creates a command object.
 
-The underlying method call of this method is the `System.Data.DbConnection.CreateCommand()` method.
-
-Below are the parameters:
-
-- **commandText**: the SQL statement to be used for execution.
-- **commandType (optional)**: the type of command to be used whether it is a `Text`, `StoredProcedure` or `TableDirect`.
-- **commandTimeout (optional)**: the command timeout in seconds to be used when executing the query in the database.
-- **transaction (optional)**: the transaction object be used when executing the command.
-
-See sample codes below.
-
 ::
 
 	// Variables
@@ -55,16 +42,10 @@ See sample codes below.
 	// Open a connection
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		
 		// Create a command object
 		var command = connection.CreateCommand("SELECT TOP 100 * FROM [dbo].[Customer];", CommandType.Text, 500, null);
-		
-		// Execute the reader, abstracting the ADO.Net features here
-		using (var reader = command.ExecuteReader())
-		{
-			// Iterate the reader and place back the result to the list
-			customers = RepoDb.Reflection.DataReaderConverter.ToEnumerable<Customer>((DbDataReader)reader);
-		}
+
+		// Use the command object here
 	}
 
 EnsureOpen Method
@@ -72,11 +53,7 @@ EnsureOpen Method
 
 .. highlight:: c#
 
-This method is used to ensure that the connection object is `Open`. The operational methods are calling this method explicitly prior to the actual execution. This method returns the connection instance itself.
-
-The underlying method call of this method is the `System.Data.DbConnection.Open()` method.
-
-See sample codes below.
+Is used to ensure that the connection object is in `Open`.
 
 ::
 
