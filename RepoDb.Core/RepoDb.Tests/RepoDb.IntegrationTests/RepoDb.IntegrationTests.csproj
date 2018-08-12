@@ -73,6 +73,7 @@
     <Compile Include="BulkOpsTest.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="InlineCrudTest.cs" />
+    <Compile Include="MillisecondsTest.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />

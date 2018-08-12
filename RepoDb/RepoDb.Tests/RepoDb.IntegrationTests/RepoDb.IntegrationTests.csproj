@@ -64,6 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MillisecondsTest.cs" />
     <Compile Include="BasicCrudTest.cs" />
     <Compile Include="BlobDataTypeMappingTest.cs" />
     <Compile Include="BulkOpsTest.cs" />

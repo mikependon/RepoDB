@@ -28,7 +28,7 @@ namespace RepoDb.TestProject
         {
             for (var i = 0; i < 10; i++)
             {
-                Task.Factory.StartNew(() => TestQuerySingle(i));
+                Task.Factory.StartNew(() => TestAllOperations());// TestQuerySingle(i));
             }
         }
 
@@ -189,9 +189,6 @@ namespace RepoDb.TestProject
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance);
 
-            // Truncate
-            repository.Truncate<Animal>();
-
             // Count
             //Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
             //Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");
@@ -300,7 +297,7 @@ namespace RepoDb.TestProject
             });
 
             // Verify
-            Console.WriteLine($"Verify InlineUpdate with Guid PrimaryKey: {personId}");
+            Console.WriteLine($"Verify InlineUpdate with Guid PrimaryKey: {animalId}");
             if (affectedRows <= 0)
             {
                 throw new Exception("No rows has been affected by the inline update.");

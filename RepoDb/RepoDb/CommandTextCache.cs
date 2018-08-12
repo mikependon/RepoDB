@@ -215,6 +215,10 @@ namespace RepoDb
                     overrideIgnore: request.OverrideIgnore);
                 m_cache.TryAdd(request, commandText);
             }
+            else
+            {
+                request.Where?.AppendParametersPrefix();
+            }
             return commandText;
         }
 
@@ -365,6 +369,10 @@ namespace RepoDb
                 commandText = statementBuilder.CreateUpdate(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
                 m_cache.TryAdd(request, commandText);
+            }
+            else
+            {
+                request.Where?.AppendParametersPrefix();
             }
             return commandText;
         }

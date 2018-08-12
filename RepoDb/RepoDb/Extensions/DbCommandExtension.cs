@@ -77,11 +77,11 @@ namespace RepoDb.Extensions
                     {
                         var property = mappedToEntityType.GetProperty(item.Key);
                         dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                            TypeMapper.Get(property?.PropertyType)?.DbType; ;
+                            TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
                     }
                     else
                     {
-                        dbType = TypeMapper.Get(item.Value?.GetType())?.DbType;
+                        dbType = TypeMapper.Get(GetUnderlyingType(item.Value?.GetType()))?.DbType;
                     }
                     command.Parameters.Add(command.CreateParameter(item.Key, item.Value, dbType));
                 }
@@ -94,10 +94,20 @@ namespace RepoDb.Extensions
                     .ForEach(property =>
                     {
                         var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                            TypeMapper.Get(property.PropertyType)?.DbType;
+                            TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
                         command.Parameters.Add(command.CreateParameter(property.GetMappedName(), property.GetValue(param), dbType));
                     });
             }
+        }
+
+        /// <summary>
+        /// Gets the underlying type if present.
+        /// </summary>
+        /// <param name="type">The type where to get the underlying type.</param>
+        /// <returns>The underlying type.</returns>
+        private static Type GetUnderlyingType(Type type)
+        {
+            return Nullable.GetUnderlyingType(type) ?? type;
         }
     }
 }
