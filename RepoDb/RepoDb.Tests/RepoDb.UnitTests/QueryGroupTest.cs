@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
+using System.Diagnostics;
 
 namespace RepoDb.UnitTests
 {

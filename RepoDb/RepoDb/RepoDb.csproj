@@ -55,6 +55,7 @@
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="DynamicComparers\DynamicPropertiesComparer.cs" />
+    <Compile Include="DynamicExpressions\DynamicExtractorExpression.cs" />
     <Compile Include="IdentityCache.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
