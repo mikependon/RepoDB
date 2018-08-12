@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace RepoDb.DynamicComparers
+namespace RepoDb
 {
     /// <summary>
-    /// A class used to compare the dynamic objects.
+    /// A class used to compare the dynamic objects. This class is currently not returning properly
+    /// on the calling class that is outside of RepoDb library.
     /// </summary>
     public static partial class DynamicComparer
     {
@@ -29,7 +30,7 @@ namespace RepoDb.DynamicComparers
         }
 
         /// <summary>
-        /// Checks whether the two dynamic object properties are really equal.
+        /// Checks whether the two dynamic object properties are equal.
         /// </summary>
         /// <typeparam name="TypeA">The type of the first dynamic object.</typeparam>
         /// <typeparam name="TypeB">The type of the second dynamic object.</typeparam>
@@ -66,9 +67,10 @@ namespace RepoDb.DynamicComparers
                     .Select(p => p.Name);
 
                 // Check the count
-                isEqual = (propertiesOfTypeA.Count() == propertiesOfTypeB.Count()) &&
-                    propertiesOfTypeA?.All(propertyA =>
-                            propertiesOfTypeB?.FirstOrDefault(propertyB => propertyB == propertyA) != null) == true;
+                isEqual = (propertiesOfTypeA.Count() > 0) &&
+                    (propertiesOfTypeA.Count() == propertiesOfTypeB.Count()) &&
+                    (true == propertiesOfTypeA?.All(propertyA =>
+                        propertiesOfTypeB?.FirstOrDefault(propertyB => propertyB == propertyA) != null));
 
                 // Expression variables
                 var body = (Expression)Expression.Constant(isEqual);
