@@ -68,11 +68,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Comparers\OrderFieldComparerTest.cs" />
-    <Compile Include="Comparers\ParameterComparerTest.cs" />
-    <Compile Include="Comparers\FieldComparerTest.cs" />
-    <Compile Include="Comparers\QueryGroupComparerTest.cs" />
-    <Compile Include="Comparers\QueryFieldComparerTest.cs" />
+    <Compile Include="Equalities\OrderFieldEqualityTest.cs" />
+    <Compile Include="Equalities\ParameterEqualityTest.cs" />
+    <Compile Include="Equalities\FieldEqualityTest.cs" />
+    <Compile Include="Equalities\QueryGroupEqualityTest.cs" />
+    <Compile Include="Equalities\QueryFieldEqualityTest.cs" />
     <Compile Include="CustomObjects\CustomDbCommand.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -116,6 +116,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DynamicComparers\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
