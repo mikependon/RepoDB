@@ -14,6 +14,8 @@ namespace RepoDb
     /// </summary>
     public class QueryField : IEquatable<QueryField>
     {
+        private const int HASHCODE_ISNULL = 128;
+        private const int HASHCODE_ISNOTNULL = 256;
         private int? m_hashCode = null;
 
         /// <summary>
@@ -278,15 +280,16 @@ namespace RepoDb
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
             {
-                hashCode += 128;
+                hashCode += HASHCODE_ISNULL;
             }
             // The (IS NOT NULL) affects the uniqueness of the object
             else if (Operation == Operation.NotEqual && ReferenceEquals(null, Parameter.Value))
             {
-                hashCode += 256;
+                hashCode += HASHCODE_ISNOTNULL;
             }
             // The parameter's length affects the uniqueness of the object
-            else if (Operation == Operation.In && !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
+            else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
+                !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
             {
                 hashCode += ((Array)Parameter.Value).Length.GetHashCode();
             }

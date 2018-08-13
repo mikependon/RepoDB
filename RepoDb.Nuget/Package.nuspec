@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.3.0</version>
+    <version>1.3.5</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,8 +10,9 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      - Refactor: Removed DataEntity - requested from the community
-      - Performance: Cached the command texts
+      [Release v1.3.5]
+      - Refactor: Removed the DataEntity base class (request from the community)
+      - Performance: Added a mechanism to cache the command texts
       - Bug Fix: Exception is thrown at Repository.Query when cacheKey is present
       - Bug Fix: Incorrect milliseconds is being saved for nullable System.DateTime properties
     </releaseNotes>

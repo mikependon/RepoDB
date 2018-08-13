@@ -16,30 +16,12 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            Test();
-            //TestParallelism();
+            TestParallelism();
             //TestInventory();
             //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
-        }
-
-        private static void Test()
-        {
-            using (var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance))
-            {
-                var context1 = new
-                {
-                    Id = (int?)null
-                };
-                var person1 = repository.Query<Person>(context1);
-                var context2 = new
-                {
-                    Id = 10
-                };
-                var person2 = repository.Query<Person>(context2);
-            }
         }
 
         public static void TestParallelism()
