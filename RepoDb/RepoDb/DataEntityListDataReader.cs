@@ -15,7 +15,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
     public class DataEntityListDataReader<TEntity> : DbDataReader
-        where TEntity :class
+        where TEntity : class
     {
         #region Fields
 
@@ -45,7 +45,8 @@ namespace RepoDb
             m_recordsAffected = -1;
 
             // Properties
-            Properties = DataEntityExtension.GetPropertiesFor<TEntity>(command).ToList();
+            Command = command;
+            Properties = PropertyCache.Get<TEntity>(command).ToList();
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             FieldCount = Properties.Count;
@@ -74,6 +75,11 @@ namespace RepoDb
         /// Gets the properties of data entity object.
         /// </summary>
         public IList<PropertyInfo> Properties { get; private set; }
+
+        /// <summary>
+        /// Gets the command used by this entity list reader.
+        /// </summary>
+        public Command Command { get; private set; }
 
         /// <summary>
         /// Gets the current position of the enumerator.
@@ -410,9 +416,10 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
+            var extracted = ClassExpression.Extract(Enumerator.Current, Command).ToArray();
             for (var i = 0; i < Properties.Count; i++)
             {
-                values[i] = Properties[i].GetValue(Enumerator.Current);
+                values[i] = extracted[i].Value;
             }
             return FieldCount;
         }

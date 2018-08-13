@@ -78,9 +78,9 @@ namespace RepoDb
         {
             // Expressions
             var listType = typeof(List<PropertyValue>);
-            var method = listType.GetMethod("Add", new[] { typeof(PropertyValue) });
+            var method = listType.GetTypeInfo().GetMethod("Add", new[] { typeof(PropertyValue) });
             var param = Expression.Parameter(typeof(T), "obj");
-            var constructor = typeof(PropertyValue).GetConstructor(new[]
+            var constructor = typeof(PropertyValue).GetTypeInfo().GetConstructor(new[]
             {
                     typeof(string),
                     typeof(object),

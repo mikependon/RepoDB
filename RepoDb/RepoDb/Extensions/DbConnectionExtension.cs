@@ -1770,7 +1770,7 @@ namespace RepoDb
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
                 CommandTextCache.GetInsertText<TEntity>(request);
-            var param = entity.AsObject(command);
+            var param = ClassExpression.Extract(entity);
 
             // Before Execution
             if (trace != null)
@@ -1786,7 +1786,7 @@ namespace RepoDb
                     return null;
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
-                param = (cancellableTraceLog?.Parameter ?? param);
+                param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
             }
 
             // Before Execution Time

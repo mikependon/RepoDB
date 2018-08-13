@@ -67,8 +67,17 @@ namespace RepoDb.Extensions
         /// <param name="mappedToEntityType">The target type where to map the parameters.</param>
         internal static void CreateParameters(this IDbCommand command, object param, Type mappedToEntityType)
         {
-            var obj = param as ExpandoObject;
-            if (obj != null)
+            if (param is IEnumerable<PropertyValue>)
+            {
+                var propertyValues = (IEnumerable<PropertyValue>)param;
+                propertyValues.ToList().ForEach(propertyValue =>
+                {
+                    var dbType = propertyValue.Property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                        TypeMapper.Get(GetUnderlyingType(propertyValue.Property.PropertyType))?.DbType;
+                    command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
+                });
+            }
+            else if (param is ExpandoObject)
             {
                 var dictionary = (IDictionary<string, object>)param;
                 var dbType = (DbType?)null;
@@ -109,7 +118,7 @@ namespace RepoDb.Extensions
         /// <returns>The underlying type.</returns>
         private static Type GetUnderlyingType(Type type)
         {
-            return Nullable.GetUnderlyingType(type) ?? type;
+            return type != null ? Nullable.GetUnderlyingType(type) ?? type : null;
         }
     }
 }

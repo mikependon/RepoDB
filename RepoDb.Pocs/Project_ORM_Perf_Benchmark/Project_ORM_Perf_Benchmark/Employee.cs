@@ -3,7 +3,7 @@ using System;
 
 namespace Project_ORM_Perf_Benchmark
 {
-    public class Employee : DataEntity
+    public class Employee
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

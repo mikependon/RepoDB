@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the identity property of the entity.
     /// </summary>
-    internal static class IdentityCache
+    public static class IdentityCache
     {
         private static readonly ConcurrentDictionary<string, PropertyInfo> m_cache = new ConcurrentDictionary<string, PropertyInfo>();
 

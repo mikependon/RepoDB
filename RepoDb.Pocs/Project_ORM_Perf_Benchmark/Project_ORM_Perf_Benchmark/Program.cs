@@ -167,7 +167,7 @@ namespace Project_ORM_Perf_Benchmark
         private static void CompareInsert(int rows)
         {
             var employees = CreateEmployees(rows);
-            //DapperInsert(employees);
+            DapperInsert(employees);
             RepoDbInsert(employees);
             RepoDbBulkInsert(employees);
         }
@@ -244,11 +244,13 @@ namespace Project_ORM_Perf_Benchmark
 
         private static void InsertAll(int rows)
         {
+            var now = DateTime.UtcNow;
             var employees = CreateEmployees(rows);
             using (var repository = new DbRepository<SqlConnection>(ConnectionString))
             {
                 repository.BulkInsert(employees);
-                Console.WriteLine($"{rows} row(s) has been inserted.");
+                var lapsedTime = DateTime.UtcNow - now;
+                Console.WriteLine($"{rows} row(s) has been inserted for {lapsedTime.TotalSeconds} second(s).");
             }
         }
 

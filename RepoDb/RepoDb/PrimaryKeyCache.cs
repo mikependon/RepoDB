@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A class used to cache the primary property of the entity.
     /// </summary>
-    internal static class PrimaryKeyCache
+    public static class PrimaryKeyCache
     {
         private static readonly ConcurrentDictionary<string, PropertyInfo> m_cache = new ConcurrentDictionary<string, PropertyInfo>();
 

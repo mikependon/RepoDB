@@ -79,6 +79,8 @@
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
+    <Compile Include="PropertyCache.cs" />
+    <Compile Include="PropertyValue.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
     <Compile Include="Requests\CountRequest.cs" />
     <Compile Include="Requests\BatchQueryRequest.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="RecursionManager.cs" />
     <Compile Include="SqlDbHelper.cs" />
+    <Compile Include="ClassExpressions\ClassExtractorExpression.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
