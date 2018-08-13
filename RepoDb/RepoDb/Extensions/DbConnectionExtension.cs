@@ -1770,7 +1770,7 @@ namespace RepoDb
             var commandText = commandType == CommandType.StoredProcedure ?
                 DataEntityExtension.GetMappedName<TEntity>(command) :
                 CommandTextCache.GetInsertText<TEntity>(request);
-            var param = ClassExpression.Extract(entity);
+            var param = ClassExpression.Extract(entity, command);
 
             // Before Execution
             if (trace != null)
