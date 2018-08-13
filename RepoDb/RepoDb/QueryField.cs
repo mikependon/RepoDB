@@ -273,8 +273,18 @@ namespace RepoDb
             // Set in the combination of the properties
             hashCode += (Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode());
 
-            // Identity the length of the values (this vary)
-            if (Operation == Operation.In && !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
+            // The (IS NULL) affects the uniqueness of the object
+            if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
+            {
+                hashCode += 128;
+            }
+            // The (IS NOT NULL) affects the uniqueness of the object
+            else if (Operation == Operation.NotEqual && ReferenceEquals(null, Parameter.Value))
+            {
+                hashCode += 256;
+            }
+            // The parameter's length affects the uniqueness of the object
+            else if (Operation == Operation.In && !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
             {
                 hashCode += ((Array)Parameter.Value).Length.GetHashCode();
             }
