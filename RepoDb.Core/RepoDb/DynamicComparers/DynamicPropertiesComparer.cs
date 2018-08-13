@@ -6,8 +6,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to compare the dynamic objects. This class is currently not returning properly
-    /// on the calling class that is outside of RepoDb library.
+    /// A class used to compare the dynamic objects.
     /// </summary>
     public static partial class DynamicComparer
     {
@@ -31,7 +30,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Checks whether the two dynamic object properties are really equal.
+        /// Checks whether the two dynamic object properties are equal.
         /// </summary>
         /// <typeparam name="TypeA">The type of the first dynamic object.</typeparam>
         /// <typeparam name="TypeB">The type of the second dynamic object.</typeparam>
@@ -60,13 +59,11 @@ namespace RepoDb
 
                 // Get the properties
                 var isEqual = false;
-                var propertiesOfTypeA = objA
-                    .Type
+                var propertiesOfTypeA = typeof(TypeA)
                     .GetTypeInfo()
                     .GetProperties()
                     .Select(p => p.Name);
-                var propertiesOfTypeB = objB
-                    .Type
+                var propertiesOfTypeB = typeof(TypeB)
                     .GetTypeInfo()
                     .GetProperties()
                     .Select(p => p.Name);

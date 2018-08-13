@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -42,11 +43,11 @@ namespace RepoDb
             {
                 // Set the value
                 var type = typeof(T);
-                var properties = type.GetProperties();
+                var properties = type.GetTypeInfo().GetProperties();
 
                 // Expressions
                 var listType = typeof(List<object>);
-                var method = listType.GetMethod("Add", new[] { typeof(object) });
+                var method = listType.GetTypeInfo().GetMethod("Add", new[] { typeof(object) });
                 var newList = Expression.New(listType);
                 var param = Expression.Parameter(typeof(T), "obj");
 

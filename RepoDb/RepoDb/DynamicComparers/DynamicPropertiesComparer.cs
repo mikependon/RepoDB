@@ -5,8 +5,7 @@ using System.Linq.Expressions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to compare the dynamic objects. This class is currently not returning properly
-    /// on the calling class that is outside of RepoDb library.
+    /// A class used to compare the dynamic objects.
     /// </summary>
     public static partial class DynamicComparer
     {

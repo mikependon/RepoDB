@@ -6,26 +6,16 @@ using System.Linq.Expressions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used for manipulating dynamic objects via expressions.
+    /// A class used for manipulating class objects via expressions.
     /// </summary>
-    public static partial class DynamicExpression
+    public static partial class ClassExpression
     {
         /// <summary>
         /// Extracts a dynamic object value to become an enumerable of objects.
         /// </summary>
         /// <param name="obj">The object to be extracted.</param>
         /// <returns>The extracted values.</returns>
-        public static IEnumerable<object> Extract(object obj)
-        {
-            return ExtractActual((dynamic)obj);
-        }
-
-        /// <summary>
-        /// Extracts a dynamic object value to become an enumerable of objects.
-        /// </summary>
-        /// <param name="obj">The object to be extracted.</param>
-        /// <returns>The extracted values.</returns>
-        private static IEnumerable<object> ExtractActual<T>(T obj)
+        private static IEnumerable<object> Extract<T>(T obj)
         {
             return Extractor<T>.Extract(obj);
         }
