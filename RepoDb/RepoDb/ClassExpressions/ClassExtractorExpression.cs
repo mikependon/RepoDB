@@ -73,7 +73,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunction<T>(IEnumerable<PropertyInfo> properties)
+        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassExtractor<T>(IEnumerable<PropertyInfo> properties)
             where T : class
         {
             // Expressions
@@ -115,7 +115,7 @@ namespace RepoDb
 
             static Extractor()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>());
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>());
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -134,7 +134,7 @@ namespace RepoDb
 
             static ExtractorForBatchQuery()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.BatchQuery));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.BatchQuery));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -153,7 +153,7 @@ namespace RepoDb
 
             static ExtractorForBulkInsert()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.BulkInsert));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.BulkInsert));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -172,7 +172,7 @@ namespace RepoDb
 
             static ExtractorForCount()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Count));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Count));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -191,7 +191,7 @@ namespace RepoDb
 
             static ExtractorForDelete()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Delete));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Delete));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -210,7 +210,7 @@ namespace RepoDb
 
             static ExtractorForDeleteAll()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.DeleteAll));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.DeleteAll));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -229,7 +229,7 @@ namespace RepoDb
 
             static ExtractorForInlineInsert()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.InlineInsert));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineInsert));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -248,7 +248,7 @@ namespace RepoDb
 
             static ExtractorForInlineMerge()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.InlineMerge));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineMerge));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -267,7 +267,7 @@ namespace RepoDb
 
             static ExtractorForInlineUpdate()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.InlineUpdate));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineUpdate));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -286,7 +286,7 @@ namespace RepoDb
 
             static ExtractorForInsert()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Insert));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Insert));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -305,7 +305,7 @@ namespace RepoDb
 
             static ExtractorForMerge()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Merge));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Merge));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -324,7 +324,7 @@ namespace RepoDb
 
             static ExtractorForQuery()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Query));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Query));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -343,7 +343,7 @@ namespace RepoDb
 
             static ExtractorForTruncate()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Truncate));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Truncate));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
@@ -362,7 +362,7 @@ namespace RepoDb
 
             static ExtractorForUpdate()
             {
-                m_func = GetCompiledFunction<T>(PropertyCache.Get<T>(Command.Update));
+                m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Update));
             }
 
             public static IEnumerable<PropertyValue> Extract(T obj)
