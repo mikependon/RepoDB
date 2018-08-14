@@ -213,7 +213,7 @@ namespace RepoDb
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline insertable fields for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert)}'.");
+                throw new InvalidOperationException($"No inline insertable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
             }
 
             // Check for the unmatches
@@ -230,7 +230,7 @@ namespace RepoDb
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline insertable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineInsert)}'.");
+                        $"inline insertable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
                 }
             }
 
@@ -365,14 +365,14 @@ namespace RepoDb
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
                 }
                 unmatchesQualifiers = qualifiers?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesQualifiers?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
                 }
             }
 
@@ -505,7 +505,7 @@ namespace RepoDb
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline updatable fields for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}'.");
+                throw new InvalidOperationException($"No inline updatable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
             }
 
             // Append prefix to all parameters
@@ -524,7 +524,7 @@ namespace RepoDb
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline updateable for object '{DataEntityExtension.GetMappedName<TEntity>(Command.InlineUpdate)}'.");
+                        $"inline updateable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
                 }
             }
 
