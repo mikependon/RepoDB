@@ -92,7 +92,7 @@ namespace RepoDb
                 Expression.New(listType),
                 properties.Select(property =>
                 {
-                    var name = Expression.Constant(property.GetMappedName());
+                    var name = Expression.Constant(PropertyMappedNameCache.Get(property));
                     var value = Expression.Convert(Expression.Property(param, property), typeof(object));
                     var propertyValue = Expression.New(constructor,
                         name,

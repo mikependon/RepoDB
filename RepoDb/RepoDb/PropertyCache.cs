@@ -23,7 +23,7 @@ namespace RepoDb
             where TEntity : class
         {
             var type = typeof(TEntity);
-            var key = $"{type.FullName}{command.ToString()}";
+            var key = $"{type.FullName}.{command.ToString()}";
             var properties = (IEnumerable<PropertyInfo>)null;
             if (m_cache.TryGetValue(key, out properties) == false)
             {

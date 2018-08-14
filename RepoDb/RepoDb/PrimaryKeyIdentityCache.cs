@@ -28,7 +28,7 @@ namespace RepoDb
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.GetMappedName());
+                    value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, PropertyMappedNameCache.Get(primary));
                 }
                 m_cache.TryAdd(key, value);
             }

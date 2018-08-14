@@ -138,7 +138,7 @@ namespace RepoDb.Extensions
         /// </param>
         internal static QueryField AsQueryField(this PropertyInfo property, object entity, bool appendParameterPrefix)
         {
-            return new QueryField(property.GetMappedName(), Operation.Equal, property.GetValue(entity), appendParameterPrefix);
+            return new QueryField(PropertyMappedNameCache.Get(property), Operation.Equal, property.GetValue(entity), appendParameterPrefix);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of converted property info with defined aliases.</returns>
         public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.[{property.GetMappedName()}] = {rightAlias}.[{property.GetMappedName()}]";
+            return $"{leftAlias}.[{PropertyMappedNameCache.Get(property)}] = {rightAlias}.[{PropertyMappedNameCache.Get(property)}]";
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a mapped name.</returns>
         public static string AsField(this PropertyInfo property)
         {
-            return $"[{property.GetMappedName()}]";
+            return $"[{PropertyMappedNameCache.Get(property)}]";
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         public static string AsParameter(this PropertyInfo property)
         {
-            return $"@{property.GetMappedName()}";
+            return $"@{PropertyMappedNameCache.Get(property)}";
         }
 
         /// <summary>

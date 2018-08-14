@@ -81,6 +81,7 @@
     <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
     <Compile Include="CommandTypeCache.cs" />
+    <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
