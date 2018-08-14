@@ -415,7 +415,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.BatchQuery;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
                 where,
@@ -781,7 +781,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Count;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new CountRequest(typeof(TEntity),
                 connection,
                 where,
@@ -1017,7 +1017,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Delete;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
                 where,
@@ -1184,7 +1184,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.DeleteAll;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
@@ -1280,7 +1280,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.InlineInsert;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
@@ -1416,7 +1416,7 @@ namespace RepoDb
             var command = Command.InlineMerge;
             var entityProperties = entity?.GetType().GetTypeInfo().GetProperties();
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new InlineMergeRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
@@ -1602,7 +1602,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.InlineUpdate;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new InlineUpdateRequest(typeof(TEntity),
                 connection,
                 where,
@@ -1763,7 +1763,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Insert;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new InsertRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
@@ -1897,7 +1897,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>(command);
 
             // Variables
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new MergeRequest(typeof(TEntity),
                 connection,
                 qualifiers,
@@ -2231,7 +2231,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Query;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new QueryRequest(typeof(TEntity),
                 connection,
                 where,
@@ -2671,7 +2671,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Truncate;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new TruncateRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
@@ -2835,7 +2835,7 @@ namespace RepoDb
 
             // Variables
             var command = Command.Update;
-            var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+            var commandType = CommandTypeCache.Get<TEntity>(command);
             var request = new UpdateRequest(typeof(TEntity),
                 connection,
                 where,

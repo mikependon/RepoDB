@@ -27,7 +27,7 @@ namespace RepoDb
             // Open a connection
             using (var connection = new SqlConnection(connectionString).EnsureOpen())
             {
-                var commandType = DataEntityExtension.GetCommandType<TEntity>(command);
+                var commandType = CommandTypeCache.Get<TEntity>(command);
 
                 // Check for the command type
                 if (commandType != CommandType.StoredProcedure)
