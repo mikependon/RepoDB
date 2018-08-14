@@ -57,6 +57,7 @@
     <Compile Include="ClassExpressions\ClassMappedNameExpression.cs" />
     <Compile Include="ClassExpressions\PropertyMappedNameExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
+    <Compile Include="ClassProperty.cs" />
     <Compile Include="DynamicComparers\DynamicPropertiesComparer.cs" />
     <Compile Include="DynamicExpressions\DynamicExtractorExpression.cs" />
     <Compile Include="IdentityCache.cs" />
