@@ -59,8 +59,16 @@ namespace RepoDb
         private static Func<string> GetCompiledFunctionForClassMappedNameExtractor<T>(Command command)
             where T : class
         {
+            // Parameter
+            var method = typeof(ClassMappedNameCache)
+                .GetMethod("Get", new[]
+                {
+                    typeof(Command)
+                })
+                .MakeGenericMethod(typeof(T));
+
             // Expressions
-            var body = Expression.Constant(ClassMappedNameCache.Get<T>(command));
+            var body = Expression.Call(method, Expression.Constant(command));
 
             // Set the function value
             return Expression

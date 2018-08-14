@@ -1,6 +1,7 @@
 ﻿using RepoDb.Enumerations;
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -60,7 +61,16 @@ namespace RepoDb
             where T : class
         {
             // Expressions
-            var body = Expression.Constant(ClassMappedNameCache.Get<T>(command));
+            var method = typeof(ClassMappedNameCache)
+                .GetTypeInfo()
+                .GetMethod("Get", new[]
+                {
+                    typeof(Command)
+                })
+                .MakeGenericMethod(typeof(T));
+
+            // Expressions
+            var body = Expression.Call(method, Expression.Constant(command));
 
             // Set the function value
             return Expression
