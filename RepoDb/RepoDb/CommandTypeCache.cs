@@ -22,14 +22,14 @@ namespace RepoDb
             where TEntity : class
         {
             var type = typeof(TEntity);
-            var key = $"{type.FullName}{command.ToString()}";
-            var commandType = CommandType.Text;
-            if (m_cache.TryGetValue(key, out commandType) == false)
+            var key = $"{type.FullName}.{command.ToString()}";
+            var result = CommandType.Text;
+            if (m_cache.TryGetValue(key, out result) == false)
             {
-                commandType = DataEntityExtension.GetCommandType<TEntity>(command);
-                m_cache.TryAdd(key, commandType);
+                result = DataEntityExtension.GetCommandType<TEntity>(command);
+                m_cache.TryAdd(key, result);
             }
-            return commandType;
+            return result;
         }
     }
 }
