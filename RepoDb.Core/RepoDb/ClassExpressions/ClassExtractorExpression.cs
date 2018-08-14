@@ -1,5 +1,4 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace RepoDb
         public static IEnumerable<PropertyValue> Extract<TEntity>(TEntity obj)
             where TEntity : class
         {
-            return Extractor<TEntity>.Extract(obj);
+            return ClassExtractor<TEntity>.Extract(obj);
         }
 
         /// <summary>
@@ -38,41 +37,41 @@ namespace RepoDb
             switch (command)
             {
                 case Command.BatchQuery:
-                    return ExtractorForBatchQuery<TEntity>.Extract(obj);
+                    return ClassExtractorForBatchQuery<TEntity>.Extract(obj);
                 case Command.BulkInsert:
-                    return ExtractorForBulkInsert<TEntity>.Extract(obj);
+                    return ClassExtractorForBulkInsert<TEntity>.Extract(obj);
                 case Command.Count:
-                    return ExtractorForCount<TEntity>.Extract(obj);
+                    return ClassExtractorForCount<TEntity>.Extract(obj);
                 case Command.Delete:
-                    return ExtractorForDelete<TEntity>.Extract(obj);
+                    return ClassExtractorForDelete<TEntity>.Extract(obj);
                 case Command.DeleteAll:
-                    return ExtractorForDeleteAll<TEntity>.Extract(obj);
+                    return ClassExtractorForDeleteAll<TEntity>.Extract(obj);
                 case Command.InlineInsert:
-                    return ExtractorForInlineInsert<TEntity>.Extract(obj);
+                    return ClassExtractorForInlineInsert<TEntity>.Extract(obj);
                 case Command.InlineMerge:
-                    return ExtractorForInlineMerge<TEntity>.Extract(obj);
+                    return ClassExtractorForInlineMerge<TEntity>.Extract(obj);
                 case Command.InlineUpdate:
-                    return ExtractorForInlineUpdate<TEntity>.Extract(obj);
+                    return ClassExtractorForInlineUpdate<TEntity>.Extract(obj);
                 case Command.Insert:
-                    return ExtractorForInsert<TEntity>.Extract(obj);
+                    return ClassExtractorForInsert<TEntity>.Extract(obj);
                 case Command.Merge:
-                    return ExtractorForMerge<TEntity>.Extract(obj);
+                    return ClassExtractorForMerge<TEntity>.Extract(obj);
                 case Command.Query:
-                    return ExtractorForQuery<TEntity>.Extract(obj);
+                    return ClassExtractorForQuery<TEntity>.Extract(obj);
                 case Command.Truncate:
-                    return ExtractorForTruncate<TEntity>.Extract(obj);
+                    return ClassExtractorForTruncate<TEntity>.Extract(obj);
                 case Command.Update:
-                    return ExtractorForUpdate<TEntity>.Extract(obj);
+                    return ClassExtractorForUpdate<TEntity>.Extract(obj);
                 default:
-                    return Extractor<TEntity>.Extract(obj);
+                    return ClassExtractor<TEntity>.Extract(obj);
             }
         }
 
         /// <summary>
         /// Gets a function from the defined properties.
         /// </summary>
-        /// <param name="properties"></param>
-        /// <returns></returns>
+        /// <param name="properties">The list of properties.</param>
+        /// <returns>The enumerable value of class property values.</returns>
         private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassExtractor<T>(IEnumerable<PropertyInfo> properties)
             where T : class
         {
@@ -107,13 +106,13 @@ namespace RepoDb
                 .Compile();
         }
 
-        #region Extractor
+        #region ClassExtractorExtractor
 
-        private static class Extractor<T> where T : class
+        private static class ClassExtractor<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static Extractor()
+            static ClassExtractor()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>());
             }
@@ -126,13 +125,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForBatchQuery
+        #region ClassExtractorForBatchQuery
 
-        private static class ExtractorForBatchQuery<T> where T : class
+        private static class ClassExtractorForBatchQuery<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForBatchQuery()
+            static ClassExtractorForBatchQuery()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.BatchQuery));
             }
@@ -145,13 +144,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForBulkInsert
+        #region ClassExtractorForBulkInsert
 
-        private static class ExtractorForBulkInsert<T> where T : class
+        private static class ClassExtractorForBulkInsert<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForBulkInsert()
+            static ClassExtractorForBulkInsert()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.BulkInsert));
             }
@@ -164,13 +163,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForCount
+        #region ClassExtractorForCount
 
-        private static class ExtractorForCount<T> where T : class
+        private static class ClassExtractorForCount<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForCount()
+            static ClassExtractorForCount()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Count));
             }
@@ -183,13 +182,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForDelete
+        #region ClassExtractorForDelete
 
-        private static class ExtractorForDelete<T> where T : class
+        private static class ClassExtractorForDelete<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForDelete()
+            static ClassExtractorForDelete()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Delete));
             }
@@ -202,13 +201,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForDeleteAll
+        #region ClassExtractorForDeleteAll
 
-        private static class ExtractorForDeleteAll<T> where T : class
+        private static class ClassExtractorForDeleteAll<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForDeleteAll()
+            static ClassExtractorForDeleteAll()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.DeleteAll));
             }
@@ -221,13 +220,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineInsert
+        #region ClassExtractorForInlineInsert
 
-        private static class ExtractorForInlineInsert<T> where T : class
+        private static class ClassExtractorForInlineInsert<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForInlineInsert()
+            static ClassExtractorForInlineInsert()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineInsert));
             }
@@ -240,13 +239,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineMerge
+        #region ClassExtractorForInlineMerge
 
-        private static class ExtractorForInlineMerge<T> where T : class
+        private static class ClassExtractorForInlineMerge<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForInlineMerge()
+            static ClassExtractorForInlineMerge()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineMerge));
             }
@@ -259,13 +258,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineUpdate
+        #region ClassExtractorForInlineUpdate
 
-        private static class ExtractorForInlineUpdate<T> where T : class
+        private static class ClassExtractorForInlineUpdate<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForInlineUpdate()
+            static ClassExtractorForInlineUpdate()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.InlineUpdate));
             }
@@ -278,13 +277,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInsert
+        #region ClassExtractorForInsert
 
-        private static class ExtractorForInsert<T> where T : class
+        private static class ClassExtractorForInsert<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForInsert()
+            static ClassExtractorForInsert()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Insert));
             }
@@ -297,13 +296,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForMerge
+        #region ClassExtractorForMerge
 
-        private static class ExtractorForMerge<T> where T : class
+        private static class ClassExtractorForMerge<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForMerge()
+            static ClassExtractorForMerge()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Merge));
             }
@@ -316,13 +315,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForQuery
+        #region ClassExtractorForQuery
 
-        private static class ExtractorForQuery<T> where T : class
+        private static class ClassExtractorForQuery<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForQuery()
+            static ClassExtractorForQuery()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Query));
             }
@@ -335,13 +334,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForTruncate
+        #region ClassExtractorForTruncate
 
-        private static class ExtractorForTruncate<T> where T : class
+        private static class ClassExtractorForTruncate<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForTruncate()
+            static ClassExtractorForTruncate()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Truncate));
             }
@@ -354,13 +353,13 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForUpdate
+        #region ClassExtractorForUpdate
 
-        private static class ExtractorForUpdate<T> where T : class
+        private static class ClassExtractorForUpdate<T> where T : class
         {
             private static readonly Func<T, IEnumerable<PropertyValue>> m_func;
 
-            static ExtractorForUpdate()
+            static ClassExtractorForUpdate()
             {
                 m_func = GetCompiledFunctionForClassExtractor<T>(PropertyCache.Get<T>(Command.Update));
             }
