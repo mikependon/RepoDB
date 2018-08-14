@@ -32,7 +32,7 @@ namespace RepoDb
                 // Check for the command type
                 if (commandType != CommandType.StoredProcedure)
                 {
-                    var mappedName = ClassExpression.GetMappedName<TEntity>(command);
+                    var mappedName = ClassExpression.GetClassMappedName<TEntity>(command);
                     var commandText = @"
                         SELECT CONVERT(INT, c.is_identity) AS IsIdentity
                         FROM [sys].[columns] c

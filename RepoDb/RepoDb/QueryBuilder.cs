@@ -379,7 +379,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> TableFrom(Command command)
         {
-            return Append($"{ClassExpression.GetMappedName<TEntity>(command).AsQuoted(true)}");
+            return Append($"{ClassExpression.GetClassMappedName<TEntity>(command).AsQuoted(true)}");
         }
 
         /// <summary>

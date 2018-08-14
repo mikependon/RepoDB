@@ -15,7 +15,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The target type of the class.</typeparam>
         /// <param name="command">The target command for extraction.</param>
         /// <returns>The mapped-name of the class.</returns>
-        public static string GetClassMappedName<TEntity>(Command command)
+        public static string GetMappedName<TEntity>(Command command)
             where TEntity : class
         {
             switch (command)
