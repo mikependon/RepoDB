@@ -124,7 +124,7 @@ namespace RepoDb
                     var primary = PrimaryKeyCache.Get<TEntity>();
                     if (primary != null)
                     {
-                        var queryField = new QueryField(PropertyMappedNameCache.Get(primary), where);
+                        var queryField = new QueryField(ClassExpression.GetPropertyMappedName(primary), where);
                         queryGroup = new QueryGroup(queryField.AsEnumerable());
                     }
                 }
@@ -649,7 +649,7 @@ namespace RepoDb
                     }
                     reader.Properties.ToList().ForEach(property =>
                     {
-                        var columnName = PropertyMappedNameCache.Get(property);
+                        var columnName = ClassExpression.GetPropertyMappedName(property);
                         sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                     });
                     connection.EnsureOpen();
@@ -2364,7 +2364,7 @@ namespace RepoDb
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
             var entityName = ClassExpression.GetClassMappedName<TEntity>(command).AsUnquoted();
-            var primaryKey = PropertyMappedNameCache.Get(primary).AsUnquoted();
+            var primaryKey = ClassExpression.GetPropertyMappedName(primary).AsUnquoted();
             var foreignKey = $"{entityName}{primaryKey}";
 
             // Split the list

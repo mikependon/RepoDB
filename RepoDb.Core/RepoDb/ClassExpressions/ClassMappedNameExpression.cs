@@ -87,7 +87,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForBatchQuery
+        #region ClassMappedNameExtractorForBatchQuery
 
         private static class ClassMappedNameExtractorForBatchQuery<T> where T : class
         {
@@ -106,7 +106,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForBulkInsert
+        #region ClassMappedNameExtractorForBulkInsert
 
         private static class ClassMappedNameExtractorForBulkInsert<T> where T : class
         {
@@ -125,7 +125,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForCount
+        #region ClassMappedNameExtractorForCount
 
         private static class ClassMappedNameExtractorForCount<T> where T : class
         {
@@ -144,7 +144,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForDelete
+        #region ClassMappedNameExtractorForDelete
 
         private static class ClassMappedNameExtractorForDelete<T> where T : class
         {
@@ -163,7 +163,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForDeleteAll
+        #region ClassMappedNameExtractorForDeleteAll
 
         private static class ClassMappedNameExtractorForDeleteAll<T> where T : class
         {
@@ -182,7 +182,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineInsert
+        #region ClassMappedNameExtractorForInlineInsert
 
         private static class ClassMappedNameExtractorForInlineInsert<T> where T : class
         {
@@ -201,7 +201,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineMerge
+        #region ClassMappedNameExtractorForInlineMerge
 
         private static class ClassMappedNameExtractorForInlineMerge<T> where T : class
         {
@@ -220,7 +220,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInlineUpdate
+        #region ClassMappedNameExtractorForInlineUpdate
 
         private static class ClassMappedNameExtractorForInlineUpdate<T> where T : class
         {
@@ -239,7 +239,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForInsert
+        #region ClassMappedNameExtractorForInsert
 
         private static class ClassMappedNameExtractorForInsert<T> where T : class
         {
@@ -258,7 +258,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForMerge
+        #region ClassMappedNameExtractorForMerge
 
         private static class ClassMappedNameExtractorForMerge<T> where T : class
         {
@@ -277,7 +277,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForQuery
+        #region ClassMappedNameExtractorForQuery
 
         private static class ClassMappedNameExtractorForQuery<T> where T : class
         {
@@ -296,7 +296,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForTruncate
+        #region ClassMappedNameExtractorForTruncate
 
         private static class ClassMappedNameExtractorForTruncate<T> where T : class
         {
@@ -315,7 +315,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExtractorForUpdate
+        #region ClassMappedNameExtractorForUpdate
 
         private static class ClassMappedNameExtractorForUpdate<T> where T : class
         {

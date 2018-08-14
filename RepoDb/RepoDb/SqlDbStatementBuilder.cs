@@ -35,7 +35,7 @@ namespace RepoDb
             var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
             var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
                 .Where(property => queryProperties.Contains(property));
-            var fields = batchQueryProperties.Select(property => new Field(PropertyMappedNameCache.Get(property)));
+            var fields = batchQueryProperties.Select(property => new Field(ClassExpression.GetPropertyMappedName(property)));
 
             // Validate the fields
             if (fields?.Any() == false)
@@ -196,7 +196,7 @@ namespace RepoDb
 
             // Check for all the fields
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => PropertyMappedNameCache.Get(property));
+                .Select(property => ClassExpression.GetPropertyMappedName(property));
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -208,7 +208,7 @@ namespace RepoDb
 
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != PropertyMappedNameCache.Get(primary)?.ToLower()) : fields?.Any() == true;
+            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower()) : fields?.Any() == true;
 
             // Check if there are fields
             if (hasFields == false)
@@ -220,9 +220,9 @@ namespace RepoDb
             if (overrideIgnore == false)
             {
                 var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                    .Select(property => PropertyMappedNameCache.Get(property)); ;
+                    .Select(property => ClassExpression.GetPropertyMappedName(property)); ;
                 var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
-                    .Select(property => PropertyMappedNameCache.Get(property))
+                    .Select(property => ClassExpression.GetPropertyMappedName(property))
                     .Where(property => insertableProperties.Contains(property));
                 unmatchesFields = fields?.Where(field =>
                     inlineInsertableProperties?.FirstOrDefault(property =>
@@ -257,7 +257,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{PropertyMappedNameCache.Get(primary)}" : "NULL";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{ClassExpression.GetPropertyMappedName(primary)}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -316,7 +316,7 @@ namespace RepoDb
         {
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var primaryMappedName = PropertyMappedNameCache.Get(primary);
+            var primaryMappedName = ClassExpression.GetPropertyMappedName(primary);
 
             // Check for the fields presence
             if (fields == null)
@@ -332,7 +332,7 @@ namespace RepoDb
 
             // Check for all the fields
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => PropertyMappedNameCache.Get(property));
+                .Select(property => ClassExpression.GetPropertyMappedName(property));
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -356,9 +356,9 @@ namespace RepoDb
             if (overrideIgnore == false)
             {
                 var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
-                    .Select(property => PropertyMappedNameCache.Get(property));
+                    .Select(property => ClassExpression.GetPropertyMappedName(property));
                 var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)?
-                    .Select(property => PropertyMappedNameCache.Get(property))
+                    .Select(property => ClassExpression.GetPropertyMappedName(property))
                     .Where(property => mergeableProperties.Contains(property));
                 unmatchesFields = fields?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
@@ -384,10 +384,10 @@ namespace RepoDb
 
             // Get all target fields
             var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Select(property => PropertyMappedNameCache.Get(property))
+                .Select(property => ClassExpression.GetPropertyMappedName(property))
                 .Where(field => !(isPrimaryIdentity == true && field.ToLower() == primaryMappedName?.ToLower()));
             var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Select(property => PropertyMappedNameCache.Get(property))
+                .Select(property => ClassExpression.GetPropertyMappedName(property))
                 .Where(field => field.ToLower() != primaryMappedName?.ToLower());
             var mergeInsertableFields = fields
                 .Where(field => overrideIgnore == true || insertableFields.Contains(field.Name));
@@ -481,7 +481,7 @@ namespace RepoDb
 
             // Check for all the fields
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => PropertyMappedNameCache.Get(property));
+                .Select(property => ClassExpression.GetPropertyMappedName(property));
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -500,7 +500,7 @@ namespace RepoDb
             }
 
             // Variables
-            var hasFields = fields?.Any(field => field.Name.ToLower() != PropertyMappedNameCache.Get(primary)?.ToLower()) == true;
+            var hasFields = fields?.Any(field => field.Name.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower()) == true;
 
             // Check if there are fields
             if (hasFields == false)
@@ -515,10 +515,10 @@ namespace RepoDb
             if (overrideIgnore == false)
             {
                 var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                    .Select(property => PropertyMappedNameCache.Get(property));
+                    .Select(property => ClassExpression.GetPropertyMappedName(property));
                 var inlineUpdateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
-                    .Select(property => PropertyMappedNameCache.Get(property))
-                    .Where(field => field.ToLower() != PropertyMappedNameCache.Get(primary)?.ToLower() && updateableFields.Contains(field));
+                    .Select(property => ClassExpression.GetPropertyMappedName(property))
+                    .Where(field => field.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower() && updateableFields.Contains(field));
                 var unmatchesProperties = fields?.Where(field =>
                     inlineUpdateableFields?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesProperties.Count() > 0)
@@ -579,7 +579,7 @@ namespace RepoDb
             var primary = PrimaryKeyCache.Get<TEntity>();
             var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
                 .Where(property => !(isPrimaryIdentity == true && property == primary))
-                .Select(property => new Field(PropertyMappedNameCache.Get(property)));
+                .Select(property => new Field(ClassExpression.GetPropertyMappedName(property)));
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -596,7 +596,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{PropertyMappedNameCache.Get(primary)}" : "NULL";
+            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{ClassExpression.GetPropertyMappedName(primary)}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -644,7 +644,7 @@ namespace RepoDb
         {
             // Check for all the fields
             var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
-                .Select(property => PropertyMappedNameCache.Get(property));
+                .Select(property => ClassExpression.GetPropertyMappedName(property));
             var unmatchesQualifiers = qualifiers?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -656,7 +656,7 @@ namespace RepoDb
 
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var primaryKeyName = PropertyMappedNameCache.Get(primary);
+            var primaryKeyName = ClassExpression.GetPropertyMappedName(primary);
 
             // Add the primary key as the default qualifier
             if (qualifiers == null && primary != null)
@@ -672,13 +672,13 @@ namespace RepoDb
 
             // Get the target properties
             var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Select(property => PropertyMappedNameCache.Get(property))
+                .Select(property => ClassExpression.GetPropertyMappedName(property))
                 .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryKeyName?.ToLower()));
             var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Select(property => PropertyMappedNameCache.Get(property))
+                .Select(property => ClassExpression.GetPropertyMappedName(property))
                 .Where(field => field.ToLower() != primaryKeyName?.ToLower());
             var mergeableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
-                .Select(property => PropertyMappedNameCache.Get(property));
+                .Select(property => ClassExpression.GetPropertyMappedName(property));
             var mergeInsertableFields = mergeableFields
                 .Where(field => insertableFields.Contains(field))
                 .Select(field => new Field(field));
@@ -754,7 +754,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"No queryable fields found from type '{typeof(TEntity).FullName}'.");
             }
-            var fields = properties?.Select(property => new Field(PropertyMappedNameCache.Get(property).AsQuoted(true)));
+            var fields = properties?.Select(property => new Field(ClassExpression.GetPropertyMappedName(property).AsQuoted(true)));
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
@@ -815,7 +815,7 @@ namespace RepoDb
             }
             var fields = properties
                 .Where(property => property != primary && property != identity)
-                .Select(p => new Field(PropertyMappedNameCache.Get(p)));
+                .Select(p => new Field(ClassExpression.GetPropertyMappedName(p)));
             where?.AppendParametersPrefix();
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder

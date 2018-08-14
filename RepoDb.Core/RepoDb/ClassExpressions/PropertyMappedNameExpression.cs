@@ -29,7 +29,7 @@ namespace RepoDb
             {
                 // Parameter
                 var property = Expression.Parameter(typeof(PropertyInfo), "property");
-                var method = typeof(PropertyMappedNameCache).GetMethod("Get", new[] { typeof(PropertyInfo) });
+                var method = typeof(PropertyMappedNameCache).GetTypeInfo().GetMethod("Get", new[] { typeof(PropertyInfo) });
 
                 // Expressions
                 var body = Expression.Call(method, property);

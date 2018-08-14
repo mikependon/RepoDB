@@ -224,7 +224,7 @@ namespace RepoDb.Extensions
                 .ToList()
                 .ForEach(property =>
                 {
-                    expandObject[PropertyMappedNameCache.Get(property)] = property.GetValue(dataEntity);
+                    expandObject[ClassExpression.GetPropertyMappedName(property)] = property.GetValue(dataEntity);
                 });
             queryGroup?
                 .FixParameters()

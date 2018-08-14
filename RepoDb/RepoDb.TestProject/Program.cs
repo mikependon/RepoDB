@@ -17,9 +17,9 @@ namespace RepoDb.TestProject
         static void Main(string[] args)
         {
             //Test();
-            //TestParallelism();
+            TestParallelism();
             //TestInventory();
-            TestAllOperations();
+            //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
