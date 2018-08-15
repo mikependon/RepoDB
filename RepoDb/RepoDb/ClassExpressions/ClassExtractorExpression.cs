@@ -72,7 +72,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="properties">The list of properties.</param>
         /// <returns>The enumerable value of class property values.</returns>
-        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassExtractor<T>(IEnumerable<PropertyInfo> properties)
+        private static Func<T, IEnumerable<PropertyValue>> GetCompiledFunctionForClassExtractor<T>(IEnumerable<ClassProperty> properties)
             where T : class
         {
             // Expressions
@@ -81,22 +81,22 @@ namespace RepoDb
             var param = Expression.Parameter(typeof(T), "obj");
             var constructor = typeof(PropertyValue).GetConstructor(new[]
             {
-                    typeof(string),
-                    typeof(object),
-                    typeof(PropertyInfo)
-                });
+                typeof(string),
+                typeof(object),
+                typeof(PropertyInfo)
+            });
 
             // Set the body
             var body = Expression.ListInit(
                 Expression.New(listType),
                 properties.Select(property =>
                 {
-                    var name = Expression.Constant(ClassExpression.GetPropertyMappedName(property));
-                    var value = Expression.Convert(Expression.Property(param, property), typeof(object));
+                    var name = Expression.Constant(property.GetMappedName());
+                    var value = Expression.Convert(Expression.Property(param, property.PropertyInfo), typeof(object));
                     var propertyValue = Expression.New(constructor,
                         name,
                         value,
-                        Expression.Constant(property));
+                        Expression.Constant(property.PropertyInfo));
                     return Expression.ElementInit(method, propertyValue);
                 }));
 

@@ -18,7 +18,7 @@ namespace RepoDb
         /// <param name="property">The wrapped property.</param>
         public ClassProperty(PropertyInfo property)
         {
-            Property = property;
+            PropertyInfo = property;
         }
 
         #region Properties
@@ -26,7 +26,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the wrapped property of this object.
         /// </summary>
-        public PropertyInfo Property
+        public PropertyInfo PropertyInfo
         {
             get;
         }
@@ -53,7 +53,7 @@ namespace RepoDb
                 return m_primaryAttribute;
             }
             m_isPrimaryAttributeWasSet = true;
-            return m_primaryAttribute = Property.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute;
+            return m_primaryAttribute = PropertyInfo.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute;
         }
 
         /*
@@ -73,7 +73,7 @@ namespace RepoDb
                 return m_identityAttribute;
             }
             m_isIdentityAttributeWasSet = true;
-            return m_identityAttribute = Property.GetCustomAttribute(typeof(IdentityAttribute)) as IdentityAttribute;
+            return m_identityAttribute = PropertyInfo.GetCustomAttribute(typeof(IdentityAttribute)) as IdentityAttribute;
         }
 
         /*
@@ -93,7 +93,7 @@ namespace RepoDb
                 return m_ignoreAttribute;
             }
             m_isIgnoreAttributeWasSet = true;
-            return m_ignoreAttribute = Property.GetCustomAttribute(typeof(IgnoreAttribute)) as IgnoreAttribute;
+            return m_ignoreAttribute = PropertyInfo.GetCustomAttribute(typeof(IgnoreAttribute)) as IgnoreAttribute;
         }
 
         /*
@@ -111,7 +111,37 @@ namespace RepoDb
             {
                 return m_isPrimary;
             }
-            return m_isPrimary = (GetPrimaryAttribute() != null);
+
+            // Primary Attribute
+            m_isPrimary = (GetPrimaryAttribute() != null);
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
+
+            // Id Property
+            m_isPrimary = (PropertyInfo.Name.ToLower() == StringConstant.Id.ToLower());
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
+
+            // Type.Name + Id
+            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{PropertyInfo.DeclaringType.Name}{StringConstant.Id}".ToLower());
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
+
+            // Mapping.Name + Id
+            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{ClassMappedNameCache.Get(PropertyInfo.DeclaringType, Command.Query)}{StringConstant.Id}".ToLower());
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
+
+            // Return false
+            return (m_isPrimary = false);
         }
 
         /*
@@ -152,8 +182,8 @@ namespace RepoDb
                 return m_dbType;
             }
             m_isDbTypeWasSet = true;
-            return m_dbType = Property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                TypeMapper.Get(GetUnderlyingType(Property.PropertyType))?.DbType;
+            return m_dbType = PropertyInfo.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                TypeMapper.Get(GetUnderlyingType(PropertyInfo.PropertyType))?.DbType;
         }
 
         /*
@@ -172,7 +202,7 @@ namespace RepoDb
             {
                 return m_mappedName;
             }
-            return m_mappedName = ClassExpression.GetPropertyMappedName(Property);
+            return m_mappedName = ClassExpression.GetPropertyMappedName(PropertyInfo);
         }
 
         /*
@@ -198,7 +228,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The target command.</param>
         /// <returns>Returns true if the property has been ignored based on the target command.</returns>
-        private bool IsIgnored(Command command)
+        public bool IsIgnored(Command command)
         {
             var ignoreAttribute = GetIgnoreAttribute();
             if (ignoreAttribute != null)
@@ -225,11 +255,11 @@ namespace RepoDb
             {
                 return m_isRecursive;
             }
-            var args = Property.PropertyType.GetTypeInfo().GetGenericArguments();
+            var args = PropertyInfo.PropertyType.GetTypeInfo().GetGenericArguments();
             return m_isRecursive = (args != null && args.Length > 0) &&
                 (
-                    Property.PropertyType != typeof(Nullable<>) &&
-                    Property.PropertyType.Name != "Nullable`1"
+                    PropertyInfo.PropertyType != typeof(Nullable<>) &&
+                    PropertyInfo.PropertyType.Name != "Nullable`1"
                 );
         }
 
@@ -490,7 +520,7 @@ namespace RepoDb
         /// <returns>The hash code value.</returns>
         public override int GetHashCode()
         {
-            return Property.GetHashCode();
+            return PropertyInfo.GetHashCode();
         }
 
         /// <summary>
@@ -502,7 +532,7 @@ namespace RepoDb
         {
             if (obj is ClassProperty)
             {
-                return Property.Equals(((ClassProperty)obj).Property);
+                return PropertyInfo.Equals(((ClassProperty)obj).PropertyInfo);
             }
             return Equals(obj);
         }
@@ -514,7 +544,7 @@ namespace RepoDb
         /// <returns>True if the two instance is the same.</returns>
         public bool Equals(ClassProperty other)
         {
-            return Property.Equals(other.Property);
+            return PropertyInfo.Equals(other.PropertyInfo);
         }
 
 

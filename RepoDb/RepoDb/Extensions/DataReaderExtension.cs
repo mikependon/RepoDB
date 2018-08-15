@@ -16,12 +16,12 @@ namespace RepoDb.Extensions
         internal static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
             where TEntity : class
         {
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)
-                .Where(property => property.CanWrite);
-            var dictionary = new Dictionary<int, PropertyInfo>();
+            var properties = PropertyCache.Get<TEntity>(Command.None)
+                .Where(property => property.PropertyInfo.CanWrite);
+            var dictionary = new Dictionary<int, ClassProperty>();
             for (var i = 0; i < reader.FieldCount; i++)
             {
-                var property = properties.FirstOrDefault(p => ClassExpression.GetPropertyMappedName(p).ToLower() == reader.GetName(i).ToLower());
+                var property = properties.FirstOrDefault(p => p.GetMappedName().ToLower() == reader.GetName(i).ToLower());
                 if (property != null)
                 {
                     dictionary.Add(i, property);
@@ -34,7 +34,7 @@ namespace RepoDb.Extensions
                 foreach (var kvp in dictionary)
                 {
                     var value = reader.IsDBNull(kvp.Key) ? null : reader.GetValue(kvp.Key);
-                    kvp.Value.SetValue(obj, value);
+                    kvp.Value.PropertyInfo.SetValue(obj, value);
                 }
                 list.Add(obj);
             }

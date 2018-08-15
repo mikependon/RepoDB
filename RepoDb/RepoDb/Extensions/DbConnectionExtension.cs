@@ -109,7 +109,7 @@ namespace RepoDb
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    var queryField = primary.AsQueryField(where);
+                    var queryField = primary.PropertyInfo.AsQueryField(where);
                     queryGroup = new QueryGroup(queryField.AsEnumerable());
                 }
             }
@@ -124,7 +124,7 @@ namespace RepoDb
                     var primary = PrimaryKeyCache.Get<TEntity>();
                     if (primary != null)
                     {
-                        var queryField = new QueryField(ClassExpression.GetPropertyMappedName(primary), where);
+                        var queryField = new QueryField(primary.GetMappedName(), where);
                         queryGroup = new QueryGroup(queryField.AsEnumerable());
                     }
                 }
@@ -142,7 +142,7 @@ namespace RepoDb
 
         // GuardPrimaryKey
 
-        private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(Command command)
             where TEntity : class
         {
             var property = PrimaryKeyCache.Get<TEntity>();
@@ -649,7 +649,7 @@ namespace RepoDb
                     }
                     reader.Properties.ToList().ForEach(property =>
                     {
-                        var columnName = ClassExpression.GetPropertyMappedName(property);
+                        var columnName = property.GetMappedName();
                         sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                     });
                     connection.EnsureOpen();
@@ -2364,7 +2364,7 @@ namespace RepoDb
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
             var entityName = ClassExpression.GetClassMappedName<TEntity>(command).AsUnquoted();
-            var primaryKey = ClassExpression.GetPropertyMappedName(primary).AsUnquoted();
+            var primaryKey = primary.GetMappedName().AsUnquoted();
             var foreignKey = $"{entityName}{primaryKey}";
 
             // Split the list
@@ -2403,7 +2403,7 @@ namespace RepoDb
                             throw new MissingFieldException($"Parent property '{parentFieldName}' from type '{recursiveData.ParentDataEntityType.FullName}' is not found.");
                         }
                     }
-                    parentFieldProperty = (parentFieldProperty ?? primary);
+                    parentFieldProperty = (parentFieldProperty ?? primary.PropertyInfo);
 
                     // Check for the foreign property
                     var foreignProperty = recursiveData.ChildListType.GetProperty(childFieldName.AsUnquoted());
@@ -2754,7 +2754,7 @@ namespace RepoDb
             var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
             return Update(connection: connection,
                 entity: entity,
-                where: new QueryGroup(property.AsQueryField(entity, true).AsEnumerable()),
+                where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

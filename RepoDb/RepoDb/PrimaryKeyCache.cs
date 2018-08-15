@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Reflection;
 
 namespace RepoDb
@@ -9,22 +10,22 @@ namespace RepoDb
     /// </summary>
     public static class PrimaryKeyCache
     {
-        private static readonly ConcurrentDictionary<string, PropertyInfo> m_cache = new ConcurrentDictionary<string, PropertyInfo>();
+        private static readonly ConcurrentDictionary<string, ClassProperty> m_cache = new ConcurrentDictionary<string, ClassProperty>();
 
         /// <summary>
         /// Gets the cached primary key property for the entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <returns>The cached primary property.</returns>
-        public static PropertyInfo Get<TEntity>()
+        public static ClassProperty Get<TEntity>()
             where TEntity : class
         {
             var type = typeof(TEntity);
             var key = type.FullName;
-            var property = (PropertyInfo)null;
+            var property = (ClassProperty)null;
             if (m_cache.TryGetValue(key, out property) == false)
             {
-                property = DataEntityExtension.GetPrimaryProperty(type);
+                property = PropertyCache.Get<TEntity>().FirstOrDefault(p => p.IsPrimary() == true);
                 m_cache.TryAdd(key, property);
             }
             return property;

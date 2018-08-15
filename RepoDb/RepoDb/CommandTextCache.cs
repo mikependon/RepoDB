@@ -116,7 +116,7 @@ namespace RepoDb
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
+                if (identity != null && identity != primary.PropertyInfo)
                 {
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
@@ -161,7 +161,7 @@ namespace RepoDb
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
+                if (identity != null && identity != primary.PropertyInfo)
                 {
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
@@ -236,7 +236,7 @@ namespace RepoDb
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
+                if (identity != null && identity != primary.PropertyInfo)
                 {
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
@@ -277,7 +277,7 @@ namespace RepoDb
             {
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 var identity = IdentityCache.Get<TEntity>();
-                if (identity != null && identity != primary)
+                if (identity != null && identity != primary.PropertyInfo)
                 {
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }

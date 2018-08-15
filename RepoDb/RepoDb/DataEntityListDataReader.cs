@@ -74,7 +74,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the properties of data entity object.
         /// </summary>
-        public IList<PropertyInfo> Properties { get; private set; }
+        public IList<ClassProperty> Properties { get; private set; }
 
         /// <summary>
         /// Gets the command used by this entity list reader.
@@ -244,7 +244,7 @@ namespace RepoDb
         public override string GetDataTypeName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].PropertyType.Name;
+            return Properties[i].PropertyInfo.PropertyType.Name;
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace RepoDb
         public override Type GetFieldType(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].PropertyType;
+            return Properties[i].PropertyInfo.PropertyType;
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace RepoDb
         public override string GetName(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return ClassExpression.GetPropertyMappedName(Properties[i]);
+            return Properties[i].GetMappedName();
         }
 
         /// <summary>
@@ -365,7 +365,7 @@ namespace RepoDb
         public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties.IndexOf(Properties.FirstOrDefault(p => ClassExpression.GetPropertyMappedName(p) == name));
+            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
         }
 
         /// <summary>
@@ -397,7 +397,7 @@ namespace RepoDb
         public override object GetValue(int i)
         {
             ThrowExceptionIfNotAvailable();
-            return Properties[i].GetValue(Enumerator.Current);
+            return Properties[i].PropertyInfo.GetValue(Enumerator.Current);
         }
 
         /// <summary>

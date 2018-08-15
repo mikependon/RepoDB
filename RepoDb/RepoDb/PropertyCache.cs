@@ -2,7 +2,6 @@
 using RepoDb.Extensions;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace RepoDb
 {
@@ -11,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<string, IEnumerable<PropertyInfo>> m_cache = new ConcurrentDictionary<string, IEnumerable<PropertyInfo>>();
+        private static readonly ConcurrentDictionary<string, IEnumerable<ClassProperty>> m_cache = new ConcurrentDictionary<string, IEnumerable<ClassProperty>>();
 
         /// <summary>
         /// Gets the cached primary key property for the entity.
@@ -19,12 +18,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="command">The target command.</param>
         /// <returns>The cached properties of the entity.</returns>
-        public static IEnumerable<PropertyInfo> Get<TEntity>(Command command = Command.None)
+        public static IEnumerable<ClassProperty> Get<TEntity>(Command command = Command.None)
             where TEntity : class
         {
             var type = typeof(TEntity);
             var key = $"{type.FullName}.{command.ToString()}";
-            var properties = (IEnumerable<PropertyInfo>)null;
+            var properties = (IEnumerable<ClassProperty>)null;
             if (m_cache.TryGetValue(key, out properties) == false)
             {
                 properties = DataEntityExtension.GetPropertiesFor<TEntity>(command);

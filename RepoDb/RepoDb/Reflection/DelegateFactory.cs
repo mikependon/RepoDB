@@ -48,12 +48,12 @@ namespace RepoDb.Reflection
             var matchedCount = 0;
 
             // Iterate the properties
-            DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query)
-                .Where(property => property.CanWrite)
+            PropertyCache.Get<TEntity>(Command.Query)
+                .Where(property => property.PropertyInfo.CanWrite)
                 .ToList()
                 .ForEach(property =>
                 {
-                    var ordinal = fields.IndexOf(ClassExpression.GetPropertyMappedName(property));
+                    var ordinal = fields.IndexOf(property.GetMappedName());
                     if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
@@ -75,12 +75,12 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToDataEntityDelegate<TEntity>));
         }
 
-        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, PropertyInfo property)
+        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, ClassProperty property)
 			where TEntity : class
         {
             // Get the property type
-            var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-            var propertyType = underlyingType ?? property.PropertyType;
+            var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
+            var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
 
             // Variables for ending this property emitting
             var endLabel = ilGenerator.DefineLabel();
@@ -142,7 +142,7 @@ namespace RepoDb.Reflection
             }
 
             // Call the (Property.Set) or (Property = Value)
-            ilGenerator.Emit(OpCodes.Call, property.GetSetMethod());
+            ilGenerator.Emit(OpCodes.Call, property.PropertyInfo.GetSetMethod());
 
             // End label for DBNull.Value checking
             ilGenerator.MarkLabel(endLabel);
