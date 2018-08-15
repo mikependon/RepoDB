@@ -210,6 +210,30 @@ namespace RepoDb
         }
 
         /*
+         * IsRecursive
+         */
+
+        private bool? m_isRecursive;
+
+        /// <summary>
+        /// Gets the value whether this property is recursive.
+        /// </summary>
+        /// <returns>The value that defines whether this property is recursive.</returns>
+        public bool? IsRecursive()
+        {
+            if (m_isRecursive != null)
+            {
+                return m_isRecursive;
+            }
+            var args = Property.PropertyType.GetTypeInfo().GetGenericArguments();
+            return m_isRecursive = (args != null && args.Length > 0) &&
+                (
+                    Property.PropertyType != typeof(Nullable<>) &&
+                    Property.PropertyType.Name != "Nullable`1"
+                );
+        }
+
+        /*
          * IsQueryable
          */
 
