@@ -30,13 +30,13 @@ namespace RepoDb.Extensions
             var primary = PrimaryKeyCache.Get<TEntity>();
             if (primary != null)
             {
-                if (primary.PropertyType == typeof(Guid))
+                if (primary.PropertyInfo.PropertyType == typeof(Guid))
                 {
                     value = Guid.Parse(value.ToString());
                 }
                 else
                 {
-                    value = Convert.ChangeType(value, primary.PropertyType);
+                    value = Convert.ChangeType(value, primary.PropertyInfo.PropertyType);
                 }
             }
             return value;
@@ -73,11 +73,14 @@ namespace RepoDb.Extensions
         }
 
         // GetPropertiesFor
-        internal static IEnumerable<PropertyInfo> GetPropertiesFor(Type type, Command command)
+        internal static IEnumerable<ClassProperty> GetPropertiesFor(Type type, Command command)
         {
             return type
                 .GetProperties()
-                .Where(property => !property.IsIgnored(command) && !property.IsRecursive());
+                .Select(property => new ClassProperty(property))
+                .Where(property => 
+                    property.IsIgnored(command) == false && 
+                    property.IsRecursive() == false);
         }
 
         /// <summary>
@@ -87,7 +90,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TEntity">The type of the data entity where to get the list of the properties.</typeparam>
         /// <param name="command">The target command.</param>
         /// <returns>The list of data entity properties based on the target command.</returns>
-        public static IEnumerable<PropertyInfo> GetPropertiesFor<TEntity>(Command command)
+        public static IEnumerable<ClassProperty> GetPropertiesFor<TEntity>(Command command)
             where TEntity : class
         {
             return GetPropertiesFor(typeof(TEntity), command);
@@ -224,7 +227,7 @@ namespace RepoDb.Extensions
                 .ToList()
                 .ForEach(property =>
                 {
-                    expandObject[ClassExpression.GetPropertyMappedName(property)] = property.GetValue(dataEntity);
+                    expandObject[property.GetMappedName()] = property.PropertyInfo.GetValue(dataEntity);
                 });
             queryGroup?
                 .FixParameters()
