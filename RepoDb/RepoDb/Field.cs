@@ -72,7 +72,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException("Parameter 'obj' must have atleast one property.");
             }
-            return properties.Select(property => new Field(ClassExpression.GetPropertyMappedName(property)));
+            return properties.Select(property => new Field(PropertyMappedNameCache.Get(property)));
         }
 
         // Equality and comparers
