@@ -78,8 +78,8 @@ namespace RepoDb.Extensions
             return type
                 .GetProperties()
                 .Select(property => new ClassProperty(property))
-                .Where(property => 
-                    property.IsIgnored(command) == false && 
+                .Where(property =>
+                    property.IsIgnored(command) == false &&
                     property.IsRecursive() == false);
         }
 
@@ -127,69 +127,6 @@ namespace RepoDb.Extensions
             where TEntity : class
         {
             return GetPropertyByAttribute(typeof(TEntity), attributeType);
-        }
-
-        // GetPrimaryProperty
-        internal static PropertyInfo GetPrimaryProperty(Type type)
-        {
-            // Primary Attribute
-            var property = GetPropertyByAttribute(type, typeof(PrimaryAttribute));
-            if (property != null)
-            {
-                return property;
-            }
-
-            // Id Property
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == StringConstant.Id.ToLower());
-            if (property != null)
-            {
-                return property;
-            }
-
-            // Type.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{type.Name}{StringConstant.Id}".ToLower());
-            if (property != null)
-            {
-                return property;
-            }
-
-            // Mapping.Name + Id
-            property = type.GetProperties().FirstOrDefault(p => p.Name.ToLower() == $"{GetMappedName(type, Command.Query).AsUnquoted()}{StringConstant.Id}".ToLower());
-            if (property != null)
-            {
-                return property;
-            }
-
-            // Not found
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the primary key property of the data entity object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity where to get the primary key property.</typeparam>
-        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
-        public static PropertyInfo GetPrimaryProperty<TEntity>()
-            where TEntity : class
-        {
-            return GetPrimaryProperty(typeof(TEntity));
-        }
-
-        // GetIdentityProperty
-        internal static PropertyInfo GetIdentityProperty(Type type)
-        {
-            return GetPropertyByAttribute(type, typeof(IdentityAttribute));
-        }
-
-        /// <summary>
-        /// Gets the identity property of the data entity object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity where to get the identity property.</typeparam>
-        /// <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as an identity property of the data entity.</returns>
-        public static PropertyInfo GetIdentityProperty<TEntity>()
-            where TEntity : class
-        {
-            return GetIdentityProperty(typeof(TEntity));
         }
 
         // GetMappedName

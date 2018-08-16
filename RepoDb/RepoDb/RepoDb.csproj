@@ -55,6 +55,7 @@
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="ClassExpressions\ClassMappedNameExpression.cs" />
+    <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassExpressions\PropertyMappedNameExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="Requests\QueryRequest.cs" />
     <Compile Include="RecursionManager.cs" />
     <Compile Include="SqlDbHelper.cs" />
-    <Compile Include="ClassExpressions\ClassExtractorExpression.cs" />
+    <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />

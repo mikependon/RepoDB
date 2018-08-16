@@ -26,7 +26,7 @@ namespace RepoDb
             var key = property;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = PropertyInfoExtension.GetMappedName(property);
+                result = ClassExpression.GetPropertyMappedName(property);
                 m_cache.TryAdd(key, result);
             }
             return result;

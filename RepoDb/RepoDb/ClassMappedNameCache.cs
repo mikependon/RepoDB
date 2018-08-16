@@ -21,16 +21,23 @@ namespace RepoDb
         public static string Get<TEntity>(Command command = Command.None)
             where TEntity : class
         {
-            return Get(typeof(TEntity), command);
+            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
+            var result = (string)null;
+            if (m_cache.TryGetValue(key, out result) == false)
+            {
+                result = ClassExpression.GetClassMappedName<TEntity>(command);
+                m_cache.TryAdd(key, result);
+            }
+            return result;
         }
 
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
-        /// <param name="type">The entity type.</param>
+        /// <param name="type">The type of the target entity.</param>
         /// <param name="command">The target command.</param>
         /// <returns>The cached command type of the entity.</returns>
-        public static string Get(Type type, Command command = Command.None)
+        internal static string Get(Type type, Command command = Command.None)
         {
             var key = $"{type.FullName}.{command.ToString()}";
             var result = (string)null;

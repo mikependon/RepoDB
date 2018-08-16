@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Extensions;
+using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -29,7 +30,7 @@ namespace RepoDb
             {
                 // Parameter
                 var property = Expression.Parameter(typeof(PropertyInfo), "property");
-                var method = typeof(PropertyMappedNameCache).GetMethod("Get", new[] { typeof(PropertyInfo) });
+                var method = typeof(PropertyInfoExtension).GetMethod("GetMappedName", new[] { typeof(PropertyInfo) });
 
                 // Expressions
                 var body = Expression.Call(method, property);

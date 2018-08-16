@@ -1,5 +1,4 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -21,12 +20,11 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> Get<TEntity>(Command command = Command.None)
             where TEntity : class
         {
-            var type = typeof(TEntity);
-            var key = $"{type.FullName}.{command.ToString()}";
+            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
             var properties = (IEnumerable<ClassProperty>)null;
             if (m_cache.TryGetValue(key, out properties) == false)
             {
-                properties = DataEntityExtension.GetPropertiesFor<TEntity>(command);
+                properties = ClassExpression.GetProperties<TEntity>(command);
                 m_cache.TryAdd(key, properties);
             }
             return properties;

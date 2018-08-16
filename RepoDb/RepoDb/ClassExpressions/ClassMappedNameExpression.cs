@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using RepoDb.Extensions;
 using System;
 using System.Linq.Expressions;
 
@@ -60,15 +61,10 @@ namespace RepoDb
             where T : class
         {
             // Parameter
-            var method = typeof(ClassMappedNameCache)
-                .GetMethod("Get", new[]
-                {
-                    typeof(Command)
-                })
-                .MakeGenericMethod(typeof(T));
+            var mappedName = DataEntityExtension.GetMappedName<T>(command);
 
             // Expressions
-            var body = Expression.Call(method, Expression.Constant(command));
+            var body = Expression.Constant(mappedName);
 
             // Set the function value
             return Expression

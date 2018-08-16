@@ -32,7 +32,7 @@ namespace RepoDb.TestProject
                 var people = repository.Query<Person>(top: 1000);
                 people.ToList().ForEach(person =>
                 {
-                    var extracted = ClassExpression.Extract(person);
+                    var extracted = ClassExpression.GetPropertiesAndValues(person);
                 });
             }
         }
