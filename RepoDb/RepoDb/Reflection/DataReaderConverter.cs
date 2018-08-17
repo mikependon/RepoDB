@@ -34,7 +34,7 @@ namespace RepoDb.Reflection
         public static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader)
             where TEntity : class
         {
-            if (reader != null && reader.HasRows)
+            if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
                 var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
                 while (reader.Read())

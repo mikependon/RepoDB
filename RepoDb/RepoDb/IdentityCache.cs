@@ -18,8 +18,7 @@ namespace RepoDb
         public static ClassProperty Get<TEntity>()
             where TEntity : class
         {
-            var type = typeof(TEntity);
-            var key = type.FullName;
+            var key = typeof(TEntity).FullName;
             var property = (ClassProperty)null;
             if (m_cache.TryGetValue(key, out property) == false)
             {

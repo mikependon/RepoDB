@@ -18,16 +18,11 @@ namespace RepoDb
         /// <returns>The cached mapped-name of the property.</returns>
         public static string Get(PropertyInfo property)
         {
-            if (property==null)
-            {
-                return null;
-            }
             var result = (string)null;
-            var key = property;
-            if (m_cache.TryGetValue(key, out result) == false)
+            if (m_cache.TryGetValue(property, out result) == false)
             {
-                result = ClassExpression.GetPropertyMappedName(property);
-                m_cache.TryAdd(key, result);
+                result = PropertyInfoExtension.GetMappedName(property);
+                m_cache.TryAdd(property, result);
             }
             return result;
         }

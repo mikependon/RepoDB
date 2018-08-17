@@ -54,9 +54,7 @@
     <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
-    <Compile Include="ClassExpressions\ClassMappedNameExpression.cs" />
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
-    <Compile Include="ClassExpressions\PropertyMappedNameExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DynamicComparers\DynamicPropertiesComparer.cs" />

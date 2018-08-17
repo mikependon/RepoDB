@@ -16,8 +16,8 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            //Test();
-            TestParallelism();
+            Test();
+            //TestParallelism();
             //TestInventory();
             //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
@@ -29,11 +29,12 @@ namespace RepoDb.TestProject
         {
             using (var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance))
             {
-                var people = repository.Query<Person>(top: 1000);
-                people.ToList().ForEach(person =>
+                for (var i = 0; i < 1000; i++)
                 {
-                    var extracted = ClassExpression.GetPropertiesAndValues(person);
-                });
+                    var person = repository.Query<Person>(new { Id = 1000 }).ToList();
+                }
+                //Console.WriteLine($"Count: {PerformanceMonitor.GetCount()}");
+                //Console.WriteLine($"Elapsed: {Convert.ToInt32(PerformanceMonitor.GetElapsedTime().TotalMilliseconds)} millisecond(s)");
             }
         }
 

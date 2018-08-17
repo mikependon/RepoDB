@@ -25,7 +25,7 @@ namespace RepoDb
             var result = (string)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = ClassExpression.GetClassMappedName<TEntity>(command);
+                result = DataEntityExtension.GetMappedName<TEntity>(command);
                 m_cache.TryAdd(key, result);
             }
             return result;

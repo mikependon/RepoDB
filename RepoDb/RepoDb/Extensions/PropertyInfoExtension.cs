@@ -54,7 +54,7 @@ namespace RepoDb.Extensions
         /// <returns>The custom attribute.</returns>
         public static Attribute GetCustomAttribute(this PropertyInfo property, Type type)
         {
-            var attributes = property.GetCustomAttributes(type, false);
+            var attributes = property?.GetCustomAttributes(type, false);
             return attributes?.Any() == true ? (Attribute)attributes[0] : null;
         }
 
