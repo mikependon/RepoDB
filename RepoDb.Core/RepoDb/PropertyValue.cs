@@ -13,7 +13,7 @@ namespace RepoDb
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The value of the property.</param>
         /// <param name="property">The actual property object.</param>
-        public PropertyValue(string name, object value, PropertyInfo property)
+        public PropertyValue(string name, object value, ClassProperty property)
         {
             Name = name;
             Value = value;
@@ -33,6 +33,6 @@ namespace RepoDb
         /// <summary>
         /// Gets the actual property object.
         /// </summary>
-        public PropertyInfo Property { get; }
+        public ClassProperty Property { get; }
     }
 }

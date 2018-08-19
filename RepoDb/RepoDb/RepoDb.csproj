@@ -57,8 +57,6 @@
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
-    <Compile Include="DynamicComparers\DynamicPropertiesComparer.cs" />
-    <Compile Include="DynamicExpressions\DynamicExtractorExpression.cs" />
     <Compile Include="IdentityCache.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
@@ -86,6 +84,7 @@
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
+    <Compile Include="Reflection\DelegateCache.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
     <Compile Include="Requests\CountRequest.cs" />
     <Compile Include="Requests\BatchQueryRequest.cs" />

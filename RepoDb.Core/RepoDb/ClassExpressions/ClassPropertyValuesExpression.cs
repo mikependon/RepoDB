@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -75,9 +76,9 @@ namespace RepoDb
             where T : class
         {
             // Expressions
-            var addMethod = typeof(List<PropertyValue>).GetMethod("Add", new[] { typeof(PropertyValue) });
+            var addMethod = typeof(List<PropertyValue>).GetTypeInfo().GetMethod("Add", new[] { typeof(PropertyValue) });
             var obj = Expression.Parameter(typeof(T), "obj");
-            var propertyValueConstructor = typeof(PropertyValue).GetConstructor(new[]
+            var propertyValueConstructor = typeof(PropertyValue).GetTypeInfo().GetConstructor(new[]
             {
                 typeof(string),
                 typeof(object),

@@ -16,27 +16,31 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            Test();
+            //TestPerformanceMonitor();
             //TestParallelism();
             //TestInventory();
-            //TestAllOperations();
+            TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
-        private static void Test()
-        {
-            using (var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance))
-            {
-                for (var i = 0; i < 1000; i++)
-                {
-                    var person = repository.Query<Person>(new { Id = 1000 }).ToList();
-                }
-                //Console.WriteLine($"Count: {PerformanceMonitor.GetCount()}");
-                //Console.WriteLine($"Elapsed: {Convert.ToInt32(PerformanceMonitor.GetElapsedTime().TotalMilliseconds)} millisecond(s)");
-            }
-        }
+        //private static void TestPerformanceMonitor()
+        //{
+        //    using (var repository = new DbRepository<SqlConnection>(RepoDbConnectionString))
+        //    {
+        //        for (var i = 0; i < 1000; i++)
+        //        {
+        //            PerformanceMonitor.Start();
+        //            //var people = repository.Query<Person>(new { Id = i });
+        //            var people = repository.ExecuteQuery<Person>("SELECT * FROM Person WHERE Id = @Id;", new { Id = i });
+        //            var person = people.Where(p => p.Id == i).FirstOrDefault();
+        //            PerformanceMonitor.Stop();
+        //        }
+        //        //Console.WriteLine($"Count: {PerformanceMonitor.GetCount()}");
+        //        Console.WriteLine($"Elapsed: {Convert.ToInt32(PerformanceMonitor.GetElapsedTime().TotalMilliseconds)} millisecond(s)");
+        //    }
+        //}
 
         public static void TestParallelism()
         {
@@ -49,43 +53,40 @@ namespace RepoDb.TestProject
         public static void TestInventory()
         {
 
-            using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString, ConnectionPersistency.Instance))
+            using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString))
             {
                 var current = DateTime.UtcNow;
-                var customer = repository.Query<CustomerDto>(recursive: true, recursionDepth: 5);
-                var lapsedInSeconds = (DateTime.UtcNow - current).TotalSeconds;
-                Console.WriteLine($"Recursive query lapsed for total of {lapsedInSeconds} second(s).");
-                //var customers = repository.Query<CustomerDto>();
-                //customers.ToList().ForEach(customer =>
-                //{
-                //    // Customer
-                //    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
-                //    // Orders
-                //    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
-                //    orders.ToList().ForEach(order =>
-                //    {
-                //        Console.WriteLine($"   Order: {order.OrderNumber}, " +
-                //            $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
-                //        // OrderItem
-                //        var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
-                //        if (orderItem != null)
-                //        {
-                //            // Product
-                //            var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
-                //            if (product != null)
-                //            {
-                //                Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
-                //                // Supplier
-                //                var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
-                //                if (supplier != null)
-                //                {
-                //                    Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
-                //                }
-                //            }
-                //        }
-                //    });
-                //    //Console.ReadLine();
-                //});
+                var customers = repository.Query<CustomerDto>();
+                foreach (var customer in customers) // customers.ToList().ForEach(customer =>
+                {
+                    // Customer
+                    Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName} from {customer.City}, {customer.Country}");
+                    // Orders
+                    var orders = repository.Query<OrderDto>(new { CustomerId = customer.Id });
+                    orders.ToList().ForEach(order =>
+                    {
+                        Console.WriteLine($"   Order: {order.OrderNumber}, " +
+                            $"Date: {order.OrderDate.GetValueOrDefault().ToString("u")}, Total Amount: {order.TotalAmount}");
+                        // OrderItem
+                        var orderItem = repository.Query<OrderItemDto>(new { OrderId = order.Id }).FirstOrDefault();
+                        if (orderItem != null)
+                        {
+                            // Product
+                            var product = repository.Query<ProductDto>(new { Id = orderItem.ProductId }).FirstOrDefault();
+                            if (product != null)
+                            {
+                                Console.WriteLine($"      Product: {product.ProductName}, Price: {orderItem.UnitPrice}, Quantity: {orderItem.Quantity}, Total: {orderItem.UnitPrice * orderItem.Quantity} ");
+                                // Supplier
+                                var supplier = repository.Query<SupplierDto>(new { Id = product.SupplierId }).FirstOrDefault();
+                                if (supplier != null)
+                                {
+                                    Console.WriteLine($"      Supplier: {supplier.CompanyName}, City: {supplier.City}, Country: {supplier.Country}, Contact: {supplier.ContactName}, Phone: {supplier.Phone} ");
+                                }
+                            }
+                        }
+                    });
+                    //Console.ReadLine();
+                }
             }
             Console.ReadLine();
         }
@@ -201,7 +202,7 @@ namespace RepoDb.TestProject
         private static void TestAllOperations()
         {
             // Repository
-            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString, ConnectionPersistency.Instance);
+            var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 
             // Count
             //Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");

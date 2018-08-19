@@ -36,7 +36,7 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
+                var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>(reader);
                 while (reader.Read())
                 {
                     yield return @delegate(reader);
@@ -53,7 +53,7 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.HasRows)
             {
-                var @delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
+                var @delegate = DelegateCache.GetDataReaderToExpandoObjectDelegate(reader);
                 while (reader.Read())
                 {
                     yield return @delegate(reader);

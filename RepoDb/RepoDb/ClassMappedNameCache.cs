@@ -21,14 +21,7 @@ namespace RepoDb
         public static string Get<TEntity>(Command command = Command.None)
             where TEntity : class
         {
-            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
-            var result = (string)null;
-            if (m_cache.TryGetValue(key, out result) == false)
-            {
-                result = DataEntityExtension.GetMappedName<TEntity>(command);
-                m_cache.TryAdd(key, result);
-            }
-            return result;
+            return Get(typeof(TEntity), command);
         }
 
         /// <summary>

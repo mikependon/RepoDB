@@ -202,7 +202,7 @@ namespace RepoDb
             {
                 return m_mappedName;
             }
-            return m_mappedName = ClassExpression.GetPropertyMappedName(PropertyInfo);
+            return m_mappedName = PropertyMappedNameCache.Get(PropertyInfo);
         }
 
         /*

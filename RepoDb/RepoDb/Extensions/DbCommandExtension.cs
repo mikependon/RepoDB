@@ -71,8 +71,7 @@ namespace RepoDb.Extensions
                 var propertyValues = (IEnumerable<PropertyValue>)param;
                 propertyValues.ToList().ForEach(propertyValue =>
                 {
-                    var dbType = propertyValue.Property.GetDbType() ??
-                        TypeMapper.Get(GetUnderlyingType(propertyValue.Property.PropertyInfo.PropertyType))?.DbType;
+                    var dbType = propertyValue.Property.GetDbType();
                     command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
                 });
             }

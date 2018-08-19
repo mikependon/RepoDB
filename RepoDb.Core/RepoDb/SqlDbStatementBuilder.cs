@@ -32,10 +32,10 @@ namespace RepoDb
         public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
             where TEntity : class
         {
-            var queryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
-            var batchQueryProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.BatchQuery)
+            var queryProperties = PropertyCache.Get<TEntity>(Command.Query);
+            var batchQueryProperties = PropertyCache.Get<TEntity>(Command.BatchQuery)
                 .Where(property => queryProperties.Contains(property));
-            var fields = batchQueryProperties.Select(property => new Field(ClassExpression.GetPropertyMappedName(property)));
+            var fields = batchQueryProperties.Select(property => new Field(property.GetMappedName()));
 
             // Validate the fields
             if (fields?.Any() == false)
@@ -161,7 +161,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
@@ -195,8 +195,8 @@ namespace RepoDb
             }
 
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => ClassExpression.GetPropertyMappedName(property));
+            var properties = PropertyCache.Get<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -208,21 +208,21 @@ namespace RepoDb
 
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower()) : fields?.Any() == true;
+            var hasFields = isPrimaryIdentity ? fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields?.Any() == true;
 
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline insertable fields for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineInsert)}'.");
+                throw new InvalidOperationException($"No inline insertable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
             }
 
             // Check for the unmatches
             if (overrideIgnore == false)
             {
-                var insertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                    .Select(property => ClassExpression.GetPropertyMappedName(property)); ;
-                var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineInsert)
-                    .Select(property => ClassExpression.GetPropertyMappedName(property))
+                var insertableProperties = PropertyCache.Get<TEntity>(Command.Insert)
+                    .Select(property => property.GetMappedName()); ;
+                var inlineInsertableProperties = PropertyCache.Get<TEntity>(Command.InlineInsert)
+                    .Select(property => property.GetMappedName())
                     .Where(property => insertableProperties.Contains(property));
                 unmatchesFields = fields?.Where(field =>
                     inlineInsertableProperties?.FirstOrDefault(property =>
@@ -230,7 +230,7 @@ namespace RepoDb
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline insertable for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineInsert)}'.");
+                        $"inline insertable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
                 }
             }
 
@@ -238,7 +238,7 @@ namespace RepoDb
             if (primary != null && isPrimaryIdentity)
             {
                 fields = fields?
-                    .Where(field => field.Name.ToLower() != primary.Name.ToLower())
+                    .Where(field => field.Name.ToLower() != primary.GetMappedName().ToLower())
                         .Select(field => field);
             }
 
@@ -257,7 +257,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{ClassExpression.GetPropertyMappedName(primary)}" : "NULL";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -286,7 +286,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
@@ -316,7 +316,7 @@ namespace RepoDb
         {
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var primaryMappedName = ClassExpression.GetPropertyMappedName(primary);
+            var primaryMappedName = primary?.GetMappedName();
 
             // Check for the fields presence
             if (fields == null)
@@ -331,8 +331,8 @@ namespace RepoDb
             }
 
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => ClassExpression.GetPropertyMappedName(property));
+            var properties = PropertyCache.Get<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -355,24 +355,24 @@ namespace RepoDb
             // Check for the unmatches
             if (overrideIgnore == false)
             {
-                var mergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
-                    .Select(property => ClassExpression.GetPropertyMappedName(property));
-                var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineMerge)?
-                    .Select(property => ClassExpression.GetPropertyMappedName(property))
+                var mergeableProperties = PropertyCache.Get<TEntity>(Command.Merge)?
+                    .Select(property => property.GetMappedName());
+                var inlineMergeableProperties = PropertyCache.Get<TEntity>(Command.InlineMerge)?
+                    .Select(property => property.GetMappedName())
                     .Where(property => mergeableProperties.Contains(property));
                 unmatchesFields = fields?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
                 }
                 unmatchesQualifiers = qualifiers?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesQualifiers?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
                 }
             }
 
@@ -383,11 +383,11 @@ namespace RepoDb
             }
 
             // Get all target fields
-            var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Select(property => ClassExpression.GetPropertyMappedName(property))
+            var insertableFields = PropertyCache.Get<TEntity>(Command.Insert)
+                .Select(property => property.GetMappedName())
                 .Where(field => !(isPrimaryIdentity == true && field.ToLower() == primaryMappedName?.ToLower()));
-            var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Select(property => ClassExpression.GetPropertyMappedName(property))
+            var updateableFields = PropertyCache.Get<TEntity>(Command.Update)
+                .Select(property => property.GetMappedName())
                 .Where(field => field.ToLower() != primaryMappedName?.ToLower());
             var mergeInsertableFields = fields
                 .Where(field => overrideIgnore == true || insertableFields.Contains(field.Name));
@@ -480,8 +480,8 @@ namespace RepoDb
             }
 
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.None)?
-                .Select(property => ClassExpression.GetPropertyMappedName(property));
+            var properties = PropertyCache.Get<TEntity>(Command.None)?
+                .Select(property => property.GetMappedName());
             var unmatchesFields = fields?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -493,19 +493,19 @@ namespace RepoDb
 
             // Important fields
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
             }
 
             // Variables
-            var hasFields = fields?.Any(field => field.Name.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower()) == true;
+            var hasFields = fields?.Any(field => field.Name.ToLower() != primary?.GetMappedName().ToLower()) == true;
 
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline updatable fields for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineUpdate)}'.");
+                throw new InvalidOperationException($"No inline updatable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
             }
 
             // Append prefix to all parameters
@@ -514,17 +514,17 @@ namespace RepoDb
             // Check for the unmatches
             if (overrideIgnore == false)
             {
-                var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                    .Select(property => ClassExpression.GetPropertyMappedName(property));
-                var inlineUpdateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.InlineUpdate)
-                    .Select(property => ClassExpression.GetPropertyMappedName(property))
-                    .Where(field => field.ToLower() != ClassExpression.GetPropertyMappedName(primary)?.ToLower() && updateableFields.Contains(field));
+                var updateableFields = PropertyCache.Get<TEntity>(Command.Update)
+                    .Select(property => property.GetMappedName());
+                var inlineUpdateableFields = PropertyCache.Get<TEntity>(Command.InlineUpdate)
+                    .Select(property => property.GetMappedName())
+                    .Where(field => field.ToLower() != primary?.GetMappedName().ToLower() && updateableFields.Contains(field));
                 var unmatchesProperties = fields?.Where(field =>
                     inlineUpdateableFields?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline updateable for object '{ClassExpression.GetClassMappedName<TEntity>(Command.InlineUpdate)}'.");
+                        $"inline updateable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
                 }
             }
 
@@ -555,7 +555,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
@@ -577,9 +577,9 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var fields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Where(property => !(isPrimaryIdentity == true && property == primary))
-                .Select(property => new Field(ClassExpression.GetPropertyMappedName(property)));
+            var fields = PropertyCache.Get<TEntity>(Command.Insert)
+                .Where(property => !(isPrimaryIdentity == true && property.IsPrimary() == true))
+                .Select(property => new Field(property.GetMappedName()));
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -596,7 +596,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{ClassExpression.GetPropertyMappedName(primary)}" : "NULL";
+            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -620,7 +620,7 @@ namespace RepoDb
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
@@ -643,8 +643,8 @@ namespace RepoDb
             where TEntity : class
         {
             // Check for all the fields
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)?
-                .Select(property => ClassExpression.GetPropertyMappedName(property));
+            var properties = PropertyCache.Get<TEntity>(Command.Merge)?
+                .Select(property => property.GetMappedName());
             var unmatchesQualifiers = qualifiers?.Where(field =>
                 properties?.FirstOrDefault(property =>
                     field.Name.ToLower() == property.ToLower()) == null);
@@ -656,7 +656,7 @@ namespace RepoDb
 
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var primaryKeyName = ClassExpression.GetPropertyMappedName(primary);
+            var primaryKeyName = primary?.GetMappedName();
 
             // Add the primary key as the default qualifier
             if (qualifiers == null && primary != null)
@@ -671,14 +671,14 @@ namespace RepoDb
             }
 
             // Get the target properties
-            var insertableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Insert)
-                .Select(property => ClassExpression.GetPropertyMappedName(property))
+            var insertableFields = PropertyCache.Get<TEntity>(Command.Insert)
+                .Select(property => property.GetMappedName())
                 .Where(field => !(isPrimaryIdentity && field.ToLower() == primaryKeyName?.ToLower()));
-            var updateableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update)
-                .Select(property => ClassExpression.GetPropertyMappedName(property))
+            var updateableFields = PropertyCache.Get<TEntity>(Command.Update)
+                .Select(property => property.GetMappedName())
                 .Where(field => field.ToLower() != primaryKeyName?.ToLower());
-            var mergeableFields = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Merge)
-                .Select(property => ClassExpression.GetPropertyMappedName(property));
+            var mergeableFields = PropertyCache.Get<TEntity>(Command.Merge)
+                .Select(property => property.GetMappedName());
             var mergeInsertableFields = mergeableFields
                 .Where(field => insertableFields.Contains(field))
                 .Select(field => new Field(field));
@@ -749,12 +749,12 @@ namespace RepoDb
         public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
             where TEntity : class
         {
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Query);
+            var properties = PropertyCache.Get<TEntity>(Command.Query);
             if (properties?.Any() == false)
             {
                 throw new InvalidOperationException($"No queryable fields found from type '{typeof(TEntity).FullName}'.");
             }
-            var fields = properties?.Select(property => new Field(ClassExpression.GetPropertyMappedName(property).AsQuoted(true)));
+            var fields = properties?.Select(property => new Field(property.GetMappedName().AsQuoted(true)));
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder
                 .Clear()
@@ -802,20 +802,20 @@ namespace RepoDb
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : class
         {
-            var properties = DataEntityExtension.GetPropertiesFor<TEntity>(Command.Update);
+            var properties = PropertyCache.Get<TEntity>(Command.Update);
             if (properties?.Any() == false)
             {
                 throw new InvalidOperationException($"No updateable fields found from type '{typeof(TEntity).FullName}'.");
             }
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var identity = DataEntityExtension.GetIdentityProperty<TEntity>();
+            var identity = IdentityCache.Get<TEntity>();
             if (identity != null && identity != primary)
             {
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
             }
             var fields = properties
-                .Where(property => property != primary && property != identity)
-                .Select(p => new Field(ClassExpression.GetPropertyMappedName(p)));
+                .Where(property => property.IsPrimary() == false && property.IsIdentity() == false)
+                .Select(p => new Field(p.GetMappedName()));
             where?.AppendParametersPrefix();
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
             queryBuilder

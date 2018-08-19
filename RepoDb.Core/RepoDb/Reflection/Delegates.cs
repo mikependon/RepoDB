@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Dynamic;
 
 namespace RepoDb.Reflection.Delegates

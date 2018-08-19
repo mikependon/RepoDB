@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Compile Remove="Class1.cs" />
+    <Compile Remove="PerformanceMonitor.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -109,7 +109,7 @@ namespace RepoDb
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    var queryField = primary.AsQueryField(where);
+                    var queryField = primary.PropertyInfo.AsQueryField(where);
                     queryGroup = new QueryGroup(queryField.AsEnumerable());
                 }
             }
@@ -124,7 +124,7 @@ namespace RepoDb
                     var primary = PrimaryKeyCache.Get<TEntity>();
                     if (primary != null)
                     {
-                        var queryField = new QueryField(ClassExpression.GetPropertyMappedName(primary), where);
+                        var queryField = new QueryField(primary.GetMappedName(), where);
                         queryGroup = new QueryGroup(queryField.AsEnumerable());
                     }
                 }
@@ -142,7 +142,7 @@ namespace RepoDb
 
         // GuardPrimaryKey
 
-        private static PropertyInfo GetAndGuardPrimaryKey<TEntity>(Command command)
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(Command command)
             where TEntity : class
         {
             var property = PrimaryKeyCache.Get<TEntity>();
@@ -160,7 +160,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsBatchQueryable<TEntity>())
             {
-                throw new EntityNotBatchQueryableException(ClassExpression.GetClassMappedName<TEntity>(Command.BatchQuery));
+                throw new EntityNotBatchQueryableException(ClassMappedNameCache.Get<TEntity>(Command.BatchQuery));
             }
         }
 
@@ -171,7 +171,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsBulkInsertable<TEntity>())
             {
-                throw new EntityNotBulkInsertableException(ClassExpression.GetClassMappedName<TEntity>(Command.BulkInsert));
+                throw new EntityNotBulkInsertableException(ClassMappedNameCache.Get<TEntity>(Command.BulkInsert));
             }
         }
 
@@ -182,7 +182,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsCountable<TEntity>())
             {
-                throw new EntityNotCountableException(ClassExpression.GetClassMappedName<TEntity>(Command.Count));
+                throw new EntityNotCountableException(ClassMappedNameCache.Get<TEntity>(Command.Count));
             }
         }
 
@@ -193,7 +193,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsDeletable<TEntity>())
             {
-                throw new EntityNotDeletableException(ClassExpression.GetClassMappedName<TEntity>(Command.Delete));
+                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.Delete));
             }
         }
 
@@ -204,7 +204,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsDeletableAll<TEntity>())
             {
-                throw new EntityNotDeletableException(ClassExpression.GetClassMappedName<TEntity>(Command.DeleteAll));
+                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.DeleteAll));
             }
         }
 
@@ -215,7 +215,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInlineInsertable<TEntity>())
             {
-                throw new EntityNotInlineInsertableException(ClassExpression.GetClassMappedName<TEntity>(Command.InlineInsert));
+                throw new EntityNotInlineInsertableException(ClassMappedNameCache.Get<TEntity>(Command.InlineInsert));
             }
         }
 
@@ -226,7 +226,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInlineMergeable<TEntity>())
             {
-                throw new EntityNotInlineMergeableException(ClassExpression.GetClassMappedName<TEntity>(Command.InlineMerge));
+                throw new EntityNotInlineMergeableException(ClassMappedNameCache.Get<TEntity>(Command.InlineMerge));
             }
         }
 
@@ -237,7 +237,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
             {
-                throw new EntityNotInlineUpdateableException(ClassExpression.GetClassMappedName<TEntity>(Command.InlineUpdate));
+                throw new EntityNotInlineUpdateableException(ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate));
             }
         }
 
@@ -248,7 +248,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsInsertable<TEntity>())
             {
-                throw new EntityNotInsertableException(ClassExpression.GetClassMappedName<TEntity>(Command.Insert));
+                throw new EntityNotInsertableException(ClassMappedNameCache.Get<TEntity>(Command.Insert));
             }
         }
 
@@ -259,7 +259,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsMergeable<TEntity>())
             {
-                throw new EntityNotMergeableException(ClassExpression.GetClassMappedName<TEntity>(Command.Merge));
+                throw new EntityNotMergeableException(ClassMappedNameCache.Get<TEntity>(Command.Merge));
             }
         }
 
@@ -270,7 +270,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsQueryable<TEntity>())
             {
-                throw new EntityNotQueryableException(ClassExpression.GetClassMappedName<TEntity>(Command.Query));
+                throw new EntityNotQueryableException(ClassMappedNameCache.Get<TEntity>(Command.Query));
             }
         }
 
@@ -281,7 +281,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsTruncatable<TEntity>())
             {
-                throw new EntityNotDeletableException(ClassExpression.GetClassMappedName<TEntity>(Command.Truncate));
+                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.Truncate));
             }
         }
 
@@ -292,7 +292,7 @@ namespace RepoDb
         {
             if (!DataEntityExtension.IsUpdateable<TEntity>())
             {
-                throw new EntityNotUpdateableException(ClassExpression.GetClassMappedName<TEntity>(Command.Update));
+                throw new EntityNotUpdateableException(ClassMappedNameCache.Get<TEntity>(Command.Update));
             }
         }
 
@@ -424,7 +424,7 @@ namespace RepoDb
                 orderBy,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetBatchQueryText<TEntity>(request);
             var param = where?.AsObject();
 
@@ -642,14 +642,14 @@ namespace RepoDb
             {
                 using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection))
                 {
-                    sqlBulkCopy.DestinationTableName = ClassExpression.GetClassMappedName<TEntity>(command);
+                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>(command);
                     if (commandTimeout != null && commandTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                     }
                     reader.Properties.ToList().ForEach(property =>
                     {
-                        var columnName = ClassExpression.GetPropertyMappedName(property);
+                        var columnName = property.GetMappedName();
                         sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
                     });
                     connection.EnsureOpen();
@@ -787,7 +787,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetCountText<TEntity>(request);
             var param = where?.AsObject();
 
@@ -1023,7 +1023,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetDeleteText<TEntity>(request);
             var param = where?.AsObject();
 
@@ -1189,7 +1189,7 @@ namespace RepoDb
                 connection,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetDeleteAllText<TEntity>(request);
 
             // Before Execution
@@ -1287,7 +1287,7 @@ namespace RepoDb
                 overrideIgnore,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetInlineInsertText<TEntity>(request);
 
             // Before Execution
@@ -1424,7 +1424,7 @@ namespace RepoDb
                 overrideIgnore,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetInlineMergeText<TEntity>(request);
 
             // Before Execution
@@ -1768,7 +1768,7 @@ namespace RepoDb
                 connection,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetInsertText<TEntity>(request);
             var param = ClassExpression.Extract(entity, command);
 
@@ -1903,7 +1903,7 @@ namespace RepoDb
                 qualifiers,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetMergeText<TEntity>(request);
             var param = entity?.AsObject(command);
 
@@ -2239,7 +2239,7 @@ namespace RepoDb
                 top,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();
 
@@ -2363,8 +2363,8 @@ namespace RepoDb
             // Variables for recursive
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
-            var entityName = ClassExpression.GetClassMappedName<TEntity>(command).AsUnquoted();
-            var primaryKey = ClassExpression.GetPropertyMappedName(primary).AsUnquoted();
+            var entityName = ClassMappedNameCache.Get<TEntity>(command).AsUnquoted();
+            var primaryKey = primary.GetMappedName().AsUnquoted();
             var foreignKey = $"{entityName}{primaryKey}";
 
             // Split the list
@@ -2403,7 +2403,7 @@ namespace RepoDb
                             throw new MissingFieldException($"Parent property '{parentFieldName}' from type '{recursiveData.ParentDataEntityType.FullName}' is not found.");
                         }
                     }
-                    parentFieldProperty = (parentFieldProperty ?? primary);
+                    parentFieldProperty = (parentFieldProperty ?? primary.PropertyInfo);
 
                     // Check for the foreign property
                     var foreignProperty = recursiveData.ChildListType.GetTypeInfo().GetProperty(childFieldName.AsUnquoted());
@@ -2676,7 +2676,7 @@ namespace RepoDb
                 connection,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetTruncateText<TEntity>(request);
 
             // Before Execution
@@ -2754,7 +2754,7 @@ namespace RepoDb
             var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
             return Update(connection: connection,
                 entity: entity,
-                where: new QueryGroup(property.AsQueryField(entity, true).AsEnumerable()),
+                where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2841,7 +2841,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = commandType == CommandType.StoredProcedure ?
-                ClassExpression.GetClassMappedName<TEntity>(command) :
+                ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetUpdateText<TEntity>(request);
             var param = entity?.AsObject(where, command);
 
@@ -3086,8 +3086,13 @@ namespace RepoDb
             where TEntity : class
         {
             // Actual Execution
-            using (var reader = ExecuteReaderInternal(connection, commandText, param,
-                commandType, commandTimeout, transaction, typeof(TEntity)))
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: typeof(TEntity)))
             {
                 return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
             }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace RepoDb
 {
@@ -8,11 +8,11 @@ namespace RepoDb
     /// </summary>
     public static class DataEntityMapper
     {
-        private static readonly Dictionary<Type, DataEntityMapItem> m_cache;
+        private static readonly ConcurrentDictionary<Type, DataEntityMapItem> m_cache;
 
         static DataEntityMapper()
         {
-            m_cache = new Dictionary<Type, DataEntityMapItem>();
+            m_cache = new ConcurrentDictionary<Type, DataEntityMapItem>();
         }
 
         /// <summary>
@@ -23,14 +23,10 @@ namespace RepoDb
         internal static DataEntityMapItem For(Type type)
         {
             var value = (DataEntityMapItem)null;
-            if (m_cache.ContainsKey(type))
-            {
-                value = m_cache[type];
-            }
-            else
+            if (m_cache.TryGetValue(type, out value)==false)
             {
                 value = new DataEntityMapItem();
-                m_cache.Add(type, value);
+                m_cache.TryAdd(type, value);
             }
             return value;
         }

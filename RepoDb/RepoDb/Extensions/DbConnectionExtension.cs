@@ -3086,8 +3086,13 @@ namespace RepoDb
             where TEntity : class
         {
             // Actual Execution
-            using (var reader = ExecuteReaderInternal(connection, commandText, param,
-                commandType, commandTimeout, transaction, typeof(TEntity)))
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                entityType: typeof(TEntity)))
             {
                 return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
             }
