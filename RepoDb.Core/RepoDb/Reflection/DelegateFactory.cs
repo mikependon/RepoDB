@@ -1,10 +1,8 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
-using RepoDb.Extensions;
 using RepoDb.Reflection.Delegates;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;

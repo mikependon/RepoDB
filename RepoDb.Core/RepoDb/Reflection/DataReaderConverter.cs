@@ -21,8 +21,7 @@ namespace RepoDb.Reflection
             {
                 return default(TEntity);
             }
-            var @delegate = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
-            return @delegate(reader);
+            return DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>(reader)(reader);
         }
 
         /// <summary>
