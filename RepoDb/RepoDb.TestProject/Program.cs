@@ -204,6 +204,11 @@ namespace RepoDb.TestProject
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 
+            var result = repository.ExecuteQuery<Person>("SELECT TOP 100 Id, Name, DateOfBirth FROM [dbo].[Person];");
+            result = repository.Query<Person>(top: 100);
+
+            return;
+
             // Count
             //Console.WriteLine($"Counting Person Records: {repository.Count<Person>()}");
             //Console.WriteLine($"Counting Animal Records: {repository.Count<Animal>()}");

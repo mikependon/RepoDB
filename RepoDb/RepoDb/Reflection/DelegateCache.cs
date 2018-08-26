@@ -1,5 +1,6 @@
 ﻿using RepoDb.Reflection;
 using RepoDb.Reflection.Delegates;
+using System.Collections.Concurrent;
 using System.Data.Common;
 
 namespace RepoDb
@@ -18,7 +19,27 @@ namespace RepoDb
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
             where TEntity : class
         {
-            return DataReaderToDataEntityDelegateCache<TEntity>.Get(reader);
+            return GetDataReaderToDataEntityDelegate<TEntity>(reader, null);
+        }
+
+        /// <summary>
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
+        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <param name="cacheKey">The customized cache key.</param>
+        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        internal static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader, string cacheKey)
+            where TEntity : class
+        {
+            if (cacheKey == null)
+            {
+                return DataReaderToDataEntityDelegateCache<TEntity>.Get(reader);
+            }
+            else
+            {
+                return DataReaderWithCacheKeyToDataEntityDelegateCache<TEntity>.Get(reader, cacheKey);
+            }
         }
 
         /// <summary>
@@ -29,6 +50,24 @@ namespace RepoDb
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             return DataReaderToExpandoObjectDelegateCache.Get(reader);
+        }
+
+        /// <summary>
+        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// </summary>
+        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <param name="cacheKey">The customized cache key.</param>
+        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        internal static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate<TEntity>(DbDataReader reader, string cacheKey)
+        {
+            if (cacheKey == null)
+            {
+                return DataReaderToExpandoObjectDelegateCache.Get(reader);
+            }
+            else
+            {
+                return DataReaderWithCacheKeyToExpandoObjectDelegateCache.Get(reader, cacheKey);
+            }
         }
 
         #region DataReaderToDataEntityDelegateCache
@@ -50,6 +89,28 @@ namespace RepoDb
 
         #endregion
 
+        #region DataReaderWithCacheKeyToDataEntityDelegateCache
+
+        private static class DataReaderWithCacheKeyToDataEntityDelegateCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<string, DataReaderToDataEntityDelegate<TEntity>> m_cache = new ConcurrentDictionary<string, DataReaderToDataEntityDelegate<TEntity>>();
+
+            public static DataReaderToDataEntityDelegate<TEntity> Get(DbDataReader reader, string cacheKey)
+            {
+                var result = (DataReaderToDataEntityDelegate<TEntity>)null;
+                cacheKey = $"{typeof(TEntity).FullName}.{cacheKey}";
+                if (m_cache.TryGetValue(cacheKey, out result) == false)
+                {
+                    result = DelegateFactory.GetDataReaderToDataEntityDelegate<TEntity>(reader);
+                    m_cache.TryAdd(cacheKey, result);
+                }
+                return result;
+            }
+        }
+
+        #endregion
+
         #region DataReaderToExpandoObjectDelegateCache
 
         private static class DataReaderToExpandoObjectDelegateCache
@@ -63,6 +124,26 @@ namespace RepoDb
                     m_delegate = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
                 }
                 return m_delegate;
+            }
+        }
+
+        #endregion
+
+        #region DataReaderWithCacheKeyToExpandoObjectDelegateCache
+
+        private static class DataReaderWithCacheKeyToExpandoObjectDelegateCache
+        {
+            private static ConcurrentDictionary<string, DataReaderToExpandoObjectDelegate> m_cache = new ConcurrentDictionary<string, DataReaderToExpandoObjectDelegate>();
+
+            public static DataReaderToExpandoObjectDelegate Get(DbDataReader reader, string cacheKey)
+            {
+                var result = (DataReaderToExpandoObjectDelegate)null;
+                if (m_cache.TryGetValue(cacheKey, out result) == false)
+                {
+                    result = DelegateFactory.GetDataReaderToExpandoObjectDelegate(reader);
+                    m_cache.TryAdd(cacheKey, result);
+                }
+                return result;
             }
         }
 

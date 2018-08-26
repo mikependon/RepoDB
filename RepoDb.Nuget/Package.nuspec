@@ -10,7 +10,7 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      [Release v1.5.0]
+      [Release v1.5.2]
       - Performance Optimization: This release has an extreme performance improvement.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
