@@ -1129,6 +1129,267 @@
             </summary>
             <param name="throwException">If true, an exception will be thrown.</param>
         </member>
+        <member name="T:RepoDb.ClassExpression">
+            <summary>
+            A class used for manipulating class objects via expressions.
+            </summary>
+            <summary>
+            A class used for manipulating class objects via expressions.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetProperties``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the properties of the class based on the target command.
+            </summary>
+            <typeparam name="TEntity">The target type.</typeparam>
+            <param name="command">The target command.</param>
+            <returns>The properties of the class based on the target command.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesExtractor``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets a function used to extract the properties of a class.
+            </summary>
+            <typeparam name="T">The target type.</typeparam>
+            <param name="command">The target command.</param>
+            <returns>The properties of the class.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetPropertiesAndValues``1(``0)">
+            <summary>
+            Extracts the class properties to become an enumerable of property values.
+            </summary>
+            <typeparam name="TEntity">The target type of the class.</typeparam>
+            <param name="obj">The object to be extracted.</param>
+            <returns>The extracted values.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.Extract``1(``0,RepoDb.Enumerations.Command)">
+            <summary>
+            Extracts the class properties to become an enumerable of property values.
+            </summary>
+            <typeparam name="TEntity">The target type of the class.</typeparam>
+            <param name="obj">The object to be extracted.</param>
+            <param name="command">The target command for extraction.</param>
+            <returns>The extracted values.</returns>
+        </member>
+        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertyValuesExtractor``1(System.Collections.Generic.IEnumerable{RepoDb.ClassProperty})">
+            <summary>
+            Gets a function that returns the list of property values of the class.
+            </summary>
+            <param name="properties">The list of properties.</param>
+            <returns>The enumerable value of class property values.</returns>
+        </member>
+        <member name="T:RepoDb.ClassMappedNameCache">
+            <summary>
+            A class used to cache the mapped-name for the entity.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClassMappedNameCache.Get``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the cached mapped-name for the entity.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="command">The target command.</param>
+            <returns>The cached command type of the entity.</returns>
+        </member>
+        <member name="M:RepoDb.ClassMappedNameCache.Get(System.Type,RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the cached mapped-name for the entity.
+            </summary>
+            <param name="type">The type of the target entity.</param>
+            <param name="command">The target command.</param>
+            <returns>The cached command type of the entity.</returns>
+        </member>
+        <member name="T:RepoDb.ClassProperty">
+            <summary>
+            A class that wraps the property object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClassProperty.#ctor(System.Reflection.PropertyInfo)">
+            <summary>
+            Creates a new instance of <i>ClassProperty</i> object.
+            </summary>
+            <param name="property">The wrapped property.</param>
+        </member>
+        <member name="P:RepoDb.ClassProperty.PropertyInfo">
+            <summary>
+            Gets the wrapped property of this object.
+            </summary>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetPrimaryAttribute">
+            <summary>
+            Gets the primary attribute if present.
+            </summary>
+            <returns>The primary attribute if present.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetIdentityAttribute">
+            <summary>
+            Gets the identity attribute if present.
+            </summary>
+            <returns>The identity attribute if present.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetIgnoreAttribute">
+            <summary>
+            Gets the ignore attribute if present.
+            </summary>
+            <returns>The ignore attribute if present.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsPrimary">
+            <summary>
+            Gets a value whether the current property is a primary property.
+            </summary>
+            <returns>True if the current property is a primary.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsIdentity">
+            <summary>
+            Gets a value whether the current property is an identity or not.
+            </summary>
+            <returns>True if the current property is an identity.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetDbType">
+            <summary>
+            Gets the mapped <i>DbType</i> for the current property.
+            </summary>
+            <returns>The mapped <i>DbType</i> value.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetMappedName">
+            <summary>
+            Gets the mapped-name for the current property.
+            </summary>
+            <returns>The mapped-name value.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetUnderlyingType(System.Type)">
+            <summary>
+            Gets the underlying type if present.
+            </summary>
+            <param name="type">The type where to get the underlying type.</param>
+            <returns>The underlying type.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsIgnored(RepoDb.Enumerations.Command)">
+            <summary>
+            Identifies whether the current property is ignored based on the command.
+            </summary>
+            <param name="command">The target command.</param>
+            <returns>Returns true if the property has been ignored based on the target command.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsRecursive">
+            <summary>
+            Gets the value whether this property is recursive.
+            </summary>
+            <returns>The value that defines whether this property is recursive.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsQueryable">
+            <summary>
+            Gets the value whether this property is queryable.
+            </summary>
+            <returns>The value that defines whether this property is queryable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsInsertable">
+            <summary>
+            Gets the value whether this property is insertable.
+            </summary>
+            <returns>The value that defines whether this property is insertable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsUpdateable">
+            <summary>
+            Gets the value whether this property is updateable.
+            </summary>
+            <returns>The value that defines whether this property is updateable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsDeletable">
+            <summary>
+            Gets the value whether this property is deletable.
+            </summary>
+            <returns>The value that defines whether this property is deletable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsMergeable">
+            <summary>
+            Gets the value whether this property is mergeable.
+            </summary>
+            <returns>The value that defines whether this property is mergeable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsBatchQueryable">
+            <summary>
+            Gets the value whether this property is batch-queryable.
+            </summary>
+            <returns>The value that defines whether this property is batch-queryable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsInlineUpdateable">
+            <summary>
+            Gets the value whether this property is inline-updateable.
+            </summary>
+            <returns>The value that defines whether this property is inline-updateable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsInlineMergeable">
+            <summary>
+            Gets the value whether this property is inline-merge.
+            </summary>
+            <returns>The value that defines whether this property is inline-merge.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsInlineInsertable">
+            <summary>
+            Gets the value whether this property is inline-insert.
+            </summary>
+            <returns>The value that defines whether this property is inline-insert.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsBulkInsertable">
+            <summary>
+            Gets the value whether this property is bulk-insertable.
+            </summary>
+            <returns>The value that defines whether this property is bulk-insertable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsCountable">
+            <summary>
+            Gets the value whether this property is countable.
+            </summary>
+            <returns>The value that defines whether this property is countable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsDeletableAll">
+            <summary>
+            Gets the value whether this property is deletable (all).
+            </summary>
+            <returns>The value that defines whether this property is deletable (all).</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.IsTruncatable">
+            <summary>
+            Gets the value whether this property is truncatable.
+            </summary>
+            <returns>The value that defines whether this property is truncatable.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.GetHashCode">
+            <summary>
+            Returns the hashcode of the <i>Property</i> property of this instance.
+            </summary>
+            <returns>The hash code value.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.Equals(System.Object)">
+            <summary>
+            Compare the current instance to the other object instance.
+            </summary>
+            <param name="obj">The object to be compared.</param>
+            <returns>True if the two instance is the same.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.Equals(RepoDb.ClassProperty)">
+            <summary>
+            Compare the current instance to the other object instance.
+            </summary>
+            <param name="other">The object to be compared.</param>
+            <returns>True if the two instance is the same.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.op_Equality(RepoDb.ClassProperty,RepoDb.ClassProperty)">
+            <summary>
+            Compares the equality of the two <i>ClassProperty</i> objects.
+            </summary>
+            <param name="objA">The first <i>ClassProperty</i> object.</param>
+            <param name="objB">The second <i>ClassProperty</i> object.</param>
+            <returns>True if the instances are equal.</returns>
+        </member>
+        <member name="M:RepoDb.ClassProperty.op_Inequality(RepoDb.ClassProperty,RepoDb.ClassProperty)">
+            <summary>
+            Compares the inequality of the two <i>ClassProperty</i> objects.
+            </summary>
+            <param name="objA">The first <i>ClassProperty</i> object.</param>
+            <param name="objB">The second <i>ClassProperty</i> object.</param>
+            <returns>True if the instances are not equal.</returns>
+        </member>
         <member name="T:RepoDb.CommandTextCache">
             <summary>
             A class used to cache the composed command text used by the library.
@@ -1230,6 +1491,19 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
+        <member name="T:RepoDb.CommandTypeCache">
+            <summary>
+            A class used to cache the command type used for the entity.
+            </summary>
+        </member>
+        <member name="M:RepoDb.CommandTypeCache.Get``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the cached command type for the entity.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="command">The target command.</param>
+            <returns>The cached command type of the entity.</returns>
+        </member>
         <member name="T:RepoDb.Constant">
             <summary>
             A class that holds the constant values for <i>RepoDb</i> library.
@@ -1328,6 +1602,11 @@
         <member name="P:RepoDb.DataEntityListDataReader`1.Properties">
             <summary>
             Gets the properties of data entity object.
+            </summary>
+        </member>
+        <member name="P:RepoDb.DataEntityListDataReader`1.Command">
+            <summary>
+            Gets the command used by this entity list reader.
             </summary>
         </member>
         <member name="P:RepoDb.DataEntityListDataReader`1.Position">
@@ -3103,20 +3382,6 @@
             <typeparam name="TEntity">The entity type where to get the mapped command type.</typeparam>
             <param name="command">The target command.</param>
             <returns>A command type object used by the data entity for the target command.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.GetPrimaryProperty``1">
-            <summary>
-            Gets the primary key property of the data entity object.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity where to get the primary key property.</typeparam>
-            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as a primary property of the data entity.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.GetIdentityProperty``1">
-            <summary>
-            Gets the identity property of the data entity object.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity where to get the identity property.</typeparam>
-            <returns>An instance of <i>System.Reflection.PropertyInfo</i> that corresponds to as an identity property of the data entity.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetMappedName``1(RepoDb.Enumerations.Command)">
             <summary>
@@ -5730,6 +5995,59 @@
             <param name="command">The target command.</param>
             <returns>A boolean value indicating the identification of the column.</returns>
         </member>
+        <member name="T:RepoDb.PropertyCache">
+            <summary>
+            A class used to cache the properties of the entity.
+            </summary>
+        </member>
+        <member name="M:RepoDb.PropertyCache.Get``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the cached primary key property for the entity.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="command">The target command.</param>
+            <returns>The cached properties of the entity.</returns>
+        </member>
+        <member name="T:RepoDb.PropertyMappedNameCache">
+            <summary>
+            A class used to cache the mapped-name of the property.
+            </summary>
+        </member>
+        <member name="M:RepoDb.PropertyMappedNameCache.Get(System.Reflection.PropertyInfo)">
+            <summary>
+            Gets the cached mapped-name of the property.
+            </summary>
+            <param name="property">The target property.</param>
+            <returns>The cached mapped-name of the property.</returns>
+        </member>
+        <member name="T:RepoDb.PropertyValue">
+            <summary>
+            A class used when extracting the class object properties and values.
+            </summary>
+        </member>
+        <member name="M:RepoDb.PropertyValue.#ctor(System.String,System.Object,RepoDb.ClassProperty)">
+            <summary>
+            Creates a new instance of <i>PropertyValue</i> class.
+            </summary>
+            <param name="name">The name of the property.</param>
+            <param name="value">The value of the property.</param>
+            <param name="property">The actual property object.</param>
+        </member>
+        <member name="P:RepoDb.PropertyValue.Name">
+            <summary>
+            Gets or sets the name of the property.
+            </summary>
+        </member>
+        <member name="P:RepoDb.PropertyValue.Value">
+            <summary>
+            Gets or sets the value of the property.
+            </summary>
+        </member>
+        <member name="P:RepoDb.PropertyValue.Property">
+            <summary>
+            Gets the actual property object.
+            </summary>
+        </member>
         <member name="T:RepoDb.QueryBuilder`1">
             <summary>
             An object used to compose a SQL Query Statement.
@@ -6450,6 +6768,26 @@
             </summary>
             <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
             <returns>An instance of <i>System.Dynamic.ExpandoObject</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+        </member>
+        <member name="T:RepoDb.DelegateCache">
+            <summary>
+            A class used to cache the dynamic delegate.
+            </summary>
+        </member>
+        <member name="M:RepoDb.DelegateCache.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader)">
+            <summary>
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+            </summary>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        </member>
+        <member name="M:RepoDb.DelegateCache.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader)">
+            <summary>
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+            </summary>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="T:RepoDb.Requests.BaseRequest">
             <summary>
