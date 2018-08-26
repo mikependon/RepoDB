@@ -989,7 +989,7 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query(object where, IEnumerable<OrderField> orderBy = null, int? top = 0,  string cacheKey = null,
+        public IEnumerable<TEntity> Query(object where, IEnumerable<OrderField> orderBy = null, int? top = 0, string cacheKey = null,
             IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.Query<TEntity>(where: where,
@@ -1021,7 +1021,7 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0, 
+        public IEnumerable<TEntity> Query(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
         {
             return DbRepository.Query<TEntity>(where: where,
