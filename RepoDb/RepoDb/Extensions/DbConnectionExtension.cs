@@ -2264,13 +2264,17 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQuery<TEntity>(connection: connection,
+            var result = (IEnumerable<TEntity>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                delegateCacheKey: null);
+                entityType: typeof(TEntity)))
+            {
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+            }
 
             // After Execution
             if (trace != null)
@@ -3025,7 +3029,7 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction))
             {
-                return DataReaderConverter.ToEnumerable((DbDataReader)reader).ToList();
+                return DataReaderConverter.ToEnumerable((DbDataReader)reader, true).ToList();
             }
         }
 
@@ -3086,42 +3090,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return ExecuteQuery<TEntity>(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                delegateCacheKey: commandText);
-        }
-
-        /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
-        /// converts the result back to an enumerable list of data entity object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
-        /// <param name="param">
-        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
-        /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="delegateCacheKey">A cache key to the delegate.</param>
-        /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
-        /// </returns>
-        internal static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
-            string commandText,
-            object param = null,
-            CommandType? commandType = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            string delegateCacheKey = null)
-            where TEntity : class
-        {
             // Actual Execution
             using (var reader = ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
@@ -3131,7 +3099,7 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: typeof(TEntity)))
             {
-                return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, delegateCacheKey)?.ToList();
+                return DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader, true)?.ToList();
             }
         }
 

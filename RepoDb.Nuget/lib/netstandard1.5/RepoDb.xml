@@ -6711,14 +6711,6 @@
             A static classed used to convert the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
             </summary>
         </member>
-        <member name="M:RepoDb.Reflection.DataReaderConverter.AsEntity``1(System.Data.Common.DbDataReader)">
-            <summary>
-            Converts the <i>System.Data.Common.DbDataReader</i> into data entity object.
-            </summary>
-            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
-            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-            <returns>An instance <i>RepoDb.DataEntity</i> object.</returns>
-        </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable``1(System.Data.Common.DbDataReader)">
             <summary>
             Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>RepoDb.DataEntity</i> object.
@@ -6727,11 +6719,28 @@
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
             <returns>An array of <i>RepoDb.DataEntity</i> objects.</returns>
         </member>
+        <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable``1(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>RepoDb.DataEntity</i> object.
+            </summary>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> type to convert.</typeparam>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+            <returns>An array of <i>RepoDb.DataEntity</i> objects.</returns>
+        </member>
         <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable(System.Data.Common.DbDataReader)">
             <summary>
             Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>System.Dynamic.ExpandoObject</i> object.
             </summary>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <returns>An array of <i>System.Dynamic.ExpandoObject</i> objects.</returns>
+        </member>
+        <member name="M:RepoDb.Reflection.DataReaderConverter.ToEnumerable(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Converts the <i>System.Data.Common.DbDataReader</i> into an enumerable of <i>System.Dynamic.ExpandoObject</i> object.
+            </summary>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
             <returns>An array of <i>System.Dynamic.ExpandoObject</i> objects.</returns>
         </member>
         <member name="T:RepoDb.Reflection.DelegateFactory">
@@ -6782,11 +6791,28 @@
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
             <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         </member>
+        <member name="M:RepoDb.DelegateCache.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+            </summary>
+            <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        </member>
         <member name="M:RepoDb.DelegateCache.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader)">
             <summary>
             Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
             </summary>
             <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        </member>
+        <member name="M:RepoDb.DelegateCache.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader,System.Boolean)">
+            <summary>
+            Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+            </summary>
+            <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
             <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
         </member>
         <member name="T:RepoDb.Requests.BaseRequest">

@@ -64,6 +64,17 @@ namespace RepoDb.IntegrationTests
             customer.IsActive.ShouldBe(fixtureData.IsActive);
             fixtureData.LastUpdatedUtc.ShouldBeEx(customer.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
+
+            //assert - raw - this will test the cached type Customer whether the mapping
+            //is not affected after calling the Query method.
+            customer = repository.ExecuteQuery<Customer>("SELECT FirstName, LastName, Address, Email FROM [dbo].[Customer] WHERE Id = @Id;", new { Id = returnedId }).FirstOrDefault();
+
+            //assert - raw
+            customer.ShouldNotBeNull();
+            customer.FirstName.ShouldBe(fixtureData.FirstName);
+            customer.LastName.ShouldBe(fixtureData.LastName);
+            customer.Address.ShouldBe(fixtureData.Address);
+            customer.Email.ShouldBe(fixtureData.Email);
         }
 
         [TestMethod]

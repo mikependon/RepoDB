@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.5.0</version>
+    <version>1.5.2</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
