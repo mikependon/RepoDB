@@ -55,8 +55,7 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var mappedName = property.GetMappedName().ToLower();
-                    var ordinal = fields.IndexOf(mappedName);
+                    var ordinal = fields.IndexOf(property.GetMappedName().ToLower());
                     if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);

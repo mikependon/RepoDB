@@ -42,7 +42,10 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Matching the fields
-            var fields = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+            var fields = Enumerable.Range(0, reader.FieldCount)
+                .Select(reader.GetName)
+                .Select(n => n.ToLower())
+                .ToList();
             var matchedCount = 0;
 
             // Iterate the properties
@@ -51,8 +54,7 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var mappedName = property.GetMappedName().ToLower();
-                    var ordinal = fields.IndexOf(mappedName);
+                    var ordinal = fields.IndexOf(property.GetMappedName().ToLower());
                     if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
