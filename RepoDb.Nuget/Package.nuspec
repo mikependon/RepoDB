@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,8 +10,9 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      [Release v1.5.2]
-      - Performance Optimization: This release has an extreme performance improvement.
+      [Release v1.5.3]
+      - Optimization: This release has an extreme performance improvement. This is an update at v1.5.2.
+      - Bug: Fixed the packages.config dependencies issues.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
@@ -19,7 +20,8 @@
     <licenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</licenseUrl>
     <repository type="Github" url="https://github.com/RepoDb/RepoDb" />
     <dependencies>
-      <group targetFramework=".NETStandard1.5">
+      <group targetFramework=".NETFramework4.5.1" />
+      <group targetFramework=".NETStandard1.3">
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
         <dependency id="System.Data.Common" version="4.3.0" exclude="Build,Analyzers" />
         <dependency id="System.Data.SqlClient" version="4.5.1" exclude="Build,Analyzers" />
@@ -29,6 +31,13 @@
         <dependency id="System.Reflection.Extensions" version="4.3.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.5.1" />
+    </frameworkAssemblies>
   </metadata>
   <files>
     <file src="readme.txt" target="lib\readme.txt" />
