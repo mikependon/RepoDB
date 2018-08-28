@@ -43,7 +43,10 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Stloc, 0);
 
             // Matching the fields
-            var fields = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+            var fields = Enumerable.Range(0, reader.FieldCount)
+                .Select(reader.GetName)
+                .Select(n => n.ToLower())
+                .ToList();
             var matchedCount = 0;
 
             // Iterate the properties
@@ -52,7 +55,8 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var ordinal = fields.IndexOf(property.GetMappedName());
+                    var mappedName = property.GetMappedName().ToLower();
+                    var ordinal = fields.IndexOf(mappedName);
                     if (ordinal >= 0)
                     {
                         EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
@@ -75,7 +79,7 @@ namespace RepoDb.Reflection
         }
 
         private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, ClassProperty property)
-			where TEntity : class
+            where TEntity : class
         {
             // Get the property type
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
