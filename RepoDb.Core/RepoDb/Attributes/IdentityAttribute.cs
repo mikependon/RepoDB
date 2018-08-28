@@ -8,7 +8,7 @@ namespace RepoDb.Attributes
     public class IdentityAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.IdentityAttribute</i> object.
+        /// Creates a new instance of <see cref="IdentityAttribute"/> class.
         /// </summary>
         public IdentityAttribute()
         {

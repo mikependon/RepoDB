@@ -9,7 +9,7 @@ namespace RepoDb.Attributes
     public class MapAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.MapAttribute</i> object.
+        /// Creates a new instance of <see cref="MapAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of the mapping that is equivalent to the database object/field.</param>
         public MapAttribute(string name)

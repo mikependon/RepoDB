@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotInlineUpdateableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineUpdateableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotInlineUpdateableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotInlineUpdateableException(string name)

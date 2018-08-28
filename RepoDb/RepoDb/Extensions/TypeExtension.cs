@@ -4,7 +4,7 @@ using System.Linq;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods type <i>System.Type</i> object.
+    /// Contains the extension methods type <see cref="Type"/> object.
     /// </summary>
     public static class TypeExtension
     {

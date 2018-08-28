@@ -6,7 +6,7 @@
     internal class DataEntityChildItemData
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.DataEntityChildItemData</i> object.
+        /// Creates a new instance of <see cref="DataEntityChildItemData"/> object.
         /// </summary>
         /// <param name="dataEntity">The instance of the data entity object.</param>
         public DataEntityChildItemData(object dataEntity)

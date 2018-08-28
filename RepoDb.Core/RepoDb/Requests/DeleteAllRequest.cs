@@ -5,14 +5,14 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the <i>DeleteAll</i> operation arguments.
+    /// A class that holds the value of the delete-all operation arguments.
     /// </summary>
     internal class DeleteAllRequest : BaseRequest, IEquatable<DeleteAllRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>DeleteAllRequest</i> object.
+        /// Creates a new instance of <see cref="DeleteAllRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
@@ -25,7 +25,7 @@ namespace RepoDb.Requests
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>DeleteAllRequest</i>.
+        /// Returns the hashcode for this <see cref="DeleteAllRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -47,7 +47,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>DeleteAllRequest</i> object equality against the given target object.
+        /// Compares the <see cref="DeleteAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -57,7 +57,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>DeleteAllRequest</i> object equality against the given target object.
+        /// Compares the <see cref="DeleteAllRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -67,10 +67,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>DeleteAllRequest</i> objects.
+        /// Compares the equality of the two <see cref="DeleteAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>DeleteAllRequest</i> object.</param>
-        /// <param name="objB">The second <i>DeleteAllRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="DeleteAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="DeleteAllRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(DeleteAllRequest objA, DeleteAllRequest objB)
         {
@@ -82,10 +82,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>DeleteAllRequest</i> objects.
+        /// Compares the inequality of the two <see cref="DeleteAllRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>DeleteAllRequest</i> object.</param>
-        /// <param name="objB">The second <i>DeleteAllRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="DeleteAllRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="DeleteAllRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(DeleteAllRequest objA, DeleteAllRequest objB)
         {

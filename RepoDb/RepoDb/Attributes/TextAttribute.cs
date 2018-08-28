@@ -8,7 +8,7 @@ namespace RepoDb.Attributes
     public class TextAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.TextAttribute</i> object.
+        /// Creates a new instance of <see cref="TextAttribute"/> class.
         /// </summary>
         /// <param name="text">A value of the text.</param>
         public TextAttribute(string text)

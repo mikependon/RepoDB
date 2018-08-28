@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class CancelledExecutionException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.CancelledExecutionException</i> object.
+        /// Creates a new instance of <see cref="CancelledExecutionException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public CancelledExecutionException(string message)

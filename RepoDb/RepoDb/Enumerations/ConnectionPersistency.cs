@@ -1,7 +1,9 @@
-﻿namespace RepoDb.Enumerations
+﻿using System.Data.Common;
+
+namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// An enumeration that defines the persistency of the <i>System.Data.Common.DbConnection</i> object used by the repository.
+    /// An enumeration that defines the persistency of the <see cref="DbConnection"/> object used by the repository.
     /// </summary>
     public enum ConnectionPersistency
     {

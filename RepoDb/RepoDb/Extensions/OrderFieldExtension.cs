@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.OrderField</i> object.
+    /// Contains the extension methods for <see cref="OrderField"/> object.
     /// </summary>
     public static class OrderFieldExtension
     {

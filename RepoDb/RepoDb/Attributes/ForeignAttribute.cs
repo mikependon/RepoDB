@@ -8,7 +8,7 @@ namespace RepoDb.Attributes
     public class ForeignAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.ForeignAttribute</i> object.
+        /// Creates a new instance of <see cref="ForeignAttribute"/> class.
         /// </summary>
         /// <param name="childFieldName">The field name for the child data entity object.</param>
         public ForeignAttribute(string childFieldName) : this(null, childFieldName)
@@ -16,7 +16,7 @@ namespace RepoDb.Attributes
         }
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.ForeignAttribute</i> object.
+        /// Creates a new instance of <see cref="ForeignAttribute"/> class.
         /// </summary>
         /// <param name="parentFieldName">The field name for the parent data entity object.</param>
         /// <param name="childFieldName">The field name for the child data entity object.</param>

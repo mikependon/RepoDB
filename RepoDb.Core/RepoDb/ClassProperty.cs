@@ -13,7 +13,7 @@ namespace RepoDb
     public class ClassProperty : IEquatable<ClassProperty>
     {
         /// <summary>
-        /// Creates a new instance of <i>ClassProperty</i> object.
+        /// Creates a new instance of <see cref="ClassProperty"/> object.
         /// </summary>
         /// <param name="property">The wrapped property.</param>
         public ClassProperty(PropertyInfo property)
@@ -170,9 +170,9 @@ namespace RepoDb
         private DbType? m_dbType;
 
         /// <summary>
-        /// Gets the mapped <i>DbType</i> for the current property.
+        /// Gets the mapped <see cref="DbType"/> for the current property.
         /// </summary>
-        /// <returns>The mapped <i>DbType</i> value.</returns>
+        /// <returns>The mapped <see cref="DbType"/> value.</returns>
         public DbType? GetDbType()
         {
             // We cannot use the NULL comparer for m_dbType object
@@ -515,7 +515,7 @@ namespace RepoDb
         #region Comparers
 
         /// <summary>
-        /// Returns the hashcode of the <i>Property</i> property of this instance.
+        /// Returns the hashcode of the <see cref="PropertyInfo"/> object of this instance.
         /// </summary>
         /// <returns>The hash code value.</returns>
         public override int GetHashCode()
@@ -549,10 +549,10 @@ namespace RepoDb
 
 
         /// <summary>
-        /// Compares the equality of the two <i>ClassProperty</i> objects.
+        /// Compares the equality of the two <see cref="ClassProperty"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>ClassProperty</i> object.</param>
-        /// <param name="objB">The second <i>ClassProperty</i> object.</param>
+        /// <param name="objA">The first <see cref="ClassProperty"/> object.</param>
+        /// <param name="objB">The second <see cref="ClassProperty"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(ClassProperty objA, ClassProperty objB)
         {
@@ -564,10 +564,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>ClassProperty</i> objects.
+        /// Compares the inequality of the two <see cref="ClassProperty"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>ClassProperty</i> object.</param>
-        /// <param name="objB">The second <i>ClassProperty</i> object.</param>
+        /// <param name="objA">The first <see cref="ClassProperty"/> object.</param>
+        /// <param name="objB">The second <see cref="ClassProperty"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(ClassProperty objA, ClassProperty objB)
         {

@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotUpdateableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotUpdateableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotUpdateableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotUpdateableException(string name)

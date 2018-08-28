@@ -15,13 +15,13 @@ namespace RepoDb
 
         /// <summary>
         /// Gets the batches count used by the repository (recursive query) operation. The default value is
-        /// equals to <i>RepoDb.Constant.DefaultRecursiveQueryBatchCount</i> value.
+        /// equals to <see cref="Constant.DefaultRecursiveQueryBatchCount"/> value.
         /// </summary>
         public static int RecursiveQueryBatchCount { get; private set; }
 
         /// <summary>
         /// Gets the maximum recursion that the repository (recursion depth) can execute. The default value is
-        /// equals to <i>RepoDb.Constant.DefaultRecursiveMaxRecursion</i> value.
+        /// equals to <see cref="Constant.DefaultRecursiveQueryMaxRecursion"/> value.
         /// </summary>
         public static int RecursiveQueryMaxRecursion { get; private set; }
 

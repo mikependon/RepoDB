@@ -1,4 +1,5 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Data.IDbConnection</i> object.
+    /// Contains the extension methods for <see cref="IDbConnection"/> object.
     /// </summary>
     public static class DbConnectionExtension
     {
@@ -26,10 +27,10 @@ namespace RepoDb
         /// Creates a command object.
         /// </summary>
         /// <param name="connection">The connection to be used when creating a command object.</param>
-        /// <param name="commandText">The value of the <i>CommandText</i> property.</param>
-        /// <param name="commandType">The value of the <i>CommandType</i> property.</param>
-        /// <param name="commandTimeout">The value of the <i>CommandTimeout</i> property.</param>
-        /// <param name="transaction">The value of the <i>Transaction</i> property (if present).</param>
+        /// <param name="commandText">The value of the <see cref="IDbCommand.CommandText"/> property.</param>
+        /// <param name="commandType">The value of the <see cref="IDbCommand.CommandType"/> property.</param>
+        /// <param name="commandTimeout">The value of the <see cref="IDbCommand.CommandTimeout"/> property.</param>
+        /// <param name="transaction">The value of the <see cref="IDbCommand.Transaction"/> property.</param>
         /// <returns>A command object instance containing the defined property values passed.</returns>
         public static IDbCommand CreateCommand(this IDbConnection connection,
             string commandText,
@@ -71,8 +72,8 @@ namespace RepoDb
         /// <summary>
         /// Validates whether the transaction object connection is object is equals to the connection object.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+        /// <param name="connection">The connection object to be validated.</param>
+        /// <param name="transaction">The transaction object to compare.</param>
         private static void ValidateTransactionConnectionObject(this IDbConnection connection, IDbTransaction transaction)
         {
             if (transaction != null && transaction.Connection != connection)
@@ -82,7 +83,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the <i>where</i> query expression to <i>RepoDb.QueryGroup</i> object.
+        /// Converts the (WHERE) query expression to <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
@@ -598,7 +599,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -676,7 +677,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entities">The list of the <i>Data Entities</i> to be bulk-inserted.</param>
+        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -979,7 +980,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression or primary key value to be used by this operation. When is set to <i>NULL</i>, it deletes all the data from the database.</param>
+        /// <param name="where">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1262,14 +1263,14 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
         /// </returns>
         public static object InlineInsert<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
@@ -1341,14 +1342,14 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
         /// </returns>
         public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
@@ -1367,12 +1368,12 @@ namespace RepoDb
         // InlineMerge
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only. It uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only. It uses the primary key as the default qualifier field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1399,7 +1400,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1470,12 +1471,12 @@ namespace RepoDb
         // InlineMergeAsync
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the <i>PrimaryKey</i> as the default qualifier field.
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the primary key as the default qualifier field.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1502,7 +1503,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1532,7 +1533,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1560,7 +1561,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1587,7 +1588,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1661,7 +1662,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1689,7 +1690,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1717,7 +1718,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <i>RepoDb.Attributes.IgnoreAttribute</i> defined.</param>
+        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -1751,8 +1752,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
         /// </returns>
         public static object Insert<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
@@ -1828,8 +1829,8 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>
-        /// The value of the <i>PrimaryKey</i> of the newly inserted data entity object. Returns <i>NULL</i> if the 
-        /// <i>PrimaryKey</i> property is not present.
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
         /// </returns>
         public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
@@ -1847,7 +1848,7 @@ namespace RepoDb
         // Merge
 
         /// <summary>
-        /// Merges an existing data entity object in the database. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// Merges an existing data entity object in the database. By default, this operation uses the primary key property as
         /// the qualifier.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -1950,7 +1951,7 @@ namespace RepoDb
         // MergeAsync
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asynchronous way. By default, this operation uses the <i>PrimaryKey</i> property as
+        /// Merges an existing data entity object in the database in an asynchronous way. By default, this operation uses the primary key property as
         /// the qualifier.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -2014,7 +2015,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2023,10 +2024,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2059,7 +2060,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2068,10 +2069,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2104,7 +2105,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2113,10 +2114,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2150,7 +2151,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2159,10 +2160,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2195,7 +2196,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2204,10 +2205,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2348,10 +2349,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         private static void QueryChildData<TEntity>(this IDbConnection connection, IEnumerable<DataEntityChildListData> what, IEnumerable<TEntity> result,
@@ -2486,7 +2487,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2495,10 +2496,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2531,7 +2532,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2540,10 +2541,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2577,7 +2578,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2586,10 +2587,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2623,7 +2624,7 @@ namespace RepoDb
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to <i>NULL</i> would force to query from the database.
+        /// to null would force to query from the database.
         /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2632,10 +2633,10 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <param name="recursive">
         /// The value that indicates whether the child data entity objects defined in the target data entity object will
-        /// be included in the result of the query. The default value is <i>False</i>.
+        /// be included in the result of the query. The default value is false.
         /// </param>
         /// <param name="recursionDepth">
-        /// Defines the depth of the recursion when querying the data from the database. By default, the value is <i>NULL</i> to enable the querying of all 
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
@@ -2999,20 +3000,20 @@ namespace RepoDb
         #region Execute Commands
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static IEnumerable<dynamic> ExecuteQuery(this IDbConnection connection,
             string commandText,
@@ -3034,20 +3035,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of dynamic objects containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
@@ -3066,7 +3067,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
@@ -3074,13 +3075,13 @@ namespace RepoDb
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static IEnumerable<TEntity> ExecuteQuery<TEntity>(this IDbConnection connection,
             string commandText,
@@ -3104,7 +3105,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
@@ -3112,13 +3113,13 @@ namespace RepoDb
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>
-        /// An enumerable list of data entity object containing the converted results of the underlying <i>System.Data.IDataReader</i> object.
+        /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
         public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
             string commandText,
@@ -3138,14 +3139,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3168,14 +3169,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3246,14 +3247,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteReader</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3276,14 +3277,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3306,14 +3307,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3340,14 +3341,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in asynchronous way. It uses the underlying <i>ExecuteNonQuery</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database in asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3370,14 +3371,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3400,14 +3401,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
@@ -3434,14 +3435,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying <i>ExecuteScalar</i> method of the <i>System.Data.IDataReader</i> object and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection to be used during execution.</param>
         /// <param name="commandText">The command text to be used on the execution.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
-        /// defined in the <i>CommandText</i> property.
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>

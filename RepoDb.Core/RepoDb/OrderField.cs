@@ -14,7 +14,7 @@ namespace RepoDb
     public class OrderField
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.OrderField</i> object.
+        /// Creates a new instance of <see cref="OrderField"/> object.
         /// </summary>
         /// <param name="name">The name of the field to be ordered.</param>
         /// <param name="order">The ordering direction of the field.</param>
@@ -35,7 +35,7 @@ namespace RepoDb
         public Order Order { get; }
 
         /// <summary>
-        /// Gets the value of the <i>RepoDb.Attributes.TextAttribute.Text</i> thas was implemented on the ordering direction.
+        /// Gets the value of the <see cref="TextAttribute.Text"/> thas was implemented on the ordering direction.
         /// </summary>
         /// <returns>The string containing the text value of the ordering direction.</returns>
         public string GetOrderText()
@@ -52,13 +52,10 @@ namespace RepoDb
 
         /// <summary>
         /// Parse an object to be used for ordering. The object can have multiple properties for ordering and each property must have
-        /// a value of <i>RepoDb.Enumerations.Order</i> enumeration.
+        /// a value of <see cref="Enumerations.Order"/> enumeration.
         /// </summary>
-        /// <param name="obj">
-        /// An object to be parsed. Ex:
-        /// <i>new { LastName = Order.Descending, FirstName = Order.Ascending }</i>
-        /// </param>
-        /// <returns>An enumerable of <i>RepoDb.OrderField</i> object that holds the ordering values for every field.</returns>
+        /// <param name="obj">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="OrderField"/> object that holds the ordering values for every field.</returns>
         public static IEnumerable<OrderField> Parse(object obj)
         {
             if (obj == null)
@@ -86,7 +83,7 @@ namespace RepoDb
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>OrderField</i>.
+        /// Returns the hashcode for this <see cref="OrderField"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -95,7 +92,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>OrderField</i> object equality against the given target object.
+        /// Compares the <see cref="OrderField"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -105,7 +102,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>OrderField</i> object equality against the given target object.
+        /// Compares the <see cref="OrderField"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -115,10 +112,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>OrderField</i> objects.
+        /// Compares the equality of the two <see cref="OrderField"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>OrderField</i> object.</param>
-        /// <param name="objB">The second <i>OrderField</i> object.</param>
+        /// <param name="objA">The first <see cref="OrderField"/> object.</param>
+        /// <param name="objB">The second <see cref="OrderField"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(OrderField objA, OrderField objB)
         {
@@ -130,10 +127,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>OrderField</i> objects.
+        /// Compares the inequality of the two <see cref="OrderField"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>OrderField</i> object.</param>
-        /// <param name="objB">The second <i>OrderField</i> object.</param>
+        /// <param name="objA">The first <see cref="OrderField"/> object.</param>
+        /// <param name="objB">The second <see cref="OrderField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(OrderField objA, OrderField objB)
         {

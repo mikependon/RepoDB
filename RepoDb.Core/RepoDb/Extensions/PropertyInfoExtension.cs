@@ -9,7 +9,7 @@ using System;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Reflection.PropertyInfo</i> object.
+    /// Contains the extension methods for <see cref="PropertyInfo"/> object.
     /// </summary>
     public static class PropertyInfoExtension
     {

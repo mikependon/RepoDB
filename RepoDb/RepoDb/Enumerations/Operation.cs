@@ -32,27 +32,27 @@ namespace RepoDb.Enumerations
         /// </summary>
         [Text(">=")] GreaterThanOrEqual,
         /// <summary>
-        /// A like operation. Defines the <i>LIKE</i> keyword in SQL Statement.
+        /// A like operation. Defines the (LIKE) keyword in SQL Statement.
         /// </summary>
         [Text("LIKE")] Like,
         /// <summary>
-        /// A not-like operation. Defines the <i>NOT LIKE</i> keyword in SQL Statement.
+        /// A not-like operation. Defines the (NOT LIKE) keyword in SQL Statement.
         /// </summary>
         [Text("NOT LIKE")] NotLike,
         /// <summary>
-        /// A between operation. Defines the <i>BETWEEN</i> keyword in SQL Statement.
+        /// A between operation. Defines the (BETWEEN) keyword in SQL Statement.
         /// </summary>
         [Text("BETWEEN")] Between,
         /// <summary>
-        /// A not-between operation. Defines the <i>NOT BETWEEN</i> keyword in SQL Statement.
+        /// A not-between operation. Defines the (NOT BETWEEN) keyword in SQL Statement.
         /// </summary>
         [Text("NOT BETWEEN")] NotBetween,
         /// <summary>
-        /// An in operation. Defines the <i>IN</i> keyword in SQL Statement.
+        /// An in operation. Defines the (IN) keyword in SQL Statement.
         /// </summary>
         [Text("IN")] In,
         /// <summary>
-        /// A non-in operation. Defines the <i>NOT IN</i> keyword in SQL Statement.
+        /// A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
         /// </summary>
         [Text("NOT IN")] NotIn,
         /// <summary>

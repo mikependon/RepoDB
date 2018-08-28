@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Data.IDataReader</i> object.
+    /// Contains the extension methods for <see cref="IDataReader"/> object.
     /// </summary>
     public static class DataReaderExtension
     {

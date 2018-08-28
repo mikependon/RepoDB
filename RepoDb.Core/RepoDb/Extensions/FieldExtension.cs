@@ -4,7 +4,7 @@ using System.Linq;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.Field</i> object.
+    /// Contains the extension methods for <see cref="Field"/> object.
     /// </summary>
     public static class FieldExtension
     {

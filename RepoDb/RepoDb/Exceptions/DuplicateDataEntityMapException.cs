@@ -9,7 +9,7 @@ namespace RepoDb.Exceptions
     public class DuplicateDataEntityMapException : DataEntityMapException
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.DuplicateDataEntityMapException</i> object.
+        /// Creates a new instance of <see cref="DuplicateDataEntityMapException"/> class.
         /// </summary>
         /// <param name="command">The command of the data entity mapping.</param>
         public DuplicateDataEntityMapException(Command command)

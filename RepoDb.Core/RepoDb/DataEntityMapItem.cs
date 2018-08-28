@@ -7,14 +7,14 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used by <i>RepoDb.DataEntityMapper</i> to map a data entity object into database object.
+    /// An object used by <see cref="DataEntityMapper"/> class to map a data entity object into the database object.
     /// </summary>
     public class DataEntityMapItem
     {
         private readonly Dictionary<Command, DataEntityMap> m_cache;
 
         /// <summary>
-        /// Creates an instance of <i>RepoDb.DataEntityMapItem</i> class.
+        /// Creates a new instance of <see cref="DataEntityMapItem"/> class.
         /// </summary>
         public DataEntityMapItem()
         {
@@ -65,7 +65,7 @@ namespace RepoDb
         /// <param name="command">The type of command this mapping is used to.</param>
         /// <param name="name">The name of the object from the database.</param>
         /// <param name="commandType">The command type to be used during execution.</param>
-        /// <returns>The current instance of <i>RepoDb.DataEntityMapItem</i> that holds the mapping.</returns>
+        /// <returns>The current instance of <see cref="DataEntityMapItem"/> that holds the mapping.</returns>
         public DataEntityMapItem On(Command command, string name, CommandType commandType = CommandType.Text)
         {
             return Set(command, new DataEntityMap(name, commandType));
@@ -76,7 +76,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="command">The type of command this mapping is used to.</param>
         /// <param name="map">The mapping to be used before execution.</param>
-        /// <returns>The current instance of <i>RepoDb.DataEntityMapItem</i> that holds the mapping.</returns>
+        /// <returns>The current instance of <see cref="DataEntityMapItem"/> that holds the mapping.</returns>
         public DataEntityMapItem Set(Command command, DataEntityMap map)
         {
             // Validate
@@ -97,10 +97,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the instance of <i>RepoDb.DataEntityMap</i> object based on the command mapping.
+        /// Gets the instance of <see cref="DataEntityMap"/> object based on the command mapping.
         /// </summary>
         /// <param name="command">The command specified on this mapping.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntityMap</i> that holds the mapping.</returns>
+        /// <returns>An instance of <see cref="DataEntityMap"/> that holds the mapping.</returns>
         public DataEntityMap Get(Command command)
         {
             var result = (DataEntityMap)null;

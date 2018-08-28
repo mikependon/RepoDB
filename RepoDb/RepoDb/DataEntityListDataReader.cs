@@ -27,7 +27,7 @@ namespace RepoDb
         #endregion
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.DataEntityListDataReader</i> object.
+        /// Creates a new instance of <see cref="DataEntityListDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="command">The type of command to be used by this data reader.</param>
@@ -371,7 +371,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the table schema.
         /// </summary>
-        /// <returns>An instance of the <i>System.Data.DataTable</i> with the table schema.</returns>
+        /// <returns>An instance of the <see cref="DataTable"/> with the table schema.</returns>
         public override DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
@@ -425,7 +425,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a value that checks whether the value of the property from the desired index is equals to <i>System.DbNull.Value</i>.
+        /// Gets a value that checks whether the value of the property from the desired index is equals to <see cref="DBNull.Value"/>.
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>

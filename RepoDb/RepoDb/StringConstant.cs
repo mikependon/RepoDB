@@ -1,7 +1,7 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class that holds the constant values fo <i>RepoDb</i> library.
+    /// A class that holds the constant values fo <see cref="RepoDb"/> library.
     /// </summary>
     internal static class StringConstant
     {

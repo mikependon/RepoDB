@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class InvalidQueryExpressionException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.InvalidQueryExpressionException</i> object.
+        /// Creates a new instance of <see cref="InvalidQueryExpressionException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public InvalidQueryExpressionException(string message)

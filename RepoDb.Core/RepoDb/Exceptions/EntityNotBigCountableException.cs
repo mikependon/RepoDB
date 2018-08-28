@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotBigCountableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotBigCountableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotBigCountableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotBigCountableException(string name)

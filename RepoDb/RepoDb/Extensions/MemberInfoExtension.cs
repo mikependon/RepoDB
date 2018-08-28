@@ -1,16 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using RepoDb.Attributes;
-using RepoDb.Enumerations;
-using RepoDb.Interfaces;
 using System;
 
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Reflection.MemberInfo</i> object.
+    /// Contains the extension methods for <see cref="MemberInfo"/> object.
     /// </summary>
     public static class MemberInfoExtension
     {

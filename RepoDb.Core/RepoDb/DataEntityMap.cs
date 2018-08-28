@@ -3,12 +3,12 @@
 namespace RepoDb
 {
     /// <summary>
-    /// An object used to map a <i>RepoDb.DataEntity</i> object into database object.
+    /// An object used to map a data entity object into database object.
     /// </summary>
     public class DataEntityMap
     {
         /// <summary>
-        /// Creates an instance of <i>RepoDb.ObjectMap</i> class.
+        /// Creates a new instance of <see cref="DataEntityMap"/> class.
         /// </summary>
         /// <param name="name">The name of database object.</param>
         /// <param name="commandType">The type of command used during execution.</param>

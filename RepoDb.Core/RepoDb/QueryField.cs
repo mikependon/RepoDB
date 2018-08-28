@@ -9,8 +9,8 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to define the query expression for all repository operations. It holds the instances of field (<i>RepoDb.Field</i>),
-    /// parameter (<i>RepoDb.QueryField</i>) and the target operation (<i>RepoDb.Enumeration.Operation</i>) of the query expression.
+    /// A class used to define the query expression for all repository operations. It holds the instances of field (<see cref="Field"/>),
+    /// parameter (<see cref="QueryField"/>) and the target operation (<see cref="Operation"/>) of the query expression.
     /// </summary>
     public class QueryField : IEquatable<QueryField>
     {
@@ -19,7 +19,7 @@ namespace RepoDb
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.QueryField</i> object./
+        /// Creates a new instance of <see cref="QueryField"/> object./
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
@@ -29,7 +29,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.QueryField</i> object./
+        /// Creates a new instance of <see cref="QueryField"/> object./
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
@@ -40,7 +40,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.QueryField</i> object./
+        /// Creates a new instance of <see cref="QueryField"/> object./
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
@@ -83,9 +83,9 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Operation</i> property value of this instance.
+        /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Operation"/> property value of this instance.
         /// </summary>
-        /// <returns>A string instance containing the value of the <i>RepoDb.Attributes.TextAttribute</i> text property.</returns>
+        /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetOperationText()
         {
             var textAttribute = typeof(Operation)
@@ -261,7 +261,7 @@ namespace RepoDb
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>QueryField</i>.
+        /// Returns the hashcode for this <see cref="QueryField"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -302,7 +302,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>QueryField</i> object equality against the given target object.
+        /// Compares the <see cref="QueryField"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -312,7 +312,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>QueryField</i> object equality against the given target object.
+        /// Compares the <see cref="QueryField"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -322,10 +322,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>QueryField</i> objects.
+        /// Compares the equality of the two <see cref="QueryField"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryField</i> object.</param>
-        /// <param name="objB">The second <i>QueryField</i> object.</param>
+        /// <param name="objA">The first <see cref="QueryField"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(QueryField objA, QueryField objB)
         {
@@ -337,10 +337,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>QueryField</i> objects.
+        /// Compares the inequality of the two <see cref="QueryField"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryField</i> object.</param>
-        /// <param name="objB">The second <i>QueryField</i> object.</param>
+        /// <param name="objA">The first <see cref="QueryField"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryField"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(QueryField objA, QueryField objB)
         {

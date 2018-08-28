@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class DuplicateTypeMapException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.DuplicateTypeMapException</i> object.
+        /// Creates a new instance of <see cref="DuplicateTypeMapException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public DuplicateTypeMapException(string message)

@@ -7,7 +7,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.QueryGroup</i> object.
+    /// Contains the extension methods for <see cref="QueryGroup"/> object.
     /// </summary>
     public static class QueryGroupExtension
     {

@@ -20,7 +20,7 @@ namespace RepoDb
         /// Create a new entity and database mapping.
         /// </summary>
         /// <param name="type">The type of command to be used for mapping.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
+        /// <returns>An instance of <see cref="DataEntityMapItem"/> that is used for mapping.</returns>
         internal static DataEntityMapItem For(Type type)
         {
             var value = (DataEntityMapItem)null;
@@ -36,7 +36,7 @@ namespace RepoDb
         /// Creates a new entity and database mapping.
         /// </summary>
         /// <typeparam name="TEntity">The data entity type where to apply the mapping.</typeparam>
-        /// <returns>An instance of <i>RepoDb.DataEntityMapItem</i> that is used for mapping.</returns>
+        /// <returns>An instance of <see cref="DataEntityMapItem"/> that is used for mapping.</returns>
         public static DataEntityMapItem For<TEntity>()
             where TEntity : class
         {

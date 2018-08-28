@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.String</i> object.
+    /// Contains the extension methods for string.
     /// </summary>
     public static class StringExtension
     {

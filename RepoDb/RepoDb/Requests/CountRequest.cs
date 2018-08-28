@@ -5,14 +5,14 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the <i>Count</i> operation arguments.
+    /// A class that holds the value of the count operation arguments.
     /// </summary>
     internal class CountRequest : BaseRequest, IEquatable<CountRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>CountRequest</i> object.
+        /// Creates a new instance of <see cref="CountRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
@@ -32,7 +32,7 @@ namespace RepoDb.Requests
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>CountRequest</i>.
+        /// Returns the hashcode for this <see cref="CountRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -60,7 +60,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>CountRequest</i> object equality against the given target object.
+        /// Compares the <see cref="CountRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -70,7 +70,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>CountRequest</i> object equality against the given target object.
+        /// Compares the <see cref="CountRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -80,10 +80,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>CountRequest</i> objects.
+        /// Compares the equality of the two <see cref="CountRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>CountRequest</i> object.</param>
-        /// <param name="objB">The second <i>CountRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="CountRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="CountRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(CountRequest objA, CountRequest objB)
         {
@@ -95,10 +95,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>CountRequest</i> objects.
+        /// Compares the inequality of the two <see cref="CountRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>CountRequest</i> object.</param>
-        /// <param name="objB">The second <i>CountRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="CountRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="CountRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(CountRequest objA, CountRequest objB)
         {

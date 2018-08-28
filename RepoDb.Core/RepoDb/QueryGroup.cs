@@ -19,14 +19,11 @@ namespace RepoDb
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.QueryGroup</i> object.
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
-        /// <param name="conjunction">
-        /// The conjunction to be used for every group seperation. The value could be <i>AND</i> or <i>OR</i>.
-        /// Uses the <i>RepoDb.Enumerations.Conjunction</i> enumeration values.
-        /// </param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields, IEnumerable<QueryGroup> queryGroups = null, Conjunction conjunction = Conjunction.And)
         {
             Conjunction = conjunction;
@@ -60,9 +57,9 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the text value of <i>RepoDb.Attributes.TextAttribute</i> implemented at the <i>Conjunction</i> property value of this instance.
+        /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Conjunction"/> property value of this instance.
         /// </summary>
-        /// <returns>A string instance containing the value of the <i>RepoDb.Attributes.TextAttribute</i> text property.</returns>
+        /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetConjunctionText()
         {
             var textAttribute = typeof(Conjunction)
@@ -75,7 +72,7 @@ namespace RepoDb
 
         /// <summary>
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
-        /// conjuncted by the value of the <i>Conjunction</i> property.
+        /// conjuncted by the value of the <see cref="Conjunction"/> property.
         /// </summary>
         /// <returns>A stringified formatted-text of the current instance.</returns>
         public string GetString()
@@ -173,7 +170,7 @@ namespace RepoDb
 
         /// <summary>
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
-        /// <i>RepoDb.QueryGroup</i> that defines the query tree expression.
+        /// <see cref="QueryGroup"/> that defines the query tree expression.
         /// </summary>
         /// <param name="obj">
         /// A dynamic query tree expression to be parsed.
@@ -182,7 +179,7 @@ namespace RepoDb
         /// FirstName = new { Operation = Operation.Like, Value = "An%" },
         /// UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
         /// </param>
-        /// <returns>An instance of the <i>RepoDb.QueryGroup</i> object that contains the parsed query expression.</returns>
+        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
         public static QueryGroup Parse(object obj)
         {
             // Cannot further optimize and shortify this method, this one works like a charm for now.
@@ -431,7 +428,7 @@ namespace RepoDb
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>QueryGroup</i>.
+        /// Returns the hashcode for this <see cref="QueryGroup"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -474,7 +471,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>QueryGroup</i> object equality against the given target object.
+        /// Compares the <see cref="QueryGroup"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -484,7 +481,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>QueryGroup</i> object equality against the given target object.
+        /// Compares the <see cref="QueryGroup"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -494,10 +491,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>QueryGroup</i> objects.
+        /// Compares the equality of the two <see cref="QueryGroup"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryGroup</i> object.</param>
-        /// <param name="objB">The second <i>QueryGroup</i> object.</param>
+        /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(QueryGroup objA, QueryGroup objB)
         {
@@ -509,10 +506,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>QueryGroup</i> objects.
+        /// Compares the inequality of the two <see cref="QueryGroup"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>QueryGroup</i> object.</param>
-        /// <param name="objB">The second <i>QueryGroup</i> object.</param>
+        /// <param name="objA">The first <see cref="QueryGroup"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryGroup"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(QueryGroup objA, QueryGroup objB)
         {

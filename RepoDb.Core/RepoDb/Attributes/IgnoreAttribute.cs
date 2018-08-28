@@ -10,7 +10,7 @@ namespace RepoDb.Attributes
     public class IgnoreAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.IgnoreAttribute</i> object.
+        /// Creates a new instance of <see cref="IgnoreAttribute"/> class.
         /// </summary>
         /// <param name="command">The target operation command where to ignore the property.</param>
         public IgnoreAttribute(Command command)

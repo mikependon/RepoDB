@@ -7,16 +7,16 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used as an map-item when mapping a statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>)
-    /// to be used for every connection type (typeof <i>System.Data.DbConnection</i>).
+    /// A class used as an map-item when mapping a statement builder (typeof <see cref="IStatementBuilder"/>)
+    /// to be used for every connection type (typeof <see cref="DbConnection"/>).
     /// </summary>
     public class StatementBuilderMap
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.StatementBuilderMap</i> object.
+        /// Creates a new instance of <see cref="StatementBuilderMap"/> object.
         /// </summary>
         /// <param name="dbConnectionType">
-        /// The target type of the database connection to be used for mapping. This must be of type <i>System.Data.DbConnection</i>, or else,
+        /// The target type of the database connection to be used for mapping. This must be of type <see cref="DbConnection"/>, or else,
         /// an argument exception will be thrown.
         /// </param>
         /// <param name="statementBuilder">The statement builder to be used for mapping.</param>

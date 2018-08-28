@@ -10,7 +10,7 @@ namespace RepoDb.Requests
     internal abstract class BaseRequest
     {
         /// <summary>
-        /// Creates a new instance of <i>QueryRequest</i> object.
+        /// Creates a new instance of <see cref="BaseRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>

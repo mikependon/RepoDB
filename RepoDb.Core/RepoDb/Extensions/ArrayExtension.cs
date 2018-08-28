@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Array</i> object.
+    /// Contains the extension methods for <see cref="System.Array"/> object.
     /// </summary>
     public static class ArrayExtension
     {

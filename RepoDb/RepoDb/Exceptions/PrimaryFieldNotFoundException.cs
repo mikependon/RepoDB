@@ -9,7 +9,7 @@ namespace RepoDb.Exceptions
     public class PrimaryFieldNotFoundException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.PrimaryFieldNotFoundException</i> object.
+        /// Creates a new instance of <see cref="PrimaryFieldNotFoundException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public PrimaryFieldNotFoundException(string message)

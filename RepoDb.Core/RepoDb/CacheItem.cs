@@ -3,12 +3,12 @@
 namespace RepoDb
 {
     /// <summary>
-    /// An item used when caching an object in the repository object. This is the default class used by the <i>RepoDb.MemoryCache</i> object.
+    /// An item used when caching an object in the repository object. This is the default class used by the <see cref="MemoryCache"/> object.
     /// </summary>
     public class CacheItem
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.CacheItem</i> object.
+        /// Creates a new instance of <see cref="CacheItem"/> object.
         /// </summary>
         /// <param name="key">The key of the cache.</param>
         /// <param name="value">The value of the cache.</param>
@@ -18,7 +18,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.CacheItem</i> object.
+        /// Creates a new instance of <see cref="CacheItem"/> object.
         /// </summary>
         /// <param name="key">The key of the cache item.</param>
         /// <param name="value">The value of the cache item.</param>

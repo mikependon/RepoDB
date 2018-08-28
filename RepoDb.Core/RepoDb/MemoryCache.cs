@@ -8,15 +8,15 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used for caching a result in the repository <i>Query</i> operation. This object is the default
-    /// memory cache object used by the <i>RepoDb</i> repositories.
+    /// An object used for caching a result in the repository query operation. This object is the default
+    /// memory cache object used by the <see cref="RepoDb"/> repositories.
     /// </summary>
     public class MemoryCache : ICache
     {
         private readonly ConcurrentDictionary<string, CacheItem> m_cache;
 
         /// <summary>
-        /// Creates a new instance <i>RepoDb.MemoryCache</i> object.
+        /// Creates a new instance <see cref="MemoryCache"/> object.
         /// </summary>
         public MemoryCache()
         {

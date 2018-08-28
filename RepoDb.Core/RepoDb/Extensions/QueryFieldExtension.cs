@@ -8,7 +8,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.QueryField</i> object.
+    /// Contains the extension methods for <see cref="QueryField"/> object.
     /// </summary>
     public static class QueryFieldExtension
     {

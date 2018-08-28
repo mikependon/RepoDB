@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotDeletableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotDeletableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotDeletableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotDeletableException(string name)

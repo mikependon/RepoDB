@@ -5,15 +5,15 @@ using System.Linq;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>System.Object</i> object.
+    /// Contains the extension methods for all objects.
     /// </summary>
     internal static class ObjectExtension
     {
         /// <summary>
-        /// Merge the <i>RepoDb.QueryGroup</i> object into the current object.
+        /// Merge the <see cref="QueryGroup"/> object into the current object.
         /// </summary>
-        /// <param name="obj">The object where the <i>RepoDb.QueryGroup</i> object will be merged.</param>
-        /// <param name="queryGroup">The <i>RepoDb.QueryGroup</i> object to merged.</param>
+        /// <param name="obj">The object where the <see cref="QueryGroup"/> object will be merged.</param>
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to merged.</param>
         /// <returns>The object instance itself with the merged values.</returns>
         public static object Merge(this object obj, QueryGroup queryGroup)
         {

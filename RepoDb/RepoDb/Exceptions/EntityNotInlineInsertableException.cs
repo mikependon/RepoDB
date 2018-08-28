@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotInlineInsertableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineInsertableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotInlineInsertableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotInlineInsertableException(string name)

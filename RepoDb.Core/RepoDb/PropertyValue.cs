@@ -8,7 +8,7 @@ namespace RepoDb
     public class PropertyValue
     {
         /// <summary>
-        /// Creates a new instance of <i>PropertyValue</i> class.
+        /// Creates a new instance of <see cref="PropertyValue"/> class.
         /// </summary>
         /// <param name="name">The name of the property.</param>
         /// <param name="value">The value of the property.</param>

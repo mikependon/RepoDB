@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotQueryableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotQueryableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotQueryableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotQueryableException(string name)

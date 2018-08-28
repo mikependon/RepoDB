@@ -9,7 +9,7 @@ namespace RepoDb.Exceptions
     public class DataEntityMapException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.DataEntityMapException</i> object.
+        /// Creates a new instance of <see cref="DataEntityMapException"/> class.
         /// </summary>
         /// <param name="command">The command of the data entity mapping.</param>
         public DataEntityMapException(Command command)

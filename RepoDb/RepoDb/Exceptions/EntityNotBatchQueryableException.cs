@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotBatchQueryableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotBatchQueryableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotBatchQueryableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotBatchQueryableException(string name)

@@ -10,7 +10,7 @@ using RepoDb.Enumerations;
 namespace RepoDb.Extensions
 {
     /// <summary>
-    /// Contains the extension methods for <i>RepoDb.DataEntity</i> object.
+    /// Contains the extension methods for data entity object.
     /// </summary>
     public static class DataEntityExtension
     {
@@ -48,7 +48,7 @@ namespace RepoDb.Extensions
         /// Gets the recursive data of the target data entity object.
         /// </summary>
         /// <param name="type">The type of the target data entity.</param>
-        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
+        /// <returns>An enumerable list of <see cref="DataEntityChildListData"/> object.</returns>
         internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(Type type)
         {
             return type?
@@ -67,7 +67,7 @@ namespace RepoDb.Extensions
         /// Gets the recursive data of the target data entity object.
         /// </summary>
         /// <typeparam name="T">The type of the target data entity.</typeparam>
-        /// <returns>An enumerable list of <i>RecursiveData</i> object.</returns>
+        /// <returns>An enumerable list of <see cref="DataEntityChildListData"/> object.</returns>
         internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData<T>()
         {
             return GetDataEntityChildrenData(typeof(T));
@@ -86,7 +86,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the list of <i>System.Reflection.PropertyInfo</i> objects from the data entity class based on the
+        /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity class based on the
         /// target command.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the list of the properties.</typeparam>
@@ -140,8 +140,8 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the mapped name of the data entity type on a target command. The identification process it to check the <i>RepoDb.Attributes.MapAttribute</i>
-        /// and get the value of the <i>Name</i> property.
+        /// Gets the mapped name of the data entity type on a target command. The identification process it to check the <see cref="MapAttribute"/>
+        /// and get the value of the name property.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
         /// <param name="command">The target command.</param>

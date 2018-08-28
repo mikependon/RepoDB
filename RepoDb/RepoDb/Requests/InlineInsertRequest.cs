@@ -7,14 +7,14 @@ using System.Linq;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the <i>InlineInsert</i> operation arguments.
+    /// A class that holds the value of the inline-insert operation arguments.
     /// </summary>
     internal class InlineInsertRequest : BaseRequest, IEquatable<InlineInsertRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>InlineInsertRequest</i> object.
+        /// Creates a new instance of <see cref="InlineInsertRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
@@ -40,7 +40,7 @@ namespace RepoDb.Requests
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>InlineInsertRequest</i>.
+        /// Returns the hashcode for this <see cref="InlineInsertRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -77,7 +77,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>InlineInsertRequest</i> object equality against the given target object.
+        /// Compares the <see cref="InlineInsertRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -87,7 +87,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>InlineInsertRequest</i> object equality against the given target object.
+        /// Compares the <see cref="InlineInsertRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -97,10 +97,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>InlineInsertRequest</i> objects.
+        /// Compares the equality of the two <see cref="InlineInsertRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>InlineInsertRequest</i> object.</param>
-        /// <param name="objB">The second <i>InlineInsertRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="InlineInsertRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="InlineInsertRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(InlineInsertRequest objA, InlineInsertRequest objB)
         {
@@ -112,10 +112,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>InlineInsertRequest</i> objects.
+        /// Compares the inequality of the two <see cref="InlineInsertRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>InlineInsertRequest</i> object.</param>
-        /// <param name="objB">The second <i>InlineInsertRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="InlineInsertRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="InlineInsertRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(InlineInsertRequest objA, InlineInsertRequest objB)
         {

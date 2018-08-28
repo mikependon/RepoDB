@@ -19,7 +19,7 @@ namespace RepoDb
         /// Stringify the current object.
         /// </summary>
         /// <returns>
-        /// Returns a string that corresponds to the composed SQL Query Statement. It uses the <i>GetString</i>
+        /// Returns a string that corresponds to the composed SQL Query Statement. It uses the <see cref="GetString"/>
         /// method as its underlying method call.
         /// </returns>
         public override string ToString()

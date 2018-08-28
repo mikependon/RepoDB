@@ -9,8 +9,8 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to map a statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>) object into a database connection type
-    /// (typeof <i>System.Data.DbConnection</i>) object. The mapping defines by this class will bypass all the mappings made on the repository
+    /// A static class used to map a statement builder (typeof <see cref="IStatementBuilder"/>) object into a database connection type
+    /// (typeof <see cref="DbConnection"/>) object. The mapping defines by this class will bypass all the mappings made on the repository
     /// level for the specified database connection type.
     /// </summary>
     public static class StatementBuilderMapper
@@ -30,10 +30,10 @@ namespace RepoDb
         /// Gets an instance of mapping defined for the target type.
         /// </summary>
         /// <param name="dbConnectionType">
-        /// The target type of the database connection to be used for mapping. This must be of type <i>System.Data.DbConnection</i>, or else,
+        /// The target type of the database connection to be used for mapping. This must be of type <see cref="DbConnection"/>, or else,
         /// an argument exception will be thrown.
         /// </param>
-        /// <returns>An instance of <i>RepoDb.Interfaces.StatementBuilderMap</i> defined on the mapping.</returns>
+        /// <returns>An instance of <see cref="StatementBuilderMap"/> defined on the mapping.</returns>
         public static StatementBuilderMap Get(Type dbConnectionType)
         {
             if (!dbConnectionType.IsSubclassOf(typeof(IDbConnection)) && !dbConnectionType.IsSubclassOf(typeof(DbConnection)))
@@ -44,15 +44,15 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a mapping between the statement builder (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>) object and database connection type
-        /// (typeof <i>System.Data.DbConnection</i>) object.
+        /// Creates a mapping between the statement builder (typeof <see cref="IStatementBuilder"/>) object and database connection type
+        /// (typeof <see cref="DbConnection"/>) object.
         /// </summary>
         /// <param name="dbConnectionType">
-        /// The target type of the database connection to be used for mapping. This must be of type <i>System.Data.DbConnection</i>, or else,
+        /// The target type of the database connection to be used for mapping. This must be of type <see cref="DbConnection"/>, or else,
         /// an argument exception will be thrown.
         /// </param>
         /// <param name="statementBuilder">
-        /// The statement builder to be mapped (typeof <i>RepoDb.Interfaces.IStatementBuilder</i>).
+        /// The statement builder to be mapped (typeof <see cref="IStatementBuilder"/>).
         /// </param>
         public static void Map(Type dbConnectionType, IStatementBuilder statementBuilder)
         {

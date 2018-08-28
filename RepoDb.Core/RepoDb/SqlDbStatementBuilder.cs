@@ -4,6 +4,7 @@ using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RepoDb.Attributes;
 
 namespace RepoDb
 {
@@ -13,12 +14,12 @@ namespace RepoDb
     public sealed class SqlDbStatementBuilder : IStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.SqlDbStatementBuilder</i> object.
+        /// Creates a new instance of <see cref="SqlDbStatementBuilder"/> object.
         /// </summary>
         public SqlDbStatementBuilder() { }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>BatchQuery</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository batch-query operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -28,7 +29,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>BatchQuery</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for batch-query operation.</returns>
         public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null)
             where TEntity : class
         {
@@ -76,14 +77,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Count</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository count operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Count</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for count operation.</returns>
         public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : class
         {
@@ -101,14 +102,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Delete</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository delete operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Delete</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
         public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : class
         {
@@ -124,13 +125,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>DeleteAll</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository delete-all operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>DeleteAll</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
         public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : class
         {
@@ -145,7 +146,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
+        /// Creates a SQL Statement for repository inline-insert operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -153,10 +154,10 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="overrideIgnore">
-        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// Set to true if the defined <see cref="IgnoreAttribute"/> would likely 
         /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
-        /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, bool? overrideIgnore = false)
             where TEntity : class
         {
@@ -171,7 +172,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineInsert</i> operation.
+        /// Creates a SQL Statement for repository inline-insert operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -179,11 +180,11 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="overrideIgnore">
-        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// Set to true if the defined <see cref="IgnoreAttribute"/> would likely 
         /// be ignored on the inline insert operation in SQL Statement composition.
         /// </param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>InlineInsert</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
             bool? overrideIgnore = false, bool isPrimaryIdentity = false)
             where TEntity : class
@@ -269,7 +270,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
+        /// Creates a SQL Statement for repository inline-merge operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -278,10 +279,10 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">
-        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// Set to true if the defined <see cref="IgnoreAttribute"/> would likely 
         /// be ignored on the inline merge operation in SQL Statement composition.
         /// </param>
-        /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = false)
             where TEntity : class
         {
@@ -296,7 +297,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineMerge</i> operation.
+        /// Creates a SQL Statement for repository inline-merge operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -305,11 +306,11 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="overrideIgnore">
-        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// Set to true if the defined <see cref="IgnoreAttribute"/> would likely 
         /// be ignored in the inline merge operation in SQL Statement composition.
         /// </param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>InlineMerge</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null,
             bool? overrideIgnore = false, bool? isPrimaryIdentity = false)
             where TEntity : class
@@ -456,7 +457,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>InlineUpdate</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository inline update operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -465,10 +466,10 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="overrideIgnore">
-        /// Set to <i>true</i> if the defined <i>RepoDb.Attributes.IgnoreAttribute</i> would likely 
+        /// Set to true if the defined <see cref="IgnoreAttribute"/> would likely 
         /// be ignored on the inline update operation in SQL Statement composition.
         /// </param>
-        /// <returns>A string containing the composed SQL Statement for <i>InlineUpdate</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
         public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields = null,
             QueryGroup where = null, bool? overrideIgnore = false)
             where TEntity : class
@@ -544,13 +545,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository insert operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
         public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : class
         {
@@ -565,14 +566,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Insert</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository insert operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Insert</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
         internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool? isPrimaryIdentity = null)
             where TEntity : class
         {
@@ -608,14 +609,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository merge operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
+        /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers = null)
             where TEntity : class
         {
@@ -630,15 +631,15 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Merge</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository merge operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <param name="qualifiers">The list of qualifier fields to be used for the <i>Merge</i> operation in SQL Statement composition.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Merge</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
             where TEntity : class
         {
@@ -736,7 +737,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Query</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository query operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -744,8 +745,8 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
-        /// <param name="top">The number of rows to be returned by the <i>Query</i> operation in SQL Statement composition.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Query</i> operation.</returns>
+        /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
+        /// <returns>A string containing the composed SQL Statement for query operation.</returns>
         public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null)
             where TEntity : class
         {
@@ -770,13 +771,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Truncate</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository truncate operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Truncate</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for truncate operation.</returns>
         public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder)
             where TEntity : class
         {
@@ -791,14 +792,14 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a SQL Statement for repository <i>Update</i> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository update operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <returns>A string containing the composed SQL Statement for <i>Update</i> operation.</returns>
+        /// <returns>A string containing the composed SQL Statement for update operation.</returns>
         public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where = null)
             where TEntity : class
         {

@@ -7,14 +7,14 @@ using System.Linq;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the <i>BatchQuery</i> operation arguments.
+    /// A class that holds the value of the batch-query operation arguments.
     /// </summary>
     internal class BatchQueryRequest : BaseRequest, IEquatable<BatchQueryRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <i>BatchQueryRequest</i> object.
+        /// Creates a new instance of <see cref="BatchQueryRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
@@ -55,7 +55,7 @@ namespace RepoDb.Requests
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>BatchQueryRequest</i>.
+        /// Returns the hashcode for this <see cref="BatchQueryRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -104,7 +104,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>BatchQueryRequest</i> object equality against the given target object.
+        /// Compares the <see cref="BatchQueryRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -114,7 +114,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <i>BatchQueryRequest</i> object equality against the given target object.
+        /// Compares the <see cref="BatchQueryRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -124,10 +124,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>BatchQueryRequest</i> objects.
+        /// Compares the equality of the two <see cref="BatchQueryRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>BatchQueryRequest</i> object.</param>
-        /// <param name="objB">The second <i>BatchQueryRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="BatchQueryRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="BatchQueryRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(BatchQueryRequest objA, BatchQueryRequest objB)
         {
@@ -139,10 +139,10 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>BatchQueryRequest</i> objects.
+        /// Compares the inequality of the two <see cref="BatchQueryRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>BatchQueryRequest</i> object.</param>
-        /// <param name="objB">The second <i>BatchQueryRequest</i> object.</param>
+        /// <param name="objA">The first <see cref="BatchQueryRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="BatchQueryRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(BatchQueryRequest objA, BatchQueryRequest objB)
         {

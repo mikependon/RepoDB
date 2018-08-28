@@ -13,11 +13,11 @@ namespace RepoDb
     public static class DelegateCache
     {
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An instance of data entity object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
             where TEntity : class
         {
@@ -25,12 +25,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <returns>An instance of data entity object.</returns>
         internal static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader, bool basedOnFields = false)
             where TEntity : class
         {
@@ -45,21 +45,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An instance of data entity object.</returns>
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             return DataReaderToExpandoObjectDelegateCache.Get(reader);
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <returns>An instance of data entity object.</returns>
         internal static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader, bool basedOnFields = false)
         {
             if (basedOnFields == false)

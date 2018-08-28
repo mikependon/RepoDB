@@ -9,10 +9,10 @@ namespace RepoDb
     public class TypeMapItem
     {
         /// <summary>
-        /// Creates a a new instance of <i>RepoDb.TypeMap</i> object.
+        /// Creates a a new instance of <see cref="TypeMapItem"/> object.
         /// </summary>
         /// <param name="type">The .NET CLR Type to be mapped.</param>
-        /// <param name="dbType">The database type to map (typeof <i>System.Data.DbType</i>).</param>
+        /// <param name="dbType">The database type to map (typeof <see cref="DbType"/>).</param>
         public TypeMapItem(Type type, DbType dbType)
         {
             Type = type;
@@ -30,9 +30,9 @@ namespace RepoDb
         public DbType DbType { get; private set; }
 
         /// <summary>
-        /// Internally sets the value of the <i>DbType</i> property.
+        /// Internally sets the value of the <see cref="DbType"/> property.
         /// </summary>
-        /// <param name="dbType">The value of the <i>DbType</i>.</param>
+        /// <param name="dbType">The value of the <see cref="DbType"/>.</param>
         internal void SetDbType(DbType dbType)
         {
             DbType = dbType;

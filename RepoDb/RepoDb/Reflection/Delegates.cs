@@ -4,18 +4,18 @@ using System.Dynamic;
 namespace RepoDb.Reflection.Delegates
 {
     /// <summary>
-    /// A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>RepoDb.DataEntity</i> object.
+    /// A delegate used to map the <see cref="DbDataReader"/> into data entity object.
     /// </summary>
-    /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to map.</typeparam>
-    /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
-    /// <returns>An instance of <i>RepoDb.DataEntity</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+    /// <typeparam name="TEntity">The data entity object to map.</typeparam>
+    /// <param name="dataReader">An instance of <see cref="DbDataReader"/> to be mapped.</param>
+    /// <returns>An instance of data entity object containing the values from the <see cref="DbDataReader"/> object.</returns>
     public delegate TEntity DataReaderToDataEntityDelegate<TEntity>(DbDataReader dataReader)
         where TEntity : class;
 
     /// <summary>
-    /// A delegate used to map the <i>System.Data.Common.DbDataReader</i> into <i>System.Dynamic.ExpandoObject</i> object.
+    /// A delegate used to map the <see cref="DbDataReader"/> into <see cref="ExpandoObject"/> object.
     /// </summary>
-    /// <param name="dataReader">An instance of <i>System.Data.Common.DbDataReader</i> to be mapped.</param>
-    /// <returns>An instance of <i>System.Dynamic.ExpandoObject</i> object containing the values from the <i>System.Data.Common.DbDataReader</i> object.</returns>
+    /// <param name="dataReader">An instance of <see cref="DbDataReader"/> to be mapped.</param>
+    /// <returns>An instance of <see cref="ExpandoObject"/> object containing the values from the <see cref="DbDataReader"/> object.</returns>
     public delegate ExpandoObject DataReaderToExpandoObjectDelegate(DbDataReader dataReader);
 }

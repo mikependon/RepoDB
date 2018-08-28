@@ -1,18 +1,19 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System.Collections.Concurrent;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A static class used to get the cached value of <i>RepoDb.DataEntity</i> primary property <i>IsIdentity</i> identification.
+    /// A static class used to get the cached value of data entity primary property as an identity.
     /// </summary>
     internal static class PrimaryKeyIdentityCache
     {
         private static readonly ConcurrentDictionary<string, bool> m_cache = new ConcurrentDictionary<string, bool>();
 
         /// <summary>
-        /// Gets the <i>RepoDb.Attributes.MapAttribute.Name</i> value implemented on the data entity on a target command.
+        /// Gets the <see cref="MapAttribute.Name"/> value implemented on the data entity on a target command.
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connectionString">The connection string object to be used.</param>

@@ -3,7 +3,7 @@
 namespace RepoDb.Enumerations
 {
     /// <summary>
-    /// An enumeration used to define a conjuction for the query grouping. This enumeration is used at <i>RepoDb.QueryGroup</i> object.
+    /// An enumeration used to define a conjuction for the query grouping. This enumeration is used at <see cref="QueryGroup"/> object.
     /// </summary>
     public enum Conjunction : short
     {

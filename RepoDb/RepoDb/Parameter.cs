@@ -9,7 +9,7 @@ namespace RepoDb
     public sealed class Parameter : IEquatable<Parameter>
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Parameter</i> object.
+        /// Creates a new instance of <see cref="Parameter"/> object.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
@@ -18,7 +18,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Parameter</i> object.
+        /// Creates a new instance of <see cref="Parameter"/> object.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
@@ -66,7 +66,7 @@ namespace RepoDb
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>Parameter</i>.
+        /// Returns the hashcode for this <see cref="Parameter"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -75,7 +75,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>Parameter</i> object equality against the given target object.
+        /// Compares the <see cref="Parameter"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -85,7 +85,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>Parameter</i> object equality against the given target object.
+        /// Compares the <see cref="Parameter"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -95,10 +95,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>Parameter</i> objects.
+        /// Compares the equality of the two <see cref="Parameter"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>Parameter</i> object.</param>
-        /// <param name="objB">The second <i>Parameter</i> object.</param>
+        /// <param name="objA">The first <see cref="Parameter"/> object.</param>
+        /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(Parameter objA, Parameter objB)
         {
@@ -110,10 +110,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>Parameter</i> objects.
+        /// Compares the inequality of the two <see cref="Parameter"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>Parameter</i> object.</param>
-        /// <param name="objB">The second <i>Parameter</i> object.</param>
+        /// <param name="objA">The first <see cref="Parameter"/> object.</param>
+        /// <param name="objB">The second <see cref="Parameter"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(Parameter objA, Parameter objB)
         {

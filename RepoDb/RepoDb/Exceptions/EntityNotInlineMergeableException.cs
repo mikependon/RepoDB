@@ -8,7 +8,7 @@ namespace RepoDb.Exceptions
     public class EntityNotInlineMergeableException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Exceptions.EntityNotInlineMergeableException</i> object.
+        /// Creates a new instance of <see cref="EntityNotInlineMergeableException"/> class.
         /// </summary>
         /// <param name="name">The type name or the mapped name of the entity.</param>
         public EntityNotInlineMergeableException(string name)

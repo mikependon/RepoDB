@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -11,7 +10,7 @@ namespace RepoDb
     public class Field : IEquatable<Field>
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Field</i> object.
+        /// Creates a new instance of <see cref="Field"/> object.
         /// </summary>
         /// <param name="name">The name of the field.</param>
         public Field(string name)
@@ -34,10 +33,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Creates an enumerable of <i>RepoDb.Field</i> objects that derived from the given array of string values.
+        /// Creates an enumerable of <see cref="Field"/> objects that derived from the given array of string values.
         /// </summary>
         /// <param name="fields">The array of string values that signifies the name of the fields (for each item).</param>
-        /// <returns>An enumerable of <i>RepoDb.Field</i> object.</returns>
+        /// <returns>An enumerable of <see cref="Field"/> object.</returns>
         public static IEnumerable<Field> From(params string[] fields)
         {
             if (fields == null)
@@ -52,11 +51,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Parse an object and creates an enumerable of <i>RepoDb.Field</i> objects. Each field is equivalent
+        /// Parse an object and creates an enumerable of <see cref="Field"/> objects. Each field is equivalent
         /// to each property of the given object. The parse operation uses a reflection operation.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
-        /// <returns>An enumerable of <i>RepoDb.Field</i> objects.</returns>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse(object obj)
         {
             if (obj == null)
@@ -78,7 +77,7 @@ namespace RepoDb
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <i>Field</i>.
+        /// Returns the hashcode for this <see cref="Field"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -87,7 +86,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>Field</i> object equality against the given target object.
+        /// Compares the <see cref="Field"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -97,7 +96,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the <i>Field</i> object equality against the given target object.
+        /// Compares the <see cref="Field"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
@@ -107,10 +106,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the equality of the two <i>Field</i> objects.
+        /// Compares the equality of the two <see cref="Field"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>Field</i> object.</param>
-        /// <param name="objB">The second <i>Field</i> object.</param>
+        /// <param name="objA">The first <see cref="Field"/> object.</param>
+        /// <param name="objB">The second <see cref="Field"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(Field objA, Field objB)
         {
@@ -122,10 +121,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Compares the inequality of the two <i>Field</i> objects.
+        /// Compares the inequality of the two <see cref="Field"/> objects.
         /// </summary>
-        /// <param name="objA">The first <i>Field</i> object.</param>
-        /// <param name="objB">The second <i>Field</i> object.</param>
+        /// <param name="objA">The first <see cref="Field"/> object.</param>
+        /// <param name="objB">The second <see cref="Field"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
         public static bool operator !=(Field objA, Field objB)
         {

@@ -17,11 +17,11 @@ namespace RepoDb.Reflection
     public static class DelegateFactory
     {
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The <i>RepoDb.DataEntity</i> object to convert to.</typeparam>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An instance of data entity object.</returns>
         public static DataReaderToDataEntityDelegate<TEntity> GetDataReaderToDataEntityDelegate<TEntity>(DbDataReader reader)
             where TEntity : class
         {
@@ -150,10 +150,10 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <i>System.Data.Common.DbDataReader</i> object into <i>RepoDb.DataEntity</i> object.
+        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
-        /// <param name="reader">The <i>System.Data.Common.DbDataReader</i> to be converted.</param>
-        /// <returns>An instance of <i>RepoDb.DataEntity</i> object.</returns>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An instance of data entity object.</returns>
         public static DataReaderToExpandoObjectDelegate GetDataReaderToExpandoObjectDelegate(DbDataReader reader)
         {
             var returnType = typeof(ExpandoObject);

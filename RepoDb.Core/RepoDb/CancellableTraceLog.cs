@@ -8,7 +8,7 @@ namespace RepoDb
     public sealed class CancellableTraceLog : TraceLog
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.CancellableTraceLog</i> object.
+        /// Creates a new instance of <see cref="CancellableTraceLog"/> object.
         /// </summary>
         /// <param name="method">A method that will instantiate this trace log object.</param>
         /// <param name="statement">A SQL statement that was used in the trace operation.</param>
@@ -25,7 +25,7 @@ namespace RepoDb
         public bool IsCancelled { get; private set; }
 
         /// <summary>
-        /// Gets a value whether an exception will be thrown after the <i>Cancel</i> method was called.
+        /// Gets a value whether an exception will be thrown after the <see cref="Cancel(bool)"/> method was called.
         /// </summary>
         public bool IsThrowException { get; private set; }
 

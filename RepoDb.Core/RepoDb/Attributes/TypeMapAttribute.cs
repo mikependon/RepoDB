@@ -9,7 +9,7 @@ namespace RepoDb.Attributes
     public class TypeMapAttribute : Attribute
     {
         /// <summary>
-        /// Creates a new instance of <i>RepoDb.Attributes.TypeMapAttribute</i> object.
+        /// Creates a new instance of <see cref="TypeMapAttribute"/> class.
         /// </summary>
         /// <param name="dbType">A target database type.</param>
         public TypeMapAttribute(DbType dbType)
