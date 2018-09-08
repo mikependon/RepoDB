@@ -201,6 +201,13 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
+            using (var connection = new SqlConnection(RepoDbConnectionString))
+            {
+                var result = connection.ExecuteQuery("SELECT TOP 10000 * FROM Person");
+            }
+
+            return;
+
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 

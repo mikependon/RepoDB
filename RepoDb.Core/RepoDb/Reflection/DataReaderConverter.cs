@@ -61,10 +61,10 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.HasRows)
             {
-                var @delegate = DelegateCache.GetDataReaderToExpandoObjectDelegate(reader, basedOnFields);
+                var func = FunctionCache.GetDataReaderToExpandoObjectFunction(reader, basedOnFields);
                 while (reader.Read())
                 {
-                    yield return @delegate(reader);
+                    yield return func(reader);
                 }
             }
         }

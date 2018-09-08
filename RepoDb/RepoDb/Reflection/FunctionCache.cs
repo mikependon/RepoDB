@@ -3,6 +3,7 @@ using RepoDb.Reflection;
 using System;
 using System.Collections.Concurrent;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 
 namespace RepoDb
@@ -13,7 +14,7 @@ namespace RepoDb
     public static class FunctionCache
     {
         /// <summary>
-        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
@@ -25,11 +26,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a delegate that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The data entity object to convert to.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
-        /// <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
+        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
         /// <returns>An compiled function that is used to cover the <see cref="DbDataReader"/> object into data entity object.</returns>
         internal static Func<DbDataReader, TEntity> GetDataReaderToDataEntityFunction<TEntity>(DbDataReader reader, bool basedOnFields = false)
             where TEntity : class
@@ -41,6 +42,34 @@ namespace RepoDb
             else
             {
                 return FieldBasedDataReaderToDataEntityFunctionCache<TEntity>.Get(reader);
+            }
+        }
+
+        /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <returns>An instance of data entity object via dynamics.</returns>
+        public static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader)
+        {
+            return DataReaderToExpandoObjectFunctionCache.Get(reader);
+        }
+
+        /// <summary>
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// </summary>
+        /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
+        /// <param name="basedOnFields">Check whether to create a compiled function based on the data reader fields.</param>
+        /// <returns>An instance of data entity object via dynamics.</returns>
+        internal static Func<DbDataReader, ExpandoObject> GetDataReaderToExpandoObjectFunction(DbDataReader reader, bool basedOnFields = false)
+        {
+            if (basedOnFields == false)
+            {
+                return DataReaderToExpandoObjectFunctionCache.Get(reader);
+            }
+            else
+            {
+                return FieldBasedDataReaderToExpandoObjectFunctionCache.Get(reader);
             }
         }
 
@@ -80,6 +109,47 @@ namespace RepoDb
                 if (m_cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.GetDataReaderToDataEntityFunction<TEntity>(reader);
+                    m_cache.TryAdd(key, result);
+                }
+                return result;
+            }
+        }
+
+        #endregion
+
+        #region DataReaderToExpandoObjectDelegateCache
+
+        private static class DataReaderToExpandoObjectFunctionCache
+        {
+            private static Func<DbDataReader, ExpandoObject> m_func;
+
+            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader)
+            {
+                if (m_func == null)
+                {
+                    m_func = FunctionFactory.GetDataReaderToExpandoObjectFunction(reader);
+                }
+                return m_func;
+            }
+        }
+
+        #endregion
+
+        #region FieldBasedDataReaderToExpandoObjectFunctionCache
+
+        private static class FieldBasedDataReaderToExpandoObjectFunctionCache
+        {
+            private static ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>> m_cache = new ConcurrentDictionary<string, Func<DbDataReader, ExpandoObject>>();
+
+            public static Func<DbDataReader, ExpandoObject> Get(DbDataReader reader)
+            {
+                var result = (Func<DbDataReader, ExpandoObject>)null;
+                var key = Enumerable.Range(0, reader.FieldCount)
+                    .Select(reader.GetName)
+                    .Join(".");
+                if (m_cache.TryGetValue(key, out result) == false)
+                {
+                    result = FunctionFactory.GetDataReaderToExpandoObjectFunction(reader);
                     m_cache.TryAdd(key, result);
                 }
                 return result;
