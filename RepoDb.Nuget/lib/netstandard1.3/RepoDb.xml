@@ -5286,6 +5286,53 @@
             <param name="objB">The second <see cref="T:RepoDb.Field"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
+        <member name="T:RepoDb.FieldDefinition">
+            <summary>
+            A class the holds the definition of the database table columns.
+            </summary>
+        </member>
+        <member name="M:RepoDb.FieldDefinition.#ctor">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.FieldDefinition"/> object.
+            </summary>
+        </member>
+        <member name="P:RepoDb.FieldDefinition.Name">
+            <summary>
+            Gets or sets the name of the field.
+            </summary>
+        </member>
+        <member name="P:RepoDb.FieldDefinition.IsIdentity">
+            <summary>
+            Gets or sets the value whether that identify whether the field is an identity.
+            </summary>
+        </member>
+        <member name="P:RepoDb.FieldDefinition.IsNullable">
+            <summary>
+            Gets or sets the value that identify whether the field is nullable.
+            </summary>
+        </member>
+        <member name="T:RepoDb.FieldDefinitionCache">
+            <summary>
+            A class used to cache the field definitions of the entity.
+            </summary>
+        </member>
+        <member name="M:RepoDb.FieldDefinitionCache.Get``1(RepoDb.Enumerations.Command)">
+            <summary>
+            Gets the cached field definitions of the entity.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="command">The target command</param>
+            <returns>The cached field definitions of the entity.</returns>
+        </member>
+        <member name="M:RepoDb.FieldDefinitionCache.Get``1(RepoDb.Enumerations.Command,System.String)">
+            <summary>
+            Gets the cached field definitions of the entity.
+            </summary>
+            <typeparam name="TEntity">The type of the target entity.</typeparam>
+            <param name="command">The target command</param>
+            <param name="connectionString">The connection string to be used.</param>
+            <returns>The cached field definitions of the entity.</returns>
+        </member>
         <member name="T:RepoDb.IdentityCache">
             <summary>
             A class used to cache the identity property of the entity.
@@ -7541,15 +7588,13 @@
             A helper class for database specially for the direct access. This class is only meant for SQL Server.
             </summary>
         </member>
-        <member name="M:RepoDb.SqlDbHelper.IsIdentity``1(System.String,RepoDb.Enumerations.Command,System.String)">
+        <member name="M:RepoDb.SqlDbHelper.GetFieldDefinitions(System.String,System.String)">
             <summary>
-            Checks whether the target column is an identity field from the database.
+            Gets the field definitions of the table.
             </summary>
-            <typeparam name="TEntity"></typeparam>
-            <param name="connectionString">The connection string object to be used.</param>
-            <param name="command">The target command.</param>
-            <param name="columnName">The name of the column.</param>
-            <returns>A boolean value indicating the identification of the column.</returns>
+            <param name="connectionString">The connection string to be used.</param>
+            <param name="tableName">The name of the table.</param>
+            <returns>An enumerable list of field definitions.</returns>
         </member>
         <member name="T:RepoDb.SqlDbStatementBuilder">
             <summary>

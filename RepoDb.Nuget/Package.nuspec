@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.5.3</version>
+    <version>1.6.0</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,9 +10,8 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      [Release v1.5.3]
-      - Optimization: This release has an extreme performance improvement. This is an update at v1.5.2.
-      - Bug: Fixed the packages.config dependencies issues.
+      [Release v1.6.0]
+      - Performance: Introduce field definitions for NULL checks at IL.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
