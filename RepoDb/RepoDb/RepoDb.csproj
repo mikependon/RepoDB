@@ -59,6 +59,7 @@
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
+    <Compile Include="DataReaderFieldDefinition.cs" />
     <Compile Include="FieldDefinition.cs" />
     <Compile Include="FieldDefinitionCache.cs" />
     <Compile Include="IdentityCache.cs" />
@@ -88,7 +89,10 @@
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
+    <Compile Include="Reflection\FunctionCache.cs" />
     <Compile Include="Reflection\DelegateCache.cs" />
+    <Compile Include="Reflection\Functions.cs" />
+    <Compile Include="Reflection\FunctionFactory.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
     <Compile Include="Requests\CountRequest.cs" />
     <Compile Include="Requests\BatchQueryRequest.cs" />

@@ -432,7 +432,8 @@ namespace RepoDb
             // Database pre-touch for field definitions
             if (connection is System.Data.SqlClient.SqlConnection)
             {
-                FieldDefinitionCache.Get<TEntity>(command, connection.ConnectionString);
+                FieldDefinitionCache.Get<TEntity>(Command.Query /* Used at the Reflection expressions */,
+                    connection.ConnectionString);
             }
 
             // Before Execution

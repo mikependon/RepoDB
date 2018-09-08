@@ -33,10 +33,10 @@ namespace RepoDb.Reflection
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
-                var @delegate = DelegateCache.GetDataReaderToDataEntityDelegate<TEntity>(reader, basedOnFields);
+                var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader, basedOnFields);
                 while (reader.Read())
                 {
-                    yield return @delegate(reader);
+                    yield return func(reader);
                 }
             }
         }

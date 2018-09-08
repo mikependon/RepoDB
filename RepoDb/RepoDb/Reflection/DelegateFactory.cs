@@ -13,7 +13,7 @@ using System.Reflection.Emit;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A static factor class used to create a delegate a custom delegate.
+    /// A static factory class used to create a delegate a custom delegate.
     /// </summary>
     public static class DelegateFactory
     {
