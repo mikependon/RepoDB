@@ -116,8 +116,9 @@ namespace Project_ORM_Perf_Benchmark
         private static void CompareQuery(int rows)
         {
             DapperQueryEntity(rows);
-            RepoDbQuery(rows);
+            RepoDbQueryEntity(rows);
             DapperQuery(rows);
+            RepoDbExecuteQuery(rows);
         }
 
         private static void DapperQueryEntity(int rows)
@@ -131,7 +132,7 @@ namespace Project_ORM_Perf_Benchmark
             }
         }
 
-        private static void RepoDbQuery(int rows)
+        private static void RepoDbQueryEntity(int rows)
         {
             var now = DateTime.UtcNow;
             using (var repository = new DbRepository<SqlConnection>(ConnectionString))

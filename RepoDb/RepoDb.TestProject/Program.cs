@@ -201,6 +201,13 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
+            using (var connection = new SqlConnection("Server=.;Database=TestDb;Integrated Security=SSPI;"))
+            {
+                var employees = connection.ExecuteQuery("SELECT TOP 10000 * FROM Employee;");
+            }
+
+            return;
+
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 

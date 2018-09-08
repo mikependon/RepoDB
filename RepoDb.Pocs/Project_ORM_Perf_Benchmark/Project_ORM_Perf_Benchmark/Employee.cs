@@ -11,7 +11,7 @@ namespace Project_ORM_Perf_Benchmark
         public string Address { get; set; }
         public string Phone { get; set; }
         public int? Age { get; set; }
-        public double? Worth { get; set; }
+        public float? Worth { get; set; }
         public double? Salary { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public short Gender { get; set; }

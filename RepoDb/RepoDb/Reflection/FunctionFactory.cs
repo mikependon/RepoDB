@@ -30,11 +30,11 @@ namespace RepoDb.Reflection
             // Matching the fields
             var fields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
-                .Select((n, i) => new DataReaderFieldDefinition
+                .Select((name, ordinal) => new DataReaderFieldDefinition
                 {
-                    Name = n.ToLower(),
-                    Ordinal = i,
-                    Type = reader.GetFieldType(i)
+                    Name = name.ToLower(),
+                    Ordinal = ordinal,
+                    Type = reader.GetFieldType(ordinal)
                 });
 
             // Get the bindings
@@ -163,20 +163,19 @@ namespace RepoDb.Reflection
             // Expression variables
             var readerParameterExpression = Expression.Parameter(typeof(DbDataReader), "reader");
             var newObjectExpression = Expression.New(typeof(ExpandoObject));
-            var dictionaryExpression = Expression.Convert(newObjectExpression, typeof(IDictionary<string, object>));
 
             // Matching the fields
             var fields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
-                .Select((n, i) => new DataReaderFieldDefinition
+                .Select((name, ordinal) => new DataReaderFieldDefinition
                 {
-                    Name = n.ToLower(),
-                    Ordinal = i,
-                    Type = reader.GetFieldType(i)
+                    Name = name,
+                    Ordinal = ordinal,
+                    Type = reader.GetFieldType(ordinal)
                 });
 
             // Initialize the elements
-            var elementInits = GetElementInits(newObjectExpression, readerParameterExpression, fields);
+            var elementInits = GetElementInits(readerParameterExpression, fields);
 
             // Throw an error if there are no matching atleast one
             if (elementInits.Any() == false)
@@ -196,12 +195,10 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Returns the list of the bindings for the object.
         /// </summary>
-        /// <param name="dictionaryExpression">The dictionary object expression.</param>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
         /// <param name="fields">The list of fields to be bound.</param>
         /// <returns>The enumerable list of child elements initializations.</returns>
-        private static IEnumerable<ElementInit> GetElementInits(Expression dictionaryExpression,
-            ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> fields)
+        private static IEnumerable<ElementInit> GetElementInits(ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> fields)
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
@@ -214,12 +211,14 @@ namespace RepoDb.Reflection
             {
                 // Field variable
                 var field = readerFields[ordinal];
+                var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
                 var readerGetValueMethod = dataReaderType.GetMethod($"Get{field?.Type.Name}");
                 if (readerGetValueMethod == null)
                 {
                     readerGetValueMethod = dataReaderType.GetMethod("GetValue");
+                    isConversionNeeded = true;
                 }
 
                 // Expressions
@@ -228,9 +227,13 @@ namespace RepoDb.Reflection
 
                 // Check for nullables
                 var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
-                var ifTrueExpression = Expression.Default(field.Type);
-                var isFalseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
-                valueExpression = Expression.Condition(isDbNullExpression, ifTrueExpression, isFalseExpression);
+                var trueExpression = Expression.Default(field.Type);
+                var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
+                if (isConversionNeeded == true)
+                {
+                    falseExpression = Expression.Convert(falseExpression, field?.Type);
+                }
+                valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
 
                 // Add to the bindings
                 var values = new[]
