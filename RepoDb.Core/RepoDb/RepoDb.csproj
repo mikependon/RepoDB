@@ -4,16 +4,15 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.5.3</Version>
+    <Version>1.6.0</Version>
     <Authors>Michael Camara Pendon, Rodel E. Dagumampan</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release v1.5.3]
-- Optimization: This release has an extreme performance improvement. This is an update at v1.5.2.
-- Bug: Fixed the packages.config dependencies issues.</PackageReleaseNotes>
+    <PackageReleaseNotes>[Release v1.6.0]
+- Performance: Introduce field definitions for NULL checks at IL.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -21,8 +20,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.5.3.0</AssemblyVersion>
-    <FileVersion>1.5.3.0</FileVersion>
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

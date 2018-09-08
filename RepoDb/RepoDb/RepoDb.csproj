@@ -59,6 +59,8 @@
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
     <Compile Include="ClassProperty.cs" />
+    <Compile Include="FieldDefinition.cs" />
+    <Compile Include="FieldDefinitionCache.cs" />
     <Compile Include="IdentityCache.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />

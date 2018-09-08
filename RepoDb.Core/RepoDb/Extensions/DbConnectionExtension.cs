@@ -429,6 +429,12 @@ namespace RepoDb
                 CommandTextCache.GetBatchQueryText<TEntity>(request);
             var param = where?.AsObject();
 
+            // Database pre-touch for field definitions
+            if (connection is System.Data.SqlClient.SqlConnection)
+            {
+                FieldDefinitionCache.Get<TEntity>(command, connection.ConnectionString);
+            }
+
             // Before Execution
             if (trace != null)
             {
@@ -450,12 +456,17 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteQuery<TEntity>(connection: connection,
+            var result = (IEnumerable<TEntity>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                entityType: typeof(TEntity)))
+            {
+                result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
+            }
 
             // After Execution
             if (trace != null)
@@ -2243,6 +2254,12 @@ namespace RepoDb
                 ClassMappedNameCache.Get<TEntity>(command) :
                 CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();
+
+            // Database pre-touch for field definitions
+            if (connection is System.Data.SqlClient.SqlConnection)
+            {
+                FieldDefinitionCache.Get<TEntity>(command, connection.ConnectionString);
+            }
 
             // Before Execution
             if (trace != null)

@@ -1,7 +1,8 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Extensions;
+using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -29,7 +30,15 @@ namespace RepoDb
                 var primary = PrimaryKeyCache.Get<TEntity>();
                 if (primary != null)
                 {
-                    value = SqlDbHelper.IsIdentity<TEntity>(connectionString, command, primary.GetMappedName());
+                    var tableName = ClassMappedNameCache.Get<TEntity>(command);
+                    var fieldDefinitions = SqlDbHelper.GetFieldDefinitions(connectionString, tableName);
+                    if (fieldDefinitions != null)
+                    {
+                        var field = fieldDefinitions
+                            .FirstOrDefault(fd => 
+                                string.Equals(fd.Name, primary.GetMappedName(), StringComparison.CurrentCultureIgnoreCase));
+                        value = field?.IsIdentity == true;
+                    }
                 }
                 m_cache.TryAdd(key, value);
             }

@@ -32,6 +32,7 @@ namespace RepoDb.Reflection
                 typeof(Assembly).GetTypeInfo().Module,
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
+            var fieldDefinitions = FieldDefinitionCache.Get<TEntity>(Command.Query);
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);
@@ -54,10 +55,12 @@ namespace RepoDb.Reflection
                 .ToList()
                 .ForEach(property =>
                 {
-                    var ordinal = fields.IndexOf(property.GetMappedName().ToLower());
+                    var mappedName = property.GetMappedName().ToLower();
+                    var fieldDefinition = fieldDefinitions?.FirstOrDefault(fd => fd.Name.ToLower() == mappedName);
+                    var ordinal = fields.IndexOf(mappedName);
                     if (ordinal >= 0)
                     {
-                        EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property);
+                        EmitDataReaderToDataEntityMapping<TEntity>(ilGenerator, ordinal, property, fieldDefinition);
                         matchedCount++;
                     }
                 });
@@ -76,10 +79,11 @@ namespace RepoDb.Reflection
             return (DataReaderToDataEntityDelegate<TEntity>)dynamicMethod.CreateDelegate(typeof(DataReaderToDataEntityDelegate<TEntity>));
         }
 
-        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, ClassProperty property)
+        private static void EmitDataReaderToDataEntityMapping<TEntity>(ILGenerator ilGenerator, int ordinal, ClassProperty property, FieldDefinition fieldDefinition)
             where TEntity : class
         {
             // Get the property type
+            var isNullable = fieldDefinition == null || fieldDefinition?.IsNullable == true;
             var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
             var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
 
@@ -94,11 +98,15 @@ namespace RepoDb.Reflection
             ilGenerator.Emit(OpCodes.Callvirt, typeof(DbDataReader).GetTypeInfo().GetMethod("get_Item", new[] { typeof(int) }));
             ilGenerator.Emit(OpCodes.Stloc, 1);
 
-            // Load the resulted Value and DBNull.Value for comparisson
-            ilGenerator.Emit(OpCodes.Ldloc, 1);
-            ilGenerator.Emit(OpCodes.Ldsfld, typeof(DBNull).GetTypeInfo().GetField("Value"));
-            ilGenerator.Emit(OpCodes.Ceq);
-            ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
+            // Check if nullable in the actual definition
+            if (isNullable == true)
+            {
+                // Load the resulted Value and DBNull.Value for comparisson
+                ilGenerator.Emit(OpCodes.Ldloc, 1);
+                ilGenerator.Emit(OpCodes.Ldsfld, typeof(DBNull).GetTypeInfo().GetField("Value"));
+                ilGenerator.Emit(OpCodes.Ceq);
+                ilGenerator.Emit(OpCodes.Brtrue_S, endLabel);
+            }
 
             // Load the DataEntity instance
             ilGenerator.Emit(OpCodes.Ldloc, 0);
