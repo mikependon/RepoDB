@@ -91,7 +91,7 @@ namespace RepoDb
 
         #endregion
 
-        #region DataReaderWithCacheKeyToDataEntityDelegateCache
+        #region FieldBasedDataReaderToDataEntityDelegateCache
 
         private static class FieldBasedDataReaderToDataEntityDelegateCache<TEntity>
             where TEntity : class
