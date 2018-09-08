@@ -64,7 +64,6 @@ namespace RepoDb.IntegrationTests
                 fixtureData.LastUpdatedUtc.ShouldBe(savedData.LastUpdatedUtc);
                 fixtureData.LastUserId.ShouldBe(savedData.LastUserId);
             }
-
         }
 
         [TestMethod]

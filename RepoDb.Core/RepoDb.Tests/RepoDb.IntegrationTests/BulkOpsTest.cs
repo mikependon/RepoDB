@@ -94,7 +94,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [Map("[dbo].[TestTable]")]
-        public class TestTable : DataEntity
+        public class TestTable
         {
             public int Age { get; set; }
             public DateTime BirthDate { get; set; }

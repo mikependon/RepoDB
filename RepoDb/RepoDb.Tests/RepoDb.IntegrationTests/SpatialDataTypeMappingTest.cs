@@ -40,7 +40,7 @@ namespace RepoDb.IntegrationTests
             //assert
             var saveData = sut.Query<Models.TypeMapSpatial>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
-            saveData.geography_column.ShouldBe(fixtureData.geography_column);
+            saveData.geography_column.ToString().ShouldBe(fixtureData.geography_column);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace RepoDb.IntegrationTests
             //assert
             var saveData = sut.Query<Models.TypeMapSpatial>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
-            saveData.geometry_column.ShouldBe(fixtureData.geometry_column);
+            saveData.geometry_column.ToString().ShouldBe(fixtureData.geometry_column);
         }
     }
 }

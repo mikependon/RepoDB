@@ -67,7 +67,7 @@ namespace RepoDb.IntegrationTests
         public void TestNumericDataTypesInsert()
         {
             //arrange
-            var fixtureData = new Models.TypeMap
+            var fixtureData = new Models.TypeMapNumeric
             {
                 bigint_column = 123456789,
                 bit_column = true,
@@ -87,7 +87,7 @@ namespace RepoDb.IntegrationTests
             var returnedId = sut.Insert(fixtureData);
 
             //assert
-            var saveData = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
+            var saveData = sut.Query<Models.TypeMapNumeric>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
             saveData.bigint_column.ShouldBe(fixtureData.bigint_column);
             saveData.bit_column.ShouldBe(fixtureData.bit_column);
@@ -111,7 +111,7 @@ namespace RepoDb.IntegrationTests
             var dateTimeOffset = new DateTimeOffset(2007, 11, 22, 16, 0, 0, new TimeSpan(-5, 0, 0));
             var time = baseTime.TimeOfDay;
 
-            var fixtureData = new Models.TypeMap
+            var fixtureData = new Models.TypeMapDate
             {
                 date_column = baseTime.Date,
                 datetime_column = baseTime,
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests
             //TODO: support guid primary key
             
             //assert
-            var saveData = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
+            var saveData = sut.Query<Models.TypeMapDate>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
             saveData.date_column.ShouldBe(fixtureData.date_column);
             saveData.datetime_column.ShouldBeEx(fixtureData.datetime_column);
