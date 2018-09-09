@@ -89,7 +89,7 @@ namespace RepoDb.Reflection
                 if (ordinal >= 0)
                 {
                     // Identify the value for null check
-                    var isNullable = tableField == null || tableField?.IsNullable == true;
+                    var isTableFieldNullable = tableField == null || tableField?.IsNullable == true;
 
                     // Get the type
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
@@ -110,15 +110,34 @@ namespace RepoDb.Reflection
                     var valueExpression = (Expression)null;
 
                     // Check for nullables
-                    if (isNullable == true)
+                    if (isTableFieldNullable == true)
                     {
                         var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetTypeInfo().GetMethod("IsDBNull"), ordinalExpression);
-                        var trueExpression = Expression.Default(propertyType);
+
+                        // True expression
+                        var trueExpression = (Expression)null;
+                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        {
+                            trueExpression = Expression.New(typeof(Nullable<>).MakeGenericType(propertyType));
+                        }
+                        else
+                        {
+                            trueExpression = Expression.Default(propertyType);
+                        }
+
+                        // False expression
                         var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
                         if (isConversionNeeded == true)
                         {
                             falseExpression = Expression.Convert(falseExpression, propertyType);
                         }
+                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        {
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            falseExpression = Expression.New(nullableConstructorExpression, falseExpression);
+                        }
+
+                        // Set the value
                         valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
                     }
                     else
@@ -127,18 +146,19 @@ namespace RepoDb.Reflection
                         valueExpression = Expression.Call(readerParameterExpression,
                             readerGetValueMethod,
                             ordinalExpression);
+
+                        // Convert to correct type if necessary
                         if (isConversionNeeded == true)
                         {
                             valueExpression = Expression.Convert(valueExpression, propertyType);
                         }
-                    }
 
-                    // Check if the property is a 'Nullable' property
-                    if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
-                    {
-                        // Create a new instance of nullable
-                        var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
-                        valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                        // Set for the 'Nullable' property
+                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
+                        {
+                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                            valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
+                        }
                     }
 
                     // Set the actual property value
