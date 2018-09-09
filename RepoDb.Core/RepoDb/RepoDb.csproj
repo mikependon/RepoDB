@@ -12,7 +12,8 @@
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
     <PackageReleaseNotes>[Release v1.6.0]
-- Performance: Introduce field definitions for NULL checks at IL.</PackageReleaseNotes>
+- Performance: Introduced the field definitions for NULL checks at IL. #48
+- Performance: Added a compiled-functions (Expression) when converting the DataReader to Entity. FransBouma Recommendation #47</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>

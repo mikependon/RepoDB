@@ -11,7 +11,8 @@
     <language>en-US</language>
     <releaseNotes>
       [Release v1.6.0]
-      - Performance: Introduce field definitions for NULL checks at IL.
+      - Performance: Introduced the field definitions for NULL checks at IL. #48
+      - Performance: Added a compiled-functions (Expression) when converting the DataReader to Entity. FransBouma Recommendation #47
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
