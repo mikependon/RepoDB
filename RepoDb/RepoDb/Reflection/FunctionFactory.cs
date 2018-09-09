@@ -15,7 +15,7 @@ namespace RepoDb.Reflection
     public static class FunctionFactory
     {
         /// <summary>
-        /// Gets a designated expression function for converting the <see cref="DbDataReader"/> object into class entity.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type.</typeparam>
         /// <param name="reader">The data reader object.</param>
@@ -150,7 +150,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into data entity object.
+        /// Gets a compiled function that is used to convert the <see cref="DbDataReader"/> object into dynamic object (<see cref="ExpandoObject"/>).
         /// </summary>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>
         /// <returns>An instance of data entity object.</returns>
