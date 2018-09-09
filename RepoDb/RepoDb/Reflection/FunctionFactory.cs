@@ -28,7 +28,7 @@ namespace RepoDb.Reflection
             var newEntityExpression = Expression.New(typeof(TEntity));
 
             // Matching the fields
-            var fields = Enumerable.Range(0, reader.FieldCount)
+            var readerFields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
                 .Select((name, ordinal) => new DataReaderFieldDefinition
                 {
@@ -37,17 +37,17 @@ namespace RepoDb.Reflection
                     Type = reader.GetFieldType(ordinal)
                 });
 
-            // Get the bindings
-            var bindings = GetEntityBindings<TEntity>(newEntityExpression, readerParameterExpression, fields);
+            // Get the member assignments
+            var memberAssignments = GetMemberAssignments<TEntity>(newEntityExpression, readerParameterExpression, readerFields);
 
             // Throw an error if there are no matching atleast one
-            if (bindings.Any() == false)
+            if (memberAssignments.Any() == false)
             {
                 throw new NoMatchedFieldsException($"There are no matching fields between the result set of the data reader and the type '{typeof(TEntity).FullName}'.");
             }
 
             // Initialize the members
-            var body = Expression.MemberInit(newEntityExpression, bindings);
+            var body = Expression.MemberInit(newEntityExpression, memberAssignments);
 
             // Set the function value
             return Expression
@@ -61,16 +61,16 @@ namespace RepoDb.Reflection
         /// <typeparam name="TEntity">The target entity type.</typeparam>
         /// <param name="newEntityExpression">The new entity expression.</param>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
-        /// <param name="fields">The list of fields to be bound.</param>
+        /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <returns>The enumerable list of member assignment and bindings.</returns>
-        private static IEnumerable<MemberAssignment> GetEntityBindings<TEntity>(Expression newEntityExpression,
-            ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> fields)
+        private static IEnumerable<MemberAssignment> GetMemberAssignments<TEntity>(Expression newEntityExpression,
+            ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> readerFields)
             where TEntity : class
         {
             // Initialize variables
-            var bindings = new List<MemberAssignment>();
+            var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var fieldDefinitions = FieldDefinitionCache.Get<TEntity>(Command.Query);
+            var tableFields = FieldDefinitionCache.Get<TEntity>(Command.Query);
             var properties = PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.PropertyInfo.CanWrite)
                 .ToList();
@@ -80,23 +80,23 @@ namespace RepoDb.Reflection
             {
                 // Get the mapped name, definition, and ordinal
                 var mappedName = property.GetMappedName().ToLower();
-                var fieldDefinition = fieldDefinitions?.FirstOrDefault(fd => fd.Name.ToLower() == mappedName);
-                var field = fields.FirstOrDefault(f => f.Name == mappedName);
-                var ordinal = fields.Select(f => f.Name).ToList().IndexOf(mappedName);
+                var tableField = tableFields?.FirstOrDefault(fd => fd.Name.ToLower() == mappedName);
+                var readerField = readerFields.FirstOrDefault(f => f.Name == mappedName);
+                var ordinal = readerFields.Select(f => f.Name).ToList().IndexOf(mappedName);
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
                 {
                     // Identify the value for null check
-                    var isNullable = fieldDefinition == null || fieldDefinition?.IsNullable == true;
+                    var isNullable = tableField == null || tableField?.IsNullable == true;
 
                     // Get the type
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
-                    var isConversionNeeded = field?.Type != propertyType;
+                    var isConversionNeeded = readerField?.Type != propertyType;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                    var readerGetValueMethod = dataReaderType.GetMethod($"Get{field?.Type.Name}");
+                    var readerGetValueMethod = dataReaderType.GetMethod($"Get{readerField?.Type.Name}");
                     if (readerGetValueMethod == null)
                     {
                         readerGetValueMethod = dataReaderType.GetMethod($"Get{propertyType.Name}") ??
@@ -112,13 +112,13 @@ namespace RepoDb.Reflection
                     if (isNullable == true)
                     {
                         var isDbNullExpression = Expression.Call(readerParameterExpression, dataReaderType.GetMethod("IsDBNull"), ordinalExpression);
-                        var ifTrueExpression = Expression.Default(propertyType);
-                        var isFalseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
+                        var trueExpression = Expression.Default(propertyType);
+                        var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
                         if (isConversionNeeded == true)
                         {
-                            isFalseExpression = Expression.Convert(isFalseExpression, propertyType);
+                            falseExpression = Expression.Convert(falseExpression, propertyType);
                         }
-                        valueExpression = Expression.Condition(isDbNullExpression, ifTrueExpression, isFalseExpression);
+                        valueExpression = Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
                     }
                     else
                     {
@@ -144,13 +144,13 @@ namespace RepoDb.Reflection
                         }
 
                         // Set the actual property value
-                        bindings.Add(Expression.Bind(property.PropertyInfo, valueExpression));
+                        memberAssignments.Add(Expression.Bind(property.PropertyInfo, valueExpression));
                     }
                 }
             });
 
             // Return the result
-            return bindings;
+            return memberAssignments;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace RepoDb.Reflection
             var newObjectExpression = Expression.New(typeof(ExpandoObject));
 
             // Matching the fields
-            var fields = Enumerable.Range(0, reader.FieldCount)
+            var readerFields = Enumerable.Range(0, reader.FieldCount)
                 .Select(reader.GetName)
                 .Select((name, ordinal) => new DataReaderFieldDefinition
                 {
@@ -175,7 +175,7 @@ namespace RepoDb.Reflection
                 });
 
             // Initialize the elements
-            var elementInits = GetElementInits(readerParameterExpression, fields);
+            var elementInits = GetElementInits(readerParameterExpression, readerFields?.ToList());
 
             // Throw an error if there are no matching atleast one
             if (elementInits.Any() == false)
@@ -196,14 +196,13 @@ namespace RepoDb.Reflection
         /// Returns the list of the bindings for the object.
         /// </summary>
         /// <param name="readerParameterExpression">The data reader parameter.</param>
-        /// <param name="fields">The list of fields to be bound.</param>
+        /// <param name="readerFields">The list of fields to be bound from the data reader.</param>
         /// <returns>The enumerable list of child elements initializations.</returns>
-        private static IEnumerable<ElementInit> GetElementInits(ParameterExpression readerParameterExpression, IEnumerable<DataReaderFieldDefinition> fields)
+        private static IEnumerable<ElementInit> GetElementInits(ParameterExpression readerParameterExpression, List<DataReaderFieldDefinition> readerFields)
         {
             // Initialize variables
             var elementInits = new List<ElementInit>();
             var dataReaderType = typeof(DbDataReader);
-            var readerFields = fields?.ToList();
             var addMethod = typeof(IDictionary<string, object>).GetMethod("Add", new[] { typeof(string), typeof(object) });
 
             // Iterate each properties
