@@ -11,7 +11,7 @@ using System.Reflection;
 namespace RepoDb.Reflection
 {
     /// <summary>
-    /// A static factor class used to create a custom function.
+    /// A static factory class used to create a custom function.
     /// </summary>
     public static class FunctionFactory
     {
@@ -133,20 +133,16 @@ namespace RepoDb.Reflection
                         }
                     }
 
-                    // Check if value expression is not null, only add those
-                    if (valueExpression != null)
+                    // Check if the property is a 'Nullable' property
+                    if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                     {
-                        // Check if the property is a 'Nullable' property
-                        if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
-                        {
-                            // Create a new instance of nullable
-                            var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
-                            valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
-                        }
-
-                        // Set the actual property value
-                        memberAssignments.Add(Expression.Bind(property.PropertyInfo, valueExpression));
+                        // Create a new instance of nullable
+                        var nullableConstructorExpression = typeof(Nullable<>).MakeGenericType(propertyType).GetTypeInfo().GetConstructor(new[] { propertyType });
+                        valueExpression = Expression.New(nullableConstructorExpression, valueExpression);
                     }
+
+                    // Set the actual property value
+                    memberAssignments.Add(Expression.Bind(property.PropertyInfo, valueExpression));
                 }
             });
 
@@ -247,6 +243,5 @@ namespace RepoDb.Reflection
             // Return the result
             return elementInits;
         }
-
     }
 }
