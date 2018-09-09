@@ -6851,12 +6851,12 @@
         </member>
         <member name="T:RepoDb.Reflection.FunctionFactory">
             <summary>
-            A static factor class used to create a custom function.
+            A static factory class used to create a custom function.
             </summary>
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToDataEntityFunction``1(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a designated expression function for converting the <see cref="T:System.Data.Common.DbDataReader"/> object into class entity.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
             </summary>
             <typeparam name="TEntity">The target entity type.</typeparam>
             <param name="reader">The data reader object.</param>
@@ -6874,7 +6874,7 @@
         </member>
         <member name="M:RepoDb.Reflection.FunctionFactory.GetDataReaderToExpandoObjectFunction(System.Data.Common.DbDataReader)">
             <summary>
-            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            Gets a compiled function that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into dynamic object (<see cref="T:System.Dynamic.ExpandoObject"/>).
             </summary>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
             <returns>An instance of data entity object.</returns>
