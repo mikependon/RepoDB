@@ -41,12 +41,7 @@ namespace RepoDb
             var result = (IEnumerable<FieldDefinition>)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                var commandType = CommandTypeCache.Get<TEntity>(command);
-                if (commandType != CommandType.StoredProcedure)
-                {
-                    var tableName = ClassMappedNameCache.Get<TEntity>(command);
-                    result = SqlDbHelper.GetFieldDefinitions(connectionString, tableName);
-                }
+                result = SqlDbHelper.GetFieldDefinitions(connectionString, ClassMappedNameCache.Get<TEntity>(command));
                 m_cache.TryAdd(key, result);
             }
             return result;

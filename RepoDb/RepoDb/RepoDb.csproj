@@ -72,7 +72,6 @@
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="PrimaryKeyIdentityCache.cs" />
     <Compile Include="DataEntityListDataReader.cs" />
-    <Compile Include="DataEntityMapItem.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBigCountableException.cs" />
     <Compile Include="Exceptions\EntityNotCountableException.cs" />
@@ -83,9 +82,7 @@
     <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
-    <Compile Include="DataEntityMapper.cs" />
     <Compile Include="DataEntityChildListData.cs" />
-    <Compile Include="CommandTypeCache.cs" />
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
@@ -163,7 +160,6 @@
     <Compile Include="StatementBuilderMap.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />
-    <Compile Include="DataEntityMap.cs" />
     <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />
   </ItemGroup>

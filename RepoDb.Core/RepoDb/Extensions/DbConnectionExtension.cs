@@ -154,149 +154,6 @@ namespace RepoDb
             return property;
         }
 
-        // GuardBatchQueryable
-
-        private static void GuardBatchQueryable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsBatchQueryable<TEntity>())
-            {
-                throw new EntityNotBatchQueryableException(ClassMappedNameCache.Get<TEntity>(Command.BatchQuery));
-            }
-        }
-
-        // GuardBulkInsert
-
-        private static void GuardBulkInsert<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsBulkInsertable<TEntity>())
-            {
-                throw new EntityNotBulkInsertableException(ClassMappedNameCache.Get<TEntity>(Command.BulkInsert));
-            }
-        }
-
-        // GuardCountable
-
-        private static void GuardCountable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsCountable<TEntity>())
-            {
-                throw new EntityNotCountableException(ClassMappedNameCache.Get<TEntity>(Command.Count));
-            }
-        }
-
-        // GuardDeletable
-
-        private static void GuardDeletable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsDeletable<TEntity>())
-            {
-                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.Delete));
-            }
-        }
-
-        // GuardDeletableAll
-
-        private static void GuardDeletableAll<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsDeletableAll<TEntity>())
-            {
-                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.DeleteAll));
-            }
-        }
-
-        // GuardInlineInsertable
-
-        private static void GuardInlineInsertable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsInlineInsertable<TEntity>())
-            {
-                throw new EntityNotInlineInsertableException(ClassMappedNameCache.Get<TEntity>(Command.InlineInsert));
-            }
-        }
-
-        // GuardInlineMergeable
-
-        private static void GuardInlineMergeable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsInlineMergeable<TEntity>())
-            {
-                throw new EntityNotInlineMergeableException(ClassMappedNameCache.Get<TEntity>(Command.InlineMerge));
-            }
-        }
-
-        // GuardInlineUpdateable
-
-        private static void GuardInlineUpdateable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsInlineUpdateable<TEntity>())
-            {
-                throw new EntityNotInlineUpdateableException(ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate));
-            }
-        }
-
-        // GuardInsertable
-
-        private static void GuardInsertable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsInsertable<TEntity>())
-            {
-                throw new EntityNotInsertableException(ClassMappedNameCache.Get<TEntity>(Command.Insert));
-            }
-        }
-
-        // GuardMergeable
-
-        private static void GuardMergeable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsMergeable<TEntity>())
-            {
-                throw new EntityNotMergeableException(ClassMappedNameCache.Get<TEntity>(Command.Merge));
-            }
-        }
-
-        // GuardQueryable
-
-        private static void GuardQueryable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsQueryable<TEntity>())
-            {
-                throw new EntityNotQueryableException(ClassMappedNameCache.Get<TEntity>(Command.Query));
-            }
-        }
-
-        // GuardTruncatable
-
-        private static void GuardTruncatable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsTruncatable<TEntity>())
-            {
-                throw new EntityNotDeletableException(ClassMappedNameCache.Get<TEntity>(Command.Truncate));
-            }
-        }
-
-        // GuardUpdateable
-
-        private static void GuardUpdateable<TEntity>()
-            where TEntity : class
-        {
-            if (!DataEntityExtension.IsUpdateable<TEntity>())
-            {
-                throw new EntityNotUpdateableException(ClassMappedNameCache.Get<TEntity>(Command.Update));
-            }
-        }
-
         #endregion
 
         #region Operational Commands
@@ -411,12 +268,9 @@ namespace RepoDb
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardBatchQueryable<TEntity>();
-
             // Variables
             var command = Command.BatchQuery;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
                 where,
@@ -424,9 +278,7 @@ namespace RepoDb
                 rowsPerBatch,
                 orderBy,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetBatchQueryText<TEntity>(request);
+            var commandText = CommandTextCache.GetBatchQueryText<TEntity>(request);
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
@@ -624,9 +476,6 @@ namespace RepoDb
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
 
-            // Check
-            GuardBulkInsert<TEntity>();
-
             // Variables
             var command = Command.BulkInsert;
 
@@ -789,19 +638,14 @@ namespace RepoDb
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardCountable<TEntity>();
-
             // Variables
             var command = Command.Count;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new CountRequest(typeof(TEntity),
                 connection,
                 where,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetCountText<TEntity>(request);
+            var commandText = CommandTextCache.GetCountText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1025,19 +869,14 @@ namespace RepoDb
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardDeletable<TEntity>();
-
             // Variables
             var command = Command.Delete;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
                 where,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetDeleteText<TEntity>(request);
+            var commandText = CommandTextCache.GetDeleteText<TEntity>(request);
             var param = where?.AsObject();
 
             // Before Execution
@@ -1192,18 +1031,13 @@ namespace RepoDb
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardDeletableAll<TEntity>();
-
             // Variables
             var command = Command.DeleteAll;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetDeleteAllText<TEntity>(request);
+            var commandText = CommandTextCache.GetDeleteAllText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -1288,20 +1122,15 @@ namespace RepoDb
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardInlineInsertable<TEntity>();
-
             // Variables
             var command = Command.InlineInsert;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 overrideIgnore,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetInlineInsertText<TEntity>(request);
+            var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -1422,23 +1251,18 @@ namespace RepoDb
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardInlineMergeable<TEntity>();
-
             // Variables
             var command = Command.InlineMerge;
             var entityProperties = entity?.GetType().GetTypeInfo().GetProperties();
             var primary = PrimaryKeyCache.Get<TEntity>();
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new InlineMergeRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 qualifiers,
                 overrideIgnore,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetInlineMergeText<TEntity>(request);
+            var commandText = CommandTextCache.GetInlineMergeText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -1610,12 +1434,9 @@ namespace RepoDb
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardInlineUpdateable<TEntity>();
-
             // Variables
             var command = Command.InlineUpdate;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new InlineUpdateRequest(typeof(TEntity),
                 connection,
                 where,
@@ -1771,18 +1592,13 @@ namespace RepoDb
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardInsertable<TEntity>();
-
             // Variables
             var command = Command.Insert;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new InsertRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetInsertText<TEntity>(request);
+            var commandText = CommandTextCache.GetInsertText<TEntity>(request);
             var param = ClassExpression.Extract(entity, command);
 
             // Before Execution
@@ -1906,18 +1722,15 @@ namespace RepoDb
             var command = Command.Merge;
 
             // Check
-            GuardMergeable<TEntity>();
             GetAndGuardPrimaryKey<TEntity>(command);
 
             // Variables
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new MergeRequest(typeof(TEntity),
                 connection,
                 qualifiers,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetMergeText<TEntity>(request);
+            var commandText = CommandTextCache.GetMergeText<TEntity>(request);
             var param = entity?.AsObject(command);
 
             // Before Execution
@@ -2239,21 +2052,16 @@ namespace RepoDb
                 }
             }
 
-            // Check
-            GuardQueryable<TEntity>();
-
             // Variables
             var command = Command.Query;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new QueryRequest(typeof(TEntity),
                 connection,
                 where,
                 orderBy,
                 top,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetQueryText<TEntity>(request);
+            var commandText = CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
@@ -2690,18 +2498,13 @@ namespace RepoDb
         public static void Truncate<TEntity>(this IDbConnection connection, int? commandTimeout = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardTruncatable<TEntity>();
-
             // Variables
             var command = Command.Truncate;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new TruncateRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetTruncateText<TEntity>(request);
+            var commandText = CommandTextCache.GetTruncateText<TEntity>(request);
 
             // Before Execution
             if (trace != null)
@@ -2854,19 +2657,14 @@ namespace RepoDb
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            // Check
-            GuardUpdateable<TEntity>();
-
             // Variables
             var command = Command.Update;
-            var commandType = CommandTypeCache.Get<TEntity>(command);
+            var commandType = CommandType.Text;
             var request = new UpdateRequest(typeof(TEntity),
                 connection,
                 where,
                 statementBuilder);
-            var commandText = commandType == CommandType.StoredProcedure ?
-                ClassMappedNameCache.Get<TEntity>(command) :
-                CommandTextCache.GetUpdateText<TEntity>(request);
+            var commandText = CommandTextCache.GetUpdateText<TEntity>(request);
             var param = entity?.AsObject(where, command);
 
             // Before Execution
