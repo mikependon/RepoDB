@@ -308,7 +308,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.BatchQuery<TEntity>(where: whereOrWhat,
+            var result = connection.BatchQuery<TEntity>(whereOrWhat: whereOrWhat,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -584,7 +584,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Count<TEntity>(commandTimeout: CommandTimeout,
-                where: whereOrWhat,
+                whereOrWhat: whereOrWhat,
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
@@ -793,7 +793,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Delete<TEntity>(where: whereOrWhat,
+            var result = connection.Delete<TEntity>(whereOrWhat: whereOrWhat,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1130,7 +1130,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
-                where: whereOrWhat,
+                whereOrWhat: whereOrWhat,
                 overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -1551,7 +1551,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Query<TEntity>(where: whereOrWhat,
+            var result = connection.Query<TEntity>(whereOrWhat: whereOrWhat,
                 orderBy: orderBy,
                 top: top,
                 cacheKey: cacheKey,
@@ -1881,7 +1881,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Update<TEntity>(entity: entity,
-                where: whereOrWhat,
+                whereOrWhat: whereOrWhat,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
