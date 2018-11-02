@@ -134,7 +134,7 @@ namespace RepoDb
             }
 
             // Mapping.Name + Id
-            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{ClassMappedNameCache.Get(PropertyInfo.DeclaringType, Command.Query)}{StringConstant.Id}".ToLower());
+            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{ClassMappedNameCache.Get(PropertyInfo.DeclaringType)}{StringConstant.Id}".ToLower());
             if (m_isPrimary == true)
             {
                 return m_isPrimary;

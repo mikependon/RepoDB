@@ -33,7 +33,7 @@ namespace RepoDb.Reflection
                 typeof(Assembly).Module,
                 true);
             var ilGenerator = dynamicMethod.GetILGenerator();
-            var fieldDefinitions = FieldDefinitionCache.Get<TEntity>(Command.Query);
+            var fieldDefinitions = FieldDefinitionCache.Get<TEntity>();
 
             // Declare IL Variables
             ilGenerator.DeclareLocal(entityType);

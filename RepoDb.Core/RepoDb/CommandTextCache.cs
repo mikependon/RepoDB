@@ -132,7 +132,7 @@ namespace RepoDb
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.InlineInsert);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
                     }
                     commandText = sqlStatementBuilder.CreateInlineInsert(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
@@ -177,7 +177,7 @@ namespace RepoDb
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.InlineMerge);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
                     }
                     commandText = sqlStatementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
@@ -252,7 +252,7 @@ namespace RepoDb
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.Insert);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
                     }
                     commandText = sqlStatementBuilder.CreateInsert(queryBuilder: new QueryBuilder<TEntity>(),
                         isPrimaryIdentity: isPrimaryIdentity);
@@ -293,7 +293,7 @@ namespace RepoDb
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
-                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString, Command.Merge);
+                        isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
                     }
                     commandText = sqlStatementBuilder.CreateMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         qualifiers: request.Qualifiers,

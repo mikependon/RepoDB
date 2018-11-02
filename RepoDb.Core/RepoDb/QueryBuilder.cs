@@ -375,11 +375,10 @@ namespace RepoDb
         /// <summary>
         /// Appends the mapped entity name to the SQL Query Statement based on the mapped command.
         /// </summary>
-        /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> TableFrom(Command command)
+        public QueryBuilder<TEntity> TableName()
         {
-            return Append($"{ClassMappedNameCache.Get<TEntity>(command).AsQuoted(true)}");
+            return Append($"{ClassMappedNameCache.Get<TEntity>().AsQuoted(true)}");
         }
 
         /// <summary>

@@ -284,8 +284,7 @@ namespace RepoDb
             // Database pre-touch for field definitions
             if (connection is System.Data.SqlClient.SqlConnection)
             {
-                FieldDefinitionCache.Get<TEntity>(Command.Query /* Used at the Reflection expressions */,
-                    connection.ConnectionString);
+                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }
 
             // Before Execution
@@ -504,7 +503,7 @@ namespace RepoDb
             {
                 using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection))
                 {
-                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>(command);
+                    sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
                     if (commandTimeout != null && commandTimeout.HasValue)
                     {
                         sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
@@ -2067,7 +2066,7 @@ namespace RepoDb
             // Database pre-touch for field definitions
             if (connection is System.Data.SqlClient.SqlConnection)
             {
-                FieldDefinitionCache.Get<TEntity>(command, connection.ConnectionString);
+                FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }
 
             // Before Execution
@@ -2195,7 +2194,7 @@ namespace RepoDb
             // Variables for recursive
             var command = Command.Query;
             var primary = GetAndGuardPrimaryKey<TEntity>(command);
-            var entityName = ClassMappedNameCache.Get<TEntity>(command).AsUnquoted();
+            var entityName = ClassMappedNameCache.Get<TEntity>().AsUnquoted();
             var primaryKey = primary.GetMappedName().AsUnquoted();
             var foreignKey = $"{entityName}{primaryKey}";
 

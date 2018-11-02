@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 
@@ -16,27 +15,25 @@ namespace RepoDb
         /// Gets the cached mapped-name for the entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <param name="command">The target command.</param>
-        /// <returns>The cached command type of the entity.</returns>
-        public static string Get<TEntity>(Command command = Command.None)
+        /// <returns>The cached mapped name of the entity.</returns>
+        public static string Get<TEntity>()
             where TEntity : class
         {
-            return Get(typeof(TEntity), command);
+            return Get(typeof(TEntity));
         }
 
         /// <summary>
         /// Gets the cached mapped-name for the entity.
         /// </summary>
         /// <param name="type">The type of the target entity.</param>
-        /// <param name="command">The target command.</param>
-        /// <returns>The cached command type of the entity.</returns>
-        internal static string Get(Type type, Command command = Command.None)
+        /// <returns>The cached mapped name of the entity.</returns>
+        internal static string Get(Type type)
         {
-            var key = $"{type.FullName}.{command.ToString()}";
+            var key = type.FullName;
             var result = (string)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = DataEntityExtension.GetMappedName(type, command);
+                result = DataEntityExtension.GetMappedName(type);
                 m_cache.TryAdd(key, result);
             }
             return result;

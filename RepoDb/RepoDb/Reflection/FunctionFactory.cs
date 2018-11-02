@@ -70,7 +70,7 @@ namespace RepoDb.Reflection
             // Initialize variables
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
-            var tableFields = FieldDefinitionCache.Get<TEntity>(Command.Query);
+            var tableFields = FieldDefinitionCache.Get<TEntity>();
             var properties = PropertyCache.Get<TEntity>(Command.Query)
                 .Where(property => property.PropertyInfo.CanWrite)
                 .ToList();

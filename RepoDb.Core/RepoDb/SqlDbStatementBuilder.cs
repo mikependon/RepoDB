@@ -61,7 +61,7 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableFrom(Command.BatchQuery)
+                .TableName()
                 .WhereFrom(where)
                 .CloseParen()
                 .Select()
@@ -95,7 +95,7 @@ namespace RepoDb
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableFrom(Command.Count)
+                .TableName()
                 .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
@@ -118,7 +118,7 @@ namespace RepoDb
                 .Clear()
                 .Delete()
                 .From()
-                .TableFrom(Command.Delete)
+                .TableName()
                 .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
@@ -140,7 +140,7 @@ namespace RepoDb
                 .Clear()
                 .Delete()
                 .From()
-                .TableFrom(Command.DeleteAll)
+                .TableName()
                 .End();
             return queryBuilder.GetString();
         }
@@ -214,7 +214,7 @@ namespace RepoDb
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline insertable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
+                throw new InvalidOperationException($"No inline insertable fields for object '{ClassMappedNameCache.Get<TEntity>()}'.");
             }
 
             // Check for the unmatches
@@ -231,7 +231,7 @@ namespace RepoDb
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline insertable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineInsert)}'.");
+                        $"inline insertable for object '{ClassMappedNameCache.Get<TEntity>()}'.");
                 }
             }
 
@@ -249,7 +249,7 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .TableFrom(Command.Insert)
+                .TableName()
                 .OpenParen()
                 .FieldsFrom(fields)
                 .CloseParen()
@@ -366,14 +366,14 @@ namespace RepoDb
                 if (unmatchesFields?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesFields.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>()}'.");
                 }
                 unmatchesQualifiers = qualifiers?.Where(field =>
                     inlineMergeableProperties?.FirstOrDefault(property => field.Name.ToLower() == property.ToLower()) == null);
                 if (unmatchesQualifiers?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineMerge)}'.");
+                        $"inline mergeable for object '{ClassMappedNameCache.Get<TEntity>()}'.");
                 }
             }
 
@@ -414,7 +414,7 @@ namespace RepoDb
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableFrom(Command.Merge)
+                .TableName()
                 .As("T")
                 .Using()
                 .OpenParen()
@@ -506,7 +506,7 @@ namespace RepoDb
             // Check if there are fields
             if (hasFields == false)
             {
-                throw new InvalidOperationException($"No inline updatable fields for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
+                throw new InvalidOperationException($"No inline updatable fields for object '{ClassMappedNameCache.Get<TEntity>()}'.");
             }
 
             // Append prefix to all parameters
@@ -525,7 +525,7 @@ namespace RepoDb
                 if (unmatchesProperties.Count() > 0)
                 {
                     throw new InvalidOperationException($"The fields '{unmatchesProperties.Select(field => field.AsField()).Join(", ")}' are not " +
-                        $"inline updateable for object '{ClassMappedNameCache.Get<TEntity>(Command.InlineUpdate)}'.");
+                        $"inline updateable for object '{ClassMappedNameCache.Get<TEntity>()}'.");
                 }
             }
 
@@ -534,7 +534,7 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Update()
-                .TableFrom(Command.InlineUpdate)
+                .TableName()
                 .Set()
                 .FieldsAndParametersFrom(fields)
                 .WhereFrom(where)
@@ -588,7 +588,7 @@ namespace RepoDb
                 .Clear()
                 .Insert()
                 .Into()
-                .TableFrom(Command.Insert)
+                .TableName()
                 .OpenParen()
                 .FieldsFrom(fields)
                 .CloseParen()
@@ -694,7 +694,7 @@ namespace RepoDb
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableFrom(Command.Merge)
+                .TableName()
                 .As("T")
                 .Using()
                 .OpenParen()
@@ -763,7 +763,7 @@ namespace RepoDb
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableFrom(Command.Query)
+                .TableName()
                 .WhereFrom(where)
                 .OrderByFrom(orderBy)
                 .End();
@@ -786,7 +786,7 @@ namespace RepoDb
                 .Clear()
                 .Truncate()
                 .Table()
-                .TableFrom(Command.Delete)
+                .TableName()
                 .End();
             return queryBuilder.GetString();
         }
@@ -822,7 +822,7 @@ namespace RepoDb
             queryBuilder
                 .Clear()
                 .Update()
-                .TableFrom(Command.Update)
+                .TableName()
                 .Set()
                 .FieldsAndParametersFrom(fields)
                 .WhereFrom(where)

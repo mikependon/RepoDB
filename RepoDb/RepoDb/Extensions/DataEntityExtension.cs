@@ -112,22 +112,21 @@ namespace RepoDb.Extensions
         }
 
         // GetMappedName
-        internal static string GetMappedName(Type type, Command command)
+        internal static string GetMappedName(Type type)
         {
             return type.GetCustomAttribute<MapAttribute>()?.Name ?? type.Name;
         }
 
         /// <summary>
-        /// Gets the mapped name of the data entity type on a target command. The identification process it to check the <see cref="MapAttribute"/>
-        /// and get the value of the name property.
+        /// Gets the mapped name of a data entity. It will return the value of <see cref="MapAttribute.Name"/> property. If the
+        /// <see cref="MapAttribute"/> is not defined, then this will return the name of the class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
-        /// <param name="command">The target command.</param>
-        /// <returns>A string that contains the mapped name for the target command.</returns>
-        public static string GetMappedName<TEntity>(Command command)
+        /// <returns>A mapped name for the data entity.</returns>
+        public static string GetMappedName<TEntity>()
             where TEntity : class
         {
-            return GetMappedName(typeof(TEntity), command);
+            return GetMappedName(typeof(TEntity));
         }
 
         /// <summary>
