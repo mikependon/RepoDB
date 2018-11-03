@@ -79,25 +79,23 @@ namespace RepoDb.Reflection
             // Iterate each properties
             properties?.ForEach(property =>
             {
-                // Get the mapped name, definition, and ordinal
+                // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().ToLower();
-                var tableField = tableFields?.FirstOrDefault(fd => fd.Name.ToLower() == mappedName);
-                var readerField = readerFields.FirstOrDefault(f => f.Name == mappedName);
-                var ordinal = readerFields.Select(f => f.Name).ToList().IndexOf(mappedName);
+                var ordinal = readerFields?.Select(f => f.Name).ToList().IndexOf(mappedName);
 
                 // Process only if there is a correct ordinal
                 if (ordinal >= 0)
                 {
-                    // Identify the value for null check
+                    // Variables needed for the iteration
+                    var tableField = tableFields?.FirstOrDefault(f => f.Name.ToLower() == mappedName);
+                    var readerField = readerFields.First(f => f.Name.ToLower() == mappedName);
                     var isTableFieldNullable = tableField == null || tableField?.IsNullable == true;
-
-                    // Get the type
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
                     var isConversionNeeded = readerField?.Type != propertyType;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{readerField?.Type.Name}");
+                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{readerField?.Type?.Name}");
                     if (readerGetValueMethod == null)
                     {
                         readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{propertyType.Name}") ??
