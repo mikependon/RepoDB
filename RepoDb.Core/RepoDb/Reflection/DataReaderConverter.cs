@@ -31,20 +31,14 @@ namespace RepoDb.Reflection
         internal static IEnumerable<TEntity> ToEnumerable<TEntity>(DbDataReader reader, bool basedOnFields = false)
             where TEntity : class
         {
-            var list = new List<TEntity>();
             if (reader != null && reader.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToDataEntityFunction<TEntity>(reader, basedOnFields);
-                //while (reader.Read())
-                //{
-                //    yield return func(reader);
-                //}
                 while (reader.Read())
                 {
-                    list.Add(func(reader));
+                    yield return func(reader);
                 }
             }
-            return list;
         }
 
         /// <summary>
