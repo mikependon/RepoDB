@@ -201,6 +201,18 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
+            var id = 998;
+            var id2 = 10002;
+            var value = DateTime.UtcNow.Date.AddDays(-10);
+            //var queryGroup = QueryGroup.Parse<Person>(p => p.Name == "Michael" || p.Name == "Mike"
+            //    || (p.DateInserted <= value && p.Address == "Denmark"));
+            var queryGroup = QueryGroup.Parse<Person>(p => p.Id == id || p.Id == 1000 || p.Id == Convert.ToInt32(id2));
+            using (var connection = new SqlConnection(RepoDbConnectionString))
+            {
+                var employees = connection.Query<Person>(queryGroup, top: 100);
+            }
+            return;
+
             //using (var connection = new SqlConnection("Server=.;Database=TestDb;Integrated Security=SSPI;"))
             //{
             //    var employees = connection.ExecuteQuery("SELECT TOP 10000 * FROM Employee;");

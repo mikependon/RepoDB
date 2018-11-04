@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -2036,6 +2037,50 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+            string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
+            IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null) where TEntity : class
+        {
+            return QueryData<TEntity>(connection: connection,
+                where: QueryGroup.Parse<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                cacheKey: cacheKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder,
+                recursive: recursive,
+                recursionDepth: recursionDepth);
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
+        /// be included in the result of the query. The default value is false.
+        /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
+        /// <returns>An enumerable list of data entity object.</returns>
         private static IEnumerable<TEntity> QueryData<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
@@ -2427,6 +2472,51 @@ namespace RepoDb
             return Task.Factory.StartNew(() =>
                 Query<TEntity>(connection: connection,
                     whereOrWhat: whereOrWhat,
+                    orderBy: orderBy,
+                    top: top,
+                    cacheKey: cacheKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    recursive: recursive,
+                    recursionDepth: recursionDepth));
+        }
+
+        /// <summary>
+        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <param name="recursive">
+        /// The value that indicates whether the child data entity objects defined in the target data entity object will
+        /// be included in the result of the query. The default value is false.
+        /// </param>
+        /// <param name="recursionDepth">
+        /// Defines the depth of the recursion when querying the data from the database. By default, the value is null to enable the querying of all 
+        /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
+        /// </param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
+            IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
+            where TEntity : class
+        {
+            return Task.Factory.StartNew(() =>
+                Query<TEntity>(connection: connection,
+                    where: where,
                     orderBy: orderBy,
                     top: top,
                     cacheKey: cacheKey,

@@ -3,7 +3,9 @@ using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace RepoDb
 {
@@ -104,6 +106,207 @@ namespace RepoDb
         }
 
         // Static Methods
+
+        #region Parse (Expression)
+
+        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        {
+            // Supported expression types
+            var supportedExpressionTypes = new[]
+            {
+                ExpressionType.Equal,
+                ExpressionType.Not,
+                ExpressionType.GreaterThan,
+                ExpressionType.GreaterThanOrEqual,
+                ExpressionType.LessThan,
+                ExpressionType.LessThanOrEqual
+            };
+
+            // Only support the following expression type
+            if (supportedExpressionTypes.Contains(expression.NodeType) == false)
+            {
+                throw new NotSupportedException($"Expression type '{expression.Left.NodeType.ToString()}' is currently not supported.");
+            }
+
+            // Supported expressions
+            var supportedExpressions = new[]
+            {
+                typeof(MemberExpression),
+                typeof(ConstantExpression),
+                typeof(UnaryExpression)
+            };
+
+            // We need to make sure that Left expression
+            if (expression.Left is MemberExpression == false &&
+                expression.Left is ConstantExpression == false &&
+                expression.Left is UnaryExpression == false)
+            {
+                throw new NotSupportedException($"Left expression is not supported for expression '{expression.ToString()}'.");
+            }
+
+            // We need to make sure that Right expression
+            if (expression.Right is MemberExpression == false &&
+                expression.Right is ConstantExpression == false &&
+                expression.Right is UnaryExpression == false)
+            {
+                throw new NotSupportedException($"Left expression is not supported for expression '{expression.ToString()}'.");
+            }
+
+            // Field values variable
+            var fieldName = GetFieldNameFromExpression(expression);
+            var operation = GetOperationFromExpression(expression);
+            var value = GetValueFromExpression(expression);
+
+            // Return the value
+            return new QueryField(fieldName, operation, value);
+        }
+
+        private static string GetFieldNameFromExpression(BinaryExpression expression)
+        {
+            // Check the left
+            if (expression.Left is MemberExpression)
+            {
+                var member = (MemberExpression)expression.Left;
+                if (member.Expression.NodeType == ExpressionType.Parameter)
+                {
+                    return member.Member.Name;
+                }
+            }
+
+            // Check the right
+            if (expression.Right is MemberExpression)
+            {
+                var member = (MemberExpression)expression.Right;
+                if (member.Expression.NodeType == ExpressionType.Parameter)
+                {
+                    return member.Member.Name;
+                }
+            }
+
+            // Throw an exception
+            throw new InvalidOperationException($"Field name not found from expression '{expression.ToString()}'.");
+        }
+
+        private static Operation GetOperationFromExpression(Expression expression)
+        {
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Equal:
+                    return Operation.Equal;
+                case ExpressionType.NotEqual:
+                    return Operation.NotEqual;
+                case ExpressionType.GreaterThan:
+                    return Operation.GreaterThan;
+                case ExpressionType.GreaterThanOrEqual:
+                    return Operation.GreaterThanOrEqual;
+                case ExpressionType.LessThan:
+                    return Operation.LessThan;
+                case ExpressionType.LessThanOrEqual:
+                    return Operation.LessThanOrEqual;
+                default:
+                    return Operation.Equal;
+            }
+        }
+
+        private static object GetValueFromExpression(BinaryExpression expression)
+        {
+            // Check the left
+            if (expression.Left is ConstantExpression)
+            {
+                return ((ConstantExpression)expression.Left).Value;
+            }
+            else if (expression.Left is UnaryExpression)
+            {
+                return GetValueFromExpression((UnaryExpression)expression.Left);
+            }
+            else if (expression.Left is MemberExpression)
+            {
+                var member = (MemberExpression)expression.Left;
+                if (member.Expression.NodeType == ExpressionType.Constant)
+                {
+                    return ((ConstantExpression)member.Expression).Value;
+                }
+            }
+
+            // Check the right
+            if (expression.Right is ConstantExpression)
+            {
+                return ((ConstantExpression)expression.Right).Value;
+            }
+            else if (expression.Right is UnaryExpression)
+            {
+                return GetValueFromExpression((UnaryExpression)expression.Right);
+            }
+            else if (expression.Right is MemberExpression)
+            {
+                var member = (MemberExpression)expression.Right;
+                if (member.Expression.NodeType == ExpressionType.Constant)
+                {
+                    return ((ConstantExpression)member.Expression).Value;
+                }
+            }
+
+            // Throw an exception
+            throw new InvalidOperationException($"Value not found from expression '{expression.ToString()}'.");
+        }
+
+        private static object GetValueFromExpression(UnaryExpression unary)
+        {
+            if (unary.Operand is MemberExpression)
+            {
+                return GetValueFromExpression((MemberExpression)unary.Operand);
+            }
+            else if (unary.Operand is MethodCallExpression)
+            {
+                return GetValueFromExpression((MethodCallExpression)unary.Operand);
+            }
+            return null;
+        }
+
+        private static object GetValueFromExpression(MethodCallExpression expression)
+        {
+            var value = (object)null;
+            if (expression.Arguments?.Any() == true)
+            {
+                var arguments = new List<object>();
+                expression.Arguments.ToList().ForEach(arg =>
+                {
+                    if (arg is ConstantExpression)
+                    {
+                        arguments.Add(((ConstantExpression)arg).Value);
+                    }
+                    else if (arg is MemberExpression)
+                    {
+                        arguments.Add(GetValueFromExpression((MemberExpression)arg));
+                    }
+                });
+                value = expression.Method.Invoke(expression.Object, arguments.ToArray());
+            }
+            else
+            {
+                value = expression.Method.Invoke(expression.Object, null);
+            }
+            return value;
+        }
+
+        private static object GetValueFromExpression(MemberExpression expression)
+        {
+            var value = (object)null;
+            if (expression.Expression is ConstantExpression)
+            {
+                if (expression.Member is System.Reflection.FieldInfo)
+                {
+                    var fieldInfo = (System.Reflection.FieldInfo)expression.Member;
+                    var instance = ((ConstantExpression)expression.Expression).Value;
+                    value = fieldInfo.GetValue(instance);
+                }
+            }
+            return value;
+        }
+
+        #endregion
+
+        #region Parse (Dynamics)
 
         internal static QueryField Parse(string fieldName, object value)
         {
@@ -255,6 +458,8 @@ namespace RepoDb
                 throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
         }
+
+        #endregion
 
         // Equality and comparers
 
