@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Linq.Expressions;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -48,6 +50,48 @@ namespace RepoDb
                 throw new NullReferenceException($"Field name must not be null.");
             }
             return fields.Select(field => new Field(field));
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="Field"/> object based on the type of the data entity passed on the expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="Field"/> object.</returns>
+        public static Field From<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
+        {
+            // Constant
+            if (expression.Body.IsConstant())
+            {
+                var value = expression.Body.ToConstant().Value;
+                if (value is string)
+                {
+                    return new Field(Convert.ToString(value));
+                }
+            }
+            // Member
+            if (expression.Body.IsMember())
+            {
+                return new Field(expression.Body.ToMember().Member.Name);
+            }
+            // Unary
+            else if (expression.Body.IsUnary())
+            {
+                var unary = expression.Body.ToUnary();
+                if (unary.Operand.IsMember())
+                {
+                    return new Field(unary.Operand.ToMember().Member.Name);
+                }
+                else if (unary.Operand.IsBinary())
+                {
+                    var binary = unary.Operand.ToBinary();
+                    if (binary.Left.IsMember())
+                    {
+                        return new Field(binary.Left.ToMember().Member.Name);
+                    }
+                }
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         /// <summary>
