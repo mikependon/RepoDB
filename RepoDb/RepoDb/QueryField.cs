@@ -114,7 +114,7 @@ namespace RepoDb
             // Only support the following expression type
             if (expression.CanBeExtracted() == false)
             {
-                throw new NotSupportedException($"Expression type '{expression.Left.NodeType.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"Expression type '{expression.ToString()}' is currently not supported.");
             }
 
             // Needed variables for field
