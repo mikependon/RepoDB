@@ -178,9 +178,9 @@ namespace RepoDb
         public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
         {
             // Parse the expression (BinaryExpression)
-            if (expression.Body is BinaryExpression)
+            if (expression.Body.IsBinary())
             {
-                return Parse<TEntity>((BinaryExpression)expression.Body);
+                return Parse<TEntity>(expression.Body.ToBinary());
             }
 
             // Throw an exception that this is not yet supported
@@ -207,7 +207,7 @@ namespace RepoDb
             else
             {
                 // Left
-                if (expression.Left.CanBeGrouped() && expression.Right.IsBinary())
+                if (expression.Left.CanBeGrouped() && expression.Left.IsBinary())
                 {
                     queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
                 }
@@ -217,7 +217,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is not supported.");
+                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
                 }
 
                 // Right
@@ -231,7 +231,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    throw new NotSupportedException($"Right expression '{expression.Left.ToString()}' is not supported.");
+                    throw new NotSupportedException($"Right expression '{expression.Left.ToString()}' is currently not supported.");
                 }
             }
 
