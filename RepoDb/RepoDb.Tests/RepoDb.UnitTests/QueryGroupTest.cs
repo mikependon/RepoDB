@@ -2,17 +2,645 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
-using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Text;
 
 namespace RepoDb.UnitTests
 {
     [TestClass]
     public class QueryGroupTest
     {
+        #region Expressions
+
+        public class QueryGroupTestClass
+        {
+            public int PropertyInt { get; set; }
+            public string PropertyString { get; set; }
+            public double PropertyDouble { get; set; }
+            public DateTime PropertyDateTime { get; set; }
+            public float PropertySingle { get; set; }
+            public Guid PropertyGuid { get; set; }
+            public Boolean PropertyBoolean { get; set; }
+            public Byte[] PropertyBytes { get; set; }
+        }
+
+        private int GetIntValueForParseExpression()
+        {
+            return new Random().Next(int.MaxValue);
+        }
+
+        private string GetStringValueForParseExpression()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private double GetDoubleValueForParseExpression()
+        {
+            return new Random().NextDouble() * double.MaxValue;
+        }
+
+        private DateTime GetDateTimeValueForParseExpression()
+        {
+            return DateTime.UtcNow.AddSeconds(-new Random().Next(1, 60 * 60 * 24 * 30));
+        }
+
+        private float GetSingleValueForParseExpression()
+        {
+            return Convert.ToSingle(new Random().NextDouble() * 1000);
+        }
+
+        private Guid GetGuidValueForParseExpression()
+        {
+            return Guid.NewGuid();
+        }
+
+        private bool GetBooleanValueForParseExpression()
+        {
+            return new Random().NextDouble() > 0.5;
+        }
+
+        private Byte[] GetBytesValueForParseExpression()
+        {
+            return Encoding.UTF8.GetBytes(GetStringValueForParseExpression());
+        }
+
+        // Int
+
+        [TestMethod]
+        public void TestParseExpressionIntConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionIntVariable()
+        {
+            // Setup
+            var value = 1;
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionIntClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyInt = 1
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value.PropertyInt).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionIntMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == GetIntValueForParseExpression()).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionIntVariableMethodCall()
+        {
+            // Setup
+            var value = GetIntValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // String
+
+        [TestMethod]
+        public void TestParseExpressionStringConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == "A").GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStringVariable()
+        {
+            // Setup
+            var value = "A";
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value).GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStringClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyString = "A"
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value.PropertyString).GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStringMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == GetStringValueForParseExpression()).GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStringVariableMethodCall()
+        {
+            // Setup
+            var value = GetStringValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value).GetString();
+            var expected = "([PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Double
+
+        [TestMethod]
+        public void TestParseExpressionDoubleConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDouble == 1.0).GetString();
+            var expected = "([PropertyDouble] = @PropertyDouble)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDoubleVariable()
+        {
+            // Setup
+            var value = 1.0;
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDouble == value).GetString();
+            var expected = "([PropertyDouble] = @PropertyDouble)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDoubleClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyDouble = 1.0
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDouble == value.PropertyDouble).GetString();
+            var expected = "([PropertyDouble] = @PropertyDouble)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDoubleMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDouble == GetDoubleValueForParseExpression()).GetString();
+            var expected = "([PropertyDouble] = @PropertyDouble)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDoubleVariableMethodCall()
+        {
+            // Setup
+            var value = GetDoubleValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDouble == value).GetString();
+            var expected = "([PropertyDouble] = @PropertyDouble)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // DateTime
+
+        [TestMethod]
+        public void TestParseExpressionDateTimeConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDateTime == DateTime.UtcNow).GetString();
+            var expected = "([PropertyDateTime] = @PropertyDateTime)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDateTimeVariable()
+        {
+            // Setup
+            var value = DateTime.UtcNow;
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDateTime == value).GetString();
+            var expected = "([PropertyDateTime] = @PropertyDateTime)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDateTimeClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyDateTime = DateTime.UtcNow
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDateTime == value.PropertyDateTime).GetString();
+            var expected = "([PropertyDateTime] = @PropertyDateTime)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDateTimeMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDateTime == GetDateTimeValueForParseExpression()).GetString();
+            var expected = "([PropertyDateTime] = @PropertyDateTime)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionDateTimeVariableMethodCall()
+        {
+            // Setup
+            var value = GetDateTimeValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyDateTime == value).GetString();
+            var expected = "([PropertyDateTime] = @PropertyDateTime)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Single
+
+        [TestMethod]
+        public void TestParseExpressionSingleConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertySingle == 1).GetString();
+            var expected = "([PropertySingle] = @PropertySingle)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionSingleVariable()
+        {
+            // Setup
+            var value = 1;
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertySingle == value).GetString();
+            var expected = "([PropertySingle] = @PropertySingle)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionSingleClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertySingle = 1
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertySingle == value.PropertySingle).GetString();
+            var expected = "([PropertySingle] = @PropertySingle)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionSingleMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertySingle == GetSingleValueForParseExpression()).GetString();
+            var expected = "([PropertySingle] = @PropertySingle)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionSingleVariableMethodCall()
+        {
+            // Setup
+            var value = GetSingleValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertySingle == value).GetString();
+            var expected = "([PropertySingle] = @PropertySingle)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Guid
+
+        [TestMethod]
+        public void TestParseExpressionGuidConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyGuid == Guid.NewGuid()).GetString();
+            var expected = "([PropertyGuid] = @PropertyGuid)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionGuidVariable()
+        {
+            // Setup
+            var value = Guid.NewGuid();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyGuid == value).GetString();
+            var expected = "([PropertyGuid] = @PropertyGuid)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionGuidClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyGuid = Guid.NewGuid()
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyGuid == value.PropertyGuid).GetString();
+            var expected = "([PropertyGuid] = @PropertyGuid)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionGuidMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyGuid == GetGuidValueForParseExpression()).GetString();
+            var expected = "([PropertyGuid] = @PropertyGuid)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionGuidVariableMethodCall()
+        {
+            // Setup
+            var value = GetGuidValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyGuid == value).GetString();
+            var expected = "([PropertyGuid] = @PropertyGuid)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Boolean
+
+        [TestMethod]
+        public void TestParseExpressionBooleanConstant()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBoolean == true).GetString();
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionBooleanVariable()
+        {
+            // Setup
+            var value = true;
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBoolean == value).GetString();
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionBooleanClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyBoolean = true
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBoolean == value.PropertyBoolean).GetString();
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionBooleanMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBoolean == GetBooleanValueForParseExpression()).GetString();
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionBooleanVariableMethodCall()
+        {
+            // Setup
+            var value = GetBooleanValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBoolean == value).GetString();
+            var expected = "([PropertyBoolean] = @PropertyBoolean)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Byte
+
+        [TestMethod]
+        public void TestParseExpressionByteArray()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == new[] { byte.Parse("0") }).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionPassedByteArray()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == Encoding.Unicode.GetBytes("Test")).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
+        public void TestParseExpressionByteVariable()
+        {
+            // Setup
+            var value = new[] { byte.Parse("0") };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == value).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionByteClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyBytes = new[] { byte.Parse("0") }
+            };
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == value.PropertyBytes).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionByteMethodCall()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == GetBytesValueForParseExpression()).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionByteVariableMethodCall()
+        {
+            // Setup
+            var value = GetBytesValueForParseExpression();
+
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyBytes == value).GetString();
+            var expected = "([PropertyBytes] = @PropertyBytes)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Check values
+
+        // Check Operations (Equal, NotEqual, GreaterThan, etc)
+
+        // Check Groupings
+
+        #endregion
+
+        #region Dynamics
+
         // Expression
 
         [TestMethod]
-        public void TestSingleExpression()
+        public void TestParseDynamicSingleExpression()
         {
             // Setup
             var expression = new { Field1 = 1 };
@@ -26,7 +654,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfConjunctionIsNotAConjunctionType()
+        public void ThrowExceptionOnParseDynamicOnParseDynamicIfConjunctionIsNotAConjunctionType()
         {
             // Setup
             var expression = new { Conjunction = "NotAConjunctionType", Field1 = 1 };
@@ -36,7 +664,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestMultipleExpressions()
+        public void TestParseDynamicMultipleExpressions()
         {
             // Setup
             var expression = new { Field1 = 1, Field2 = 2, Field3 = 3 };
@@ -50,7 +678,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestMultipleExpressionsForConjunctionOr()
+        public void TestParseDynamicMultipleExpressionsForConjunctionOr()
         {
             // Setup
             var expression = new { Conjunction = Conjunction.Or, Field1 = 1, Field2 = 2, Field3 = 3 };
@@ -66,7 +694,7 @@ namespace RepoDb.UnitTests
         // No Operation
 
         [TestMethod]
-        public void TestNoOperation()
+        public void TestParseDynamicNoOperation()
         {
             // Setup
             var expression = new { Field1 = 1 };
@@ -82,7 +710,7 @@ namespace RepoDb.UnitTests
         // No Operation for IS NULL
 
         [TestMethod]
-        public void TestNoOperationForIsNull()
+        public void TestParseDynamicNoOperationForIsNull()
         {
             // Setup
             var expression = new { Field1 = (object)null };
@@ -98,7 +726,7 @@ namespace RepoDb.UnitTests
         // Equal
 
         [TestMethod]
-        public void TestEqualOperation()
+        public void TestParseDynamicEqualOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Equal, Value = 1 } };
@@ -114,7 +742,7 @@ namespace RepoDb.UnitTests
         // Equal for IS NULL
 
         [TestMethod]
-        public void TestEqualOperationForIsNull()
+        public void TestParseDynamicEqualOperationForIsNull()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Equal, Value = (object)null } };
@@ -130,7 +758,7 @@ namespace RepoDb.UnitTests
         // NotEqual
 
         [TestMethod]
-        public void TestNotEqualOperation()
+        public void TestParseDynamicNotEqualOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotEqual, Value = 1 } };
@@ -146,7 +774,7 @@ namespace RepoDb.UnitTests
         // NotEqual of IS NOT NULL
 
         [TestMethod]
-        public void TestNotEqualOperationForIsNotNull()
+        public void TestParseDynamicNotEqualOperationForIsNotNull()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotEqual, Value = (object)null } };
@@ -162,7 +790,7 @@ namespace RepoDb.UnitTests
         // LessThan
 
         [TestMethod]
-        public void TestLessThanOperation()
+        public void TestParseDynamicLessThanOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.LessThan, Value = 1 } };
@@ -178,7 +806,7 @@ namespace RepoDb.UnitTests
         // GreaterThan
 
         [TestMethod]
-        public void TestGreaterThanOperation()
+        public void TestParseDynamicGreaterThanOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.GreaterThan, Value = 1 } };
@@ -194,7 +822,7 @@ namespace RepoDb.UnitTests
         // LessThanOrEqual
 
         [TestMethod]
-        public void TestLessThanOrEqualOperation()
+        public void TestParseDynamicLessThanOrEqualOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.LessThanOrEqual, Value = 1 } };
@@ -210,7 +838,7 @@ namespace RepoDb.UnitTests
         // GreaterThanOrEqual
 
         [TestMethod]
-        public void TestGreaterThanOrEqualOperation()
+        public void TestParseDynamicGreaterThanOrEqualOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.GreaterThanOrEqual, Value = 1 } };
@@ -226,7 +854,7 @@ namespace RepoDb.UnitTests
         // Like
 
         [TestMethod]
-        public void TestLikeOperation()
+        public void TestParseDynamicLikeOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Like, Value = 1 } };
@@ -242,7 +870,7 @@ namespace RepoDb.UnitTests
         // NotLike
 
         [TestMethod]
-        public void TestNotLikeOperation()
+        public void TestParseDynamicNotLikeOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotLike, Value = 1 } };
@@ -258,7 +886,7 @@ namespace RepoDb.UnitTests
         // Between
 
         [TestMethod]
-        public void TestBetweenOperation()
+        public void TestParseDynamicBetweenOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Between, Value = new[] { 1, 2 } } };
@@ -272,7 +900,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfBetweenOperationValueIsNotAnArray()
+        public void ThrowExceptionOnParseDynamicIfBetweenOperationValueIsNotAnArray()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Between, Value = "NotAnArray" } };
@@ -282,7 +910,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfBetweenOperationValuesAreNotOnTheSameTypes()
+        public void ThrowExceptionOnParseDynamicIfBetweenOperationValuesAreNotOnTheSameTypes()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, "2" } } };
@@ -292,7 +920,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfBetweenOperationValuesLengthIsLessThan2()
+        public void ThrowExceptionOnParseDynamicIfBetweenOperationValuesLengthIsLessThan2()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1 } } };
@@ -302,7 +930,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfBetweenOperationValuesLengthIsGreaterThan2()
+        public void ThrowExceptionOnParseDynamicIfBetweenOperationValuesLengthIsGreaterThan2()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Between, Value = new object[] { 1, 2, 3 } } };
@@ -314,7 +942,7 @@ namespace RepoDb.UnitTests
         // NotBetween
 
         [TestMethod]
-        public void TestNotBetweenOperation()
+        public void TestParseDynamicParseDynamicNotBetweenOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = new[] { 1, 2 } } };
@@ -328,7 +956,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfNotBetweenOperationValueIsNotAnArray()
+        public void ThrowExceptionOnParseDynamicIfNotBetweenOperationValueIsNotAnArray()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = "NotAnArray" } };
@@ -338,7 +966,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfNotBetweenOperationValuesAreNotOnTheSameTypes()
+        public void ThrowExceptionOnParseDynamicIfNotBetweenOperationValuesAreNotOnTheSameTypes()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1, "2" } } };
@@ -348,7 +976,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfNotBetweenOperationValuesLengthIsNotEqualsTo2()
+        public void ThrowExceptionOnParseDynamicIfNotBetweenOperationValuesLengthIsNotEqualsTo2()
         {
             // Setup
             var expression1 = new { Field1 = new { Operation = Operation.NotBetween, Value = new object[] { 1 } } };
@@ -362,7 +990,7 @@ namespace RepoDb.UnitTests
         // In
 
         [TestMethod]
-        public void TestInOperation()
+        public void TestParseDynamicParseDynamicInOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.In, Value = new[] { 1, 2, 3 } } };
@@ -376,7 +1004,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfInOperationValueIsNotAnArray()
+        public void ThrowExceptionOnParseDynamicIfInOperationValueIsNotAnArray()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.In, Value = "NotAnArray" } };
@@ -386,7 +1014,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfInOperationValuesAreNotOnTheSameTypes()
+        public void ThrowExceptionOnParseDynamicIfInOperationValuesAreNotOnTheSameTypes()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.In, Value = new object[] { 1, "OtherDataType" } } };
@@ -398,7 +1026,7 @@ namespace RepoDb.UnitTests
         // NotIn
 
         [TestMethod]
-        public void TestNotInOperation()
+        public void TestParseDynamicNotInOperation()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotIn, Value = new[] { 1, 2, 3 } } };
@@ -412,7 +1040,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfNotInOperationValueIsNotAnArray()
+        public void ThrowExceptionOnParseDynamicIfNotInOperationValueIsNotAnArray()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotIn, Value = "NotAnArray" } };
@@ -422,7 +1050,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfNotInOperationValuesAreNotOnTheSameTypes()
+        public void ThrowExceptionOnParseDynamicIfNotInOperationValuesAreNotOnTheSameTypes()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.NotIn, Value = new object[] { 1, "OtherDataType" } } };
@@ -434,7 +1062,7 @@ namespace RepoDb.UnitTests
         // All
 
         [TestMethod]
-        public void TestAllOperation()
+        public void TestParseDynamicAllOperation()
         {
             // Setup
             var expression = new
@@ -460,7 +1088,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfAllOperationValueIsNotAnExpressionOrAnArrayOfExpressions()
+        public void ThrowExceptionOnParseDynamicIfAllOperationValueIsNotAnExpressionOrAnArrayOfExpressions()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.All, Value = "NotAnExpressionsOrAnArrayOfExpressions" } };
@@ -470,7 +1098,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfChildQueryGroupsAreNotAnExpressionsOrAnArrayOfExpressions()
+        public void ThrowExceptionOnParseDynamicIfChildQueryGroupsAreNotAnExpressionsOrAnArrayOfExpressions()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.All, Value = "NotAnExpressionsOrAnArrayOfExpressions" } };
@@ -482,7 +1110,7 @@ namespace RepoDb.UnitTests
         // Any
 
         [TestMethod]
-        public void TestAnyOperation()
+        public void TestParseDynamicAnyOperation()
         {
             // Setup
             var expression = new
@@ -508,7 +1136,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfAnyOperationValueIsNotAnArrayOfExpressions()
+        public void ThrowExceptionOnParseDynamicIfAnyOperationValueIsNotAnArrayOfExpressions()
         {
             // Setup
             var expression = new { Field1 = new { Operation = Operation.Any, Value = "NotAnExpressionsOrAnArrayOfExpressions" } };
@@ -520,7 +1148,7 @@ namespace RepoDb.UnitTests
         // FixParameters
 
         [TestMethod]
-        public void TestFixParametersOnASingleFieldWithMultipleExpression()
+        public void TestParseDynamicFixParametersOnASingleFieldWithMultipleExpression()
         {
             // Setup
             var expression = new
@@ -545,7 +1173,7 @@ namespace RepoDb.UnitTests
         // Others
 
         [TestMethod]
-        public void TestChildQueryGroupsSingle()
+        public void TestParseDynamicChildQueryGroupsSingle()
         {
             // Setup
             var expression = new
@@ -567,7 +1195,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestChildQueryGroupsSingleForConjunctionOr()
+        public void TestParseDynamicChildQueryGroupsSingleForConjunctionOr()
         {
             // Setup
             var expression = new
@@ -590,7 +1218,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestChildQueryGroupsMultiple()
+        public void TestParseDynamicChildQueryGroupsMultiple()
         {
             // Setup
             var expression = new
@@ -619,5 +1247,6 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        #endregion
     }
 }

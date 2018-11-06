@@ -60,21 +60,10 @@ namespace RepoDb
         /// <returns>An instance of <see cref="Field"/> object.</returns>
         public static Field From<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
         {
-            // Constant
-            if (expression.Body.IsConstant())
-            {
-                var value = expression.Body.ToConstant().Value;
-                if (value is string)
-                {
-                    return new Field(Convert.ToString(value));
-                }
-            }
-            // Member
             if (expression.Body.IsMember())
             {
                 return new Field(expression.Body.ToMember().Member.Name);
             }
-            // Unary
             else if (expression.Body.IsUnary())
             {
                 var unary = expression.Body.ToUnary();
@@ -84,11 +73,7 @@ namespace RepoDb
                 }
                 else if (unary.Operand.IsBinary())
                 {
-                    var binary = unary.Operand.ToBinary();
-                    if (binary.Left.IsMember())
-                    {
-                        return new Field(binary.Left.ToMember().Member.Name);
-                    }
+                    return new Field(unary.Operand.ToBinary().GetName());
                 }
             }
             throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");

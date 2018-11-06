@@ -114,40 +114,32 @@ namespace RepoDb
             // Only support the following expression type
             if (expression.CanBeExtracted() == false)
             {
-                throw new NotSupportedException($"Expression type '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
             }
 
-            // Needed variables for field
-            var fieldName = GetNameFromExpression(expression);
-            var operation = GetOperationFromExpression(expression);
-            var value = GetValueFromExpression(expression);
+            // Name
+            var fieldName = expression.GetName();
+            if (string.IsNullOrEmpty(fieldName))
+            {
+                throw new NotSupportedException($"Name: Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Value
+            var value = expression.GetValue();
+            if (value == null)
+            {
+                throw new NotSupportedException($"Value: Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Operation
+            var operation = GetOperation(expression);
 
             // Return the value
             return new QueryField(fieldName, operation, value);
         }
 
-        // GetName
-
-        private static string GetNameFromExpression(BinaryExpression expression)
-        {
-            // Check the left
-            if (expression.Left.IsMember())
-            {
-                return expression.Left.ToMember().Member.Name;
-            }
-
-            // Check the right
-            if (expression.Right.IsMember())
-            {
-                return expression.Right.ToMember().Member.Name;
-            }
-
-            // Throw an exception
-            throw new InvalidOperationException($"Field name not found from expression '{expression.ToString()}'.");
-        }
-
         // GetOperation
-        private static Operation GetOperationFromExpression(BinaryExpression expression)
+        private static Operation GetOperation(BinaryExpression expression)
         {
             switch (expression.NodeType)
             {
@@ -164,116 +156,8 @@ namespace RepoDb
                 case ExpressionType.LessThanOrEqual:
                     return Operation.LessThanOrEqual;
                 default:
-                    return Operation.Equal;
+                    throw new NotSupportedException($"Operation: Expression '{expression.ToString()}' is currently not supported.");
             }
-        }
-
-        private static object GetValueFromExpression(BinaryExpression expression)
-        {
-            // Check the contants
-            if (expression.Right.IsConstant())
-            {
-                return GetValueFromExpression(expression.Right.ToConstant());
-            }
-            else if (expression.Left.IsConstant())
-            {
-                return GetValueFromExpression(expression.Left.ToConstant());
-            }
-
-            // Check the unaries
-            else if (expression.Right.IsUnary())
-            {
-                return GetValueFromExpression(expression.Right.ToUnary());
-            }
-            else if (expression.Left.IsUnary())
-            {
-                return GetValueFromExpression(expression.Left.ToUnary());
-            }
-
-            // Check the member expression
-            else if (expression.Right.IsMember())
-            {
-                return GetValueFromExpression(expression.Right.ToMember());
-            }
-            else if (expression.Left.IsMember())
-            {
-                return GetValueFromExpression(expression.Left.ToMember());
-            }
-
-            // Throw an exception
-            throw new InvalidOperationException($"Value not found from expression '{expression.ToString()}'.");
-        }
-
-        private static object GetValueFromExpression(ConstantExpression expression)
-        {
-            return expression.Value;
-        }
-
-        private static object GetValueFromExpression(UnaryExpression expression)
-        {
-            if (expression.Operand.IsMember())
-            {
-                return GetValueFromExpression(expression.Operand.ToMember());
-            }
-            else if (expression.Operand.IsMethodCall())
-            {
-                return GetValueFromExpression(expression.Operand.ToMethodCall());
-            }
-            return null;
-        }
-
-        private static object GetValueFromExpression(MethodCallExpression expression)
-        {
-            if (expression.Arguments?.Any() == true)
-            {
-                return expression.Method.Invoke(expression.Object, expression.Arguments.Select(argExpression =>
-                {
-                    if (argExpression.IsConstant())
-                    {
-                        return GetValueFromExpression(argExpression.ToConstant());
-                    }
-                    else if (argExpression.IsMember())
-                    {
-                        return GetValueFromExpression(argExpression.ToMember());
-                    }
-                    throw new InvalidOperationException($"Value not found from expression '{argExpression.ToString()}'.");
-                }).ToArray());
-            }
-            else
-            {
-                return expression.Method.Invoke(expression.Object, null);
-            }
-        }
-
-        private static object GetValueFromExpression(MemberExpression expression)
-        {
-            if (expression.Expression.IsConstant())
-            {
-                if (expression.Member.IsFieldInfo())
-                {
-                    return expression.Member.AsFieldInfo().GetValue(expression.Expression.ToConstant().Value);
-                }
-                else if (expression.Member.IsPropertyInfo())
-                {
-                    return expression.Member.AsPropertyInfo().GetValue(expression.Expression.ToConstant().Value);
-                }
-            }
-            else if (expression.Expression.IsMember())
-            {
-                if (expression.Member.IsFieldInfo())
-                {
-                    return expression.Member.AsFieldInfo().GetValue(GetValueFromExpression(expression.Expression.ToMember()));
-                }
-                else if (expression.Member.IsPropertyInfo())
-                {
-                    return expression.Member.AsPropertyInfo().GetValue(GetValueFromExpression(expression.Expression.ToMember()));
-                }
-            }
-            else if (expression.Expression.IsMethodCall())
-            {
-                return GetValueFromExpression(expression.Expression.ToMethodCall());
-            }
-            return null;
         }
 
         #endregion
