@@ -570,7 +570,7 @@ namespace RepoDb.UnitTests
             // Assert
             Assert.AreEqual(expected, actual);
         }
-        
+
         [TestMethod]
         public void TestParseExpressionByteVariable()
         {
@@ -627,11 +627,171 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        // Check values
+        // Operations
 
-        // Check Operations (Equal, NotEqual, GreaterThan, etc)
+        [TestMethod]
+        public void TestParseExpressionForEqual()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
 
-        // Check Groupings
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForNotEqual()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt != 1).GetString();
+            var expected = "([PropertyInt] <> @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForGreaterThan()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt > 1).GetString();
+            var expected = "([PropertyInt] > @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForGreaterThanOrEqual()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt >= 1).GetString();
+            var expected = "([PropertyInt] >= @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForLessThan()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt < 1).GetString();
+            var expected = "([PropertyInt] < @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForLessThanOrEqual()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt <= 1).GetString();
+            var expected = "([PropertyInt] <= @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionWithoutProperty()
+        {
+            QueryGroup.Parse<QueryGroupTestClass>(e => true).GetString();
+        }
+
+        // Properties
+
+        [TestMethod]
+        public void TestParseExpressionWithDoubleSameFieldsForAnd()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1 && e.PropertyInt == 2).GetString();
+            var expected = "([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithDoubleSameFieldsForOr()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1 || e.PropertyInt == 2).GetString();
+            var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Groupings
+
+        [TestMethod]
+        public void TestParseExpressionWithSingleGroupForAnd()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1 && e.PropertyString == "A").GetString();
+            var expected = "([PropertyInt] = @PropertyInt AND [PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithSingleGroupForOr()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1 || e.PropertyString == "A").GetString();
+            var expected = "([PropertyInt] = @PropertyInt OR [PropertyString] = @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithSingleGroupForOrAndSingleFieldForAnd()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) && e.PropertyString == "A").GetString();
+            var expected = "([PropertyString] = @PropertyString AND ([PropertyInt] = @PropertyInt OR [PropertyDouble] = @PropertyDouble))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithSingleGroupForAndAndSingleFieldForOr()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) || e.PropertyString == "A").GetString();
+            var expected = "([PropertyString] = @PropertyString OR ([PropertyInt] = @PropertyInt AND [PropertyDouble] = @PropertyDouble))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithDoubleGroupForAnd()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) && (e.PropertyString == "A" && e.PropertySingle == 1)).GetString();
+            var expected = "(([PropertyInt] = @PropertyInt AND [PropertyDouble] = @PropertyDouble) AND ([PropertyString] = @PropertyString AND [PropertySingle] = @PropertySingle))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithDoubleGroupForOr()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) || (e.PropertyString == "A" || e.PropertySingle == 1)).GetString();
+            var expected = "(([PropertyInt] = @PropertyInt OR [PropertyDouble] = @PropertyDouble) OR ([PropertyString] = @PropertyString OR [PropertySingle] = @PropertySingle))";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
 
         #endregion
 
