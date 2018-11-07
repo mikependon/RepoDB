@@ -9,42 +9,28 @@ namespace RepoDb.Extensions
     /// </summary>
     internal static class ExpressionExtension
     {
-        internal static Func<Expression, bool> m_canBeExtracted;
-        internal static Func<Expression, bool> m_canBeGrouped;
-
-        static ExpressionExtension()
-        {
-            m_canBeExtracted = (Expression expression) =>
+        private readonly static ExpressionType[] m_extractableExpressionTypes = new[]
             {
-                return (new[]
-                    {
-                        ExpressionType.Equal,
-                        ExpressionType.NotEqual,
-                        ExpressionType.GreaterThan,
-                        ExpressionType.GreaterThanOrEqual,
-                        ExpressionType.LessThan,
-                        ExpressionType.LessThanOrEqual
-                    })
-                    .Contains(expression.NodeType);
+                ExpressionType.Equal,
+                ExpressionType.NotEqual,
+                ExpressionType.GreaterThan,
+                ExpressionType.GreaterThanOrEqual,
+                ExpressionType.LessThan,
+                ExpressionType.LessThanOrEqual
             };
-            m_canBeGrouped = (Expression expression) =>
-            {
-                return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
-            };
-        }
 
         // CanBeExtracted
 
         internal static bool CanBeExtracted(this Expression expression)
         {
-            return m_canBeExtracted(expression);
+            return m_extractableExpressionTypes.Contains(expression.NodeType);
         }
 
         // CanBeGrouped
 
         internal static bool CanBeGrouped(this Expression expression)
         {
-            return m_canBeGrouped(expression);
+            return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
         }
 
         // Binary
