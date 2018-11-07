@@ -109,7 +109,13 @@ namespace RepoDb
 
         #region Parse (Expression)
 
-        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        /// <summary>
+        /// Parse an instance of <see cref="BinaryExpression"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The target entity type</typeparam>
+        /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be parsed.</param>
+        /// <returns>An instance of <see cref="QueryField"/> object.</returns>
+        public static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
         {
             // Only support the following expression type
             if (expression.CanBeExtracted() == false)

@@ -207,7 +207,11 @@ namespace RepoDb
             else
             {
                 // Left
-                if (expression.Left.CanBeGrouped() && expression.Left.IsBinary())
+                if (expression.Left.IsBinary() == false)
+                {
+                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
+                }
+                else if (expression.Left.CanBeGrouped())
                 {
                     queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
                 }
@@ -215,23 +219,19 @@ namespace RepoDb
                 {
                     queryFields.Add(QueryField.Parse<TEntity>(expression.Left.ToBinary()));
                 }
-                else
-                {
-                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
-                }
 
                 // Right
-                if (expression.Right.CanBeGrouped() && expression.Right.IsBinary())
+                if (expression.Right.IsBinary() == false)
+                {
+                    throw new NotSupportedException($"Right expression '{expression.Right.ToString()}' is currently not supported.");
+                }
+                else if (expression.Right.CanBeGrouped())
                 {
                     queryGroups.Add(Parse<TEntity>(expression.Right.ToBinary()));
                 }
                 else if (expression.Right.CanBeExtracted())
                 {
                     queryFields.Add(QueryField.Parse<TEntity>(expression.Right.ToBinary()));
-                }
-                else
-                {
-                    throw new NotSupportedException($"Right expression '{expression.Left.ToString()}' is currently not supported.");
                 }
             }
 
