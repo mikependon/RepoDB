@@ -7,7 +7,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="Expression"/> object.
     /// </summary>
-    internal static class ExpressionExtension
+    public static class ExpressionExtension
     {
         private readonly static ExpressionType[] m_extractableExpressionTypes = new[]
             {
@@ -21,81 +21,104 @@ namespace RepoDb.Extensions
 
         // CanBeExtracted
 
-        internal static bool CanBeExtracted(this Expression expression)
+        /// <summary>
+        /// Identify whether the expression can be extracted as <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="expression">The expression to be checked.</param>
+        /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
+        public static bool CanBeExtracted(this Expression expression)
         {
             return m_extractableExpressionTypes.Contains(expression.NodeType);
         }
 
         // CanBeGrouped
 
-        internal static bool CanBeGrouped(this Expression expression)
+        /// <summary>
+        /// Identify whether the expression can be grouped as <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="expression">The expression to be checked.</param>
+        /// <returns>Returns true if the expression can be grouped as <see cref="QueryGroup"/> object.</returns>
+        public static bool CanBeGrouped(this Expression expression)
         {
             return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
         }
 
         // Binary
 
-        internal static bool IsMember(this Expression expression)
+        public static bool IsMember(this Expression expression)
         {
             return expression is MemberExpression;
         }
 
-        internal static MemberExpression ToMember(this Expression expression)
+        public static MemberExpression ToMember(this Expression expression)
         {
             return (MemberExpression)expression;
         }
 
         // Binary
 
-        internal static bool IsBinary(this Expression expression)
+        public static bool IsBinary(this Expression expression)
         {
             return expression is BinaryExpression;
         }
 
-        internal static BinaryExpression ToBinary(this Expression expression)
+        public static BinaryExpression ToBinary(this Expression expression)
         {
             return (BinaryExpression)expression;
         }
 
         // Unary
 
-        internal static bool IsUnary(this Expression expression)
+        public static bool IsUnary(this Expression expression)
         {
             return expression is UnaryExpression;
         }
 
-        internal static UnaryExpression ToUnary(this Expression expression)
+        public static UnaryExpression ToUnary(this Expression expression)
         {
             return (UnaryExpression)expression;
         }
 
         // Unary
 
-        internal static bool IsConstant(this Expression expression)
+        public static bool IsConstant(this Expression expression)
         {
             return expression is ConstantExpression;
         }
 
-        internal static ConstantExpression ToConstant(this Expression expression)
+        public static ConstantExpression ToConstant(this Expression expression)
         {
             return (ConstantExpression)expression;
         }
 
         // Unary
 
-        internal static bool IsMethodCall(this Expression expression)
+        public static bool IsMethodCall(this Expression expression)
         {
             return expression is MethodCallExpression;
         }
 
-        internal static MethodCallExpression ToMethodCall(this Expression expression)
+        public static MethodCallExpression ToMethodCall(this Expression expression)
         {
             return (MethodCallExpression)expression;
         }
 
+
+        // NewArray
+
+        public static bool IsNewArray(this Expression expression)
+        {
+            return expression is NewArrayExpression;
+        }
+
+        public static NewArrayExpression ToNewArray(this Expression expression)
+        {
+            return (NewArrayExpression)expression;
+        }
+
         // GetName
 
-        internal static string GetName(this BinaryExpression expression)
+        public static string GetName(this BinaryExpression expression)
         {
             if (expression.Left.IsMember())
             {
@@ -106,182 +129,94 @@ namespace RepoDb.Extensions
 
         // GetValue
 
-        internal static object GetValue(this BinaryExpression expression)
+        public static object GetValue(this Expression expression)
         {
-            // Constants
-            if (expression.Right.IsConstant())
+            if (expression.IsBinary())
             {
-                return expression.Right.ToConstant().GetValue();
+                return expression.ToBinary().GetValue();
             }
-            // Unaries
-            else if (expression.Right.IsUnary())
+            else if (expression.IsConstant())
             {
-                return expression.Right.ToUnary().GetValue();
+                return expression.ToConstant().GetValue();
             }
-            // MethodCall
-            else if (expression.Right.IsMethodCall())
+            else if (expression.IsUnary())
             {
-                return expression.Right.ToMethodCall().GetValue();
+                return expression.ToUnary().GetValue();
             }
-            // Member
-            else if (expression.Right.IsMember())
+            else if (expression.IsMethodCall())
             {
-                return expression.Right.ToMember().GetValue();
+                return expression.ToMethodCall().GetValue();
             }
-            // Others
+            else if (expression.IsMember())
+            {
+                return expression.ToMember().GetValue();
+            }
+            else if (expression.IsNewArray())
+            {
+                return expression.ToNewArray().GetValue();
+            }
             else
             {
-                // Arrays
-                if (expression.Right.NodeType == ExpressionType.NewArrayInit)
-                {
-                    var newArrayExpression = (NewArrayExpression)expression.Right;
-                    var arrayType = Type.GetType(expression.Right.Type.FullName.Replace("[]", string.Empty));
-                    var array = Array.CreateInstance(arrayType, newArrayExpression.Expressions.Count);
-                    for (var i = 0; i < newArrayExpression.Expressions.Count; i++)
-                    {
-                        var currentExpression = newArrayExpression.Expressions[i];
-                        var value = (object)null;
-                        if (currentExpression.IsConstant())
-                        {
-                            value = currentExpression.ToConstant().GetValue();
-                        }
-                        else if (currentExpression.IsMember())
-                        {
-                            value = currentExpression.ToMember().GetValue();
-                        }
-                        else if (currentExpression.IsMethodCall())
-                        {
-                            value = currentExpression.ToMethodCall().GetValue();
-                        }
-                        array.SetValue(value, i);
-                    }
-                    return array;
-                }
+                return null;
             }
-            // Nothing
-            return null;
         }
 
-        internal static object GetValue(this ConstantExpression expression)
+        public static object GetValue(this BinaryExpression expression)
+        {
+            return expression.Right.GetValue();
+        }
+
+        public static object GetValue(this ConstantExpression expression)
         {
             return expression.Value;
         }
 
-        internal static object GetValue(this UnaryExpression expression)
+        public static object GetValue(this UnaryExpression expression)
         {
-            if (expression.Operand.IsMember())
-            {
-                return expression.Operand.ToMember().GetValue();
-            }
-            else if (expression.Operand.IsMethodCall())
-            {
-                return expression.Operand.ToMethodCall().GetValue();
-            }
-            return null;
+            return expression.Operand.GetValue();
         }
 
-        internal static object GetValue(this MethodCallExpression expression)
+        public static object GetValue(this MethodCallExpression expression)
         {
-            if (expression.Arguments?.Any() == true)
-            {
-                var instance = (object)null;
-                if (expression.Object.IsMember())
-                {
-                    var member = expression.Object.ToMember();
-                    if (member.Member.IsFieldInfo())
-                    {
-                        instance = member.Member.AsFieldInfo().GetValue(null);
-                    }
-                    else if (member.Member.IsPropertyInfo())
-                    {
-                        instance = member.Member.AsPropertyInfo().GetValue(null);
-                    }
-                    else if (member.Member.IsMethodInfo())
-                    {
-                        instance = member.Member.AsMethodInfo().Invoke(null, null);
-                    }
-                }
-                return expression.Method.Invoke(instance, expression.Arguments.Select(argExpression =>
-                {
-                    if (argExpression.IsConstant())
-                    {
-                        return argExpression.ToConstant().GetValue();
-                    }
-                    else if (argExpression.IsMember())
-                    {
-                        return argExpression.ToMember().GetValue();
-                    }
-                    else if (argExpression.IsMethodCall())
-                    {
-                        return argExpression.ToMethodCall().GetValue();
-                    }
-                    return null;
-                }).ToArray());
-            }
-            else
-            {
-                if (expression.Object != null)
-                {
-                    if (expression.Object.IsConstant())
-                    {
-                        return expression.Method.Invoke(expression.Object.ToConstant().GetValue(), null);
-                    }
-                    else if (expression.Object.IsMember())
-                    {
-                        return expression.Method.Invoke(expression.Object.ToMember().GetValue(), null);
-                    }
-                    else if (expression.Object.IsMethodCall())
-                    {
-                        return expression.Method.Invoke(expression.Object.ToMethodCall().GetValue(), null);
-                    }
-                }
-                else
-                {
-                    return expression.Method.Invoke(null, null);
-                }
-            }
-            return null;
+            return expression.Method.Invoke(expression.Object.GetValue(),
+                expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
         }
 
-        internal static object GetValue(this MemberExpression expression)
+        public static object GetValue(this MemberExpression expression)
         {
             if (expression.Expression != null)
             {
-                if (expression.Expression.IsConstant())
-                {
-                    if (expression.Member.IsFieldInfo())
-                    {
-                        return expression.Member.AsFieldInfo().GetValue(expression.Expression.ToConstant().GetValue());
-                    }
-                    else if (expression.Member.IsPropertyInfo())
-                    {
-                        return expression.Member.AsPropertyInfo().GetValue(expression.Expression.ToConstant().GetValue());
-                    }
-                }
-                else if (expression.Expression.IsMember())
-                {
-                    if (expression.Member.IsFieldInfo())
-                    {
-                        return expression.Member.AsFieldInfo().GetValue(expression.Expression.ToMember().GetValue());
-                    }
-                    else if (expression.Member.IsPropertyInfo())
-                    {
-                        return expression.Member.AsPropertyInfo().GetValue(expression.Expression.ToMember().GetValue());
-                    }
-                }
-                else if (expression.Expression.IsMethodCall())
-                {
-                    return expression.Expression.ToMethodCall().GetValue();
-                }
+                return expression.Expression.GetValue();
             }
             else
             {
-                if (expression.Member != null && expression.Member.IsPropertyInfo())
+                if (expression.Member.IsFieldInfo())
+                {
+                    return expression.Member.AsFieldInfo().GetValue(null);
+                }
+                else if (expression.Member.IsPropertyInfo())
                 {
                     return expression.Member.AsPropertyInfo().GetValue(null);
                 }
+                else if (expression.Member.IsMethodInfo())
+                {
+                    return expression.Member.AsMethodInfo().Invoke(null, null);
+                }
             }
             return null;
+        }
+
+        public static object GetValue(this NewArrayExpression expression)
+        {
+            var arrayType = expression.Type.GetElementType();
+            var array = Array.CreateInstance(arrayType, expression.Expressions.Count);
+            expression.Expressions?.ToList().ForEach(item =>
+            {
+                var index = expression.Expressions.IndexOf(item);
+                var value = item.GetValue();
+                array.SetValue(value, index);
+            });
+            return array;
         }
     }
 }
