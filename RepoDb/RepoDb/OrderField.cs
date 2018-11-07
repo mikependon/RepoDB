@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace RepoDb
 {
@@ -47,6 +48,70 @@ namespace RepoDb
         }
 
         // Static Methods
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
+        /// to <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.</returns>
+        public static OrderField Ascending<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
+        {
+            if (expression.Body.IsUnary())
+            {
+                var unary = expression.Body.ToUnary();
+                if (unary.Operand.IsMember())
+                {
+                    return new OrderField(unary.Operand.ToMember().Member.Name, Order.Ascending);
+                }
+                else if (unary.Operand.IsBinary())
+                {
+                    return new OrderField(unary.Operand.ToBinary().GetName(), Order.Ascending);
+                }
+            }
+            if (expression.Body.IsMember())
+            {
+                return new OrderField(expression.Body.ToMember().Member.Name, Order.Ascending);
+            }
+            if (expression.Body.IsBinary())
+            {
+                return new OrderField(expression.Body.ToBinary().GetName(), Order.Ascending);
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
+        /// to <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.</returns>
+        public static OrderField Descending<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
+        {
+            if (expression.Body.IsUnary())
+            {
+                var unary = expression.Body.ToUnary();
+                if (unary.Operand.IsMember())
+                {
+                    return new OrderField(unary.Operand.ToMember().Member.Name, Order.Descending);
+                }
+                else if (unary.Operand.IsBinary())
+                {
+                    return new OrderField(unary.Operand.ToBinary().GetName(), Order.Descending);
+                }
+            }
+            if (expression.Body.IsMember())
+            {
+                return new OrderField(expression.Body.ToMember().Member.Name, Order.Descending);
+            }
+            if (expression.Body.IsBinary())
+            {
+                return new OrderField(expression.Body.ToBinary().GetName(), Order.Descending);
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
 
         /// <summary>
         /// Parse an object to be used for ordering. The object can have multiple properties for ordering and each property must have

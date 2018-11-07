@@ -47,9 +47,13 @@ namespace RepoDb.Extensions
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
         public static string GetName(this BinaryExpression expression)
         {
-            if ((expression.Left ?? expression.Right).IsMember())
+            if (expression.Left.IsMember())
             {
-                return (expression.Left ?? expression.Right).ToMember().Member.Name;
+                return expression.Left.ToMember().Member.Name;
+            }
+            if (expression.Right.IsMember())
+            {
+                return expression.Right.ToMember().Member.Name;
             }
             return null;
         }
