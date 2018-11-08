@@ -793,6 +793,61 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // Others
+
+        [TestMethod]
+        public void TestParseExpressionWithMathOperations()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == (1 + 1)).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithNewClassInstance()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == new Random().Next(int.MaxValue)).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithMethodClass()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private string TestParseExpressionWithArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestClass
+        {
+            // Act
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value).GetString();
+
+            // Return
+            return actual;
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithArgumentParameter()
+        {
+            // Act
+            var actual = TestParseExpressionWithArgumentParameterMethod<QueryGroupTestClass>(1);
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region Dynamics

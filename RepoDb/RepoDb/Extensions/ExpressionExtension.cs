@@ -63,7 +63,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a value from the current instance of <see cref="Expression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="Expression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="Expression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="Expression"/> object.</returns>
         public static object GetValue(this Expression expression)
         {
@@ -91,6 +91,10 @@ namespace RepoDb.Extensions
             {
                 return expression.ToNewArray().GetValue();
             }
+            else if (expression.IsNew())
+            {
+                return expression.ToNew().GetValue();
+            }
             else
             {
                 return null;
@@ -100,7 +104,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a value from the current instance of <see cref="BinaryExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="BinaryExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="BinaryExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="BinaryExpression"/> object.</returns>
         public static object GetValue(this BinaryExpression expression)
         {
@@ -110,7 +114,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a value from the current instance of <see cref="ConstantExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="ConstantExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="ConstantExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="ConstantExpression"/> object.</returns>
         public static object GetValue(this ConstantExpression expression)
         {
@@ -120,7 +124,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a value from the current instance of <see cref="UnaryExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="UnaryExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="UnaryExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="UnaryExpression"/> object.</returns>
         public static object GetValue(this UnaryExpression expression)
         {
@@ -130,28 +134,28 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a value from the current instance of <see cref="MethodCallExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="MethodCallExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="MethodCallExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
         public static object GetValue(this MethodCallExpression expression)
         {
-            return expression.Method.Invoke(expression.Object.GetValue(),
+            return expression.Method.Invoke(expression.Object?.GetValue(),
                 expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
         }
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="MemberExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="MemberExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MemberExpression"/> object.</returns>
         public static object GetValue(this MemberExpression expression)
         {
-            return expression.Expression?.GetValue() ?? expression.Member.GetValue();
+            return expression.Member.GetValue(expression.Expression?.GetValue());
         }
 
         /// <summary>
-        /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
+        /// Gets a value from the current instance of <see cref="NewArrayExpression"/> object.
         /// </summary>
-        /// <param name="expression">The instance of <see cref="NewArrayExpression"/> object where the value is to be extraced.</param>
+        /// <param name="expression">The instance of <see cref="NewArrayExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="NewArrayExpression"/> object.</returns>
         public static object GetValue(this NewArrayExpression expression)
         {
@@ -165,23 +169,43 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Gets a value from the current instance of <see cref="NewExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="NewExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="NewExpression"/> object.</returns>
+        public static object GetValue(this NewExpression expression)
+        {
+            if (expression.Arguments?.Any() == true)
+            {
+                return Activator.CreateInstance(expression.Constructor.DeclaringType,
+                    expression.Arguments?.Select(arg => arg.GetValue()));
+            }
+            else
+            {
+                return Activator.CreateInstance(expression.Constructor.DeclaringType);
+            }
+        }
+
+        /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
         /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extraced.</param>
+        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extracted.</param>
+        /// <param name="obj">The object whose member value will be returned.</param>
+        /// <param name="parameters">The argument list of parameters if needed.</param>
         /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
-        private static object GetValue(this MemberInfo member)
+        private static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
         {
             if (member.IsFieldInfo())
             {
-                return member.AsFieldInfo().GetValue(null);
+                return member.AsFieldInfo().GetValue(obj);
             }
             else if (member.IsPropertyInfo())
             {
-                return member.AsPropertyInfo().GetValue(null);
+                return member.AsPropertyInfo().GetValue(obj);
             }
             else if (member.IsMethodInfo())
             {
-                return member.AsMethodInfo().Invoke(null, null);
+                return member.AsMethodInfo().Invoke(obj, parameters);
             }
             return null;
         }
@@ -308,6 +332,26 @@ namespace RepoDb.Extensions
         public static NewArrayExpression ToNewArray(this Expression expression)
         {
             return (NewArrayExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="NewExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="NewExpression"/>.</returns>
+        public static bool IsNew(this Expression expression)
+        {
+            return expression is NewExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="NewExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="NewExpression"/> object.</returns>
+        public static NewExpression ToNew(this Expression expression)
+        {
+            return (NewExpression)expression;
         }
 
         #endregion
