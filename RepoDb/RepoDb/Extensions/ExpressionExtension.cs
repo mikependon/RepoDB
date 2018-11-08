@@ -138,7 +138,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
         public static object GetValue(this MethodCallExpression expression)
         {
-            return expression.Method.Invoke(expression.Object?.GetValue(),
+            return expression.Method.GetValue(expression.Object?.GetValue(),
                 expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
         }
 
