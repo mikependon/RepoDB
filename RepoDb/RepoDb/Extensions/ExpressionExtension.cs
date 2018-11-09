@@ -107,7 +107,7 @@ namespace RepoDb.Extensions
             {
                 return expression.ToParameter().GetValue();
             }
-            if (expression.IsDefault())
+            else if (expression.IsDefault())
             {
                 return expression.ToDefault().GetValue();
             }
