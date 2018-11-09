@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using System.Linq.Expressions;
 using RepoDb.Extensions;
+using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -80,7 +81,7 @@ namespace RepoDb
             {
                 return new Field(expression.Body.ToBinary().GetName());
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         /// <summary>

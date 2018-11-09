@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
@@ -79,9 +80,8 @@ namespace RepoDb
             {
                 return new OrderField(expression.Body.ToBinary().GetName(), order);
             }
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
-
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 

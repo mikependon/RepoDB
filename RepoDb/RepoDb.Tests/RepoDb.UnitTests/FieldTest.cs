@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Exceptions;
 using System;
 using System.Linq;
 
@@ -85,8 +86,23 @@ namespace RepoDb.UnitTests
 
         // Parse
 
+        public class FieldTestClass
+        {
+            public int Id { get; set; }
+        }
+
         [TestMethod]
-        public void TestParseMethod()
+        public void TestParseExpressionMethod()
+        {
+            // Act
+            var parsed = Field.Parse<FieldTestClass>(p => p.Id);
+
+            // Assert
+            Assert.AreEqual("Id", parsed.Name);
+        }
+
+        [TestMethod]
+        public void TestParseDynamicMethod()
         {
             // Prepare
             var obj = new { Field1 = "Field1", Field2 = "Field2" };
@@ -101,8 +117,15 @@ namespace RepoDb.UnitTests
             Assert.AreEqual("Field2", fields[1].Name);
         }
 
+        [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
+        public void ThrowExceptionIfParseExpressionMethodHasNoPropertyName()
+        {
+            // Act/Assert
+            Field.Parse<FieldTestClass>(p => 1);
+        }
+
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfParseMethodObjParameterIsNull()
+        public void ThrowExceptionIfParseDynamicMethodObjParameterIsNull()
         {
             // Prepare
             var obj = (object)null;
@@ -112,7 +135,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfParseMethodObjParameterIsNotDynamic()
+        public void ThrowExceptionIfParseDynamicMethodObjParameterIsNotDynamic()
         {
             // Prepare
             var obj = "NotADynamic";
@@ -122,7 +145,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfParseMethodObjParameterHasNoProperty()
+        public void ThrowExceptionIfParseDynamicMethodObjParameterHasNoProperty()
         {
             // Prepare
             var obj = new { };
