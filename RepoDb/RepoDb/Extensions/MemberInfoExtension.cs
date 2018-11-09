@@ -99,7 +99,7 @@ namespace RepoDb.Extensions
         {
             return (MethodInfo)member;
         }
-        
+
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
         /// </summary>
@@ -107,7 +107,7 @@ namespace RepoDb.Extensions
         /// <param name="obj">The object whose member value will be returned.</param>
         /// <param name="parameters">The argument list of parameters if needed.</param>
         /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
-        private static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
+        internal static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
         {
             if (member.IsFieldInfo())
             {
