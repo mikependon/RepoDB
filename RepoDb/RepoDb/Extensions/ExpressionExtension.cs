@@ -99,6 +99,14 @@ namespace RepoDb.Extensions
             {
                 return expression.ToMemberInit().GetValue();
             }
+            else if (expression.IsConditional())
+            {
+                return expression.ToConditional().GetValue();
+            }
+            else if (expression.IsParameter())
+            {
+                return expression.ToParameter().GetValue();
+            }
             else
             {
                 return null;
@@ -112,7 +120,18 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="BinaryExpression"/> object.</returns>
         public static object GetValue(this BinaryExpression expression)
         {
-            return expression.Right.GetValue() ?? expression.Left.GetValue();
+            return expression.GetValue(true);
+        }
+
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="BinaryExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="BinaryExpression"/> object where the value is to be extracted.</param>
+        /// <param name="includeLeft">True if the value at the left side will also be retrieved if the value at the right is NULL.</param>
+        /// <returns>The extracted value from <see cref="BinaryExpression"/> object.</returns>
+        public static object GetValue(this BinaryExpression expression, bool includeLeft = true)
+        {
+            return expression.Right.GetValue() ?? (includeLeft ? expression.Left.GetValue() : null);
         }
 
         /// <summary>
@@ -201,6 +220,29 @@ namespace RepoDb.Extensions
             expression.Bindings.ToList().ForEach(member =>
                 member.Member.SetValue(instance, member.GetValue()));
             return instance;
+        }
+
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="ConditionalExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="ConditionalExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="ConditionalExpression"/> object.</returns>
+        public static object GetValue(this ConditionalExpression expression)
+        {
+            var ifFalse = expression.IfFalse.GetValue();
+            var ifTrue = expression.IfTrue.GetValue();
+            var test = expression.Test.GetValue();
+            return test == ifTrue ? ifTrue : ifFalse;
+        }
+
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="ParameterExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="ParameterExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="ParameterExpression"/> object.</returns>
+        public static object GetValue(this ParameterExpression expression)
+        {
+            return Activator.CreateInstance(expression.Type);
         }
 
         #endregion
@@ -365,6 +407,46 @@ namespace RepoDb.Extensions
         public static MemberInitExpression ToMemberInit(this Expression expression)
         {
             return (MemberInitExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ConditionalExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="ConditionalExpression"/>.</returns>
+        public static bool IsConditional(this Expression expression)
+        {
+            return expression is ConditionalExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="ConditionalExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="ConditionalExpression"/> object.</returns>
+        public static ConditionalExpression ToConditional(this Expression expression)
+        {
+            return (ConditionalExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="ParameterExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="ParameterExpression"/>.</returns>
+        public static bool IsParameter(this Expression expression)
+        {
+            return expression is ParameterExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="ParameterExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="ParameterExpression"/> object.</returns>
+        public static ParameterExpression ToParameter(this Expression expression)
+        {
+            return (ParameterExpression)expression;
         }
 
         #endregion

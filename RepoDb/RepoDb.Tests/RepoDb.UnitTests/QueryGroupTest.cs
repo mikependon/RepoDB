@@ -70,6 +70,36 @@ namespace RepoDb.UnitTests
             return Encoding.UTF8.GetBytes(GetStringValueForParseExpression());
         }
 
+        // Name
+
+        [TestMethod]
+        public void TestParseExpressionWithNameAtLeft()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1);
+
+            // Act
+            var actual = parsed.QueryFields.First().Field.Name;
+            var expected = "PropertyInt";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionWithNameAtRight()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => 1 == e.PropertyInt);
+
+            // Act
+            var actual = parsed.QueryFields.First().Field.Name;
+            var expected = "PropertyInt";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         // Int
 
         [TestMethod]
@@ -1162,6 +1192,21 @@ namespace RepoDb.UnitTests
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
             var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringConditionalChecking()
+        {
+            // Setup
+            var value = "ABC";
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (value == null ? null : value));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value;
 
             // Assert
             Assert.AreEqual(expected, actual);
