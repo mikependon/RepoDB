@@ -186,30 +186,6 @@ namespace RepoDb.Extensions
             }
         }
 
-        /// <summary>
-        /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extracted.</param>
-        /// <param name="obj">The object whose member value will be returned.</param>
-        /// <param name="parameters">The argument list of parameters if needed.</param>
-        /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
-        private static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
-        {
-            if (member.IsFieldInfo())
-            {
-                return member.AsFieldInfo().GetValue(obj);
-            }
-            else if (member.IsPropertyInfo())
-            {
-                return member.AsPropertyInfo().GetValue(obj);
-            }
-            else if (member.IsMethodInfo())
-            {
-                return member.AsMethodInfo().Invoke(obj, parameters);
-            }
-            return null;
-        }
-
         #endregion
 
         #region Identification
