@@ -240,7 +240,13 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ParameterExpression"/> object.</returns>
         public static object GetValue(this ParameterExpression expression)
         {
-            return Activator.CreateInstance(expression.Type);
+            switch (expression.GetType().Name)
+            {
+                case "TypedParameterExpression":
+                    return Activator.CreateInstance(expression.Type);
+                default:
+                    return null;
+            }
         }
 
         #endregion
