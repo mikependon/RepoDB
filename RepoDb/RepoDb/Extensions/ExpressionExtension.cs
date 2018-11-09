@@ -95,6 +95,10 @@ namespace RepoDb.Extensions
             {
                 return expression.ToNew().GetValue();
             }
+            else if (expression.IsMemberInit())
+            {
+                return expression.ToMemberInit().GetValue();
+            }
             else
             {
                 return null;
@@ -186,9 +190,22 @@ namespace RepoDb.Extensions
             }
         }
 
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="MemberInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="MemberInitExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="MemberInitExpression"/> object.</returns>
+        public static object GetValue(this MemberInitExpression expression)
+        {
+            var instance = expression.NewExpression.GetValue();
+            expression.Bindings.ToList().ForEach(member =>
+                member.Member.SetValue(instance, member.GetValue()));
+            return instance;
+        }
+
         #endregion
 
-        #region Identification
+        #region Identification and Conversion
 
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="BinaryExpression"/> object.
@@ -328,6 +345,26 @@ namespace RepoDb.Extensions
         public static NewExpression ToNew(this Expression expression)
         {
             return (NewExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="MemberInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="MemberInitExpression"/>.</returns>
+        public static bool IsMemberInit(this Expression expression)
+        {
+            return expression is MemberInitExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="MemberInitExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="MemberInitExpression"/> object.</returns>
+        public static MemberInitExpression ToMemberInit(this Expression expression)
+        {
+            return (MemberInitExpression)expression;
         }
 
         #endregion

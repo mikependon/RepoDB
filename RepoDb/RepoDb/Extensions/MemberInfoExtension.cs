@@ -34,6 +34,50 @@ namespace RepoDb.Extensions
             return attributes?.Any() == true ? (Attribute)attributes[0] : null;
         }
 
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
+        /// </summary>
+        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extracted.</param>
+        /// <param name="obj">The object whose member value will be returned.</param>
+        /// <param name="parameters">The argument list of parameters if needed.</param>
+        /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
+        internal static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
+        {
+            if (member.IsFieldInfo())
+            {
+                return member.ToFieldInfo().GetValue(obj);
+            }
+            else if (member.IsPropertyInfo())
+            {
+                return member.ToPropertyInfo().GetValue(obj);
+            }
+            else if (member.IsMethodInfo())
+            {
+                return member.ToMethodInfo().Invoke(obj, parameters);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets the value of an object member based on the retrieved value from the instance of <see cref="MemberInfo"/> object.
+        /// </summary>
+        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be retrieved.</param>
+        /// <param name="obj">The object whose member value will be set.</param>
+        /// <param name="value">The target value of the member.</param>
+        internal static void SetValue(this MemberInfo member, object obj, object value)
+        {
+            if (member.IsFieldInfo())
+            {
+                member.ToFieldInfo().SetValue(obj, value);
+            }
+            else if (member.IsPropertyInfo())
+            {
+                member.ToPropertyInfo().SetValue(obj, value);
+            }
+        }
+
+        #region Identification and Conversion
+
         // Field
 
         /// <summary>
@@ -51,9 +95,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
         /// <returns>A converted instance of <see cref="FieldInfo"/> object.</returns>
-        public static FieldInfo AsFieldInfo(this MemberInfo member)
+        public static FieldInfo ToFieldInfo(this MemberInfo member)
         {
-            return member as FieldInfo;
+            return (FieldInfo)member;
         }
 
         // Property
@@ -73,7 +117,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
         /// <returns>A converted instance of <see cref="PropertyInfo"/> object.</returns>
-        public static PropertyInfo AsPropertyInfo(this MemberInfo member)
+        public static PropertyInfo ToPropertyInfo(this MemberInfo member)
         {
             return (PropertyInfo)member;
         }
@@ -95,33 +139,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
         /// <returns>A converted instance of <see cref="MethodInfo"/> object.</returns>
-        public static MethodInfo AsMethodInfo(this MemberInfo member)
+        public static MethodInfo ToMethodInfo(this MemberInfo member)
         {
             return (MethodInfo)member;
         }
 
-        /// <summary>
-        /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extracted.</param>
-        /// <param name="obj">The object whose member value will be returned.</param>
-        /// <param name="parameters">The argument list of parameters if needed.</param>
-        /// <returns>The extracted value from <see cref="MemberInfo"/> object.</returns>
-        internal static object GetValue(this MemberInfo member, object obj, object[] parameters = null)
-        {
-            if (member.IsFieldInfo())
-            {
-                return member.AsFieldInfo().GetValue(obj);
-            }
-            else if (member.IsPropertyInfo())
-            {
-                return member.AsPropertyInfo().GetValue(obj);
-            }
-            else if (member.IsMethodInfo())
-            {
-                return member.AsMethodInfo().Invoke(obj, parameters);
-            }
-            return null;
-        }
+        #endregion
     }
 }

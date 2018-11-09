@@ -61,6 +61,7 @@
     <Compile Include="ClassProperty.cs" />
     <Compile Include="DataReaderFieldDefinition.cs" />
     <Compile Include="Extensions\ExpressionExtension.cs" />
+    <Compile Include="Extensions\MemberBindingExtension.cs" />
     <Compile Include="FieldDefinition.cs" />
     <Compile Include="FieldDefinitionCache.cs" />
     <Compile Include="IdentityCache.cs" />

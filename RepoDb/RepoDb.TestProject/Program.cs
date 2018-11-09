@@ -202,45 +202,6 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
-            using (var connection = new SqlConnection(RepoDbConnectionString))
-            {
-                // Dynamics
-                var employees1 = connection.Query<Person>(new { Id = 1000 });
-
-                // Expression
-                var employees2 = connection.Query<Person>(p => p.Id == 1000); // <<------ NEW ^_^
-
-                // Object-Based
-                var employees3 = connection.Query<Person>(new QueryField(nameof(Person.Id), 1000));
-
-                employees3.Max(p => p.Id);
-            }
-
-            //var from = 998;
-            var to = Convert.ToInt32("1000");
-            //var orElse = 10000;
-            var value = DateTime.UtcNow.Date.AddDays(-10);
-            //var queryGroup = QueryGroup.Parse<Person>(p => p.Name == "Michael" || p.Name == "Mike" || (p.DateInserted <= value && p.Address == "Denmark"));
-            //var queryGroup = QueryGroup.Parse<Person>(p => (p.Id == from || p.Id == to) && p.Name == "Michael" && p.Name == "Rodel");
-            //var queryGroup = QueryGroup.Parse<Person>(p => p.Id == 1000 || (p.Id == 2000 && p.Name != "Michael"));
-            var prsn = new Person
-            {
-                Id = 1000
-            };
-            var queryGroup = QueryGroup.Parse<Person>(p => p.Id == prsn.Id);
-            var commandText = queryGroup.GetString();
-            using (var connection = new SqlConnection(RepoDbConnectionString))
-            {
-                var employees = connection.Query<Person>(queryGroup, top: 100);
-            }
-            return;
-
-            //using (var connection = new SqlConnection("Server=.;Database=TestDb;Integrated Security=SSPI;"))
-            //{
-            //    var employees = connection.ExecuteQuery("SELECT TOP 10000 * FROM Employee;");
-            //}
-            //return;
-
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 

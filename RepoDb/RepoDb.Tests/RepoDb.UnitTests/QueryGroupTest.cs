@@ -2,7 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Text;
 
 namespace RepoDb.UnitTests
@@ -11,6 +11,11 @@ namespace RepoDb.UnitTests
     public class QueryGroupTest
     {
         #region Expressions
+
+        public class QueryGroupTestClassMember
+        {
+            public string PropertyString { get; set; }
+        }
 
         public class QueryGroupTestClass
         {
@@ -22,6 +27,7 @@ namespace RepoDb.UnitTests
             public Guid PropertyGuid { get; set; }
             public Boolean PropertyBoolean { get; set; }
             public Byte[] PropertyBytes { get; set; }
+            public QueryGroupTestClassMember Member { get; set; }
         }
 
         private int GetIntValueForParseExpression()
@@ -796,7 +802,7 @@ namespace RepoDb.UnitTests
         // Others
 
         [TestMethod]
-        public void TestParseExpressionWithMathOperations()
+        public void TestParseExpressionWithIntMathOperations()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == (1 + 1)).GetString();
@@ -807,7 +813,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithNewClassInstance()
+        public void TestParseExpressionWithIntNewClassInstance()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == new Random().Next(int.MaxValue)).GetString();
@@ -818,7 +824,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithMethodClass()
+        public void TestParseExpressionWithIntMethodClass()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString();
@@ -828,7 +834,7 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        private string TestParseExpressionWithArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestClass
+        private string TestParseExpressionWithIntArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestClass
         {
             // Act
             var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value).GetString();
@@ -838,11 +844,324 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithArgumentParameter()
+        public void TestParseExpressionWithIntArgumentParameter()
         {
             // Act
-            var actual = TestParseExpressionWithArgumentParameterMethod<QueryGroupTestClass>(1);
+            var actual = TestParseExpressionWithIntArgumentParameterMethod<QueryGroupTestClass>(1);
             var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // Test (Expression Value)
+
+        [TestMethod]
+        public void TestParseExpressionValueIntConstant()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == 1);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 1;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueIntVariable()
+        {
+            // Setup
+            var value = 1;
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueIntClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyInt = 1
+            };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value.PropertyInt);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value.PropertyInt;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueIntMethodCall()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == GetIntValueForParseExpression());
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = GetIntValueForParseExpression();
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueIntVariableMethodCall()
+        {
+            // Setup
+            var value = GetIntValueForParseExpression();
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == value);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithIntMathOperations()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == (1 + 1));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 2;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithIntNewClassInstance()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == new Random().Next(int.MaxValue));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value.GetType();
+            var expected = typeof(int);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithIntMethodClass()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == Convert.ToInt32("1000"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 1000;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private QueryGroup TestParseExpressionValueWithIntArgumentParameterMethod<TEntity>(int value) where TEntity : QueryGroupTestClass
+        {
+            // Act
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyInt == value);
+
+            // Return
+            return actual;
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithIntArgumentParameter()
+        {
+            // Setup
+            var parsed = TestParseExpressionValueWithIntArgumentParameterMethod<QueryGroupTestClass>(1);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 1;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueStringConstant()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == "ABC");
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueStringVariable()
+        {
+            // Setup
+            var value = Guid.NewGuid().ToString();
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueStringClassProperty()
+        {
+            // Setup
+            var value = new QueryGroupTestClass
+            {
+                PropertyString = Guid.NewGuid().ToString()
+            };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value.PropertyString);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value.PropertyString;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueStringMethodCall()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == GetStringValueForParseExpression());
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value.GetType();
+            var expected = typeof(string);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueStringVariableMethodCall()
+        {
+            // Setup
+            var value = GetStringValueForParseExpression();
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == value);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringConcatenation()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == ("A" + "B" + "C"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringNewClassInstance()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (new QueryGroupTestClass() { PropertyString = "ABC" }).PropertyString);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringMethodClass()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == Convert.ToString("ABC"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        private QueryGroup TestParseExpressionValueWithStringArgumentParameterMethod<TEntity>(string value) where TEntity : QueryGroupTestClass
+        {
+            // Act
+            var actual = QueryGroup.Parse<TEntity>(e => e.PropertyString == value);
+
+            // Return
+            return actual;
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringArgumentParameter()
+        {
+            // Setup
+            var parsed = TestParseExpressionValueWithStringArgumentParameterMethod<QueryGroupTestClass>("ABC");
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringNewClassInstanceMemberSetVariable()
+        {
+            // Setup
+            var member = new QueryGroupTestClassMember() { PropertyString = "ABC" };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (new QueryGroupTestClass() { Member = member }).Member.PropertyString);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringNewClassInstanceMemberSetInstance()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (new QueryGroupTestClass() { Member = new QueryGroupTestClassMember() { PropertyString = "ABC" } }).Member.PropertyString);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "ABC";
 
             // Assert
             Assert.AreEqual(expected, actual);
