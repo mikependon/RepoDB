@@ -107,6 +107,10 @@ namespace RepoDb.Extensions
             {
                 return expression.ToParameter().GetValue();
             }
+            if (expression.IsDefault())
+            {
+                return expression.ToDefault().GetValue();
+            }
             else
             {
                 return null;
@@ -247,6 +251,16 @@ namespace RepoDb.Extensions
                 default:
                     return null;
             }
+        }
+
+        /// <summary>
+        /// Gets a value from the current instance of <see cref="DefaultExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="DefaultExpression"/> object where the value is to be extracted.</param>
+        /// <returns>The extracted value from <see cref="DefaultExpression"/> object.</returns>
+        public static object GetValue(this DefaultExpression expression)
+        {
+            return expression.Type.IsValueType ? Activator.CreateInstance(expression.Type) : null;
         }
 
         #endregion
@@ -451,6 +465,26 @@ namespace RepoDb.Extensions
         public static ParameterExpression ToParameter(this Expression expression)
         {
             return (ParameterExpression)expression;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="DefaultExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="DefaultExpression"/>.</returns>
+        public static bool IsDefault(this Expression expression)
+        {
+            return expression is DefaultExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="DefaultExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="DefaultExpression"/> object.</returns>
+        public static DefaultExpression ToDefault(this Expression expression)
+        {
+            return (DefaultExpression)expression;
         }
 
         #endregion

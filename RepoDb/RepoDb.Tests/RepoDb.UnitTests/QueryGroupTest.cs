@@ -1226,6 +1226,20 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestParseExpressionWithDefaultValue()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == default(int));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = default(int);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         #endregion
 
         #region Dynamics
