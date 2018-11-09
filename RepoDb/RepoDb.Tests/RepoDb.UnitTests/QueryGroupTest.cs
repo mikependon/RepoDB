@@ -1202,11 +1202,25 @@ namespace RepoDb.UnitTests
         {
             // Setup
             var value = "ABC";
-            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (value == null ? null : value));
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString == (value != null ? value : null));
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
             var expected = value;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueWithStringConditionalCheckingOpposite()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyInt == (1 == 2 ? 1 : 2));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = 2;
 
             // Assert
             Assert.AreEqual(expected, actual);

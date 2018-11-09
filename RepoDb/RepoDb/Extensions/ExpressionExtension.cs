@@ -229,10 +229,8 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ConditionalExpression"/> object.</returns>
         public static object GetValue(this ConditionalExpression expression)
         {
-            var ifFalse = expression.IfFalse.GetValue();
             var ifTrue = expression.IfTrue.GetValue();
-            var test = expression.Test.GetValue();
-            return test == ifTrue ? ifTrue : ifFalse;
+            return expression.Test.GetValue() == ifTrue ? ifTrue : expression.IfFalse.GetValue();
         }
 
         /// <summary>
