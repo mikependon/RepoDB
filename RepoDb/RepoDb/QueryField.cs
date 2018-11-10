@@ -3,7 +3,6 @@ using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -134,7 +133,7 @@ namespace RepoDb
                 var properties = PropertyCache.Get<TEntity>(Command.None);
                 if (properties.Any(property => property.PropertyInfo.Name == fieldName) == false)
                 {
-                    throw new InvalidQueryExpressionException($"Property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                    throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
                 }
             }
 

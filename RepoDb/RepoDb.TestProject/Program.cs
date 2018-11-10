@@ -17,10 +17,11 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
+            TestQueryGroupParseExpression();
             //TestPerformanceMonitor();
             //TestParallelism();
             //TestInventory();
-            TestAllOperations();
+            //TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
@@ -197,6 +198,12 @@ namespace RepoDb.TestProject
                 var people = connection.Query<Person>(new { Id = id });
                 Console.WriteLine($"Query Single for Id {id} is now completed!");
             }
+        }
+
+        private static void TestQueryGroupParseExpression()
+        {
+            var list = new long[] { 1, 2 };
+            var parsed = QueryGroup.Parse<Person>(p => list.Contains(p.Id));
         }
 
         private static void TestAllOperations()

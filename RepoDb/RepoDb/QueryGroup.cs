@@ -177,66 +177,205 @@ namespace RepoDb
         /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
         public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
         {
-            // Parse the expression (BinaryExpression)
-            if (expression.Body.IsBinary())
+            // Parse the expression base on type
+            var parsed = Parse<TEntity>(expression.Body);
+
+            // Throw an unsupported exception if not parsed
+            if (parsed == null)
             {
-                return Parse<TEntity>(expression.Body.ToBinary());
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
             }
 
-            // Throw an exception that this is not yet supported
-            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            // Return the parsed values
+            return parsed;
+        }
+
+        private static QueryGroup Parse<TEntity>(Expression expression) where TEntity : class
+        {
+            if (expression.IsBinary())
+            {
+                return Parse<TEntity>(expression.ToBinary());
+            }
+            else if (expression.IsUnary())
+            {
+                return Parse<TEntity>(expression.ToUnary());
+            }
+            else if (expression.IsMethodCall())
+            {
+                return Parse<TEntity>(expression.ToMethodCall());
+            }
+            return null;
         }
 
         private static QueryGroup Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        {
+            // Identify the kind of expression
+            if (expression.Left.IsMethodCall())
+            {
+                var method = expression.Left.ToMethodCall();
+                if (method.Method.Name == StringConstant.Contains)
+                {
+                    var right = expression.Right.GetValue();
+                    return ParseContains<TEntity>(method, Equals(true, right) ? Operation.In : Operation.NotIn);
+                }
+            }
+            else
+            {
+                // Variables needed
+                var queryFields = new List<QueryField>();
+                var queryGroups = new List<QueryGroup>();
+                var conjunction = Conjunction.And;
+
+                // Conjunction
+                if (expression.NodeType == ExpressionType.OrElse)
+                {
+                    conjunction = Conjunction.Or;
+                }
+
+                // Identify the current expression
+                if (expression.CanBeExtracted())
+                {
+                    queryFields.Add(QueryField.Parse<TEntity>(expression));
+                }
+                else
+                {
+                    // Left
+                    if (expression.Left.IsBinary() == false)
+                    {
+                        throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
+                    }
+                    else if (expression.Left.CanBeGrouped())
+                    {
+                        queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
+                    }
+                    else if (expression.Left.CanBeExtracted())
+                    {
+                        queryFields.Add(QueryField.Parse<TEntity>(expression.Left.ToBinary()));
+                    }
+
+                    // Right
+                    if (expression.Right.IsBinary() == false)
+                    {
+                        throw new NotSupportedException($"Right expression '{expression.Right.ToString()}' is currently not supported.");
+                    }
+                    else if (expression.Right.CanBeGrouped())
+                    {
+                        queryGroups.Add(Parse<TEntity>(expression.Right.ToBinary()));
+                    }
+                    else if (expression.Right.CanBeExtracted())
+                    {
+                        queryFields.Add(QueryField.Parse<TEntity>(expression.Right.ToBinary()));
+                    }
+                }
+
+                // Return the result
+                return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
+            }
+
+            // Return null if not yet supported
+            return null;
+        }
+
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression) where TEntity : class
+        {
+            // Identify and call the property method
+            if (expression.Operand.IsMethodCall())
+            {
+                var method = expression.Operand.ToMethodCall();
+                if (method.Method.Name == StringConstant.Contains)
+                {
+                    return ParseContains<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.In : Operation.NotIn);
+                }
+            }
+
+            // Return null if not supported
+            return null;
+        }
+
+        private static QueryGroup Parse<TEntity>(MethodCallExpression expression) where TEntity : class
+        {
+            // Get the name
+            var name = expression.Method.Name;
+
+            // Support only various methods
+            if (name == StringConstant.All || name == StringConstant.Any)
+            {
+                return ParseAllOrAny<TEntity>(expression);
+            }
+            else if (name == StringConstant.Contains)
+            {
+                return ParseContains<TEntity>(expression, Operation.In);
+            }
+
+            // Return null if not supported
+            return null;
+        }
+
+        private static QueryGroup ParseAllOrAny<TEntity>(MethodCallExpression expression) where TEntity : class
         {
             var queryFields = new List<QueryField>();
             var queryGroups = new List<QueryGroup>();
             var conjunction = Conjunction.And;
 
-            // Conjunction
-            if (expression.NodeType == ExpressionType.OrElse)
+            // Get the name
+            var name = expression.Method.Name;
+
+            // Support only various methods
+            if (name == StringConstant.Any)
             {
                 conjunction = Conjunction.Or;
             }
-
-            // Identify the current expression
-            if (expression.CanBeExtracted())
+            else if (name == StringConstant.All)
             {
-                queryFields.Add(QueryField.Parse<TEntity>(expression));
+                conjunction = Conjunction.And;
             }
-            else
-            {
-                // Left
-                if (expression.Left.IsBinary() == false)
-                {
-                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
-                }
-                else if (expression.Left.CanBeGrouped())
-                {
-                    queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
-                }
-                else if (expression.Left.CanBeExtracted())
-                {
-                    queryFields.Add(QueryField.Parse<TEntity>(expression.Left.ToBinary()));
-                }
 
-                // Right
-                if (expression.Right.IsBinary() == false)
-                {
-                    throw new NotSupportedException($"Right expression '{expression.Right.ToString()}' is currently not supported.");
-                }
-                else if (expression.Right.CanBeGrouped())
-                {
-                    queryGroups.Add(Parse<TEntity>(expression.Right.ToBinary()));
-                }
-                else if (expression.Right.CanBeExtracted())
-                {
-                    queryFields.Add(QueryField.Parse<TEntity>(expression.Right.ToBinary()));
-                }
+            // Call the method
+            if (expression.Arguments?.Any() == true)
+            {
+
             }
 
             // Return the result
             return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
+        }
+
+        private static QueryGroup ParseContains<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
+        {
+            // Return null if there is no any arguments
+            if (expression.Arguments?.Any() == false)
+            {
+                return null;
+            }
+
+            // Gets the property
+            var property = expression.Arguments
+                .Where(arg => arg.IsMember())
+                .Where(arg => arg.ToMember().Member.IsPropertyInfo())
+                .Select(arg => arg.ToMember().Member.ToPropertyInfo())
+                .FirstOrDefault();
+
+            // Return null if property is not found
+            if (property == null)
+            {
+                throw new InvalidQueryExpressionException($"No target property found for expression '{expression.ToString()}'.");
+            }
+
+            // Make sure the property is in the entity
+            var properties = PropertyCache.Get<TEntity>();
+            if (properties.FirstOrDefault(p => p.PropertyInfo.Name == property.Name) == null)
+            {
+                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Get the values
+            var values = expression.Arguments.FirstOrDefault().GetValue();
+
+            // Add to query fields
+            var queryField = new QueryField(property.Name, operation, values);
+
+            // Return the result
+            return new QueryGroup(queryField.AsEnumerable()).FixParameters();
         }
 
         #endregion
