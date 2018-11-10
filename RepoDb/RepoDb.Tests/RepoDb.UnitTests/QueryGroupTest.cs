@@ -32,37 +32,37 @@ namespace RepoDb.UnitTests
 
         private int GetIntValueForParseExpression()
         {
-            return new Random().Next(int.MaxValue);
+            return 1;
         }
 
         private string GetStringValueForParseExpression()
         {
-            return Guid.NewGuid().ToString();
+            return "ABC";
         }
 
         private double GetDoubleValueForParseExpression()
         {
-            return new Random().NextDouble() * double.MaxValue;
+            return 1234567.12;
         }
 
         private DateTime GetDateTimeValueForParseExpression()
         {
-            return DateTime.UtcNow.AddSeconds(-new Random().Next(1, 60 * 60 * 24 * 30));
+            return new DateTime(2018, 01, 01, 2, 4, 11, 112);
         }
 
         private float GetSingleValueForParseExpression()
         {
-            return Convert.ToSingle(new Random().NextDouble() * 1000);
+            return 18891;
         }
 
         private Guid GetGuidValueForParseExpression()
         {
-            return Guid.NewGuid();
+            return Guid.Parse("4C43B849-4FD1-4E7D-95CA-A0EE0D358DE7");
         }
 
         private bool GetBooleanValueForParseExpression()
         {
-            return new Random().NextDouble() > 0.5;
+            return 1 != 0;
         }
 
         private Byte[] GetBytesValueForParseExpression()

@@ -27,17 +27,17 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestGeographyDataType()
         {
-            //arrange
+            // Setup
             var fixtureData = new Models.TypeMapSpatial
             {
                 geography_column = "POLYGON ((0 0, 50 0, 50 50, 0 50, 0 0))"
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var returnedId = sut.Insert(fixtureData);
 
-            //assert
+            // Assert
             var saveData = sut.Query<Models.TypeMapSpatial>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
             saveData.geography_column.ToString().ShouldBe(fixtureData.geography_column);
@@ -46,19 +46,19 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestGeometryDataType()
         {
-            //arrange
+            // Setup
             var fixtureData = new Models.TypeMapSpatial
             {
                 geometry_column = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var returnedId = sut.Insert(fixtureData);
 
             //TODO: support guid primary key
 
-            //assert
+            // Assert
             var saveData = sut.Query<Models.TypeMapSpatial>(top: 1).FirstOrDefault();
             saveData.ShouldNotBeNull();
             saveData.geometry_column.ToString().ShouldBe(fixtureData.geometry_column);

@@ -6,7 +6,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="System.Array"/> object.
     /// </summary>
-    public static class ArrayExtension
+    internal static class ArrayExtension
     {
         internal static IEnumerable<object> AsEnumerable(this Array array)
         {

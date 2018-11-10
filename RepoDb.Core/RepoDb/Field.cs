@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Linq.Expressions;
 using RepoDb.Extensions;
+using RepoDb.Exceptions;
 using System.Reflection;
 
 namespace RepoDb
@@ -50,6 +52,37 @@ namespace RepoDb
                 throw new NullReferenceException($"Field name must not be null.");
             }
             return fields.Select(field => new Field(field));
+        }
+
+        /// <summary>
+        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result to <see cref="Field"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <returns>An instance of <see cref="Field"/> object.</returns>
+        public static Field Parse<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
+        {
+            if (expression.Body.IsUnary())
+            {
+                var unary = expression.Body.ToUnary();
+                if (unary.Operand.IsMember())
+                {
+                    return new Field(unary.Operand.ToMember().Member.Name);
+                }
+                else if (unary.Operand.IsBinary())
+                {
+                    return new Field(unary.Operand.ToBinary().GetName());
+                }
+            }
+            if (expression.Body.IsMember())
+            {
+                return new Field(expression.Body.ToMember().Member.Name);
+            }
+            if (expression.Body.IsBinary())
+            {
+                return new Field(expression.Body.ToBinary().GetName());
+            }
+            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is invalid.");
         }
 
         /// <summary>

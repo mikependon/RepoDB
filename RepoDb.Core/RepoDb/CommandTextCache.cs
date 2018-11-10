@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Interfaces;
+﻿using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
 using System.Collections.Concurrent;

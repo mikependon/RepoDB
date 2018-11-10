@@ -373,7 +373,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends the mapped entity name to the SQL Query Statement based on the mapped command.
+        /// Appends the mapped entity name to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> TableName()

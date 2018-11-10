@@ -14,17 +14,6 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a custom attribute defined on the member.
         /// </summary>
-        /// <typeparam name="T">The custom attribute that is defined into the property.</typeparam>
-        /// <param name="member">The type of where the custom attribute is defined.</param>
-        /// <returns>The custom attribute.</returns>
-        public static T GetCustomAttribute<T>(this MemberInfo member) where T : Attribute
-        {
-            return (T)GetCustomAttribute(member, typeof(T));
-        }
-
-        /// <summary>
-        /// Gets a custom attribute defined on the member.
-        /// </summary>
         /// <param name="member">The type of where the custom attribute is defined.</param>
         /// <param name="type">The custom attribute that is defined into the member.</param>
         /// <returns>The custom attribute.</returns>

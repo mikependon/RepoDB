@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
-using RepoDb.IntegrationTests.Extensions;
 using Shouldly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
@@ -40,13 +38,13 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestDateTime()
         {
-            //arrange
+            // Setup
             var sessionId = Guid.NewGuid();
             var date = DateTime.Parse("2018-01-01");
             var dateTime = DateTime.Parse("2018-01-01 13:10:12.000");
             var dateTime2 = DateTime.Parse("2018-01-01 01:10:00.1234567");
 
-            //act
+            // Act
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var returnedId = repository.Insert(new TestDateTimeClass
             {
@@ -55,9 +53,9 @@ namespace RepoDb.IntegrationTests
                 datetime_column = dateTime,
                 datetime2_column = dateTime2
             });
-
-            //assert
             var actual = repository.Query<TestDateTimeClass>(new { SessionId = sessionId }).FirstOrDefault();
+
+            // Assert
             actual.ShouldNotBeNull();
             actual.date_column.ShouldBe(date.Date);
             actual.datetime_column.ShouldBe(dateTime);
@@ -79,13 +77,13 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestDateTimeNullable()
         {
-            //arrange
+            // Setup
             var sessionId = Guid.NewGuid();
             var date = DateTime.Parse("2018-01-01");
             var dateTime = DateTime.Parse("2018-01-01 13:10:12.000");
             var dateTime2 = DateTime.Parse("2018-01-01 01:10:00.1234567");
 
-            //act
+            // Act
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             repository.Insert(new TestDateTimeNullableClass
             {
@@ -94,9 +92,9 @@ namespace RepoDb.IntegrationTests
                 datetime_column = dateTime,
                 datetime2_column = dateTime2
             });
-
-            //assert
             var actual = repository.Query<TestDateTimeClass>(new { SessionId = sessionId }).FirstOrDefault();
+
+            // Assert
             actual.ShouldNotBeNull();
             actual.date_column.ShouldBe(date.Date);
             actual.datetime_column.ShouldBe(dateTime);

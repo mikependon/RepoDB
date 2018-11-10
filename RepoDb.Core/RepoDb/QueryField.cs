@@ -3,7 +3,9 @@ using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb
@@ -106,6 +108,73 @@ namespace RepoDb
         }
 
         // Static Methods
+
+        #region Parse (Expression)
+
+        /// <summary>
+        /// Parse an instance of <see cref="BinaryExpression"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The target entity type</typeparam>
+        /// <param name="expression">The instance of <see cref="BinaryExpression"/> to be parsed.</param>
+        /// <returns>An instance of <see cref="QueryField"/> object.</returns>
+        internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        {
+            // Only support the following expression type
+            if (expression.CanBeExtracted() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Name
+            var fieldName = expression.GetName();
+            if (string.IsNullOrEmpty(fieldName))
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+            else
+            {
+                var properties = PropertyCache.Get<TEntity>(Command.None);
+                if (properties.Any(property => property.PropertyInfo.Name == fieldName) == false)
+                {
+                    throw new InvalidQueryExpressionException($"Property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
+                }
+            }
+
+            // Value
+            var value = expression.GetValue();
+
+            // Operation
+            var operation = GetOperation(expression);
+
+            // Return the value
+            return new QueryField(fieldName, operation, value);
+        }
+
+        // GetOperation
+        private static Operation GetOperation(BinaryExpression expression)
+        {
+            switch (expression.NodeType)
+            {
+                case ExpressionType.Equal:
+                    return Operation.Equal;
+                case ExpressionType.NotEqual:
+                    return Operation.NotEqual;
+                case ExpressionType.GreaterThan:
+                    return Operation.GreaterThan;
+                case ExpressionType.GreaterThanOrEqual:
+                    return Operation.GreaterThanOrEqual;
+                case ExpressionType.LessThan:
+                    return Operation.LessThan;
+                case ExpressionType.LessThanOrEqual:
+                    return Operation.LessThanOrEqual;
+                default:
+                    throw new NotSupportedException($"Operation: Expression '{expression.ToString()}' is currently not supported.");
+            }
+        }
+
+        #endregion
+
+        #region Parse (Dynamics)
 
         internal static QueryField Parse(string fieldName, object value)
         {
@@ -257,6 +326,8 @@ namespace RepoDb
                 throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
         }
+
+        #endregion
 
         // Equality and comparers
 

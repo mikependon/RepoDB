@@ -5,6 +5,7 @@ using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb
@@ -167,6 +168,82 @@ namespace RepoDb
         }
 
         // Static Methods
+
+        #region Parse (Expression)
+
+        /// <summary>
+        /// This method is used to parse the customized expression.
+        /// </summary>
+        /// <typeparam name="TEntity">The target entity type</typeparam>
+        /// <param name="expression">The expression to be converted to a <see cref="QueryGroup"/> object.</param>
+        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
+        public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
+        {
+            // Parse the expression (BinaryExpression)
+            if (expression.Body.IsBinary())
+            {
+                return Parse<TEntity>(expression.Body.ToBinary());
+            }
+
+            // Throw an exception that this is not yet supported
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        private static QueryGroup Parse<TEntity>(BinaryExpression expression) where TEntity : class
+        {
+            var queryFields = new List<QueryField>();
+            var queryGroups = new List<QueryGroup>();
+            var conjunction = Conjunction.And;
+
+            // Conjunction
+            if (expression.NodeType == ExpressionType.OrElse)
+            {
+                conjunction = Conjunction.Or;
+            }
+
+            // Identify the current expression
+            if (expression.CanBeExtracted())
+            {
+                queryFields.Add(QueryField.Parse<TEntity>(expression));
+            }
+            else
+            {
+                // Left
+                if (expression.Left.IsBinary() == false)
+                {
+                    throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
+                }
+                else if (expression.Left.CanBeGrouped())
+                {
+                    queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
+                }
+                else if (expression.Left.CanBeExtracted())
+                {
+                    queryFields.Add(QueryField.Parse<TEntity>(expression.Left.ToBinary()));
+                }
+
+                // Right
+                if (expression.Right.IsBinary() == false)
+                {
+                    throw new NotSupportedException($"Right expression '{expression.Right.ToString()}' is currently not supported.");
+                }
+                else if (expression.Right.CanBeGrouped())
+                {
+                    queryGroups.Add(Parse<TEntity>(expression.Right.ToBinary()));
+                }
+                else if (expression.Right.CanBeExtracted())
+                {
+                    queryFields.Add(QueryField.Parse<TEntity>(expression.Right.ToBinary()));
+                }
+            }
+
+            // Return the result
+            return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
+        }
+
+        #endregion
+
+        #region Parse (Dynamics)
 
         /// <summary>
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
@@ -424,6 +501,8 @@ namespace RepoDb
                 throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
             }
         }
+
+        #endregion
 
         // Equality and comparers
 
