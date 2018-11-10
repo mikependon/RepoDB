@@ -26,7 +26,7 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Never use try-catch inside the library
  - Never create complex implementations (especially for complex Join Queries)
 
-### What's with RepoDb?
+### Features
 
  - Caching
  - Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
