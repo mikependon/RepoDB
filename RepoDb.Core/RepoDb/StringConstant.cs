@@ -6,12 +6,15 @@
     internal static class StringConstant
     {
         // Strings
+        public static readonly string All = "All";
         public static readonly string And = "And";
+        public static readonly string Any = "Any";
         public static readonly string As = "As";
         public static readonly string BetweenLeft = "BetweenLeft";
         public static readonly string BetweenRight = "BetweenRight";
         public static readonly string ColumnName = "ColumnName";
         public static readonly string Conjunction = "Conjunction";
+        public static readonly string Contains = "Contains";
         public static readonly string DataType = "DataType";
         public static readonly string DynamicMethod = "DynamicMethod";
         public static readonly string ExecuteNonQuery = "ExecuteNonQuery";
