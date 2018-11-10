@@ -50,7 +50,6 @@ namespace RepoDb.IntegrationTests.Setup
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Order];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[Customer];");
                 connection.ExecuteNonQuery("DELETE FROM [dbo].[TypeMap];");
-
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([OrderDetail], RESEED, 1);");
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([Order], RESEED, 1);");
                 connection.ExecuteNonQuery("DBCC CHECKIDENT ([Customer], RESEED, 1);");

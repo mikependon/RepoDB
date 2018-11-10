@@ -53,7 +53,6 @@ namespace RepoDb.TestProject
 
         public static void TestInventory()
         {
-
             using (var repository = new DbRepository<SqlConnection>(InventoryConnectionString))
             {
                 var current = DateTime.UtcNow;

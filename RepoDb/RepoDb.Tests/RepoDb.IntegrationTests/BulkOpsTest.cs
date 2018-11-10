@@ -30,9 +30,8 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestBulkInsert()
         {
-            //arrange
+            // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
-
             var fixture = new Fixture();
             var fixtureDataList = fixture.Build<Customer>()
                 .With(x => x.FirstName, "FirstName")
@@ -44,56 +43,52 @@ namespace RepoDb.IntegrationTests
                 .With(x => x.LastUserId, Environment.UserName)
                 .CreateMany(100);
 
-            //act
+            // Act
             var affectedRows = repository.BulkInsert(fixtureDataList);
+            var customers = repository.Query<Customer>(top: 10).ToList();
 
-            //assert
+            // Assert
             affectedRows.ShouldBe(100);
-
-            var savedDataList = repository.Query<Customer>(top:10).ToList();
-            foreach (var savedData in savedDataList)
+            foreach (var customer in customers)
             {
-                var fixtureData = fixtureDataList.Single(s => s.GlobalId == savedData.GlobalId);
+                var fixtureData = fixtureDataList.Single(s => s.GlobalId == customer.GlobalId);
                 fixtureData.ShouldNotBeNull();
-                fixtureData.FirstName.ShouldBe(savedData.FirstName);
-                fixtureData.LastName.ShouldBe(savedData.LastName);
-                fixtureData.MiddleName.ShouldBe(savedData.MiddleName);
-                fixtureData.Address.ShouldBe(savedData.Address);
-                fixtureData.Email.ShouldBe(savedData.Email);
-                fixtureData.IsActive.ShouldBe(savedData.IsActive);
-                fixtureData.LastUpdatedUtc.ShouldBe(savedData.LastUpdatedUtc);
-                fixtureData.LastUserId.ShouldBe(savedData.LastUserId);
+                fixtureData.FirstName.ShouldBe(customer.FirstName);
+                fixtureData.LastName.ShouldBe(customer.LastName);
+                fixtureData.MiddleName.ShouldBe(customer.MiddleName);
+                fixtureData.Address.ShouldBe(customer.Address);
+                fixtureData.Email.ShouldBe(customer.Email);
+                fixtureData.IsActive.ShouldBe(customer.IsActive);
+                fixtureData.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+                fixtureData.LastUserId.ShouldBe(customer.LastUserId);
             }
         }
 
         [TestMethod]
         public void TestBulkInsertWithUnorderedColumns()
         {
-            //arrange
+            // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
-
             repository.ExecuteNonQuery(@"                
                 CREATE TABLE [dbo].[TestTable](
 	                [FullName] [NVARCHAR](50) NULL,
 	                [Age] INT NULL,
 	                [BirthDate] DATETIME NULL
                 ) ");
-
             var fixture = new Fixture();
             var fixtureData = fixture.Build<TestTable>()
-                .With(x => x.FullName, "FirstName dela Cruz Pinto")
+                .With(x => x.FullName, "A B C")
                 .With(x => x.Age, 25)
                 .With(x => x.BirthDate, new DateTime(1993, 1, 1))
                 .CreateMany(10);
 
-            //act
+            // Act
             var affectedRows = repository.BulkInsert(fixtureData);
 
-            //assert
+            // Assert
             affectedRows.ShouldBe(10);
         }
 
-        [Map("[dbo].[TestTable]")]
         public class TestTable
         {
             public int Age { get; set; }

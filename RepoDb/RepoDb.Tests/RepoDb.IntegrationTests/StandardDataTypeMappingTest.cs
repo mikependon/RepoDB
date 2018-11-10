@@ -2,7 +2,6 @@
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
-using RepoDb.IntegrationTests.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using Shouldly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,8 +28,8 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestStringDataTypesInsert()
         {
-            //arrange
-            var fixtureData = new Models.TypeMap
+            // Setup
+            var data = new Models.TypeMap
             {
                 char_column = "char text",
                 nchar_column = "nchar text",
@@ -43,31 +42,29 @@ namespace RepoDb.IntegrationTests
                 uniqueidentifier = Guid.NewGuid()
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
-            var returnedId = sut.Insert(fixtureData);
+            var id = sut.Insert(data);
+            var result = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
 
-            //TODO: support guid primary key
-
-            //assert
-            var saveData = sut.Query<Models.TypeMap>(top: 1).FirstOrDefault();
-            saveData.ShouldNotBeNull();
-            saveData.char_column.ShouldContain(fixtureData.char_column);;
-            saveData.nchar_column.ShouldContain(fixtureData.nchar_column);
-            saveData.ntext_column.ShouldBe(fixtureData.ntext_column);
-            saveData.nvarchar_column.ShouldBe(fixtureData.nvarchar_column);
-            saveData.nvarcharmax_column.ShouldBe(fixtureData.nvarcharmax_column);
-            saveData.text_column.ShouldBe(fixtureData.text_column);
-            saveData.varchar_column.ShouldBe(fixtureData.varchar_column);
-            saveData.varcharmax_column.ShouldBe(fixtureData.varcharmax_column);
-            saveData.uniqueidentifier.ShouldBe(fixtureData.uniqueidentifier);
+            // Assert
+            result.ShouldNotBeNull();
+            result.char_column.ShouldContain(data.char_column); ;
+            result.nchar_column.ShouldContain(data.nchar_column);
+            result.ntext_column.ShouldBe(data.ntext_column);
+            result.nvarchar_column.ShouldBe(data.nvarchar_column);
+            result.nvarcharmax_column.ShouldBe(data.nvarcharmax_column);
+            result.text_column.ShouldBe(data.text_column);
+            result.varchar_column.ShouldBe(data.varchar_column);
+            result.varcharmax_column.ShouldBe(data.varcharmax_column);
+            result.uniqueidentifier.ShouldBe(data.uniqueidentifier);
         }
 
         [TestMethod]
         public void TestNumericDataTypesInsert()
         {
-            //arrange
-            var fixtureData = new Models.TypeMapNumeric
+            // Setup
+            var data = new Models.TypeMapNumeric
             {
                 bigint_column = 123456789,
                 bit_column = true,
@@ -82,67 +79,62 @@ namespace RepoDb.IntegrationTests
                 tinyint_column = 12
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
-            var returnedId = sut.Insert(fixtureData);
+            var id = sut.Insert(data);
+            var result = sut.Query<Models.TypeMapNumeric>(top: 1).FirstOrDefault();
 
-            //assert
-            var saveData = sut.Query<Models.TypeMapNumeric>(top: 1).FirstOrDefault();
-            saveData.ShouldNotBeNull();
-            saveData.bigint_column.ShouldBe(fixtureData.bigint_column);
-            saveData.bit_column.ShouldBe(fixtureData.bit_column);
-            saveData.decimal_column.ShouldBe(fixtureData.decimal_column);
-            saveData.float_column.ShouldBe(fixtureData.float_column);
-            saveData.int_column.ShouldBe(fixtureData.int_column);
-            saveData.money_column.ShouldBe(fixtureData.money_column);
-            saveData.numeric_column.ShouldBe(fixtureData.numeric_column);
-            saveData.real_column.ShouldBe(fixtureData.real_column);
-            saveData.smallint_column.ShouldBe(fixtureData.smallint_column);
-            saveData.smallmoney_column.ShouldBe(fixtureData.smallmoney_column);
-            saveData.tinyint_column.ShouldBe(fixtureData.tinyint_column);
+            // Assert
+            result.ShouldNotBeNull();
+            result.bigint_column.ShouldBe(data.bigint_column);
+            result.bit_column.ShouldBe(data.bit_column);
+            result.decimal_column.ShouldBe(data.decimal_column);
+            result.float_column.ShouldBe(data.float_column);
+            result.int_column.ShouldBe(data.int_column);
+            result.money_column.ShouldBe(data.money_column);
+            result.numeric_column.ShouldBe(data.numeric_column);
+            result.real_column.ShouldBe(data.real_column);
+            result.smallint_column.ShouldBe(data.smallint_column);
+            result.smallmoney_column.ShouldBe(data.smallmoney_column);
+            result.tinyint_column.ShouldBe(data.tinyint_column);
         }
 
         [TestMethod]
         public void TestDateTimeDataTypes()
         {
-            //arrange
-            var baseTime = DateTime.UtcNow.Date.AddHours(10).AddMinutes(20).AddSeconds(30).AddMilliseconds(123456789);
-
+            // Setup
+            var baseTime = new DateTime(2018, 2, 15, 3, 12, 15, 123);
             var dateTimeOffset = new DateTimeOffset(2007, 11, 22, 16, 0, 0, new TimeSpan(-5, 0, 0));
-            var time = baseTime.TimeOfDay;
-
-            var fixtureData = new Models.TypeMapDate
+            var data = new Models.TypeMapDate
             {
                 date_column = baseTime.Date,
                 datetime_column = baseTime,
                 datetime2_column = baseTime,
-                datetimeoffset_column = dateTimeOffset,
                 smalldatetime_column = baseTime,
-                time_column = time
+                datetimeoffset_column = dateTimeOffset,
+                time_column = baseTime.TimeOfDay
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
-            var returnedId = sut.Insert(fixtureData);
+            var id = sut.Insert(data);
+            var result = sut.Query<Models.TypeMapDate>(top: 1).FirstOrDefault();
 
-            //TODO: support guid primary key
-            
-            //assert
-            var saveData = sut.Query<Models.TypeMapDate>(top: 1).FirstOrDefault();
-            saveData.ShouldNotBeNull();
-            saveData.date_column.ShouldBe(fixtureData.date_column);
-            saveData.datetime_column.ShouldBeEx(fixtureData.datetime_column);
-            saveData.datetime2_column.ShouldBeEx(fixtureData.datetime2_column);
-            saveData.datetimeoffset_column.ShouldBe(fixtureData.datetimeoffset_column);
-            saveData.smalldatetime_column.ShouldBeEx(fixtureData.smalldatetime_column);
-            saveData.time_column.Value.TotalMilliseconds.ShouldBe(fixtureData.time_column.Value.TotalMilliseconds);
+            // Assert
+            result.ShouldNotBeNull();
+            result.date_column.ShouldBe(data.date_column);
+            result.datetime_column.ShouldBe(data.datetime_column);
+            result.datetime2_column.ShouldBe(data.datetime2_column);
+            result.datetimeoffset_column.ShouldBe(data.datetimeoffset_column);
+            result.smalldatetime_column.ShouldBe(new DateTime(2018, 2, 15, 3, 12, 0, 0));
+            result.time_column.Value.ShouldBe(data.time_column.Value);
         }
 
         [TestMethod]
         public void TestXmlDataTypeInsert()
         {
-            //arrange
-            var sampleXmlData = @"
+            // Setup
+            var data = @"
                     <dataset>
 	                    <register>
 		                    <cpf>82334792845</cpf>
@@ -169,23 +161,19 @@ namespace RepoDb.IntegrationTests
                     ";
             var fixtureData = new Models.TypeMapXml
             {
-                xml_column = sampleXmlData
+                xml_column = data
             };
 
-            //act
+            // Act
             var sut = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var returnedId = sut.Insert(fixtureData);
+            var result = sut.Query<Models.TypeMapXml>(top: 1).FirstOrDefault();
+            var dataXml = Regex.Replace(fixtureData.xml_column, @"\s+", string.Empty);
+            var resultXml = Regex.Replace(result.xml_column, @"\s+", string.Empty);
 
-            //TODO: support guid primary key
-
-            //assert
-            var saveData = sut.Query<Models.TypeMapXml>(top: 1).FirstOrDefault();
-
-            var testXmlData = Regex.Replace(fixtureData.xml_column, @"\s+", string.Empty);
-            var savedXmlData = Regex.Replace(saveData.xml_column, @"\s+", string.Empty);
-
-            saveData.ShouldNotBeNull();
-            savedXmlData.ShouldBe(testXmlData);
+            // Assert
+            result.ShouldNotBeNull();
+            resultXml.ShouldBe(dataXml);
         }
     }
 }

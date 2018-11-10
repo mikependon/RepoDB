@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
-using RepoDb.IntegrationTests.Extensions;
 using Shouldly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
@@ -27,13 +26,14 @@ namespace RepoDb.IntegrationTests
             SetupHelper.CleanDatabase();
         }
 
-        [TestMethod]
-        public void TestInsert()
-        {
-            //arrange
-            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
+        // Dynamics
 
-            var fixtureData = new Customer
+        [TestMethod]
+        public void TestCrudViaDynamics()
+        {
+            // Setup
+            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
+            var customer = new Customer
             {
                 GlobalId = Guid.NewGuid(),
                 FirstName = "FirstName",
@@ -46,45 +46,26 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName
             };
 
-            //act
-            var returnedId = repository.Insert(fixtureData);
+            // Act (Insert)
+            var customerId = repository.Insert(customer);
+            var result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
 
-            //assert
-            var customer = repository.Query<Customer>(new { Id = returnedId }).FirstOrDefault();
+            // Assert (Insert)
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.GlobalId.ShouldBe(customer.GlobalId);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
 
-            //assert
-            customer.ShouldNotBeNull();
-            customer.Id.ShouldNotBe(0);
-            customer.GlobalId.ShouldBe(fixtureData.GlobalId);
-            customer.FirstName.ShouldBe(fixtureData.FirstName);
-            customer.LastName.ShouldBe(fixtureData.LastName);
-            customer.MiddleName.ShouldBe(fixtureData.MiddleName);
-            customer.Address.ShouldBe(fixtureData.Address);
-            customer.Email.ShouldBe(fixtureData.Email);
-            customer.IsActive.ShouldBe(fixtureData.IsActive);
-            fixtureData.LastUpdatedUtc.ShouldBeEx(customer.LastUpdatedUtc);
-            customer.LastUserId.ShouldBe(fixtureData.LastUserId);
-
-            //assert - raw - this will test the cached type Customer whether the mapping
-            //is not affected after calling the Query method.
-            customer = repository.ExecuteQuery<Customer>("SELECT FirstName, LastName, Address, Email FROM [dbo].[Customer] WHERE Id = @Id;", new { Id = returnedId }).FirstOrDefault();
-
-            //assert - raw
-            customer.ShouldNotBeNull();
-            customer.FirstName.ShouldBe(fixtureData.FirstName);
-            customer.LastName.ShouldBe(fixtureData.LastName);
-            customer.Address.ShouldBe(fixtureData.Address);
-            customer.Email.ShouldBe(fixtureData.Email);
-        }
-
-        [TestMethod]
-        public void TestUpdate()
-        {
-            //arrange
-            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
-            var fixtureData = new Customer
+            // Setup (Update)
+            customer = new Customer
             {
-                Id = 1,
                 FirstName = "FirstName-EDITED",
                 LastName = "LastName-EDITED",
                 MiddleName = "MiddleName-EDITED",
@@ -95,43 +76,182 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName
             };
 
-            //act
-            repository.Update(fixtureData, new { fixtureData.Id });
+            // Act (Update)
+            repository.Update(customer, new { Id = customerId });
+            result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
 
-            //assert
-            var savedData = repository.Query<Customer>(new { fixtureData.Id }).FirstOrDefault();
-            savedData.ShouldNotBeNull();
-            savedData.Id.ShouldNotBe(0);
-            savedData.GlobalId.ShouldBe(fixtureData.GlobalId);
-            savedData.FirstName.ShouldBe(fixtureData.FirstName);
-            savedData.LastName.ShouldBe(fixtureData.LastName);
-            savedData.MiddleName.ShouldBe(fixtureData.MiddleName);
-            savedData.Address.ShouldBe(fixtureData.Address);
-            savedData.Email.ShouldBe(fixtureData.Email);
-            savedData.IsActive.ShouldBe(fixtureData.IsActive);
-            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
+            // Assert (Update)
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
+
+            // Act (Delete)
+            repository.Delete<Customer>(new { Id = customerId });
+
+            // Assert (Delete)
+            result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
+            result.ShouldBeNull();
         }
 
         [TestMethod]
-        public void TestDelete()
+        public void TestMergeInsertAndQueryViaDynamics()
         {
-            //arrange and act
+            // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
-            var rowsAffected = repository.Delete<Customer>(new { Id = 1 });
+            var customer = new Customer
+            {
+                Id = 99,
+                GlobalId = Guid.NewGuid(),
+                FirstName = "FirstName-MERGED",
+                LastName = "LastName-MERGED",
+                MiddleName = "MiddleName-MERGED",
+                Address = "Address-MERGED",
+                IsActive = true,
+                Email = "Test@Email.com-MERGED",
+                DateInsertedUtc = DateTime.UtcNow,
+                LastUpdatedUtc = DateTime.UtcNow,
+                LastUserId = Environment.UserName
+            };
 
-            //assert
-            rowsAffected.ShouldBe(1);
-            var savedData = repository.Query<Customer>(new { Id = 1 }).FirstOrDefault();
-            savedData.ShouldBeNull();
+            // Act
+            repository.Merge(customer);
+            var result = repository.Query<Customer>(new { customer.GlobalId }).FirstOrDefault();
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.GlobalId.ShouldBe(customer.GlobalId);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
         }
 
         [TestMethod]
-        public void TestMergeInsert()
+        public void TestMergeUpdateAndQueryViaDynamics()
         {
-            //arrange
+            // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
+            var customer = new Customer
+            {
+                GlobalId = Guid.NewGuid(),
+                FirstName = "FirstName-MERGED",
+                LastName = "LastName-MERGED",
+                MiddleName = "Pinto-MERGED",
+                Address = "Address-MERGED",
+                IsActive = true,
+                Email = "Test@Email.com-MERGED",
+                LastUpdatedUtc = DateTime.UtcNow,
+                LastUserId = $"{Environment.UserName}-MERGED"
+            };
 
+            // Act
+            repository.Merge(customer, Field.From(nameof(Customer.GlobalId)));
+            var result = repository.Query<Customer>(new { customer.GlobalId }).FirstOrDefault();
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.GlobalId.ShouldBe(customer.GlobalId);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
+        }
+
+        // Expressions
+
+        [TestMethod]
+        public void TestCrudViaExpressions()
+        {
+            // Setup
+            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
+            var customer = new Customer
+            {
+                GlobalId = Guid.NewGuid(),
+                FirstName = "FirstName",
+                LastName = "LastName",
+                MiddleName = "MiddleName",
+                Address = "Address",
+                IsActive = true,
+                Email = "Test@Email.com",
+                LastUpdatedUtc = DateTime.UtcNow,
+                LastUserId = Environment.UserName
+            };
+
+            // Act (Insert)
+            var customerId = (long)repository.Insert(customer);
+            var result = repository.Query<Customer>(c => c.Id == customerId).FirstOrDefault();
+
+            // Assert (Insert)
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.GlobalId.ShouldBe(customer.GlobalId);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
+
+            // Setup (Update)
+            customer = new Customer
+            {
+                FirstName = "FirstName-EDITED",
+                LastName = "LastName-EDITED",
+                MiddleName = "MiddleName-EDITED",
+                Address = "Address-EDITED",
+                IsActive = true,
+                Email = "Test@Email.com-EDITED",
+                LastUpdatedUtc = DateTime.UtcNow,
+                LastUserId = Environment.UserName
+            };
+
+            // Act (Update)
+            repository.Update(customer, new { Id = customerId });
+            result = repository.Query<Customer>(c => c.Id == customerId).FirstOrDefault();
+
+            // Assert (Update)
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(0);
+            result.FirstName.ShouldBe(customer.FirstName);
+            result.LastName.ShouldBe(customer.LastName);
+            result.MiddleName.ShouldBe(customer.MiddleName);
+            result.Address.ShouldBe(customer.Address);
+            result.Email.ShouldBe(customer.Email);
+            result.IsActive.ShouldBe(customer.IsActive);
+            result.LastUpdatedUtc.ShouldBe(customer.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(customer.LastUserId);
+
+            // Act (Delete)
+            repository.Delete<Customer>(c => c.Id == customerId);
+
+            // Assert (Delete)
+            result = repository.Query<Customer>(c => c.Id == customerId).FirstOrDefault();
+            result.ShouldBeNull();
+        }
+
+        [TestMethod]
+        public void TestMergeInsertAndQueryViaExpression()
+        {
+            // Setup
+            var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var fixtureData = new Customer
             {
                 Id = 99,
@@ -147,11 +267,11 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName
             };
 
-            //act
+            // Act
             repository.Merge(fixtureData);
+            var customer = repository.Query<Customer>(c => c.GlobalId == fixtureData.GlobalId).FirstOrDefault();
 
-            //assert
-            var customer = repository.Query<Customer>(new { fixtureData.GlobalId }).FirstOrDefault();
+            // Assert
             customer.ShouldNotBeNull();
             customer.Id.ShouldNotBe(0);
             customer.GlobalId.ShouldBe(fixtureData.GlobalId);
@@ -164,11 +284,11 @@ namespace RepoDb.IntegrationTests
             customer.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
             customer.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
-        
+
         [TestMethod]
-        public void TestMergeUpdate()
+        public void TestMergeUpdateAndQueryViaExpression()
         {
-            //arrange
+            // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var fixtureData = new Customer
             {
@@ -183,21 +303,21 @@ namespace RepoDb.IntegrationTests
                 LastUserId = $"{Environment.UserName}-MERGED"
             };
 
-            //act
-            repository.Merge(fixtureData, Field.From("GlobalId"));
+            // Act
+            repository.Merge(fixtureData, Field.From(nameof(Customer.GlobalId)));
+            var result = repository.Query<Customer>(c => c.GlobalId == fixtureData.GlobalId).FirstOrDefault();
 
-            //assert
-            var savedData = repository.Query<Customer>(new { fixtureData.GlobalId }).FirstOrDefault();
-            savedData.ShouldNotBeNull();
-            savedData.GlobalId.ShouldBe(fixtureData.GlobalId);
-            savedData.FirstName.ShouldBe(fixtureData.FirstName);
-            savedData.LastName.ShouldBe(fixtureData.LastName);
-            savedData.MiddleName.ShouldBe(fixtureData.MiddleName);
-            savedData.Address.ShouldBe(fixtureData.Address);
-            savedData.Email.ShouldBe(fixtureData.Email);
-            savedData.IsActive.ShouldBe(fixtureData.IsActive);
-            savedData.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
-            savedData.LastUserId.ShouldBe(fixtureData.LastUserId);
+            // Assert
+            result.ShouldNotBeNull();
+            result.GlobalId.ShouldBe(fixtureData.GlobalId);
+            result.FirstName.ShouldBe(fixtureData.FirstName);
+            result.LastName.ShouldBe(fixtureData.LastName);
+            result.MiddleName.ShouldBe(fixtureData.MiddleName);
+            result.Address.ShouldBe(fixtureData.Address);
+            result.Email.ShouldBe(fixtureData.Email);
+            result.IsActive.ShouldBe(fixtureData.IsActive);
+            result.LastUpdatedUtc.ShouldBe(fixtureData.LastUpdatedUtc);
+            result.LastUserId.ShouldBe(fixtureData.LastUserId);
         }
     }
 }
