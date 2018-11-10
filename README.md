@@ -2,7 +2,7 @@
 
 A dynamic, lightweight, and fast repo-based ORM .NET Library.
 
-![](https://ci.appveyor.com/api/projects/status/8sms05vy0ad9aao2?svg=true)
+[!](https://ci.appveyor.com/api/projects/status/8sms05vy0ad9aao2?svg=true)
 [![RepoDb](https://img.shields.io/nuget/v/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
 [![RepoDb](https://img.shields.io/nuget/dt/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
 
@@ -29,10 +29,8 @@ To provide more flexibility and fast-switching development approach, whether to 
 ### What's with RepoDb?
 
  - Caching
- - Cyclomatic Complexity
- - Expression Tree
+ - Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
  - Field Mapping
- - Multiple Mapping
  - Operations (Asynchronous)
  - Recursive Query
  - SQL Statement Builder

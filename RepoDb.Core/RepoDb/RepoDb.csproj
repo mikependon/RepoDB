@@ -4,16 +4,19 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.6.4</Version>
+    <Version>1.7.0-beta1</Version>
     <Authors>Michael Camara Pendon, Rodel E. Dagumampan</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release v1.6.4]
-- Performance: Introduced the field definitions for NULL checks at IL. #48
-- Performance: Added a compiled-functions (Expression) when converting the DataReader to Entity. FransBouma Recommendation #47</PackageReleaseNotes>
+    <PackageReleaseNotes>[Release 1.7.0-beta1]
+- Introduced Expression-Based Query for Connection and Repository Operations
+- Introduced Expression-Based Parsing for QueryGroup, QueryField, Field, OrderField
+- Introduced Array-Based Parameters when calling ExecuteScalar
+- Removed Support for DataEntityMapper (Multiple Mapping)
+- Bug Fixes: https://github.com/RepoDb/RepoDb/issues?q=is:issue+is:closed</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -21,8 +24,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.6.4.0</AssemblyVersion>
-    <FileVersion>1.6.4.0</FileVersion>
+    <AssemblyVersion>1.7.0.1</AssemblyVersion>
+    <FileVersion>1.7.0.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

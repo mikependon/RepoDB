@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.6.4</version>
+    <version>1.7.0-beta1</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -10,9 +10,12 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-      [Release v1.6.4]
-      - Performance: Introduced the field definitions for NULL checks at IL. #48
-      - Performance: Added a compiled-functions (Expression) when converting the DataReader to Entity. FransBouma Recommendation #47
+    [Release 1.7.0-beta1]
+    - Introduced Expression-Based Query for Connection and Repository Operations
+    - Introduced Expression-Based Parsing for QueryGroup, QueryField, Field, OrderField
+    - Introduced Array-Based Parameters when calling ExecuteScalar
+    - Removed Support for DataEntityMapper (Multiple Mapping)
+    - Bug Fixes: https://github.com/RepoDb/RepoDb/issues?q=is:issue+is:closed
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
