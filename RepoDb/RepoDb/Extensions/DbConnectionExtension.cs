@@ -3795,7 +3795,7 @@ namespace RepoDb
                 else
                 {
                     // Add the parameters
-                    command.CreateParameters(param);
+                    command.CreateParameters(param, entityType);
                 }
 
                 // Execute the reader
@@ -4005,10 +4005,32 @@ namespace RepoDb
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
+            // Identify target statement, for now, only support the param with single parameter that is an array
+            var property = param?.GetType().GetProperties().FirstOrDefault();
+            var arrayValues = (IEnumerable<object>)null;
+
+            // Get the values for the arrays
+            if (property != null && property.PropertyType.IsArray)
+            {
+                arrayValues = ((Array)property.GetValue(param)).AsEnumerable();
+                commandText = ToRawSqlWithArrayParams(commandText, property.Name, arrayValues);
+            }
+
             // Actual Execution
             using (var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction))
             {
-                command.CreateParameters(param, entityType);
+                // Identify target statement, for now, only support array with single parameters
+                if (arrayValues != null)
+                {
+                    command.CreateParametersFromArray(property.Name, arrayValues);
+                }
+                else
+                {
+                    // Add the parameters
+                    command.CreateParameters(param, entityType);
+                }
+
+                // Execute the scalar
                 return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
         }
