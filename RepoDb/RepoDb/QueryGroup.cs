@@ -313,31 +313,92 @@ namespace RepoDb
 
         private static QueryGroup ParseAllOrAny<TEntity>(MethodCallExpression expression) where TEntity : class
         {
+            // Return null if there is no any arguments
+            if (expression.Arguments?.Any() == false)
+            {
+                return null;
+            }
+
+            // Get the last property
+            var last = expression
+                .Arguments
+                .LastOrDefault();
+
+            // Make sure the last is a member
+            if (last == null || last?.IsLambda() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Make sure the last is a binary
+            var lambda = last.ToLambda();
+            if (lambda.Body.IsBinary() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Make sure it is a member
+            var binary = lambda.Body.ToBinary();
+            if (binary.Right.IsMember() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Make sure it is a property
+            var member = binary.Right.ToMember().Member;
+            if (member.IsPropertyInfo() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Make sure the property is in the entity
+            var property = member.ToPropertyInfo();
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
+            {
+                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Variables needed for fields
             var queryFields = new List<QueryField>();
-            var queryGroups = new List<QueryGroup>();
             var conjunction = Conjunction.And;
 
-            // Get the name
-            var name = expression.Method.Name;
-
             // Support only various methods
-            if (name == StringConstant.Any)
+            if (expression.Method.Name == StringConstant.Any)
             {
                 conjunction = Conjunction.Or;
             }
-            else if (name == StringConstant.All)
+            else if (expression.Method.Name == StringConstant.All)
             {
                 conjunction = Conjunction.And;
             }
 
             // Call the method
-            if (expression.Arguments?.Any() == true)
-            {
+            var first = expression.Arguments.First();
+            var values = (object)null;
 
+            // Identify the type of the argument
+            if (first.IsNewArray())
+            {
+                values = first.ToNewArray().GetValue();
+            }
+            else if (first.IsMember())
+            {
+                values = first.ToMember().GetValue();
+            }
+
+            // Values must be an array
+            if (values is Array)
+            {
+                foreach (var value in (Array)values)
+                {
+                    var operation = binary.NodeType == ExpressionType.Equal ? Operation.Equal : Operation.NotEqual;
+                    var queryField = new QueryField(property.Name, operation, value);
+                    queryFields.Add(queryField);
+                }
             }
 
             // Return the result
-            return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
+            return new QueryGroup(queryFields, null, conjunction).FixParameters();
         }
 
         private static QueryGroup ParseContains<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
@@ -348,28 +409,41 @@ namespace RepoDb
                 return null;
             }
 
-            // Gets the property
-            var property = expression.Arguments
-                .Where(arg => arg.IsMember())
-                .Where(arg => arg.ToMember().Member.IsPropertyInfo())
-                .Select(arg => arg.ToMember().Member.ToPropertyInfo())
-                .FirstOrDefault();
+            // Get the last arg
+            var last = expression
+                .Arguments
+                .LastOrDefault();
 
-            // Return null if property is not found
+            // Make sure the last arg is a member
+            if (last == null || last?.IsMember() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Make sure it is a property info
+            var member = last.ToMember().Member;
+            if (member.IsPropertyInfo() == false)
+            {
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+            }
+
+            // Get the property
+            var property = member.ToPropertyInfo();
+
+            // Make sure to guard the property, throw an error if necessary
             if (property == null)
             {
                 throw new InvalidQueryExpressionException($"No target property found for expression '{expression.ToString()}'.");
             }
 
             // Make sure the property is in the entity
-            var properties = PropertyCache.Get<TEntity>();
-            if (properties.FirstOrDefault(p => p.PropertyInfo.Name == property.Name) == null)
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
             {
                 throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Get the values
-            var values = expression.Arguments.FirstOrDefault().GetValue();
+            var values = expression.Arguments.First().GetValue();
 
             // Add to query fields
             var queryField = new QueryField(property.Name, operation, values);

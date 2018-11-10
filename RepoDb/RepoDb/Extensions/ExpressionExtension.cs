@@ -268,6 +268,26 @@ namespace RepoDb.Extensions
         #region Identification and Conversion
 
         /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is a <see cref="LambdaExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is a <see cref="LambdaExpression"/>.</returns>
+        public static bool IsLambda(this Expression expression)
+        {
+            return expression is LambdaExpression;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="Expression"/> object into <see cref="LambdaExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be converted.</param>
+        /// <returns>A converted instance of <see cref="LambdaExpression"/> object.</returns>
+        public static LambdaExpression ToLambda(this Expression expression)
+        {
+            return (LambdaExpression)expression;
+        }
+
+        /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> is a <see cref="BinaryExpression"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>

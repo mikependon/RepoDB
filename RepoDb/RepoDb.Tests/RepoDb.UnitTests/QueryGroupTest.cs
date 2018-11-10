@@ -1002,6 +1002,194 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // All
+
+        [TestMethod]
+        public void TestParseExpressionAll()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAll()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p != e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAllFromVariable()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => list.All(p => p == e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAllFromVariable()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => list.All(p => p != e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] <> @PropertyInt AND [PropertyInt] <> @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAllFromVariableAsNot()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => !(new int[] { 1, 2 }.All(p => p == e.PropertyInt)));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAllFromVariableAsBoolean()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == true);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAllAsNot()
+        {
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => !(new int[] { 1, 2 }.All(p => p == e.PropertyInt)));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAllAsBoolean()
+        {
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == true);
+        }
+
+        // Any
+
+        [TestMethod]
+        public void TestParseExpressionAny()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAny()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p != e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyFromVariable()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => list.Any(p => p == e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAnyFromVariable()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => list.Any(p => p != e.PropertyInt));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyInt] <> @PropertyInt OR [PropertyInt] <> @PropertyInt_1)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAnyFromVariableAsNot()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => !(new int[] { 1, 2 }.Any(p => p == e.PropertyInt)));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAnyFromVariableAsBoolean()
+        {
+            // Setup
+            var list = new int[] { 1, 2 };
+
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == true);
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAnyAsNot()
+        {
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => !(new int[] { 1, 2 }.Any(p => p == e.PropertyInt)));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionForAnyAsBoolean()
+        {
+            // Act
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == true);
+        }
+
         // Test (Expression Value)
 
         [TestMethod]
