@@ -108,7 +108,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Parse an object to be used for ordering. The object can have multiple properties for ordering and each property must have
+        /// Parse an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have
         /// a value of <see cref="Enumerations.Order"/> enumeration.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
