@@ -74,12 +74,6 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.Equal, 10045 ));
 
-Explicit way:
-
-::
-
-	var result = connection.Query<Customer>(new QueryField("Id", Operation.Equal, 10045 ));
-
 Operation.NotEqual
 ------------------
 
