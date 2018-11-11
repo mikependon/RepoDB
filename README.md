@@ -6,8 +6,8 @@ A dynamic, lightweight, and fast repo-based ORM .NET Library.
 [![RepoDb](https://img.shields.io/nuget/v/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
 [![RepoDb](https://img.shields.io/nuget/dt/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
 
-Package: https://www.nuget.org/packages/RepoDb  
-Documentation: https://repodb.readthedocs.io/en/latest/
+Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
+Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
 
 ### Goal
 
@@ -38,40 +38,97 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Transactions
  - Type Mapping
 
-### Operations
+### Codes
 
- - BatchQuery
- - BatchQueryAsync
- - BulkInsert
- - BulkInsertAsync
- - Count
- - CountAsync
- - Delete
- - DeleteAsync
- - DeleteAll
- - DeleteAllAsync
- - ExecuteReader
- - ExecuteReaderAsync
- - ExecuteQuery
- - ExecuteQueryAsync
- - ExecuteNonQuery
- - ExecuteNonQueryAsync
- - ExecuteScalar
- - ExecuteScalarAsync
- - InlineInsert
- - InlineInsertAsync
- - InlineMerge
- - InlineMergeAsync
- - InlineUpdate
- - InlineUpdateAsync
- - Insert
- - InsertAsync
- - Merge
- - MergeAsync
- - Query
- - QueryAsync
- - Truncate
- - TruncateAsync
- - Update
- - UpdateAsync
+Let us say you have a customer class named `Customer` that has an equivalent table in the database.
 
+	public class Customer
+	{
+		public int Id { get; set; }
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public bool IsActive { get; set; }
+		public DateTime LastUpdatedUtc { get; set; }
+		public DateTime CreatedDateUtc { get; set; }
+	}
+
+**Query**
+
+There are 3 ways of doing this (dynamics, expression and object-based approach).
+
+Dynamics:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(new { Id = 1005 });
+	}
+
+Expression:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(c => c.Id = 1005);
+	}
+
+Object-Based:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 1005));
+	}
+
+**ExecuteQuery**
+
+You can create a class with combined properties of different tables or with stored procedures. It does not need to be 100% identical to the schema, as long the property of the class is part of the result set.
+
+	public class ComplexClass
+	{
+		public int CustomerId { get; set; }
+		public int OrderId { get; set; }
+		public int ProductId { get; set; }
+		public string CustomerName { get; set; }
+		public string ProductName { get; set; }
+		public DateTime OrderDate { get; set; }
+		public int Quantity { get; set; }
+		public double Price { get; set; }
+	}
+
+Then you can create this command text.
+
+	var commandText = @"SELECT C.Id AS CustomerId
+			, O.Id AS OrderId
+			, P.Id AS ProductId
+			, CONCAT(C.FirstName, ' ', C.LastName) AS CustomerName
+			, P.Name AS ProductName
+			, O.OrderDate
+			, O.Quantity
+			, P.Price
+		FROM [dbo].[Customer] C
+		INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id
+		INNER JOIN [dbo].[OrderItem] OI ON OI.OrderId = O.Id
+		INNER JOIN [dbo].[Product] P ON P.Id = OI.ProductId
+		WHERE (C.Id = @CustomerId)
+			AND (O.OrderDate BETWEEN @OrderDate AND DATEADD(DAY, 1, @OrderDate));";
+
+Dynamics:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<ComplexClass>(commandText, new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date });
+	}
+
+Object-Based:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var queryGroup = new QueryGroup(new []
+		{
+			new QueryField("CustomerId", 1005),
+			new QueryField("OrderDate", DateTime.UtcNow.Date)
+		});
+		var customer = connection.Query<Customer>(commandText, queryGroup);
+	}
+
+The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
+
+Note: Expression-based query is a typical ORM approach for a `DataSet` and `ClassObject`. The most optimal when it comes to performance is to used the `Object-Based` (followed by `Dynamics` and then `Expression`). However, writing an `Object-Based` is a bit informative.
