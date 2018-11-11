@@ -88,6 +88,7 @@ You can create a class with combined properties of different tables or with stor
 		public int ProductId { get; set; }
 		public string CustomerName { get; set; }
 		public string ProductName { get; set; }
+		public DateTime ProductDescription { get; set; } // This is not in the CommandText, will be ignored
 		public DateTime OrderDate { get; set; }
 		public int Quantity { get; set; }
 		public double Price { get; set; }
@@ -103,6 +104,7 @@ Then you can create this command text.
 			, O.OrderDate
 			, O.Quantity
 			, P.Price
+			, (O.Quatity * P.Price) AS Total /* Note: This is not in the class, but still it is valid */
 		FROM [dbo].[Customer] C
 		INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id
 		INNER JOIN [dbo].[OrderItem] OI ON OI.OrderId = O.Id
@@ -132,3 +134,60 @@ Object-Based:
 The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
 
 Note: Expression-based query is a typical ORM approach for a `DataSet` and `ClassObject`. The most optimal when it comes to performance is to used the `Object-Based` (followed by `Dynamics` and then `Expression`). However, writing an `Object-Based` is a bit informative.
+
+**StoredProcedure**
+
+Using the complex type above. If you have a stored procedure like below.
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_get_customer_orders_by_date];
+	GO
+	CREATE PROCEDURE [dbo].[sp_get_customer_orders_by_date]
+	(
+		@CustomerId INT
+		, @OrderDate DATETIME2(7)
+	)
+	AS
+	BEGIN
+		SELECT C.Id AS CustomerId
+			, O.Id AS OrderId
+			, P.Id AS ProductId
+			, CONCAT(C.FirstName, ' ', C.LastName) AS CustomerName
+			, P.Name AS ProductName
+			, O.OrderDate
+			, O.Quantity
+			, P.Price
+			, (O.Quatity * P.Price) AS Total /* Note: This is not in the class, but still it is valid */
+		FROM [dbo].[Customer] C
+		INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id
+		INNER JOIN [dbo].[OrderItem] OI ON OI.OrderId = O.Id
+		INNER JOIN [dbo].[Product] P ON P.Id = OI.ProductId
+		WHERE (C.Id = @CustomerId)
+			AND (O.OrderDate BETWEEN @OrderDate AND DATEADD(DAY, 1, @OrderDate));
+	END
+
+Then it can be called as below.
+
+	
+Dynamics:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
+			new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date },
+			commandType: CommandType.StoredProcedure);
+	}
+
+Object-Based:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var queryGroup = new QueryGroup(new []
+		{
+			new QueryField("CustomerId", 1005),
+			new QueryField("OrderDate", DateTime.UtcNow.Date)
+		});
+		var customer = connection.Query<Customer>(commandText, queryGroup,
+			commandType: CommandType.StoredProcedure);
+	}
+
+Please visit our [documentation](https://repodb.readthedocs.io/en/latest/) for further details about the codes.
