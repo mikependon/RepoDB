@@ -12,7 +12,7 @@ namespace RepoDb.Extensions
         /// Converts an instance of a <see cref="Field"/> into an <see cref="IEnumerable{T}"/> of <see cref="Field"/> object.
         /// </summary>
         /// <param name="field">The <see cref="Field"/> to be converted.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> list of <see cref="Field"/>.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> list of <see cref="Field"/> object.</returns>
         public static IEnumerable<Field> AsEnumerable(this Field field)
         {
             return new[] { field };
