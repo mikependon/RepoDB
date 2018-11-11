@@ -7,10 +7,10 @@ RepoDb Documentation
    pages/introduction
    pages/installation
    pages/attributes
-   pages/multiplemapping
    pages/typemapping
    pages/connection
-   pages/connectionoperations
+   pages/field
+   pages/orderfield
    pages/transaction
    pages/expressiontree
    pages/querygroup

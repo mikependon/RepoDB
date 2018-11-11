@@ -100,26 +100,6 @@ Below is a sample customized `Trace` object.
 
 	public class NorthwindDatabaseTrace : ITrace
 	{
-		public void BeforeBatchQuery(CancellableTraceLog log)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void AfterBatchQuery(TraceLog log)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void BeforeBulkInsert(CancellableTraceLog log)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void AfterBulkInsert(TraceLog log)
-		{
-			throw new NotImplementedException();
-		}
-
 		...
 	}
 

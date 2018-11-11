@@ -82,13 +82,13 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
@@ -288,57 +288,14 @@ RETURN $result
 <p>Below is the way on how to create a custom <cite>Cache</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
 <span class="p">{</span>
-        <span class="k">public</span> <span class="nf">FileCache</span><span class="p">(</span><span class="kt">string</span> <span class="n">location</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Add a logic on the constructor</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Serialize to a File</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">CacheItem</span> <span class="n">item</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Serialize to a File</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">Clear</span><span class="p">()</span>
-        <span class="p">{</span>
-                <span class="c1">// Delete the Files</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">Contains</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Check if the Filename exists by Key</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="n">CacheItem</span> <span class="nf">Get</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Deserialize the File where the FileName is equals to Key, return the object</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">CacheItem</span><span class="p">&gt;</span> <span class="n">GetEnumerator</span><span class="p">()</span>
-        <span class="p">{</span>
-                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">void</span> <span class="nf">Remove</span><span class="p">(</span><span class="kt">string</span> <span class="n">key</span><span class="p">)</span>
-        <span class="p">{</span>
-                <span class="c1">// Delete the File where the FileName is equals to Key</span>
-        <span class="p">}</span>
-
-        <span class="n">IEnumerator</span> <span class="n">IEnumerable</span><span class="p">.</span><span class="n">GetEnumerator</span><span class="p">()</span>
-        <span class="p">{</span>
-                <span class="c1">// Get the File.ParentFolder.Files enumerator and deserialize each file</span>
-        <span class="p">}</span>
+        <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The snippets above creates a class named <cite>FileCache</cite> that implements the <cite>ICache</cite> interfaces. By implementing the said interface, the class is now qualified to become a library <cite>Cache</cite> object.</p>
 <p>Below is the way on how to inject the custom <cite>Cache</cite> object to a repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fileCache</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileCache</span><span class="p">();</span>
-<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span><span class="n">fileCache</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">fileCache</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Upon creating a repository, the <cite>fileCache</cite> variable is being passed in the <cite>cache</cite> parameter. This signals the repository to use the <cite>FileCache</cite> class as the <cite>Cache</cite> object manager of the <cite>Query</cite> operation.</p>

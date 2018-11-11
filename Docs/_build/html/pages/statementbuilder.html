@@ -82,13 +82,13 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionoperations.html">Connection Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
@@ -205,7 +205,7 @@
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
 <p>By default, the library is using the <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite> object when composing the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provide.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null) where TEntity
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null) where TEntity : class
 {
         // Create an initial SELECT statement
         queryBuilder.Clear()
@@ -239,52 +239,9 @@
 <div class="section" id="createbatchquery-method">
 <h2>CreateBatchQuery Method<a class="headerlink" href="#createbatchquery-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>BatchQuery</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateBatchQuery</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-<li><strong>page</strong>: the page number implied when creating a statement.</li>
-<li><strong>rowsPerBatch</strong>: the size of the rows implied when creating a statement.</li>
-<li><strong>orderBy</strong>: the fields used in the <cite>ORDER BY</cite> when creating a statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateBatchQuery</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable&lt;OrderField&gt; orderBy) where TEntity
 {
-        var queryProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Query);
-        var batchQueryProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.BatchQuery)
-                .Where(property =&gt; queryProperties.Contains(property));
-        var fields = batchQueryProperties.Select(property =&gt; new Field(property.Name));
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .With()
-                .WriteText(&quot;CTE&quot;)
-                .As()
-                .OpenParen()
-                .Select()
-                .RowNumber()
-                .Over()
-                .OpenParen()
-                .OrderByFrom(orderBy)
-                .CloseParen()
-                .As(&quot;[RowNumber],&quot;)
-                .FieldsFrom(Command.BatchQuery)
-                .From()
-                .TableFrom(Command.BatchQuery)
-                .WhereFrom(where)
-                .CloseParen()
-                .Select()
-                .FieldsFrom(fields)
-                .From()
-                .WriteText(&quot;CTE&quot;)
-                .WriteText($&quot;WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})&quot;)
-                .OrderByFrom(orderBy)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -292,25 +249,9 @@
 <div class="section" id="createcount-method">
 <h2>CreateCount Method<a class="headerlink" href="#createcount-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Count</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateCount</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>where</strong>: the expression used when creating a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateCount</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCount&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Select()
-                .CountBig()
-                .WriteText(&quot;(1) AS [Counted]&quot;)
-                .From()
-                .TableFrom(Command.Count)
-                .WhereFrom(where)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -318,23 +259,9 @@
 <div class="section" id="createdelete-method">
 <h2>CreateDelete Method<a class="headerlink" href="#createdelete-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Delete</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateDelete</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateDelete</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDelete&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Delete()
-                .From()
-                .TableFrom(Command.Delete)
-                .WhereFrom(where)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -342,21 +269,9 @@
 <div class="section" id="createdeleteall-method">
 <h2>CreateDeleteAll Method<a class="headerlink" href="#createdeleteall-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>DeleteAll</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateDeleteAll</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: the builder used when creating a statement (of type <cite>RepoDb.QueryBuilder&lt;TEntity&gt;</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateDeleteAll</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDeleteAll&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Delete()
-                .From()
-                .TableFrom(Command.DeleteAll)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -364,13 +279,6 @@
 <div class="section" id="createinlineinsert-method">
 <h2>CreateInlineInsert Method<a class="headerlink" href="#createinlineinsert-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineInsert</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateInlineInsert</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>fields</strong>: the list of the fields to be a part of the inline merge operation in SQL Statement composition.</li>
-<li><strong>overrideIgnore</strong>: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInlineInsert</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields, bool? overrideIgnore = false)
         where TEntity
 {
@@ -381,64 +289,7 @@ internal string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; qu
         bool? overrideIgnore = false, bool isPrimaryIdentity = false)
         where TEntity
 {
-        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
-        var hasFields = isPrimaryIdentity ? fields?.Any(field =&gt; field.Name.ToLower() != primary?.GetMappedName().ToLower()) : fields.Any();
-
-        // Check if there are fields
-        if (hasFields == false)
-        {
-                throw new InvalidOperationException($&quot;No inline insertable fields found at type &#39;{typeof(TEntity).FullName}&#39;.&quot;);
-        }
-
-        // Check for the unmatches
-        if (overrideIgnore == false)
-        {
-                var insertableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert);
-                var inlineInsertableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.InlineInsert)
-                        .Where(property =&gt; insertableProperties.Contains(property))
-                        .Select(property =&gt; property.GetMappedName());
-                var unmatchesProperties = fields?.Where(field =&gt;
-                        inlineInsertableProperties?.FirstOrDefault(property =&gt;
-                                field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatchesProperties.Count() &gt; 0)
-                {
-                        throw new InvalidOperationException($&quot;The fields &#39;{unmatchesProperties.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}&#39; are not &quot; +
-                                $&quot;inline insertable for object &#39;{DataEntityExtension.GetMappedName&lt;TEntity&gt;(Command.InlineInsert)}&#39;.&quot;);
-                }
-        }
-
-        // Check for the primary key
-        if (primary != null &amp;&amp; isPrimaryIdentity)
-        {
-                fields = fields?
-                        .Where(field =&gt; field.Name.ToLower() != primary.Name.ToLower())
-                                .Select(field =&gt; field);
-        }
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Insert()
-                .Into()
-                .TableFrom(Command.Insert)
-                .OpenParen()
-                .FieldsFrom(fields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(fields)
-                .CloseParen()
-                .End();
-        var result = isPrimaryIdentity ? &quot;SCOPE_IDENTITY()&quot; : (primary != null) ? $&quot;@{primary.GetMappedName()}&quot; : &quot;NULL&quot;;
-        queryBuilder
-                .Select()
-                .WriteText(result)
-                .As(&quot;[Result]&quot;)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -446,14 +297,6 @@ internal string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; qu
 <div class="section" id="createinlinemerge-method">
 <h2>CreateInlineMerge Method<a class="headerlink" href="#createinlinemerge-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineMerge</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateInlineMerge</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>fields</strong>: the list of the fields to be a part of the inline merge operation in SQL Statement composition.</li>
-<li><strong>qualifiers</strong>: the list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</li>
-<li><strong>overrideIgnore</strong>: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInlineUpdate</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields, IEnumerable&lt;Field&gt; qualifiers, bool? overrideIgnore = false)
         where TEntity
 {
@@ -464,110 +307,7 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
         bool? overrideIgnore = false, bool isPrimaryIdentity = false)
         where TEntity
 {
-        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
-
-        // Get all target properties
-        var mergeableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Merge);
-        var inlineMergeableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.InlineMerge)
-                .Where(property =&gt; mergeableProperties.Contains(property));
-
-        // Check for the unmatches
-        if (overrideIgnore == false)
-        {
-                var unmatchesProperties = fields?.Where(field =&gt;
-                        inlineMergeableProperties?.FirstOrDefault(property =&gt; field.Name.ToLower() == property.GetMappedName().ToLower()) == null);
-                                //.Where(property =&gt; property.Name.ToLower() != primary?.GetMappedName().ToLower());
-                if (unmatchesProperties.Count() &gt; 0)
-                {
-                        throw new InvalidOperationException($&quot;The fields &#39;{unmatchesProperties.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}&#39; are not &quot; +
-                                $&quot;inline mergeable for object &#39;{DataEntityExtension.GetMappedName&lt;TEntity&gt;(Command.InlineMerge)}&#39;.&quot;);
-                }
-        }
-
-        // Use the primary for qualifiers if there is no any
-        if (qualifiers == null &amp;&amp; primary != null)
-        {
-                qualifiers = Field.From(primary.GetMappedName());
-        }
-
-        // Get all target fields
-        var insertableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
-                .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary));
-        var updateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Update)
-                .Where(property =&gt; property != primary);
-        var mergeInsertableFields = mergeableProperties
-                .Where(property =&gt; insertableProperties.Contains(property) &amp;&amp;
-                        mergeableProperties.Contains(property) &amp;&amp;
-                                inlineMergeableProperties.Contains(property))
-                .Where(property =&gt;
-                        fields.Any(field =&gt; field.Name.ToLower() == property.GetMappedName().ToLower()))
-                .Select(property =&gt; new Field(property.Name));
-        var mergeUpdateableFields = mergeableProperties
-                .Where(property =&gt; updateableProperties.Contains(property) &amp;&amp;
-                        mergeableProperties.Contains(property) &amp;&amp;
-                                inlineMergeableProperties.Contains(property))
-                .Where(property =&gt;
-                        fields.Any(field =&gt; field.Name.ToLower() == property.GetMappedName().ToLower()))
-                .Select(property =&gt; new Field(property.Name));
-
-        // Check if there are inline mergeable fields (for insert)
-        if (!mergeInsertableFields.Any())
-        {
-                throw new InvalidOperationException($&quot;No inline mergeable fields (for insert) found at type &#39;{typeof(TEntity).FullName}&#39;.&quot;);
-        }
-
-        // Check if there are inline mergeable fields (for update)
-        if (!mergeUpdateableFields.Any())
-        {
-                throw new InvalidOperationException($&quot;No inline mergeable fields (for update) found at type &#39;{typeof(TEntity).FullName}&#39;.&quot;);
-        }
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                // MERGE T USING S
-                .Merge()
-                .TableFrom(Command.Merge)
-                .As(&quot;T&quot;)
-                .Using()
-                .OpenParen()
-                .Select()
-                .ParametersAsFieldsFrom(fields)
-                .CloseParen()
-                .As(&quot;S&quot;)
-                // QUALIFIERS
-                .On()
-                .OpenParen()
-                .WriteText(qualifiers?
-                        .Select(
-                                field =&gt; field.AsJoinQualifier(&quot;S&quot;, &quot;T&quot;))
-                                        .Join($&quot; {StringConstant.And.ToUpper()} &quot;))
-                .CloseParen()
-                // WHEN NOT MATCHED THEN INSERT VALUES
-                .When()
-                .Not()
-                .Matched()
-                .Then()
-                .Insert()
-                .OpenParen()
-                .FieldsFrom(mergeInsertableFields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
-                .CloseParen()
-                // WHEN MATCHED THEN UPDATE SET
-                .When()
-                .Matched()
-                .Then()
-                .Update()
-                .Set()
-                .FieldsAndAliasFieldsFrom(mergeUpdateableFields, &quot;S&quot;)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -575,58 +315,11 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
 <div class="section" id="createinlineupdate-method">
 <h2>CreateInlineUpdate Method<a class="headerlink" href="#createinlineupdate-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineUpdate</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateInlineUpdate</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>fields</strong>: the list of the fields to be a part of the inline merge operation in SQL Statement composition.</li>
-<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-<li><strong>overrideIgnore</strong>: the flag used to identify whether all the ignored fields will be included in the operation when composing a statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInlineUpdate</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields,
         QueryGroup where, bool? overrideIgnore = false)
         where TEntity
 {
-        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
-        var hasFields = fields?.Any(field =&gt; field.Name.ToLower() != primary?.GetMappedName().ToLower());
-
-        // Check if there are fields
-        if (hasFields == false)
-        {
-                throw new InvalidOperationException($&quot;No inline updatable fields found at type &#39;{typeof(TEntity).FullName}&#39;.&quot;);
-        }
-
-        // Get the target properties
-        var updateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Update);
-        var inlineUpdateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.InlineUpdate)
-                .Where(property =&gt; property != primary &amp;&amp; updateableProperties.Contains(property))
-                .Select(property =&gt; property.GetMappedName());
-
-        // Check for the unmatches
-        if (overrideIgnore == false)
-        {
-                var unmatchesProperties = fields?.Where(field =&gt;
-                        inlineUpdateableProperties?.FirstOrDefault(property =&gt; field.Name.ToLower() == property.ToLower()) == null);
-                if (unmatchesProperties.Count() &gt; 0)
-                {
-                        throw new InvalidOperationException($&quot;The fields &#39;{unmatchesProperties.Select(field =&gt; field.AsField()).Join(&quot;, &quot;)}&#39; are not &quot; +
-                                $&quot;inline updateable for object &#39;{DataEntityExtension.GetMappedName&lt;TEntity&gt;(Command.InlineUpdate)}&#39;.&quot;);
-                }
-        }
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Update()
-                .TableFrom(Command.InlineUpdate)
-                .Set()
-                .FieldsAndParametersFrom(fields)
-                .WhereFrom(where)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -634,11 +327,6 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
 <div class="section" id="createinsert-method">
 <h2>CreateInsert Method<a class="headerlink" href="#createinsert-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Insert</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateInsert</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateInsert</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder)
         where TEntity
 {
@@ -648,35 +336,7 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
 internal string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, bool isPrimaryIdentity)
         where TEntity
 {
-        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
-        var fields = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
-                .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary))
-                .Select(p =&gt; new Field(p.Name));
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Insert()
-                .Into()
-                .TableFrom(Command.Insert)
-                .OpenParen()
-                .FieldsFrom(fields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(fields)
-                .CloseParen()
-                .End();
-        var result = isPrimaryIdentity ? &quot;SCOPE_IDENTITY()&quot; : (primary != null) ? $&quot;@{primary.GetMappedName()}&quot; : &quot;NULL&quot;;
-        queryBuilder
-                .Select()
-                .WriteText(result)
-                .As(&quot;[Result]&quot;)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -684,12 +344,6 @@ internal string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBui
 <div class="section" id="createmerge-method">
 <h2>CreateMerge Method<a class="headerlink" href="#createmerge-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Merge</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateMerge</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>qualifiers</strong>: the list of fields to be used as a qualifiers when composing a statement (on enumerable of type <cite>RepoDb.Field</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateMerge</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers)
         where TEntity
 {
@@ -699,73 +353,7 @@ internal string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBui
 internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers, bool isPrimaryIdentity)
         where TEntity
 {
-        var primary = DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;();
-
-        // Add the primary key as the default qualifier
-        if (qualifiers == null &amp;&amp; primary != null)
-        {
-                qualifiers = Field.From(primary.GetMappedName());
-        }
-
-        // Get the target properties
-        var insertableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Insert)
-                .Where(property =&gt; !(isPrimaryIdentity &amp;&amp; property == primary));
-        var updateableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Merge)
-                .Where(property =&gt; property != primary);
-        var mergeableProperties = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Merge);
-        var mergeInsertableFields = mergeableProperties
-                .Where(property =&gt; insertableProperties.Contains(property))
-                .Select(property =&gt; new Field(property.Name));
-        var mergeUpdateableFields = mergeableProperties
-                .Where(property =&gt; updateableProperties.Contains(property))
-                .Select(property =&gt; new Field(property.Name));
-
-        // Build the SQL Statement
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                // MERGE T USING S
-                .Merge()
-                .TableFrom(Command.Merge)
-                .As(&quot;T&quot;)
-                .Using()
-                .OpenParen()
-                .Select()
-                .ParametersAsFieldsFrom(Command.None) // All fields must be included for selection
-                .CloseParen()
-                .As(&quot;S&quot;)
-                // QUALIFIERS
-                .On()
-                .OpenParen()
-                .WriteText(qualifiers?
-                        .Select(
-                                field =&gt; field.AsJoinQualifier(&quot;S&quot;, &quot;T&quot;))
-                                        .Join($&quot; {StringConstant.And.ToUpper()} &quot;))
-                .CloseParen()
-                // WHEN NOT MATCHED THEN INSERT VALUES
-                .When()
-                .Not()
-                .Matched()
-                .Then()
-                .Insert()
-                .OpenParen()
-                .FieldsFrom(mergeInsertableFields)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(mergeInsertableFields)
-                .CloseParen()
-                // WHEN MATCHED THEN UPDATE SET
-                .When()
-                .Matched()
-                .Then()
-                .Update()
-                .Set()
-                .FieldsAndAliasFieldsFrom(mergeUpdateableFields, &quot;S&quot;)
-                .End();
-
-        // Return the query
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -773,29 +361,10 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createquery-method">
 <h2>CreateQuery Method<a class="headerlink" href="#createquery-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Query</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateQuery</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-<li><strong>top</strong>: the value that identifies the number of rows to be returned when composing a statement.</li>
-<li><strong>orderBy</strong>: the fields used in the <cite>ORDER BY</cite> when creating a statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateQuery</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null)
         where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Select()
-                .TopFrom(top)
-                .FieldsFrom(Command.Query)
-                .From()
-                .TableFrom(Command.Query)
-                .WhereFrom(where)
-                .OrderByFrom(orderBy)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -803,21 +372,9 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createtruncate-method">
 <h2>CreateTruncate Method<a class="headerlink" href="#createtruncate-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Truncate</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateTruncate</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateTruncate</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateTruncate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        queryBuilder
-                .Clear()
-                .Truncate()
-                .Table()
-                .TableFrom(Command.Delete)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>
@@ -825,27 +382,9 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createupdate-method">
 <h2>CreateUpdate Method<a class="headerlink" href="#createupdate-method" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Update</cite> operation of the repository is being called.</p>
-<p>Below are the arguments of <cite>CreateUpdate</cite> method.</p>
-<ul class="simple">
-<li><strong>queryBuilder</strong>: an instance of query builder used to build the SQL statement.</li>
-<li><strong>where</strong>: the expression used when composing a statement (of type <cite>RepoDb.QueryGroup</cite>).</li>
-</ul>
-<p>See below the actual implementation of <cite>SqlDbStatementBuilder</cite> object for <cite>CreateUpdate</cite> method.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity
 {
-        queryBuilder = queryBuilder ?? new QueryBuilder&lt;TEntity&gt;();
-        var fields = DataEntityExtension.GetPropertiesFor&lt;TEntity&gt;(Command.Update)
-                .Where(property =&gt; property != DataEntityExtension.GetPrimaryProperty&lt;TEntity&gt;())
-                .Select(p =&gt; new Field(p.Name));
-        queryBuilder
-                .Clear()
-                .Update()
-                .TableFrom(Command.Update)
-                .Set()
-                .FieldsAndParametersFrom(fields)
-                .WhereFrom(where)
-                .End();
-        return queryBuilder.GetString();
+        ...
 }
 </pre></div>
 </div>

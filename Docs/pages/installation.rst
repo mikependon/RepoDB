@@ -16,7 +16,7 @@ Once the project is opened, then do the following steps:
 4. In the right side, select the project you wish the library to install to.
 5. Click the `Install` button.
 
-Wait for few seconds until the installation is completed.
+Wait for a few seconds until the installation is completed.
 
 Via Package Manager Console
 ---------------------------
@@ -28,4 +28,4 @@ Once the project is opened, then do the following steps:
 3. In the `Default Project` drop down field, select the project you wish the library to install to.
 4. In the `Package Manager Console`, type the `Install-Package RepoDb`, then press `Enter`.
 
-Wait for few seconds until the installation is completed.
+Wait for a few seconds until the installation is completed.

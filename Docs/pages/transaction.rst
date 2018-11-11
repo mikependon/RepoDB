@@ -1,15 +1,15 @@
 Transaction
 ===========
 
+The library has abstracted the `ADO.NET` transaction object.
+
 .. highlight:: c#
 
-The library has abstracted everything from `ADO.NET` including the `Transaction` object. This means, the `Transaction` object works completely the same as it was with `ADO.NET`.
-
-Transactions can be created by calling the `BeginTransaction` method of the `DbConnection` object.
+BeginTransaction
+----------------
 
 ::
 
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	using (var connection = repository.CreateConnection().EnsureOpen())
 	{
 		var transaction = connection.BeginTransaction();
@@ -27,46 +27,62 @@ Transactions can be created by calling the `BeginTransaction` method of the `DbC
 		}
 	}
 
-Every operation of the repository accepts a transaction object as an argument. Once the `Transaction` object is passed, then the repository operation execution context will be a part of that transaction.
+Using a Transaction
+-------------------
 
-See below on how to use a `Transaction` object with multiple operations.
+Every connection operation accepts a transaction object as an argument. Once the transaction object is passed, the operation execution context will be a part of that transaction.
 
 ::
 
-	var connectionString = @"Server=.;Database=Northwind;Integrated Security=SSPI;";
-	var customerRepository = new CustomerRepository<Customer, SqlConnection>(connectionString);
-	var orderRepository = new OrderRepository<Order, SqlConnection>(connectionString);
-	using (var connection = customerRepository.CreateConnection().EnsureOpen())
+	// Creates a connection object first (better to use 'using' keyword)
+	var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen();
+
+	// Creates a transaction by calling the 'BeginTransaction' method of the connection object
+	var transaction = connection.BeginTransaction();
+
+	// Always wrap with try-catch block
+	try
 	{
-		var transaction = connection.BeginTransaction();
-		try
+		// Call the first operation
+		var customer = new Customer()
 		{
-			var customer = new Customer()
-			{
-				Name = "Anna Fullerton",
-				CreatedDate = DateTime.UtcNow
-			};
-			var customerId = Convert.ToInt32(customerRepository.Insert(customer, transaction: transaction));
-			var order = new Order()
-			{
-				CustomerId = customerId,
-				ProductId = 12,
-				Quantity = 2,
-				CreatedDate = DateTime.UtcNow
-			};
-			var orderId = Convert.ToInt32(orderRepository.Insert(order, transaction: transaction));
-			transaction.Commit();
-		}
-		catch
+			Name = "Anna Fullerton",
+			CreatedDate = DateTime.UtcNow
+		};
+		var customerId = Convert.ToInt32(connection.Insert(customer, transaction: transaction));
+
+		// Call the second operation
+		var affectedRows = connection.ExecuteNonQuery("[dbo].[sp_allocate_customer_orderable_products_by_location]",
+			new { CustomerId = customerId },
+			commandType: CommandType.StoredProcedure,
+			transaction: transaction);
+
+		// Call the third operation
+		if (affectedRows > 0)
 		{
-			transaction.Rollback();
+			connection.ExecuteQuery<OrderableProduct>("[dbo].[sp_get_customer_orderable_products",
+				new { CustomerId = customerId },
+				commandType: CommandType.StoredProcedure,
+				transaction: transaction);
 		}
-		finally
+		else
 		{
-			transaction.Dispose();
+			connection.Delete<Customer>(customerId);
 		}
+
+		// Make sure to commit transaction
+		transaction.Commit();
 	}
+	catch
+	{
+		// Rollback on any exceptions
+		transaction.Rollback();
+	}
+	finally
+	{
+		// Always dispose after used
+		transaction.Dispose();
 
-The code snippets above will first insert a `Customer` record in the database and will return the newly added customer `Id`. It will be followed by inserting the `Order` record with the parent `CustomerId` as part of the entity relationship. Then, the transaction will be committed. However, if any exception occurs during the operation, the transaction will rollback all the operations above.
-
-**Note**: Notice that the transaction object were created via `CustomerRepository` and has been used in both repository afterwards. The library will adapt the transaction process of `ADO.NET`. So whether the transaction object is created via an independent `DbConnection` object, as long as the connection is open, then the operation is valid.
+		// Dispose the connection as well
+		connection.Dispose();
+	}

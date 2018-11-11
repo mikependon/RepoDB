@@ -81,13 +81,13 @@
 <li class="toctree-l1"><a class="reference internal" href="pages/introduction.html">Introduction to RepoDb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/installation.html">Installation Steps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/attributes.html">Property Attributes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/connection.html">Connection Object</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/connectionoperations.html">Connection Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/field.html">Field</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/expressiontree.html">Expression Tree</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pages/querygroup.html">Query Group Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/repositoryoperations.html">Repository Operations</a></li>
@@ -186,47 +186,61 @@
 <li class="toctree-l2"><a class="reference internal" href="pages/attributes.html#ignore-attribute">Ignore Attribute</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/multiplemapping.html">Multiple Entity Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/typemapping.html">Type Mapping</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/connection.html">Connection Object</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#creating-a-connection">Creating a Connection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#createcommand-method">CreateCommand Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#ensureopen-method">EnsureOpen Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#working-with-storedprocedure">Working with StoredProcedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#batchquery">BatchQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#bulkinsert">BulkInsert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#count">Count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#createcommand">CreateCommand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#delete">Delete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#deleteall">DeleteAll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#ensureopen">EnsureOpen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#executenonquery">ExecuteNonQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#executequery">ExecuteQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#executereader">ExecuteReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#executescalar">ExecuteScalar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#inlineinsert">InlineInsert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#inlinemerge">InlineMerge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#inlineupdate">InlineUpdate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#insert">Insert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#merge">Merge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#query">Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#truncate">Truncate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/connection.html#update">Update</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/connectionoperations.html">Connection Operations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#batchquery-operation">BatchQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#bulkinsert-operation">BulkInsert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#count-operation">Count Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#delete-operation">Delete Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#deleteall-operation">DeleteAll Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#executenonquery-operation">ExecuteNonQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#executequery-operation">ExecuteQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#executereader-operation">ExecuteReader Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#executescalar-operation">ExecuteScalar Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#inlineinsert-operation">InlineInsert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#inlinemerge-operation">InlineMerge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#inlineupdate-operation">InlineUpdate Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#insert-operation">Insert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#merge-operation">Merge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#query-operation">Query Operation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pages/connectionoperations.html#ordering-the-result">Ordering the Result</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pages/connectionoperations.html#limiting-the-query-result">Limiting the Query Result</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/field.html">Field</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#creating-a-new-instance">Creating a new Instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#asenumerable">AsEnumerable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#from">From</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#parse-via-expression">Parse (via Expression)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#parse-via-object">Parse (via Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/field.html#usage-of-field">Usage of Field</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#truncate-operation">Truncate Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/connectionoperations.html#update-operation">Update Operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/orderfield.html">OrderField</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#creating-a-new-instance">Creating a new Instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#asenumerable">AsEnumerable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#ascending">Ascending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#descending">Descending</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#parse-via-expression">Parse (via Expression)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#parse-via-object">Parse (via Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/orderfield.html#usage-of-orderfield">Usage of OrderField</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/transaction.html">Transaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/transaction.html">Transaction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/transaction.html#begintransaction">BeginTransaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/transaction.html#using-a-transaction">Using a Transaction</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="pages/expressiontree.html">Expression Tree</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/expressiontree.html#explicit-expression">Explicit Expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/expressiontree.html#dynamic-expression">Dynamic Expression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/expressiontree.html#explicit">Explicit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/expressiontree.html#dynamic">Dynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/expressiontree.html#linq">Linq</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/querygroup.html">Query Group Expressions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/querygroup.html#query-operations">Query Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/querygroup.html">QueryGroup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/querygroup.html#operations">Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/querygroup.html#operation-equal">Operation.Equal</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/querygroup.html#operation-notequal">Operation.NotEqual</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/querygroup.html#operation-lessthan">Operation.LessThan</a></li>
@@ -253,29 +267,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pages/connectionpersistency.html#instance-persistency">Instance Persistency</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pages/repositoryoperations.html">Repository Operations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#batchquery-operation">BatchQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#bulkinsert-operation">BulkInsert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#count-operation">Count Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#delete-operation">Delete Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#deleteall-operation">DeleteAll Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#executenonquery-operation">ExecuteNonQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#executequery-operation">ExecuteQuery Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#executescalar-operation">ExecuteScalar Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#inlineinsert-operation">InlineInsert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#inlinemerge-operation">InlineMerge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#inlineupdate-operation">InlineUpdate Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#insert-operation">Insert Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#merge-operation">Merge Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#query-operation">Query Operation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pages/repositoryoperations.html#ordering-the-result">Ordering the Result</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pages/repositoryoperations.html#limiting-the-query-result">Limiting the Query Result</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#truncate-operation">Truncate Operation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pages/repositoryoperations.html#update-operation">Update Operation</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/repositoryoperations.html">Repository Operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pages/cache.html">Working with Cache</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pages/cache.html#creating-a-cache-entry">Creating a Cache Entry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pages/cache.html#checking-a-cache-entry">Checking a Cache Entry</a></li>

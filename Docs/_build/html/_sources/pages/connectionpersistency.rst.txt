@@ -5,10 +5,6 @@ Connection Persistency
 
 A connection persistency is flag that is being used by the repository object when it comes to the database connection object persistency. When creating a repository, the value can be passed in the constructor.
 
-The value is residing at `RepoDb.Enumerations.ConnectionPersistency` enumeration.
-
-Below is a sample code to pass the connection persistency value.
-
 ::
 
 	using (var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", ConnectionPersistency.Instance))
@@ -22,8 +18,6 @@ PerCall Persistency
 .. highlight:: c#
 
 A new instance of a connection is being `Instantiated` and `Disposed` on every call of the repository operation. This is the default persistency value of the repository.
-
-See sample codes below.
 
 ::
 
@@ -69,8 +63,6 @@ Instance Persistency
 --------------------
 
 A single connection object is being used until the lifetime of the repository. Repository lifetime is of until the `Dispose` method has been called.
-
-See sample codes below.
 
 ::
 

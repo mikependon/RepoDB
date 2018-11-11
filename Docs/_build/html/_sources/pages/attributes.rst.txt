@@ -1,7 +1,7 @@
 Property Attributes
 ===================
 
-The library supports different attributes to support the custom implementation as per scenario basis.
+The library contains certain attributes to support the custom implementation as per scenario basis.
 
 Map Attribute
 -------------

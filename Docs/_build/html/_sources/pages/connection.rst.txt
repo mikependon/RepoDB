@@ -1,34 +1,119 @@
 Connection Object
 =================
 
-.. highlight:: c#
-
 The library has abstracted everything from `ADO.NET` when it comes to the connection object.
 
-Creating a Connection
----------------------
+BatchQuery
+----------
 
-Via repository:
+Query the data from the database by batch.
+
+.. highlight:: c#
+
+Dynamic way:
 
 ::
 
-	var repository = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen();
-	using (var connection = repository.CreateConnection().EnsureOpen())
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		// Use the connection here
+		connection.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
 	}
 
-Or, the traditional way:
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.BatchQuery<Order>(o => o.CustomerId == 10045, 0, 24);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.BatchQuery<Order>(new QueryField(nameof(Order.CustomerId), 10045), 0, 24);
+	}
+
+BulkInsert
+----------
+
+Bulk-inserting the list of data entity objects in the database.
+
+.. highlight:: c#
+
+Let us say a variable named `orders` is present, which is an enumerable of data entity.
+
+::
+
+	var orders = new List<Order>();
+
+From there, a data entity record can be added.
+
+::
+
+	orders.Add(new Order()
+	{
+		Quantity = 2,
+		ProductId = 12,
+		CreatedDate = DateTime.UtcNow,
+		UpdatedDate = DateTime.UtcNow
+	});
+
+Then simply call the `BulkInsert` operation, passing the enumerable object of the data entity.
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		// Use the connection here
+		var affectedRows = connection.BulkInsert<Order>(entities);
 	}
 
-CreateCommand Method
---------------------
+The result would be the number for rows affected by the `BulkInsert` in the database.
+
+Count
+-----
+
+Counts the number of rows from the database.
+
+.. highlight:: c#
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Count<Order>(new { Id >= 1000, CreatedDate >= DateTime.UtcNow.Date.AddMonths(-1) });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.Count<Order>(o => o.Id >= 1000 && o.CreatedDate >= DateTime.UtcNow.Date.AddMonths(-1) });
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var queryGroup = new QueryGroup(new []
+		{
+			new QueryField(nameof(Order.Id), Operation.GreaterThan, 1000),
+			new QueryField(nameof(Order.CreatedDate), Operation.GreaterThan, DateTime.UtcNow.Date.AddMonths(-1)),
+		});
+		connection.Count<Order>(queryGroup);
+	}
+
+CreateCommand
+-------------
 
 .. highlight:: c#
 
@@ -48,12 +133,83 @@ Creates a command object.
 		// Use the command object here
 	}
 
-EnsureOpen Method
------------------
+Delete
+------
+
+Deletes a data in the database based on the given query expression.
 
 .. highlight:: c#
 
-Is used to ensure that the connection object is in `Open`.
+Via data entity:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = GetCustomer(1005);
+		var affectedRows = connection.Delete<Customer>(customer);
+	}
+
+Via PrimaryKey:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete<Customer>(1005);
+	}
+	
+Deleting a data entity without a primary key will throw a `PrimaryFieldNotFoundException` exception.
+
+**Note**: By leaving the `WHERE` parameter to blank would delete all records. Exactly the same as `DeleteAll` operation.
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete<Customer>(new { Id = 1005 });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete<Customer>(c => c.Id == 1005);
+	}
+	
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 1005));
+	}
+
+DeleteAll
+---------
+
+Deletes all records from the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.DeleteAll<Customer>();
+	}
+
+EnsureOpen
+----------
+
+.. highlight:: c#
+
+Ensure that the connection object is on open state.
 
 ::
 
@@ -61,101 +217,482 @@ Is used to ensure that the connection object is in `Open`.
 	{
 		// Use the connection here
 	}
-
-Working with StoredProcedure
-----------------------------
+	
+ExecuteNonQuery
+---------------
 
 .. highlight:: c#
 
-Calling a stored procedure is a simple as executing any SQL Statements via repository, and by setting the `CommandType` to `StoredProcedure`.
-
-Say a Stored Procedure below exists in the database.
-
-.. highlight:: sql
+Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteNonQuery` and returns the number of affected rows during the execution.
 
 ::
 
-	DROP PROCEDURE IF EXISTS [dbo].[sp_GetCustomer];
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = @"UPDATE O
+			SET O.Quantity = @Quantity
+				, O.LastUpdatedUtc = @LastUpdatedUtc
+			FROM [dbo].[Order] O
+			WHERE (O.Id = @OrderId);";
+		var parameters = new
+		{
+			OrderId = 1002,
+			Quantity = 5,
+			LastUpdatedUtc = DateTime.UtcNow
+		};
+		var result = connection.ExecuteNonQuery(commandText, parameters);
+	}
+
+Let us say the stored procedure below exists.
+
+.. code-block:: sql
+	:linenos:
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_update_order_quantity];
 	GO
 
-	CREATE PROCEDURE [dbo].[sp_GetCustomer]
+	CREATE PROCEDURE [dbo].[sp_update_order_quantity]
 	(
-		@Id BIGINT
+		@OrderId INT
+		, @Quantity INT
 	)
 	AS
 	BEGIN
-
-		SELECT Id
-			, Name
-			, Title
-			, UpdatedDate
-			, CreatedDate
-		FROM [dbo].[Customer]
-		WHERE (Id = @Id);
-
+		UPDATE O
+		SET O.Quantity = @Quantity
+			, O.LastUpdatedUtc = GETUTCDATE()
+		FROM [dbo].[Order] O
+		WHERE (O.Id = @OrderId);
 	END
+
+Below is the code on how to execute a stored procedure mentioned above:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var parameters = new
+		{
+			OrderId = 1002,
+			Quantity = 5,
+			LastUpdatedUtc = DateTime.UtcNow
+		};
+		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
+	}
+
+ExecuteQuery
+------------
+
+Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteReader` and converts the result back to an enumerable list of dynamic objects.
 
 .. highlight:: c#
 
-Below is the way on how to call the Stored Procedure.
-
-Calling via `Repository.ExecuteQuery`.
-
-::
-
-	var repository = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen();
-	var customers = repository.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
-	customers
-		.ToList()
-		.ForEach(customer =>
-		{
-			// Process each customer here
-		});
-
-Or, in a tradional way with independent `SqlConnection` object extended method.
-
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.ExecuteQuery<Customer>("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
-		customers
-			.ToList()
-			.ForEach(customer =>
-			{
-				// Process each customer here
-			});
+		var commandText = @"SELECT * FROM [dbo].[Customer] WHERE CustomerId = @CustomerId;";
+		var result = connection.ExecuteQuery<Order>(commandText, new { CustomerId = 10045 });
 	}
 
-Or, via independent `SqlConnection` object extended `ExecuteQuery` method that returns the list of `dynamic` objects.
+Let us say the stored procedure below exists.
+
+.. code-block:: sql
+	:linenos:
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_get_customer];
+	GO
+
+	CREATE PROCEDURE [dbo].[sp_get_customer]
+	(
+		@CustomerId INT
+	)
+	AS
+	BEGIN
+		SELECT *
+		FROM [dbo].[Customer] C
+		WHERE (C.Id = @CustomerId);
+	END
+
+Below is the code on how to execute a stored procedure mentioned above:
 
 ::
-	
+
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.ExecuteQuery("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure);
-		customers
-			.ToList()
-			.ForEach(customer =>
-			{
-				// Process each customer here
-			});
+		var result = connection.ExecuteNonQuery("[dbo].[sp_get_customer]",
+			new { CustomerId = 10045 },
+			commandType: CommandType.StoredProcedure);
 	}
 
+ExecuteReader
+-------------
 
-Or, in a tradional way with independent `SqlConnection` object extended method.
+Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteReader` and returns the instance of the data reader.
+
+.. highlight:: c#
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		using (var reader = connection.ExecuteReader("[dbo].[sp_GetCustomer]", new { Id = 10045 }, commandType: CommandType.StoredProcedure))
+		using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer] WHERE CustomerId = @CustomerId;", new { CustomerId = 10045 }))
 		{
-			while (reader.Read())
-			{
-				// Process each row here
-			}
+			// Use the data reader here
 		}
 	}
 
-**Note**: The multiple mapping also supports the Stored Procedure by binding it to the `DataEntity` object.
+Let us say the stored procedure below exists.
+
+.. code-block:: sql
+	:linenos:
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_get_customer];
+	GO
+
+	CREATE PROCEDURE [dbo].[sp_get_customer]
+	(
+		@CustomerId INT
+	)
+	AS
+	BEGIN
+		SELECT *
+		FROM [dbo].[Customer] C
+		WHERE (C.Id = @CustomerId);
+	END
+
+Below is the code on how to execute a stored procedure mentioned above:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		using (var reader = connection.ExecuteReader("[dbo].[sp_get_customer]", new { CustomerId = 10045 }, commandType: CommandType.StoredProcedure))
+		{
+			// Use the data reader here
+		}
+	}
+
+ExecuteScalar
+-------------
+
+Executes a query from the database. It uses the underlying method `IDbCommand.ExecuteScalar` and returns the first occurence value (first column of first row) of the execution.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var maxId = connection.ExecuteScalar("SELECT MAX([Id]) AS MaxId FROM [dbo].[Customer];");
+	}
+	
+Let us say the stored procedure below exists.
+
+.. code-block:: sql
+	:linenos:
+
+	DROP PROCEDURE IF EXISTS [dbo].[sp_get_latest_customer_id];
+	GO
+
+	CREATE PROCEDURE [dbo].[sp_get_latest_customer_id]
+	AS
+	BEGIN
+		SELECT MAX(Id) FROM [dbo].[Customer];
+	END
+
+Below is the code on how to execute a stored procedure mentioned above:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var maxId = connection.ExecuteReader("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
+	}
+
+InlineInsert
+------------
+
+Inserts a data in the database by targetting certain fields only.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Not really an order object, instead, it is a dynamic object
+		var entity = new
+		{
+			CustomerId = 10045,
+			ProductId = 35,
+			Quantity = 5,
+			CreatedDate = DateTime.UtcNow
+		};
+
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineInsert<Order>(entity);
+	}
+
+InlineMerge
+-----------
+
+Merges a data in the database by targetting certain fields only.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Not really an order object, instead, it is a dynamic object
+		var entity = new
+		{
+			Id = 1002,
+			CustomerId = 10045,
+			ProductId = 35,
+			Quantity = 5,
+			CreatedDate = DateTime.UtcNow
+		};
+
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineMerge<Order>(entity, new []
+		{
+			Field.Parse<Order>(o => o.Id),
+			Field.Parse<Order>(o => o.CustomerId)
+		});
+	}
+
+In the second parameter, the `Field.From` method can also be used.
+
+::
+	
+	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id), nameof(Order.CustomerId)));
+
+Or, a literal array of string can be used as well.
+
+::
+
+	var id = connection.InlineMerge<Order>(entity, Field.From("Id", "CustomerId"));
+
+The second parameter can be omitted if the data entity has a primary key.
+
+InlineUpdate
+------------
+
+Updates a data in the database by targetting certain fields only.
+
+.. highlight:: c#
+
+Let us say a dynamic entity is defined.
+
+::
+
+	// Not really an order object, instead, it is a dynamic object
+	var entity = new
+	{
+		Name = "Anna Fullerton",
+		UpdatedDate = DateTime.UtcNow
+	};
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineUpdate<Customer>(entity, new { Id = 10045 });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineUpdate<Customer>(entity, o => o.Id == 10045);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineUpdate<Customer>(entity, new QueryField(nameof(Customer.Id), 10045));
+	}
+
+Insert
+------
+
+Inserts a data in the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var order = new Order()
+		{
+			CustomerId = 10045,
+			ProductId = 12
+			Quantity = 2,
+			CreatedDate = DateTime.UtcNow
+		};
+		connection.Insert(order);
+	}
+
+Merge
+-----
+
+Merges an existing data entity object in the database. By default, this operation uses the primary key property as the qualifier.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var order = connection.Query<Order>(1);
+		order.Quantity = 5;
+		UpdatedDate = DateTime.UtcNow;
+		connection.Merge(order, Field.Parse<Order>(o => o.Id));
+	}
+
+In the second parameter, the `Field.From` method can also be used.
+
+::
+	
+	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id)));
+
+Or, a literal array of string can be used as well.
+
+::
+
+	var id = connection.InlineMerge<Order>(entity, Field.From("Id"));
+
+Query
+-----
+
+Query a data from the database.
+
+.. highlight:: c#
+
+Via primary key:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.Query<Customer>(10045).FirstOrDefault();
+	}
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>(new { Id = 10045 });
+	}
+	
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>(c => c.Id == 10045);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customers = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
+	}
+
+Truncate
+--------
+
+Truncates a table from the database.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.Truncate<Customer>();
+	}
+
+Update
+------
+
+Updates a data in the database based on the given query expression.
+
+.. highlight:: c#
+
+Let us say an `Order` object was queried from the database.
+
+::
+	
+		// Query a data from the database
+		var order = connection.Query<Order>(1002).FirstOrDefault();
+
+		// Set the target properties
+		order.Quantity = 5;
+		order.UpdateDate = DateTime.UtcNow;
+
+Via data entity:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update(order);
+	}
+
+Note: This call will throw an exception if the data entity does not have a primary key.
+
+Via primary key:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update(order, 1002);
+	}
+
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update(order, new { Id = 1002 });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update(order, o => o.Id == 1002);
+	}
+
+Explicit way:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update(order, new QueryField(nameof(Order.Id), 1002));
+	}

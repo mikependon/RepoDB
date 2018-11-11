@@ -165,50 +165,7 @@ Below is the way on how to create a custom `Cache` object.
 
 	public class FileCache : ICache
 	{
-		public FileCache(string location)
-		{
-			// Add a logic on the constructor
-		}
-
-		public void Add(string key, object value)
-		{
-			// Serialize to a File
-		}
-
-		public void Add(CacheItem item)
-		{
-			// Serialize to a File
-		}
-
-		public void Clear()
-		{
-			// Delete the Files
-		}
-
-		public bool Contains(string key)
-		{
-			// Check if the Filename exists by Key
-		}
-
-		public CacheItem Get(string key)
-		{
-			// Deserialize the File where the FileName is equals to Key, return the object
-		}
-
-		public IEnumerator<CacheItem> GetEnumerator()
-		{
-			// Get the File.ParentFolder.Files enumerator and deserialize each file
-		}
-
-		public void Remove(string key)
-		{
-			// Delete the File where the FileName is equals to Key
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			// Get the File.ParentFolder.Files enumerator and deserialize each file
-		}
+		...
 	}
 
 The snippets above creates a class named `FileCache` that implements the `ICache` interfaces. By implementing the said interface, the class is now qualified to become a library `Cache` object.
@@ -218,7 +175,7 @@ Below is the way on how to inject the custom `Cache` object to a repository.
 ::
 
 	var fileCache = new FileCache();
-	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;",fileCache);
+	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;", fileCache);
 
 Upon creating a repository, the `fileCache` variable is being passed in the `cache` parameter. This signals the repository to use the `FileCache` class as the `Cache` object manager of the `Query` operation.
 

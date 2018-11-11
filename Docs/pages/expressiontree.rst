@@ -1,54 +1,21 @@
 Expression Tree
 ===============
 
+Expression tree is used to define an expression when calling the connection operations.
+
+Explicit
+--------
+
+An explicit (or often known as object-based) query expression are using the defined objects:
+
+- RepoDb.QueryGroup
+- RepoDb.QueryField
+- RepoDb.Enumerations.Conjunction
+- RepoDb.Enumerations.Operation
+
 .. highlight:: c#
 
-The expression tree is the brain of the library. It defines the best possible way of doing a `WHERE` expression (SQL Statement) by composing it via `dynamic` or `RepoDb.QueryGroup` objects.
-
-Objects used for composing the expression tree.
-
-- **QueryGroup**: used to group an expression.
-- **QueryField**: it holds the `Field` and `Parameter` objects to be used on the query expressions.
-- **Conjunction**: an enumeration that holds the value whether the expression is on `And` or `Or` operation.
-- **Operation**: an enumeration that holds the value what kind of operation is going to be executed on certain expression. It holds the value of like `Equal`, `NotEqual`, `Between`, `GreaterThan` and etc.
-
-Certain repository operations are using the expression trees.
-
-- Repository.BatchQuery
-- Repository.Count
-- Repository.Delete
-- Repository.ExecuteNonQuery
-- Repository.ExecuteQuery
-- Repository.ExecuteScalar
-- Repository.InlineInsert
-- Repository.InlineMerge
-- Repository.InlineUpdate
-- Repository.Query
-- Repository.Update
-
-Certain connection extension methods are using the expression trees.
-
-- DbConnection.BatchQuery
-- DbConnection.Count
-- DbConnection.Delete
-- DbConnection.ExecuteNonQuery
-- DbConnection.ExecuteQuery
-- DbConnection.ExecuteReader
-- DbConnection.ExecuteScalar
-- DbConnection.InlineInsert
-- DbConnection.InlineMerge
-- DbConnection.InlineUpdate
-- DbConnection.Query
-- DbConnection.Update
-
-There are two ways of building the expression trees, the explicit way by using `QueryGroup` objects and dynamic way by using `dynamic` objects.
-
-Explicit Expression
--------------------
-
-An explicit query expression are using the defined objects `RepoDb.QueryGroup`, `RepoDb.QueryField`, `RepoDb.Enumerations.Conjunction` and `RepoDb.Enumerations.Operation` when composing the expression.
-
-Below is a pseudo code of explicit query expression.
+Below is a pseudo code of an explicit query expression.
 
 ::
 
@@ -105,21 +72,21 @@ Actual explicit query tree expression.
 	(
 		new []
 		{
-			new QueryField("CustomerId", Operation.GreaterThanOrEqual, 10045),
+			new QueryField("Id", Operation.GreaterThanOrEqual, 10045),
 			new QueryField("CreatedDate", Operation.GreaterThanOrEqual, DateTime.UtcNow.Date.AddMonths(-3))
 		},
 		null, // Child QueryGroups
 		Conjunction.And
 	);
 
-Dynamic Expression
-------------------
+Dynamic
+-------
+
+A dynamic (or often known as dynamic-based) query expression is using a single dynamic object when composing the expression.
+
+Below is a pseudo code of a dynamic query expression.
 
 .. highlight:: c#
-
-A dynamic query expression is using a single dynamic object when composing the expression.
-
-Below is a pseudo code of dynamic query expression.
 
 ::
 
@@ -160,6 +127,23 @@ Actual dynamic query tree expression.
 	// Last 3 months customer with CustomerId >= 10045
 	var query = new
 	{
-		CustomerId = new { Operation = 10045 },
+		Id = new { Operation = Operation.GreaterThanOrEqual, Value = 10045 },
 		CreatedDate = new { Operation = Operation.GreaterThanOrEqual, DateTime.UtcNow.Date.AddMonths(-3) }
 	};
+
+Linq
+----
+
+A Linq query expression (or often known as expression-based) is used as a function-based-expression to construct an expression. It requires a data entity type to compose an expression.
+
+For the pseudo codes, please refer to Microsoft `documentation <https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/>`_.
+
+Actual explicit query tree expression.
+
+::
+
+	// Last 3 months customer with CustomerId >= 10045
+	<Customer>(c => c.Id >= 10045 && CreatedDate >= DateTime.UtcNow.Date.AddMonths(-3))
+
+
+
