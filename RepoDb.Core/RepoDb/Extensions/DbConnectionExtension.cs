@@ -2868,7 +2868,7 @@ namespace RepoDb
 
                     // Set the context with the given keys
                     list.ToList().ForEach(item => item.Key = parentFieldProperty.GetValue(item.DataEntity));
-                    var context = new QueryGroup(new QueryField(childFieldName, Operation.In, list.Select(item => item.Key).ToArray().Distinct()).AsEnumerable());
+                    var context = new QueryGroup(new QueryField(childFieldName, Operation.In, list.Select(item => item.Key).Distinct().ToArray()).AsEnumerable());
 
                     // Parameters
                     var parameters = new object[]
