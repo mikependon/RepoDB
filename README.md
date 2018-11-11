@@ -38,7 +38,7 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Transactions
  - Type Mapping
 
-### Codes
+## Code Samples
 
 Let us say you have a customer class named `Customer` that has an equivalent table in the database.
 
