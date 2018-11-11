@@ -67,7 +67,7 @@ Expression:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(c => c.Id = 1005);
+		var customer = connection.Query<Customer>(c => c.Id == 1005);
 	}
 
 Object-Based:
@@ -76,6 +76,15 @@ Object-Based:
 	{
 		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 1005));
 	}
+
+The expressions can also be used on the following operations:
+
+ - BatchQuery
+ - Count
+ - Delete
+ - InlineMerge
+ - InlineUpdate
+ - Update
 
 **ExecuteQuery**
 
@@ -167,7 +176,6 @@ Using the complex type above. If you have a stored procedure like below.
 
 Then it can be called as below.
 
-	
 Dynamics:
 
 	using (var connection = new SqlConnection(ConnectionString))
