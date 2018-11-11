@@ -17,6 +17,7 @@ RepoDb Documentation
    pages/repository
    pages/connectionpersistency
    pages/repositoryoperations
+   pages/recursive
    pages/cache
    pages/trace
    pages/statementbuilder

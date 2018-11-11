@@ -85,8 +85,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#map-attribute">Map Attribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#primary-attribute">Primary Attribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identity-attribute">Identity Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dbtype-attribute">DbType Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typemap-attribute">TypeMap Attribute</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foreign-attribute">Foreign Attribute</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
@@ -99,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive Query</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
 <li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
 <li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
@@ -220,8 +222,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dbtype-attribute">
-<h2>DbType Attribute<a class="headerlink" href="#dbtype-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="typemap-attribute">
+<h2>TypeMap Attribute<a class="headerlink" href="#typemap-attribute" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define a property-level mapping of database type.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
@@ -282,6 +284,28 @@
 </ul>
 <p>All commands specified above can be defined together in a single <cite>IgnoreAttribute</cite> by using the pipe character (<cite>|</cite>) as the separator.</p>
 <p><strong>Note</strong>: The <cite>RepoDb</cite> is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.</p>
+</div>
+<div class="section" id="foreign-attribute">
+<h2>Foreign Attribute<a class="headerlink" href="#foreign-attribute" title="Permalink to this headline">¶</a></h2>
+<p>An attribute used to define a foreign relationship for the recursive property of the data entity object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Order</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">CustomerId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Quantity</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">OrderDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">OrderItem</span><span class="p">&gt;</span> <span class="n">OrderItems</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="na">        [Foreign(&quot;CustomerId&quot;)]</span> <span class="c1">// Here, we are referring that the Order has a CustomerId property</span>
+        <span class="k">public</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;</span> <span class="n">Orders</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
