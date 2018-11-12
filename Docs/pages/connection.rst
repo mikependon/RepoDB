@@ -86,7 +86,7 @@ Dynamic way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.Count<Order>(new { Id >= 1000, CreatedDate >= DateTime.UtcNow.Date.AddMonths(-1) });
+		connection.Count<Order>(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 1000 }, CreatedDate = new { Operation = Operation.GreaterThanOrEqual, Value = DateTime.UtcNow.Date.AddMonths(-1) }});
 	}
 
 Expression way:
@@ -488,7 +488,7 @@ Let us say a dynamic entity is defined.
 
 ::
 
-	// Not really an order object, instead, it is a dynamic object
+	// Not really an Customer object, instead, it is a dynamic object
 	var entity = new
 	{
 		Name = "Anna Fullerton",
