@@ -1,10 +1,10 @@
-Recursive Query
-===============
+Recursive
+=========
 
 A recursive query is used to auto-mapped a child-referenced objects into the current target objects.
 
-Recursive Manager
------------------
+RecursiveManager
+----------------
 
 A manager class for recursive query. Full namespace at `RepoDb.RecursiveManager`. Below is the definition.
 
@@ -23,8 +23,8 @@ RecursiveQueryBatchCount
 
 The batches count used by the repository (recursive query) operation. The default value is equals to `Constant.DefaultRecursiveQueryBatchCount` value.
 
-Setting a Batch
----------------
+SetRecursiveQueryBatchCount
+---------------------------
 
 Call the `RecursiveManager.SetRecursiveQueryBatchCount()` method.
 
@@ -39,8 +39,8 @@ RecursiveQueryMaxRecursion
 
 The maximum recursion that the repository (recursion depth) can execute. The default value is equals to `Constant.DefaultRecursiveQueryMaxRecursion` value.
 
-Setting a Recursion
--------------------
+SetRecursiveMaximumRecursion
+----------------------------
 
 Call the `RecursiveManager.SetRecursiveMaximumRecursion()` method.
 
@@ -203,7 +203,6 @@ With the use of `Foreign` attribute, we can traverse the parent data entity obje
 		public string Name { get; set; }
 		public IEnumerable<Order> Orders { get; set; }
 	}
-
 
 
 

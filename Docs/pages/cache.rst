@@ -1,39 +1,9 @@
-Working with Cache
-==================
+Cache
+=====
 
 .. highlight:: c#
 
-The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. Given the name itself, the library only works with memory caching by default. A cache is only working on `Query` operation of the repository.
-
-A cache key is important in order for the caching to cache the object. It should be unique to every cache item.
-
-Below are the methods of `Cache` object.
-
-- **Add**: accepts an `item` or a `key` and `value` pair parameters. It adds an item to the `Cache` object. If an item is already existing, the item will be overriden.
-- **Clear**: clear all items from the cache.
-- **Contains**: accepts a `key` parameter. Checks whether the `Cache` object contains an item with the defined key.
-- **Get**: accepts a `key` parameter. Returns a cached item object.
-- **GetEnumerator**: returns an enumerator for `IEnumerable<CacheItem>` objects. It contains all the cached items from the `Cache` object.
-- **Remove**: accepts a `key` parameter. Removes an entry from the `Cache` object.
-
-One important object when manipulating a cache is the `CacheItem` object (implements `RepoDb.CacheItem`). It acts as the cache item entry for the cache object. The default expiration of the `CacheItem` is 180 minutes.
-
-Below are the constructor arguments of the `CacheItem` object.
-
-- **key**: the key of the cache.
-- **value**: the value object of the cache.
-- **expirationInMinutes**: The expiration in minutes of the cache item.
-
-Below are the properties of `CacheItem` object.
-
-- **Key**: the key of the cache. It returns a `System.String` type.
-- **Value**: the cached object of the item. It returns a `System.Object` type. It can be casted back to a defined object type.
-- **CreatedDate**: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a `System.DateTime` object.
-- **Expiration**: the expiration date of this cache item. It returns a `System.DateTime` object.
-
-Below are the methods of `CacheItem` object.
-
-- **IsExpired**: Checks whether the cached item is expired. It returns a `System.Boolean` value.
+The library supports caching when querying a data from the database. By the default, the `RepoDb.MemoryCache` is being used by the library. A cache is only working on `Query` operation of the repository.
 
 The repository caching operation is of the `pseudo` below.
 
@@ -56,8 +26,8 @@ The repository caching operation is of the `pseudo` below.
 	END IF
 	RETURN $result
 
-Creating a Cache Entry
-----------------------
+Creation
+--------
 
 The snippets below declared a variable named `cacheKey`. The value of this variable acts as the key value of the items to be cached by the repository.
 
@@ -81,8 +51,8 @@ Codes below will return the same result as above assuming the same repository ob
 
 	var customers = (IEnumerable<Customer>)repository.Cache.Get("CacheKey.Customers.StartsWith.Anna").Value;
 
-Checking a Cache Entry
-----------------------
+Contains
+--------
 
 .. highlight:: c#
 
@@ -92,8 +62,8 @@ Code below is the way on how to check if the cached item is present on the `Cach
 
 	var isExists = repository.Cache.Contains("CacheKey");
 
-Checking a Cache Expiration
----------------------------
+IsExpired
+---------
 
 .. highlight:: c#
 
@@ -103,8 +73,8 @@ Code below is the way on how to check if the cached item is expired already, ass
 
 	var isExpired = repository.Cache.Get("CacheKey").IsExpired();
 
-Setting the Cache Expiration
-----------------------------
+Expiration
+----------
 
 .. highlight:: c#
 
@@ -112,10 +82,12 @@ Code below is the way on how to set cached item is expiration, assuming that a r
 
 ::
 
-	repository.Cache.Get("CacheKey").Expiration = DateTime.UtcNow.Date.AddHours(3);
+	repository.Cache.Get("CacheKey").Expiration = DateTime.UtcNow.Date.AddHours(5);
 
-Iterating the Cache Entries
----------------------------
+The default expiration of the `CacheItem` is 180 minutes.
+
+Iteration
+---------
 
 .. highlight:: c#
 
@@ -130,8 +102,8 @@ Code below is the way on how to retrieve or iterate all the cached items from th
 		// Process the item here
 	}
 
-Removing or Clearing a Cache
-----------------------------
+Remove
+------
 
 .. highlight:: c#
 
@@ -152,8 +124,8 @@ Below is the way to remove specific cache item.
 	repository.Cache.Remove("CacheKey");
 
 
-Injecting a Custom Cache Object
--------------------------------
+ICache
+------
 
 .. highlight:: c#
 

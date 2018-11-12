@@ -1,5 +1,5 @@
-Connection Object
-=================
+Connection
+==========
 
 The library has abstracted everything from `ADO.NET` when it comes to the connection object.
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Property Attributes &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Attributes &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Type Mapping" href="typemapping.html" />
-    <link rel="prev" title="Installation Steps" href="installation.html" /> 
+    <link rel="prev" title="Installation" href="installation.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,33 +79,33 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Property Attributes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#map-attribute">Map Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#primary-attribute">Primary Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#identity-attribute">Identity Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#typemap-attribute">TypeMap Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ignore-attribute">Ignore Attribute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#foreign-attribute">Foreign Attribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Attributes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#map">Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primary">Primary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#identity">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#typemap">TypeMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ignore">Ignore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#foreign">Foreign</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
-<li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
-<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
@@ -153,7 +153,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Property Attributes</li>
+      <li>Attributes</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -172,11 +172,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="property-attributes">
-<h1>Property Attributes<a class="headerlink" href="#property-attributes" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="attributes">
+<h1>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h1>
 <p>The library contains certain attributes to support the custom implementation as per scenario basis.</p>
-<div class="section" id="map-attribute">
-<h2>Map Attribute<a class="headerlink" href="#map-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="map">
+<h2>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h2>
 <p>Is used to map an equivalent object from the database.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Customer</span><span class="p">]</span><span class="s">&quot;)]</span>
 <span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
@@ -193,8 +193,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="primary-attribute">
-<h2>Primary Attribute<a class="headerlink" href="#primary-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="primary">
+<h2>Primary<a class="headerlink" href="#primary" title="Permalink to this headline">¶</a></h2>
 <p>Used to define a primary key from the class object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
@@ -211,8 +211,8 @@
 </ol>
 <p>If all of the conditions above were not met, then the <cite>DataEntity</cite> will have no primary property. It somehow fails if the repository operation of like <cite>Delete</cite> and <cite>Update</cite> has been called without explicitly specifying the expressions for the <cite>WHERE</cite> parameter.</p>
 </div>
-<div class="section" id="identity-attribute">
-<h2>Identity Attribute<a class="headerlink" href="#identity-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="identity">
+<h2>Identity<a class="headerlink" href="#identity" title="Permalink to this headline">¶</a></h2>
 <p>Used to define an identity key from the class object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
@@ -222,8 +222,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="typemap-attribute">
-<h2>TypeMap Attribute<a class="headerlink" href="#typemap-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="typemap">
+<h2>TypeMap<a class="headerlink" href="#typemap" title="Permalink to this headline">¶</a></h2>
 <p>Is used to define a property-level mapping of database type.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
@@ -236,8 +236,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="ignore-attribute">
-<h2>Ignore Attribute<a class="headerlink" href="#ignore-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ignore">
+<h2>Ignore<a class="headerlink" href="#ignore" title="Permalink to this headline">¶</a></h2>
 <p>Is used to ignore certain properties from the actual database operation.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
 <span class="p">{</span>
@@ -285,8 +285,8 @@
 <p>All commands specified above can be defined together in a single <cite>IgnoreAttribute</cite> by using the pipe character (<cite>|</cite>) as the separator.</p>
 <p><strong>Note</strong>: The <cite>RepoDb</cite> is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.</p>
 </div>
-<div class="section" id="foreign-attribute">
-<h2>Foreign Attribute<a class="headerlink" href="#foreign-attribute" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="foreign">
+<h2>Foreign<a class="headerlink" href="#foreign" title="Permalink to this headline">¶</a></h2>
 <p>An attribute used to define a foreign relationship for the recursive property of the data entity object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Order</span>
 <span class="p">{</span>
@@ -320,7 +320,7 @@
         <a href="typemapping.html" class="btn btn-neutral float-right" title="Type Mapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation Steps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

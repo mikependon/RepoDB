@@ -27,8 +27,8 @@ BeginTransaction
 		}
 	}
 
-Using a Transaction
--------------------
+Usability
+---------
 
 Every connection operation accepts a transaction object as an argument. Once the transaction object is passed, the operation execution context will be a part of that transaction.
 

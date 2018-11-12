@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Connection Persistency &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Persistency &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Repository Operations" href="repositoryoperations.html" />
-    <link rel="prev" title="Working with Repository" href="repository.html" /> 
+    <link rel="next" title="Recursive" href="recursive.html" />
+    <link rel="prev" title="Repository" href="repository.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,29 +79,29 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Connection Persistency</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#percall-persistency">PerCall Persistency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#instance-persistency">Instance Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Persistency</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#percall">PerCall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instance">Instance</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
-<li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
-<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
@@ -149,13 +149,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Connection Persistency</li>
+      <li>Persistency</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/pages/connectionpersistency.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/pages/persistency.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -168,8 +168,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="connection-persistency">
-<h1>Connection Persistency<a class="headerlink" href="#connection-persistency" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="persistency">
+<h1>Persistency<a class="headerlink" href="#persistency" title="Permalink to this headline">¶</a></h1>
 <p>A connection persistency is flag that is being used by the repository object when it comes to the database connection object persistency. When creating a repository, the value can be passed in the constructor.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">ConnectionPersistency</span><span class="p">.</span><span class="n">Instance</span><span class="p">))</span>
 <span class="p">{</span>
@@ -177,8 +177,8 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="section" id="percall-persistency">
-<h2>PerCall Persistency<a class="headerlink" href="#percall-persistency" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="percall">
+<h2>PerCall<a class="headerlink" href="#percall" title="Permalink to this headline">¶</a></h2>
 <p>A new instance of a connection is being <cite>Instantiated</cite> and <cite>Disposed</cite> on every call of the repository operation. This is the default persistency value of the repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
 <span class="p">{</span>
@@ -217,8 +217,8 @@
 <p>If every <cite>Customer</cite> object has 2 <cite>Order</cite> records each, then the number of connection created is of total 31 new database connection.</p>
 <p><strong>Note</strong>: It is not necesarry to call the <cite>Dispose</cite> method of the repository if the value of the <cite>ConnectionPersistency</cite> is <cite>PerCall</cite> as the operation is disposing each connection object after use.</p>
 </div>
-<div class="section" id="instance-persistency">
-<h2>Instance Persistency<a class="headerlink" href="#instance-persistency" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="instance">
+<h2>Instance<a class="headerlink" href="#instance" title="Permalink to this headline">¶</a></h2>
 <p>A single connection object is being used until the lifetime of the repository. Repository lifetime is of until the <cite>Dispose</cite> method has been called.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">ConnectionPersistency</span><span class="p">.</span><span class="n">Instance</span><span class="p">))</span>
 <span class="p">{</span>
@@ -263,10 +263,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="repositoryoperations.html" class="btn btn-neutral float-right" title="Repository Operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recursive.html" class="btn btn-neutral float-right" title="Recursive" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="repository.html" class="btn btn-neutral" title="Working with Repository" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="repository.html" class="btn btn-neutral" title="Repository" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

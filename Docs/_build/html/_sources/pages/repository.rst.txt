@@ -1,10 +1,10 @@
-Working with Repository
-=======================
+Repository
+==========
 
 The library contains two repository objects, the `RepoDb.BaseRepository<TEntity, TDbConnection>` and the `RepoDb.DbRepository<TDbConnection>`.
 
-DbRepository Class
-------------------
+DbRepository
+------------
 
 A base object for all shared-based repositories.
 
@@ -41,8 +41,8 @@ Since the repository is shared, the operations within this repository is also sh
 	// Getting all orders of customer 10045
 	var order = repository.Query<Order>(o => o.CustomerId == 10045);
 
-BaseRepository Class
---------------------
+BaseRepository
+--------------
 
 An abstract class for all entity-based repositories.
 
@@ -72,3 +72,10 @@ Since the repository is only for single entity, then it can only be used the tar
 
 	// Getting a customer record where Id = 10045
 	var customer = repository.Query<Customer>(c => c.Id == 10045);
+
+Operations
+----------
+
+All repository operations has abstracted the connection operations (extended methods).
+
+Please refer to `Connection <file:///C:/Users/MichaelP/Source/Repos/GitHub/RepoDb/Docs/_build/html/pages/connection.html>`_ object documentation.

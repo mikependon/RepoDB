@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Expression Tree" href="expressiontree.html" />
-    <link rel="prev" title="OrderField" href="orderfield.html" /> 
+    <link rel="next" title="Expressions" href="expressions.html" />
+    <link rel="prev" title="ExecuteQuery" href="executequery.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,29 +79,29 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Transaction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#begintransaction">BeginTransaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-a-transaction">Using a Transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usability">Usability</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive Query</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cache.html">Working with Cache</a></li>
-<li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
-<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">Cache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
@@ -192,8 +192,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="using-a-transaction">
-<h2>Using a Transaction<a class="headerlink" href="#using-a-transaction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="usability">
+<h2>Usability<a class="headerlink" href="#usability" title="Permalink to this headline">¶</a></h2>
 <p>Every connection operation accepts a transaction object as an argument. Once the transaction object is passed, the operation execution context will be a part of that transaction.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Creates a connection object first (better to use &#39;using&#39; keyword)</span>
 <span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">();</span>
@@ -260,10 +260,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="expressiontree.html" class="btn btn-neutral float-right" title="Expression Tree" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="expressions.html" class="btn btn-neutral float-right" title="Expressions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="orderfield.html" class="btn btn-neutral" title="OrderField" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="executequery.html" class="btn btn-neutral" title="ExecuteQuery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

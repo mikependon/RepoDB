@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Working with Cache &mdash; RepoDb 1.1.0 documentation</title>
+  <title>Cache &mdash; RepoDb 1.1.0 documentation</title>
   
 
   
@@ -28,8 +28,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Working with Trace" href="trace.html" />
-    <link rel="prev" title="Recursive Query" href="recursive.html" /> 
+    <link rel="next" title="Trace" href="trace.html" />
+    <link rel="prev" title="Recursive" href="recursive.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,34 +79,34 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction to RepoDb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Steps</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attributes.html">Property Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection Object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
+<li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expressiontree.html">Expression Tree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repository.html">Working with Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="connectionpersistency.html">Connection Persistency</a></li>
-<li class="toctree-l1"><a class="reference internal" href="repositoryoperations.html">Repository Operations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive Query</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Cache</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#creating-a-cache-entry">Creating a Cache Entry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#checking-a-cache-entry">Checking a Cache Entry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#checking-a-cache-expiration">Checking a Cache Expiration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#setting-the-cache-expiration">Setting the Cache Expiration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#iterating-the-cache-entries">Iterating the Cache Entries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#removing-or-clearing-a-cache">Removing or Clearing a Cache</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#injecting-a-custom-cache-object">Injecting a Custom Cache Object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursive.html">Recursive</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Cache</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creation">Creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contains">Contains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#isexpired">IsExpired</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#expiration">Expiration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iteration">Iteration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remove">Remove</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#icache">ICache</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="trace.html">Working with Trace</a></li>
-<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">Working with StatementBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Library Extensibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trace.html">Trace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statementbuilder.html">StatementBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extensibility.html">Extensibility</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Supported Versions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contacts</a></li>
 </ul>
@@ -154,7 +154,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Working with Cache</li>
+      <li>Cache</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,37 +173,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="working-with-cache">
-<h1>Working with Cache<a class="headerlink" href="#working-with-cache" title="Permalink to this headline">¶</a></h1>
-<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. Given the name itself, the library only works with memory caching by default. A cache is only working on <cite>Query</cite> operation of the repository.</p>
-<p>A cache key is important in order for the caching to cache the object. It should be unique to every cache item.</p>
-<p>Below are the methods of <cite>Cache</cite> object.</p>
-<ul class="simple">
-<li><strong>Add</strong>: accepts an <cite>item</cite> or a <cite>key</cite> and <cite>value</cite> pair parameters. It adds an item to the <cite>Cache</cite> object. If an item is already existing, the item will be overriden.</li>
-<li><strong>Clear</strong>: clear all items from the cache.</li>
-<li><strong>Contains</strong>: accepts a <cite>key</cite> parameter. Checks whether the <cite>Cache</cite> object contains an item with the defined key.</li>
-<li><strong>Get</strong>: accepts a <cite>key</cite> parameter. Returns a cached item object.</li>
-<li><strong>GetEnumerator</strong>: returns an enumerator for <cite>IEnumerable&lt;CacheItem&gt;</cite> objects. It contains all the cached items from the <cite>Cache</cite> object.</li>
-<li><strong>Remove</strong>: accepts a <cite>key</cite> parameter. Removes an entry from the <cite>Cache</cite> object.</li>
-</ul>
-<p>One important object when manipulating a cache is the <cite>CacheItem</cite> object (implements <cite>RepoDb.CacheItem</cite>). It acts as the cache item entry for the cache object. The default expiration of the <cite>CacheItem</cite> is 180 minutes.</p>
-<p>Below are the constructor arguments of the <cite>CacheItem</cite> object.</p>
-<ul class="simple">
-<li><strong>key</strong>: the key of the cache.</li>
-<li><strong>value</strong>: the value object of the cache.</li>
-<li><strong>expirationInMinutes</strong>: The expiration in minutes of the cache item.</li>
-</ul>
-<p>Below are the properties of <cite>CacheItem</cite> object.</p>
-<ul class="simple">
-<li><strong>Key</strong>: the key of the cache. It returns a <cite>System.String</cite> type.</li>
-<li><strong>Value</strong>: the cached object of the item. It returns a <cite>System.Object</cite> type. It can be casted back to a defined object type.</li>
-<li><strong>CreatedDate</strong>: the created timestamp of this cache item. By default, it is equals to the time of when this cache item object has been instantiated. It returns a <cite>System.DateTime</cite> object.</li>
-<li><strong>Expiration</strong>: the expiration date of this cache item. It returns a <cite>System.DateTime</cite> object.</li>
-</ul>
-<p>Below are the methods of <cite>CacheItem</cite> object.</p>
-<ul class="simple">
-<li><strong>IsExpired</strong>: Checks whether the cached item is expired. It returns a <cite>System.Boolean</cite> value.</li>
-</ul>
+  <div class="section" id="cache">
+<h1>Cache<a class="headerlink" href="#cache" title="Permalink to this headline">¶</a></h1>
+<p>The library supports caching when querying a data from the database. By the default, the <cite>RepoDb.MemoryCache</cite> is being used by the library. A cache is only working on <cite>Query</cite> operation of the repository.</p>
 <p>The repository caching operation is of the <cite>pseudo</cite> below.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>VAR item = null
 IF ($cacheKey is not null) THEN
@@ -221,8 +193,8 @@ END IF
 RETURN $result
 </pre></div>
 </div>
-<div class="section" id="creating-a-cache-entry">
-<h2>Creating a Cache Entry<a class="headerlink" href="#creating-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creation">
+<h2>Creation<a class="headerlink" href="#creation" title="Permalink to this headline">¶</a></h2>
 <p>The snippets below declared a variable named <cite>cacheKey</cite>. The value of this variable acts as the key value of the items to be cached by the repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">);</span>
 <span class="kt">var</span> <span class="n">cacheKey</span> <span class="p">=</span> <span class="s">&quot;CacheKey.Customers.StartsWith.Anna&quot;</span><span class="p">;</span>
@@ -237,29 +209,30 @@ RETURN $result
 </pre></div>
 </div>
 </div>
-<div class="section" id="checking-a-cache-entry">
-<h2>Checking a Cache Entry<a class="headerlink" href="#checking-a-cache-entry" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="contains">
+<h2>Contains<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to check if the cached item is present on the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExists</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="checking-a-cache-expiration">
-<h2>Checking a Cache Expiration<a class="headerlink" href="#checking-a-cache-expiration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="isexpired">
+<h2>IsExpired<a class="headerlink" href="#isexpired" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to check if the cached item is expired already, assuming that a repository object has been created already.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">isExpired</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">IsExpired</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="setting-the-cache-expiration">
-<h2>Setting the Cache Expiration<a class="headerlink" href="#setting-the-cache-expiration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="expiration">
+<h2>Expiration<a class="headerlink" href="#expiration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to set cached item is expiration, assuming that a repository object has been created already.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="s">&quot;CacheKey&quot;</span><span class="p">).</span><span class="n">Expiration</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
 </pre></div>
 </div>
+<p>The default expiration of the <cite>CacheItem</cite> is 180 minutes.</p>
 </div>
-<div class="section" id="iterating-the-cache-entries">
-<h2>Iterating the Cache Entries<a class="headerlink" href="#iterating-the-cache-entries" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="iteration">
+<h2>Iteration<a class="headerlink" href="#iteration" title="Permalink to this headline">¶</a></h2>
 <p>Code below is the way on how to retrieve or iterate all the cached items from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Let&#39;s expect that the repository is meant for Customer data entity</span>
 <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">item</span> <span class="k">in</span> <span class="n">repository</span><span class="p">.</span><span class="n">Cache</span><span class="p">)</span>
@@ -270,8 +243,8 @@ RETURN $result
 </pre></div>
 </div>
 </div>
-<div class="section" id="removing-or-clearing-a-cache">
-<h2>Removing or Clearing a Cache<a class="headerlink" href="#removing-or-clearing-a-cache" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="remove">
+<h2>Remove<a class="headerlink" href="#remove" title="Permalink to this headline">¶</a></h2>
 <p>By default, the library does not support the auto-flush of the cache. Those forcing the developers to handle the flushing on its way.</p>
 <p>Clearing or removing an entry from a cache is the only way to flush the cached objects.</p>
 <p>See below on how to clear the cached item from the <cite>Cache</cite> object, assuming that a repository object has been created already.</p>
@@ -283,8 +256,8 @@ RETURN $result
 </pre></div>
 </div>
 </div>
-<div class="section" id="injecting-a-custom-cache-object">
-<h2>Injecting a Custom Cache Object<a class="headerlink" href="#injecting-a-custom-cache-object" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="icache">
+<h2>ICache<a class="headerlink" href="#icache" title="Permalink to this headline">¶</a></h2>
 <p>The library supports a cache object injection in the repository level. As mentioned earlier, by default, the library is using the <cite>RepoDb.MemoryCache</cite> object. It can overriden by creating a class and implements the <cite>RepoDb.Interfaces.ICache</cite> interface, and passed it to the <cite>cache</cite> argument of the repository constructor.</p>
 <p>Below is the way on how to create a custom <cite>Cache</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">FileCache</span> <span class="p">:</span> <span class="n">ICache</span>
@@ -312,10 +285,10 @@ RETURN $result
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="trace.html" class="btn btn-neutral float-right" title="Working with Trace" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="trace.html" class="btn btn-neutral float-right" title="Trace" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recursive.html" class="btn btn-neutral" title="Recursive Query" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recursive.html" class="btn btn-neutral" title="Recursive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

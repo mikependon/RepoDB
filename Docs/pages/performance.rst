@@ -1,5 +1,5 @@
-Performance Benchmark
-=====================
+Performance
+===========
 
 .. highlight:: c#
 

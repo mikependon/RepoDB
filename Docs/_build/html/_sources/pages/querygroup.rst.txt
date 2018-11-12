@@ -3,14 +3,6 @@ QueryGroup
 
 A query group object is used to group an expression when composing a tree expressions. It is equivalent to a grouping on a `WHERE` statement in SQL Statements.
 
-Below are the constructor parameters.
-
-- **queryFields**: the list of `QueryField` objects to be included in the expression composition. It stands as `[FieldName] = @FiedName` when it comes to SQL Statement compositions.
-- **queryGroups**: the list of child `QueryGroup` objects to be included in the expresson composition. It stands as the `([FieldName] = @FieldName AND [FieldName1] = @FieldName1)` when it comes to SQL Statement compositions.
-- **conjunction**: the conjuction to be used when grouping the fields. It stands as the `AND` or `OR` in the SQL Statement compositions.
-
-As mentioned above, below is a sample code to create a query group object.
-
 .. highlight:: c#
 
 ::
@@ -40,8 +32,8 @@ Let us say a connection object was created this way.
 
 	var connection = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 
-Operation.Equal
----------------
+Equal
+-----
 
 .. highlight:: c#
 
@@ -74,14 +66,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.Equal, 10045 ));
 
-Explicit way:
-
-::
-
-	var result = connection.Query<Customer>(new QueryField("Id", Operation.Equal, 10045 ));
-
-Operation.NotEqual
-------------------
+NotEqual
+--------
 
 .. highlight:: c#
 
@@ -108,8 +94,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Name", Operation.NotEqual, "Anna Fullerton" });
 
-Operation.LessThan
-------------------
+LessThan
+--------
 
 .. highlight:: c#
 
@@ -133,8 +119,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.LessThan, 100 });
 
-Operation.GreaterThan
----------------------
+GreaterThan
+-----------
 
 .. highlight:: c#
 
@@ -158,8 +144,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.GreaterThan, 0 });
 
-Operation.LessThanOrEqual
--------------------------
+LessThanOrEqual
+---------------
 
 .. highlight:: c#
 
@@ -183,8 +169,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>.Query(new QueryField("Id", Operation.LessThanOrEqual, 100 });
 
-Operation.GreaterThanOrEqual
-----------------------------
+GreaterThanOrEqual
+------------------
 
 .. highlight:: c#
 
@@ -208,8 +194,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.GreaterThanOrEqual, 0 });
 
-Operation.Like
---------------
+Like
+----
 
 .. highlight:: c#
 
@@ -240,8 +226,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Name", Operation.Like, "Anna%" });
 
-Operation.NotLike
------------------
+NotLike
+-------
 
 .. highlight:: c#
 
@@ -272,8 +258,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Name", Operation.NotLike, "Anna%" });
 
-Operation.Between
------------------
+Between
+-------
 
 .. highlight:: c#
 
@@ -309,8 +295,8 @@ or
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.Between, new [] { 10045, 10075 } });
 
-Operation.NotBetween
---------------------
+NotBetween
+----------
 
 .. highlight:: c#
 
@@ -346,8 +332,8 @@ or
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.NotBetween, new [] { 10045, 10075 } });
 
-Operation.In
-------------
+In
+--
 
 .. highlight:: c#
 
@@ -371,8 +357,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.In, new [] { 10045, 10046, 10047, 10048 } });
 
-Operation.NotIn
----------------
+NotIn
+-----
 
 .. highlight:: c#
 
@@ -396,8 +382,8 @@ Explicit way:
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.NotIn, new [] { 10045, 10046, 10047, 10048 } });
 
-Operation.All
--------------
+All
+---
 
 .. highlight:: c#
 
@@ -447,8 +433,8 @@ Explicit way:
 
 The `Operation.All` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `QueryField` in the `QueryGroup` object will do the same when calling it explicitly.
 
-Operation.Any
--------------
+Any
+---
 
 .. highlight:: c#
 

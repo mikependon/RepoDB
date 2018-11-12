@@ -1,5 +1,5 @@
-Introduction to RepoDb
-======================
+Introduction
+============
 
 A dynamic, lightweight and fast repository-based ORM .NET Library.
 
@@ -23,8 +23,8 @@ Principles
 * We will never ever do try-catch inside the library
 * We will never make complex implementations (specially for complex Join Queries)
 
-What's with RepoDb?
--------------------
+Features
+--------
 
 * Caching
 * Expression Trees (Dynamic-Based, Expression-Based, Object-Based)

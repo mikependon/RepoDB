@@ -1,12 +1,12 @@
-Installation Steps
-==================
+Installation
+============
 
 There are two ways of installing the library as standardized by Microsoft. First, via Nuget Package Manager, and secondly, via Package Manager Console.
 
 **Pre-requisite**: A Microsoft Visual Studio has already been installed and a .NET Solution and Project has already been created.
 
-Via Nuget Package Manager
--------------------------
+Nuget Package
+-------------
 
 Once the project is opened, then do the following steps:
 
@@ -18,8 +18,8 @@ Once the project is opened, then do the following steps:
 
 Wait for a few seconds until the installation is completed.
 
-Via Package Manager Console
----------------------------
+Package Manager
+---------------
 
 Once the project is opened, then do the following steps:
 

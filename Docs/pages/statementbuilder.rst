@@ -1,37 +1,18 @@
-Working with StatementBuilder
-=============================
+StatementBuilder
+================
 
-The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the `RepoDb.SqlDbStatementBuilder` that is only working for SQL Server databases.
+The library supports statement building injection, allowing the developers to override the default query statement the library is using. By default, the library is using the `SqlDbStatementBuilder` that is only working for SQL Server databases.
 
-In order to override the statement builder, the developer must create a class that implements the `RepoDb.Interfaces.IStatementBuilder` interface. This allows the class to be injectable in the repository and implements the necessary methods needed by all operations.
-
-A `QueryBuilder` object comes along the way when the custom statement builder is being created. This object is a helper object when composing the actual SQL Statements. See the `QueryBuilder` documentation.
-
-Below are the methods of the `IStatementBuilder` interface.
-
-- **CreateBatchQuery**: called when creating a `BatchQuery` statement.
-- **CreateCount**: called when creating a `Count` statement.
-- **CreateDelete**: called when creating a `Delete` statement.
-- **CreateDeleteAll**: called when creating a `Delete` statement.
-- **CreateInlineInsert**: called when creating a `InlineInsert` statement.
-- **CreateInlineMerge**: called when creating a `InlineMerge` statement.
-- **CreateInlineUpdate**: called when creating a `InlineUpdate` statement.
-- **CreateInsert**: called when creating a `Insert` statement.
-- **CreateMerge**: called when creating a `Merge` statement.
-- **CreateQuery**: called when creating a `Query` statement.
-- **CreateTruncate**: called when creating a `Truncate` statement.
-- **CreateUpdate**: called when creating a `Update` statement.
-
-QueryBuilder Object
--------------------
+QueryBuilder
+------------
 
 .. highlight:: none
 
 A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.
 
-By default, the library is using the `RepoDb.QueryBuilder<TEntity>` object when composing the statement.
+By default, the library is using the `QueryBuilder<TEntity>` object when composing the statement.
 
-Below is a sample code that creates a SQL Statement for the `Query` operation for `Oracle` data provide.
+Below is a sample code that creates a SQL Statement for the `Query` operation for `Oracle` data provider.
 
 ::
 
@@ -64,8 +45,8 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 		return queryBuilder.ToString();
 	}
 
-CreateBatchQuery Method
------------------------
+CreateBatchQuery
+----------------
 
 .. highlight:: none
 
@@ -78,8 +59,8 @@ This method is being called when the `BatchQuery` operation of the repository is
 		...
 	}
 
-CreateCount Method
-------------------
+CreateCount
+-----------
 
 .. highlight:: none
 
@@ -92,8 +73,8 @@ This method is being called when the `Count` operation of the repository is bein
 		...
 	}
 
-CreateDelete Method
--------------------
+CreateDelete
+------------
 
 .. highlight:: none
 
@@ -106,8 +87,8 @@ This method is being called when the `Delete` operation of the repository is bei
 		...
 	}
 
-CreateDeleteAll Method
-----------------------
+CreateDeleteAll
+---------------
 
 .. highlight:: none
 
@@ -120,8 +101,8 @@ This method is being called when the `DeleteAll` operation of the repository is 
 		...
 	}
 
-CreateInlineInsert Method
--------------------------
+CreateInlineInsert
+------------------
 
 .. highlight:: none
 
@@ -142,8 +123,8 @@ This method is being called when the `InlineInsert` operation of the repository 
 		...
 	}
 
-CreateInlineMerge Method
-------------------------
+CreateInlineMerge
+-----------------
 
 .. highlight:: none
 
@@ -164,8 +145,8 @@ This method is being called when the `InlineMerge` operation of the repository i
 		...
 	}
 
-CreateInlineUpdate Method
--------------------------
+CreateInlineUpdate
+------------------
 
 .. highlight:: none
 
@@ -180,8 +161,8 @@ This method is being called when the `InlineUpdate` operation of the repository 
 		...
 	}
 
-CreateInsert Method
--------------------
+CreateInsert
+------------
 
 .. highlight:: none
 
@@ -201,8 +182,8 @@ This method is being called when the `Insert` operation of the repository is bei
 		...
 	}
 
-CreateMerge Method
-------------------
+CreateMerge
+-----------
 
 .. highlight:: none
 
@@ -222,8 +203,8 @@ This method is being called when the `Merge` operation of the repository is bein
 		...
 	}
 
-CreateQuery Method
-------------------
+CreateQuery
+-----------
 
 .. highlight:: none
 
@@ -237,8 +218,8 @@ This method is being called when the `Query` operation of the repository is bein
 		...
 	}
 
-CreateTruncate Method
----------------------
+CreateTruncate
+--------------
 
 .. highlight:: none
 
@@ -251,8 +232,8 @@ This method is being called when the `Truncate` operation of the repository is b
 		...
 	}
 
-CreateUpdate Method
--------------------
+CreateUpdate
+------------
 
 .. highlight:: none
 
@@ -272,7 +253,7 @@ Creating a custom Statement Builder
 
 The main reason why the library supports the statement builder is to allow the developers override the default statement builder of the library. By default, the library statement builder is only limited for SQL Server providers (as SQL Statements). However, it will fail if the library is being used to access the Oracle, MySql or any other providers.
 
-To create a custom statement builder, simply create a class and implements the `RepoDb.Interfaces.IStatementBuilder` interface.
+To create a custom statement builder, simply create a class and implements the `Interfaces.IStatementBuilder` interface.
 
 ::
 	
@@ -295,9 +276,9 @@ Mapping a Statement Builder
 
 .. highlight:: c#
 
-By default, the library is using the `RepoDb.SqlDbStatementBuilder` object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.
+By default, the library is using the `SqlDbStatementBuilder` object for the statement builder. As discussed above, when creating a custom statement builder, it can then be injected as an object in the repository. However, if the developer wants to map the statement builder by provider level, this feature comes into the play.
 
-The mapper is of static type `RepoDb.StatementBuilderMapper`.
+The mapper is of static type `StatementBuilderMapper`.
 
 The following are the methods of this object.
 

@@ -8,15 +8,15 @@ RepoDb Documentation
    pages/installation
    pages/attributes
    pages/typemapping
-   pages/connection
    pages/field
    pages/orderfield
+   pages/connection
+   pages/executequery
    pages/transaction
-   pages/expressiontree
+   pages/expressions
    pages/querygroup
    pages/repository
-   pages/connectionpersistency
-   pages/repositoryoperations
+   pages/persistency
    pages/recursive
    pages/cache
    pages/trace

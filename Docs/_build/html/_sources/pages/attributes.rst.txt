@@ -1,10 +1,10 @@
-Property Attributes
-===================
+Attributes
+==========
 
 The library contains certain attributes to support the custom implementation as per scenario basis.
 
-Map Attribute
--------------
+Map
+---
 
 Is used to map an equivalent object from the database.
 
@@ -29,8 +29,8 @@ It is also used to map an equivalent column from the database.
 		public int Id { get; set; }
 	}
 
-Primary Attribute
------------------
+Primary
+-------
 
 Used to define a primary key from the class object.
 
@@ -52,8 +52,8 @@ The following primary property identification processed will be used in any case
 
 If all of the conditions above were not met, then the `DataEntity` will have no primary property. It somehow fails if the repository operation of like `Delete` and `Update` has been called without explicitly specifying the expressions for the `WHERE` parameter.
 
-Identity Attribute
-------------------
+Identity
+--------
 
 Used to define an identity key from the class object.
 
@@ -67,8 +67,8 @@ Used to define an identity key from the class object.
 		public int Id { get; set; }
 	}
 
-TypeMap Attribute
------------------
+TypeMap
+-------
 
 Is used to define a property-level mapping of database type.
 
@@ -85,8 +85,8 @@ Is used to define a property-level mapping of database type.
 		public byte[] Image { get; set; }
 	}
 
-Ignore Attribute
-----------------
+Ignore
+------
 
 Is used to ignore certain properties from the actual database operation.
 
@@ -146,8 +146,8 @@ All commands specified above can be defined together in a single `IgnoreAttribut
 
 **Note**: The `RepoDb` is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.
 
-Foreign Attribute
------------------
+Foreign
+-------
 
 An attribute used to define a foreign relationship for the recursive property of the data entity object.
 

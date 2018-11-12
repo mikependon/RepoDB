@@ -1,5 +1,5 @@
-Library Extensibility
-=====================
+Extensibility
+=============
 
 RepoDb is highly extensible for RDBMS only. Below are the objects that can be extended.
 

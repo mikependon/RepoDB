@@ -1,5 +1,5 @@
-Connection Persistency
-======================
+Persistency
+===========
 
 .. highlight:: c#
 
@@ -12,8 +12,8 @@ A connection persistency is flag that is being used by the repository object whe
 		// Call the operations here
 	}
 
-PerCall Persistency
--------------------
+PerCall
+-------
 
 .. highlight:: c#
 
@@ -59,8 +59,8 @@ If every `Customer` object has 2 `Order` records each, then the number of connec
 
 **Note**: It is not necesarry to call the `Dispose` method of the repository if the value of the `ConnectionPersistency` is `PerCall` as the operation is disposing each connection object after use.
 
-Instance Persistency
---------------------
+Instance
+--------
 
 A single connection object is being used until the lifetime of the repository. Repository lifetime is of until the `Dispose` method has been called.
 

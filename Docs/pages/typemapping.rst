@@ -15,6 +15,6 @@ and a `System.Decimal` type into `System.Data.DbType.Double` database type.
 
 ::
 	
-	TypeMapper.AddMap(new TypeMap(typeof(Decimal), DbType.Double));
+	TypeMapper.AddMap(new TypeMapItem(typeof(Decimal), DbType.Double));
 
 **Note**: The `TypeMapper` class is callable anywhere in the application as it was implemented as a static class.
