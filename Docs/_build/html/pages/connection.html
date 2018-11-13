@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ExecuteQuery" href="executequery.html" />
+    <link rel="next" title="ExecuteQuery (Dynamic)" href="executequery.html" />
     <link rel="prev" title="OrderField" href="orderfield.html" /> 
 
   
@@ -107,7 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#update">Update</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery (Dynamic)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
@@ -245,7 +245,7 @@
 <p>Dynamic way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">&gt;=</span> <span class="m">1000</span><span class="p">,</span> <span class="n">CreatedDate</span> <span class="p">&gt;=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddMonths</span><span class="p">(-</span><span class="m">1</span><span class="p">)</span> <span class="p">});</span>
+        <span class="n">connection</span><span class="p">.</span><span class="n">Count</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">1000</span> <span class="p">},</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddMonths</span><span class="p">(-</span><span class="m">1</span><span class="p">)</span> <span class="p">}});</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -608,7 +608,7 @@
 <h2>InlineUpdate<a class="headerlink" href="#inlineupdate" title="Permalink to this headline">¶</a></h2>
 <p>Updates a data in the database by targetting certain fields only.</p>
 <p>Let us say a dynamic entity is defined.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Not really an order object, instead, it is a dynamic object</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Not really an Customer object, instead, it is a dynamic object</span>
 <span class="kt">var</span> <span class="n">entity</span> <span class="p">=</span> <span class="k">new</span>
 <span class="p">{</span>
         <span class="n">Name</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span><span class="p">,</span>
@@ -780,7 +780,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="executequery.html" class="btn btn-neutral float-right" title="ExecuteQuery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="executequery.html" class="btn btn-neutral float-right" title="ExecuteQuery (Dynamic)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="orderfield.html" class="btn btn-neutral" title="OrderField" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

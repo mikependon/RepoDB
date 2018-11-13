@@ -54,7 +54,7 @@ This method is being called when the `BatchQuery` operation of the repository is
 
 ::
 
-	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity
+	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : class
 	{
 		...
 	}
@@ -68,7 +68,7 @@ This method is being called when the `Count` operation of the repository is bein
 
 ::
 
-	public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
+	public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
 	{
 		...
 	}
@@ -82,7 +82,7 @@ This method is being called when the `Delete` operation of the repository is bei
 
 ::
 
-	public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
+	public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
 	{
 		...
 	}
@@ -96,7 +96,7 @@ This method is being called when the `DeleteAll` operation of the repository is 
 
 ::
 
-	public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity
+	public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : class
 	{
 		...
 	}
@@ -111,14 +111,14 @@ This method is being called when the `InlineInsert` operation of the repository 
 ::
 
 	public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
-		where TEntity
+		where TEntity : class
 	{
 		return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
 	}
 
 	internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
 		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -133,14 +133,14 @@ This method is being called when the `InlineMerge` operation of the repository i
 ::
 
 	public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
-		where TEntity
+		where TEntity : class
 	{
 		return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
 	}
 
 	internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers,
 		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -156,7 +156,7 @@ This method is being called when the `InlineUpdate` operation of the repository 
 
 	public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
 		QueryGroup where, bool? overrideIgnore = false)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -171,13 +171,13 @@ This method is being called when the `Insert` operation of the repository is bei
 ::
 
 	public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
-		where TEntity
+		where TEntity : class
 	{
 		return CreateInsert(queryBuilder, false);
 	}
 
 	internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -192,13 +192,13 @@ This method is being called when the `Merge` operation of the repository is bein
 ::
 
 	public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
-		where TEntity
+		where TEntity : class
 	{
 		return CreateMerge(queryBuilder, qualifiers);
 	}
 
 	internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -213,7 +213,7 @@ This method is being called when the `Query` operation of the repository is bein
 ::
 
 	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
-		where TEntity
+		where TEntity : class
 	{
 		...
 	}
@@ -227,7 +227,7 @@ This method is being called when the `Truncate` operation of the repository is b
 
 ::
 
-	public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity
+	public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : class
 	{
 		...
 	}
@@ -241,7 +241,7 @@ This method is being called when the `Update` operation of the repository is bei
 
 ::
 
-	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity
+	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
 	{
 		...
 	}

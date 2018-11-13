@@ -1,5 +1,5 @@
-ExecuteQuery
-============
+ExecuteQuery (Dynamic)
+======================
 
 This method is a dynamic method used to execute a SQL Statements or Stored Procedure from the database. It is a forward only operation.
 
