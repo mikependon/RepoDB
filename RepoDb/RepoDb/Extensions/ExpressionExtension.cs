@@ -187,7 +187,7 @@ namespace RepoDb.Extensions
         public static object GetValue(this NewArrayExpression expression)
         {
             var arrayType = expression.Type.GetElementType();
-            var array = Array.CreateInstance(arrayType, expression.Expressions.Count);
+            var array = Array.CreateInstance(arrayType, expression.Expressions?.Count);
             expression
                 .Expressions?
                 .ToList()
