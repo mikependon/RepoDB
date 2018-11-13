@@ -13,6 +13,12 @@ Vision
 
 To provide more flexibility and fast-switching development approach, whether to use the massive or lightweight ORM operations.
 
+Links
+--------
+
+* Package: `https://www.nuget.org/packages/RepoDb <https://www.nuget.org/packages/RepoDb>`_
+* Repository: `https://github.com/RepoDb/RepoDb <https://github.com/RepoDb/RepoDb>`_
+
 Principles
 ----------
 
