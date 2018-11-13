@@ -1,10 +1,17 @@
-﻿using System;
+﻿using RepoDb.Exceptions;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb.Extensions
 {
+    /**
+     * Though we know that throwing an exception in the extension is not advisable, but I tend to do it to ensure that the
+     * parsing of the Linq expressions are properly handled. Please be guided about this extension that it somehow throws
+     * and exception at some scenarios.
+     */
+
     /// <summary>
     /// Contains the extension methods for <see cref="Expression"/> object.
     /// </summary>
@@ -55,7 +62,7 @@ namespace RepoDb.Extensions
             {
                 return expression.Right.ToMember().Member.Name;
             }
-            return null;
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         #region GetValue
@@ -111,10 +118,7 @@ namespace RepoDb.Extensions
             {
                 return expression.ToDefault().GetValue();
             }
-            else
-            {
-                return null;
-            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         /// <summary>
@@ -187,7 +191,7 @@ namespace RepoDb.Extensions
         public static object GetValue(this NewArrayExpression expression)
         {
             var arrayType = expression.Type.GetElementType();
-            var array = Array.CreateInstance(arrayType, expression.Expressions?.Count);
+            var array = Array.CreateInstance(arrayType, (int)expression.Expressions?.Count);
             expression
                 .Expressions?
                 .ToList()
@@ -221,8 +225,7 @@ namespace RepoDb.Extensions
         public static object GetValue(this MemberInitExpression expression)
         {
             var instance = expression.NewExpression.GetValue();
-            expression.Bindings.ToList().ForEach(member =>
-                member.Member.SetValue(instance, member.GetValue()));
+            expression.Bindings.ToList().ForEach(member => member.Member.SetValue(instance, member.GetValue()));
             return instance;
         }
 
@@ -248,9 +251,8 @@ namespace RepoDb.Extensions
             {
                 case "TypedParameterExpression":
                     return Activator.CreateInstance(expression.Type);
-                default:
-                    return null;
             }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         /// <summary>

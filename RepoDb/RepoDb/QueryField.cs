@@ -124,17 +124,9 @@ namespace RepoDb
 
             // Name
             var fieldName = expression.GetName();
-            if (string.IsNullOrEmpty(fieldName))
+            if (PropertyCache.Get<TEntity>(Command.None).Any(property => property.PropertyInfo.Name == fieldName) == false)
             {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
-            }
-            else
-            {
-                var properties = PropertyCache.Get<TEntity>(Command.None);
-                if (properties.Any(property => property.PropertyInfo.Name == fieldName) == false)
-                {
-                    throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
-                }
+                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {fieldName} is not defined on a target type '{typeof(TEntity).FullName}'.");
             }
 
             // Value
