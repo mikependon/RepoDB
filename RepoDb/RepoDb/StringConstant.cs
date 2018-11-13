@@ -17,6 +17,7 @@
         public static readonly string Contains = "Contains";
         public static readonly string DataType = "DataType";
         public static readonly string DynamicMethod = "DynamicMethod";
+        public static readonly string EndsWith = "EndsWith";
         public static readonly string ExecuteNonQuery = "ExecuteNonQuery";
         public static readonly string ExecuteQuery = "ExecuteQuery";
         public static readonly string ExecuteReader = "ExecuteReader";
@@ -30,6 +31,7 @@
         public static readonly string Operation = "Operation";
         public static readonly string Or = "Or";
         public static readonly string QueryGroups = "QueryGroups";
+        public static readonly string StartsWith = "StartsWith";
         public static readonly string Value = "Value";
     }
 }

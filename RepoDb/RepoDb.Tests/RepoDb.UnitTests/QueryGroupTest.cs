@@ -1002,6 +1002,174 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestParseExpressionContainsAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotContainsAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsTrueAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.Contains("A") == true);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsFalseAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.Contains("A") == false);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStartsWithAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotStartsWithAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStartsWithEqualsTrueAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.StartsWith("A") == true);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionStartsWithEqualsFalseAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.StartsWith("A") == false);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionEndsWithAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.EndsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotEndsWithAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.EndsWith("A"));
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionEndsWithEqualsTrueAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.EndsWith("A") == true);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionEndsWithEqualsFalseAtProperty()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.EndsWith("A") == false);
+
+            // Act
+            var actual = parsed.GetString();
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         // All
 
         [TestMethod]
@@ -1079,7 +1247,7 @@ namespace RepoDb.UnitTests
             var list = new int[] { 1, 2 };
 
             // Act
-            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == true);
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == false);
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
@@ -1093,7 +1261,7 @@ namespace RepoDb.UnitTests
         public void ThrowExceptionOnParseExpressionForAllAsBoolean()
         {
             // Act
-            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == true);
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.All(p => p == e.PropertyInt) == false);
         }
 
         // Any
@@ -1173,7 +1341,7 @@ namespace RepoDb.UnitTests
             var list = new int[] { 1, 2 };
 
             // Act
-            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == true);
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == false);
         }
 
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
@@ -1187,7 +1355,7 @@ namespace RepoDb.UnitTests
         public void ThrowExceptionOnParseExpressionForAnyAsBoolean()
         {
             // Act
-            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == true);
+            QueryGroup.Parse<QueryGroupTestClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt) == false);
         }
 
         // Test (Expression Value)
