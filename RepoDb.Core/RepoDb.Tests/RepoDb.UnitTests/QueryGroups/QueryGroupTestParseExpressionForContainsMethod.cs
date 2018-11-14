@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 
 namespace RepoDb.UnitTests
@@ -177,6 +178,54 @@ namespace RepoDb.UnitTests
 
             // Assert
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotContainsFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsFalseFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsTrueFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotContainsFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsFalseFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionContainsEqualsTrueFromClassMethod()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -66,6 +66,53 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestParseExpressionAnyFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAnyFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyEqualsFalseFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyEqualsTrueFromClassProperty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionNotAnyFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyEqualsFalseFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void TestParseExpressionAnyEqualsTrueFromClassMethod()
+        {
+            throw new NotImplementedException();
+        }
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnParseExpressionForAnyFromVariableAsNot()
         {

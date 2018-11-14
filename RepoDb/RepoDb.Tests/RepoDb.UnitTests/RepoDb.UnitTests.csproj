@@ -109,7 +109,7 @@
     <Compile Include="QueryGroups\QueryGroupTestParseDynamicForNotInOperation.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseDynamicForAnyOperation.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseDynamicForExpressions.cs" />
-    <Compile Include="QueryGroupTest.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicValues.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseExpressionValues.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseExpressionForAnyMethod.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseExpressionForAllMethod.cs" />
