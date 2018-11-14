@@ -1058,6 +1058,8 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // StartsWith
+
         [TestMethod]
         public void TestParseExpressionStartsWithAtProperty()
         {
@@ -1080,7 +1082,7 @@ namespace RepoDb.UnitTests
 
             // Act
             var actual = parsed.GetString();
-            var expected = "([PropertyString] LIKE @PropertyString)";
+            var expected = "([PropertyString] NOT LIKE @PropertyString)";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1114,6 +1116,8 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // EndsWith
+
         [TestMethod]
         public void TestParseExpressionEndsWithAtProperty()
         {
@@ -1146,7 +1150,7 @@ namespace RepoDb.UnitTests
         public void TestParseExpressionEndsWithEqualsTrueAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.EndsWith("A") == true);
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.EndsWith("A") == true);
 
             // Act
             var actual = parsed.GetString();
@@ -1160,7 +1164,7 @@ namespace RepoDb.UnitTests
         public void TestParseExpressionEndsWithEqualsFalseAtProperty()
         {
             // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => !e.PropertyString.EndsWith("A") == false);
+            var parsed = QueryGroup.Parse<QueryGroupTestClass>(e => e.PropertyString.EndsWith("A") == false);
 
             // Act
             var actual = parsed.GetString();
