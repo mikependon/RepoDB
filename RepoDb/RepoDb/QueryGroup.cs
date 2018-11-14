@@ -213,10 +213,33 @@ namespace RepoDb
             if (expression.Left.IsMethodCall())
             {
                 var method = expression.Left.ToMethodCall();
-                if (method.Method.Name == StringConstant.Contains)
+                var right = expression.Right.GetValue();
+
+                // IN, NOT IN: (p => (new[] { 1, 2 }).Contains(p.Property))
+                if (method.Object == null)
                 {
-                    var right = expression.Right.GetValue();
-                    return ParseContains<TEntity>(method, Equals(true, right) ? Operation.In : Operation.NotIn);
+                    if (method.Method.Name == StringConstant.Contains)
+                    {
+                        return ParseContainsForArray<TEntity>(method, Equals(true, right) ? Operation.In : Operation.NotIn);
+                    }
+                }
+
+                // LIKE, NOT LIKE: 
+                else if (method.Object.IsMember())
+                {
+                    if (method.Method.Name == StringConstant.Contains ||
+                        method.Method.Name == StringConstant.StartsWith ||
+                        method.Method.Name == StringConstant.EndsWith)
+                    {
+                        var member = method.Object.ToMember();
+                        if (member.Type == typeof(string))
+                        {
+                            if (member.Member.IsPropertyInfo())
+                            {
+                                return ParseContainsForStringProperty<TEntity>(method, Equals(true, right) ? Operation.Like : Operation.NotLike);
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -282,9 +305,32 @@ namespace RepoDb
             if (expression.Operand.IsMethodCall())
             {
                 var method = expression.Operand.ToMethodCall();
-                if (method.Method.Name == StringConstant.Contains)
+
+                // IN, NOT IN: (p => !(new[] { 1, 2 }).Contains(p.Property))
+                if (method.Object == null)
                 {
-                    return ParseContains<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.In : Operation.NotIn);
+                    if (method.Method.Name == StringConstant.Contains)
+                    {
+                        return ParseContainsForArray<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.In : Operation.NotIn);
+                    }
+                }
+
+                // LIKE, NOT LIKE: 
+                else if (method.Object.IsMember())
+                {
+                    if (method.Method.Name == StringConstant.Contains ||
+                        method.Method.Name == StringConstant.StartsWith ||
+                        method.Method.Name == StringConstant.EndsWith)
+                    {
+                        var member = method.Object.ToMember();
+                        if (member.Type == typeof(string))
+                        {
+                            if (member.Member.IsPropertyInfo())
+                            {
+                                return ParseContainsForStringProperty<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.Like : Operation.NotLike);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -297,7 +343,7 @@ namespace RepoDb
             // Check methods for the 'And/Or' both 'Array.All()' and 'Array.Any()'
             if (expression.Method.Name == StringConstant.All || expression.Method.Name == StringConstant.Any)
             {
-                return ParseAllOrAny<TEntity>(expression);
+                return ParseAllOrAnyForArray<TEntity>(expression);
             }
 
             // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
@@ -308,13 +354,13 @@ namespace RepoDb
                 {
                     if (expression.Object.ToMember().Type == typeof(string))
                     {
-                        return ParseContainsStartsWithOrEndsWithForProperty<TEntity>(expression);
+                        return ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(expression);
                     }
                 }
                 // Check for the (new [] { value1, value2 }).Contains(p.Property)
                 else
                 {
-                    return ParseContains<TEntity>(expression, Operation.In);
+                    return ParseContainsForArray<TEntity>(expression, Operation.In);
                 }
             }
 
@@ -326,7 +372,7 @@ namespace RepoDb
                 {
                     if (expression.Object.ToMember().Type == typeof(string))
                     {
-                        return ParseContainsStartsWithOrEndsWithForProperty<TEntity>(expression);
+                        return ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(expression);
                     }
                 }
             }
@@ -335,7 +381,7 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup ParseAllOrAny<TEntity>(MethodCallExpression expression) where TEntity : class
+        private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
@@ -425,7 +471,7 @@ namespace RepoDb
             return new QueryGroup(queryFields, null, conjunction).FixParameters();
         }
 
-        private static QueryGroup ParseContains<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
+        private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
@@ -470,7 +516,34 @@ namespace RepoDb
             return new QueryGroup(queryField.AsEnumerable()).FixParameters();
         }
 
-        private static QueryGroup ParseContainsStartsWithOrEndsWithForProperty<TEntity>(MethodCallExpression expression) where TEntity : class
+        private static QueryGroup ParseContainsForStringProperty<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
+        {
+            // Return null if there is no any arguments
+            if (expression.Arguments?.Any() == false)
+            {
+                return null;
+            }
+
+            // Get the last arg
+            var value = Convert.ToString(expression.Arguments.FirstOrDefault());
+
+            // Get the property
+            var property = expression.Object.ToMember().Member.ToPropertyInfo();
+
+            // Make sure the property is in the entity
+            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
+            {
+                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
+            }
+
+            // Add to query fields
+            var queryField = new QueryField(property.Name, operation, ConvertToLikeableValue(expression.Method.Name, value));
+
+            // Return the result
+            return new QueryGroup(queryField.AsEnumerable()).FixParameters();
+        }
+
+        private static QueryGroup ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
