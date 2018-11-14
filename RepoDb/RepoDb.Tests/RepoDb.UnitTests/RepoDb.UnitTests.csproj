@@ -85,29 +85,60 @@
     <Compile Include="Enumerations\ConjunctionTextTest.cs" />
     <Compile Include="Enumerations\OperationTextTest.cs" />
     <Compile Include="Enumerations\OrderTextTest.cs" />
-    <Compile Include="FieldTest.cs" />
+    <Compile Include="Fields\FieldTest.cs" />
     <Compile Include="Interfaces\ICacheForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ICacheForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForDbRepositoryTest.cs" />
-    <Compile Include="MemoryCacheTest.cs" />
-    <Compile Include="OrderFieldTest.cs" />
+    <Compile Include="Caches\MemoryCacheTest.cs" />
+    <Compile Include="Fields\OrderFieldTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForAllOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForBetweenOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForEqualOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicCommon.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForNotEqualOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForLessThanOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForGreaterThanOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForNotLikeOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForLikeOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForNotBetweenOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForInOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForNotInOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForAnyOperation.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseDynamicForExpressions.cs" />
     <Compile Include="QueryGroupTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateBatchQueryTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateCountTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateDeleteAllTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateDeleteTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateInlineInsertTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateInlineMergeTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateInlineUpdateTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateInsertTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateMergeTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateQueryTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateTruncateTest.cs" />
-    <Compile Include="SqlDbStatementBuilderTest\CreateUpdateTest.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionValues.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForAnyMethod.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForAllMethod.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForEndsWithMethod.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForStartsWithMethod.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForContainsMethod.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionOperations.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForDateTimeType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForDoubleType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForGuidType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForBooleanType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForByteType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForSingleType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForStringType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionForIntType.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionCommon.cs" />
+    <Compile Include="QueryGroups\QueryGroupTestParseExpressionClasses.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateBatchQueryTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateCountTestFor.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateDeleteAllTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateDeleteTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateInlineInsertTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateInlineMergeTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateInlineUpdateTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateInsertTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateMergeTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateQueryTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateTruncateTest.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateUpdateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj">
@@ -119,9 +150,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="QueryGroupTest\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

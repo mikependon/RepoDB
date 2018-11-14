@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RepoDb.UnitTests.Comparers
+namespace RepoDb.UnitTests.Equalities
 {
     [TestClass]
-    public class ParameterComparerTest
+    public class ParameterEqualityTest
     {
         [TestMethod]
         public void TestEqualsToString()

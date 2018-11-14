@@ -3,10 +3,10 @@ using RepoDb.Enumerations;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RepoDb.UnitTests.Comparers
+namespace RepoDb.UnitTests.Equalities
 {
     [TestClass]
-    public class QueryFieldComparerTest
+    public class QueryFieldEqualityTest
     {
         [TestMethod]
         public void TestGetHashCodeEquality()

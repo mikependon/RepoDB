@@ -4,7 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System.Linq;
 
-namespace RepoDb.UnitTests
+namespace RepoDb.UnitTests.Enumerations
 {
     [TestClass]
     public class OrderTextTest

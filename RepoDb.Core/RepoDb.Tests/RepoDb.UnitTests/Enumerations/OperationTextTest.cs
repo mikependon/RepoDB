@@ -5,7 +5,7 @@ using RepoDb.Extensions;
 using System.Linq;
 using System.Reflection;
 
-namespace RepoDb.UnitTests
+namespace RepoDb.UnitTests.Enumerations
 {
     [TestClass]
     public class OperationTextTest

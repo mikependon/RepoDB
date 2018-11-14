@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace RepoDb.UnitTests.Comparers
+namespace RepoDb.UnitTests.Equalities
 {
     [TestClass]
-    public class FieldComparerTest
+    public class FieldEqualityTest
     {
         [TestMethod]
         public void TestEqualsToString()
