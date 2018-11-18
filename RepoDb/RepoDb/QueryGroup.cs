@@ -24,11 +24,16 @@ namespace RepoDb
         /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
-        public QueryGroup(IEnumerable<QueryField> queryFields, IEnumerable<QueryGroup> queryGroups = null, Conjunction conjunction = Conjunction.And)
+        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            IEnumerable<QueryGroup> queryGroups = null,
+            Conjunction conjunction = Conjunction.And,
+            bool isNot = false)
         {
             Conjunction = conjunction;
             QueryFields = queryFields;
             QueryGroups = queryGroups;
+            IsNot = isNot;
         }
 
         /// <summary>
@@ -47,6 +52,11 @@ namespace RepoDb
         public IEnumerable<QueryGroup> QueryGroups { get; }
 
         /// <summary>
+        /// Gets the value whether the grouping is in opposite field-value state.
+        /// </summary>
+        public bool IsNot { get; private set; }
+
+        /// <summary>
         /// Force to append prefixes on the bound parameter objects.
         /// </summary>
         internal void AppendParametersPrefix()
@@ -54,6 +64,15 @@ namespace RepoDb
             QueryFields?
                 .ToList()
                 .ForEach(queryField => queryField.AppendParameterPrefix());
+        }
+
+        /// <summary>
+        /// Sets the value of the <see cref="IsNot"/> property.
+        /// </summary>
+        /// <param name="value">The <see cref="bool"/> value the defines the <see cref="IsNot"/> property.</param>
+        internal void SetIsNot(bool value)
+        {
+            IsNot = value;
         }
 
         /// <summary>
@@ -96,7 +115,7 @@ namespace RepoDb
                 });
                 groupList.Add(fieldList.Join($" {conjunction} "));
             }
-            return $"({groupList.Join($" {conjunction} ")})";
+            return IsNot ? $"NOT ({groupList.Join($" {conjunction} ")})" : $"({groupList.Join($" {conjunction} ")})";
         }
 
         /// <summary>
@@ -187,12 +206,16 @@ namespace RepoDb
             }
 
             // Return the parsed values
-            return parsed;
+            return parsed.FixParameters();
         }
 
         private static QueryGroup Parse<TEntity>(Expression expression) where TEntity : class
         {
-            if (expression.IsBinary())
+            if (expression.IsLambda())
+            {
+                return Parse<TEntity>(expression.ToLambda().Body);
+            }
+            else if (expression.IsBinary())
             {
                 return Parse<TEntity>(expression.ToBinary());
             }
@@ -209,141 +232,98 @@ namespace RepoDb
 
         private static QueryGroup Parse<TEntity>(BinaryExpression expression) where TEntity : class
         {
-            // Identify the kind of expression
-            if (expression.Left.IsMethodCall())
+            var leftQueryGroup = (QueryGroup)null;
+            var rightQueryGroup = (QueryGroup)null;
+            var skipRight = false;
+            var isEqualsTo = true;
+
+            /*
+             * LEFT
+             */
+
+            // Get the value in the right
+            if (expression.Right.IsConstant())
             {
-                var method = expression.Left.ToMethodCall();
-                var right = expression.Right.GetValue();
+                var value = expression.Right.GetValue();
+                isEqualsTo = value is bool && Equals(value, false) != true;
+                skipRight = true;
+            }
 
-                // IN, NOT IN: (p => (new[] { 1, 2 }).Contains(p.Property))
-                if (method.Object == null)
-                {
-                    if (method.Method.Name == StringConstant.Contains)
-                    {
-                        return ParseContainsForArray<TEntity>(method, Equals(true, right) ? Operation.In : Operation.NotIn);
-                    }
-                }
-
-                // LIKE, NOT LIKE: 
-                else if (method.Object.IsMember())
-                {
-                    if (method.Method.Name == StringConstant.Contains ||
-                        method.Method.Name == StringConstant.StartsWith ||
-                        method.Method.Name == StringConstant.EndsWith)
-                    {
-                        var member = method.Object.ToMember();
-                        if (member.Type == typeof(string))
-                        {
-                            if (member.Member.IsPropertyInfo())
-                            {
-                                return ParseContainsForStringProperty<TEntity>(method, Equals(true, right) ? Operation.Like : Operation.NotLike);
-                            }
-                        }
-                    }
-                }
+            // Binary
+            if (expression.Left.IsBinary() == true)
+            {
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToBinary());
+                leftQueryGroup.SetIsNot(isEqualsTo == false);
+            }
+            // Unary
+            else if (expression.Left.IsUnary() == true)
+            {
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), isEqualsTo: isEqualsTo);
+            }
+            // MethodCall
+            else if (expression.Left.IsMethodCall())
+            {
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToMethodCall(), isEqualsTo: isEqualsTo);
             }
             else
             {
-                // Variables needed
-                var queryFields = new List<QueryField>();
-                var queryGroups = new List<QueryGroup>();
-                var conjunction = Conjunction.And;
-
-                // Conjunction
-                if (expression.NodeType == ExpressionType.OrElse)
+                // Extractable
+                if (expression.IsExtractable())
                 {
-                    conjunction = Conjunction.Or;
+                    leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression).AsEnumerable());
                 }
-
-                // Identify the current expression
-                if (expression.CanBeExtracted())
-                {
-                    queryFields.Add(QueryField.Parse<TEntity>(expression));
-                }
-                else
-                {
-                    // Left
-                    if (expression.Left.IsBinary() == false)
-                    {
-                        throw new NotSupportedException($"Left expression '{expression.Left.ToString()}' is currently not supported.");
-                    }
-                    else if (expression.Left.CanBeGrouped())
-                    {
-                        queryGroups.Add(Parse<TEntity>(expression.Left.ToBinary()));
-                    }
-                    else if (expression.Left.CanBeExtracted())
-                    {
-                        queryFields.Add(QueryField.Parse<TEntity>(expression.Left.ToBinary()));
-                    }
-
-                    // Right
-                    if (expression.Right.IsBinary() == false)
-                    {
-                        throw new NotSupportedException($"Right expression '{expression.Right.ToString()}' is currently not supported.");
-                    }
-                    else if (expression.Right.CanBeGrouped())
-                    {
-                        queryGroups.Add(Parse<TEntity>(expression.Right.ToBinary()));
-                    }
-                    else if (expression.Right.CanBeExtracted())
-                    {
-                        queryFields.Add(QueryField.Parse<TEntity>(expression.Right.ToBinary()));
-                    }
-                }
-
-                // Return the result
-                return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
             }
 
-            // Return null if not yet supported
-            return null;
-        }
+            /*
+             * RIGHT
+             */
 
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression) where TEntity : class
-        {
-            // Identify and call the property method
-            if (expression.Operand.IsMethodCall())
+            if (skipRight == false)
             {
-                var method = expression.Operand.ToMethodCall();
-
-                // IN, NOT IN: (p => !(new[] { 1, 2 }).Contains(p.Property))
-                if (method.Object == null)
+                // Binary
+                if (expression.Right.IsBinary() == true)
                 {
-                    if (method.Method.Name == StringConstant.Contains)
-                    {
-                        return ParseContainsForArray<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.In : Operation.NotIn);
-                    }
+                    rightQueryGroup = Parse<TEntity>(expression.Right.ToBinary());
+                }
+                // Unary
+                if (expression.Right.IsUnary() == true)
+                {
+                    var unary = expression.Right.ToUnary();
+                    rightQueryGroup = Parse<TEntity>(unary);
+                }
+                // MethodCall
+                else if (expression.Right.IsMethodCall())
+                {
+                    rightQueryGroup = Parse<TEntity>(expression.Right.ToMethodCall());
                 }
 
-                // LIKE, NOT LIKE: 
-                else if (method.Object.IsMember())
+                // Return both of them
+                if (leftQueryGroup != null && rightQueryGroup != null)
                 {
-                    if (method.Method.Name == StringConstant.Contains ||
-                        method.Method.Name == StringConstant.StartsWith ||
-                        method.Method.Name == StringConstant.EndsWith)
-                    {
-                        var member = method.Object.ToMember();
-                        if (member.Type == typeof(string))
-                        {
-                            if (member.Member.IsPropertyInfo())
-                            {
-                                return ParseContainsForStringProperty<TEntity>(method, expression.NodeType == ExpressionType.Equal ? Operation.Like : Operation.NotLike);
-                            }
-                        }
-                    }
+                    var conjunction = (expression.NodeType == ExpressionType.OrElse) ? Conjunction.Or : Conjunction.And;
+                    return new QueryGroup(null, new[] { leftQueryGroup, rightQueryGroup }, conjunction);
                 }
             }
 
-            // Return null if not supported
+            // Return either one of them
+            return leftQueryGroup ?? rightQueryGroup;
+        }
+
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression, bool isEqualsTo = true) where TEntity : class
+        {
+            if (expression.Operand?.IsMethodCall() == true)
+            {
+                return Parse<TEntity>(expression.Operand.ToMethodCall(), (expression.NodeType == ExpressionType.Not), isEqualsTo);
+            }
             return null;
         }
 
-        private static QueryGroup Parse<TEntity>(MethodCallExpression expression) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
-            // Check methods for the 'And/Or' both 'Array.All()' and 'Array.Any()'
+            // Check methods for the 'Like', both 'Array.<All|Any>()'
             if (expression.Method.Name == StringConstant.All || expression.Method.Name == StringConstant.Any)
             {
-                return ParseAllOrAnyForArray<TEntity>(expression);
+                return ParseAllOrAnyForArray<TEntity>(expression, isNot, isEqualsTo);
             }
 
             // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
@@ -354,13 +334,13 @@ namespace RepoDb
                 {
                     if (expression.Object.ToMember().Type == typeof(string))
                     {
-                        return ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(expression);
+                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
                     }
                 }
                 // Check for the (new [] { value1, value2 }).Contains(p.Property)
                 else
                 {
-                    return ParseContainsForArray<TEntity>(expression, Operation.In);
+                    return ParseContainsForArray<TEntity>(expression, isNot, isEqualsTo);
                 }
             }
 
@@ -372,7 +352,7 @@ namespace RepoDb
                 {
                     if (expression.Object.ToMember().Type == typeof(string))
                     {
-                        return ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(expression);
+                        return ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(expression, isNot, isEqualsTo);
                     }
                 }
             }
@@ -381,7 +361,7 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression) where TEntity : class
+        private static QueryGroup ParseAllOrAnyForArray<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
@@ -409,13 +389,13 @@ namespace RepoDb
 
             // Make sure it is a member
             var binary = lambda.Body.ToBinary();
-            if (binary.Right.IsMember() == false)
+            if (binary.Left.IsMember() == false && binary.Right.IsMember() == false)
             {
-                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+                throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported. Expression must contain a single condition to any property of type '{typeof(TEntity).FullName}'.");
             }
 
             // Make sure it is a property
-            var member = binary.Right.ToMember().Member;
+            var member = binary.Left.IsMember() ? binary.Left.ToMember().Member : binary.Right.ToMember().Member;
             if (member.IsPropertyInfo() == false)
             {
                 throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
@@ -459,19 +439,18 @@ namespace RepoDb
             // Values must be an array
             if (values is Array)
             {
+                var operation = QueryField.GetOperation(binary.NodeType);
                 foreach (var value in (Array)values)
                 {
-                    var operation = binary.NodeType == ExpressionType.Equal ? Operation.Equal : Operation.NotEqual;
-                    var queryField = new QueryField(property.Name, operation, value);
-                    queryFields.Add(queryField);
+                    queryFields.Add(new QueryField(property.Name, operation, value));
                 }
             }
 
             // Return the result
-            return new QueryGroup(queryFields, null, conjunction).FixParameters();
+            return new QueryGroup(queryFields, null, conjunction, (isNot == isEqualsTo));
         }
 
-        private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
+        private static QueryGroup ParseContainsForArray<TEntity>(MethodCallExpression expression, bool isNot, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
@@ -510,10 +489,13 @@ namespace RepoDb
             var values = expression.Arguments.First().GetValue();
 
             // Add to query fields
+            var operation = isNot ? Operation.NotIn : Operation.In;
             var queryField = new QueryField(property.Name, operation, values);
 
             // Return the result
-            return new QueryGroup(queryField.AsEnumerable()).FixParameters();
+            var queryGroup = new QueryGroup(queryField.AsEnumerable());
+            queryGroup.SetIsNot(isEqualsTo == false);
+            return queryGroup;
         }
 
         private static QueryGroup ParseContainsForStringProperty<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
@@ -525,7 +507,7 @@ namespace RepoDb
             }
 
             // Get the last arg
-            var value = Convert.ToString(expression.Arguments.FirstOrDefault());
+            var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
 
             // Get the property
             var property = expression.Object.ToMember().Member.ToPropertyInfo();
@@ -540,10 +522,10 @@ namespace RepoDb
             var queryField = new QueryField(property.Name, operation, ConvertToLikeableValue(expression.Method.Name, value));
 
             // Return the result
-            return new QueryGroup(queryField.AsEnumerable()).FixParameters();
+            return new QueryGroup(queryField.AsEnumerable());
         }
 
-        private static QueryGroup ParseContainsStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression) where TEntity : class
+        private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
             if (expression.Arguments?.Any() == false)
@@ -552,7 +534,7 @@ namespace RepoDb
             }
 
             // Get the value arg
-            var value = Convert.ToString(expression.Arguments.FirstOrDefault());
+            var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
 
             // Make sure it has a value
             if (string.IsNullOrEmpty(value))
@@ -577,10 +559,11 @@ namespace RepoDb
             }
 
             // Add to query fields
-            var queryField = new QueryField(property.Name, Operation.Like, ConvertToLikeableValue(expression.Method.Name, value));
+            var operation = (isNot == isEqualsTo) ? Operation.NotLike : Operation.Like;
+            var queryField = new QueryField(property.Name, operation, ConvertToLikeableValue(expression.Method.Name, value));
 
             // Return the result
-            return new QueryGroup(queryField.AsEnumerable()).FixParameters();
+            return new QueryGroup(queryField.AsEnumerable());
         }
 
         private static string ConvertToLikeableValue(string methodName, string value)

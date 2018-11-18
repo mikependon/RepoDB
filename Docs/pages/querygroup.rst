@@ -212,13 +212,13 @@ Expression way:
 ::
 
 	// Contains (LIKE '%VAL%')
-	var result = connection.Query<Customer>(c => c.Name.Contains("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => c.Name.Contains("Anna"));
 	
 	// Contains (LIKE 'VAL%')
-	var result = connection.Query<Customer>(c => c.Name.StartsWith("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => c.Name.StartsWith("Anna"));
 
 	// Contains (LIKE '%VAL')
-	var result = connection.Query<Customer>(c => c.Name.EndsWith("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => c.Name.EndsWith("Anna"));
 
 Explicit way:
 
@@ -244,13 +244,13 @@ Expression way:
 ::
 
 	// Contains (LIKE '%VAL%')
-	var result = connection.Query<Customer>(c => !c.Name.Contains("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => !c.Name.Contains("Anna"));
 	
 	// Contains (LIKE 'VAL%')
-	var result = connection.Query<Customer>(c => !c.Name.StartsWith("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => !c.Name.StartsWith("Anna"));
 
 	// Contains (LIKE '%VAL')
-	var result = connection.Query<Customer>(c => !c.Name.EndsWith("Anna")); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => !c.Name.EndsWith("Anna"));
 
 Explicit way:
 
@@ -349,7 +349,7 @@ Expression way:
 
 ::
 
-	var result = connection.Query<Customer>(c => (new [] { 10045, 10046, 10047, 10048 }).Contains(c.Id)); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => (new [] { 10045, 10046, 10047, 10048 }).Contains(c.Id));
 
 Explicit way:
 
@@ -374,7 +374,7 @@ Expression way:
 
 ::
 
-	var result = connection.Query<Customer>(c => !(new [] { 10045, 10046, 10047, 10048 }).Contains(c.Id)); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => !(new [] { 10045, 10046, 10047, 10048 }).Contains(c.Id));
 
 Explicit way:
 
@@ -415,7 +415,7 @@ Expression way:
 	var result = connection.Query<Customer>(c => (new [] { "Anna", "Tom Hawks", "Frank Myers", "Joe Austin" }).All(c.Name));
 
 	// Different operations (Equal, Like, NotEqual, GreaterThan, etc)
-	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") && c.Name != "Tom Hawks" && !(new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name)); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") && c.Name != "Tom Hawks" && !(new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name));
 
 Explicit way:
 
@@ -466,7 +466,7 @@ Expression way:
 	var result = connection.Query<Customer>(c => (new [] { "Anna", "Tom Hawks", "Frank Myers", "Joe Austin" }).Any(c.Name));
 
 	// Different operations (Equal, Like, NotEqual, GreaterThan, etc)
-	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") || c.Name == "Tom Hawks" || (new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name)); // Supported at version above 1.7.0-beta1
+	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") || c.Name == "Tom Hawks" || (new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name));
 
 Explicit way:
 

@@ -361,5 +361,347 @@ namespace RepoDb.UnitTests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        // Contains
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyContains()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "%A%";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyContainsWhereValueHasWildcardsAtLeft()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("%A"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "%A%";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyContainsWhereValueHasWildcardsAtRight()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A%"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "%A%";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyStartsWith()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "A%";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyStartsWithWhereValueHasWildcardsAtRight()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.StartsWith("A%"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "A%";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyEndsWith()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("A"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "%A";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForStringPropertyEndsWithWhereValueHasWildcardsAtLeft()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.EndsWith("%A"));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+            var expected = "%A";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayContains()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.IsTrue(actual is Array);
+            Assert.AreEqual("A", ((Array)actual).GetValue(0));
+            Assert.AreEqual("B", ((Array)actual).GetValue(1));
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotContains()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString));
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.IsTrue(actual is Array);
+            Assert.AreEqual("A", ((Array)actual).GetValue(0));
+            Assert.AreEqual("B", ((Array)actual).GetValue(1));
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayContainsEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { "A", "B" }).Contains(e.PropertyString) == false);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.IsTrue(actual is Array);
+            Assert.AreEqual("A", ((Array)actual).GetValue(0));
+            Assert.AreEqual("B", ((Array)actual).GetValue(1));
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotContainsEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { "A", "B" }).Contains(e.PropertyString) == false);
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.IsTrue(actual is Array);
+            Assert.AreEqual("A", ((Array)actual).GetValue(0));
+            Assert.AreEqual("B", ((Array)actual).GetValue(1));
+        }
+
+        // All
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAll()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString));
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAllEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == false);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAllEqualsTrue()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s != p.PropertyString) == true);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAll()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).All(s => s == p.PropertyString));
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAllEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == false);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAllEqualsTrue()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).All(s => s == p.PropertyString) == true);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        // Any
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAny()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString));
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAnyEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == false);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayAnyEqualsTrue()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s != p.PropertyString) == true);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAny()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => !(new[] { "A", "B" }).Any(s => s == p.PropertyString));
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAnyEqualsFalse()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == false);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionValueForArrayNotAnyEqualsTrue()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(p => (new[] { "A", "B" }).Any(s => s == p.PropertyString) == true);
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual("A", actual1);
+            Assert.AreEqual("B", actual2);
+        }
     }
 }
