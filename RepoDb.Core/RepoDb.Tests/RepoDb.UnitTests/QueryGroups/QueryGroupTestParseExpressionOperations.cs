@@ -73,6 +73,32 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        // Equals Boolean
+
+        [TestMethod]
+        public void TestParseExpressionForEqualEqualsFalse()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1) == false).GetString();
+            var expected = "NOT ([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestParseExpressionForEqualEqualsTrue()
+        {
+            // Act
+            var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1) == true).GetString();
+            var expected = "([PropertyInt] = @PropertyInt)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        // ExpectedException
+
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnParseExpressionWithoutProperty()
         {

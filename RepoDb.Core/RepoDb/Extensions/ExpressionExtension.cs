@@ -1,5 +1,4 @@
-﻿using RepoDb.Exceptions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -27,12 +26,20 @@ namespace RepoDb.Extensions
                 ExpressionType.LessThanOrEqual
             };
 
+        private readonly static ExpressionType[] m_mathematicalExpressionTypes = new[]
+            {
+                ExpressionType.Add,
+                ExpressionType.Subtract,
+                ExpressionType.Multiply,
+                ExpressionType.Divide
+            };
+
         /// <summary>
         /// Identify whether the instance of <see cref="Expression"/> can be extracted as <see cref="QueryField"/> object.
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be extracted as <see cref="QueryField"/> object.</returns>
-        public static bool CanBeExtracted(this Expression expression)
+        public static bool IsExtractable(this Expression expression)
         {
             return m_extractableExpressionTypes.Contains(expression.NodeType);
         }
@@ -42,9 +49,19 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
         /// <returns>Returns true if the expression can be grouped as <see cref="QueryGroup"/> object.</returns>
-        public static bool CanBeGrouped(this Expression expression)
+        public static bool IsGroupable(this Expression expression)
         {
             return expression.NodeType == ExpressionType.AndAlso || expression.NodeType == ExpressionType.OrElse;
+        }
+
+        /// <summary>
+        /// Identify whether the instance of <see cref="Expression"/> is using the <see cref="Math"/> object operations.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="Expression"/> object to be identified.</param>
+        /// <returns>Returns true if the expression is using the <see cref="Math"/> object operations.</returns>
+        public static bool IsMathematical(this Expression expression)
+        {
+            return m_mathematicalExpressionTypes.Contains(expression.NodeType);
         }
 
         /// <summary>
@@ -58,11 +75,61 @@ namespace RepoDb.Extensions
             {
                 return expression.Left.ToMember().Member.Name;
             }
-            if (expression.Right.IsMember())
+            else if (expression.Left.IsUnary())
             {
-                return expression.Right.ToMember().Member.Name;
+                return expression.Left.ToUnary().GetName();
             }
-            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the name of the operand defines on the current instance of <see cref="UnaryExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="UnaryExpression"/> to be checked.</param>
+        /// <returns>The name of the operand.</returns>
+        public static string GetName(this UnaryExpression expression)
+        {
+            if (expression.Operand.IsMethodCall())
+            {
+                return expression.Operand.ToMethodCall().GetName();
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the name of the operand defines on the current instance of <see cref="MethodCallExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="MethodCallExpression"/> to be checked.</param>
+        /// <returns>The name of the operand.</returns>
+        public static string GetName(this MethodCallExpression expression)
+        {
+            if (expression.Object?.IsMember() == true)
+            {
+                return expression.Object.ToMember().GetName();
+            }
+            else
+            {
+                // Contains
+                if (expression.Method.Name == StringConstant.Contains)
+                {
+                    var last = expression.Arguments?.Last();
+                    if (last?.IsMember() == true)
+                    {
+                        return last.ToMember().Member.Name;
+                    }
+                }
+            }
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
+        }
+
+        /// <summary>
+        /// Gets the name of the <see cref="MemberInfo"/> defines on the current instance of <see cref="MemberExpression"/> object.
+        /// </summary>
+        /// <param name="expression">The instance of <see cref="MemberExpression"/> to be checked.</param>
+        /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
+        public static string GetName(this MemberExpression expression)
+        {
+            return expression.Member.Name;
         }
 
         #region GetValue
@@ -118,7 +185,7 @@ namespace RepoDb.Extensions
             {
                 return expression.ToDefault().GetValue();
             }
-            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         /// <summary>
@@ -128,18 +195,11 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="BinaryExpression"/> object.</returns>
         public static object GetValue(this BinaryExpression expression)
         {
-            return expression.GetValue(true);
-        }
-
-        /// <summary>
-        /// Gets a value from the current instance of <see cref="BinaryExpression"/> object.
-        /// </summary>
-        /// <param name="expression">The instance of <see cref="BinaryExpression"/> object where the value is to be extracted.</param>
-        /// <param name="includeLeft">True if the value at the left side will also be retrieved if the value at the right is NULL.</param>
-        /// <returns>The extracted value from <see cref="BinaryExpression"/> object.</returns>
-        public static object GetValue(this BinaryExpression expression, bool includeLeft = true)
-        {
-            return expression.Right.GetValue() ?? (includeLeft ? expression.Left.GetValue() : null);
+            if (IsMathematical(expression))
+            {
+                throw new NotSupportedException($"A mathematical expression '{expression.ToString()}' is currently not supported.");
+            }
+            return expression.Right.GetValue();
         }
 
         /// <summary>
@@ -169,8 +229,7 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
         public static object GetValue(this MethodCallExpression expression)
         {
-            return expression.Method.GetValue(expression.Object?.GetValue(),
-                expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
+            return expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
         }
 
         /// <summary>
@@ -236,8 +295,36 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="ConditionalExpression"/> object.</returns>
         public static object GetValue(this ConditionalExpression expression)
         {
+            var test = expression.Test.GetValue();
             var ifTrue = expression.IfTrue.GetValue();
-            return expression.Test.GetValue() == ifTrue ? ifTrue : expression.IfFalse.GetValue();
+            if (expression.Test.NodeType == ExpressionType.Equal)
+            {
+                return test == ifTrue ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else if (expression.Test.NodeType == ExpressionType.NotEqual)
+            {
+                return test != ifTrue ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else if (expression.Test.NodeType > ExpressionType.GreaterThan)
+            {
+                return test?.ToNumber() > ifTrue.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else if (expression.Test.NodeType > ExpressionType.GreaterThanOrEqual)
+            {
+                return test?.ToNumber() >= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else if (expression.Test.NodeType > ExpressionType.LessThan)
+            {
+                return test?.ToNumber() < ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else if (expression.Test.NodeType > ExpressionType.LessThanOrEqual)
+            {
+                return test?.ToNumber() <= ifTrue?.ToNumber() ? ifTrue : expression.IfFalse.GetValue();
+            }
+            else
+            {
+                throw new NotSupportedException($"The operation '{expression.NodeType.ToString()}' at expression '{expression.ToString()}' is currently not supported.");
+            }
         }
 
         /// <summary>
@@ -252,7 +339,7 @@ namespace RepoDb.Extensions
                 case "TypedParameterExpression":
                     return Activator.CreateInstance(expression.Type);
             }
-            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is currently not supported.");
+            throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
         }
 
         /// <summary>

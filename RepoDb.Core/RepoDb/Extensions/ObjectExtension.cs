@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -92,6 +93,58 @@ namespace RepoDb.Extensions
         public static object Coalesce(this object obj, params object[] parameters)
         {
             return parameters?.First(param => param != null);
+        }
+
+        /// <summary>
+        /// Identify whether an object is a decimal.
+        /// </summary>
+        /// <param name="value">The value to be identified.</param>
+        /// <returns>True if the value is a decimal.</returns>
+        public static bool IsDecimal(this object value)
+        {
+            return value is float ||
+                value is double ||
+                value is decimal;
+        }
+
+        /// <summary>
+        /// Identify whether an object is a number.
+        /// </summary>
+        /// <param name="value">The value to be identified.</param>
+        /// <returns>True if the value is a number.</returns>
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte ||
+                value is byte ||
+                value is short ||
+                value is ushort ||
+                value is int ||
+                value is uint ||
+                value is long ||
+                value is ulong ||
+                value is float ||
+                value is double ||
+                value is decimal;
+        }
+
+        /// <summary>
+        /// Converts an object to a <see cref="decimal"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>A <see cref="decimal"/> value of the object.</returns>
+        public static double ToDecimal(this object value)
+        {
+            return Convert.ToDouble(value);
+        }
+
+        /// <summary>
+        /// Converts an object to a <see cref="long"/>.
+        /// </summary>
+        /// <param name="value">The value to be converted.</param>
+        /// <returns>A <see cref="long"/> value of the object.</returns>
+        public static long ToNumber(this object value)
+        {
+            return Convert.ToInt64(value);
         }
     }
 }

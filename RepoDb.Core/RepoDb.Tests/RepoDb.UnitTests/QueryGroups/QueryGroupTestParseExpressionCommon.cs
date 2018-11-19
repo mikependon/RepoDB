@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 
 namespace RepoDb.UnitTests
@@ -21,18 +22,11 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestParseExpressionWithNameAtRight()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnParseExpressionWithNameAtRight()
         {
-            // Setup
-            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt);
-
             // Act
-            var actual = parsed.QueryFields.First().Field.Name;
-            var expected = "PropertyInt";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
+            QueryGroup.Parse<QueryGroupTestExpressionClass>(e => 1 == e.PropertyInt);
         }
 
         // Properties
@@ -42,7 +36,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyInt == 2).GetString();
-            var expected = "([PropertyInt] = @PropertyInt AND [PropertyInt] = @PropertyInt_1)";
+            var expected = "(([PropertyInt] = @PropertyInt) AND ([PropertyInt] = @PropertyInt_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -53,7 +47,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyInt == 2).GetString();
-            var expected = "([PropertyInt] = @PropertyInt OR [PropertyInt] = @PropertyInt_1)";
+            var expected = "(([PropertyInt] = @PropertyInt) OR ([PropertyInt] = @PropertyInt_1))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -66,7 +60,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyString == "A").GetString();
-            var expected = "([PropertyInt] = @PropertyInt AND [PropertyString] = @PropertyString)";
+            var expected = "(([PropertyInt] = @PropertyInt) AND ([PropertyString] = @PropertyString))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -77,7 +71,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyString == "A").GetString();
-            var expected = "([PropertyInt] = @PropertyInt OR [PropertyString] = @PropertyString)";
+            var expected = "(([PropertyInt] = @PropertyInt) OR ([PropertyString] = @PropertyString))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -88,7 +82,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) && e.PropertyString == "A").GetString();
-            var expected = "([PropertyString] = @PropertyString AND ([PropertyInt] = @PropertyInt OR [PropertyDouble] = @PropertyDouble))";
+            var expected = "((([PropertyInt] = @PropertyInt) OR ([PropertyDouble] = @PropertyDouble)) AND ([PropertyString] = @PropertyString))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -99,7 +93,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) || e.PropertyString == "A").GetString();
-            var expected = "([PropertyString] = @PropertyString OR ([PropertyInt] = @PropertyInt AND [PropertyDouble] = @PropertyDouble))";
+            var expected = "((([PropertyInt] = @PropertyInt) AND ([PropertyDouble] = @PropertyDouble)) OR ([PropertyString] = @PropertyString))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -110,7 +104,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) && (e.PropertyString == "A" && e.PropertySingle == 1)).GetString();
-            var expected = "(([PropertyInt] = @PropertyInt AND [PropertyDouble] = @PropertyDouble) AND ([PropertyString] = @PropertyString AND [PropertySingle] = @PropertySingle))";
+            var expected = "((([PropertyInt] = @PropertyInt) AND ([PropertyDouble] = @PropertyDouble)) AND (([PropertyString] = @PropertyString) AND ([PropertySingle] = @PropertySingle)))";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -121,7 +115,7 @@ namespace RepoDb.UnitTests
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) || (e.PropertyString == "A" || e.PropertySingle == 1)).GetString();
-            var expected = "(([PropertyInt] = @PropertyInt OR [PropertyDouble] = @PropertyDouble) OR ([PropertyString] = @PropertyString OR [PropertySingle] = @PropertySingle))";
+            var expected = "((([PropertyInt] = @PropertyInt) OR ([PropertyDouble] = @PropertyDouble)) OR (([PropertyString] = @PropertyString) OR ([PropertySingle] = @PropertySingle)))";
 
             // Assert
             Assert.AreEqual(expected, actual);

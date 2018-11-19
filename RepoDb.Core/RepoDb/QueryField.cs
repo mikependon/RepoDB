@@ -120,7 +120,7 @@ namespace RepoDb
         internal static QueryField Parse<TEntity>(BinaryExpression expression) where TEntity : class
         {
             // Only support the following expression type
-            if (expression.CanBeExtracted() == false)
+            if (expression.IsExtractable() == false)
             {
                 throw new NotSupportedException($"Expression '{expression.ToString()}' is currently not supported.");
             }
@@ -136,16 +136,16 @@ namespace RepoDb
             var value = expression.GetValue();
 
             // Operation
-            var operation = GetOperation(expression);
+            var operation = GetOperation(expression.NodeType);
 
             // Return the value
             return new QueryField(fieldName, operation, value);
         }
 
         // GetOperation
-        private static Operation GetOperation(BinaryExpression expression)
+        internal static Operation GetOperation(ExpressionType expressionType)
         {
-            switch (expression.NodeType)
+            switch (expressionType)
             {
                 case ExpressionType.Equal:
                     return Operation.Equal;
@@ -160,7 +160,7 @@ namespace RepoDb
                 case ExpressionType.LessThanOrEqual:
                     return Operation.LessThanOrEqual;
                 default:
-                    throw new NotSupportedException($"Operation: Expression '{expression.ToString()}' is currently not supported.");
+                    throw new NotSupportedException($"Operation: Expression '{expressionType.ToString()}' is currently not supported.");
             }
         }
 
