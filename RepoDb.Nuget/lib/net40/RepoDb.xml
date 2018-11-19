@@ -604,6 +604,16 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+            <summary>
+            Merges a data in the database by targetting certain fields only.
+            </summary>
+            <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
@@ -629,6 +639,16 @@
             Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the primary key as the default qualifier field.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+            <summary>
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
+            </summary>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
             <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -784,6 +804,18 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.BaseRepository`2.Merge(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Data.IDbTransaction)">
+            <summary>
+            Merges an existing data entity object in the database.
+            </summary>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.BaseRepository`2.Merge(`0,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges an existing data entity object in the database.
@@ -814,6 +846,18 @@
             the qualifier.
             </summary>
             <param name="entity">The entity to be merged.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.MergeAsync(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Data.IDbTransaction)">
+            <summary>
+            Merges an existing data entity object in the database in an asynchronous way.
+            </summary>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -2706,6 +2750,17 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+            <summary>
+            Merges a data in the database by targetting certain fields only.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
@@ -2734,6 +2789,17 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+            <summary>
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
             <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -2904,6 +2970,19 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbRepository`1.Merge``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction)">
+            <summary>
+            Merges an existing data entity object in the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbRepository`1.Merge``1(``0,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges an existing data entity object in the database.
@@ -2937,6 +3016,19 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The entity to be merged.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.MergeAsync``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction)">
+            <summary>
+            Merges an existing data entity object in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -3990,29 +4082,60 @@
             <returns>The underlying type.</returns>
         </member>
         <member name="T:RepoDb.Extensions.ExpressionExtension">
+            Though we know that throwing an exception in the extension is not advisable, but I tend to do it to ensure that the
+            parsing of the Linq expressions are properly handled. Please be guided about this extension that it somehow throws
+            and exception at some scenarios.
             <summary>
             Contains the extension methods for <see cref="T:System.Linq.Expressions.Expression"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.Extensions.ExpressionExtension.CanBeExtracted(System.Linq.Expressions.Expression)">
+        <member name="M:RepoDb.Extensions.ExpressionExtension.IsExtractable(System.Linq.Expressions.Expression)">
             <summary>
             Identify whether the instance of <see cref="T:System.Linq.Expressions.Expression"/> can be extracted as <see cref="T:RepoDb.QueryField"/> object.
             </summary>
             <param name="expression">The instance of <see cref="T:System.Linq.Expressions.Expression"/> object to be identified.</param>
             <returns>Returns true if the expression can be extracted as <see cref="T:RepoDb.QueryField"/> object.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.ExpressionExtension.CanBeGrouped(System.Linq.Expressions.Expression)">
+        <member name="M:RepoDb.Extensions.ExpressionExtension.IsGroupable(System.Linq.Expressions.Expression)">
             <summary>
             Identify whether the instance of <see cref="T:System.Linq.Expressions.Expression"/> can be grouped as <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
             <param name="expression">The instance of <see cref="T:System.Linq.Expressions.Expression"/> object to be identified.</param>
             <returns>Returns true if the expression can be grouped as <see cref="T:RepoDb.QueryGroup"/> object.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.ExpressionExtension.IsMathematical(System.Linq.Expressions.Expression)">
+            <summary>
+            Identify whether the instance of <see cref="T:System.Linq.Expressions.Expression"/> is using the <see cref="T:System.Math"/> object operations.
+            </summary>
+            <param name="expression">The instance of <see cref="T:System.Linq.Expressions.Expression"/> object to be identified.</param>
+            <returns>Returns true if the expression is using the <see cref="T:System.Math"/> object operations.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.ExpressionExtension.GetName(System.Linq.Expressions.BinaryExpression)">
             <summary>
             Gets the name of the <see cref="T:System.Reflection.MemberInfo"/> defines on the current instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> object.
             </summary>
             <param name="expression">The instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> to be checked.</param>
+            <returns>The name of the <see cref="T:System.Reflection.MemberInfo"/>.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ExpressionExtension.GetName(System.Linq.Expressions.UnaryExpression)">
+            <summary>
+            Gets the name of the operand defines on the current instance of <see cref="T:System.Linq.Expressions.UnaryExpression"/> object.
+            </summary>
+            <param name="expression">The instance of <see cref="T:System.Linq.Expressions.UnaryExpression"/> to be checked.</param>
+            <returns>The name of the operand.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ExpressionExtension.GetName(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            Gets the name of the operand defines on the current instance of <see cref="T:System.Linq.Expressions.MethodCallExpression"/> object.
+            </summary>
+            <param name="expression">The instance of <see cref="T:System.Linq.Expressions.MethodCallExpression"/> to be checked.</param>
+            <returns>The name of the operand.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ExpressionExtension.GetName(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            Gets the name of the <see cref="T:System.Reflection.MemberInfo"/> defines on the current instance of <see cref="T:System.Linq.Expressions.MemberExpression"/> object.
+            </summary>
+            <param name="expression">The instance of <see cref="T:System.Linq.Expressions.MemberExpression"/> to be checked.</param>
             <returns>The name of the <see cref="T:System.Reflection.MemberInfo"/>.</returns>
         </member>
         <member name="M:RepoDb.Extensions.ExpressionExtension.GetValue(System.Linq.Expressions.Expression)">
@@ -4027,14 +4150,6 @@
             Gets a value from the current instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> object.
             </summary>
             <param name="expression">The instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> object where the value is to be extracted.</param>
-            <returns>The extracted value from <see cref="T:System.Linq.Expressions.BinaryExpression"/> object.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.ExpressionExtension.GetValue(System.Linq.Expressions.BinaryExpression,System.Boolean)">
-            <summary>
-            Gets a value from the current instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> object.
-            </summary>
-            <param name="expression">The instance of <see cref="T:System.Linq.Expressions.BinaryExpression"/> object where the value is to be extracted.</param>
-            <param name="includeLeft">True if the value at the left side will also be retrieved if the value at the right is NULL.</param>
             <returns>The extracted value from <see cref="T:System.Linq.Expressions.BinaryExpression"/> object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.ExpressionExtension.GetValue(System.Linq.Expressions.ConstantExpression)">
@@ -4282,10 +4397,10 @@
         </member>
         <member name="M:RepoDb.Extensions.FieldExtension.AsEnumerable(RepoDb.Field)">
             <summary>
-            Converts an instance of a field into an enumerable list of field.
+            Converts an instance of a <see cref="T:RepoDb.Field"/> into an <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:RepoDb.Field"/> object.
             </summary>
-            <param name="field">The field to be converted.</param>
-            <returns>An enumerable list of field.</returns>
+            <param name="field">The <see cref="T:RepoDb.Field"/> to be converted.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> list of <see cref="T:RepoDb.Field"/> object.</returns>
         </member>
         <member name="T:RepoDb.Extensions.MemberBindingExtension">
             <summary>
@@ -4426,6 +4541,34 @@
             <param name="obj">The current object.</param>
             <param name="parameters">The list of parameters.</param>
             <returns>The first non-null object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.IsDecimal(System.Object)">
+            <summary>
+            Identify whether an object is a decimal.
+            </summary>
+            <param name="value">The value to be identified.</param>
+            <returns>True if the value is a decimal.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.IsNumber(System.Object)">
+            <summary>
+            Identify whether an object is a number.
+            </summary>
+            <param name="value">The value to be identified.</param>
+            <returns>True if the value is a number.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.ToDecimal(System.Object)">
+            <summary>
+            Converts an object to a <see cref="T:System.Decimal"/>.
+            </summary>
+            <param name="value">The value to be converted.</param>
+            <returns>A <see cref="T:System.Decimal"/> value of the object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.ToNumber(System.Object)">
+            <summary>
+            Converts an object to a <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="value">The value to be converted.</param>
+            <returns>A <see cref="T:System.Int64"/> value of the object.</returns>
         </member>
         <member name="T:RepoDb.Extensions.OrderFieldExtension">
             <summary>
@@ -5329,6 +5472,21 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges a data in the database by targetting certain fields only. It uses the primary key as the default qualifier field.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only. It uses the primary key as the default qualifier field.
@@ -5366,6 +5524,21 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges a data in the database by targetting certain fields only in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
             <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
@@ -5599,6 +5772,24 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.Merge``1(System.Data.IDbConnection,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges an existing data entity object in the database. By default, this operation uses the primary key property as
+            the qualifier.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifier field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.Merge``1(System.Data.IDbConnection,``0,RepoDb.Field,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges an existing data entity object in the database. By default, this operation uses the primary key property as
@@ -5642,6 +5833,23 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The entity to be merged.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.MergeAsync``1(System.Data.IDbConnection,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges an existing data entity object in the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The entity to be merged.</param>
+            <param name="qualifier">
+            The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+            (equation of the fields) of the source and destination tables.
+            </param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -7167,7 +7375,7 @@
         </member>
         <member name="M:RepoDb.OrderField.Parse(System.Object)">
             <summary>
-            Parse an object to be used for ordering. The object can have multiple properties for ordering and each property must have
+            Parse an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have
             a value of <see cref="T:RepoDb.Enumerations.Order"/> enumeration.
             </summary>
             <param name="obj">An object to be parsed.</param>
@@ -7893,13 +8101,14 @@
             to define the filtering and query expressions for the actual execution.
             </summary>
         </member>
-        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction)">
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
             <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
             <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
             <param name="conjunction">The conjunction to be used for every group seperation.</param>
+            <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         </member>
         <member name="P:RepoDb.QueryGroup.Conjunction">
             <summary>
@@ -7916,10 +8125,21 @@
             Gets the list of child query groups being grouped by this object.
             </summary>
         </member>
+        <member name="P:RepoDb.QueryGroup.IsNot">
+            <summary>
+            Gets the value whether the grouping is in opposite field-value state.
+            </summary>
+        </member>
         <member name="M:RepoDb.QueryGroup.AppendParametersPrefix">
             <summary>
             Force to append prefixes on the bound parameter objects.
             </summary>
+        </member>
+        <member name="M:RepoDb.QueryGroup.SetIsNot(System.Boolean)">
+            <summary>
+            Sets the value of the <see cref="P:RepoDb.QueryGroup.IsNot"/> property.
+            </summary>
+            <param name="value">The <see cref="T:System.Boolean"/> value the defines the <see cref="P:RepoDb.QueryGroup.IsNot"/> property.</param>
         </member>
         <member name="M:RepoDb.QueryGroup.GetConjunctionText">
             <summary>

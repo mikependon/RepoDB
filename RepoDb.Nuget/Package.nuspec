@@ -2,20 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.7.0-beta1</version>
+    <version>1.7.0-beta2</version>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <title>RepoDb</title>
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.7.0-beta1]
+    [Release 1.7.0-beta2]
     - Introduced Expression-Based Query for Connection and Repository Operations
-    - Introduced Expression-Based Parsing for QueryGroup, QueryField, Field, OrderField
-    - Introduced Array-Based Parameters when calling ExecuteScalar
-    - Removed Support for DataEntityMapper (Multiple Mapping)
-    - Bug Fixes: https://github.com/RepoDb/RepoDb/issues?q=is:issue+is:closed
+    - Introduced Support to All (as Operation.All), Any (as Operation.Any), Contains (as Operation.Like, Operation.NotLike, Operation.In, Operation.NotIn)
+    - Introduced an Expression-Based 'qualifer' field for 'Merge' and 'InlineMerge' operation
+    - Unit Test updates for 'All', 'Any', and 'Contains' operation.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
