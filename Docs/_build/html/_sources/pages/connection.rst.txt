@@ -573,19 +573,19 @@ In the second parameter, the `Field.From` method can also be used.
 
 ::
 	
-	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id)));
+	var id = connection.Merge<Order>(entity, Field.From(nameof(Order.Id)));
 
 Or, via a literal array of string.
 
 ::
 
-	var id = connection.InlineMerge<Order>(entity, Field.From("Id"));
+	var id = connection.Merge<Order>(entity, Field.From("Id"));
 
 Or, via a single field expression can be used as well.
 
 ::
 
-	var id = connection.InlineMerge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
+	var id = connection.Merge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
 
 **Note**: The second parameter can be omitted if the data entity has a primary key.
 
