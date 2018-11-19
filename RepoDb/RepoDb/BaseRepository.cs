@@ -785,6 +785,22 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int InlineMerge(object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineMerge<TEntity>(entity,
+                qualifier: qualifier,
+                overrideIgnore: overrideIgnore,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges a data in the database by targetting certain fields only.
+        /// </summary>
+        /// <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge(object entity, Field qualifier, bool? overrideIgnore = false, IDbTransaction transaction = null)
         {
             return DbRepository.InlineMerge<TEntity>(entity,
@@ -822,6 +838,24 @@ namespace RepoDb
         {
             return Task.Factory.StartNew(() =>
                 DbRepository.InlineMerge<TEntity>(entity,
+                    overrideIgnore: overrideIgnore,
+                    transaction: transaction));
+        }
+
+        /// <summary>
+        /// Merges a data in the database by targetting certain fields only in an asynchronous way.
+        /// </summary>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+        /// <param name="qualifier">The qualifier field to be used by the inline merge operation on a SQL Statement.</param>
+        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> InlineMergeAsync(object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false,
+            IDbTransaction transaction = null)
+        {
+            return Task.Factory.StartNew(() =>
+                DbRepository.InlineMerge<TEntity>(entity: entity,
+                    qualifier: qualifier,
                     overrideIgnore: overrideIgnore,
                     transaction: transaction));
         }
@@ -1085,6 +1119,23 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int Merge(TEntity entity, Expression<Func<TEntity, object>> qualifier, IDbTransaction transaction = null)
+        {
+            return DbRepository.Merge<TEntity>(entity: entity,
+                qualifier: qualifier,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges an existing data entity object in the database.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="qualifier">
+        /// The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+        /// (equation of the fields) of the source and destination tables.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Merge(TEntity entity, Field qualifier, IDbTransaction transaction = null)
         {
             return DbRepository.Merge<TEntity>(entity: entity,
@@ -1121,6 +1172,23 @@ namespace RepoDb
         public Task<int> MergeAsync(TEntity entity, IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Merges an existing data entity object in the database in an asynchronous way.
+        /// </summary>
+        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="qualifier">
+        /// The qualifer field to be used during merge operation. The qualifers are the fields used when qualifying the condition
+        /// (equation of the fields) of the source and destination tables.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> MergeAsync(TEntity entity, Expression<Func<TEntity, object>> qualifier, IDbTransaction transaction = null)
+        {
+            return DbRepository.MergeAsync<TEntity>(entity: entity,
+                qualifier: qualifier,
                 transaction: transaction);
         }
 

@@ -242,7 +242,7 @@ namespace RepoDb
              */
 
             // Get the value in the right
-            if (expression.Right.IsConstant())
+            if (expression.Right.Type == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
                 isEqualsTo = value is bool && Equals(value, false) != true;
@@ -271,6 +271,7 @@ namespace RepoDb
                 if (expression.IsExtractable())
                 {
                     leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression).AsEnumerable());
+                    skipRight = true;
                 }
             }
 
