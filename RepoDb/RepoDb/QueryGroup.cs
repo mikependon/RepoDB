@@ -498,33 +498,6 @@ namespace RepoDb
             return queryGroup;
         }
 
-        private static QueryGroup ParseContainsForStringProperty<TEntity>(MethodCallExpression expression, Operation operation) where TEntity : class
-        {
-            // Return null if there is no any arguments
-            if (expression.Arguments?.Any() == false)
-            {
-                return null;
-            }
-
-            // Get the last arg
-            var value = Convert.ToString(expression.Arguments.FirstOrDefault()?.GetValue());
-
-            // Get the property
-            var property = expression.Object.ToMember().Member.ToPropertyInfo();
-
-            // Make sure the property is in the entity
-            if (PropertyCache.Get<TEntity>().FirstOrDefault(p => p.PropertyInfo == property) == null)
-            {
-                throw new InvalidQueryExpressionException($"Invalid expression '{expression.ToString()}'. The property {property.Name} is not defined on a target type '{typeof(TEntity).FullName}'.");
-            }
-
-            // Add to query fields
-            var queryField = new QueryField(property.Name, operation, ConvertToLikeableValue(expression.Method.Name, value));
-
-            // Return the result
-            return new QueryGroup(queryField.AsEnumerable());
-        }
-
         private static QueryGroup ParseContainsOrStartsWithOrEndsWithForStringProperty<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Return null if there is no any arguments
