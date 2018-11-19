@@ -469,13 +469,19 @@ In the second parameter, the `Field.From` method can also be used.
 	
 	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id), nameof(Order.CustomerId)));
 
-Or, a literal array of string can be used as well.
+Or, via a literal array of string.
 
 ::
 
 	var id = connection.InlineMerge<Order>(entity, Field.From("Id", "CustomerId"));
 
-The second parameter can be omitted if the data entity has a primary key.
+Or, via a single field expression can be used as well.
+
+::
+
+	var id = connection.InlineMerge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
+
+**Note**: The second parameter can be omitted if the data entity has a primary key.
 
 InlineUpdate
 ------------
@@ -569,11 +575,19 @@ In the second parameter, the `Field.From` method can also be used.
 	
 	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id)));
 
-Or, a literal array of string can be used as well.
+Or, via a literal array of string.
 
 ::
 
 	var id = connection.InlineMerge<Order>(entity, Field.From("Id"));
+
+Or, via a single field expression can be used as well.
+
+::
+
+	var id = connection.InlineMerge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
+
+**Note**: The second parameter can be omitted if the data entity has a primary key.
 
 Query
 -----

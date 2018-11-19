@@ -598,11 +598,15 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">)));</span>
 </pre></div>
 </div>
-<p>Or, a literal array of string can be used as well.</p>
+<p>Or, via a literal array of string.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;CustomerId&quot;</span><span class="p">));</span>
 </pre></div>
 </div>
-<p>The second parameter can be omitted if the data entity has a primary key.</p>
+<p>Or, via a single field expression can be used as well.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">);</span> <span class="c1">// Only works for single qualifier</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The second parameter can be omitted if the data entity has a primary key.</p>
 </div>
 <div class="section" id="inlineupdate">
 <h2>InlineUpdate<a class="headerlink" href="#inlineupdate" title="Permalink to this headline">¶</a></h2>
@@ -674,10 +678,15 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">)));</span>
 </pre></div>
 </div>
-<p>Or, a literal array of string can be used as well.</p>
+<p>Or, via a literal array of string.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">));</span>
 </pre></div>
 </div>
+<p>Or, via a single field expression can be used as well.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">,</span> <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">);</span> <span class="c1">// Only works for single qualifier</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: The second parameter can be omitted if the data entity has a primary key.</p>
 </div>
 <div class="section" id="query">
 <h2>Query<a class="headerlink" href="#query" title="Permalink to this headline">¶</a></h2>
