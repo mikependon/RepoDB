@@ -1689,6 +1689,12 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
+        <member name="M:RepoDb.CommandTextCache.EnsureStatementBuilder(RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Throws an exception of the builder is not defined.
+            </summary>
+            <param name="builder">The builder to be checked.</param>
+        </member>
         <member name="T:RepoDb.Constant">
             <summary>
             A class that holds the constant values for <see cref="N:RepoDb"/> library.
@@ -6482,6 +6488,13 @@
             <param name="provider">The type of the provider to be used for identification.</param>
             <returns>Returns true if the <see cref="T:System.Data.IDbConnection"/> object is of type of the target provider.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.GetProvider(System.Data.IDbConnection)">
+            <summary>
+            Gets the provider of the current <see cref="T:System.Data.IDbConnection"/> object.
+            </summary>
+            <param name="connection">The target connection object.</param>
+            <returns>The provider of the target <see cref="T:System.Data.IDbConnection"/> object.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.CreateCommand(System.Data.IDbConnection,System.String,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Creates a command object.
@@ -9477,62 +9490,50 @@
             <param name="where">The query expression for SQL statement.</param>
             <returns>A string containing the composed SQL Statement for update operation.</returns>
         </member>
-        <member name="T:RepoDb.StatementBuilderMap">
+        <member name="T:RepoDb.StatementBuilderMapItem">
             <summary>
-            A class used as an map-item when mapping a statement builder (typeof <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>)
-            to be used for every connection type (typeof <see cref="T:System.Data.Common.DbConnection"/>).
+            A map item between the <see cref="P:RepoDb.StatementBuilderMapItem.Provider"/>and <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>.
             </summary>
         </member>
-        <member name="M:RepoDb.StatementBuilderMap.#ctor(System.Type,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.StatementBuilderMapItem.#ctor(RepoDb.Enumerations.Provider,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Creates a new instance of <see cref="T:RepoDb.StatementBuilderMap"/> object.
+            Creates a new instance of <see cref="T:RepoDb.StatementBuilderMapItem"/> object.
             </summary>
-            <param name="dbConnectionType">
-            The target type of the database connection to be used for mapping. This must be of type <see cref="T:System.Data.Common.DbConnection"/>, or else,
-            an argument exception will be thrown.
-            </param>
+            <param name="provider">The target provider.</param>
             <param name="statementBuilder">The statement builder to be used for mapping.</param>
         </member>
-        <member name="P:RepoDb.StatementBuilderMap.DbConnectionType">
+        <member name="P:RepoDb.StatementBuilderMapItem.Provider">
             <summary>
-            Gets the type of the database connection object that is being used for mapping.
+            Gets the provider.
             </summary>
         </member>
-        <member name="P:RepoDb.StatementBuilderMap.StatementBuilder">
+        <member name="P:RepoDb.StatementBuilderMapItem.StatementBuilder">
             <summary>
             Gets the statement builder object that is being used for mapping.
             </summary>
         </member>
         <member name="T:RepoDb.StatementBuilderMapper">
             <summary>
-            A static class used to map a statement builder (typeof <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>) object into a database connection type
-            (typeof <see cref="T:System.Data.Common.DbConnection"/>) object. The mapping defines by this class will bypass all the mappings made on the repository
-            level for the specified database connection type.
+            A class used to map a <see cref="T:RepoDb.Enumerations.Provider"/> to a <see cref="T:RepoDb.Interfaces.IStatementBuilder"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.StatementBuilderMapper.Get(System.Type)">
+        <member name="M:RepoDb.StatementBuilderMapper.Get(RepoDb.Enumerations.Provider)">
             <summary>
-            Gets an instance of mapping defined for the target type.
+            Gets an instance of mapping defined for the target <see cref="T:RepoDb.Enumerations.Provider"/>.
             </summary>
-            <param name="dbConnectionType">
-            The target type of the database connection to be used for mapping. This must be of type <see cref="T:System.Data.Common.DbConnection"/>, or else,
-            an argument exception will be thrown.
-            </param>
-            <returns>An instance of <see cref="T:RepoDb.StatementBuilderMap"/> defined on the mapping.</returns>
+            <param name="provider">The target provider.</param>
+            <returns>An instance of <see cref="T:RepoDb.StatementBuilderMapItem"/> defined on the mapping.</returns>
         </member>
-        <member name="M:RepoDb.StatementBuilderMapper.Map(System.Type,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.StatementBuilderMapper.Map(RepoDb.Enumerations.Provider,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
-            Creates a mapping between the statement builder (typeof <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>) object and database connection type
-            (typeof <see cref="T:System.Data.Common.DbConnection"/>) object.
+            Creates a mapping between the <see cref="T:RepoDb.Enumerations.Provider"/> and <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>) object.
             </summary>
-            <param name="dbConnectionType">
-            The target type of the database connection to be used for mapping. This must be of type <see cref="T:System.Data.Common.DbConnection"/>, or else,
-            an argument exception will be thrown.
-            </param>
+            <param name="provider">The target provider.</param>
             <param name="statementBuilder">
             The statement builder to be mapped (typeof <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>).
             </param>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:RepoDb.StatementBuilderMapper.Map(RepoDb.StatementBuilderMapItem)" -->
         <member name="T:RepoDb.TraceLog">
             <summary>
             A tracing log object used in the tracing operations.

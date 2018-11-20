@@ -12,6 +12,8 @@
     <releaseNotes>
     [Release 1.7.0-beta3]
     - Fixed Target Framework Referencing Issues of NuGet Package
+    - Added a new enumeration for data providers.
+    - Updated the statement builder mapper to use the Provider object instead of DbConnection type.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

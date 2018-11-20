@@ -12,7 +12,9 @@
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
     <PackageReleaseNotes>[Release 1.7.0-beta3]
-- Fixed Target Framework Referencing Issues of NuGet Package</PackageReleaseNotes>
+- Fixed Target Framework Referencing Issues of NuGet Package
+- Added a new enumeration for data providers.
+- Updated the statement builder mapper to use the Provider object instead of DbConnection type.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>

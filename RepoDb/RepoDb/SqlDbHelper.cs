@@ -1,8 +1,5 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using System;
+﻿using RepoDb.Extensions;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace RepoDb
