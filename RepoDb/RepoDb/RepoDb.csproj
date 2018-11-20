@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Attributes\IdentityAttribute.cs" />
+    <Compile Include="Enumerations\Provider.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
     <Compile Include="ClassMappedNameCache.cs" />
@@ -159,7 +160,7 @@
     <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\Delegates.cs" />
     <Compile Include="SqlDbStatementBuilder.cs" />
-    <Compile Include="StatementBuilderMap.cs" />
+    <Compile Include="StatementBuilderMapItem.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapItem.cs" />

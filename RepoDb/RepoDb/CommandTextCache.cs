@@ -26,9 +26,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateBatchQuery(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where,
                     page: request.Page,
@@ -51,9 +50,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateCount(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
                 m_cache.TryAdd(request, commandText);
@@ -73,9 +71,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateDelete(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
                 m_cache.TryAdd(request, commandText);
@@ -95,9 +92,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateDeleteAll(queryBuilder: new QueryBuilder<TEntity>());
                 m_cache.TryAdd(request, commandText);
             }
@@ -123,9 +119,8 @@ namespace RepoDb
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
                 var isPrimaryIdentity = (identity != null);
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
@@ -168,9 +163,8 @@ namespace RepoDb
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
                 var isPrimaryIdentity = (identity != null);
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
@@ -208,9 +202,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateInlineUpdate(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where,
                     fields: request.Fields,
@@ -243,9 +236,8 @@ namespace RepoDb
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
                 var isPrimaryIdentity = (identity != null);
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
@@ -284,9 +276,8 @@ namespace RepoDb
                     throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
                 }
                 var isPrimaryIdentity = (identity != null);
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 if (statementBuilder is SqlDbStatementBuilder)
                 {
                     var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
@@ -320,9 +311,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateQuery(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where,
                     orderBy: request.OrderBy,
@@ -344,9 +334,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateTruncate(queryBuilder: new QueryBuilder<TEntity>());
                 m_cache.TryAdd(request, commandText);
             }
@@ -365,9 +354,8 @@ namespace RepoDb
             var commandText = (string)null;
             if (m_cache.TryGetValue(request, out commandText) == false)
             {
-                var statementBuilder = (request.StatementBuilder ??
-                    StatementBuilderMapper.Get(request.Connection?.GetType())?.StatementBuilder ??
-                    new SqlDbStatementBuilder());
+                var statementBuilder = request.StatementBuilder ?? StatementBuilderMapper.Get(request.Connection.GetProvider())?.StatementBuilder;
+                EnsureStatementBuilder(statementBuilder);
                 commandText = statementBuilder.CreateUpdate(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where);
                 m_cache.TryAdd(request, commandText);
@@ -377,6 +365,18 @@ namespace RepoDb
                 request.Where?.AppendParametersPrefix();
             }
             return commandText;
+        }
+
+        /// <summary>
+        /// Throws an exception of the builder is not defined.
+        /// </summary>
+        /// <param name="builder">The builder to be checked.</param>
+        private static void EnsureStatementBuilder(IStatementBuilder builder)
+        {
+            if (builder == null)
+            {
+                throw new InvalidOperationException("There is no 'IStatementBuilder' object defined. Please visit your mapping and make sure to map a 'Provider' to a correct 'IStatementBuilder' object.");
+            }
         }
     }
 }

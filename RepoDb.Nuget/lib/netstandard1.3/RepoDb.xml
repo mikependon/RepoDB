@@ -117,6 +117,236 @@
             Gets a value of the text.
             </summary>
         </member>
+        <member name="T:RepoDb.Enumerations.Provider">
+            <summary>
+            An enumeration used to define the connection provider.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Sql">
+            <summary>
+            A data provider for Sql Server.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Oracle">
+            <summary>
+            A data provider for Oracle.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.SqLite">
+            <summary>
+            A data provider for SqLite.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.PostgreSql">
+            <summary>
+            A data provider for PostgreSql.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.MySql">
+            <summary>
+            A data provider for MySql.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Ole">
+            <summary>
+            A data provider for Ole.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.ConnectionPersistency">
+            <summary>
+            An enumeration that defines the persistency of the <see cref="T:System.Data.Common.DbConnection"/> object used by the repository.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConnectionPersistency.PerCall">
+            <summary>
+            A new connection is being created on every call of the repository operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConnectionPersistency.Instance">
+            <summary>
+            A single connection is being used until the lifetime of the repository.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Conjunction">
+            <summary>
+            An enumeration used to define a conjuction for the query grouping. This enumeration is used at <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Conjunction.And">
+            <summary>
+            The (AND) conjunction.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Conjunction.Or">
+            <summary>
+            The (OR) conjunction.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Order">
+            <summary>
+            An enumeration used to define the ordering of the query field.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Order.Ascending">
+            <summary>
+            The ascending order.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Order.Descending">
+            <summary>
+            The descending order.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Command">
+            <summary>
+            An enumeration used to define the commands for every operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.None">
+            <summary>
+            No defined command and is applicable to every commands.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Query">
+            <summary>
+            A command that is being used when querying a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Insert">
+            <summary>
+            A command that is being used when inserting a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Update">
+            <summary>
+            A command that is being used when updating a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Delete">
+            <summary>
+            A command that is being used when deleting a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Merge">
+            <summary>
+            A command that is being used when merging a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.BatchQuery">
+            <summary>
+            A command that is being used when batch-querying a data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
+            <summary>
+            A command that is being used when doing an inline update on the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.BulkInsert">
+            <summary>
+            A command that is being used when updating a data by targetting certain fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Count">
+            <summary>
+            A command that is being used when counting the data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.DeleteAll">
+            <summary>
+            A command that is being used when deleting all data.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineInsert">
+            <summary>
+            A command that is being used when inserting a data by targetting certain fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.InlineMerge">
+            <summary>
+            A command that is being used when merging a data by targetting certain fields only.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Command.Truncate">
+            <summary>
+            A command that is being used when truncating a table.
+            </summary>
+        </member>
+        <member name="T:RepoDb.Enumerations.Operation">
+            <summary>
+            An enumeration used to define an operation on the query expression.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Equal">
+            <summary>
+            An equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotEqual">
+            <summary>
+            A not-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.LessThan">
+            <summary>
+            A less-than operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.GreaterThan">
+            <summary>
+            A greater-than operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.LessThanOrEqual">
+            <summary>
+            A less-than-or-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.GreaterThanOrEqual">
+            <summary>
+            A greater-than-or-equal operation.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Like">
+            <summary>
+            A like operation. Defines the (LIKE) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotLike">
+            <summary>
+            A not-like operation. Defines the (NOT LIKE) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Between">
+            <summary>
+            A between operation. Defines the (BETWEEN) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotBetween">
+            <summary>
+            A not-between operation. Defines the (NOT BETWEEN) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.In">
+            <summary>
+            An in operation. Defines the (IN) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.NotIn">
+            <summary>
+            A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.All">
+            <summary>
+            An (AND) equation and operation. This defines that all query expression must be true.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Operation.Any">
+            <summary>
+            An (OR) equation and operation. This defines that any query expression must be true.
+            </summary>
+        </member>
         <member name="T:RepoDb.ClassExpression">
             <summary>
             A class used for manipulating class objects via expressions.
@@ -1498,201 +1728,6 @@
         <member name="P:RepoDb.DataEntityChildItemData.DataEntity">
             <summary>
             Gets the data entity object.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.ConnectionPersistency">
-            <summary>
-            An enumeration that defines the persistency of the <see cref="T:System.Data.Common.DbConnection"/> object used by the repository.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.ConnectionPersistency.PerCall">
-            <summary>
-            A new connection is being created on every call of the repository operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.ConnectionPersistency.Instance">
-            <summary>
-            A single connection is being used until the lifetime of the repository.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Conjunction">
-            <summary>
-            An enumeration used to define a conjuction for the query grouping. This enumeration is used at <see cref="T:RepoDb.QueryGroup"/> object.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Conjunction.And">
-            <summary>
-            The (AND) conjunction.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Conjunction.Or">
-            <summary>
-            The (OR) conjunction.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Order">
-            <summary>
-            An enumeration used to define the ordering of the query field.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Order.Ascending">
-            <summary>
-            The ascending order.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Order.Descending">
-            <summary>
-            The descending order.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Command">
-            <summary>
-            An enumeration used to define the commands for every operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.None">
-            <summary>
-            No defined command and is applicable to every commands.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Query">
-            <summary>
-            A command that is being used when querying a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Insert">
-            <summary>
-            A command that is being used when inserting a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Update">
-            <summary>
-            A command that is being used when updating a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Delete">
-            <summary>
-            A command that is being used when deleting a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Merge">
-            <summary>
-            A command that is being used when merging a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BatchQuery">
-            <summary>
-            A command that is being used when batch-querying a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
-            <summary>
-            A command that is being used when doing an inline update on the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BulkInsert">
-            <summary>
-            A command that is being used when updating a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Count">
-            <summary>
-            A command that is being used when counting the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.DeleteAll">
-            <summary>
-            A command that is being used when deleting all data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineInsert">
-            <summary>
-            A command that is being used when inserting a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineMerge">
-            <summary>
-            A command that is being used when merging a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Truncate">
-            <summary>
-            A command that is being used when truncating a table.
-            </summary>
-        </member>
-        <member name="T:RepoDb.Enumerations.Operation">
-            <summary>
-            An enumeration used to define an operation on the query expression.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Equal">
-            <summary>
-            An equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotEqual">
-            <summary>
-            A not-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.LessThan">
-            <summary>
-            A less-than operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.GreaterThan">
-            <summary>
-            A greater-than operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.LessThanOrEqual">
-            <summary>
-            A less-than-or-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.GreaterThanOrEqual">
-            <summary>
-            A greater-than-or-equal operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Like">
-            <summary>
-            A like operation. Defines the (LIKE) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotLike">
-            <summary>
-            A not-like operation. Defines the (NOT LIKE) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Between">
-            <summary>
-            A between operation. Defines the (BETWEEN) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotBetween">
-            <summary>
-            A not-between operation. Defines the (NOT BETWEEN) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.In">
-            <summary>
-            An in operation. Defines the (IN) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.NotIn">
-            <summary>
-            A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.All">
-            <summary>
-            An (AND) equation and operation. This defines that all query expression must be true.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Any">
-            <summary>
-            An (OR) equation and operation. This defines that any query expression must be true.
             </summary>
         </member>
         <member name="T:RepoDb.Exceptions.NoMatchedFieldsException">
@@ -6438,6 +6473,14 @@
             <summary>
             Contains the extension methods for <see cref="T:System.Data.IDbConnection"/> object.
             </summary>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.IsProvider(System.Data.IDbConnection,RepoDb.Enumerations.Provider)">
+            <summary>
+            Identify the provider of the <see cref="T:System.Data.IDbConnection"/> object.
+            </summary>
+            <param name="connection">The connection to be identified.</param>
+            <param name="provider">The type of the provider to be used for identification.</param>
+            <returns>Returns true if the <see cref="T:System.Data.IDbConnection"/> object is of type of the target provider.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.CreateCommand(System.Data.IDbConnection,System.String,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>

@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -23,6 +24,28 @@ namespace RepoDb
     public static class DbConnectionExtension
     {
         #region Other Methods
+
+        /// <summary>
+        /// Identify the provider of the <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <param name="connection">The connection to be identified.</param>
+        /// <param name="provider">The type of the provider to be used for identification.</param>
+        /// <returns>Returns true if the <see cref="IDbConnection"/> object is of type of the target provider.</returns>
+        public static bool IsProvider(this IDbConnection connection, Provider provider)
+        {
+            return connection?.GetType().Name.Equals($"{provider.ToString()}{StringConstant.Connection}") == true;
+        }
+
+        /// <summary>
+        /// Gets the provider of the current <see cref="IDbConnection"/> object.
+        /// </summary>
+        /// <param name="connection">The target connection object.</param>
+        /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
+        public static Provider GetProvider(this IDbConnection connection)
+        {
+            var typeName = connection?.GetType().Name.Replace(StringConstant.Connection, string.Empty);
+            return (Provider)Enum.Parse(typeof(Provider), typeName);
+        }
 
         /// <summary>
         /// Creates a command object.
@@ -343,7 +366,7 @@ namespace RepoDb
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
-            if (connection is System.Data.SqlClient.SqlConnection)
+            if (connection.IsProvider(Provider.Sql))
             {
                 FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }
@@ -593,7 +616,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.GetType() != typeof(System.Data.SqlClient.SqlConnection))
+            if (connection.IsProvider(Provider.Sql) == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -624,7 +647,7 @@ namespace RepoDb
             // Actual Execution
             using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
             {
-                using (var sqlBulkCopy = new System.Data.SqlClient.SqlBulkCopy((System.Data.SqlClient.SqlConnection)connection))
+                using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
                 {
                     sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
                     if (commandTimeout != null && commandTimeout.HasValue)
@@ -2800,7 +2823,7 @@ namespace RepoDb
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
-            if (connection is System.Data.SqlClient.SqlConnection)
+            if (connection.IsProvider(Provider.Sql))
             {
                 FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }

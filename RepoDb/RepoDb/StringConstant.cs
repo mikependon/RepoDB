@@ -14,6 +14,7 @@
         public static readonly string BetweenRight = "BetweenRight";
         public static readonly string ColumnName = "ColumnName";
         public static readonly string Conjunction = "Conjunction";
+        public static readonly string Connection = "Connection";
         public static readonly string Contains = "Contains";
         public static readonly string DataType = "DataType";
         public static readonly string DynamicMethod = "DynamicMethod";
@@ -26,12 +27,18 @@
         public static readonly string For = "For";
         public static readonly string Id = "Id";
         public static readonly string In = "In";
+        public static readonly string MySql = "Mysql";
         public static readonly string Obj = "Obj";
         public static readonly string Object = "Object";
+        public static readonly string Ole = "Ole";
         public static readonly string Operation = "Operation";
         public static readonly string Or = "Or";
+        public static readonly string Oracle = "Oracle";
+        public static readonly string PostgreSql = "PostgreSql";
         public static readonly string QueryGroups = "QueryGroups";
         public static readonly string StartsWith = "StartsWith";
+        public static readonly string Sql = "Sql";
+        public static readonly string SqLite = "SqLite";
         public static readonly string Value = "Value";
     }
 }

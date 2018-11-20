@@ -3747,6 +3747,41 @@
             The descending order.
             </summary>
         </member>
+        <member name="T:RepoDb.Enumerations.Provider">
+            <summary>
+            An enumeration used to define the connection provider.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Sql">
+            <summary>
+            A data provider for Sql Server.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Oracle">
+            <summary>
+            A data provider for Oracle.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.SqLite">
+            <summary>
+            A data provider for SqLite.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.PostgreSql">
+            <summary>
+            A data provider for PostgreSql.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.MySql">
+            <summary>
+            A data provider for MySql.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.Provider.Ole">
+            <summary>
+            A data provider for Ole.
+            </summary>
+        </member>
         <member name="T:RepoDb.Exceptions.CancelledExecutionException">
             <summary>
             An exception that is being thrown when the operation has been cancelled during the tracing.
@@ -4834,6 +4869,14 @@
             <summary>
             Contains the extension methods for <see cref="T:System.Data.IDbConnection"/> object.
             </summary>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.IsProvider(System.Data.IDbConnection,RepoDb.Enumerations.Provider)">
+            <summary>
+            Identify the provider of the <see cref="T:System.Data.IDbConnection"/> object.
+            </summary>
+            <param name="connection">The connection to be identified.</param>
+            <param name="provider">The type of the provider to be used for identification.</param>
+            <returns>Returns true if the <see cref="T:System.Data.IDbConnection"/> object is of type of the target provider.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.CreateCommand(System.Data.IDbConnection,System.String,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>

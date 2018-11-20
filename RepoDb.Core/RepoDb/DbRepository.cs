@@ -146,7 +146,7 @@ namespace RepoDb
             CommandTimeout = commandTimeout;
             Cache = (cache ?? new MemoryCache());
             Trace = trace;
-            StatementBuilder = (statementBuilder ?? StatementBuilderMapper.Get(typeof(TDbConnection))?.StatementBuilder ?? new SqlDbStatementBuilder());
+            StatementBuilder = statementBuilder;
             ConnectionPersistency = connectionPersistency;
         }
 
