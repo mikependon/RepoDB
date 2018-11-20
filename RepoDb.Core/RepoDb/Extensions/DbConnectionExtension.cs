@@ -26,12 +26,12 @@ namespace RepoDb
         #region Other Methods
 
         /// <summary>
-        /// Identify the provider of the <see cref="IDbConnection"/> object.
+        /// Identify the equality of the provider of the <see cref="IDbConnection"/> object.
         /// </summary>
         /// <param name="connection">The connection to be identified.</param>
-        /// <param name="provider">The type of the provider to be used for identification.</param>
+        /// <param name="provider">The provider to be compared.</param>
         /// <returns>Returns true if the <see cref="IDbConnection"/> object is of type of the target provider.</returns>
-        public static bool IsProvider(this IDbConnection connection, Provider provider)
+        internal static bool IsProvider(this IDbConnection connection, Provider provider)
         {
             return connection?.GetType().Name.Equals($"{provider.ToString()}{StringConstant.Connection}") == true;
         }
