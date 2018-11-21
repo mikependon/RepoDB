@@ -66,6 +66,7 @@
     <Compile Include="FieldDefinition.cs" />
     <Compile Include="FieldDefinitionCache.cs" />
     <Compile Include="IdentityCache.cs" />
+    <Compile Include="NamespaceConstant.cs" />
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
     <Compile Include="Constant.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="PrimaryKeyIdentityCache.cs" />
-    <Compile Include="DataEntityListDataReader.cs" />
+    <Compile Include="DataEntityDataReader.cs" />
     <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBigCountableException.cs" />
     <Compile Include="Exceptions\EntityNotCountableException.cs" />

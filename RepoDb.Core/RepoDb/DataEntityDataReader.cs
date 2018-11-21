@@ -1,11 +1,9 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Reflection;
 using System.Collections;
 
 namespace RepoDb
@@ -14,7 +12,7 @@ namespace RepoDb
     /// A data reader object used to manipulate the enumerable list of data entity objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
-    public class DataEntityListDataReader<TEntity> : DbDataReader
+    public class DataEntityDataReader<TEntity> : DbDataReader
         where TEntity : class
     {
         #region Fields
@@ -27,11 +25,11 @@ namespace RepoDb
         #endregion
 
         /// <summary>
-        /// Creates a new instance of <see cref="DataEntityListDataReader{TEntity}"/> object.
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="command">The type of command to be used by this data reader.</param>
-        public DataEntityListDataReader(IEnumerable<TEntity> entities, Command command)
+        public DataEntityDataReader(IEnumerable<TEntity> entities, Command command)
         {
             if (entities == null)
             {
@@ -133,7 +131,7 @@ namespace RepoDb
         /// <summary>
         /// Closes the current data reader.
         /// </summary>
-        public override void Close()
+        public void Close()
         {
             m_isClosed = true;
         }
@@ -372,7 +370,7 @@ namespace RepoDb
         /// Gets the table schema.
         /// </summary>
         /// <returns>An instance of the <see cref="DataTable"/> with the table schema.</returns>
-        public override DataTable GetSchemaTable()
+        public DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");

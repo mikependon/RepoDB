@@ -26,14 +26,30 @@ namespace RepoDb
         #region Other Methods
 
         /// <summary>
-        /// Identify the equality of the provider of the <see cref="IDbConnection"/> object.
+        /// Identify whether the current instance of <see cref="IDbConnection"/> object corresponds to the target provider.
         /// </summary>
         /// <param name="connection">The connection to be identified.</param>
-        /// <param name="provider">The provider to be compared.</param>
-        /// <returns>Returns true if the <see cref="IDbConnection"/> object is of type of the target provider.</returns>
-        internal static bool IsProvider(this IDbConnection connection, Provider provider)
+        /// <param name="provider">The target provider for comparisson.</param>
+        /// <returns>Returns true if the <see cref="IDbConnection"/> object corresponds to the target provider.</returns>
+        internal static bool IsForProvider(this IDbConnection connection, Provider provider)
         {
-            return connection?.GetType().Name.Equals($"{provider.ToString()}{StringConstant.Connection}") == true;
+            switch (provider)
+            {
+                case Provider.Sql:
+                    return NamespaceConstant.SqlConnection.Equals(connection.GetType().FullName);
+                case Provider.Oracle:
+                    return NamespaceConstant.OracleConnection.Equals(connection.GetType().FullName);
+                case Provider.Sqlite:
+                    return NamespaceConstant.SqliteConnection.Equals(connection.GetType().FullName);
+                case Provider.Npgsql:
+                    return NamespaceConstant.NpgsqlConnection.Equals(connection.GetType().FullName);
+                case Provider.MySql:
+                    return NamespaceConstant.MySqlConnection.Equals(connection.GetType().FullName);
+                case Provider.OleDb:
+                    return NamespaceConstant.OleDbConnection.Equals(connection.GetType().FullName);
+                default:
+                    return false;
+            }
         }
 
         /// <summary>
@@ -41,10 +57,25 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The target connection object.</param>
         /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
-        public static Provider GetProvider(this IDbConnection connection)
+        internal static Provider GetProvider(this IDbConnection connection)
         {
-            var typeName = connection?.GetType().Name.Replace(StringConstant.Connection, string.Empty);
-            return (Provider)Enum.Parse(typeof(Provider), typeName);
+            switch (connection.GetType().FullName)
+            {
+                case NamespaceConstant.SqlConnection:
+                    return Provider.Sql;
+                case NamespaceConstant.OracleConnection:
+                    return Provider.Oracle;
+                case NamespaceConstant.SqliteConnection:
+                    return Provider.Sqlite;
+                case NamespaceConstant.NpgsqlConnection:
+                    return Provider.Npgsql;
+                case NamespaceConstant.MySqlConnection:
+                    return Provider.MySql;
+                case NamespaceConstant.OleDbConnection:
+                    return Provider.OleDb;
+                default:
+                    throw new NotSupportedException($"The connection object type '{connection.GetType().FullName}' is currently not supported.");
+            }
         }
 
         /// <summary>
@@ -366,7 +397,7 @@ namespace RepoDb
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
-            if (connection.IsProvider(Provider.Sql))
+            if (connection.IsForProvider(Provider.Sql))
             {
                 FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }
@@ -616,7 +647,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate, only supports SqlConnection
-            if (connection.IsProvider(Provider.Sql) == false)
+            if (connection.IsForProvider(Provider.Sql) == false)
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
@@ -645,7 +676,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, command))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
                 {
@@ -2823,7 +2854,7 @@ namespace RepoDb
             var param = where?.AsObject();
 
             // Database pre-touch for field definitions
-            if (connection.IsProvider(Provider.Sql))
+            if (connection.IsForProvider(Provider.Sql))
             {
                 FieldDefinitionCache.Get<TEntity>(connection.ConnectionString);
             }

@@ -14,20 +14,20 @@
         /// </summary>
         Oracle = 2,
         /// <summary>
-        /// A data provider for SqLite.
+        /// A data provider for Sqlite.
         /// </summary>
-        SqLite = 3,
+        Sqlite = 3,
         /// <summary>
-        /// A data provider for PostgreSql.
+        /// A data provider for Npgsql.
         /// </summary>
-        PostgreSql = 4,
+        Npgsql = 4,
         /// <summary>
         /// A data provider for MySql.
         /// </summary>
         MySql = 5,
         /// <summary>
-        /// A data provider for Ole.
+        /// A data provider for OleDb.
         /// </summary>
-        Ole = 6
+        OleDb = 6
     }
 }

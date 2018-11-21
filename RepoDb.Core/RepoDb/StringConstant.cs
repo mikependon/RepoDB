@@ -1,44 +1,44 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class that holds the constant values fo <see cref="RepoDb"/> library.
+    /// A class that holds the string constant values for <see cref="RepoDb"/> library.
     /// </summary>
     internal static class StringConstant
     {
         // Strings
-        public static readonly string All = "All";
-        public static readonly string And = "And";
-        public static readonly string Any = "Any";
-        public static readonly string As = "As";
-        public static readonly string BetweenLeft = "BetweenLeft";
-        public static readonly string BetweenRight = "BetweenRight";
-        public static readonly string ColumnName = "ColumnName";
-        public static readonly string Conjunction = "Conjunction";
-        public static readonly string Connection = "Connection";
-        public static readonly string Contains = "Contains";
-        public static readonly string DataType = "DataType";
-        public static readonly string DynamicMethod = "DynamicMethod";
-        public static readonly string EndsWith = "EndsWith";
-        public static readonly string ExecuteNonQuery = "ExecuteNonQuery";
-        public static readonly string ExecuteQuery = "ExecuteQuery";
-        public static readonly string ExecuteReader = "ExecuteReader";
-        public static readonly string ExecuteReaderEx = "ExecuteReaderEx";
-        public static readonly string ExecuteScalar = "ExecuteScalar";
-        public static readonly string For = "For";
-        public static readonly string Id = "Id";
-        public static readonly string In = "In";
-        public static readonly string MySql = "Mysql";
-        public static readonly string Obj = "Obj";
-        public static readonly string Object = "Object";
-        public static readonly string Ole = "Ole";
-        public static readonly string Operation = "Operation";
-        public static readonly string Or = "Or";
-        public static readonly string Oracle = "Oracle";
-        public static readonly string PostgreSql = "PostgreSql";
-        public static readonly string QueryGroups = "QueryGroups";
-        public static readonly string StartsWith = "StartsWith";
-        public static readonly string Sql = "Sql";
-        public static readonly string SqLite = "SqLite";
-        public static readonly string Value = "Value";
+        public const string All = "All";
+        public const string And = "And";
+        public const string Any = "Any";
+        public const string As = "As";
+        public const string BetweenLeft = "BetweenLeft";
+        public const string BetweenRight = "BetweenRight";
+        public const string ColumnName = "ColumnName";
+        public const string Conjunction = "Conjunction";
+        public const string Connection = "Connection";
+        public const string Contains = "Contains";
+        public const string DataType = "DataType";
+        public const string DynamicMethod = "DynamicMethod";
+        public const string EndsWith = "EndsWith";
+        public const string ExecuteNonQuery = "ExecuteNonQuery";
+        public const string ExecuteQuery = "ExecuteQuery";
+        public const string ExecuteReader = "ExecuteReader";
+        public const string ExecuteReaderEx = "ExecuteReaderEx";
+        public const string ExecuteScalar = "ExecuteScalar";
+        public const string For = "For";
+        public const string Id = "Id";
+        public const string In = "In";
+        public const string MySql = "Mysql";
+        public const string Obj = "Obj";
+        public const string Object = "Object";
+        public const string Ole = "Ole";
+        public const string Operation = "Operation";
+        public const string Or = "Or";
+        public const string Oracle = "Oracle";
+        public const string PostgreSql = "PostgreSql";
+        public const string QueryGroups = "QueryGroups";
+        public const string StartsWith = "StartsWith";
+        public const string Sql = "Sql";
+        public const string SqLite = "SqLite";
+        public const string Value = "Value";
     }
 }

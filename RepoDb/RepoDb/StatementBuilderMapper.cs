@@ -36,10 +36,9 @@ namespace RepoDb
         /// Creates a mapping between the <see cref="Provider"/> and <see cref="IStatementBuilder"/>) object.
         /// </summary>
         /// <param name="provider">The target provider.</param>
-        /// <param name="statementBuilder">
-        /// The statement builder to be mapped (typeof <see cref="IStatementBuilder"/>).
-        /// </param>
-        public static void Map(Provider provider, IStatementBuilder statementBuilder)
+        /// <param name="statementBuilder">The statement builder to be mapped.</param>
+        /// <param name="force">True if to overwrite existing mapping if present.</param>
+        public static void Map(Provider provider, IStatementBuilder statementBuilder, bool force = false)
         {
             Map(new StatementBuilderMapItem(provider, statementBuilder));
         }
@@ -48,15 +47,24 @@ namespace RepoDb
         /// Creates a mapping between the <see cref="Provider"/> and <see cref="IStatementBuilder"/>) object.
         /// </summary>
         /// <param name="mapItem">The map item object.</param>
-        public static void Map(StatementBuilderMapItem mapItem)
+        /// <param name="force">True if to overwrite existing mapping if present.</param>
+        public static void Map(StatementBuilderMapItem mapItem, bool force = false)
         {
-            if (Get(mapItem.Provider) != null)
+            var mapping = Get(mapItem.Provider);
+            if (mapping == null)
             {
-                throw new InvalidOperationException($"Mapping is already exists for provider {mapItem.Provider.ToString()}.");
+                m_maps.Add(mapItem);
             }
             else
             {
-                m_maps.Add(mapItem);
+                if (force)
+                {
+                    mapping.StatementBuilder = mapItem.StatementBuilder;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Mapping is already exists for provider {mapItem.Provider.ToString()}.");
+                }
             }
         }
     }

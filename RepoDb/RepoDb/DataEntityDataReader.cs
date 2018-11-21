@@ -1,11 +1,9 @@
 ﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
-using System.Reflection;
 using System.Collections;
 
 namespace RepoDb
@@ -133,7 +131,7 @@ namespace RepoDb
         /// <summary>
         /// Closes the current data reader.
         /// </summary>
-        public void Close()
+        public override void Close()
         {
             m_isClosed = true;
         }
@@ -372,7 +370,7 @@ namespace RepoDb
         /// Gets the table schema.
         /// </summary>
         /// <returns>An instance of the <see cref="DataTable"/> with the table schema.</returns>
-        public DataTable GetSchemaTable()
+        public override DataTable GetSchemaTable()
         {
             ThrowExceptionIfNotAvailable();
             throw new NotSupportedException("This is not supported by this data reader.");
