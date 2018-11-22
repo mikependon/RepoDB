@@ -12,7 +12,7 @@ namespace RepoDb
     /// A data reader object used to manipulate the enumerable list of data entity objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
-    public class DataEntityListDataReader<TEntity> : DbDataReader
+    public class DataEntityDataReader<TEntity> : DbDataReader
         where TEntity : class
     {
         #region Fields
@@ -25,11 +25,11 @@ namespace RepoDb
         #endregion
 
         /// <summary>
-        /// Creates a new instance of <see cref="DataEntityListDataReader{TEntity}"/> object.
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         /// <param name="command">The type of command to be used by this data reader.</param>
-        public DataEntityListDataReader(IEnumerable<TEntity> entities, Command command)
+        public DataEntityDataReader(IEnumerable<TEntity> entities, Command command)
         {
             if (entities == null)
             {

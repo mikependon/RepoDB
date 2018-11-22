@@ -676,7 +676,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityListDataReader<TEntity>(entities, command))
+            using (var reader = new DataEntityDataReader<TEntity>(entities, command))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
                 {
