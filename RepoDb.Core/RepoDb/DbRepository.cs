@@ -492,11 +492,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -514,11 +514,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object whereOrWhat, int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object whereOrWhat, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(whereOrWhat: whereOrWhat,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
@@ -537,11 +537,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where, int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
@@ -560,11 +560,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryField where, int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryField where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
@@ -583,11 +583,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
@@ -606,11 +606,11 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where, int page, int rowsPerBatch,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
@@ -658,10 +658,10 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
+        public async Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BulkInsert<TEntity>(entities: entities, mappings: mappings));
         }
 
@@ -853,10 +853,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(transaction: transaction));
         }
 
@@ -867,10 +867,10 @@ namespace RepoDb
         /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(object whereOrWhat, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(object whereOrWhat, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(whereOrWhat: whereOrWhat,
                     transaction: transaction));
         }
@@ -882,10 +882,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -897,10 +897,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(QueryField where, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(QueryField where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -912,10 +912,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -927,10 +927,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
+        public async Task<long> CountAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -1123,10 +1123,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(transaction: transaction));
         }
 
@@ -1137,10 +1137,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -1152,10 +1152,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(QueryField where, IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(QueryField where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -1167,10 +1167,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -1182,10 +1182,10 @@ namespace RepoDb
         /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(object whereOrWhat, IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(object whereOrWhat, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(whereOrWhat: whereOrWhat,
                     transaction: transaction));
         }
@@ -1197,10 +1197,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
+        public async Task<int> DeleteAsync<TEntity>(QueryGroup where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(where: where,
                     transaction: transaction));
         }
@@ -1243,10 +1243,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 DeleteAll<TEntity>(transaction: transaction));
         }
 
@@ -1300,10 +1300,10 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<object> InlineInsertAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineInsert<TEntity>(entity: entity,
                     overrideIgnore: overrideIgnore,
                     transaction: transaction));
@@ -1458,10 +1458,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineMergeAsync<TEntity>(object entity, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(entity: entity,
                     overrideIgnore: overrideIgnore,
                     transaction: transaction));
@@ -1476,11 +1476,11 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(entity: entity,
                     qualifier: qualifier,
                     overrideIgnore: overrideIgnore,
@@ -1496,11 +1496,11 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity, Field qualifier, bool? overrideIgnore = false,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity, Field qualifier, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(entity: entity,
                     qualifier: qualifier,
                     overrideIgnore: overrideIgnore,
@@ -1516,11 +1516,11 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(entity: entity,
                     qualifiers: qualifiers,
                     overrideIgnore: overrideIgnore,
@@ -1710,10 +1710,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, object whereOrWhat, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity, object whereOrWhat, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(entity: entity,
                     whereOrWhat: whereOrWhat,
                     overrideIgnore: overrideIgnore,
@@ -1729,10 +1729,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, Expression<Func<TEntity, bool>> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity, Expression<Func<TEntity, bool>> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
@@ -1748,10 +1748,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryField where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity, QueryField where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
@@ -1767,10 +1767,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
@@ -1786,10 +1786,10 @@ namespace RepoDb
         /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(entity: entity,
                     where: where,
                     overrideIgnore: overrideIgnore,
@@ -1843,10 +1843,10 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Insert<TEntity>(entity: entity,
                     transaction: transaction));
         }
@@ -1984,10 +1984,10 @@ namespace RepoDb
         /// <param name="entity">The entity to be merged.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<int> MergeAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge<TEntity>(entity: entity,
                     transaction: transaction));
         }
@@ -2003,10 +2003,10 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity, Expression<Func<TEntity, object>> qualifier, IDbTransaction transaction = null)
+        public async Task<int> MergeAsync<TEntity>(TEntity entity, Expression<Func<TEntity, object>> qualifier, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge<TEntity>(entity: entity,
                     qualifier: qualifier,
                     transaction: transaction));
@@ -2023,10 +2023,10 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity, Field qualifier, IDbTransaction transaction = null)
+        public async Task<int> MergeAsync<TEntity>(TEntity entity, Field qualifier, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge<TEntity>(entity: entity,
                     qualifier: qualifier,
                     transaction: transaction));
@@ -2043,10 +2043,10 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
+        public async Task<int> MergeAsync<TEntity>(TEntity entity, IEnumerable<Field> qualifiers, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge<TEntity>(entity: entity,
                     qualifiers: qualifiers,
                     transaction: transaction));
@@ -2380,11 +2380,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(orderBy: orderBy,
                     top: top,
                     cacheKey: cacheKey,
@@ -2414,11 +2414,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(where: where,
                     orderBy: orderBy,
                     top: top,
@@ -2449,11 +2449,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(where: where,
                     orderBy: orderBy,
                     top: top,
@@ -2484,11 +2484,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(where: where,
                     orderBy: orderBy,
                     top: top,
@@ -2519,11 +2519,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrWhat, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrWhat, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(whereOrWhat: whereOrWhat,
                     orderBy: orderBy,
                     top: top,
@@ -2554,11 +2554,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(where: where,
                     orderBy: orderBy,
                     top: top,
@@ -2598,11 +2598,11 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        public Task TruncateAsync<TEntity>()
+        public async Task TruncateAsync<TEntity>()
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
-                Truncate<TEntity>());
+            await Task.Run(() =>
+               Truncate<TEntity>());
         }
 
         // Update
@@ -2806,10 +2806,10 @@ namespace RepoDb
         /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update<TEntity>(entity: entity,
                     transaction: transaction));
         }
@@ -2822,27 +2822,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, Expression<Func<TEntity, bool>> where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
-                Update<TEntity>(entity: entity,
-                    where: where,
-                    transaction: transaction));
-        }
-
-        /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, QueryField where, IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update<TEntity>(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -2856,10 +2839,27 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, QueryField where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
+                Update<TEntity>(entity: entity,
+                    where: where,
+                    transaction: transaction));
+        }
+
+        /// <summary>
+        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, IEnumerable<QueryField> where, IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            return await Task.Run(() =>
                 Update<TEntity>(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -2873,10 +2873,10 @@ namespace RepoDb
         /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, object whereOrWhat, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, object whereOrWhat, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update<TEntity>(entity: entity,
                     whereOrWhat: whereOrWhat,
                     transaction: transaction));
@@ -2890,10 +2890,10 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, QueryGroup where, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update<TEntity>(entity: entity,
                     where: where,
                     transaction: transaction));
@@ -2960,10 +2960,10 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
+        public async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 ExecuteQuery<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
@@ -3020,9 +3020,9 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
+        public async Task<int> ExecuteNonQueryAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
-            return Task.Factory.StartNew<int>(() =>
+            return await Task.Run<int>(() =>
                 ExecuteNonQuery(commandText: commandText,
                     param: param,
                     commandType: commandType,
@@ -3079,9 +3079,9 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
+        public async Task<object> ExecuteScalarAsync(string commandText, object param = null, CommandType? commandType = null, IDbTransaction transaction = null)
         {
-            return Task.Factory.StartNew<object>(() =>
+            return await Task.Run<object>(() =>
                 ExecuteScalar(commandText: commandText,
                     param: param,
                     commandType: commandType,

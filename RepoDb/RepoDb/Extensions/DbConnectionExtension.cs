@@ -462,12 +462,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
-                BatchQuery<TEntity>(connection: connection,
+            return await Task.Run(() => BatchQuery<TEntity>(connection: connection,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -492,11 +491,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(connection: connection,
                     whereOrWhat: whereOrWhat,
                     page: page,
@@ -523,11 +522,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(connection: connection,
                     where: where,
                     page: page,
@@ -554,11 +553,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryField where, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryField where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(connection: connection,
                     where: where,
                     page: page,
@@ -585,11 +584,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(connection: connection,
                     where: where,
                     page: page,
@@ -616,11 +615,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch,
+        public static async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BatchQuery<TEntity>(connection: connection,
                     where: where,
                     page: page,
@@ -730,10 +729,10 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, int? commandTimeout = null, ITrace trace = null)
+        public static async Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, int? commandTimeout = null, ITrace trace = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 BulkInsert(connection: connection,
                     entities: entities,
                     mappings: mappings,
@@ -935,11 +934,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -958,11 +957,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int? commandTimeout = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                     whereOrWhat: whereOrWhat,
                     commandTimeout: commandTimeout,
@@ -982,11 +981,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int? commandTimeout = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1006,11 +1005,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryField where, int? commandTimeout = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryField where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1030,11 +1029,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1054,11 +1053,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+        public static async Task<long> CountAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Count<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1260,11 +1259,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(connection: connection,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -1283,35 +1282,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int? commandTimeout = null,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
-                Delete<TEntity>(connection: connection,
-                    where: where,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder));
-        }
-
-        /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryField where, int? commandTimeout = null,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1331,11 +1306,35 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryField where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
+                Delete<TEntity>(connection: connection,
+                    where: where,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder));
+        }
+
+        /// <summary>
+        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
+            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return await Task.Run(() =>
                 Delete<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1355,11 +1354,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int? commandTimeout = null,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, object whereOrWhat, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(connection: connection,
                     whereOrWhat: whereOrWhat,
                     commandTimeout: commandTimeout,
@@ -1379,11 +1378,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
+        public static async Task<int> DeleteAsync<TEntity>(this IDbConnection connection, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Delete<TEntity>(connection: connection,
                     where: where,
                     commandTimeout: commandTimeout,
@@ -1466,11 +1465,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
+        public static async Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 DeleteAll<TEntity>(connection: connection,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
@@ -1569,11 +1568,11 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineInsert<TEntity>(connection: connection,
                     entity: entity,
                     overrideIgnore: overrideIgnore,
@@ -1749,11 +1748,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     overrideIgnore: overrideIgnore,
@@ -1776,11 +1775,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false,
+        public static async Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, Expression<Func<TEntity, object>> qualifier, bool? overrideIgnore = false,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     qualifier: qualifier,
@@ -1804,11 +1803,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, Field qualifier, bool? overrideIgnore = false,
+        public static async Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, Field qualifier, bool? overrideIgnore = false,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     qualifier: qualifier,
@@ -1832,11 +1831,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
+        public static async Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<Field> qualifiers, bool? overrideIgnore = false,
             int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineMerge<TEntity>(connection: connection,
                     entity: entity,
                     qualifiers: qualifiers,
@@ -2042,11 +2041,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, object whereOrWhat, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, object whereOrWhat, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(connection: connection,
                     entity: entity,
                     whereOrWhat: whereOrWhat,
@@ -2070,11 +2069,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, Expression<Func<TEntity, bool>> where, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, Expression<Func<TEntity, bool>> where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(connection: connection,
                     entity: entity,
                     where: where,
@@ -2098,11 +2097,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryField where, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryField where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(connection: connection,
                     entity: entity,
                     where: where,
@@ -2126,11 +2125,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, IEnumerable<QueryField> where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(connection: connection,
                     entity: entity,
                     where: where,
@@ -2154,11 +2153,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
+        public static async Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection, object entity, QueryGroup where, bool? overrideIgnore = false, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 InlineUpdate<TEntity>(connection: connection,
                     entity: entity,
                     where: where,
@@ -2257,11 +2256,11 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+        public static async Task<object> InsertAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Insert(connection: connection,
                     entity: entity,
                     commandTimeout: commandTimeout,
@@ -2442,11 +2441,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+        public static async Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew<int>(() =>
+            return await Task.Run<int>(() =>
                 Merge(connection: connection,
                     entity: entity,
                     commandTimeout: commandTimeout,
@@ -2470,11 +2469,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, Expression<Func<TEntity, object>> qualifier, int? commandTimeout = null,
+        public static async Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, Expression<Func<TEntity, object>> qualifier, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge(connection: connection,
                     entity: entity,
                     qualifier: qualifier,
@@ -2499,11 +2498,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, Field qualifier, int? commandTimeout = null,
+        public static async Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, Field qualifier, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge(connection: connection,
                     entity: entity,
                     qualifier: qualifier,
@@ -2528,11 +2527,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
+        public static async Task<int> MergeAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<Field> qualifiers, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Merge(connection: connection,
                     entity: entity,
                     qualifiers: qualifiers,
@@ -3131,12 +3130,12 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, int? commandTimeout = null, IDbTransaction transaction = null, ICache cache = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     orderBy: orderBy,
                     top: top,
@@ -3176,12 +3175,12 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryField where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryField where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
                     orderBy: orderBy,
@@ -3222,12 +3221,12 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
                     orderBy: orderBy,
@@ -3268,12 +3267,12 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object whereOrWhat, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, object whereOrWhat, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, ICache cache = null, int? commandTimeout = null, IDbTransaction transaction = null, ITrace trace = null,
             IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     whereOrWhat: whereOrWhat,
                     orderBy: orderBy,
@@ -3314,11 +3313,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
             IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
                     orderBy: orderBy,
@@ -3359,11 +3358,11 @@ namespace RepoDb
         /// child data entities defined on the targetted data entity. Maximum recursion of 15 cycles only to avoid cyclomatic overflow operation.
         /// </param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
+        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection, QueryGroup where, IEnumerable<OrderField> orderBy = null, int? top = 0, int? commandTimeout = null,
             IDbTransaction transaction = null, string cacheKey = null, ICache cache = null, ITrace trace = null, IStatementBuilder statementBuilder = null, bool? recursive = false, int? recursionDepth = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Query<TEntity>(connection: connection,
                     where: where,
                     orderBy: orderBy,
@@ -3443,11 +3442,11 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        public static Task TruncateAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
+        public static async Task TruncateAsync<TEntity>(this IDbConnection connection, int? commandTimeout = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            await Task.Run(() =>
                 Truncate<TEntity>(connection: connection,
                     commandTimeout: commandTimeout,
                     trace: trace,
@@ -3663,11 +3662,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update(connection: connection,
                     entity: entity,
                     commandTimeout: commandTimeout,
@@ -3688,11 +3687,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, IEnumerable<QueryField> where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update(connection: connection,
                     entity: entity,
                     where: where,
@@ -3714,11 +3713,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, object whereOrWhat, int? commandTimeout = null,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, object whereOrWhat, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update(connection: connection,
                     entity: entity,
                     whereOrWhat: whereOrWhat,
@@ -3740,11 +3739,11 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
+        public static async Task<int> UpdateAsync<TEntity>(this IDbConnection connection, TEntity entity, QueryGroup where, int? commandTimeout = null,
             IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 Update(connection: connection,
                     entity: entity,
                     where: where,
@@ -3809,14 +3808,14 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
+        public static async Task<IEnumerable<object>> ExecuteQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 ExecuteQuery(connection: connection,
                     commandText: commandText,
                     param: param,
@@ -3880,7 +3879,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public static Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
+        public static async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -3888,7 +3887,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 ExecuteQuery<TEntity>(connection: connection,
                     commandText: commandText,
                     param: param,
@@ -4019,14 +4018,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of the data reader object.</returns>
-        public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
+        public static async Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 ExecuteReader(connection: connection,
                     commandText: commandText,
                     param: param,
@@ -4113,14 +4112,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
+        public static async Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return Task.Factory.StartNew<int>(() =>
+            return await Task.Run<int>(() =>
                 ExecuteNonQuery(connection: connection,
                     commandText: commandText,
                     param: param,
@@ -4230,7 +4229,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <param name="trace">The trace object to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
+        public static async Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -4238,7 +4237,7 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
-            return Task.Factory.StartNew<object>(() =>
+            return await Task.Run<object>(() =>
                 ExecuteScalarAsync(connection: connection,
                     commandText: commandText,
                     param: param,
