@@ -441,10 +441,11 @@ namespace RepoDb
         /// Bulk-inserting the list of data entity objects in the database.
         /// </summary>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int BulkInsert(IEnumerable<TEntity> entities)
+        public int BulkInsert(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
         {
-            return DbRepository.BulkInsert<TEntity>(entities: entities);
+            return DbRepository.BulkInsert<TEntity>(entities: entities, mappings: mappings);
         }
 
         // BulkInsertAsync
@@ -453,10 +454,11 @@ namespace RepoDb
         /// Bulk-inserting the list of data entity objects in the database in an asynchronous way.
         /// </summary>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities)
+        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
         {
-            return DbRepository.BulkInsertAsync<TEntity>(entities: entities);
+            return DbRepository.BulkInsertAsync<TEntity>(entities: entities, mappings: mappings);
         }
 
         // Count

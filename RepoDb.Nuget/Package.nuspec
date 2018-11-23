@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.7.0-beta3</version>
+    <version>1.7.0-beta4</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -10,10 +10,9 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.7.0-beta3]
-    - Fixed Target Framework Referencing Issues of NuGet Package
-    - Added a new enumeration for data providers.
-    - Updated the statement builder mapper to use the Provider object instead of DbConnection type.
+    [Release 1.7.0-beta4]
+    - Exposed the 'IsForProvider' and 'GetProvider' DbConnection extended methods.
+    - Introduced a 'BulkInsertMapItem' object to provide ability to override the 'BulkInsert' operation default mappings.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

@@ -625,8 +625,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int BulkInsert<TEntity>(IEnumerable<TEntity> entities)
+        public int BulkInsert<TEntity>(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
             // Create a connection
@@ -634,6 +635,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.BulkInsert<TEntity>(entities: entities,
+                mappings: mappings,
                 commandTimeout: CommandTimeout,
                 trace: Trace);
 
@@ -654,12 +656,13 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities)
+        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
             return Task.Factory.StartNew(() =>
-                BulkInsert<TEntity>(entities: entities));
+                BulkInsert<TEntity>(entities: entities, mappings: mappings));
         }
 
         // Count

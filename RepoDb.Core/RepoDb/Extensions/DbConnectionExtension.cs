@@ -31,7 +31,7 @@ namespace RepoDb
         /// <param name="connection">The connection to be identified.</param>
         /// <param name="provider">The target provider for comparisson.</param>
         /// <returns>Returns true if the <see cref="IDbConnection"/> object corresponds to the target provider.</returns>
-        internal static bool IsForProvider(this IDbConnection connection, Provider provider)
+        public static bool IsForProvider(this IDbConnection connection, Provider provider)
         {
             switch (provider)
             {
@@ -57,7 +57,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The target connection object.</param>
         /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
-        internal static Provider GetProvider(this IDbConnection connection)
+        public static Provider GetProvider(this IDbConnection connection)
         {
             switch (connection.GetType().FullName)
             {
@@ -640,10 +640,11 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
+        public static int BulkInsert<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, int? commandTimeout = null, ITrace trace = null)
             where TEntity : class
         {
             // Validate, only supports SqlConnection
@@ -653,7 +654,7 @@ namespace RepoDb
             }
 
             // Variables
-            var command = Command.BulkInsert;
+            var command = mappings != null ? Command.None : Command.BulkInsert;
 
             // Before Execution
             if (trace != null)
@@ -685,11 +686,21 @@ namespace RepoDb
                     {
                         sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                     }
-                    reader.Properties.ToList().ForEach(property =>
+                    if (mappings == null)
                     {
-                        var columnName = property.GetMappedName();
-                        sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
-                    });
+                        reader.Properties.ToList().ForEach(property =>
+                        {
+                            var columnName = property.GetMappedName();
+                            sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
+                        });
+                    }
+                    else
+                    {
+                        mappings.ToList().ForEach(mapItem =>
+                        {
+                            sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
+                        });
+                    }
                     connection.EnsureOpen();
                     sqlBulkCopy.WriteToServer(reader);
                     result = reader.RecordsAffected;
@@ -715,15 +726,17 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, int? commandTimeout = null, ITrace trace = null)
+        public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection, IEnumerable<TEntity> entities, IEnumerable<BulkInsertMapItem> mappings = null, int? commandTimeout = null, ITrace trace = null)
             where TEntity : class
         {
             return Task.Factory.StartNew(() =>
                 BulkInsert(connection: connection,
                     entities: entities,
+                    mappings: mappings,
                     commandTimeout: commandTimeout,
                     trace: trace));
         }
