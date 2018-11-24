@@ -12,7 +12,5 @@ namespace RepoDb.TestProject.Models
         public int? ProductId { get; set; }
         public decimal? UnitPrice { get; set; }
         public int? Quantity { get; set; }
-        [Foreign("ProductId", "Id")]
-        public IEnumerable<ProductDto> Products { get; set; }
     }
 }

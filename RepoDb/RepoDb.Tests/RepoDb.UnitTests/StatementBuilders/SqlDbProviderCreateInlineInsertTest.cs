@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -78,7 +78,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
 
@@ -106,7 +106,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIdClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
@@ -134,7 +134,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassIdClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassIdFromMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassIdFromMappingClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
@@ -193,7 +193,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithPrimaryKeyFromAttribute()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithPrimaryKeyFromAttributeClass>();
             var fields = Field.From(new[] { "Field2", "Field3" });
 
@@ -223,7 +223,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestOverrideIgnoreFromInsertOperation()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestOverrideIgnoreFromInsertOperationClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -253,7 +253,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestOverrideIgnoreFromInlineInsertOperation()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestOverrideIgnoreFromInlineInsertOperationClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -282,7 +282,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithPrimaryIdentity()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithPrimaryIdentityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -312,7 +312,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
 
             // Act/Assert
@@ -331,7 +331,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheClassIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass>();
 
             // Act/Assert
@@ -350,7 +350,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass>();
 
             // Act/Assert
@@ -370,7 +370,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
 
             // Act/Assert
@@ -384,7 +384,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfFieldsAreNull()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfFieldsAreNullClass>();
 
             // Act/Assert
@@ -401,7 +401,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAtleastOneFieldIsMissingAtDataEntity()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAtleastOneFieldIsMissingAtDataEntityClass>();
             var fields = Field.From(new[] { "Field1", "Field3" });
 
@@ -420,7 +420,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAFieldIsMissingAtDataEntityMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAFieldIsMissingAtDataEntityMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field3" });
 
@@ -440,7 +440,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAFieldIsIgnoredAtInsertOperation()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAFieldIsIgnoredAtInsertOperationClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
@@ -460,7 +460,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAFieldIsIgnoredAtInlineInsertOperation()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAFieldIsIgnoredAtInlineInsertOperationClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 

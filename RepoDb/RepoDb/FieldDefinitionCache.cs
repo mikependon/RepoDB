@@ -37,7 +37,7 @@ namespace RepoDb
             var result = (IEnumerable<FieldDefinition>)null;
             if (m_cache.TryGetValue(key, out result) == false)
             {
-                result = SqlDbHelper.GetFieldDefinitions(connectionString, ClassMappedNameCache.Get<TEntity>());
+                result = SqlHelper.GetFieldDefinitions(connectionString, ClassMappedNameCache.Get<TEntity>());
                 m_cache.TryAdd(key, result);
             }
             return result;

@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithhoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithhoutMappingsClass>();
 
             // Act
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingsClass>();
 
             // Act
@@ -57,7 +57,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithhExpressions()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithhExpressionsClass>();
             var expression = new { Field1 = 1 };
 

@@ -20,7 +20,7 @@ namespace RepoDb
         public static IEnumerable<ClassProperty> Get<TEntity>(Command command = Command.None)
             where TEntity : class
         {
-            var key = $"{typeof(TEntity).FullName}.{command.ToString()}";
+            var key = string.Concat(typeof(TEntity).FullName, ".", command);
             var properties = (IEnumerable<ClassProperty>)null;
             if (m_cache.TryGetValue(key, out properties) == false)
             {

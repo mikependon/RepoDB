@@ -17,11 +17,11 @@ namespace RepoDb.TestProject
 
         static void Main(string[] args)
         {
-            TestQueryGroupParseExpression();
+            //TestQueryGroupParseExpression();
             //TestPerformanceMonitor();
             //TestParallelism();
             //TestInventory();
-            //TestAllOperations();
+            TestAllOperations();
             //TestInNotInBetweenNotBetweenAnyAllOperation();
             Console.WriteLine("Done!");
             Console.ReadLine();
@@ -208,6 +208,17 @@ namespace RepoDb.TestProject
 
         private static void TestAllOperations()
         {
+            using (var connection = new SqlConnection(RepoDbConnectionString))
+            {
+                var result = connection.ExecuteScalarAsync("SELECT MAX(Id) FROM (SELECT Id FROM Person WHERE Name LIKE 'A%A%') TMP;");
+                Console.WriteLine($"Result: {result.Result.ToString()}");
+                Console.WriteLine("Just passed on here!");
+            }
+
+            Console.WriteLine("I am here!");
+
+            return;
+
             // Repository
             var repository = new DbRepository<SqlConnection>(RepoDbConnectionString);
 

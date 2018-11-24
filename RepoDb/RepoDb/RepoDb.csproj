@@ -53,7 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="Enumerations\Provider.cs" />
@@ -71,7 +70,6 @@
     <Compile Include="PrimaryKeyCache.cs" />
     <Compile Include="CommandTextCache.cs" />
     <Compile Include="Constant.cs" />
-    <Compile Include="DataEntityChildItemData.cs" />
     <Compile Include="Enumerations\ConnectionPersistency.cs" />
     <Compile Include="Exceptions\NoMatchedFieldsException.cs" />
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
@@ -87,7 +85,6 @@
     <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
-    <Compile Include="DataEntityChildListData.cs" />
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
@@ -108,8 +105,7 @@
     <Compile Include="Requests\DeleteRequest.cs" />
     <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
-    <Compile Include="RecursionManager.cs" />
-    <Compile Include="SqlDbHelper.cs" />
+    <Compile Include="SqlHelper.cs" />
     <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
@@ -127,7 +123,6 @@
     <Compile Include="Attributes\PrimaryAttribute.cs" />
     <Compile Include="Attributes\TextAttribute.cs" />
     <Compile Include="BaseRepository.cs" />
-    <Compile Include="DataEntity.cs" />
     <Compile Include="DbRepository.cs" />
     <Compile Include="Enumerations\Conjunction.cs" />
     <Compile Include="Enumerations\Order.cs" />
@@ -161,7 +156,7 @@
     <Compile Include="Reflection\DataReaderConverter.cs" />
     <Compile Include="Reflection\DelegateFactory.cs" />
     <Compile Include="Reflection\Delegates.cs" />
-    <Compile Include="SqlDbStatementBuilder.cs" />
+    <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapItem.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
     <Compile Include="TraceLog.cs" />

@@ -7,7 +7,7 @@ namespace RepoDb
     /// <summary>
     /// A helper class for database specially for the direct access. This class is only meant for SQL Server.
     /// </summary>
-    internal static class SqlDbHelper
+    internal static class SqlHelper
     {
         /// <summary>
         /// Gets the field definitions of the table.

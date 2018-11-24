@@ -22,14 +22,5 @@ namespace RepoDb.IntegrationTests.Models
         [Attributes.Ignore(Command.Update)]
         public DateTime DateInsertedUtc { get; set; }
         public string LastUserId { get; set; }
-
-        /*
-         * Recursive
-         */
-
-        // Parent Orders (Hack the Foreign)
-
-        [Foreign("OrderId", "Id")]
-        public IEnumerable<RecursiveOrder> Orders { get; set; }
     }
 }

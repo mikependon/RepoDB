@@ -117,6 +117,28 @@
             Gets a value of the text.
             </summary>
         </member>
+        <member name="T:RepoDb.BulkInsertMapItem">
+            <summary>
+            A class used to define a mapping for the bulk insert operation.
+            </summary>
+        </member>
+        <member name="M:RepoDb.BulkInsertMapItem.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.BulkInsertMapItem"/> object.
+            </summary>
+            <param name="sourceColumn">The name of the source column.</param>
+            <param name="destinationColumn">The name of the destination column.</param>
+        </member>
+        <member name="P:RepoDb.BulkInsertMapItem.SourceColumn">
+            <summary>
+            Gets the name of the source column.
+            </summary>
+        </member>
+        <member name="P:RepoDb.BulkInsertMapItem.DestinationColumn">
+            <summary>
+            Gets the name of the destination column.
+            </summary>
+        </member>
         <member name="T:RepoDb.Enumerations.Provider">
             <summary>
             An enumeration used to define the connection provider.
@@ -132,14 +154,14 @@
             A data provider for Oracle.
             </summary>
         </member>
-        <member name="F:RepoDb.Enumerations.Provider.SqLite">
+        <member name="F:RepoDb.Enumerations.Provider.Sqlite">
             <summary>
-            A data provider for SqLite.
+            A data provider for Sqlite.
             </summary>
         </member>
-        <member name="F:RepoDb.Enumerations.Provider.PostgreSql">
+        <member name="F:RepoDb.Enumerations.Provider.Npgsql">
             <summary>
-            A data provider for PostgreSql.
+            A data provider for Npgsql.
             </summary>
         </member>
         <member name="F:RepoDb.Enumerations.Provider.MySql">
@@ -147,9 +169,9 @@
             A data provider for MySql.
             </summary>
         </member>
-        <member name="F:RepoDb.Enumerations.Provider.Ole">
+        <member name="F:RepoDb.Enumerations.Provider.OleDb">
             <summary>
-            A data provider for Ole.
+            A data provider for OleDb.
             </summary>
         </member>
         <member name="T:RepoDb.Enumerations.ConnectionPersistency">
@@ -1576,6 +1598,11 @@
             <typeparam name="TEntity">The type of the target entity.</typeparam>
             <returns>The cached identity property.</returns>
         </member>
+        <member name="T:RepoDb.NamespaceConstant">
+            <summary>
+            A class that holds the namespace fullname constant for <see cref="N:RepoDb"/> library.
+            </summary>
+        </member>
         <member name="T:RepoDb.PrimaryKeyCache">
             <summary>
             A class used to cache the primary property of the entity.
@@ -1689,11 +1716,13 @@
             <param name="request">The request object.</param>
             <returns>The cached command text.</returns>
         </member>
-        <member name="M:RepoDb.CommandTextCache.EnsureStatementBuilder(RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.CommandTextCache.EnsureStatementBuilder(System.Data.IDbConnection,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Throws an exception of the builder is not defined.
             </summary>
+            <param name="connection">The connection object to identified.</param>
             <param name="builder">The builder to be checked.</param>
+            <returns>The instance of available statement builder.</returns>
         </member>
         <member name="T:RepoDb.Constant">
             <summary>
@@ -1960,124 +1989,124 @@
             <param name="connectionString">The connection string object to be used.</param>
             <returns>A boolean value indicating the identification of the column.</returns>
         </member>
-        <member name="T:RepoDb.DataEntityListDataReader`1">
+        <member name="T:RepoDb.DataEntityDataReader`1">
             <summary>
             A data reader object used to manipulate the enumerable list of data entity objects.
             </summary>
             <typeparam name="TEntity">The type of the data entity</typeparam>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},RepoDb.Enumerations.Command)">
             <summary>
-            Creates a new instance of <see cref="T:RepoDb.DataEntityListDataReader`1"/> object.
+            Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
             </summary>
             <param name="entities">The list of the data entity object to be used for manipulation.</param>
             <param name="command">The type of command to be used by this data reader.</param>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetEnumerator">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetEnumerator">
             <summary>
             Returns an enumerator that iterates through a collection of data entity objects.
             </summary>
             <returns>The enumerator object of the current collection.</returns>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Enumerator">
+        <member name="P:RepoDb.DataEntityDataReader`1.Enumerator">
             <summary>
             Returns an enumerator that iterates through a collection of data entity objects.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Entities">
+        <member name="P:RepoDb.DataEntityDataReader`1.Entities">
             <summary>
             Gets the list of data entity objects.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Properties">
+        <member name="P:RepoDb.DataEntityDataReader`1.Properties">
             <summary>
             Gets the properties of data entity object.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Command">
+        <member name="P:RepoDb.DataEntityDataReader`1.Command">
             <summary>
             Gets the command used by this entity list reader.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Position">
+        <member name="P:RepoDb.DataEntityDataReader`1.Position">
             <summary>
             Gets the current position of the enumerator.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Item(System.Int32)">
+        <member name="P:RepoDb.DataEntityDataReader`1.Item(System.Int32)">
             <summary>
             Gets the current value from the index.
             </summary>
             <param name="i">The index of the column.</param>
             <returns>The value from the column index.</returns>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Item(System.String)">
+        <member name="P:RepoDb.DataEntityDataReader`1.Item(System.String)">
             <summary>
             Gets the current value from the name.
             </summary>
             <param name="name">The name of the column.</param>
             <returns>The value from the column name.</returns>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.Depth">
+        <member name="P:RepoDb.DataEntityDataReader`1.Depth">
             <summary>
             Gets the depth value.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.IsClosed">
+        <member name="P:RepoDb.DataEntityDataReader`1.IsClosed">
             <summary>
             Gets the value that indicates whether the current reader is closed.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.IsDisposed">
+        <member name="P:RepoDb.DataEntityDataReader`1.IsDisposed">
             <summary>
             Gets the value that indicates whether the current reader is already disposed.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.RecordsAffected">
+        <member name="P:RepoDb.DataEntityDataReader`1.RecordsAffected">
             <summary>
             Gets the number of rows affected by the iteration.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.FieldCount">
+        <member name="P:RepoDb.DataEntityDataReader`1.FieldCount">
             <summary>
             Gets the number of properties the data entity object has.
             </summary>
         </member>
-        <member name="P:RepoDb.DataEntityListDataReader`1.HasRows">
+        <member name="P:RepoDb.DataEntityDataReader`1.HasRows">
             <summary>
             Gets a value that signify whether the current data reader has data entities.
             </summary>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.Close">
+        <member name="M:RepoDb.DataEntityDataReader`1.Close">
             <summary>
             Closes the current data reader.
             </summary>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.Dispose">
+        <member name="M:RepoDb.DataEntityDataReader`1.Dispose">
             <summary>
             Disposes the current data reader.
             </summary>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.Reset">
+        <member name="M:RepoDb.DataEntityDataReader`1.Reset">
             <summary>
             Resets the pointer of the position to the beginning.
             </summary>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetBoolean(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetBoolean(System.Int32)">
             <summary>
             Gets the boolean value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetByte(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetByte(System.Int32)">
             <summary>
             Gets the byte value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
             <summary>
             GetBytes
             </summary>
@@ -2088,14 +2117,14 @@
             <param name="length">Int</param>
             <returns></returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetChar(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetChar(System.Int32)">
             <summary>
             Gets the char value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
             <summary>
             GetChars
             </summary>
@@ -2106,144 +2135,144 @@
             <param name="length">Int</param>
             <returns></returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetData(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetData(System.Int32)">
             <summary>
             GetData
             </summary>
             <param name="i">Int</param>
             <returns>Int</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetDataTypeName(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetDataTypeName(System.Int32)">
             <summary>
             Gets the name of the property data type from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The property type name from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetDateTime(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetDateTime(System.Int32)">
             <summary>
             Gets the date time value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetDecimal(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetDecimal(System.Int32)">
             <summary>
             Gets the decimal value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetDouble(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetDouble(System.Int32)">
             <summary>
             Gets the double value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetFieldType(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetFieldType(System.Int32)">
             <summary>
             Gets the type of the property from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The property type from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetFloat(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetFloat(System.Int32)">
             <summary>
             Gets the float value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetGuid(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetGuid(System.Int32)">
             <summary>
             Gets the Guid value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetInt16(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetInt16(System.Int32)">
             <summary>
             Gets the short value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetInt32(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetInt32(System.Int32)">
             <summary>
             Gets the int value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetInt64(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetInt64(System.Int32)">
             <summary>
             Gets the long value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetName(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetName(System.Int32)">
             <summary>
             Gets the name of the property from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The name from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetOrdinal(System.String)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetOrdinal(System.String)">
             <summary>
             Gets the index of the property based on the property name.
             </summary>
             <param name="name">The index of the property.</param>
             <returns>The index of the property from property name.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetSchemaTable">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetSchemaTable">
             <summary>
             Gets the table schema.
             </summary>
             <returns>An instance of the <see cref="T:System.Data.DataTable"/> with the table schema.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetString(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetString(System.Int32)">
             <summary>
             Gets the string value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetValue(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetValue(System.Int32)">
             <summary>
             Gets the current value from the defined property index.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.GetValues(System.Object[])">
+        <member name="M:RepoDb.DataEntityDataReader`1.GetValues(System.Object[])">
             <summary>
             Populates the values of the array of the current values of the current row.
             </summary>
             <param name="values">The array variable on which to populate the data.</param>
             <returns></returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.IsDBNull(System.Int32)">
+        <member name="M:RepoDb.DataEntityDataReader`1.IsDBNull(System.Int32)">
             <summary>
             Gets a value that checks whether the value of the property from the desired index is equals to <see cref="F:System.DBNull.Value"/>.
             </summary>
             <param name="i">The index of the property.</param>
             <returns>The value from the property index.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.NextResult">
+        <member name="M:RepoDb.DataEntityDataReader`1.NextResult">
             <summary>
             Forwards the data reader to the next result.
             </summary>
             <returns>Returns true if the forward operation is successful.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.Read">
+        <member name="M:RepoDb.DataEntityDataReader`1.Read">
             <summary>
             Forward the pointer into the next record.
             </summary>
             <returns>A value that indicates whether the movement is successful.</returns>
         </member>
-        <member name="M:RepoDb.DataEntityListDataReader`1.ThrowExceptionIfNotAvailable">
+        <member name="M:RepoDb.DataEntityDataReader`1.ThrowExceptionIfNotAvailable">
             <summary>
             Throws an exception if the current data reader is not available.
             </summary>
@@ -3292,7 +3321,7 @@
         </member>
         <member name="T:RepoDb.StringConstant">
             <summary>
-            A class that holds the constant values fo <see cref="N:RepoDb"/> library.
+            A class that holds the string constant values for <see cref="N:RepoDb"/> library.
             </summary>
         </member>
         <member name="T:RepoDb.CacheItem">
@@ -4122,18 +4151,20 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.BulkInsert(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:RepoDb.BaseRepository`2.BulkInsert(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
             <summary>
             Bulk-inserting the list of data entity objects in the database.
             </summary>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.BulkInsertAsync(System.Collections.Generic.IEnumerable{`0})">
+        <member name="M:RepoDb.BaseRepository`2.BulkInsertAsync(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
             <summary>
             Bulk-inserting the list of data entity objects in the database in an asynchronous way.
             </summary>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Count(System.Data.IDbTransaction)">
@@ -5393,20 +5424,22 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BulkInsert``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:RepoDb.DbRepository`1.BulkInsert``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
             <summary>
             Bulk-inserting the list of data entity objects in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
             <summary>
             Bulk-inserting the list of data entity objects in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Count``1(System.Data.IDbTransaction)">
@@ -6480,13 +6513,13 @@
             Contains the extension methods for <see cref="T:System.Data.IDbConnection"/> object.
             </summary>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.IsProvider(System.Data.IDbConnection,RepoDb.Enumerations.Provider)">
+        <member name="M:RepoDb.DbConnectionExtension.IsForProvider(System.Data.IDbConnection,RepoDb.Enumerations.Provider)">
             <summary>
-            Identify the equality of the provider of the <see cref="T:System.Data.IDbConnection"/> object.
+            Identify whether the current instance of <see cref="T:System.Data.IDbConnection"/> object corresponds to the target provider.
             </summary>
             <param name="connection">The connection to be identified.</param>
-            <param name="provider">The provider to be compared.</param>
-            <returns>Returns true if the <see cref="T:System.Data.IDbConnection"/> object is of type of the target provider.</returns>
+            <param name="provider">The target provider for comparisson.</param>
+            <returns>Returns true if the <see cref="T:System.Data.IDbConnection"/> object corresponds to the target provider.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.GetProvider(System.Data.IDbConnection)">
             <summary>
@@ -6730,24 +6763,26 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
             <summary>
             Bulk-inserting the list of data entity objects in the database.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
             <summary>
             Bulk-inserting the list of data entity objects in the database in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -9524,20 +9559,20 @@
             <param name="provider">The target provider.</param>
             <returns>An instance of <see cref="T:RepoDb.StatementBuilderMapItem"/> defined on the mapping.</returns>
         </member>
-        <member name="M:RepoDb.StatementBuilderMapper.Map(RepoDb.Enumerations.Provider,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.StatementBuilderMapper.Map(RepoDb.Enumerations.Provider,RepoDb.Interfaces.IStatementBuilder,System.Boolean)">
             <summary>
             Creates a mapping between the <see cref="T:RepoDb.Enumerations.Provider"/> and <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>) object.
             </summary>
             <param name="provider">The target provider.</param>
-            <param name="statementBuilder">
-            The statement builder to be mapped (typeof <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>).
-            </param>
+            <param name="statementBuilder">The statement builder to be mapped.</param>
+            <param name="force">True if to overwrite existing mapping if present.</param>
         </member>
-        <member name="M:RepoDb.StatementBuilderMapper.Map(RepoDb.StatementBuilderMapItem)">
+        <member name="M:RepoDb.StatementBuilderMapper.Map(RepoDb.StatementBuilderMapItem,System.Boolean)">
             <summary>
             Creates a mapping between the <see cref="T:RepoDb.Enumerations.Provider"/> and <see cref="T:RepoDb.Interfaces.IStatementBuilder"/>) object.
             </summary>
             <param name="mapItem">The map item object.</param>
+            <param name="force">True if to overwrite existing mapping if present.</param>
         </member>
         <member name="T:RepoDb.TraceLog">
             <summary>

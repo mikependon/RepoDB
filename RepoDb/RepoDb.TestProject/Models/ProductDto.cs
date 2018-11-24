@@ -13,9 +13,5 @@ namespace RepoDb.TestProject.Models
         public string Package { get; set; }
         public bool? IsDiscontinued { get; set; }
         public decimal? UnitPrice { get; set; }
-        [Foreign("SupplierId", "Id")]
-        public IEnumerable<SupplierDto> Suppliers { get; set; }
-        //[Foreign("ProductId")]
-        //public IEnumerable<OrderItemDto> OrderItems { get; set; }
     }
 }

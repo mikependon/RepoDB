@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
 
             // Act
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithMappingsClass>();
 
             // Act

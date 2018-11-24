@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()));
@@ -40,7 +40,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterBatchQuery(It.IsAny<TraceLog>()));
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()));
@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterCount(It.IsAny<TraceLog>()));
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()));
@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterDelete(It.IsAny<TraceLog>()));
@@ -131,7 +131,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeInlineInsert(It.IsAny<CancellableTraceLog>()));
@@ -148,7 +148,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterInlineInsert(It.IsAny<CancellableTraceLog>()));
@@ -167,7 +167,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeInlineMerge(It.IsAny<CancellableTraceLog>()));
@@ -184,7 +184,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterInlineMerge(It.IsAny<CancellableTraceLog>()));
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()));
@@ -220,7 +220,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterInlineUpdate(It.IsAny<CancellableTraceLog>()));
@@ -239,7 +239,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()));
@@ -256,7 +256,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterInsert(It.IsAny<CancellableTraceLog>()));
@@ -275,7 +275,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()));
@@ -292,7 +292,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterMerge(It.IsAny<CancellableTraceLog>()));
@@ -311,7 +311,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()));
@@ -328,7 +328,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterQuery(It.IsAny<CancellableTraceLog>()));
@@ -347,7 +347,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()));
@@ -364,7 +364,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterTruncate(It.IsAny<CancellableTraceLog>()));
@@ -383,7 +383,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()));
@@ -400,7 +400,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var trace = new Mock<ITrace>();
-            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlDbStatementBuilder());
+            var repository = new Mock<BaseRepository<TraceEntity, CustomDbConnection>>("ConnectionString", 0, null, trace.Object, new SqlStatementBuilder());
 
             // Setup
             trace.Setup(t => t.AfterUpdate(It.IsAny<CancellableTraceLog>()));

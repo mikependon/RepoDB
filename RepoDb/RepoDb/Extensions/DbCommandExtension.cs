@@ -43,7 +43,7 @@ namespace RepoDb.Extensions
             var list = values != null ? values.ToList() : null;
             for (var i = 0; i < list?.Count; i++)
             {
-                var parameter = command.CreateParameter($"{parameterName}{i}".AsParameter(), list[i]);
+                var parameter = command.CreateParameter(string.Concat(parameterName, i).AsParameter(), list[i]);
                 command.Parameters.Add(parameter);
             }
         }

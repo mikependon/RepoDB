@@ -79,7 +79,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryCacheTest.cs" />
     <Compile Include="RawSqlTest.cs" />
-    <Compile Include="RecursiveQueryTest.cs" />
     <Compile Include="Setup\Constants.cs" />
     <Compile Include="Setup\SetupHelper.cs" />
     <Compile Include="SpatialDataTypeMappingTest.cs" />

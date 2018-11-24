@@ -42,36 +42,6 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        // GetDataEntityChildrenData
-
-        /// <summary>
-        /// Gets the recursive data of the target data entity object.
-        /// </summary>
-        /// <param name="type">The type of the target data entity.</param>
-        /// <returns>An enumerable list of <see cref="DataEntityChildListData"/> object.</returns>
-        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData(Type type)
-        {
-            return type?
-                .GetProperties()
-                .Where(property => property.IsRecursive())
-                .Select(property => new DataEntityChildListData()
-                {
-                    ChildListType = property.PropertyType.GetGenericArguments().First(),
-                    ParentDataEntityType = type,
-                    ChildListProperty = property
-                });
-        }
-
-        /// <summary>
-        /// Gets the recursive data of the target data entity object.
-        /// </summary>
-        /// <typeparam name="T">The type of the target data entity.</typeparam>
-        /// <returns>An enumerable list of <see cref="DataEntityChildListData"/> object.</returns>
-        internal static IEnumerable<DataEntityChildListData> GetDataEntityChildrenData<T>()
-        {
-            return GetDataEntityChildrenData(typeof(T));
-        }
-
         // GetPropertiesFor
         internal static IEnumerable<ClassProperty> GetPropertiesFor(Type type, Command command)
         {
