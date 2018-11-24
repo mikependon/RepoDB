@@ -213,6 +213,7 @@ namespace RepoDb.TestProject
                 var result = connection.ExecuteScalarAsync("SELECT MAX(Id) FROM (SELECT Id FROM Person WHERE Name LIKE 'A%A%') TMP;");
                 Console.WriteLine($"Result: {result.Result.ToString()}");
                 Console.WriteLine("Just passed on here!");
+
             }
 
             Console.WriteLine("I am here!");

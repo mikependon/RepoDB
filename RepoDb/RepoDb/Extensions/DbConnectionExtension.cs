@@ -782,7 +782,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return Task.FromResult<object>(null);
+                    return Task.FromResult<IEnumerable<TEntity>>(null);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -4506,7 +4506,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return Task.FromResult<object>(null);
+                    return Task.FromResult<IEnumerable<TEntity>>(null);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
