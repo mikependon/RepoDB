@@ -270,9 +270,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var queryGroup = WhereToQueryGroup<TEntity>(whereOrWhat);
             return BatchQuery<TEntity>(connection: connection,
-                where: queryGroup,
+                where: WhereToQueryGroup<TEntity>(whereOrWhat),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -574,9 +573,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var queryGroup = WhereToQueryGroup<TEntity>(whereOrWhat);
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: queryGroup,
+                where: WhereToQueryGroup<TEntity>(whereOrWhat),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -784,7 +782,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return null;
+                    return Task.FromResult<object>(null);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -4508,7 +4506,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(command.ToString());
                     }
-                    return null;
+                    return Task.FromResult<object>(null);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
