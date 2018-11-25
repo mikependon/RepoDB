@@ -5269,7 +5269,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, null))
             {
-                return DataReaderConverter.ToEnumerable(command.ExecuteReader(), true);
+                return DataReaderConverter.ToEnumerable(command.ExecuteReader(), true).ToList();
             }
         }
 
@@ -5331,7 +5331,7 @@ namespace RepoDb
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
-                    return DataReaderConverter.ToEnumerable(reader, true);
+                    return DataReaderConverter.ToEnumerable(reader, true).ToList();
                 }
             }
         }
