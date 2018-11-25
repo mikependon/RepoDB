@@ -17,7 +17,6 @@ RepoDb Documentation
    pages/querygroup
    pages/repository
    pages/persistency
-   pages/recursive
    pages/cache
    pages/trace
    pages/statementbuilder

@@ -145,29 +145,3 @@ Below are the list of operational commands that can be defined in the `IgnoreAtt
 All commands specified above can be defined together in a single `IgnoreAttribute` by using the pipe character (`|`) as the separator.
 
 **Note**: The `RepoDb` is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.
-
-Foreign
--------
-
-An attribute used to define a foreign relationship for the recursive property of the data entity object.
-
-.. highlight:: c#
-
-::
-
-	public class Order
-	{
-		public int Id { get; set; }
-		public int CustomerId { get; set; }
-		public int Quantity { get; set; }
-		public DateTime OrderDate { get; set; }
-		public IEnumerable<OrderItem> OrderItems { get; set; }
-	}
-
-	public class Customer
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		[Foreign("CustomerId")] // Here, we are referring that the Order has a CustomerId property
-		public IEnumerable<Order> Orders { get; set; }
-	}
