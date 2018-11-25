@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingsClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -97,7 +97,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithPrimaryKeyField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithPrimaryKeyFieldClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIdClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassIdClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMappingId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingIdClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -199,7 +199,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithIdentityField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIdentityFieldClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -225,7 +225,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithExpression()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithExpressionClass>();
             var queryGroup = QueryGroup.Parse(new { Field1 = 1, Field4 = new { Operation = Operation.GreaterThan, Value = 2 } });
 
@@ -250,7 +250,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass>();
             var queryGroup = (QueryGroup)null;
 

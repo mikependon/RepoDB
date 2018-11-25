@@ -8,8 +8,7 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used for caching a result in the repository query operation. This object is the default
-    /// memory cache object used by the <see cref="RepoDb"/> repositories.
+    /// An object used for caching a result of the repository query operation. This is the default cache object used by the repositories.
     /// </summary>
     public class MemoryCache : ICache
     {

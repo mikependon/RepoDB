@@ -28,7 +28,7 @@ namespace RepoDb
                 if (primary != null)
                 {
                     var tableName = ClassMappedNameCache.Get<TEntity>();
-                    var fieldDefinitions = SqlDbHelper.GetFieldDefinitions(connectionString, tableName);
+                    var fieldDefinitions = SqlHelper.GetFieldDefinitions(connectionString, tableName);
                     if (fieldDefinitions != null)
                     {
                         var field = fieldDefinitions

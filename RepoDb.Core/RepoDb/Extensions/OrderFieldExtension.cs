@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {

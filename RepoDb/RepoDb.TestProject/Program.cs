@@ -210,13 +210,12 @@ namespace RepoDb.TestProject
         {
             using (var connection = new SqlConnection(RepoDbConnectionString))
             {
-                var result = connection.ExecuteScalarAsync("SELECT MAX(Id) FROM (SELECT Id FROM Person WHERE Name LIKE 'A%A%') TMP;");
-                Console.WriteLine($"Result: {result.Result.ToString()}");
+                var result = connection.ExecuteQueryAsync<Person>("SELECT * FROM Person WHERE Id BETWEEN 1002000 AND 2180000;");
                 Console.WriteLine("Just passed on here!");
-
+                //Console.WriteLine($"Result: {result.Result.Count()}");
+                Console.WriteLine("I am here!");
+                Console.WriteLine($"Result: {result.Result.Count()}");
             }
-
-            Console.WriteLine("I am here!");
 
             return;
 

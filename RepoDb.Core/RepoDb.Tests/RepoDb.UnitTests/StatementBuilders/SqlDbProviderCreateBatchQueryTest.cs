@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -53,7 +53,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithExpressions()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithExpressionsClass>();
             var where = QueryGroup.Parse(new
             {
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithMultipleOrderedColumnsAndWithoutAttributes()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithMultipleOrderedColumnsAndWithoutAttributesClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -128,7 +128,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -164,7 +164,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -201,7 +201,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappingsAndWithIgnoredBatchQueryCommand()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsAndWithIgnoredBatchQueryCommandClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -238,7 +238,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappingsAndWithIgnoredQueryCommand()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsAndWithIgnoredQueryCommandClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -277,7 +277,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommand()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsAndWithIgnoredBathQueryAndQueryCommandClass>();
             var orderBy = OrderField.Parse(new
             {
@@ -309,7 +309,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfThereAreNoQueryableFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -331,7 +331,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAllFieldsWereIgnored()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAllFieldsWereIgnoredClass>();
             var queryGroup = (QueryGroup)null;
 

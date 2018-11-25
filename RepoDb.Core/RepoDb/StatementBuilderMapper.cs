@@ -19,7 +19,7 @@ namespace RepoDb
             m_maps = new List<StatementBuilderMapItem>();
 
             // Default for SqlDbConnection
-            Map(Provider.Sql, new SqlDbStatementBuilder());
+            Map(Provider.Sql, new SqlStatementBuilder());
         }
 
         /// <summary>

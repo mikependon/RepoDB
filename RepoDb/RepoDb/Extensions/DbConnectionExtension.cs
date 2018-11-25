@@ -471,7 +471,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -504,7 +504,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -774,7 +774,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeBatchQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -803,7 +803,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBatchQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterBatchQuery(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -868,7 +868,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
+                var cancellableTraceLog = new CancellableTraceLog(command.ToString(), entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -919,7 +919,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
+                trace.AfterBulkInsert(new TraceLog(command.ToString(), entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -984,7 +984,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, null);
+                var cancellableTraceLog = new CancellableTraceLog(command.ToString(), entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1035,7 +1035,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog(MethodBase.GetCurrentMethod(), command.ToString(), entities, result,
+                trace.AfterBulkInsert(new TraceLog(command.ToString(), entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1237,7 +1237,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeCount(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1266,7 +1266,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterCount(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1468,7 +1468,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeCount(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1497,7 +1497,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterCount(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterCount(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1681,7 +1681,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeDelete(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1710,7 +1710,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterDelete(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1913,7 +1913,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeDelete(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -1942,7 +1942,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterDelete(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterDelete(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2006,7 +2006,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, null, null);
                 trace.BeforeDeleteAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2033,7 +2033,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterDeleteAll(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterDeleteAll(new TraceLog(commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2097,7 +2097,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, null, null);
                 trace.BeforeDeleteAll(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2124,7 +2124,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterDeleteAll(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterDeleteAll(new TraceLog(commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2200,7 +2200,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 trace.BeforeInlineInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2232,7 +2232,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                trace.AfterInlineInsert(new TraceLog(commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2308,7 +2308,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 trace.BeforeInlineInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2340,7 +2340,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, primaryKey,
+                trace.AfterInlineInsert(new TraceLog(commandText, entity, primaryKey,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2507,7 +2507,6 @@ namespace RepoDb
         {
             // Variables
             var command = Command.InlineMerge;
-            var entityProperties = entity?.GetType().GetProperties();
             var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = CommandType.Text;
             var request = new InlineMergeRequest(typeof(TEntity),
@@ -2521,7 +2520,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 trace.BeforeInlineMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2550,7 +2549,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                trace.AfterInlineMerge(new TraceLog(commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2717,7 +2716,6 @@ namespace RepoDb
         {
             // Variables
             var command = Command.InlineMerge;
-            var entityProperties = entity?.GetType().GetProperties();
             var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = CommandType.Text;
             var request = new InlineMergeRequest(typeof(TEntity),
@@ -2731,7 +2729,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, entity, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, entity, null);
                 trace.BeforeInlineMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -2760,7 +2758,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, entity, result,
+                trace.AfterInlineMerge(new TraceLog(commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -2974,7 +2972,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeInlineUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3003,7 +3001,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterInlineUpdate(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3217,7 +3215,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeInlineUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3246,7 +3244,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterInlineUpdate(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3314,7 +3312,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3346,7 +3344,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterInsert(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3414,7 +3412,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3446,7 +3444,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterInsert(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterInsert(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3588,7 +3586,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3617,7 +3615,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterMerge(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -3788,7 +3786,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeMerge(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -3817,7 +3815,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterMerge(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterMerge(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -4139,7 +4137,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -4172,7 +4170,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterQuery(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -4498,7 +4496,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeQuery(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -4527,7 +4525,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterQuery(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterQuery(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -4587,7 +4585,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, null, null);
                 trace.BeforeTruncate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -4613,7 +4611,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterTruncate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterTruncate(new TraceLog(commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
         }
@@ -4667,7 +4665,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, null, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, null, null);
                 trace.BeforeTruncate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -4693,7 +4691,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterTruncate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, null, result,
+                trace.AfterTruncate(new TraceLog(commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -4919,7 +4917,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -4948,7 +4946,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterUpdate(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -5174,7 +5172,7 @@ namespace RepoDb
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(MethodBase.GetCurrentMethod(), commandText, param, null);
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
                 trace.BeforeUpdate(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
@@ -5203,7 +5201,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterUpdate(new TraceLog(MethodBase.GetCurrentMethod(), commandText, param, result,
+                trace.AfterUpdate(new TraceLog(commandText, param, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 

@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
 
             // Act
@@ -47,7 +47,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
 
             // Act
@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
 
             // Act
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithIgnoreField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIgnoreFieldClass>();
 
             // Act
@@ -130,7 +130,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIdClass>();
 
             // Act
@@ -157,7 +157,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassIdFieldClass>();
 
             // Act
@@ -185,7 +185,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithPrimaryKeyField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithPrimaryKeyFieldClass>();
 
             // Act
@@ -213,7 +213,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMappingId()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingIdClass>();
 
             // Act
@@ -242,7 +242,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
 
             // Act/Assert
@@ -261,7 +261,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheClassIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass>();
 
             // Act/Assert
@@ -280,7 +280,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass>();
 
             // Act/Assert
@@ -300,7 +300,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
 
             // Act/Assert

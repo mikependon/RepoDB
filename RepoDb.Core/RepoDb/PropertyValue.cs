@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace RepoDb
+﻿namespace RepoDb
 {
     /// <summary>
     /// A class used when extracting the class object properties and values.

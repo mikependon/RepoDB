@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithoutMappings()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithClassMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -71,7 +71,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithFieldMapping()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithFieldMappingClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -97,7 +97,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithIgnoredField()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithIgnoredFieldClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithTop()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithTopClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithExpression()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithExpressionClass>();
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
@@ -183,7 +183,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithAscendingOrderFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithAscendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Ascending });
@@ -210,7 +210,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithDescendingOrderFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithDescendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Descending });
@@ -237,7 +237,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithAscendingAndDescendingOrderFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithAscendingAndDescendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
@@ -268,7 +268,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithDescendingAndAscendingOrderFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithDescendingAndAscendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
@@ -299,7 +299,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestWithAnyFieldsAtExpression()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<TestWithAnyFieldsAtExpressionClass>();
             var expression = new { AnyField = 1 };
             var queryGroup = QueryGroup.Parse(expression);
@@ -325,7 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfThereAreNoQueryableFields()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
             var queryGroup = (QueryGroup)null;
 
@@ -347,7 +347,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionIfAllFieldsWereIgnored()
         {
             // Setup
-            var statementBuilder = new SqlDbStatementBuilder();
+            var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfAllFieldsWereIgnoredClass>();
             var queryGroup = (QueryGroup)null;
 

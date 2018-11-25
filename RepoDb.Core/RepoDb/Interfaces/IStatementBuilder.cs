@@ -135,7 +135,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder, bool?, int?)"/> operation.
+        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.

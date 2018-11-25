@@ -78,7 +78,7 @@ namespace RepoDb
 
         private QueryBuilder<TEntity> Append(string value)
         {
-            m_stringBuilder.Append(m_stringBuilder.Length > 0 ? $" {value}" : value);
+            m_stringBuilder.Append(m_stringBuilder.Length > 0 ? string.Concat(" ", value) : value);
             return this;
         }
 
@@ -234,7 +234,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> GroupByFrom(IEnumerable<Field> fields)
         {
-            return Append($"GROUP BY {fields?.AsFields().Join(", ")}");
+            return Append(string.Concat("GROUP BY ", fields?.AsFields().Join(", ")));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> HavingCountFrom(QueryField queryField)
         {
-            return Append($"HAVING COUNT({queryField.Field.AsField()}) {queryField.GetOperationText()} {queryField.AsParameter()}");
+            return Append(string.Concat("HAVING COUNT(", queryField.Field.AsField(), ") ", queryField.GetOperationText(), ", ", queryField.AsParameter()));
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace RepoDb
         public QueryBuilder<TEntity> OrderByFrom(IEnumerable<OrderField> orderBy = null, string alias = null)
         {
             return (orderBy != null && orderBy.Any()) ?
-                Append($"ORDER BY {orderBy.Select(orderField => orderField.AsField()).Join(", ")}") :
+                Append(string.Concat("ORDER BY ", orderBy.Select(orderField => orderField.AsField()).Join(", "))) :
                 this;
         }
 
@@ -312,7 +312,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> As(string alias = null)
         {
-            return string.IsNullOrEmpty(alias) ? Append($"AS") : Append($"AS {alias}");
+            return string.IsNullOrEmpty(alias) ? Append("AS") : Append(string.Concat("AS ", alias));
         }
 
         /// <summary>
@@ -378,7 +378,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> TableName()
         {
-            return Append($"{ClassMappedNameCache.Get<TEntity>().AsQuoted(true)}");
+            return Append(ClassMappedNameCache.Get<TEntity>().AsQuoted(true));
         }
 
         /// <summary>
@@ -466,7 +466,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> TopFrom(int? rows = 0)
         {
-            return rows > 0 ? Append($"TOP ({rows})") : this;
+            return rows > 0 ? Append(string.Concat("TOP (", rows, ")")) : this;
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> WhereFrom(QueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append($"WHERE {queryGroup.FixParameters().GetString()}") : this;
+            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.FixParameters().GetString())) : this;
         }
 
         /// <summary>

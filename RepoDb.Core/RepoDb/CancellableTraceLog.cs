@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace RepoDb
+﻿namespace RepoDb
 {
     /// <summary>
     /// A cancellable tracing log object used in the tracing operations. This class holds the cancellable operations for all tracing logs.
@@ -10,12 +8,11 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="CancellableTraceLog"/> object.
         /// </summary>
-        /// <param name="method">A method that will instantiate this trace log object.</param>
         /// <param name="statement">A SQL statement that was used in the trace operation.</param>
         /// <param name="parameter">An object that was used as a parameter in the operation.</param>
         /// <param name="result">A result of the operation.</param>
-        internal CancellableTraceLog(MethodBase method, string statement, object parameter, object result)
-            : base(method, statement, parameter, result, null)
+        internal CancellableTraceLog(string statement, object parameter, object result)
+            : base(statement, parameter, result, null)
         {
         }
 

@@ -1,6 +1,4 @@
-﻿using RepoDb.Interfaces;
-using System;
-using System.Reflection;
+﻿using System;
 
 namespace RepoDb
 {
@@ -9,9 +7,8 @@ namespace RepoDb
     /// </summary>
     public class TraceLog
     {
-        internal TraceLog(MethodBase method, string statement, object parameter, object result, TimeSpan? executionTime)
+        internal TraceLog(string statement, object parameter, object result, TimeSpan? executionTime)
         {
-            Method = method;
             Statement = statement;
             Parameter = parameter;
             Result = result;
@@ -20,11 +17,6 @@ namespace RepoDb
                 ExecutionTime = executionTime.Value;
             }
         }
-
-        /// <summary>
-        /// Gets the method that triggers the actual operation execution.
-        /// </summary>
-        public MethodBase Method { get; }
 
         /// <summary>
         /// Gets the actual result of the actual operation execution.

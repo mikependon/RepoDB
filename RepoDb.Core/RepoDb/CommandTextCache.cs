@@ -116,9 +116,9 @@ namespace RepoDb
                 }
                 var isPrimaryIdentity = (identity != null);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlDbStatementBuilder)
+                if (statementBuilder is SqlStatementBuilder)
                 {
-                    var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
+                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
@@ -159,9 +159,9 @@ namespace RepoDb
                 }
                 var isPrimaryIdentity = (identity != null);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlDbStatementBuilder)
+                if (statementBuilder is SqlStatementBuilder)
                 {
-                    var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
+                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
@@ -230,9 +230,9 @@ namespace RepoDb
                 }
                 var isPrimaryIdentity = (identity != null);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlDbStatementBuilder)
+                if (statementBuilder is SqlStatementBuilder)
                 {
-                    var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
+                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
@@ -269,9 +269,9 @@ namespace RepoDb
                 }
                 var isPrimaryIdentity = (identity != null);
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                if (statementBuilder is SqlDbStatementBuilder)
+                if (statementBuilder is SqlStatementBuilder)
                 {
-                    var sqlStatementBuilder = (SqlDbStatementBuilder)statementBuilder;
+                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
@@ -291,7 +291,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder, bool?, int?)"/> operation.
+        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
