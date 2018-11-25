@@ -4,14 +4,15 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.7.0-beta4</Version>
+    <Version>1.7.0-beta5</Version>
     <Authors>Michael Camara Pendon, Rodel E. Dagumampan</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.7.0-beta4]
+    <PackageReleaseNotes>[Release 1.7.0-beta5]
+- Fixed the invalid binaries deployed at v1.7.0-beta4.
 - Modified 'async' operations implementation to leverage the awaitable features.
 - Exposed the 'IsForProvider' and 'GetProvider' DbConnection extended methods.
 - Introduced a 'BulkInsertMapItem' object to provide ability to override the 'BulkInsert' operation default mappings.
@@ -23,8 +24,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.7.0.4</AssemblyVersion>
-    <FileVersion>1.7.0.4</FileVersion>
+    <AssemblyVersion>1.7.0.5</AssemblyVersion>
+    <FileVersion>1.7.0.5</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
