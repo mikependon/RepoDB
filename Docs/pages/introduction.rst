@@ -36,7 +36,6 @@ Features
 * Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
 * Field Mapping
 * Operations (Asynchronous)
-* Recursive Query
 * SQL Statement Builder
 * Tracing
 * Transactions

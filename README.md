@@ -32,7 +32,6 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
  - Field Mapping
  - Operations (Asynchronous)
- - Recursive Query
  - SQL Statement Builder
  - Tracing
  - Transactions
