@@ -22,6 +22,20 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void TestParseExpressionWhereNameHasMapping()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.OtherPropertyString == "ABC");
+
+            // Act
+            var actual = parsed.QueryFields.First().Field.Name;
+            var expected = "PropertyString";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnParseExpressionWithNameAtRight()
         {

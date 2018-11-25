@@ -33,8 +33,8 @@ namespace RepoDb.Extensions
             {
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    var betweenLeftParameterName = $"{queryField.Parameter.Name}_{StringConstant.BetweenLeft}";
-                    var betweenRightParameterName = $"{queryField.Parameter.Name}_{StringConstant.BetweenRight}";
+                    var betweenLeftParameterName = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenLeft);
+                    var betweenRightParameterName = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenRight);
                     var values = new List<object>();
                     if (queryField.Parameter.Value != null)
                     {
@@ -74,7 +74,7 @@ namespace RepoDb.Extensions
                     }
                     for (var i = 0; i < values.Count; i++)
                     {
-                        var parameterName = $"{queryField.Parameter.Name}_{StringConstant.In}_{i}";
+                        var parameterName = string.Concat(queryField.Parameter.Name, "_", StringConstant.In, "_", i);
                         if (!expandObject.ContainsKey(parameterName))
                         {
                             expandObject.Add(parameterName, values[i]);

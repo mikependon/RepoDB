@@ -46,7 +46,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"Merge.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".Merge").GetHashCode();
 
             // Get the qualifier fields
             if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>

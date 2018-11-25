@@ -67,7 +67,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"BatchQuery.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".BatchQuery").GetHashCode();
 
             // Add the expression
             if (!ReferenceEquals(null, Where))

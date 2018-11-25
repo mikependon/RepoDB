@@ -50,7 +50,7 @@ namespace RepoDb
         {
             if (!Name.StartsWith("_"))
             {
-                Name = $"_{Name}";
+                Name = string.Concat("_", Name);
             }
         }
 
@@ -60,7 +60,7 @@ namespace RepoDb
         /// <returns></returns>
         public override string ToString()
         {
-            return $"@{Name} ({Value})";
+            return string.Concat("@", Name, " (", Value, ")");
         }
 
         // Equality and comparers

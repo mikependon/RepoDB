@@ -99,6 +99,7 @@ namespace RepoDb
         {
             var groupList = new List<string>();
             var conjunction = GetConjunctionText();
+            var separator = string.Concat(" ", conjunction, " ");
             if (QueryFields != null && QueryFields.Any())
             {
                 var fieldList = new List<string>();
@@ -106,7 +107,7 @@ namespace RepoDb
                 {
                     fieldList.Add(queryField.AsFieldAndParameter());
                 });
-                groupList.Add(fieldList.Join($" {conjunction} "));
+                groupList.Add(fieldList.Join(separator));
             }
             if (QueryGroups != null && QueryGroups.Any())
             {
@@ -115,9 +116,9 @@ namespace RepoDb
                 {
                     fieldList.Add(queryGroup.GetString());
                 });
-                groupList.Add(fieldList.Join($" {conjunction} "));
+                groupList.Add(fieldList.Join(separator));
             }
-            return IsNot ? $"NOT ({groupList.Join($" {conjunction} ")})" : $"({groupList.Join($" {conjunction} ")})";
+            return IsNot ? string.Concat("NOT (", groupList.Join(conjunction), ")") : string.Concat("(", groupList.Join(separator), ")");
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace RepoDb
                         if (queryField.Field.Equals(cQueryField.Field))
                         {
                             var fieldValue = cQueryField.Parameter;
-                            fieldValue.Name = $"{cQueryField.Parameter.Name}_{c}";
+                            fieldValue.Name = string.Concat(cQueryField.Parameter.Name, "_", c);
                         }
                     }
                     secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
@@ -546,16 +547,16 @@ namespace RepoDb
         {
             if (methodName == StringConstant.Contains)
             {
-                value = value.StartsWith("%") ? value : $"%{value}";
-                value = value.EndsWith("%") ? value : $"{value}%";
+                value = value.StartsWith("%") ? value : string.Concat("%", value);
+                value = value.EndsWith("%") ? value : string.Concat(value, "%");
             }
             else if (methodName == StringConstant.StartsWith)
             {
-                value = value.EndsWith("%") ? value : $"{value}%";
+                value = value.EndsWith("%") ? value : string.Concat(value, "%");
             }
             else if (methodName == StringConstant.EndsWith)
             {
-                value = value.StartsWith("%") ? value : $"%{value}";
+                value = value.StartsWith("%") ? value : string.Concat("%", value);
             }
             return value;
         }

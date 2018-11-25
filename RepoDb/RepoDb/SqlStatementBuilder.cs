@@ -68,7 +68,7 @@ namespace RepoDb
                 .FieldsFrom(fields)
                 .From()
                 .WriteText("CTE")
-                .WriteText($"WHERE ([RowNumber] BETWEEN {(page * rowsPerBatch) + 1} AND {(page + 1) * rowsPerBatch})")
+                .WriteText(string.Concat("WHERE ([RowNumber] BETWEEN ", (page * rowsPerBatch) + 1, " AND ", (page + 1) * rowsPerBatch, ")"))
                 .OrderByFrom(orderBy)
                 .End();
 
@@ -258,7 +258,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
+            var result = isPrimaryIdentity ? "SCOPE_IDENTITY()" : (primary != null) ? string.Concat("@", primary.GetMappedName()) : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -597,7 +597,7 @@ namespace RepoDb
                 .ParametersFrom(fields)
                 .CloseParen()
                 .End();
-            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? $"@{primary.GetMappedName()}" : "NULL";
+            var result = isPrimaryIdentity == true ? "SCOPE_IDENTITY()" : (primary != null) ? string.Concat("@", primary.GetMappedName()) : "NULL";
             queryBuilder
                 .Select()
                 .WriteText(result)
@@ -708,7 +708,7 @@ namespace RepoDb
                 .WriteText(qualifiers?
                     .Select(
                         field => field.AsJoinQualifier("S", "T"))
-                            .Join($" {StringConstant.And.ToUpper()} "))
+                            .Join(" AND "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
                 .When()

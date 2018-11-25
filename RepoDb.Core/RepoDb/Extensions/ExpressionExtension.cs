@@ -73,7 +73,7 @@ namespace RepoDb.Extensions
         {
             if (expression.Left.IsMember())
             {
-                return expression.Left.ToMember().Member.Name;
+                return expression.Left.ToMember().Member.GetMappedName();
             }
             else if (expression.Left.IsUnary())
             {
@@ -115,7 +115,7 @@ namespace RepoDb.Extensions
                     var last = expression.Arguments?.Last();
                     if (last?.IsMember() == true)
                     {
-                        return last.ToMember().Member.Name;
+                        return last.ToMember().Member.GetMappedName();
                     }
                 }
             }
@@ -129,7 +129,7 @@ namespace RepoDb.Extensions
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
         public static string GetName(this MemberExpression expression)
         {
-            return expression.Member.Name;
+            return expression.Member.GetMappedName();
         }
 
         #region GetValue

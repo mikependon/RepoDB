@@ -52,7 +52,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"InlineInsert.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".InlineInsert").GetHashCode();
 
             // Get the qualifier fields
             if (Fields != null)

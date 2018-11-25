@@ -14,7 +14,8 @@
     <PackageReleaseNotes>[Release 1.7.0-beta4]
 - Modified 'async' operations implementation to leverage the awaitable features.
 - Exposed the 'IsForProvider' and 'GetProvider' DbConnection extended methods.
-- Introduced a 'BulkInsertMapItem' object to provide ability to override the 'BulkInsert' operation default mappings.</PackageReleaseNotes>
+- Introduced a 'BulkInsertMapItem' object to provide ability to override the 'BulkInsert' operation default mappings.
+- Removed the recursive query features (DataEntity, DataEntityChildItemData, DataEntityChildListData, RecursionManager, ForeignAttribute).</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>

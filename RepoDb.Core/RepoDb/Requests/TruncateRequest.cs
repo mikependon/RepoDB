@@ -37,7 +37,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"Truncate.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".Truncate").GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

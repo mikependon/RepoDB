@@ -60,7 +60,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"InlineMerge.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".InlineMerge").GetHashCode();
 
             // Gets the target fields
             if (Fields != null)

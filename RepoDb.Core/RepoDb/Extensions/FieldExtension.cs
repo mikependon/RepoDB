@@ -27,37 +27,37 @@ namespace RepoDb.Extensions
         // AsParameter
         internal static string AsParameter(this Field field)
         {
-            return $"@{field.Name.AsQuotedParameter(true)}";
+            return string.Concat("@", field.Name.AsQuotedParameter(true));
         }
 
         // AsAliasField
         internal static string AsAliasField(this Field field, string alias)
         {
-            return $"{alias}.{field.Name.AsQuoted(true)}";
+            return string.Concat(alias, ".", field.Name.AsQuoted(true));
         }
 
         // AsParameterAsField
         internal static string AsParameterAsField(this Field field)
         {
-            return $"{AsParameter(field)} {StringConstant.As.ToUpper()} {AsField(field)}";
+            return string.Concat(AsParameter(field), " ", StringConstant.As.ToUpper(), " ", AsField(field));
         }
 
         // AsFieldAndParameter
         internal static string AsFieldAndParameter(this Field field)
         {
-            return $"{AsField(field)} = {AsParameter(field)}";
+            return string.Concat(AsField(field), " = ", AsParameter(field));
         }
 
         // AsJoinQualifier
         internal static string AsJoinQualifier(this Field field, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.{field.Name.AsQuoted(true)} = {rightAlias}.{field.Name.AsQuoted(true)}";
+            return string.Concat(leftAlias, ".", field.Name.AsQuoted(true), " = ", rightAlias, ".", field.Name.AsQuoted(true));
         }
 
         // AsFieldAndAliasField
         internal static string AsFieldAndAliasField(this Field field, string alias)
         {
-            return $"{AsField(field)} = {alias}.{AsField(field)}";
+            return string.Concat(AsField(field), " = ", alias, ".", AsField(field));
         }
 
         /* IEnumerable<PropertyInfo> */

@@ -60,7 +60,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"Query.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".Query").GetHashCode();
 
             // Add the expression
             if (!ReferenceEquals(null, Where))

@@ -47,6 +47,7 @@ namespace RepoDb.IntegrationTests
             };
 
             // Act (Insert)
+            repository.Delete<Customer>();
             var customerId = repository.Insert(customer);
             var result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
 

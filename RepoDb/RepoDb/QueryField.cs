@@ -101,7 +101,7 @@ namespace RepoDb
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{Field.ToString()} = {Parameter.ToString()}";
+            return string.Concat(Field.ToString(), " = ", Parameter.ToString());
         }
 
         // Static Methods

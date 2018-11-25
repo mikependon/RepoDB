@@ -31,19 +31,19 @@ namespace RepoDb.Extensions
         // AsParameter
         internal static string AsParameter(this QueryField queryField)
         {
-            return $"@{queryField.Parameter.Name}";
+            return string.Concat("@", queryField.Parameter.Name);
         }
 
         // AsParameterAsField
         internal static string AsParameterAsField(this QueryField queryField)
         {
-            return $"@{queryField.Parameter.Name} AS {queryField.Field.Name.AsQuoted(true)}";
+            return string.Concat(queryField.Parameter.Name, " AS ", queryField.Field.Name.AsQuoted(true));
         }
 
         // AsBetweenParameter
         internal static string AsBetweenParameter(this QueryField queryField)
         {
-            return $"@{queryField.Parameter.Name}_{StringConstant.BetweenLeft} {StringConstant.And.ToUpper()} @{queryField.Parameter.Name}_{StringConstant.BetweenRight}";
+            return string.Concat("@", queryField.Parameter.Name, "_", StringConstant.BetweenLeft, " AND @", queryField.Parameter.Name, "_", StringConstant.BetweenRight);
         }
 
         // AsInParameter
@@ -52,9 +52,9 @@ namespace RepoDb.Extensions
             var array = ((Array)queryField.Parameter.Value);
             var value = array
                 .OfType<object>()
-                .Select((qf, i) => $"@{queryField.Parameter.Name}_{StringConstant.In}_{i}")
+                .Select((qf, i) => string.Concat("@", queryField.Parameter.Name, "_", StringConstant.In, "_", i))
                 .Join(", ");
-            return $"({value})";
+            return string.Concat("(", value, ")");
         }
 
         // AsFieldAndParameter
@@ -62,26 +62,26 @@ namespace RepoDb.Extensions
         {
             if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
             {
-                return $"{queryField.AsField()} IS NULL";
+                return string.Concat(queryField.AsField(), " IS NULL");
             }
             else if (queryField.Operation == Operation.NotEqual && queryField.Parameter.Value == null)
             {
-                return $"{queryField.AsField()} IS NOT NULL";
+                return string.Concat(queryField.AsField(), " IS NOT NULL");
             }
             else
             {
                 var operationText = queryField.GetOperationText();
                 if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                 {
-                    return $"{queryField.AsField()} {operationText} {queryField.AsBetweenParameter()}";
+                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsBetweenParameter());
                 }
                 else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
                 {
-                    return $"{queryField.AsField()} {operationText} {queryField.AsInParameter()}";
+                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsInParameter());
                 }
                 else
                 {
-                    return $"{queryField.AsField()} {operationText} {queryField.AsParameter()}";
+                    return string.Concat(queryField.AsField(), " ", operationText, " ", queryField.AsParameter());
                 }
             }
         }

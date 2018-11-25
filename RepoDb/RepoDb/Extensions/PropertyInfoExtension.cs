@@ -54,8 +54,8 @@ namespace RepoDb.Extensions
         /// <returns>The custom attribute.</returns>
         public static Attribute GetCustomAttribute(this PropertyInfo property, Type type)
         {
-            var attributes = property?.GetCustomAttributes(type, false);
-            return attributes?.Any() == true ? (Attribute)attributes[0] : null;
+            var attributes = property.GetCustomAttributes(type, false)?.OfType<Attribute>();
+            return attributes?.Any() == true ? attributes.First() : null;
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of converted property info with defined aliases.</returns>
         public static string AsJoinQualifier(this PropertyInfo property, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.[{PropertyMappedNameCache.Get(property)}] = {rightAlias}.[{PropertyMappedNameCache.Get(property)}]";
+            return string.Concat(leftAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted(), " = ", rightAlias, ".", PropertyMappedNameCache.Get(property).AsQuoted());
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a mapped name.</returns>
         public static string AsField(this PropertyInfo property)
         {
-            return $"[{PropertyMappedNameCache.Get(property)}]";
+            return PropertyMappedNameCache.Get(property).AsQuoted();
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized name.</returns>
         public static string AsParameter(this PropertyInfo property)
         {
-            return $"@{PropertyMappedNameCache.Get(property)}";
+            return string.Concat("@", PropertyMappedNameCache.Get(property));
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         public static string AsParameterAsField(this PropertyInfo property)
         {
-            return $"{AsParameter(property)} {StringConstant.As.ToUpper()} {AsField(property)}";
+            return string.Concat(AsParameter(property), " ", StringConstant.As.ToUpper(), " ", AsField(property));
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a field and parameter name.</returns>
         public static string AsFieldAndParameter(this PropertyInfo property)
         {
-            return $"{AsField(property)} = {AsParameter(property)}";
+            return string.Concat(AsField(property), " = ", AsParameter(property));
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a field (and its alias) name.</returns>
         public static string AsFieldAndAliasField(this PropertyInfo property, string alias)
         {
-            return $"{AsField(property)} = {alias}.{AsField(property)}";
+            return string.Concat(AsField(property), " = ", alias, ".", AsField(property));
         }
 
         /* IEnumerable<PropertyInfo> */

@@ -37,7 +37,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = $"DeleteAll.{EntityType.FullName}".GetHashCode();
+            var hashCode = string.Concat(EntityType.FullName, ".DeleteAll").GetHashCode();
 
             // Set back the hash code value
             m_hashCode = hashCode;

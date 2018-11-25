@@ -127,14 +127,14 @@ namespace RepoDb
             }
 
             // Type.Name + Id
-            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{PropertyInfo.DeclaringType.Name}{StringConstant.Id}".ToLower());
+            m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(PropertyInfo.DeclaringType.Name, StringConstant.Id).ToLower());
             if (m_isPrimary == true)
             {
                 return m_isPrimary;
             }
 
             // Mapping.Name + Id
-            m_isPrimary = (PropertyInfo.Name.ToLower() == $"{ClassMappedNameCache.Get(PropertyInfo.DeclaringType)}{StringConstant.Id}".ToLower());
+            m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType), StringConstant.Id).ToLower());
             if (m_isPrimary == true)
             {
                 return m_isPrimary;

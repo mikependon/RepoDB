@@ -32,7 +32,7 @@ namespace RepoDb
         /// <returns>The string value equivalent to the name of the field.</returns>
         public override string ToString()
         {
-            return $"[{Name}]";
+            return Name.AsQuoted();
         }
 
         /// <summary>

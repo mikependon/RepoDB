@@ -94,10 +94,10 @@ namespace RepoDb.Reflection
                     var isConversionNeeded = readerField?.Type != propertyType;
 
                     // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                    var readerGetValueMethod = dataReaderType.GetMethod($"Get{readerField?.Type.Name}");
+                    var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", readerField?.Type.Name));
                     if (readerGetValueMethod == null)
                     {
-                        readerGetValueMethod = dataReaderType.GetMethod($"Get{propertyType.Name}") ??
+                        readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", propertyType.Name)) ??
                             dataReaderType.GetMethod("GetValue");
                         isConversionNeeded = true; // Force
                     }
@@ -227,7 +227,7 @@ namespace RepoDb.Reflection
                 var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                var readerGetValueMethod = dataReaderType.GetMethod($"Get{field?.Type.Name}");
+                var readerGetValueMethod = dataReaderType.GetMethod(string.Concat("Get", field?.Type.Name));
                 if (readerGetValueMethod == null)
                 {
                     readerGetValueMethod = dataReaderType.GetMethod("GetValue");

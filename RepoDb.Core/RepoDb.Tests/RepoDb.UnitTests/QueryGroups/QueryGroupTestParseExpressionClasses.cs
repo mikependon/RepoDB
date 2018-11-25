@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Attributes;
+using System;
 using System.Text;
 
 namespace RepoDb.UnitTests
@@ -20,6 +21,8 @@ namespace RepoDb.UnitTests
             public Guid PropertyGuid { get; set; }
             public Boolean PropertyBoolean { get; set; }
             public Byte[] PropertyBytes { get; set; }
+            [Map("PropertyString")]
+            public string OtherPropertyString { get; set; }
             public QueryGroupTestExpressionClassMember Member { get; set; }
         }
 

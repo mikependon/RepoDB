@@ -45,11 +45,11 @@ namespace RepoDb.Extensions
             }
             if (!value.StartsWith("["))
             {
-                value = $"[{value}";
+                value = string.Concat("[", value);
             }
             if (!value.EndsWith("]"))
             {
-                value = $"{value}]";
+                value = string.Concat(value, "]");
             }
             return value;
         }
@@ -79,43 +79,43 @@ namespace RepoDb.Extensions
         // AsJoinQualifier
         internal static string AsJoinQualifier(this string value, string leftAlias, string rightAlias)
         {
-            return $"{leftAlias}.[{value.AsUnquoted()}] = {rightAlias}.[{value.AsUnquoted()}]";
+            return string.Concat(leftAlias, ".", value.AsQuoted(), " = ", rightAlias, ".", value.AsQuoted());
         }
 
         // AsField
         internal static string AsField(this string value)
         {
-            return $"[{value.AsUnquoted()}]";
+            return value.AsQuoted();
         }
 
         // AsParameter
         internal static string AsParameter(this string value)
         {
-            return $"@{value.AsUnquoted()}";
+            return string.Concat("@", value.AsUnquoted());
         }
 
         // AsAliasField
         internal static string AsAliasField(this string value, string alias)
         {
-            return $"{alias}.[{value.AsUnquoted()}]";
+            return string.Concat(alias, ".", value.AsQuoted());
         }
 
         // AsParameterAsField
         internal static string AsParameterAsField(this string value)
         {
-            return $"{AsParameter(value.AsUnquoted())} {StringConstant.As.ToUpper()} {AsField(value.AsUnquoted())}";
+            return string.Concat(AsParameter(value), " AS ", AsField(value));
         }
 
         // AsFieldAndParameter
         internal static string AsFieldAndParameter(this string value)
         {
-            return $"{AsField(value.AsUnquoted())} = {AsParameter(value.AsUnquoted())}";
+            return string.Concat(AsField(value), " = ", AsParameter(value));
         }
 
         // AsFieldAndAliasField
         internal static string AsFieldAndAliasField(this string value, string alias)
         {
-            return $"{AsField(value.AsUnquoted())} = {alias}.{AsField(value.AsUnquoted())}";
+            return string.Concat(AsField(value), " = ", alias, ".", AsField(value));
         }
 
         /* IEnumerable<string> */

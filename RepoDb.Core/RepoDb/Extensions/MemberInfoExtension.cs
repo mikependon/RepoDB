@@ -24,6 +24,17 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Gets the name of the current instance of <see cref="MemberInfo"/>. If the instance is <see cref="PropertyInfo"/>, it will try to retrieved the
+        /// mapped name of the property.
+        /// </summary>
+        /// <param name="member">The member where to retrieve a name.</param>
+        /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
+        internal static string GetMappedName(this MemberInfo member)
+        {
+            return member.IsPropertyInfo() ? member.ToPropertyInfo().GetMappedName() : member.Name;
+        }
+
+        /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
         /// </summary>
         /// <param name="member">The instance of <see cref="MemberInfo"/> object where the value is to be extracted.</param>
