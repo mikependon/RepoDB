@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.7.0-beta5</version>
+    <version>1.7.0</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -10,12 +10,11 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.7.0-beta5]
-    - Fixed the invalid binaries deployed at v1.7.0-beta4.
-    - Modified 'async' operations implementation to leverage the awaitable features.
-    - Exposed the 'IsForProvider' and 'GetProvider' DbConnection extended methods.
-    - Introduced a 'BulkInsertMapItem' object to provide ability to override the 'BulkInsert' operation default mappings.
-    - Removed the recursive query features (DataEntity, DataEntityChildItemData, DataEntityChildListData, RecursionManager, ForeignAttribute).
+    [Release 1.7.0]
+    - Async Method Calls Optimizations
+    - Expression-Based Queries
+    - Removed Support for Recursive Query
+    - Initial Support for Different Database Providers
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>
