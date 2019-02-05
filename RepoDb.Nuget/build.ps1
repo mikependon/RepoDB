@@ -1,5 +1,5 @@
 ﻿## Get the directories
-Set-Location -Path "C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.Nuget"
+## Set-Location -Path "C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.Nuget"
 $currentLocation = (Get-Location).Path
 $repoDbLocation = (Get-Item $currentLocation).Parent.FullName + "\RepoDb"
 $repoDbStandardLocation = (Get-Item $currentLocation).Parent.FullName + "\RepoDb.Core"
@@ -9,14 +9,6 @@ Write-Host "[Information]"
 Write-Host ""
 Write-Host "RepoDb (NETFramework):`t" + $repoDbLocation
 Write-Host "RepoDb (NETStandard):`t" + $repoDbStandardLocation
-
-## Verify from the user
-#Write-Host ""
-#$answer = Read-Host "Please verify the directories above. Proceed (Y/N)?"
-#if ($answer.toString().toUpper() -ne "Y") {
-#    Write-Host "User did not proceed."
-#    return
-#}
 
 ## Set the 'MSBuild' exe location
 $msBuild = "C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe"
