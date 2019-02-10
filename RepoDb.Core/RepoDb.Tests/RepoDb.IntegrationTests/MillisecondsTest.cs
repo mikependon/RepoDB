@@ -53,7 +53,7 @@ namespace RepoDb.IntegrationTests
                 datetime_column = dateTime,
                 datetime2_column = dateTime2
             });
-            var actual = repository.Query<TestDateTimeClass>(new { SessionId = sessionId }).FirstOrDefault();
+            var actual = repository.Query<TestDateTimeClass>(tdtc => tdtc.SessionId == sessionId).FirstOrDefault();
 
             // Assert
             actual.ShouldNotBeNull();
@@ -92,7 +92,7 @@ namespace RepoDb.IntegrationTests
                 datetime_column = dateTime,
                 datetime2_column = dateTime2
             });
-            var actual = repository.Query<TestDateTimeClass>(new { SessionId = sessionId }).FirstOrDefault();
+            var actual = repository.Query<TestDateTimeClass>(tdtc => tdtc.SessionId == sessionId).FirstOrDefault();
 
             // Assert
             actual.ShouldNotBeNull();

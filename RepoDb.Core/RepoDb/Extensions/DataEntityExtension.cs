@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -41,29 +42,24 @@ namespace RepoDb.Extensions
             return value;
         }
 
-        // GetPropertiesFor
-        internal static IEnumerable<ClassProperty> GetPropertiesFor(Type type, Command command)
+        // GetProperties
+        internal static IEnumerable<ClassProperty> GetProperties(Type type)
         {
             return type
                 .GetTypeInfo()
                 .GetProperties()
-                .Select(property => new ClassProperty(property))
-                .Where(property =>
-                    property.IsIgnored(command) == false &&
-                    property.IsRecursive() == false);
+                .Select(property => new ClassProperty(property));
         }
 
         /// <summary>
-        /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity class based on the
-        /// target command.
+        /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity where to get the list of the properties.</typeparam>
-        /// <param name="command">The target command.</param>
-        /// <returns>The list of data entity properties based on the target command.</returns>
-        public static IEnumerable<ClassProperty> GetPropertiesFor<TEntity>(Command command)
+        /// <returns>The properties of the class.</returns>
+        public static IEnumerable<ClassProperty> GetProperties<TEntity>()
             where TEntity : class
         {
-            return GetPropertiesFor(typeof(TEntity), command);
+            return GetProperties(typeof(TEntity));
         }
 
         // GetPropertyByAttribute
@@ -105,12 +101,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dataEntity">The data entity object to be converted.</param>
         /// <param name="queryGroup">The query group to be merged.</param>
-        /// <param name="command">The target command type to be used for the object transformation.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object dataEntity, QueryGroup queryGroup, Command command)
+        internal static object AsObject(this object dataEntity, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            var properties = GetPropertiesFor(dataEntity.GetType(), command);
+            var properties = GetProperties(dataEntity.GetType());
             properties?
                 .ToList()
                 .ForEach(property =>
@@ -135,18 +130,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of converted dynamic object.</returns>
         internal static object AsObject(this object dataEntity)
         {
-            return AsObject(dataEntity, null, Command.None);
-        }
-
-        /// <summary>
-        /// Converts the data entity object into a dynamic object.
-        /// </summary>
-        /// <param name="dataEntity">The data entity object to be converted.</param>
-        /// <param name="command">The target command type to be used for the object transformation.</param>
-        /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object dataEntity, Command command)
-        {
-            return AsObject(dataEntity, null, command);
+            return AsObject(dataEntity, null);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -157,7 +156,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
-            [Attributes.Ignore(Command.InlineUpdate)]
             public DateTime Field3 { get; set; }
         }
 
@@ -172,7 +170,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var queryGroup = QueryGroup.Parse(expression);
 
             // Act
-            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup, true);
+            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestOverrideIgnoreForInlineUpdateClass] " +
                 $"SET [Field1] = @Field1, " +
@@ -188,7 +186,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Update)]
             public DateTime Field3 { get; set; }
         }
 
@@ -203,7 +200,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var queryGroup = QueryGroup.Parse(expression);
 
             // Act
-            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup, true);
+            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestOverrideIgnoreForUpdateClass] " +
                 $"SET [Field1] = @Field1, " +
@@ -244,46 +241,6 @@ namespace RepoDb.UnitTests.StatementBuilders
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsMissingAtDataEntityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
-
-            // Act/Assert
-            statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
-        }
-
-        private class ThrowExceptionIfTheTargetFieldIsIgnoreInlineUpdateAtDataEntityClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.InlineUpdate)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsIgnoreInlineUpdateAtDataEntity()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsIgnoreInlineUpdateAtDataEntityClass>();
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-
-            // Act/Assert
-            statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
-        }
-
-        private class ThrowExceptionIfTheTargetFieldIsIgnoreUpdateAtDataEntityClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Update)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsIgnoreUpdateAtDataEntity()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsIgnoreUpdateAtDataEntityClass>();
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);

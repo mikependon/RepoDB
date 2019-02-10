@@ -75,11 +75,9 @@
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="PrimaryKeyIdentityCache.cs" />
     <Compile Include="DataEntityDataReader.cs" />
-    <Compile Include="Exceptions\DuplicateDataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotBigCountableException.cs" />
     <Compile Include="Exceptions\EntityNotCountableException.cs" />
     <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
-    <Compile Include="Exceptions\DataEntityMapException.cs" />
     <Compile Include="Exceptions\EntityNotInlineInsertableException.cs" />
     <Compile Include="Exceptions\EntityNotInlineMergeableException.cs" />
     <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
@@ -118,7 +116,6 @@
     <Compile Include="Exceptions\CancelledExecutionException.cs" />
     <Compile Include="Interfaces\ICache.cs" />
     <Compile Include="Interfaces\ITrace.cs" />
-    <Compile Include="Attributes\IgnoreAttribute.cs" />
     <Compile Include="Attributes\MapAttribute.cs" />
     <Compile Include="Attributes\PrimaryAttribute.cs" />
     <Compile Include="Attributes\TextAttribute.cs" />
@@ -126,7 +123,6 @@
     <Compile Include="DbRepository.cs" />
     <Compile Include="Enumerations\Conjunction.cs" />
     <Compile Include="Enumerations\Order.cs" />
-    <Compile Include="Enumerations\Command.cs" />
     <Compile Include="Enumerations\Operation.cs" />
     <Compile Include="Exceptions\DuplicateTypeMapException.cs" />
     <Compile Include="Exceptions\EntityNotBulkInsertableException.cs" />

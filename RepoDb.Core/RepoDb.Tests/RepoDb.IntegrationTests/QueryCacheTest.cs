@@ -19,7 +19,7 @@ namespace RepoDb.IntegrationTests
             var cacheKey = globalId.ToString();
 
             // Act - Query
-            var customerId = repository.Insert(new RecursiveCustomer
+            var customerId = repository.Insert(new Customer
             {
                 Address = "Address",
                 DateInsertedUtc = DateTime.UtcNow,
@@ -32,21 +32,21 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName,
                 MiddleName = "MiddleName"
             });
-            var actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            var actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
 
             // Assert - Query
             Assert.IsNotNull(actual);
             Assert.AreEqual(1, repository.Cache.Count());
 
             // Act - Delete
-            repository.Delete<Customer>(new { GlobalId = globalId });
-            actual = repository.Query<Customer>(new { GlobalId = globalId }).FirstOrDefault();
+            repository.Delete<Customer>(c => c.GlobalId == globalId);
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId).FirstOrDefault();
 
             // Assert - Delete
             Assert.IsNull(actual);
 
             // Act - QueryWithCacheKey
-            actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
 
             // Asert - Query
             Assert.IsNotNull(actual);
@@ -61,7 +61,7 @@ namespace RepoDb.IntegrationTests
             var cacheKey = globalId.ToString();
 
             // Act - Query
-            var customerId = repository.Insert(new RecursiveCustomer
+            var customerId = repository.Insert(new Customer
             {
                 Address = "Address",
                 DateInsertedUtc = DateTime.UtcNow,
@@ -74,15 +74,15 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName,
                 MiddleName = "MiddleName"
             });
-            var actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            var actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
 
             // Assert - Query
             Assert.IsNotNull(actual);
             Assert.AreEqual(1, repository.Cache.Count());
 
             // Act - Delete
-            repository.Delete<Customer>(new { GlobalId = globalId });
-            actual = repository.Query<Customer>(new { GlobalId = globalId }).FirstOrDefault();
+            repository.Delete<Customer>(c => c.GlobalId == globalId);
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId).FirstOrDefault();
 
             // Assert - Delete
             Assert.IsNull(actual);
@@ -91,7 +91,7 @@ namespace RepoDb.IntegrationTests
             repository.Cache.Clear();
 
             // Act - QueryWithCacheKey
-            actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
             Assert.AreEqual(0, repository.Cache.Count());
 
             // Asert - Query
@@ -107,7 +107,7 @@ namespace RepoDb.IntegrationTests
             var cacheKey = globalId.ToString();
 
             // Act - Query
-            var customerId = repository.Insert(new RecursiveCustomer
+            var customerId = repository.Insert(new Customer
             {
                 Address = "Address",
                 DateInsertedUtc = DateTime.UtcNow,
@@ -120,15 +120,15 @@ namespace RepoDb.IntegrationTests
                 LastUserId = Environment.UserName,
                 MiddleName = "MiddleName"
             });
-            var actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            var actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
 
             // Assert - Query
             Assert.IsNotNull(actual);
             Assert.AreEqual(1, repository.Cache.Count());
 
             // Act - Delete
-            repository.Delete<Customer>(new { GlobalId = globalId });
-            actual = repository.Query<Customer>(new { GlobalId = globalId }).FirstOrDefault();
+            repository.Delete<Customer>(c => c.GlobalId == globalId);
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId).FirstOrDefault();
 
             // Assert - Delete
             Assert.IsNull(actual);
@@ -137,7 +137,7 @@ namespace RepoDb.IntegrationTests
             repository.Cache.Remove(cacheKey);
 
             // Act - QueryWithCacheKey
-            actual = repository.Query<Customer>(new { GlobalId = globalId }, cacheKey: cacheKey).FirstOrDefault();
+            actual = repository.Query<Customer>(c => c.GlobalId == globalId, cacheKey: cacheKey).FirstOrDefault();
             Assert.AreEqual(0, repository.Cache.Count());
 
             // Asert - Query

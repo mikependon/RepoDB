@@ -131,13 +131,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a stringified fields to the SQL Query Statement by command.
+        /// Appends a stringified fields to the SQL Query Statement.
         /// </summary>
-        /// <param name="command">The mapped command where to get all the fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsFrom(Command command)
+        public QueryBuilder<TEntity> FieldsFrom()
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName().AsQuoted(true));
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName().AsQuoted(true));
             return Append(fields?.ToList().AsFields().Join(", "));
         }
 
@@ -152,13 +151,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a stringified fields and parameters to the SQL Query Statement by command.
+        /// Appends a stringified fields and parameters to the SQL Query Statement.
         /// </summary>
-        /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndParametersFrom(Command command)
+        public QueryBuilder<TEntity> FieldsAndParametersFrom()
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsFieldsAndParameters().Join(", "));
         }
 
@@ -173,19 +171,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
+        /// Appends a stringified fields and parameters to the SQL Query Statement with aliases.
         /// </summary>
-        /// <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> FieldsAndAliasFieldsFrom(Command command, string alias)
+        public QueryBuilder<TEntity> FieldsAndAliasFieldsFrom(string alias)
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsFieldsAndAliasFields(alias).Join(", "));
         }
 
         /// <summary>
-        /// Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
+        /// Appends a stringified fields and parameters to the SQL Query Statement with aliases.
         /// </summary>
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
@@ -196,14 +193,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a stringified fields to the SQL Query Statement by command with aliases.
+        /// Appends a stringified fields to the SQL Query Statement with aliases.
         /// </summary>
-        /// <param name="command">The mapped command where to get all the fields to be stringified.</param>
         /// <param name="alias">The alias to be prepended for each field.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> AsAliasFieldsFrom(Command command, string alias)
+        public QueryBuilder<TEntity> AsAliasFieldsFrom(string alias)
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsAliasFields(alias).Join(", "));
         }
 
@@ -382,13 +378,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Append the mapped properpties name to the SQL Query Statement based on the mapped command.
+        /// Append the mapped properpties name to the SQL Query Statement.
         /// </summary>
-        /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> ParametersFrom(Command command)
+        public QueryBuilder<TEntity> ParametersFrom()
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsParameters().Join(", "));
         }
 
@@ -403,13 +398,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Append the stringified parameter as fields to the SQL Query Statement based on the mapped command.
+        /// Append the stringified parameter as fields to the SQL Query Statement.
         /// </summary>
-        /// <param name="command">The command where the mapping is defined.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder<TEntity> ParametersAsFieldsFrom(Command command)
+        public QueryBuilder<TEntity> ParametersAsFieldsFrom()
         {
-            var fields = PropertyCache.Get<TEntity>(command)?.Select(property => property.GetMappedName());
+            var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName());
             return Append(fields?.AsParametersAsFields().Join(", "));
         }
 

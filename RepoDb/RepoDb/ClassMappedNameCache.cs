@@ -15,7 +15,7 @@ namespace RepoDb
         /// Gets the cached mapped-name for the entity.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
-        /// <returns>The cached mapped name of the data entity.</returns>
+        /// <returns>The cached mapped name of the entity.</returns>
         public static string Get<TEntity>()
             where TEntity : class
         {
@@ -26,7 +26,7 @@ namespace RepoDb
         /// Gets the cached mapped-name for the entity.
         /// </summary>
         /// <param name="type">The type of the target entity.</param>
-        /// <returns>The cached command type of the entity.</returns>
+        /// <returns>The cached mapped name of the entity.</returns>
         internal static string Get(Type type)
         {
             var key = type.FullName;

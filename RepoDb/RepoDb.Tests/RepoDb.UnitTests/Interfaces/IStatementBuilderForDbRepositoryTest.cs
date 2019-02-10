@@ -134,8 +134,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Setup(builder =>
                 builder.CreateInlineInsert<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<bool>()));
+                    It.IsAny<IEnumerable<Field>>()));
 
             // Act
             repository.Object.InlineInsert<StatementBuilderEntity>(new { Id = 1 });
@@ -144,8 +143,7 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateInlineInsert<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<bool>()), Times.Once);
+                    It.IsAny<IEnumerable<Field>>()), Times.Once);
         }
 
         // CreateInlineMerge
@@ -162,8 +160,7 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInlineMerge<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<bool>()));
+                    It.IsAny<IEnumerable<Field>>()));
 
             // Act
             repository.Object.InlineMerge<StatementBuilderEntity>(new { Id = 1, Name = "Name" });
@@ -173,8 +170,7 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInlineMerge<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<bool>()), Times.Once);
+                    It.IsAny<IEnumerable<Field>>()), Times.Once);
         }
 
         // CreateInlineUpdate
@@ -191,8 +187,7 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInlineUpdate<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
-                    It.IsAny<bool>()));
+                    It.IsAny<QueryGroup>()));
 
             // Act
             repository.Object.InlineUpdate<StatementBuilderEntity>(new { Name = "Name" }, new { Id = 1 });
@@ -202,8 +197,7 @@ namespace RepoDb.UnitTests.Interfaces
                 builder.CreateInlineUpdate<StatementBuilderEntity>(
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<IEnumerable<Field>>(),
-                    It.IsAny<QueryGroup>(),
-                    It.IsAny<bool>()), Times.Once);
+                    It.IsAny<QueryGroup>()), Times.Once);
         }
 
         // CreateInsert

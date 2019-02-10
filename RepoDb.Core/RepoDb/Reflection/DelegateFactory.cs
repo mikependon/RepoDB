@@ -50,7 +50,7 @@ namespace RepoDb.Reflection
             var matchedCount = 0;
 
             // Iterate the properties
-            PropertyCache.Get<TEntity>(Command.Query)
+            PropertyCache.Get<TEntity>()
                 .Where(property => property.PropertyInfo.CanWrite)
                 .ToList()
                 .ForEach(property =>

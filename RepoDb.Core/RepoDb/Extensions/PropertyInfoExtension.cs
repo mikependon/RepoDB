@@ -80,33 +80,6 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Checks whether the property info is a recursive property of the data entity object.
-        /// </summary>
-        /// <param name="property">The instance of the propery info to be checked.</param>
-        /// <returns>A boolean value that signifies whether the property info is a recursive property of the data entity object.</returns>
-        public static bool IsRecursive(this PropertyInfo property)
-        {
-            var args = property.PropertyType.GetTypeInfo().GetGenericArguments();
-            return (args != null && args.Length > 0) &&
-                (
-                    property.PropertyType != typeof(Nullable<>) &&
-                    property.PropertyType.Name != "Nullable`1"
-                );
-        }
-
-        /// <summary>
-        /// Checks whether the property info is being ignored by the repository operation on a given command.
-        /// </summary>
-        /// <param name="property">The instance of the propery info to be checked.</param>
-        /// <param name="command">The command to be identified.</param>
-        /// <returns>A boolean value that signifies whether the property info is being ignored by the repository operation.</returns>
-        public static bool IsIgnored(this PropertyInfo property, Command command)
-        {
-            var ignore = property.GetCustomAttribute<IgnoreAttribute>();
-            return (ignore != null && (ignore.Command & command) == command && ignore.Command != Command.None);
-        }
-
-        /// <summary>
         /// Checks whether the property info is a primary property.
         /// </summary>
         /// <param name="property">The instance of property info to be checked.</param>

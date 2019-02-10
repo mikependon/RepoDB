@@ -19,23 +19,16 @@ namespace RepoDb.Requests
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
-        /// <param name="overrideIgnore">The value whether to override the ignored fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public InlineInsertRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, bool? overrideIgnore = null, IStatementBuilder statementBuilder = null)
+        public InlineInsertRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Fields = fields;
-            OverrideIgnore = overrideIgnore;
         }
         /// <summary>
         /// Gets the target fields.
         /// </summary>
         public IEnumerable<Field> Fields { get; set; }
-
-        /// <summary>
-        /// Gets the value whether to override the ignored fields.
-        /// </summary>
-        public bool? OverrideIgnore { get; set; }
 
         // Equality and comparers
 
@@ -61,12 +54,6 @@ namespace RepoDb.Requests
                 {
                     hashCode += field.GetHashCode();
                 });
-            }
-
-            // Override ignore hashcode
-            if (OverrideIgnore != null)
-            {
-                hashCode += OverrideIgnore.GetHashCode();
             }
 
             // Set back the hash code value

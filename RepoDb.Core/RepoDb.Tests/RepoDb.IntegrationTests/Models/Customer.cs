@@ -17,7 +17,6 @@ namespace RepoDb.IntegrationTests.Models
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public DateTime LastUpdatedUtc { get; set; }
-        [Attributes.Ignore(Command.Update | Command.Insert)]
         public DateTime DateInsertedUtc { get; set; }
         public string LastUserId { get; set; }
     }

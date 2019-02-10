@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 using System;
 using System.Collections.Generic;
 
@@ -193,102 +192,6 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"VALUES ( S.[ClassNameId], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class TestWithInsertIgnoreClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Insert)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestWithInsertIgnore()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithInsertIgnoreClass>();
-            var qualifiers = Field.From("Field1");
-
-            // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder, qualifiers);
-            var expected = $"" +
-                $"MERGE [TestWithInsertIgnoreClass] AS T " +
-                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
-                $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [Field1], [Field2] ) " +
-                $"VALUES ( S.[Field1], S.[Field2] ) " +
-                $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class TestWithUpdateIgnoreClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Update)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestWithUpdateIgnore()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithUpdateIgnoreClass>();
-            var qualifiers = Field.From("Field1");
-
-            // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder, qualifiers);
-            var expected = $"" +
-                $"MERGE [TestWithUpdateIgnoreClass] AS T " +
-                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
-                $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [Field1], [Field2], [Field3] ) " +
-                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
-                $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class TestWithMergeIgnoreClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Merge)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestWithMergeIgnore()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithMergeIgnoreClass>();
-            var qualifiers = Field.From("Field1");
-
-            // Act
-            var actual = statementBuilder.CreateMerge(queryBuilder, qualifiers);
-            var expected = $"" +
-                $"MERGE [TestWithMergeIgnoreClass] AS T " +
-                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
-                $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [Field1], [Field2] ) " +
-                $"VALUES ( S.[Field1], S.[Field2] ) " +
-                $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

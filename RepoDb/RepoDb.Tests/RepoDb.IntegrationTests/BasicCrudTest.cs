@@ -49,7 +49,7 @@ namespace RepoDb.IntegrationTests
             // Act (Insert)
             repository.Delete<Customer>();
             var customerId = repository.Insert(customer);
-            var result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
+            var result = repository.Query<Customer>(customerId).FirstOrDefault();
 
             // Assert (Insert)
             result.ShouldNotBeNull();
@@ -78,8 +78,8 @@ namespace RepoDb.IntegrationTests
             };
 
             // Act (Update)
-            repository.Update(customer, new { Id = customerId });
-            result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
+            repository.Update(customer, customerId);
+            result = repository.Query<Customer>(customerId).FirstOrDefault();
 
             // Assert (Update)
             result.ShouldNotBeNull();
@@ -94,21 +94,21 @@ namespace RepoDb.IntegrationTests
             result.LastUserId.ShouldBe(customer.LastUserId);
 
             // Act (Delete)
-            repository.Delete<Customer>(new { Id = customerId });
+            repository.Delete<Customer>(customerId);
 
             // Assert (Delete)
-            result = repository.Query<Customer>(new { Id = customerId }).FirstOrDefault();
+            result = repository.Query<Customer>(customerId).FirstOrDefault();
             result.ShouldBeNull();
         }
 
         [TestMethod]
-        public void TestMergeInsertAndQueryViaDynamics()
+        public void TestMergeInsertAndQuery()
         {
             // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
             var customer = new Customer
             {
-                Id = 99,
+                Id = 99, // 99 - will be updated if present in the DB, orelse, a new Id will be generated
                 GlobalId = Guid.NewGuid(),
                 FirstName = "FirstName-MERGED",
                 LastName = "LastName-MERGED",
@@ -123,7 +123,7 @@ namespace RepoDb.IntegrationTests
 
             // Act
             repository.Merge(customer);
-            var result = repository.Query<Customer>(new { customer.GlobalId }).FirstOrDefault();
+            var result = repository.Query<Customer>(c => c.GlobalId == customer.GlobalId).FirstOrDefault();
 
             // Assert
             result.ShouldNotBeNull();
@@ -140,7 +140,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestMergeUpdateAndQueryViaDynamics()
+        public void TestMergeUpdateAndQuery()
         {
             // Setup
             var repository = new DbRepository<SqlConnection>(Constants.TestDatabase);
@@ -159,7 +159,7 @@ namespace RepoDb.IntegrationTests
 
             // Act
             repository.Merge(customer, Field.From(nameof(Customer.GlobalId)));
-            var result = repository.Query<Customer>(new { customer.GlobalId }).FirstOrDefault();
+            var result = repository.Query<Customer>(c => c.GlobalId == customer.GlobalId).FirstOrDefault();
 
             // Assert
             result.ShouldNotBeNull();
@@ -225,7 +225,7 @@ namespace RepoDb.IntegrationTests
             };
 
             // Act (Update)
-            repository.Update(customer, new { Id = customerId });
+            repository.Update(customer, c => c.Id == customerId);
             result = repository.Query<Customer>(c => c.Id == customerId).FirstOrDefault();
 
             // Assert (Update)

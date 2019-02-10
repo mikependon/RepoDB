@@ -22,6 +22,80 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields) :
+            this(queryFields, null, Conjunction.And, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            IEnumerable<QueryGroup> queryGroups = null) :
+            this(queryFields, queryGroups, Conjunction.And, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            Conjunction conjunction = Conjunction.And) :
+            this(queryFields, null, conjunction, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            bool isNot = false) :
+            this(queryFields, null, Conjunction.And, isNot)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            IEnumerable<QueryGroup> queryGroups = null,
+            Conjunction conjunction = Conjunction.And) :
+            this(queryFields, queryGroups, conjunction, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            IEnumerable<QueryGroup> queryGroups = null,
+            bool isNot = false) :
+            this(queryFields, queryGroups, Conjunction.And, isNot)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        public QueryGroup(IEnumerable<QueryField> queryFields,
+            Conjunction conjunction = Conjunction.And,
+            bool isNot = false) :
+            this(queryFields, null, conjunction, isNot)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
         /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
@@ -567,257 +641,25 @@ namespace RepoDb
         /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
         /// <see cref="QueryGroup"/> that defines the query tree expression.
         /// </summary>
-        /// <param name="obj">
-        /// A dynamic query tree expression to be parsed.
-        /// Example:
-        /// var expression = new { Conjunction = Conjunction.And, Company = "Microsoft",
-        /// FirstName = new { Operation = Operation.Like, Value = "An%" },
-        /// UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
-        /// </param>
-        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
+        /// <param name="obj">A dynamic query tree expression to be parsed.</param>
+        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed dynamic query expression.</returns>
         public static QueryGroup Parse(object obj)
         {
-            // Cannot further optimize and shortify this method, this one works like a charm for now.
-
             // Check for value
             if (obj == null)
             {
                 throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
 
-            // Variables
-            var queryFields = new List<QueryField>();
-            var queryGroups = new List<QueryGroup>();
-            var conjunction = Conjunction.And;
-
             // Iterate every property
-            var objectProperties = obj.GetType().GetProperties();
-            objectProperties.ToList().ForEach(property =>
+            var queryFields = new List<QueryField>();
+            obj.GetType().GetProperties().ToList().ForEach(property =>
             {
-                var fieldName = property.Name;
-
-                // Identify the fields
-                if (string.Equals(fieldName, StringConstant.Conjunction, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // Throws an exception if conjunction is not a conjunction type
-                    if (property.PropertyType != typeof(Conjunction))
-                    {
-                        throw new InvalidQueryExpressionException($"Conjunction field must be of type {typeof(Conjunction).FullName}.");
-                    }
-
-                    // Conjunction
-                    conjunction = (Conjunction)property.GetValue(obj);
-                }
-                else if (string.Equals(fieldName, StringConstant.QueryGroups, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // Child QueryGroups
-                    var value = property.GetValue(obj);
-                    if (value is Array)
-                    {
-                        ((Array)value).AsEnumerable().ToList().ForEach(item =>
-                        {
-                            queryGroups.Add(Parse(item));
-                        });
-                    }
-                    else
-                    {
-                        queryGroups.Add(Parse(value));
-                    }
-                }
-                else
-                {
-                    // Other pre-defined fields
-                    var value = property.GetValue(obj);
-                    var type = value?.GetType();
-
-                    if (type?.IsGenericType == false || value == null)
-                    {
-                        // Most likely, (Field.Name = <value|null>)
-                        queryFields.Add(new QueryField(fieldName, value));
-                    }
-                    else
-                    {
-                        // Another dynamic object type, get the 'Operation' property
-                        var properties = type?.GetProperties();
-                        var operationProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Operation.ToLower());
-
-                        // The property 'Operation' must always be present
-                        if (operationProperty == null)
-                        {
-                            throw new InvalidQueryExpressionException($"The 'Operation' property must be present for field '{property.Name}'.");
-                        }
-
-                        // The property operatoin must be of type 'RepoDb.Enumerations.Operation'
-                        if (operationProperty.PropertyType != typeof(Operation))
-                        {
-                            throw new InvalidQueryExpressionException($"The 'Operation' property for field '{property.Name}' must be of type '{typeof(Operation).FullName}'.");
-                        }
-
-                        // The 'Value' property must always be present
-                        var valueProperty = properties?.FirstOrDefault(p => p.Name.ToLower() == StringConstant.Value.ToLower());
-
-                        // Check for the 'Value' property
-                        if (valueProperty == null)
-                        {
-                            throw new InvalidQueryExpressionException($"The 'Value' property for dynamic type query must be present at field '{property.Name}'.");
-                        }
-
-                        // Get the 'Operation' and the 'Value' value
-                        var operation = (Operation)operationProperty.GetValue(value);
-                        value = valueProperty.GetValue(value);
-
-                        // For other operation, the 'Value' property must be present
-                        if (value == null && (operation != Operation.Equal && operation != Operation.NotEqual))
-                        {
-                            throw new InvalidQueryExpressionException($"The value property '{valueProperty.Name}' must not be null.");
-                        }
-
-                        // Identify the 'Operation' and parse the correct value
-                        if ((operation == Operation.Equal || operation == Operation.NotEqual) && value == null)
-                        {
-                            // Most likely, new { Field.Name = { Operation = Operation.<Equal|NotEqual>, Value = (object)null } }
-                            // It should be (IS NULL) or (IS NOT NULL) in SQL Statement
-                            queryFields.Add(new QueryField(fieldName, operation, value));
-                        }
-                        else if (operation == Operation.All || operation == Operation.Any)
-                        {
-                            // Special case: All (AND), Any (OR)
-                            if (value.GetType().IsArray)
-                            {
-                                var childQueryGroupFields = new List<QueryField>();
-                                ((Array)value).AsEnumerable().ToList().ForEach(underlyingValue =>
-                                {
-                                    childQueryGroupFields.Add(QueryField.Parse(fieldName, underlyingValue));
-                                });
-                                var queryGroup = new QueryGroup(childQueryGroupFields, null, operation == Operation.All ? Conjunction.And : Conjunction.Or);
-                                queryGroups.Add(queryGroup);
-                            }
-                            else
-                            {
-                                queryFields.Add(QueryField.Parse(fieldName, value));
-                            }
-                        }
-                        else
-                        {
-
-                            if (operation == Operation.Between || operation == Operation.NotBetween)
-                            {
-                                // Special case: (Field.Name = new { Operation = Operation.<Between|NotBetween>, Value = new [] { value1, value2 })
-                                ValidateBetweenOperations(fieldName, operation, value);
-                            }
-                            else if (operation == Operation.In || operation == Operation.NotIn)
-                            {
-                                // Special case: (Field.Name = new { Operation = Operation.<In|NotIn>, Value = new [] { value1, value2 })
-                                ValidateInOperations(fieldName, operation, value);
-                            }
-                            else
-                            {
-                                // Other Operations
-                                ValidateOtherOperations(fieldName, operation, value);
-                            }
-
-                            // Add the field values
-                            queryFields.Add(new QueryField(fieldName, operation, value));
-                        }
-                    }
-                }
+                queryFields.Add(new QueryField(property.Name, property.GetValue(obj)));
             });
 
             // Return
-            return new QueryGroup(queryFields, queryGroups, conjunction).FixParameters();
-        }
-
-        private static void ValidateBetweenOperations(string fieldName, Operation operation, object value)
-        {
-            var valid = false;
-
-            // Make sure it is an Array
-            if (value?.GetType().IsArray == true)
-            {
-                var values = ((Array)value)
-                    .AsEnumerable()
-                    .ToList();
-
-                // The items must only be 2. There should be no NULL and no generic types
-                if (values.Count == 2)
-                {
-                    valid = !values.Any(v => v == null || v?.GetType().IsGenericType == true);
-                }
-
-                // All type must be the same
-                if (valid)
-                {
-                    var type = values.First().GetType();
-                    values.ForEach(v =>
-                    {
-                        if (valid == false) return;
-                        valid = v?.GetType() == type;
-                    });
-                }
-            }
-
-            // Throw an error if not valid
-            if (valid == false)
-            {
-                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array of 2 values with identitcal data types.");
-            }
-        }
-
-        private static void ValidateInOperations(string fieldName, Operation operation, object value)
-        {
-            var valid = false;
-
-            // Make sure it is an array
-            if (value?.GetType().IsArray == true)
-            {
-                var values = ((Array)value)
-                    .AsEnumerable()
-                    .ToList();
-
-                // Make sure there is not NULL and no generic types
-                valid = !values.Any(v => v == null || v?.GetType().IsGenericType == true);
-
-                // All type must be the same
-                if (valid)
-                {
-                    var type = values.First().GetType();
-                    values.ForEach(v =>
-                    {
-                        if (valid == false) return;
-                        valid = v?.GetType() == type;
-                    });
-                }
-            }
-
-            // Throw an error if not valid
-            if (valid == false)
-            {
-                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'. The value must be an array values with identitcal data types.");
-            }
-        }
-
-        private static void ValidateOtherOperations(string fieldName, Operation operation, object value)
-        {
-            var valid = false;
-
-            // Special for Equal and NonEqual
-            if ((operation == Operation.Equal || operation == Operation.NotEqual) && value == null)
-            {
-                // Most likely new QueryField("Field.Name", null) or new { FieldName = (object)null }.
-                // The SQL must be (@FieldName IS <NOT> NULL)
-                valid = true;
-            }
-            else
-            {
-                // Must not be a generic
-                valid = (value?.GetType().IsGenericType == false);
-            }
-
-            // Throw an error if not valid
-            if (valid == false)
-            {
-                throw new InvalidQueryExpressionException($"Invalid value for field '{fieldName}' for operation '{operation.ToString()}'.");
-            }
+            return new QueryGroup(queryFields).FixParameters();
         }
 
         #endregion

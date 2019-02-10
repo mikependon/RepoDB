@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.7.0</version>
+    <version>1.8.0-beta1</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -10,11 +10,10 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.7.0]
-    - Async Method Calls Optimizations
-    - Expression-Based Queries
-    - Removed Support for Recursive Query
-    - Initial Support for Different Database Providers
+    [Release 1.8.0-beta1]
+    - Remove the support on dynamic query tree expresssions.
+    - Removed the Command enumeration.
+    - Removed the Ignored attribute.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

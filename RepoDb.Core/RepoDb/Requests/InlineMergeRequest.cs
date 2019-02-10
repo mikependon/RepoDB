@@ -20,14 +20,12 @@ namespace RepoDb.Requests
         /// <param name="connection">The connection object.</param>
         /// <param name="fields">The list of the target fields.</param>
         /// <param name="qualifiers">The list of the qualifier fields.</param>
-        /// <param name="overrideIgnore">The value whether to override the ignored fields.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public InlineMergeRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, bool? overrideIgnore = null, IStatementBuilder statementBuilder = null)
+        public InlineMergeRequest(Type entityType, IDbConnection connection, IEnumerable<Field> fields = null, IEnumerable<Field> qualifiers = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Fields = fields;
             Qualifiers = qualifiers;
-            OverrideIgnore = overrideIgnore;
         }
 
         /// <summary>
@@ -39,11 +37,6 @@ namespace RepoDb.Requests
         /// Gets the list of the qualifier fields.
         /// </summary>
         public IEnumerable<Field> Qualifiers { get; set; }
-
-        /// <summary>
-        /// Gets the value whether to override the ignored fields.
-        /// </summary>
-        public bool? OverrideIgnore { get; set; }
 
         // Equality and comparers
 
@@ -78,12 +71,6 @@ namespace RepoDb.Requests
                 {
                     hashCode += field.GetHashCode();
                 });
-            }
-
-            // Override ignore hashcode
-            if (OverrideIgnore != null)
-            {
-                hashCode += OverrideIgnore.GetHashCode();
             }
 
             // Set back the hash code value

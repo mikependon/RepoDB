@@ -97,7 +97,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineInsert{TEntity}(IDbConnection, object, bool?, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineInsert{TEntity}(IDbConnection, object, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -125,14 +125,12 @@ namespace RepoDb
                     }
                     commandText = sqlStatementBuilder.CreateInlineInsert(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
-                        overrideIgnore: request.OverrideIgnore,
                         isPrimaryIdentity: isPrimaryIdentity);
                 }
                 else
                 {
                     commandText = statementBuilder.CreateInlineInsert(queryBuilder: new QueryBuilder<TEntity>(),
-                        fields: request.Fields,
-                        overrideIgnore: request.OverrideIgnore);
+                        fields: request.Fields);
                 }
                 m_cache.TryAdd(request, commandText);
             }
@@ -140,7 +138,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineMerge{TEntity}(IDbConnection, object, bool?, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineMerge{TEntity}(IDbConnection, object, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -169,15 +167,13 @@ namespace RepoDb
                     commandText = sqlStatementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
                         qualifiers: request.Qualifiers,
-                        overrideIgnore: request.OverrideIgnore,
                         isPrimaryIdentity: isPrimaryIdentity);
                 }
                 else
                 {
                     commandText = statementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
-                        qualifiers: request.Qualifiers,
-                        overrideIgnore: request.OverrideIgnore);
+                        qualifiers: request.Qualifiers);
                 }
                 m_cache.TryAdd(request, commandText);
             }
@@ -185,7 +181,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineUpdate{TEntity}(IDbConnection, object, QueryGroup, bool?, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineUpdate{TEntity}(IDbConnection, object, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -199,8 +195,7 @@ namespace RepoDb
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateInlineUpdate(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where,
-                    fields: request.Fields,
-                    overrideIgnore: request.OverrideIgnore);
+                    fields: request.Fields);
                 m_cache.TryAdd(request, commandText);
             }
             else

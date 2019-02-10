@@ -54,8 +54,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestGetHashCodeInequalityWithDifferentConjunction()
         {
             // Prepare
-            var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1", Conjunction = Conjunction.And });
-            var objB = QueryGroup.Parse(new { Id = 2, Name = "Name2", Conjunction = Conjunction.Or });
+            var objA = new QueryGroup(new[] { new QueryField("Name1", "Value1") }, Conjunction.And);
+            var objB = new QueryGroup(new[] { new QueryField("Name1", "Value1") }, Conjunction.Or);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());

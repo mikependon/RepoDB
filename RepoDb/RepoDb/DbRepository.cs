@@ -293,45 +293,6 @@ namespace RepoDb
         /// Query the data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> BatchQuery<TEntity>(object whereOrWhat,
-            int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.BatchQuery<TEntity>(whereOrWhat: whereOrWhat,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Query the data from the database by batch.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
@@ -532,13 +493,13 @@ namespace RepoDb
         /// Query the data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object whereOrWhat,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object primaryKey,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -549,7 +510,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.BatchQueryAsync<TEntity>(whereOrWhat: whereOrWhat,
+            var result = connection.BatchQueryAsync<TEntity>(primaryKey: primaryKey,
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -736,7 +697,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null)
@@ -770,7 +731,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null)
@@ -831,10 +792,10 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count<TEntity>(object whereOrWhat,
+        public long Count<TEntity>(object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -843,7 +804,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Count<TEntity>(commandTimeout: CommandTimeout,
-                whereOrWhat: whereOrWhat,
+                primaryKey: primaryKey,
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
@@ -1018,10 +979,10 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(object whereOrWhat,
+        public Task<long> CountAsync<TEntity>(object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1030,7 +991,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.CountAsync<TEntity>(commandTimeout: CommandTimeout,
-                whereOrWhat: whereOrWhat,
+                primaryKey: primaryKey,
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
@@ -1298,10 +1259,10 @@ namespace RepoDb
         /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete<TEntity>(object whereOrWhat,
+        public int Delete<TEntity>(object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1309,7 +1270,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Delete<TEntity>(whereOrWhat: whereOrWhat,
+            var result = connection.Delete<TEntity>(primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1485,10 +1446,10 @@ namespace RepoDb
         /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(object whereOrWhat,
+        public Task<int> DeleteAsync<TEntity>(object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1496,7 +1457,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.DeleteAsync<TEntity>(whereOrWhat: whereOrWhat,
+            var result = connection.DeleteAsync<TEntity>(primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1616,11 +1577,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         public object InlineInsert<TEntity>(object entity,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1629,7 +1588,6 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineInsert<TEntity>(entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1654,11 +1612,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         public Task<object> InlineInsertAsync<TEntity>(object entity,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1667,7 +1623,6 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineInsertAsync<TEntity>(entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1692,11 +1647,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1705,7 +1658,6 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineMerge<TEntity>(entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1727,12 +1679,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity,
             Expression<Func<TEntity, object>> qualifier,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1742,7 +1692,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMerge<TEntity>(entity: entity,
                 qualifier: qualifier,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1764,12 +1713,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity,
             Field qualifier,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1779,7 +1726,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMerge<TEntity>(entity: entity,
                 qualifier: qualifier,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1801,12 +1747,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineMerge<TEntity>(object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1816,7 +1760,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMerge<TEntity>(entity: entity,
                 qualifiers: qualifiers,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1841,11 +1784,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1854,7 +1795,6 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineMergeAsync<TEntity>(entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1876,12 +1816,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity,
             Expression<Func<TEntity, object>> qualifier,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1891,7 +1829,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMergeAsync<TEntity>(entity: entity,
                 qualifier: qualifier,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1913,12 +1850,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity,
             Field qualifier,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1928,7 +1863,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMergeAsync<TEntity>(entity: entity,
                 qualifier: qualifier,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1950,12 +1884,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineMergeAsync<TEntity>(object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1965,7 +1897,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineMergeAsync<TEntity>(entity: entity,
                 qualifiers: qualifiers,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -1990,13 +1921,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity,
-            object whereOrWhat,
-            bool? overrideIgnore = false,
+            object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2005,8 +1934,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
-                whereOrWhat: whereOrWhat,
-                overrideIgnore: overrideIgnore,
+                primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2028,12 +1956,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity,
             Expression<Func<TEntity, bool>> where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2043,7 +1969,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2065,12 +1990,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity,
             QueryField where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2080,7 +2003,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2102,12 +2024,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity,
             IEnumerable<QueryField> where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2117,7 +2037,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2139,12 +2058,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int InlineUpdate<TEntity>(object entity,
             QueryGroup where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2154,7 +2071,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdate<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2179,13 +2095,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity,
-            object whereOrWhat,
-            bool? overrideIgnore = false,
+            object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2194,8 +2108,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
-                whereOrWhat: whereOrWhat,
-                overrideIgnore: overrideIgnore,
+                primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2217,12 +2130,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity,
             Expression<Func<TEntity, bool>> where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2232,7 +2143,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2254,10 +2164,11 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryField where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+            QueryField where,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -2266,7 +2177,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2288,12 +2198,10 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> InlineUpdateAsync<TEntity>(object entity,
             IEnumerable<QueryField> where,
-            bool? overrideIgnore = false,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2303,7 +2211,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2325,10 +2232,11 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, QueryGroup where, bool? overrideIgnore = false, IDbTransaction transaction = null)
+        public Task<int> InlineUpdateAsync<TEntity>(object entity, 
+            QueryGroup where,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -2337,7 +2245,6 @@ namespace RepoDb
             // Call the method
             var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -2852,7 +2759,7 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -2861,7 +2768,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object whereOrWhat,
+        public IEnumerable<TEntity> Query<TEntity>(object primaryKey,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string cacheKey = null,
@@ -2872,7 +2779,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.Query<TEntity>(whereOrWhat: whereOrWhat,
+            var result = connection.Query<TEntity>(primaryKey: primaryKey,
                 orderBy: orderBy,
                 top: top,
                 cacheKey: cacheKey,
@@ -3117,7 +3024,7 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -3126,7 +3033,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrWhat, IEnumerable<OrderField> orderBy = null, int? top = 0,
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object primaryKey, IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -3134,7 +3041,7 @@ namespace RepoDb
             var connection = (transaction?.Connection ?? CreateConnection());
 
             // Call the method
-            var result = connection.QueryAsync<TEntity>(whereOrWhat: whereOrWhat,
+            var result = connection.QueryAsync<TEntity>(primaryKey: primaryKey,
                 orderBy: orderBy,
                 top: top,
                 cacheKey: cacheKey,
@@ -3395,11 +3302,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public int Update<TEntity>(TEntity entity,
-            object whereOrWhat,
+            object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -3408,7 +3315,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Update<TEntity>(entity: entity,
-                whereOrWhat: whereOrWhat,
+                primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
@@ -3599,11 +3506,11 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public Task<int> UpdateAsync<TEntity>(TEntity entity,
-            object whereOrWhat,
+            object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -3612,7 +3519,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.UpdateAsync<TEntity>(entity: entity,
-                whereOrWhat: whereOrWhat,
+                primaryKey: primaryKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,

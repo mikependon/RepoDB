@@ -19,8 +19,19 @@ namespace RepoDb.IntegrationTests.Models
         public decimal Discount { get; set; }
         public decimal LineTotal { get; set; }
         public DateTime LastUpdatedUtc { get; set; }
-        [Attributes.Ignore(Command.Update)]
-        public DateTime DateInsertedUtc { get; set; }
+
+        private DateTime dateInsertedUtc;
+
+        public DateTime GetDateInsertedUtc()
+        {
+            return dateInsertedUtc;
+        }
+
+        public void SetDateInsertedUtc(DateTime value)
+        {
+            dateInsertedUtc = value;
+        }
+
         public string LastUserId { get; set; }
     }
 }

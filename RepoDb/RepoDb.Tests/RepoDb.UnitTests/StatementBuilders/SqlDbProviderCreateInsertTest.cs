@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 using System;
 
 namespace RepoDb.UnitTests.StatementBuilders
@@ -85,34 +84,6 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"( [Field1], [Field2], [Field4] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field4 ) ; " +
-                $"SELECT NULL AS [Result] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class TestWithIgnoreFieldClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Insert)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestWithIgnoreField()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithIgnoreFieldClass>();
-
-            // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
-            var expected = $"" +
-                $"INSERT INTO [TestWithIgnoreFieldClass] " +
-                $"( [Field1], [Field2] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field2 ) ; " +
                 $"SELECT NULL AS [Result] ;";
 
             // Assert

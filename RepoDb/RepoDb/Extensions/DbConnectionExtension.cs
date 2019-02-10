@@ -136,58 +136,25 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Converts the (WHERE) query expression to <see cref="QueryGroup"/> object.
+        /// Converts the primary key to <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <returns></returns>
-        private static QueryGroup WhereToQueryGroup<TEntity>(object whereOrWhat)
+        private static QueryGroup PrimaryKeyToQueryGroup<TEntity>(object primaryKey)
             where TEntity : class
         {
-            if (whereOrWhat == null)
+            if (primaryKey == null)
             {
                 return null;
             }
-            var queryGroup = (QueryGroup)null;
-            if (whereOrWhat is QueryField)
+            var primary = PrimaryKeyCache.Get<TEntity>();
+            if (primary == null)
             {
-                var queryField = (QueryField)whereOrWhat;
-                queryGroup = new QueryGroup(queryField.AsEnumerable());
+                throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
             }
-            else if (whereOrWhat is QueryGroup)
-            {
-                queryGroup = (QueryGroup)whereOrWhat;
-            }
-            else if (whereOrWhat is TEntity)
-            {
-                var primary = PrimaryKeyCache.Get<TEntity>();
-                if (primary != null)
-                {
-                    var queryField = primary.PropertyInfo.AsQueryField(whereOrWhat);
-                    queryGroup = new QueryGroup(queryField.AsEnumerable());
-                }
-            }
-            else
-            {
-                if (whereOrWhat?.GetType().IsGenericType == true)
-                {
-                    queryGroup = QueryGroup.Parse(whereOrWhat);
-                }
-                else
-                {
-                    var primary = PrimaryKeyCache.Get<TEntity>();
-                    if (primary != null)
-                    {
-                        var queryField = new QueryField(primary.GetMappedName(), whereOrWhat);
-                        queryGroup = new QueryGroup(queryField.AsEnumerable());
-                    }
-                }
-            }
-            if (queryGroup == null)
-            {
-                throw new InvalidQueryExpressionException("The query expression passed is not valid.");
-            }
-            return queryGroup;
+            var queryField = new QueryField(primary.GetMappedName(), primaryKey);
+            return new QueryGroup(queryField.AsEnumerable());
         }
 
         #endregion
@@ -196,7 +163,7 @@ namespace RepoDb
 
         // GuardPrimaryKey
 
-        private static ClassProperty GetAndGuardPrimaryKey<TEntity>(Command command)
+        private static ClassProperty GetAndGuardPrimaryKey<TEntity>()
             where TEntity : class
         {
             var property = PrimaryKeyCache.Get<TEntity>();
@@ -234,42 +201,6 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection, where: (QueryGroup)null,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Query the data from the database by batch.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return BatchQuery<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -448,7 +379,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.BatchQuery;
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
@@ -475,7 +405,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException("BatchQuery");
                     }
                     return null;
                 }
@@ -551,7 +481,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
@@ -561,7 +491,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -572,7 +502,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -751,7 +681,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.BatchQuery;
             var commandType = CommandType.Text;
             var request = new BatchQueryRequest(typeof(TEntity),
                 connection,
@@ -778,7 +707,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException("BatchQuery");
                     }
                     return Task.FromResult<IEnumerable<TEntity>>(null);
                 }
@@ -819,7 +748,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -843,7 +772,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -860,19 +789,16 @@ namespace RepoDb
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
 
-            // Variables
-            var command = mappings != null ? Command.None : Command.BulkInsert;
-
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(command.ToString(), entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -884,7 +810,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities, command))
+            using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
                 {
@@ -917,7 +843,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog(command.ToString(), entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -935,7 +861,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -959,7 +885,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="Command.BulkInsert"/> will be used for mapping.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -975,20 +901,17 @@ namespace RepoDb
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
-
-            // Variables
-            var command = mappings != null ? Command.None : Command.BulkInsert;
-
+            
             // Before Execution
             if (trace != null)
             {
-                var cancellableTraceLog = new CancellableTraceLog(command.ToString(), entities, null);
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", entities, null);
                 trace.BeforeBulkInsert(cancellableTraceLog);
                 if (cancellableTraceLog.IsCancelled)
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException("BulkInsert");
                     }
                     return 0;
                 }
@@ -1000,7 +923,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            using (var reader = new DataEntityDataReader<TEntity>(entities, command))
+            using (var reader = new DataEntityDataReader<TEntity>(entities))
             {
                 using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
                 {
@@ -1033,7 +956,7 @@ namespace RepoDb
             // After Execution
             if (trace != null)
             {
-                trace.AfterBulkInsert(new TraceLog(command.ToString(), entities, result,
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", entities, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
@@ -1075,14 +998,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static long Count<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1090,7 +1013,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1223,7 +1146,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Count;
             var commandType = CommandType.Text;
             var request = new CountRequest(typeof(TEntity),
                 connection,
@@ -1241,7 +1163,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return default(int);
                 }
@@ -1306,14 +1228,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1321,7 +1243,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1454,7 +1376,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Count;
             var commandType = CommandType.Text;
             var request = new CountRequest(typeof(TEntity),
                 connection,
@@ -1472,7 +1393,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<long>(0);
                 }
@@ -1603,19 +1524,19 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, object whereOrWhat, int? commandTimeout = null, IDbTransaction transaction = null,
+        public static int Delete<TEntity>(this IDbConnection connection, object primaryKey, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(Command.Delete);
+            GetAndGuardPrimaryKey<TEntity>();
             return Delete<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
@@ -1667,7 +1588,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Delete;
             var commandType = CommandType.Text;
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
@@ -1685,7 +1605,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -1831,23 +1751,23 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(Command.Delete);
+            GetAndGuardPrimaryKey<TEntity>();
             return DeleteAsync<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
@@ -1899,7 +1819,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Delete;
             var commandType = CommandType.Text;
             var request = new DeleteRequest(typeof(TEntity),
                 connection,
@@ -1917,7 +1836,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }
@@ -1994,7 +1913,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.DeleteAll;
             var commandType = CommandType.Text;
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
@@ -2010,7 +1928,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -2085,7 +2003,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.DeleteAll;
             var commandType = CommandType.Text;
             var request = new DeleteAllRequest(typeof(TEntity),
                 connection,
@@ -2101,7 +2018,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }
@@ -2140,7 +2057,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2148,7 +2064,6 @@ namespace RepoDb
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         public static object InlineInsert<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2157,7 +2072,6 @@ namespace RepoDb
         {
             return InlineInsertInternal<TEntity>(connection: connection,
                 entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2170,7 +2084,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2178,7 +2091,6 @@ namespace RepoDb
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         internal static object InlineInsertInternal<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2186,12 +2098,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineInsert;
             var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
 
@@ -2204,7 +2114,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -2248,7 +2158,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2256,7 +2165,6 @@ namespace RepoDb
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         public static Task<object> InlineInsertAsync<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2265,7 +2173,6 @@ namespace RepoDb
         {
             return InlineInsertInternalAsync<TEntity>(connection: connection,
                 entity: entity,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2278,7 +2185,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2286,7 +2192,6 @@ namespace RepoDb
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
         internal static Task<object> InlineInsertInternalAsync<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2294,12 +2199,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineInsert;
             var commandType = CommandType.Text;
             var request = new InlineInsertRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineInsertText<TEntity>(request);
 
@@ -2312,7 +2215,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<object>(null);
                 }
@@ -2356,7 +2259,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2364,7 +2266,6 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineMerge<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2374,7 +2275,6 @@ namespace RepoDb
             return InlineMerge<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2388,7 +2288,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2397,7 +2296,6 @@ namespace RepoDb
         public static int InlineMerge<TEntity>(this IDbConnection connection,
             object entity,
             Expression<Func<TEntity, object>> qualifier,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2407,7 +2305,6 @@ namespace RepoDb
             return InlineMerge<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: Field.Parse(qualifier)?.AsEnumerable(),
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2421,7 +2318,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2430,7 +2326,6 @@ namespace RepoDb
         public static int InlineMerge<TEntity>(this IDbConnection connection,
             object entity,
             Field qualifier,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2440,7 +2335,6 @@ namespace RepoDb
             return InlineMerge<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2454,7 +2348,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2463,7 +2356,6 @@ namespace RepoDb
         public static int InlineMerge<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2473,7 +2365,6 @@ namespace RepoDb
             return InlineMergeInternal<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2487,7 +2378,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2496,7 +2386,6 @@ namespace RepoDb
         internal static int InlineMergeInternal<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2504,14 +2393,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineMerge;
             var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = CommandType.Text;
             var request = new InlineMergeRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 qualifiers,
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineMergeText<TEntity>(request);
 
@@ -2524,7 +2411,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -2565,7 +2452,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2573,7 +2459,6 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection,
             object entity,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2583,7 +2468,6 @@ namespace RepoDb
             return InlineMergeAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2597,7 +2481,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2606,7 +2489,6 @@ namespace RepoDb
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection,
             object entity,
             Expression<Func<TEntity, object>> qualifier,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2616,7 +2498,6 @@ namespace RepoDb
             return InlineMergeAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: Field.Parse(qualifier)?.AsEnumerable(),
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2630,7 +2511,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2639,7 +2519,6 @@ namespace RepoDb
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection,
             object entity,
             Field qualifier,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2649,7 +2528,6 @@ namespace RepoDb
             return InlineMergeAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2663,7 +2541,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2672,7 +2549,6 @@ namespace RepoDb
         public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2682,7 +2558,6 @@ namespace RepoDb
             return InlineMergeInternalAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: qualifiers,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2696,7 +2571,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2705,7 +2579,6 @@ namespace RepoDb
         internal static Task<int> InlineMergeInternalAsync<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<Field> qualifiers,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2713,14 +2586,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineMerge;
             var primary = PrimaryKeyCache.Get<TEntity>();
             var commandType = CommandType.Text;
             var request = new InlineMergeRequest(typeof(TEntity),
                 connection,
                 entity?.AsFields(),
                 qualifiers,
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineMergeText<TEntity>(request);
 
@@ -2733,7 +2604,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }
@@ -2774,8 +2645,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2783,8 +2653,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity,
-            object whereOrWhat,
-            bool? overrideIgnore = false,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2793,8 +2662,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
-                overrideIgnore: overrideIgnore,
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2808,7 +2676,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2817,7 +2684,6 @@ namespace RepoDb
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity,
             Expression<Func<TEntity, bool>> where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2827,7 +2693,6 @@ namespace RepoDb
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? QueryGroup.Parse<TEntity>(where) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2841,7 +2706,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2849,7 +2713,6 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity, QueryField where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2859,7 +2722,6 @@ namespace RepoDb
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2873,7 +2735,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2882,7 +2743,6 @@ namespace RepoDb
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<QueryField> where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2892,7 +2752,6 @@ namespace RepoDb
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2906,7 +2765,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2915,7 +2773,6 @@ namespace RepoDb
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity,
             QueryGroup where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2925,7 +2782,6 @@ namespace RepoDb
             return InlineUpdateInternal<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2939,7 +2795,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2948,7 +2803,6 @@ namespace RepoDb
         internal static int InlineUpdateInternal<TEntity>(this IDbConnection connection,
             object entity,
             QueryGroup where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2956,13 +2810,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineUpdate;
             var commandType = CommandType.Text;
             var request = new InlineUpdateRequest(typeof(TEntity),
                 connection,
                 where,
                 entity?.AsFields(),
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineUpdateText<TEntity>(request);
             var param = entity?.Merge(where);
@@ -2976,7 +2828,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -3017,8 +2869,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3026,8 +2877,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity,
-            object whereOrWhat,
-            bool? overrideIgnore = false,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3036,8 +2886,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
-                overrideIgnore: overrideIgnore,
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -3051,7 +2900,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3060,7 +2908,6 @@ namespace RepoDb
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity,
             Expression<Func<TEntity, bool>> where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3070,7 +2917,6 @@ namespace RepoDb
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? QueryGroup.Parse<TEntity>(where) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3084,7 +2930,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3092,7 +2937,6 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity, QueryField where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3102,7 +2946,6 @@ namespace RepoDb
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3116,7 +2959,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3125,7 +2967,6 @@ namespace RepoDb
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity,
             IEnumerable<QueryField> where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3135,7 +2976,6 @@ namespace RepoDb
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: where != null ? new QueryGroup(where) : null,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3149,7 +2989,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3158,7 +2997,6 @@ namespace RepoDb
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity,
             QueryGroup where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3168,7 +3006,6 @@ namespace RepoDb
             return InlineUpdateInternalAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: where,
-                overrideIgnore: overrideIgnore,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3182,7 +3019,6 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="IgnoreAttribute"/> defined.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3191,7 +3027,6 @@ namespace RepoDb
         internal static Task<int> InlineUpdateInternalAsync<TEntity>(this IDbConnection connection,
             object entity,
             QueryGroup where,
-            bool? overrideIgnore = false,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3199,13 +3034,11 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.InlineUpdate;
             var commandType = CommandType.Text;
             var request = new InlineUpdateRequest(typeof(TEntity),
                 connection,
                 where,
                 entity?.AsFields(),
-                overrideIgnore,
                 statementBuilder);
             var commandText = CommandTextCache.GetInlineUpdateText<TEntity>(request);
             var param = entity?.Merge(where);
@@ -3219,7 +3052,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }
@@ -3299,13 +3132,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Insert;
             var commandType = CommandType.Text;
             var request = new InsertRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
             var commandText = CommandTextCache.GetInsertText<TEntity>(request);
-            var param = ClassExpression.Extract(entity, command);
+            var param = ClassExpression.Extract(entity);
 
             // Before Execution
             if (trace != null)
@@ -3316,7 +3148,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return null;
                 }
@@ -3399,13 +3231,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Insert;
             var commandType = CommandType.Text;
             var request = new InsertRequest(typeof(TEntity),
                 connection,
                 statementBuilder);
             var commandText = CommandTextCache.GetInsertText<TEntity>(request);
-            var param = ClassExpression.Extract(entity, command);
+            var param = ClassExpression.Extract(entity);
 
             // Before Execution
             if (trace != null)
@@ -3416,7 +3247,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<object>(null);
                 }
@@ -3567,10 +3398,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var command = Command.Merge;
-
             // Check
-            GetAndGuardPrimaryKey<TEntity>(command);
+            GetAndGuardPrimaryKey<TEntity>();
 
             // Variables
             var commandType = CommandType.Text;
@@ -3579,7 +3408,7 @@ namespace RepoDb
                 qualifiers,
                 statementBuilder);
             var commandText = CommandTextCache.GetMergeText<TEntity>(request);
-            var param = entity?.AsObject(command);
+            var param = entity?.AsObject();
 
             // Before Execution
             if (trace != null)
@@ -3590,7 +3419,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -3767,10 +3596,8 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var command = Command.Merge;
-
             // Check
-            GetAndGuardPrimaryKey<TEntity>(command);
+            GetAndGuardPrimaryKey<TEntity>();
 
             // Variables
             var commandType = CommandType.Text;
@@ -3779,7 +3606,7 @@ namespace RepoDb
                 qualifiers,
                 statementBuilder);
             var commandText = CommandTextCache.GetMergeText<TEntity>(request);
-            var param = entity?.AsObject(command);
+            var param = entity?.AsObject();
 
             // Before Execution
             if (trace != null)
@@ -3790,7 +3617,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }
@@ -3954,7 +3781,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -3968,7 +3795,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string cacheKey = null,
@@ -3980,7 +3807,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 orderBy: orderBy,
                 top: top,
                 cacheKey: cacheKey,
@@ -4115,7 +3942,6 @@ namespace RepoDb
             }
 
             // Variables
-            var command = Command.Query;
             var commandType = CommandType.Text;
             var request = new QueryRequest(typeof(TEntity),
                 connection,
@@ -4141,7 +3967,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return null;
                 }
@@ -4314,7 +4140,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
@@ -4328,7 +4154,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            object whereOrWhat,
+            object primaryKey,
             IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null,
             ICache cache = null,
@@ -4339,7 +4165,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 orderBy: orderBy,
                 top: top,
                 cacheKey: cacheKey,
@@ -4474,7 +4300,6 @@ namespace RepoDb
             }
 
             // Variables
-            var command = Command.Query;
             var commandType = CommandType.Text;
             var request = new QueryRequest(typeof(TEntity),
                 connection,
@@ -4500,7 +4325,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<IEnumerable<TEntity>>(null);
                 }
@@ -4573,7 +4398,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Truncate;
             var commandType = CommandType.Text;
             var request = new TruncateRequest(typeof(TEntity),
                 connection,
@@ -4589,7 +4413,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
@@ -4653,7 +4477,6 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Truncate;
             var commandType = CommandType.Text;
             var request = new TruncateRequest(typeof(TEntity),
                 connection,
@@ -4669,7 +4492,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
@@ -4720,7 +4543,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
+            var property = GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
                 where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
@@ -4826,7 +4649,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4834,17 +4657,17 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrWhat,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(Command.Update);
+            GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -4903,14 +4726,13 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Update;
             var commandType = CommandType.Text;
             var request = new UpdateRequest(typeof(TEntity),
                 connection,
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetUpdateText<TEntity>(request);
-            var param = entity?.AsObject(where, command);
+            var param = entity?.AsObject(where);
 
             // Before Execution
             if (trace != null)
@@ -4921,7 +4743,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return 0;
                 }
@@ -4974,7 +4796,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var property = GetAndGuardPrimaryKey<TEntity>(Command.Update);
+            var property = GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
                 where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
@@ -5080,7 +4902,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -5088,17 +4910,17 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object whereOrWhat,
+            object primaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            GetAndGuardPrimaryKey<TEntity>(Command.Update);
+            GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: WhereToQueryGroup<TEntity>(whereOrWhat),
+                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -5158,14 +4980,13 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables
-            var command = Command.Update;
             var commandType = CommandType.Text;
             var request = new UpdateRequest(typeof(TEntity),
                 connection,
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetUpdateText<TEntity>(request);
-            var param = entity?.AsObject(where, command);
+            var param = entity?.AsObject(where);
 
             // Before Execution
             if (trace != null)
@@ -5176,7 +4997,7 @@ namespace RepoDb
                 {
                     if (cancellableTraceLog.IsThrowException)
                     {
-                        throw new CancelledExecutionException(command.ToString());
+                        throw new CancelledExecutionException(commandText);
                     }
                     return Task.FromResult<int>(0);
                 }

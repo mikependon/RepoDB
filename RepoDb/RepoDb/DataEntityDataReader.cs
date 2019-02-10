@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -12,7 +11,7 @@ namespace RepoDb
     /// A data reader object used to manipulate the enumerable list of data entity objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
-    public class DataEntityDataReader<TEntity> : DbDataReader
+    internal class DataEntityDataReader<TEntity> : DbDataReader
         where TEntity : class
     {
         #region Fields
@@ -28,8 +27,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
-        /// <param name="command">The type of command to be used by this data reader.</param>
-        public DataEntityDataReader(IEnumerable<TEntity> entities, Command command)
+        public DataEntityDataReader(IEnumerable<TEntity> entities)
         {
             if (entities == null)
             {
@@ -43,8 +41,7 @@ namespace RepoDb
             m_recordsAffected = -1;
 
             // Properties
-            Command = command;
-            Properties = PropertyCache.Get<TEntity>(command).ToList();
+            Properties = PropertyCache.Get<TEntity>().ToList();
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             FieldCount = Properties.Count;
@@ -73,11 +70,6 @@ namespace RepoDb
         /// Gets the properties of data entity object.
         /// </summary>
         public IList<ClassProperty> Properties { get; private set; }
-
-        /// <summary>
-        /// Gets the command used by this entity list reader.
-        /// </summary>
-        public Command Command { get; private set; }
 
         /// <summary>
         /// Gets the current position of the enumerator.
@@ -414,7 +406,7 @@ namespace RepoDb
             {
                 throw new InvalidOperationException($"The length of the array must be equals to the number of fields of the data entity (it should be {FieldCount}).");
             }
-            var extracted = ClassExpression.Extract(Enumerator.Current, Command).ToArray();
+            var extracted = ClassExpression.Extract(Enumerator.Current).ToArray();
             for (var i = 0; i < Properties.Count; i++)
             {
                 values[i] = extracted[i].Value;

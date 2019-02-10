@@ -72,9 +72,6 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\RecursiveCustomer.cs" />
-    <Compile Include="Models\RecursiveOrder.cs" />
-    <Compile Include="Models\RecursiveOrderDetail.cs" />
     <Compile Include="Models\TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryCacheTest.cs" />

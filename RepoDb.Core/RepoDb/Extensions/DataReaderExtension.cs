@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
@@ -16,7 +15,7 @@ namespace RepoDb.Extensions
         internal static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
             where TEntity : class
         {
-            var properties = PropertyCache.Get<TEntity>(Command.None)
+            var properties = PropertyCache.Get<TEntity>()
                 .Where(property => property.PropertyInfo.CanWrite);
             var dictionary = new Dictionary<int, ClassProperty>();
             for (var i = 0; i < reader.FieldCount; i++)

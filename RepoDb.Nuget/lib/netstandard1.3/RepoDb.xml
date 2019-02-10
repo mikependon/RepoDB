@@ -14,23 +14,6 @@
             Creates a new instance of <see cref="T:RepoDb.Attributes.IdentityAttribute"/> class.
             </summary>
         </member>
-        <member name="T:RepoDb.Attributes.IgnoreAttribute">
-            <summary>
-            An attribute used to define a class property or any data entity object properties to be marked as ignoreable
-            during the actual repository operation.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Attributes.IgnoreAttribute.#ctor(RepoDb.Enumerations.Command)">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> class.
-            </summary>
-            <param name="command">The target operation command where to ignore the property.</param>
-        </member>
-        <member name="P:RepoDb.Attributes.IgnoreAttribute.Command">
-            <summary>
-            Gets the target operation command where the property is being ignored by the operation.
-            </summary>
-        </member>
         <member name="T:RepoDb.Attributes.MapAttribute">
             <summary>
             An attribute class used to define a mapping of the current class/property equivalent to an object/field name in the database.
@@ -251,17 +234,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.BatchQuery(System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
-            <summary>
-            Query the data from the database by batch.
-            </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.BaseRepository`2.BatchQuery(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
             <summary>
             Query the data from the database by batch.
@@ -298,7 +270,7 @@
             <summary>
             Query the data from the database by batch in an asynchronous way.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="page">The page of the batch to be used by this operation.</param>
             <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
@@ -354,7 +326,7 @@
             Bulk-inserting the list of data entity objects in the database.
             </summary>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.BulkInsertAsync(System.Collections.Generic.IEnumerable{`0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
@@ -362,7 +334,7 @@
             Bulk-inserting the list of data entity objects in the database in an asynchronous way.
             </summary>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Count(System.Data.IDbTransaction)">
@@ -376,7 +348,7 @@
             <summary>
             Counts the number of rows from the database based on the given query expression.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         </member>
@@ -407,7 +379,7 @@
             <summary>
             Counts the number of rows from the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         </member>
@@ -454,7 +426,7 @@
             <summary>
             Deletes a data in the database based on the given query expression.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -501,7 +473,7 @@
             <summary>
             Deletes a data in the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+            <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -535,199 +507,179 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineInsert(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineInsert(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineInsertAsync(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineInsertAsync(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only. Uses the primary key as the default qualifier field.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMerge(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the primary key as the default qualifier field.
             </summary>
             <param name="entity">The dynamic data entity that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineMergeAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
-            <summary>
-            Updates a data in the database by targetting certain fields only.
-            </summary>
-            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,RepoDb.QueryField,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdate(System.Object,RepoDb.QueryGroup,System.Data.IDbTransaction)">
+            <summary>
+            Updates a data in the database by targetting certain fields only.
+            </summary>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+            <param name="where">The query expression to be used  by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,RepoDb.QueryField,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.InlineUpdateAsync(System.Object,RepoDb.QueryGroup,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -840,7 +792,7 @@
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -923,7 +875,7 @@
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -1012,7 +964,7 @@
             Updates a data in the database based on the given query expression.
             </summary>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -1065,7 +1017,7 @@
             Updates a data in the database based on the given query expression in an asynchronous way.
             </summary>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -1305,20 +1257,18 @@
             A class used for manipulating class objects via expressions.
             </summary>
         </member>
-        <member name="M:RepoDb.ClassExpression.GetProperties``1(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.ClassExpression.GetProperties``1">
             <summary>
-            Gets the properties of the class based on the target command.
+            Gets the properties of the class.
             </summary>
             <typeparam name="TEntity">The target type.</typeparam>
-            <param name="command">The target command.</param>
-            <returns>The properties of the class based on the target command.</returns>
+            <returns>The properties of the class.</returns>
         </member>
-        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesExtractor``1(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertiesExtractor``1">
             <summary>
             Gets a function used to extract the properties of a class.
             </summary>
             <typeparam name="T">The target type.</typeparam>
-            <param name="command">The target command.</param>
             <returns>The properties of the class.</returns>
         </member>
         <member name="M:RepoDb.ClassExpression.GetPropertiesAndValues``1(``0)">
@@ -1329,13 +1279,12 @@
             <param name="obj">The object to be extracted.</param>
             <returns>The extracted values.</returns>
         </member>
-        <member name="M:RepoDb.ClassExpression.Extract``1(``0,RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.ClassExpression.Extract``1(``0)">
             <summary>
             Extracts the class properties to become an enumerable of property values.
             </summary>
             <typeparam name="TEntity">The target type of the class.</typeparam>
             <param name="obj">The object to be extracted.</param>
-            <param name="command">The target command for extraction.</param>
             <returns>The extracted values.</returns>
         </member>
         <member name="M:RepoDb.ClassExpression.GetCompiledFunctionForClassPropertyValuesExtractor``1(System.Collections.Generic.IEnumerable{RepoDb.ClassProperty})">
@@ -1392,12 +1341,6 @@
             </summary>
             <returns>The identity attribute if present.</returns>
         </member>
-        <member name="M:RepoDb.ClassProperty.GetIgnoreAttribute">
-            <summary>
-            Gets the ignore attribute if present.
-            </summary>
-            <returns>The ignore attribute if present.</returns>
-        </member>
         <member name="M:RepoDb.ClassProperty.IsPrimary">
             <summary>
             Gets a value whether the current property is a primary property.
@@ -1428,97 +1371,6 @@
             </summary>
             <param name="type">The type where to get the underlying type.</param>
             <returns>The underlying type.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsIgnored(RepoDb.Enumerations.Command)">
-            <summary>
-            Identifies whether the current property is ignored based on the command.
-            </summary>
-            <param name="command">The target command.</param>
-            <returns>Returns true if the property has been ignored based on the target command.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsRecursive">
-            <summary>
-            Gets the value whether this property is recursive.
-            </summary>
-            <returns>The value that defines whether this property is recursive.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsQueryable">
-            <summary>
-            Gets the value whether this property is queryable.
-            </summary>
-            <returns>The value that defines whether this property is queryable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsInsertable">
-            <summary>
-            Gets the value whether this property is insertable.
-            </summary>
-            <returns>The value that defines whether this property is insertable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsUpdateable">
-            <summary>
-            Gets the value whether this property is updateable.
-            </summary>
-            <returns>The value that defines whether this property is updateable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsDeletable">
-            <summary>
-            Gets the value whether this property is deletable.
-            </summary>
-            <returns>The value that defines whether this property is deletable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsMergeable">
-            <summary>
-            Gets the value whether this property is mergeable.
-            </summary>
-            <returns>The value that defines whether this property is mergeable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsBatchQueryable">
-            <summary>
-            Gets the value whether this property is batch-queryable.
-            </summary>
-            <returns>The value that defines whether this property is batch-queryable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsInlineUpdateable">
-            <summary>
-            Gets the value whether this property is inline-updateable.
-            </summary>
-            <returns>The value that defines whether this property is inline-updateable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsInlineMergeable">
-            <summary>
-            Gets the value whether this property is inline-merge.
-            </summary>
-            <returns>The value that defines whether this property is inline-merge.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsInlineInsertable">
-            <summary>
-            Gets the value whether this property is inline-insert.
-            </summary>
-            <returns>The value that defines whether this property is inline-insert.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsBulkInsertable">
-            <summary>
-            Gets the value whether this property is bulk-insertable.
-            </summary>
-            <returns>The value that defines whether this property is bulk-insertable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsCountable">
-            <summary>
-            Gets the value whether this property is countable.
-            </summary>
-            <returns>The value that defines whether this property is countable.</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsDeletableAll">
-            <summary>
-            Gets the value whether this property is deletable (all).
-            </summary>
-            <returns>The value that defines whether this property is deletable (all).</returns>
-        </member>
-        <member name="M:RepoDb.ClassProperty.IsTruncatable">
-            <summary>
-            Gets the value whether this property is truncatable.
-            </summary>
-            <returns>The value that defines whether this property is truncatable.</returns>
         </member>
         <member name="M:RepoDb.ClassProperty.GetHashCode">
             <summary>
@@ -1595,7 +1447,7 @@
         </member>
         <member name="M:RepoDb.CommandTextCache.GetInlineInsertText``1(RepoDb.Requests.InlineInsertRequest)">
             <summary>
-            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">The type of the target entity.</typeparam>
             <param name="request">The request object.</param>
@@ -1603,7 +1455,7 @@
         </member>
         <member name="M:RepoDb.CommandTextCache.GetInlineMergeText``1(RepoDb.Requests.InlineMergeRequest)">
             <summary>
-            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">The type of the target entity.</typeparam>
             <param name="request">The request object.</param>
@@ -1611,7 +1463,7 @@
         </member>
         <member name="M:RepoDb.CommandTextCache.GetInlineUpdateText``1(RepoDb.Requests.InlineUpdateRequest)">
             <summary>
-            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Gets a command text from the cache for the <see cref="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">The type of the target entity.</typeparam>
             <param name="request">The request object.</param>
@@ -1681,12 +1533,11 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity</typeparam>
         </member>
-        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0},RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.DataEntityDataReader`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.DataEntityDataReader`1"/> object.
             </summary>
             <param name="entities">The list of the data entity object to be used for manipulation.</param>
-            <param name="command">The type of command to be used by this data reader.</param>
         </member>
         <member name="M:RepoDb.DataEntityDataReader`1.GetEnumerator">
             <summary>
@@ -1707,11 +1558,6 @@
         <member name="P:RepoDb.DataEntityDataReader`1.Properties">
             <summary>
             Gets the properties of data entity object.
-            </summary>
-        </member>
-        <member name="P:RepoDb.DataEntityDataReader`1.Command">
-            <summary>
-            Gets the command used by this entity list reader.
             </summary>
         </member>
         <member name="P:RepoDb.DataEntityDataReader`1.Position">
@@ -2142,18 +1988,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BatchQuery``1(System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
-            <summary>
-            Query the data from the database by batch.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.BatchQuery``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
             <summary>
             Query the data from the database by batch.
@@ -2218,7 +2052,7 @@
             Query the data from the database by batch in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="page">The page of the batch to be used by this operation.</param>
             <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
@@ -2279,7 +2113,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.BulkInsertAsync``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem})">
@@ -2288,7 +2122,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Count``1(System.Data.IDbTransaction)">
@@ -2304,7 +2138,7 @@
             Counts the number of rows from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         </member>
@@ -2357,7 +2191,7 @@
             Counts the number of rows from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         </member>
@@ -2437,7 +2271,7 @@
             Deletes a data in the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -2490,7 +2324,7 @@
             Deletes a data in the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+            <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -2519,219 +2353,199 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineInsert``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineInsert``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineInsertAsync``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Inserts a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only. It uses the primary key as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMerge``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way. Uses the primary key as the default qualifier field.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,RepoDb.Field,System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineMergeAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Data.IDbTransaction)">
             <summary>
             Merges a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
-            <summary>
-            Updates a data in the database by targetting certain fields only.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,RepoDb.QueryField,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Object,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdate``1(System.Object,RepoDb.QueryGroup,System.Data.IDbTransaction)">
+            <summary>
+            Updates a data in the database by targetting certain fields only.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+            <param name="where">The query expression to be used  by this operation.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Object,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,RepoDb.QueryField,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.InlineUpdateAsync``1(System.Object,RepoDb.QueryGroup,System.Data.IDbTransaction)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -2901,7 +2715,7 @@
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -2990,7 +2804,7 @@
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -3072,7 +2886,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -3131,7 +2945,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -3234,81 +3048,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        </member>
-        <member name="T:RepoDb.Enumerations.Command">
-            <summary>
-            An enumeration used to define the commands for every operation.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.None">
-            <summary>
-            No defined command and is applicable to every commands.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Query">
-            <summary>
-            A command that is being used when querying a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Insert">
-            <summary>
-            A command that is being used when inserting a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Update">
-            <summary>
-            A command that is being used when updating a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Delete">
-            <summary>
-            A command that is being used when deleting a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Merge">
-            <summary>
-            A command that is being used when merging a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BatchQuery">
-            <summary>
-            A command that is being used when batch-querying a data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineUpdate">
-            <summary>
-            A command that is being used when doing an inline update on the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.BulkInsert">
-            <summary>
-            A command that is being used when updating a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Count">
-            <summary>
-            A command that is being used when counting the data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.DeleteAll">
-            <summary>
-            A command that is being used when deleting all data.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineInsert">
-            <summary>
-            A command that is being used when inserting a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.InlineMerge">
-            <summary>
-            A command that is being used when merging a data by targetting certain fields only.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Command.Truncate">
-            <summary>
-            A command that is being used when truncating a table.
-            </summary>
         </member>
         <member name="T:RepoDb.Enumerations.Conjunction">
             <summary>
@@ -3475,28 +3214,6 @@
             Creates a new instance of <see cref="T:RepoDb.Exceptions.CancelledExecutionException"/> class.
             </summary>
             <param name="message">The exception message.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.DataEntityMapException">
-            <summary>
-            An exception that is being thrown for any data entity mapping related exception.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.DataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.Exceptions.DataEntityMapException"/> class.
-            </summary>
-            <param name="command">The command of the data entity mapping.</param>
-        </member>
-        <member name="T:RepoDb.Exceptions.DuplicateDataEntityMapException">
-            <summary>
-            An exception that is being thrown if the duplicate mapping for data entity is found.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Exceptions.DuplicateDataEntityMapException.#ctor(RepoDb.Enumerations.Command)">
-            <summary>
-            Creates a new instance of <see cref="T:RepoDb.Exceptions.DuplicateDataEntityMapException"/> class.
-            </summary>
-            <param name="command">The command of the data entity mapping.</param>
         </member>
         <member name="T:RepoDb.Exceptions.DuplicateTypeMapException">
             <summary>
@@ -3694,14 +3411,12 @@
             <param name="value">The value to be converted.</param>
             <returns>The converted value to primary property type.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.GetPropertiesFor``1(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.Extensions.DataEntityExtension.GetProperties``1">
             <summary>
-            Gets the list of <see cref="T:System.Reflection.PropertyInfo"/> objects from the data entity class based on the
-            target command.
+            Gets the list of <see cref="T:System.Reflection.PropertyInfo"/> objects from the data entity class.
             </summary>
             <typeparam name="TEntity">The type of the data entity where to get the list of the properties.</typeparam>
-            <param name="command">The target command.</param>
-            <returns>The list of data entity properties based on the target command.</returns>
+            <returns>The properties of the class.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.GetMappedName``1">
             <summary>
@@ -3711,13 +3426,12 @@
             <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
             <returns>A mapped name for the data entity.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object,RepoDb.QueryGroup,RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object,RepoDb.QueryGroup)">
             <summary>
             Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
             </summary>
             <param name="dataEntity">The data entity object to be converted.</param>
             <param name="queryGroup">The query group to be merged.</param>
-            <param name="command">The target command type to be used for the object transformation.</param>
             <returns>An instance of converted dynamic object.</returns>
         </member>
         <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object)">
@@ -3725,14 +3439,6 @@
             Converts the data entity object into a dynamic object.
             </summary>
             <param name="dataEntity">The data entity object to be converted.</param>
-            <returns>An instance of converted dynamic object.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object,RepoDb.Enumerations.Command)">
-            <summary>
-            Converts the data entity object into a dynamic object.
-            </summary>
-            <param name="dataEntity">The data entity object to be converted.</param>
-            <param name="command">The target command type to be used for the object transformation.</param>
             <returns>An instance of converted dynamic object.</returns>
         </member>
         <member name="T:RepoDb.Extensions.DataReaderExtension">
@@ -4360,21 +4066,6 @@
             <param name="property">The property where the mapped name will be retrieved.</param>
             <returns>A string containing the mapped name.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.IsRecursive(System.Reflection.PropertyInfo)">
-            <summary>
-            Checks whether the property info is a recursive property of the data entity object.
-            </summary>
-            <param name="property">The instance of the propery info to be checked.</param>
-            <returns>A boolean value that signifies whether the property info is a recursive property of the data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.PropertyInfoExtension.IsIgnored(System.Reflection.PropertyInfo,RepoDb.Enumerations.Command)">
-            <summary>
-            Checks whether the property info is being ignored by the repository operation on a given command.
-            </summary>
-            <param name="property">The instance of the propery info to be checked.</param>
-            <param name="command">The command to be identified.</param>
-            <returns>A boolean value that signifies whether the property info is being ignored by the repository operation.</returns>
-        </member>
         <member name="M:RepoDb.Extensions.PropertyInfoExtension.IsPrimary(System.Reflection.PropertyInfo)">
             <summary>
             Checks whether the property info is a primary property.
@@ -4587,12 +4278,12 @@
             <param name="connection">The connection object to be validated.</param>
             <param name="transaction">The transaction object to compare.</param>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.WhereToQueryGroup``1(System.Object)">
+        <member name="M:RepoDb.DbConnectionExtension.PrimaryKeyToQueryGroup``1(System.Object)">
             <summary>
-            Converts the (WHERE) query expression to <see cref="T:RepoDb.QueryGroup"/> object.
+            Converts the primary key to <see cref="T:RepoDb.QueryGroup"/> object.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <returns></returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.BatchQuery``1(System.Data.IDbConnection,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
@@ -4601,22 +4292,6 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.BatchQuery``1(System.Data.IDbConnection,System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Query the data from the database by batch.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
             <param name="page">The page of the batch to be used by this operation.</param>
             <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
@@ -4727,7 +4402,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="page">The page of the batch to be used by this operation.</param>
             <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
@@ -4824,7 +4499,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4836,7 +4511,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4848,7 +4523,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4860,7 +4535,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns defined via <see cref="F:RepoDb.Enumerations.Command.BulkInsert"/> will be used for mapping.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4883,7 +4558,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -4973,7 +4648,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -5102,7 +4777,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+            <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -5192,7 +4867,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+            <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -5273,92 +4948,72 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternal``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternal``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsertAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternalAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineInsertInternalAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Inserts a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The object that contains the targetted columns to be inserted.</param>
-            <param name="overrideIgnore">True if to allow the insert operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>The value of the primary key of the newly inserted data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Merges a data in the database by targetting certain fields only.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
@@ -5366,14 +5021,27 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,RepoDb.Field,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges a data in the database by targetting certain fields only.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
@@ -5381,14 +5049,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeInternal``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeInternal``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only.
             </summary>
@@ -5396,43 +5063,26 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only in an aynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Merges a data in the database by targetting certain fields only in an aynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-            <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,RepoDb.Field,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only in an aynchronous way.
             </summary>
@@ -5440,14 +5090,27 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,RepoDb.Field,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Merges a data in the database by targetting certain fields only in an aynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
+            <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only in an aynchronous way.
             </summary>
@@ -5455,14 +5118,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineMergeInternalAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineMergeInternalAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Merges a data in the database by targetting certain fields only in an aynchronous way.
             </summary>
@@ -5470,44 +5132,27 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">True if to allow the merge operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Updates a data in the database by targetting certain fields only.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
@@ -5515,14 +5160,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryField,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
@@ -5530,14 +5174,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
@@ -5545,14 +5188,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateInternal``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only.
             </summary>
@@ -5560,29 +5202,41 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateInternal``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Updates a data in the database by targetting certain fields only.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+            <param name="where">The query expression to be used  by this operation.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
@@ -5590,14 +5244,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryField,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryField,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
@@ -5605,14 +5258,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
@@ -5620,14 +5272,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
@@ -5635,14 +5286,13 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateInternalAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.InlineUpdateInternalAsync``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Updates a data in the database by targetting certain fields only in an asynchronous way.
             </summary>
@@ -5650,7 +5300,6 @@
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="overrideIgnore">True if to allow the update operation on the properties with <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> defined.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -5917,7 +5566,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -6056,7 +5705,7 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="orderBy">The order definition of the fields to be used by this operation.</param>
             <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
@@ -6232,7 +5881,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -6329,7 +5978,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entity">The instance of data entity object to be updated.</param>
-            <param name="whereOrWhat">The query expression or primary key value to be used by this operation.</param>
+            <param name="primaryKey">The primary key value to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -6980,24 +6629,20 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
-            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineInsert``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">
             The data entity object bound for the SQL Statement to be created.
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of fields to be a part of the inline insert operation in SQL Statement composition.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline insert operation in SQL Statement composition.
-            </param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
-            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineMerge``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">
             The data entity object bound for the SQL Statement to be created.
@@ -7005,15 +6650,11 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline insert operation in SQL Statement composition.
-            </param>
             <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
-        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
             <summary>
-            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
+            Creates a SQL Statement for repository <see cref="M:RepoDb.DbConnectionExtension.InlineUpdate``1(System.Data.IDbConnection,System.Object,RepoDb.QueryGroup,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)"/> operation.
             </summary>
             <typeparam name="TEntity">
             The data entity object bound for the SQL Statement to be created.
@@ -7021,10 +6662,6 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of fields to be a part of the inline update operation in SQL Statement composition.</param>
             <param name="where">The query expression for SQL statement.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline update operation in SQL Statement composition.
-            </param>
             <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
         </member>
         <member name="M:RepoDb.Interfaces.IStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0})">
@@ -7598,12 +7235,11 @@
             A class used to cache the properties of the entity.
             </summary>
         </member>
-        <member name="M:RepoDb.PropertyCache.Get``1(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.PropertyCache.Get``1">
             <summary>
             Gets the cached primary key property for the entity.
             </summary>
             <typeparam name="TEntity">The type of the target entity.</typeparam>
-            <param name="command">The target command.</param>
             <returns>The cached properties of the entity.</returns>
         </member>
         <member name="T:RepoDb.PropertyMappedNameCache">
@@ -7723,11 +7359,10 @@
             <param name="field">The list of fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsFrom(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.QueryBuilder`1.FieldsFrom">
             <summary>
-            Appends a stringified fields to the SQL Query Statement by command.
+            Appends a stringified fields to the SQL Query Statement.
             </summary>
-            <param name="command">The mapped command where to get all the fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryBuilder`1.FieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
@@ -7737,11 +7372,10 @@
             <param name="fields">The list fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndParametersFrom(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.QueryBuilder`1.FieldsAndParametersFrom">
             <summary>
-            Appends a stringified fields and parameters to the SQL Query Statement by command.
+            Appends a stringified fields and parameters to the SQL Query Statement.
             </summary>
-            <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryBuilder`1.FieldsAndParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
@@ -7751,27 +7385,25 @@
             <param name="fields">The list fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(RepoDb.Enumerations.Command,System.String)">
+        <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(System.String)">
             <summary>
-            Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
+            Appends a stringified fields and parameters to the SQL Query Statement with aliases.
             </summary>
-            <param name="command">The mapped command where to get all the fields and parameters to be stringified.</param>
             <param name="alias">The alias to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryBuilder`1.FieldsAndAliasFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field},System.String)">
             <summary>
-            Appends a stringified fields and parameters to the SQL Query Statement by command with aliases.
+            Appends a stringified fields and parameters to the SQL Query Statement with aliases.
             </summary>
             <param name="fields">The list fields to be stringified.</param>
             <param name="alias">The alias to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(RepoDb.Enumerations.Command,System.String)">
+        <member name="M:RepoDb.QueryBuilder`1.AsAliasFieldsFrom(System.String)">
             <summary>
-            Appends a stringified fields to the SQL Query Statement by command with aliases.
+            Appends a stringified fields to the SQL Query Statement with aliases.
             </summary>
-            <param name="command">The mapped command where to get all the fields to be stringified.</param>
             <param name="alias">The alias to be prepended for each field.</param>
             <returns>The current instance.</returns>
         </member>
@@ -7893,11 +7525,10 @@
             </summary>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersFrom(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.QueryBuilder`1.ParametersFrom">
             <summary>
-            Append the mapped properpties name to the SQL Query Statement based on the mapped command.
+            Append the mapped properpties name to the SQL Query Statement.
             </summary>
-            <param name="command">The command where the mapping is defined.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryBuilder`1.ParametersFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
@@ -7907,11 +7538,10 @@
             <param name="fields">The list of fields to be stringified.</param>
             <returns>The current instance.</returns>
         </member>
-        <member name="M:RepoDb.QueryBuilder`1.ParametersAsFieldsFrom(RepoDb.Enumerations.Command)">
+        <member name="M:RepoDb.QueryBuilder`1.ParametersAsFieldsFrom">
             <summary>
-            Append the stringified parameter as fields to the SQL Query Statement based on the mapped command.
+            Append the stringified parameter as fields to the SQL Query Statement.
             </summary>
-            <param name="command">The command where the mapping is defined.</param>
             <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryBuilder`1.ParametersAsFieldsFrom(System.Collections.Generic.IEnumerable{RepoDb.Field})">
@@ -8175,6 +7805,57 @@
             to define the filtering and query expressions for the actual execution.
             </summary>
         </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField})">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup})">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            /// <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},RepoDb.Enumerations.Conjunction)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="queryGroups">The child query groups to be grouped for the query expressions.</param>
+            <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        </member>
+        <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},RepoDb.Enumerations.Conjunction,System.Boolean)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="queryFields">The list of fields to be grouped for the query expressions.</param>
+            <param name="conjunction">The conjunction to be used for every group seperation.</param>
+            <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
+        </member>
         <member name="M:RepoDb.QueryGroup.#ctor(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Collections.Generic.IEnumerable{RepoDb.QueryGroup},RepoDb.Enumerations.Conjunction,System.Boolean)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.QueryGroup"/> object.
@@ -8254,14 +7935,8 @@
             This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
             <see cref="T:RepoDb.QueryGroup"/> that defines the query tree expression.
             </summary>
-            <param name="obj">
-            A dynamic query tree expression to be parsed.
-            Example:
-            var expression = new { Conjunction = Conjunction.And, Company = "Microsoft",
-            FirstName = new { Operation = Operation.Like, Value = "An%" },
-            UpdatedDate = new { Operation = Operation.LessThan, Value = DateTime.UtcNow.Date }}
-            </param>
-            <returns>An instance of the <see cref="T:RepoDb.QueryGroup"/> object that contains the parsed query expression.</returns>
+            <param name="obj">A dynamic query tree expression to be parsed.</param>
+            <returns>An instance of the <see cref="T:RepoDb.QueryGroup"/> object that contains the parsed dynamic query expression.</returns>
         </member>
         <member name="M:RepoDb.QueryGroup.GetHashCode">
             <summary>
@@ -8761,24 +8436,18 @@
             A class that holds the value of the inline-insert operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InlineInsertRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InlineInsertRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InlineInsertRequest"/> object.
             </summary>
             <param name="entityType">The entity type.</param>
             <param name="connection">The connection object.</param>
             <param name="fields">The list of the target fields.</param>
-            <param name="overrideIgnore">The value whether to override the ignored fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="P:RepoDb.Requests.InlineInsertRequest.Fields">
             <summary>
             Gets the target fields.
-            </summary>
-        </member>
-        <member name="P:RepoDb.Requests.InlineInsertRequest.OverrideIgnore">
-            <summary>
-            Gets the value whether to override the ignored fields.
             </summary>
         </member>
         <member name="M:RepoDb.Requests.InlineInsertRequest.GetHashCode">
@@ -8822,7 +8491,7 @@
             A class that holds the value of the inline-merge operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InlineMergeRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InlineMergeRequest.#ctor(System.Type,System.Data.IDbConnection,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InlineMergeRequest"/> object.
             </summary>
@@ -8830,7 +8499,6 @@
             <param name="connection">The connection object.</param>
             <param name="fields">The list of the target fields.</param>
             <param name="qualifiers">The list of the qualifier fields.</param>
-            <param name="overrideIgnore">The value whether to override the ignored fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="P:RepoDb.Requests.InlineMergeRequest.Fields">
@@ -8841,11 +8509,6 @@
         <member name="P:RepoDb.Requests.InlineMergeRequest.Qualifiers">
             <summary>
             Gets the list of the qualifier fields.
-            </summary>
-        </member>
-        <member name="P:RepoDb.Requests.InlineMergeRequest.OverrideIgnore">
-            <summary>
-            Gets the value whether to override the ignored fields.
             </summary>
         </member>
         <member name="M:RepoDb.Requests.InlineMergeRequest.GetHashCode">
@@ -8889,7 +8552,7 @@
             A class that holds the value of the inline update operation arguments.
             </summary>
         </member>
-        <member name="M:RepoDb.Requests.InlineUpdateRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.Requests.InlineUpdateRequest.#ctor(System.Type,System.Data.IDbConnection,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Creates a new instance of <see cref="T:RepoDb.Requests.InlineUpdateRequest"/> object.
             </summary>
@@ -8897,7 +8560,6 @@
             <param name="connection">The connection object.</param>
             <param name="where">The query expression.</param>
             <param name="fields">The list of the target fields.</param>
-            <param name="overrideIgnore">The value whether to override the ignored fields.</param>
             <param name="statementBuilder">The statement builder.</param>
         </member>
         <member name="P:RepoDb.Requests.InlineUpdateRequest.Where">
@@ -8908,11 +8570,6 @@
         <member name="P:RepoDb.Requests.InlineUpdateRequest.Fields">
             <summary>
             Gets the target fields.
-            </summary>
-        </member>
-        <member name="P:RepoDb.Requests.InlineUpdateRequest.OverrideIgnore">
-            <summary>
-            Gets the value whether to override the ignored fields.
             </summary>
         </member>
         <member name="M:RepoDb.Requests.InlineUpdateRequest.GetHashCode">
@@ -9295,7 +8952,7 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field})">
             <summary>
             Creates a SQL Statement for repository inline-insert operation.
             </summary>
@@ -9304,13 +8961,9 @@
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline insert operation in SQL Statement composition.
-            </param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Boolean)">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineInsert``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Boolean)">
             <summary>
             Creates a SQL Statement for repository inline-insert operation.
             </summary>
@@ -9319,12 +8972,20 @@
             </typeparam>
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline insert operation in SQL Statement composition.
-            </param>
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
+        </member>
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field})">
+            <summary>
+            Creates a SQL Statement for repository inline-merge operation.
+            </summary>
+            <typeparam name="TEntity">
+            The data entity object bound for the SQL Statement to be created.
+            </typeparam>
+            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
+            <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
+            <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
+            <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
         <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean})">
             <summary>
@@ -9336,30 +8997,10 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
             <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline merge operation in SQL Statement composition.
-            </param>
-            <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineMerge``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Collections.Generic.IEnumerable{RepoDb.Field},System.Nullable{System.Boolean},System.Nullable{System.Boolean})">
-            <summary>
-            Creates a SQL Statement for repository inline-merge operation.
-            </summary>
-            <typeparam name="TEntity">
-            The data entity object bound for the SQL Statement to be created.
-            </typeparam>
-            <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
-            <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
-            <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored in the inline merge operation in SQL Statement composition.
-            </param>
             <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
             <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
         </member>
-        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup,System.Nullable{System.Boolean})">
+        <member name="M:RepoDb.SqlStatementBuilder.CreateInlineUpdate``1(RepoDb.QueryBuilder{``0},System.Collections.Generic.IEnumerable{RepoDb.Field},RepoDb.QueryGroup)">
             <summary>
             Creates a SQL Statement for repository inline update operation that is meant for SQL Server.
             </summary>
@@ -9369,10 +9010,6 @@
             <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
             <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
             <param name="where">The query expression for SQL statement.</param>
-            <param name="overrideIgnore">
-            Set to true if the defined <see cref="T:RepoDb.Attributes.IgnoreAttribute"/> would likely 
-            be ignored on the inline update operation in SQL Statement composition.
-            </param>
             <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
         </member>
         <member name="M:RepoDb.SqlStatementBuilder.CreateInsert``1(RepoDb.QueryBuilder{``0})">

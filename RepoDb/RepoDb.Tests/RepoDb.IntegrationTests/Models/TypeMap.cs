@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using RepoDb.Attributes;
-using RepoDb.Enumerations;
 
 namespace RepoDb.IntegrationTests.Models
 {
@@ -9,7 +8,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMap
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public string char_column { get; set; }
@@ -34,7 +32,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapNumeric
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public long? bigint_column { get; set; }
@@ -63,7 +60,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapDate
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public DateTime? date_column { get; set; }
@@ -82,7 +78,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapBlob
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         [TypeMap(DbType.Binary)]
@@ -98,7 +93,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapXml
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public string xml_column { get; set; }
@@ -107,7 +101,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapSpatial
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public object geography_column { get; set; }
@@ -117,7 +110,6 @@ namespace RepoDb.IntegrationTests.Models
     [Map("[dbo].[TypeMap]")]
     public class TypeMapUnsupported
     {
-        [Attributes.Ignore(Command.Insert | Command.Update | Command.Merge | Command.InlineUpdate)]
         public Guid SessionId { get; set; }
 
         public object hierarchyid_column { get; set; }

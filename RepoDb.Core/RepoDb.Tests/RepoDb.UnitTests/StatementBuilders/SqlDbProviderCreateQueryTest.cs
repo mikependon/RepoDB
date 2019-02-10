@@ -85,32 +85,6 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIgnoredFieldClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Query)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestWithIgnoredField()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithIgnoredFieldClass>();
-            var queryGroup = (QueryGroup)null;
-
-            // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
-            var expected = $"" +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM [TestWithIgnoredFieldClass] ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
         private class TestWithTopClass
         {
             public int Field1 { get; set; }
@@ -327,28 +301,6 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Setup
             var statementBuilder = new SqlStatementBuilder();
             var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
-            var queryGroup = (QueryGroup)null;
-
-            // Act/Assert
-            statementBuilder.CreateQuery(queryBuilder, queryGroup);
-        }
-
-        private class ThrowExceptionIfAllFieldsWereIgnoredClass
-        {
-            [Attributes.Ignore(Command.Query)]
-            public int Field1 { get; set; }
-            [Attributes.Ignore(Command.Query)]
-            public string Field2 { get; set; }
-            [Attributes.Ignore(Command.Query)]
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfAllFieldsWereIgnored()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfAllFieldsWereIgnoredClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert
