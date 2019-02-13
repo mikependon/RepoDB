@@ -3683,17 +3683,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.BatchQueryAsync(System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
-            <summary>
-            Query the data from the database by batch in an asynchronous way.
-            </summary>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.BaseRepository`2.BatchQueryAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
             <summary>
             Query the data from the database by batch in an asynchronous way.
@@ -3761,14 +3750,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Count(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression.
-            </summary>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
         <member name="M:RepoDb.BaseRepository`2.Count(System.Collections.Generic.IEnumerable{RepoDb.QueryField},System.Data.IDbTransaction)">
             <summary>
             Counts the number of rows from the database based on the given query expression.
@@ -3791,14 +3772,6 @@
             </summary>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.CountAsync(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression in an asynchronous way.
-            </summary>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
@@ -3831,13 +3804,6 @@
             <param name="where">The query expression to be used  by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.Delete(System.Data.IDbTransaction)">
-            <summary>
-            Deletes all data in the database based on the target data entity.
-            </summary>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.BaseRepository`2.Delete(System.Object,System.Data.IDbTransaction)">
             <summary>
@@ -3876,13 +3842,6 @@
             Deletes a data in the database based on the given query expression.
             </summary>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.BaseRepository`2.DeleteAsync(System.Data.IDbTransaction)">
-            <summary>
-            Deletes all data in the database based on the target data entity in an asynchronous way.
-            </summary>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -4205,13 +4164,11 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.Query(System.Object,System.String,System.Data.IDbTransaction)">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force the repository to query from the database.
@@ -4288,13 +4245,11 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.BaseRepository`2.QueryAsync(System.Object,System.String,System.Data.IDbTransaction)">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force the repository to query from the database.
@@ -4780,18 +4735,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.BatchQueryAsync``1(System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
-            <summary>
-            Query the data from the database by batch in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.BatchQueryAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Data.IDbTransaction)">
             <summary>
             Query the data from the database by batch in an asynchronous way.
@@ -4866,15 +4809,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Count``1(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.Count``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Counts the number of rows from the database based on the given query expression.
@@ -4919,15 +4853,6 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.CountAsync``1(System.Object,System.Data.IDbTransaction)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
         <member name="M:RepoDb.DbRepository`1.CountAsync``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
             Counts the number of rows from the database based on the given query expression in an asynchronous way.
@@ -4963,14 +4888,6 @@
             <param name="where">The query expression to be used  by this operation.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.Delete``1(System.Data.IDbTransaction)">
-            <summary>
-            Deletes all data in the database based on the target data entity.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbRepository`1.Delete``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Data.IDbTransaction)">
             <summary>
@@ -5014,14 +4931,6 @@
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbRepository`1.DeleteAsync``1(System.Data.IDbTransaction)">
-            <summary>
-            Deletes all data in the database based on the target data entity in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
@@ -5443,14 +5352,12 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.Query``1(System.Object,System.String,System.Data.IDbTransaction)">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force the repository to query from the database.
@@ -5532,14 +5439,12 @@
             <param name="transaction">The transaction to be used by this operation.</param>
             <returns>An enumerable list of An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbRepository`1.QueryAsync``1(System.Object,System.String,System.Data.IDbTransaction)">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force the repository to query from the database.
@@ -5945,22 +5850,6 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,System.Object,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Query the data from the database by batch in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="page">The page of the batch to be used by this operation.</param>
-            <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An enumerable list of data entity object.</returns>
-        </member>
         <member name="M:RepoDb.DbConnectionExtension.BatchQueryAsync``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Int32,System.Int32,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Query the data from the database by batch in an asynchronous way.
@@ -6101,19 +5990,6 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Count``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
         <member name="M:RepoDb.DbConnectionExtension.Count``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Counts the number of rows from the database based on the given query expression.
@@ -6191,19 +6067,6 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.CountAsync``1(System.Data.IDbConnection,System.Object,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Counts the number of rows from the database based on the given query expression in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
         <member name="M:RepoDb.DbConnectionExtension.CountAsync``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Counts the number of rows from the database based on the given query expression in an asynchronous way.
@@ -6268,18 +6131,6 @@
             <param name="trace">The trace object to be used by this operation.</param>
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Deletes all data in the database based on the target data entity.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.Delete``1(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
@@ -6353,18 +6204,6 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="where">The query expression to be used  by this operation.</param>
-            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-            <param name="transaction">The transaction to be used by this operation.</param>
-            <param name="trace">The trace object to be used by this operation.</param>
-            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        </member>
-        <member name="M:RepoDb.DbConnectionExtension.DeleteAsync``1(System.Data.IDbConnection,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
-            <summary>
-            Deletes all data in the database based on the target data entity in an asynchronous way.
-            </summary>
-            <typeparam name="TEntity">The type of the data entity object.</typeparam>
-            <param name="connection">The connection object to be used by this operation.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used by this operation.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -7109,15 +6948,13 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.Query``1(System.Data.IDbConnection,System.Object,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Query a data from the database based on the given query expression.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
@@ -7248,15 +7085,13 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+        <member name="M:RepoDb.DbConnectionExtension.QueryAsync``1(System.Data.IDbConnection,System.Object,System.String,RepoDb.Interfaces.ICache,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Query a data from the database based on the given query expression in an asynchronous way.
             </summary>
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="primaryKey">The primary key value to be used by this operation.</param>
-            <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-            <param name="top">The top number of rows to be used by this operation.</param>
             <param name="cacheKey">
             The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
             to null would force to query from the database.
