@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.0-beta1</version>
+    <version>1.8.0-beta2</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon, Rodel E. Dagumampan</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -10,10 +10,11 @@
     <description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.8.0-beta1]
-    - Remove the support on dynamic query tree expresssions.
-    - Removed the Command enumeration.
-    - Removed the Ignored attribute.
+    [Release 1.8.0-beta2]
+    - Removed the 'orderBy' and 'top' argument in the 'Query' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.BatchQuery' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.Count' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.Delete' method without the 'where' parameter.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

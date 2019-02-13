@@ -315,28 +315,6 @@ namespace RepoDb
         /// <summary>
         /// Query the data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync(object primaryKey,
-            int page, int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.BatchQueryAsync<TEntity>(
-                primaryKey: primaryKey,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
-        /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
@@ -475,19 +453,6 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count(object primaryKey,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(primaryKey: primaryKey,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
@@ -523,19 +488,6 @@ namespace RepoDb
         public Task<long> CountAsync(IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync(object primaryKey,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(primaryKey: primaryKey,
-                transaction: transaction);
         }
 
         /// <summary>
@@ -593,16 +545,6 @@ namespace RepoDb
         #endregion
 
         #region Delete
-
-        /// <summary>
-        /// Deletes all data in the database based on the target data entity.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete(IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(transaction: transaction);
-        }
 
         /// <summary>
         /// Deletes a data in the database based on the given query expression.
@@ -672,16 +614,6 @@ namespace RepoDb
         #endregion
 
         #region DeleteAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target data entity in an asynchronous way.
-        /// </summary>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(transaction: transaction);
-        }
 
         /// <summary>
         /// Deletes a data in the database based on the given query expression in an asynchronous way.
@@ -1282,8 +1214,6 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression.
         /// </summary>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1291,14 +1221,10 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(object primaryKey,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(primaryKey: primaryKey,
-                orderBy: orderBy,
-                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction);
         }
@@ -1433,8 +1359,6 @@ namespace RepoDb
         /// Query a data from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1442,14 +1366,10 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(object primaryKey,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.QueryAsync<TEntity>(primaryKey: primaryKey,
-                orderBy: orderBy,
-                top: top,
                 cacheKey: cacheKey,
                 transaction: transaction);
         }

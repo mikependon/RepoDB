@@ -4,17 +4,18 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.8.0</Version>
+    <Version>1.8.0-beta2</Version>
     <Authors>Michael Camara Pendon, Rodel E. Dagumampan</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and fast repository-based ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.0-beta1]
-- Remove the support on dynamic query tree expresssions.
-- Removed the Command enumeration.
-- Removed the Ignored attribute.</PackageReleaseNotes>
+    <PackageReleaseNotes>[Release 1.8.0-beta2]
+- Removed the 'orderBy' and 'top' argument in the 'Query' method with 'primaryKey' argument.
+- Removed the 'DbConnection.BatchQuery' method with 'primaryKey' argument.
+- Removed the 'DbConnection.Count' method with 'primaryKey' argument.
+- Removed the 'DbConnection.Delete' method without the 'where' parameter.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -22,8 +23,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.0.1</AssemblyVersion>
-    <FileVersion>1.8.0.1</FileVersion>
+    <AssemblyVersion>1.8.0.2</AssemblyVersion>
+    <FileVersion>1.8.0.2</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

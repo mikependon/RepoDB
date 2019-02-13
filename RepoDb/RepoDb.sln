@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{C88AB92A-52E2-4868-A8CC-8CA41F332281}"
 	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Nuget\build.ps1 = ..\RepoDb.Nuget\build.ps1
 		..\RepoDb.Nuget\documentation.md = ..\RepoDb.Nuget\documentation.md
 		..\RepoDb.Nuget\install.txt = ..\RepoDb.Nuget\install.txt
 		..\RepoDb.Nuget\nuget.exe = ..\RepoDb.Nuget\nuget.exe

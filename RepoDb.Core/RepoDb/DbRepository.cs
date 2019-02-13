@@ -493,46 +493,6 @@ namespace RepoDb
         /// Query the data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object primaryKey,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.BatchQueryAsync<TEntity>(primaryKey: primaryKey,
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
@@ -792,37 +752,6 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public long Count<TEntity>(object primaryKey,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.Count<TEntity>(commandTimeout: CommandTimeout,
-                primaryKey: primaryKey,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
@@ -979,37 +908,6 @@ namespace RepoDb
         /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(object primaryKey,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.CountAsync<TEntity>(commandTimeout: CommandTimeout,
-                primaryKey: primaryKey,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
@@ -1133,34 +1031,6 @@ namespace RepoDb
         #endregion
 
         #region Delete
-
-        /// <summary>
-        /// Deletes all data in the database based on the target data entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public int Delete<TEntity>(IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.Delete<TEntity>(commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
 
         /// <summary>
         /// Deletes a data in the database based on the given query expression.
@@ -1322,34 +1192,6 @@ namespace RepoDb
         #region DeleteAsync
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            // Call the method
-            var result = connection.DeleteAsync<TEntity>(commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
-            // Return the result
-            return result;
-        }
-
-        /// <summary>
         /// Deletes a data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -1362,7 +1204,7 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-
+            
             // Call the method
             var result = connection.DeleteAsync<TEntity>(where: where,
                 commandTimeout: CommandTimeout,
@@ -2760,8 +2602,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2769,8 +2609,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object primaryKey,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2780,8 +2618,6 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Query<TEntity>(primaryKey: primaryKey,
-                orderBy: orderBy,
-                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -3025,25 +2861,22 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object primaryKey, IEnumerable<OrderField> orderBy = null, int? top = 0,
-            string cacheKey = null, IDbTransaction transaction = null)
+        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object primaryKey,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-
+            
             // Call the method
             var result = connection.QueryAsync<TEntity>(primaryKey: primaryKey,
-                orderBy: orderBy,
-                top: top,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,

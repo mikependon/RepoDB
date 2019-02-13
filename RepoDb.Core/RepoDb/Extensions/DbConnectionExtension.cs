@@ -1,5 +1,4 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -482,42 +481,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection,
-            object primaryKey,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return BatchQueryAsync<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
-                page: page,
-                rowsPerBatch: rowsPerBatch,
-                orderBy: orderBy,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
@@ -902,7 +865,7 @@ namespace RepoDb
             {
                 throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
             }
-            
+
             // Before Execution
             if (trace != null)
             {
@@ -988,33 +951,6 @@ namespace RepoDb
         {
             return Count<TEntity>(connection: connection,
                 where: (QueryGroup)null,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static long Count<TEntity>(this IDbConnection connection,
-            object primaryKey,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Count<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1229,33 +1165,6 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
-            object primaryKey,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return CountAsync<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -1430,28 +1339,6 @@ namespace RepoDb
         #region Delete
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Delete<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
         /// Deletes a data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -1531,15 +1418,21 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, object primaryKey, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Delete<TEntity>(this IDbConnection connection,
+            object primaryKey,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             GetAndGuardPrimaryKey<TEntity>();
             return Delete<TEntity>(connection: connection,
                 where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
-                transaction: transaction);
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
         }
 
         /// <summary>
@@ -1640,31 +1533,6 @@ namespace RepoDb
         #endregion
 
         #region DeleteAsync
-
-        /// <summary>
-        /// Deletes all data in the database based on the target data entity in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return DeleteAsync<TEntity>(connection: connection,
-                where: (QueryGroup)null,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
 
         /// <summary>
         /// Deletes a data in the database based on the given query expression in an asynchronous way.
@@ -3783,8 +3651,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3797,8 +3663,6 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             object primaryKey,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -3809,8 +3673,8 @@ namespace RepoDb
         {
             return Query<TEntity>(connection: connection,
                 where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
-                orderBy: orderBy,
-                top: top,
+                orderBy: null,
+                top: 0,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4142,8 +4006,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of rows to be used by this operation.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4156,7 +4018,6 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object primaryKey,
-            IEnumerable<OrderField> orderBy = null, int? top = 0,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -4167,8 +4028,8 @@ namespace RepoDb
         {
             return QueryAsync<TEntity>(connection: connection,
                 where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
-                orderBy: orderBy,
-                top: top,
+                orderBy: null,
+                top: 0,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

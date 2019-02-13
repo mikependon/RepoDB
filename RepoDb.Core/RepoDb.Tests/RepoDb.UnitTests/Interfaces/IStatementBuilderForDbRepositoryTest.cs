@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()));
 
             // Act
-            repository.Object.Delete<StatementBuilderEntity>();
+            repository.Object.Delete<StatementBuilderEntity>(0);
 
             // Assert
             statementBuilder.Verify(builder =>

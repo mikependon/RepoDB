@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Setup(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()));
 
             // Act
-            repository.Object.Delete<TraceEntity>();
+            repository.Object.Delete<TraceEntity>(0);
 
             // Assert
             trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -118,7 +118,7 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Setup(t => t.AfterDelete(It.IsAny<TraceLog>()));
 
             // Act
-            repository.Object.Delete<TraceEntity>();
+            repository.Object.Delete<TraceEntity>(0);
 
             // Assert
             trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Once);
