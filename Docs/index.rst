@@ -13,7 +13,6 @@ RepoDb Documentation
    pages/connection
    pages/executequery
    pages/transaction
-   pages/expressions
    pages/querygroup
    pages/repository
    pages/persistency

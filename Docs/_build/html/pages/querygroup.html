@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Repository" href="repository.html" />
-    <link rel="prev" title="Expressions" href="expressions.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    <link rel="prev" title="Transaction" href="transaction.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -88,7 +90,6 @@
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery (Dynamic)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">QueryGroup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#operations">Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#equal">Equal</a></li>
@@ -103,8 +104,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#notbetween">NotBetween</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#in">In</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#notin">NotIn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#all">All</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#any">Any</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -207,17 +206,6 @@
 <div class="section" id="equal">
 <h2>Equal<a class="headerlink" href="#equal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine the <cite>equality</cite> of the field and data.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
-<span class="p">{</span>
-        <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 </pre></div>
@@ -230,13 +218,6 @@
 <div class="section" id="notequal">
 <h2>NotEqual<a class="headerlink" href="#notequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine the <cite>inequality</cite> of the field and data.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
-<span class="p">{</span>
-        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna Fullerton&quot;</span> <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span> <span class="p">!=</span> <span class="s">&quot;Anna Fullerton&quot;</span><span class="p">);</span>
 </pre></div>
@@ -249,10 +230,6 @@
 <div class="section" id="lessthan">
 <h2>LessThan<a class="headerlink" href="#lessthan" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>less than</cite> of the defined value.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">&lt;</span> <span class="m">100</span><span class="p">);</span>
 </pre></div>
@@ -265,10 +242,6 @@
 <div class="section" id="greaterthan">
 <h2>GreaterThan<a class="headerlink" href="#greaterthan" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>greater than</cite> of the defined value.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThan</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">);</span>
 </pre></div>
@@ -281,10 +254,6 @@
 <div class="section" id="lessthanorequal">
 <h2>LessThanOrEqual<a class="headerlink" href="#lessthanorequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>less than or equal</cite> of the defined value.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">LessThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">100</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">&lt;=</span> <span class="m">100</span><span class="p">);</span>
 </pre></div>
@@ -297,10 +266,6 @@
 <div class="section" id="greaterthanorequal">
 <h2>GreaterThanOrEqual<a class="headerlink" href="#greaterthanorequal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>greater than or equal</cite> of the defined value.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">GreaterThanOrEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="m">0</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">&gt;=</span> <span class="m">100</span><span class="p">);</span>
 </pre></div>
@@ -313,10 +278,6 @@
 <div class="section" id="like">
 <h2>Like<a class="headerlink" href="#like" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field is <cite>identitical</cite> to a given value.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Contains (LIKE &#39;%VAL%&#39;)</span>
 <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;Anna&quot;</span><span class="p">));</span>
@@ -336,10 +297,6 @@
 <div class="section" id="notlike">
 <h2>NotLike<a class="headerlink" href="#notlike" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field is <cite>not identitical</cite> to a given value. An opposite of <cite>Operation.Like</cite>.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotLike</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Contains (LIKE &#39;%VAL%&#39;)</span>
 <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="p">!</span><span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;Anna&quot;</span><span class="p">));</span>
@@ -359,14 +316,6 @@
 <div class="section" id="between">
 <h2>Between<a class="headerlink" href="#between" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>between</cite> 2 given values.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Between</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&gt;=</span> <span class="n">Date1</span> <span class="p">&amp;&amp;</span> <span class="n">c</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&lt;=</span> <span class="n">Date2</span><span class="p">);</span>
 </pre></div>
@@ -383,14 +332,6 @@
 <div class="section" id="notbetween">
 <h2>NotBetween<a class="headerlink" href="#notbetween" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>not between</cite> 2 given values. An opposite of <cite>Operation.Between</cite>.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CreatedDate</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="n">Date1</span><span class="p">,</span> <span class="n">Date2</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotBetween</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10075</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&lt;</span> <span class="n">Date1</span> <span class="p">||</span> <span class="n">c</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&gt;</span> <span class="n">Date2</span><span class="p">);</span>
 </pre></div>
@@ -407,10 +348,6 @@
 <div class="section" id="in">
 <h2>In<a class="headerlink" href="#in" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>in</cite> given values.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}).</span><span class="n">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 </pre></div>
@@ -423,10 +360,6 @@
 <div class="section" id="notin">
 <h2>NotIn<a class="headerlink" href="#notin" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine whether the field value is <cite>not in</cite> given values. An opposite of <cite>Operation.In</cite>. See sample below.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">}</span> <span class="p">});</span>
-</pre></div>
-</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="p">!(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}).</span><span class="n">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 </pre></div>
@@ -435,90 +368,6 @@
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">});</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="all">
-<h2>All<a class="headerlink" href="#all" title="Permalink to this headline">¶</a></h2>
-<p>Part of the expression tree used to determine whether <cite>all</cite> the field values satisfied the criteria.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
-<span class="p">{</span>
-        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
-        <span class="p">{</span>
-                <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">All</span><span class="p">,</span> <span class="c1">// Works as AND</span>
-                <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
-                <span class="p">{</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">},</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">},</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-</div>
-<p>Expression way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Same operations (Equal)</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Anna&quot;</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">,</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}).</span><span class="n">All</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
-
-<span class="c1">// Different operations (Equal, Like, NotEqual, GreaterThan, etc)</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;Anna&quot;</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span> <span class="p">!=</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">&amp;&amp;</span> <span class="p">!(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}).</span><span class="n">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
-</pre></div>
-</div>
-<p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;</span>
-<span class="p">(</span>
-        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
-        <span class="p">{</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotEqual</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">})</span>
-        <span class="p">}</span>
-<span class="p">);</span>
-</pre></div>
-</div>
-<p>The <cite>Operation.All</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>QueryField</cite> in the <cite>QueryGroup</cite> object will do the same when calling it explicitly.</p>
-</div>
-<div class="section" id="any">
-<h2>Any<a class="headerlink" href="#any" title="Permalink to this headline">¶</a></h2>
-<p>Part of the expression tree used to determine whether <cite>any</cite> of the field values satisfied the criteria.</p>
-<p>Dynamic way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span>
-<span class="p">{</span>
-        <span class="n">Name</span> <span class="p">=</span> <span class="k">new</span>
-        <span class="p">{</span>
-                <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Any</span><span class="p">,</span> <span class="c1">// Works as OR</span>
-                <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span>
-                <span class="p">{</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Anna%&quot;</span> <span class="p">},</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">},</span>
-                        <span class="k">new</span> <span class="p">{</span> <span class="n">Operation</span> <span class="p">=</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="n">Value</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">});</span>
-</pre></div>
-</div>
-<p>Expression way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Same operations (Equal)</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="p">(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Anna&quot;</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">,</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}).</span><span class="n">Any</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
-
-<span class="c1">// Different operations (Equal, Like, NotEqual, GreaterThan, etc)</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">&quot;Anna&quot;</span><span class="p">)</span> <span class="p">||</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">&quot;Tom Hawks&quot;</span> <span class="p">||</span> <span class="p">(</span><span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">}).</span><span class="n">Contains</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
-</pre></div>
-</div>
-<p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;</span>
-<span class="p">(</span>
-        <span class="k">new</span> <span class="n">QueryField</span><span class="p">[]</span>
-        <span class="p">{</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Like</span><span class="p">,</span> <span class="s">&quot;Anna%&quot;</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="s">&quot;Tom Hawks&quot;</span><span class="p">),</span>
-                <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">In</span><span class="p">,</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;Frank Myers&quot;</span><span class="p">,</span> <span class="s">&quot;Joe Austin&quot;</span> <span class="p">})</span>
-        <span class="p">},</span>
-        <span class="k">null</span><span class="p">,</span> <span class="c1">// List of QueryGroups</span>
-        <span class="n">Conjunction</span><span class="p">.</span><span class="n">Or</span>
-<span class="p">);</span>
-</pre></div>
-</div>
-<p>The <cite>Operation.Any</cite> only works at the <cite>dynamic</cite> expression tree to simply the composition of the statement. Passing a list of <cite>QueryField</cite> in the <cite>QueryGroup</cite> object will do the same when calling it explicitly.</p>
 </div>
 </div>
 
@@ -533,7 +382,7 @@
         <a href="repository.html" class="btn btn-neutral float-right" title="Repository" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="expressions.html" class="btn btn-neutral" title="Expressions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="transaction.html" class="btn btn-neutral float-left" title="Transaction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -542,7 +391,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Michael Camara Pendon.
+        &copy; Copyright 2018, Michael Camara Pendon
 
     </p>
   </div>
@@ -559,32 +408,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.1.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

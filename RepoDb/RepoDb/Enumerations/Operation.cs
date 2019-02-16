@@ -54,14 +54,6 @@ namespace RepoDb.Enumerations
         /// <summary>
         /// A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
         /// </summary>
-        [Text("NOT IN")] NotIn,
-        /// <summary>
-        /// An (AND) equation and operation. This defines that all query expression must be true.
-        /// </summary>
-        [Text("AND")] All,
-        /// <summary>
-        /// An (OR) equation and operation. This defines that any query expression must be true.
-        /// </summary>
-        [Text("OR")] Any
+        [Text("NOT IN")] NotIn
     }
 }

@@ -39,21 +39,6 @@ Equal
 
 Part of the expression tree used to determine the `equality` of the field and data.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = 10045 });
-
-or
-
-::
-
-	var result = connection.Query<Customer>(new
-	{
-		Id = new { Operation = Operation.Equal, Value = 10045 }
-	});
-
 Expression way:
 
 ::
@@ -72,15 +57,6 @@ NotEqual
 .. highlight:: c#
 
 Part of the expression tree used to determine the `inequality` of the field and data.
-
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new
-	{
-		Name = new { Operation = Operation.NotEqual, Value = "Anna Fullerton" }
-	});
 
 Expression way:
 
@@ -101,12 +77,6 @@ LessThan
 
 Part of the expression tree used to determine whether the field value is `less than` of the defined value.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.LessThan, Value = 100 } });
-
 Expression way:
 
 ::
@@ -125,12 +95,6 @@ GreaterThan
 .. highlight:: c#
 
 Part of the expression tree used to determine whether the field value is `greater than` of the defined value.
-
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.GreaterThan, Value = 0 } });
 
 Expression way:
 
@@ -151,12 +115,6 @@ LessThanOrEqual
 
 Part of the expression tree used to determine whether the field value is `less than or equal` of the defined value.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.LessThanOrEqual, Value = 100 } });
-
 Expression way:
 
 ::
@@ -176,12 +134,6 @@ GreaterThanOrEqual
 
 Part of the expression tree used to determine whether the field value is `greater than or equal` of the defined value.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 0 } });
-
 Expression way:
 
 ::
@@ -200,12 +152,6 @@ Like
 .. highlight:: c#
 
 Part of the expression tree used to determine whether the field is `identitical` to a given value.
-
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Name = new { Operation = Operation.Like, Value = "Anna%" } });
 
 Expression way:
 
@@ -233,12 +179,6 @@ NotLike
 
 Part of the expression tree used to determine whether the field is `not identitical` to a given value. An opposite of `Operation.Like`.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Name = new { Operation = Operation.NotLike, Value = "Anna%" } });
-
 Expression way:
 
 ::
@@ -265,18 +205,6 @@ Between
 
 Part of the expression tree used to determine whether the field value is `between` 2 given values.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { CreatedDate = new { Operation = Operation.Between, Value = new [] { Date1, Date2 } } });
-
-or
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.Between, Value = new [] { 10045, 10075 } } });
-
 Expression way:
 
 ::
@@ -302,18 +230,6 @@ NotBetween
 
 Part of the expression tree used to determine whether the field value is `not between` 2 given values. An opposite of `Operation.Between`.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { CreatedDate = new { Operation = Operation.NotBetween, Value = new [] { Date1, Date2 } } });
-
-or
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.NotBetween, Value = new [] { 10045, 10075 } } });
-	
 Expression way:
 
 ::
@@ -339,12 +255,6 @@ In
 
 Part of the expression tree used to determine whether the field value is `in` given values.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.In, Value = new [] { 10045, 10046, 10047, 10048 } } });
-	
 Expression way:
 
 ::
@@ -364,12 +274,6 @@ NotIn
 
 Part of the expression tree used to determine whether the field value is `not in` given values. An opposite of `Operation.In`. See sample below.
 
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new { Id = new { Operation = Operation.NotIn, Value = new [] { 10045, 10046, 10047, 10048 } } });
-	
 Expression way:
 
 ::
@@ -381,107 +285,3 @@ Explicit way:
 ::
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.NotIn, new [] { 10045, 10046, 10047, 10048 } });
-
-All
----
-
-.. highlight:: c#
-
-Part of the expression tree used to determine whether `all` the field values satisfied the criteria.
-
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new
-	{
-		Name = new
-		{
-			Operation = Operation.All, // Works as AND
-			Value = new object[]
-			{
-				new { Operation = Operation.Like, Value = "Anna%" },
-				new { Operation = Operation.NotEqual, Value = "Tom Hawks" },
-				new { Operation = Operation.NotIn, Value = new string[] { "Frank Myers", "Joe Austin" } }
-			}
-		}
-	});
-
-Expression way:
-
-::
-
-	// Same operations (Equal)
-	var result = connection.Query<Customer>(c => (new [] { "Anna", "Tom Hawks", "Frank Myers", "Joe Austin" }).All(c.Name));
-
-	// Different operations (Equal, Like, NotEqual, GreaterThan, etc)
-	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") && c.Name != "Tom Hawks" && !(new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name));
-
-Explicit way:
-
-::
-
-	var result = connection.Query<Customer>
-	(
-		new QueryField[]
-		{
-			new QueryField("Name", Operation.Like, "Anna%"),
-			new QueryField("Name", Operation.NotEqual, "Tom Hawks"),
-			new QueryField("Name", Operation.NotIn, new string[] { "Frank Myers", "Joe Austin" })
-		}
-	);
-
-The `Operation.All` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `QueryField` in the `QueryGroup` object will do the same when calling it explicitly.
-
-Any
----
-
-.. highlight:: c#
-
-Part of the expression tree used to determine whether `any` of the field values satisfied the criteria.
-
-Dynamic way:
-
-::
-
-	var result = connection.Query<Customer>(new
-	{
-		Name = new
-		{
-			Operation = Operation.Any, // Works as OR
-			Value = new object[]
-			{
-				new { Operation = Operation.Like, Value = "Anna%" },
-				new { Operation = Operation.Equal, Value = "Tom Hawks" },
-				new { Operation = Operation.In, Value = new string[] { "Frank Myers", "Joe Austin" } }
-			}
-		}
-	});
-
-Expression way:
-
-::
-
-	// Same operations (Equal)
-	var result = connection.Query<Customer>(c => (new [] { "Anna", "Tom Hawks", "Frank Myers", "Joe Austin" }).Any(c.Name));
-
-	// Different operations (Equal, Like, NotEqual, GreaterThan, etc)
-	var result = connection.Query<Customer>(c => c.Name.Contains("Anna") || c.Name == "Tom Hawks" || (new [] { "Frank Myers", "Joe Austin" }).Contains(c.Name));
-
-Explicit way:
-
-::
-
-	var result = connection.Query<Customer>
-	(
-		new QueryField[]
-		{
-			new QueryField("Name", Operation.Like, "Anna%"),
-			new QueryField("Name", Operation.Equal, "Tom Hawks"),
-			new QueryField("Name", Operation.In, new string[] { "Frank Myers", "Joe Austin" })
-		},
-		null, // List of QueryGroups
-		Conjunction.Or
-	);
-
-The `Operation.Any` only works at the `dynamic` expression tree to simply the composition of the statement. Passing a list of `QueryField` in the `QueryGroup` object will do the same when calling it explicitly.

@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Type Mapping" href="typemapping.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -86,7 +88,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#primary">Primary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identity">Identity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#typemap">TypeMap</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ignore">Ignore</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="typemapping.html">Type Mapping</a></li>
@@ -95,7 +96,6 @@
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery (Dynamic)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expressions.html">Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
 <li class="toctree-l1"><a class="reference internal" href="persistency.html">Persistency</a></li>
@@ -233,54 +233,6 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="ignore">
-<h2>Ignore<a class="headerlink" href="#ignore" title="Permalink to this headline">¶</a></h2>
-<p>Is used to ignore certain properties from the actual database operation.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">Customer</span>
-<span class="p">{</span>
-<span class="na">        [Primary, Ignore(Command.Insert | Command.Update)]</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-
-<span class="na">        [Ignore(Command.Query | Command.Update)]</span>
-        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">CreatedDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>When the operation <cite>Repository.Insert</cite> is called, then following SQL statement will be composed prior to the actual execution in the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `Id` field in Insert operation</span>
-<span class="n">INSERT</span> <span class="n">INTO</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span> <span class="p">([</span><span class="n">Name</span><span class="p">],</span> <span class="p">[</span><span class="n">CreatedDate</span><span class="p">])</span> <span class="n">VALUES</span> <span class="p">(</span><span class="n">@Name</span><span class="p">,</span> <span class="n">CreatedDate</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>When the operation <cite>Repository.Query</cite> is called, then following SQL statement will be composed prior to the execution in the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `CreatedDate` field in Query operation</span>
-<span class="n">SELECT</span> <span class="p">[</span><span class="n">Id</span><span class="p">],</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">FROM</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span> <span class="n">WHERE</span> <span class="p">(.....);</span> <span class="c1">// WHERE part will vary on the expression passed during the calls</span>
-</pre></div>
-</div>
-<p>When the operation <cite>Repository.Update</cite> is called, then following SQL statement will be composed prior to the execution in the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ignoring the `Id` and `CreatedDate` fields in Update operation</span>
-<span class="n">UPDATE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">Customer</span><span class="p">]</span> <span class="n">SET</span> <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="p">=</span> <span class="n">@Name</span> <span class="n">WHERE</span> <span class="p">(.....);</span> <span class="c1">// WHERE part will vary on the expression passed during the calls</span>
-</pre></div>
-</div>
-<p>Below are the list of operational commands that can be defined in the <cite>IgnoreAttribute</cite>.</p>
-<ul class="simple">
-<li>None</li>
-<li>BatchQuery</li>
-<li>BulkInsert</li>
-<li>Count</li>
-<li>Delete</li>
-<li>DeleteAll</li>
-<li>InlineMerge</li>
-<li>InlineInsert</li>
-<li>InlineUpdate</li>
-<li>Insert</li>
-<li>Merge</li>
-<li>Query</li>
-<li>Update</li>
-</ul>
-<p>All commands specified above can be defined together in a single <cite>IgnoreAttribute</cite> by using the pipe character (<cite>|</cite>) as the separator.</p>
 <p><strong>Note</strong>: The <cite>RepoDb</cite> is an attribute-less library. It will work without specifying the attributes we discussed earlier. Attributes are only being used to implement the propery way to handle the special scenarios defined by the business requirements.</p>
 </div>
 </div>
@@ -296,7 +248,7 @@
         <a href="typemapping.html" class="btn btn-neutral float-right" title="Type Mapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,7 +257,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Michael Camara Pendon.
+        &copy; Copyright 2018, Michael Camara Pendon
 
     </p>
   </div>
@@ -322,32 +274,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'1.1.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

@@ -172,31 +172,5 @@ namespace RepoDb.UnitTests.Enumerations
             // Assert
             Assert.AreEqual("NOT IN", parsed.Text);
         }
-
-        [TestMethod]
-        public void TestAll()
-        {
-            // Prepare
-            var operation = Operation.All;
-
-            // Act
-            var parsed = GetOperationTextAttribute(operation);
-
-            // Assert
-            Assert.AreEqual("AND", parsed.Text);
-        }
-
-        [TestMethod]
-        public void TestAny()
-        {
-            // Prepare
-            var operation = Operation.Any;
-
-            // Act
-            var parsed = GetOperationTextAttribute(operation);
-
-            // Assert
-            Assert.AreEqual("OR", parsed.Text);
-        }
     }
 }

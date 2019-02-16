@@ -10,15 +10,6 @@ Query the data from the database by batch.
 
 .. highlight:: c#
 
-Dynamic way:
-
-::
-
-	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		connection.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
-	}
-
 Expression way:
 
 ::
@@ -80,15 +71,6 @@ Counts the number of rows from the database.
 
 .. highlight:: c#
 
-Dynamic way:
-
-::
-
-	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		connection.Count<Order>(new { Id = new { Operation = Operation.GreaterThanOrEqual, Value = 1000 }, CreatedDate = new { Operation = Operation.GreaterThanOrEqual, Value = DateTime.UtcNow.Date.AddMonths(-1) }});
-	}
-
 Expression way:
 
 ::
@@ -140,7 +122,7 @@ Deletes a data in the database based on the given query expression.
 
 .. highlight:: c#
 
-Via data entity:
+Via DataEntity:
 
 ::
 
@@ -162,15 +144,6 @@ Via PrimaryKey:
 Deleting a data entity without a primary key will throw a `PrimaryFieldNotFoundException` exception.
 
 **Note**: By leaving the `WHERE` parameter to blank would delete all records. Exactly the same as `DeleteAll` operation.
-
-Dynamic way:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var affectedRows = connection.Delete<Customer>(new { Id = 1005 });
-	}
 
 Expression way:
 
@@ -501,14 +474,14 @@ Let us say a dynamic entity is defined.
 		UpdatedDate = DateTime.UtcNow
 	};
 
-Dynamic way:
+Via PrimaryKey:
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		// Call the operation and define which object you are targetting
-		var id = connection.InlineUpdate<Customer>(entity, new { Id = 10045 });
+		var id = connection.InlineUpdate<Customer>(entity, 10045);
 	}
 
 Expression way:
@@ -550,6 +523,20 @@ Inserts a data in the database.
 			CreatedDate = DateTime.UtcNow
 		};
 		connection.Insert(order);
+	}
+
+IsForProvider
+-------------
+
+Checks whether the current used connection object is targetting a specific DB provider.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var isSql = connection.IsForProvider(Provider.Sql);
 	}
 
 Merge
@@ -596,7 +583,7 @@ Query a data from the database.
 
 .. highlight:: c#
 
-Via primary key:
+Via PrimaryKey:
 
 ::
 
@@ -605,15 +592,6 @@ Via primary key:
 		var customer = connection.Query<Customer>(10045).FirstOrDefault();
 	}
 
-Dynamic way:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var customers = connection.Query<Customer>(new { Id = 10045 });
-	}
-	
 Expression way:
 
 ::
@@ -664,7 +642,7 @@ Let us say an `Order` object was queried from the database.
 		order.Quantity = 5;
 		order.UpdateDate = DateTime.UtcNow;
 
-Via data entity:
+Via DataEntity:
 
 ::
 
@@ -675,22 +653,13 @@ Via data entity:
 
 Note: This call will throw an exception if the data entity does not have a primary key.
 
-Via primary key:
+Via PrimaryKey:
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var affectedRows = connection.Update(order, 1002);
-	}
-
-Dynamic way:
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var affectedRows = connection.Update(order, new { Id = 1002 });
 	}
 
 Expression way:
