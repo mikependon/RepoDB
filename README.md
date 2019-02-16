@@ -1,6 +1,6 @@
 ## RepoDb
 
-A dynamic, lightweight, and fast repo-based ORM .NET Library.
+A dynamic, lightweight, and very fast ORM .NET Library.
 
 ![](https://ci.appveyor.com/api/projects/status/8sms05vy0ad9aao2?svg=true)
 [![RepoDb](https://img.shields.io/nuget/v/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
@@ -11,7 +11,7 @@ Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthe
 
 ### Goal
 
-To be the fastest and easiest-to-use lightweight ORM.
+To be the fastest and easiest-to-use lightweight ORM .NET Library.
 
 ### Vision
 
@@ -29,7 +29,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 ### Features
 
  - Caching
- - Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
+ - Expression Trees (Expression-Based, Object-Based)
  - Field Mapping
  - Operations (Asynchronous)
  - SQL Statement Builder
@@ -55,21 +55,21 @@ Let us say you have a customer class named `Customer` that has an equivalent tab
 
 There are 3 ways of doing this (dynamics, expression and object-based approach).
 
-Dynamics:
+Via PrimaryKey:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(new { Id = 1005 });
+		var customer = connection.Query<Customer>(1005);
 	}
 
-Expression:
+Via Expression:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var customer = connection.Query<Customer>(c => c.Id == 1005);
 	}
 
-Object-Based:
+Via Object-Based:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
@@ -105,26 +105,26 @@ You can create a class with combined properties of different tables or with stor
 Then you can create this command text.
 
 	var commandText = @"SELECT C.Id AS CustomerId
-			, O.Id AS OrderId
-			, P.Id AS ProductId
-			, CONCAT(C.FirstName, ' ', C.LastName) AS CustomerName
-			, P.Name AS ProductName
-			, O.OrderDate
-			, O.Quantity
-			, P.Price
-			, (O.Quatity * P.Price) AS Total /* Note: This is not in the class, but still it is valid */
-		FROM [dbo].[Customer] C
-		INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id
-		INNER JOIN [dbo].[OrderItem] OI ON OI.OrderId = O.Id
-		INNER JOIN [dbo].[Product] P ON P.Id = OI.ProductId
-		WHERE (C.Id = @CustomerId)
-			AND (O.OrderDate BETWEEN @OrderDate AND DATEADD(DAY, 1, @OrderDate));";
+		, O.Id AS OrderId
+		, P.Id AS ProductId
+		, CONCAT(C.FirstName, ' ', C.LastName) AS CustomerName
+		, P.Name AS ProductName
+		, O.OrderDate
+		, O.Quantity
+		, P.Price
+		, (O.Quatity * P.Price) AS Total /* Note: This is not in the class, but still it is valid */
+	FROM [dbo].[Customer] C
+	INNER JOIN [dbo].[Order] O ON O.CustomerId = C.Id
+	INNER JOIN [dbo].[OrderItem] OI ON OI.OrderId = O.Id
+	INNER JOIN [dbo].[Product] P ON P.Id = OI.ProductId
+	WHERE (C.Id = @CustomerId)
+		AND (O.OrderDate BETWEEN @OrderDate AND DATEADD(DAY, 1, @OrderDate));";
 
 Dynamics:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<ComplexClass>(commandText, new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date });
+		var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date });
 	}
 
 Object-Based:
@@ -136,12 +136,12 @@ Object-Based:
 			new QueryField("CustomerId", 1005),
 			new QueryField("OrderDate", DateTime.UtcNow.Date)
 		});
-		var customer = connection.Query<Customer>(commandText, queryGroup);
+		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
 	}
 
 The `ExecuteQuery` method is purposely not being supported by `Expression` based query as we are avoiding the user to bind the complex-class to its target query text.
 
-Note: Expression-based query is a typical ORM approach for a `DataSet` and `ClassObject`. The most optimal when it comes to performance is to used the `Object-Based` (followed by `Dynamics` and then `Expression`). However, writing an `Object-Based` is a bit informative.
+Note: The most optimal when it comes to performance is to used the `Object-Based`.
 
 **StoredProcedure**
 
@@ -179,7 +179,7 @@ Dynamics:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
+		var customer = connection.ExecuteQuery<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
 			new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date },
 			commandType: CommandType.StoredProcedure);
 	}
@@ -193,7 +193,7 @@ Object-Based:
 			new QueryField("CustomerId", 1005),
 			new QueryField("OrderDate", DateTime.UtcNow.Date)
 		});
-		var customer = connection.Query<Customer>(commandText, queryGroup,
+		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup,
 			commandType: CommandType.StoredProcedure);
 	}
 

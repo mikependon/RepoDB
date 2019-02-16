@@ -26,7 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pages", "pages", "{5C628DB7
 		..\Docs\pages\connection.rst = ..\Docs\pages\connection.rst
 		..\Docs\pages\contact.rst = ..\Docs\pages\contact.rst
 		..\Docs\pages\executequery.rst = ..\Docs\pages\executequery.rst
-		..\Docs\pages\expressions.rst = ..\Docs\pages\expressions.rst
 		..\Docs\pages\extensibility.rst = ..\Docs\pages\extensibility.rst
 		..\Docs\pages\field.rst = ..\Docs\pages\field.rst
 		..\Docs\pages\installation.rst = ..\Docs\pages\installation.rst

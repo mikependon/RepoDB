@@ -3049,16 +3049,6 @@
             A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
             </summary>
         </member>
-        <member name="F:RepoDb.Enumerations.Operation.All">
-            <summary>
-            An (AND) equation and operation. This defines that all query expression must be true.
-            </summary>
-        </member>
-        <member name="F:RepoDb.Enumerations.Operation.Any">
-            <summary>
-            An (OR) equation and operation. This defines that any query expression must be true.
-            </summary>
-        </member>
         <member name="T:RepoDb.Enumerations.Order">
             <summary>
             An enumeration used to define the ordering of the query field.
@@ -4393,6 +4383,18 @@
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsert``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk-inserting a <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.BulkInsertInternal``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
             <summary>
             Bulk-inserting the list of data entity objects in the database.
@@ -4400,6 +4402,18 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertInternal``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk-inserting a <see cref="T:System.Data.Common.DbDataReader"/> object into the database.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
@@ -4417,6 +4431,18 @@
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertAsync``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk-inserting a <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.BulkInsertInternalAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
             <summary>
             Bulk-inserting the list of data entity objects in the database in an asynchronous way.
@@ -4424,6 +4450,18 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
+            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.BulkInsertInternalAsync``1(System.Data.IDbConnection,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},System.Nullable{System.Int32},RepoDb.Interfaces.ITrace)">
+            <summary>
+            Bulk-inserting a <see cref="T:System.Data.Common.DbDataReader"/> object into the database in an asynchronous way.
+            </summary>
+            <typeparam name="TEntity">The type of the data entity object.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
             <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>

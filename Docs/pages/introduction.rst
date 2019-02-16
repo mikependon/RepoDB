@@ -1,12 +1,12 @@
 Introduction
 ============
 
-A dynamic, lightweight and fast repository-based ORM .NET Library.
+A dynamic, lightweight, and very fast ORM .NET Library.
 
 Goal
 ----
 
-To be the fastest and easy-to-use lightweight ORM.
+To be the fastest and easiest-to-use lightweight ORM .NET Library.
 
 Vision
 ------
@@ -33,7 +33,7 @@ Features
 --------
 
 * Caching
-* Expression Trees (Dynamic-Based, Expression-Based, Object-Based)
+* Expression Trees (Expression-Based, Object-Based)
 * Field Mapping
 * Operations (Asynchronous)
 * SQL Statement Builder
