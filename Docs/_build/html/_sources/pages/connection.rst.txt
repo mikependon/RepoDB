@@ -62,7 +62,32 @@ Then simply call the `BulkInsert` operation, passing the enumerable object of th
 		var affectedRows = connection.BulkInsert<Order>(entities);
 	}
 
-The result would be the number for rows affected by the `BulkInsert` in the database.
+The result would be the number of rows affected by the `BulkInsert` in the database.
+
+This operation also support the `DbDataReader` object.
+
+.. highlight:: c#
+
+Let us say a data reader object named `reader` has been initiated from the source connection.
+
+::
+
+	using (var sourceConnection = new SqlConnection(@"Server=.;Database=Northwind_Old;Integrated Security=SSPI;").EnsureOpen())
+	{
+		using (var reader = sourceConnection.ExecuteReader("SELECT Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];"))
+		{
+			// Do the stuffs here
+		}
+	}
+
+Then simply call the `BulkInsert` operation by simply passing the data reader object as the parameter.
+
+::
+
+	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.BulkInsert<Order>(reader);
+	}
 
 Count
 -----

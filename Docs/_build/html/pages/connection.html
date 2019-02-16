@@ -231,7 +231,25 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The result would be the number for rows affected by the <cite>BulkInsert</cite> in the database.</p>
+<p>The result would be the number of rows affected by the <cite>BulkInsert</cite> in the database.</p>
+<p>This operation also support the <cite>DbDataReader</cite> object.</p>
+<p>Let us say a data reader object named <cite>reader</cite> has been initiated from the source connection.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">sourceConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind_Old;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reader</span> <span class="p">=</span> <span class="n">sourceConnection</span><span class="p">.</span><span class="n">ExecuteReader</span><span class="p">(</span><span class="s">&quot;SELECT Quantity, ProductId, GETUTCDATE() AS CreatedDate, GETUTCDATE() AS UpdatedDate FROM [dbo].[Order];&quot;</span><span class="p">))</span>
+        <span class="p">{</span>
+                <span class="c1">// Do the stuffs here</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then simply call the <cite>BulkInsert</cite> operation by simply passing the data reader object as the parameter.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">destinationConnection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">BulkInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">reader</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="count">
 <h2>Count<a class="headerlink" href="#count" title="Permalink to this headline">¶</a></h2>
