@@ -105,7 +105,7 @@ Being the order fields in `BatchQuery` Operation:
 			UpdatedDate = Order.Descending,
 			FirstName = Order.Ascending
 		};
-		var customers = connection.BatchQuery<Customer>(0, 100, orderBy); // Used as ordering
+		var customers = connection.BatchQuery<Customer>(0, 100, OrderField.Parse(orderBy)); // Used as ordering
 	}
 
 Being the order fields in `Query` operation:
@@ -114,5 +114,5 @@ Being the order fields in `Query` operation:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customerOrders = connection.Query<Order>(new { CustomerId = 1 }, new { Id = Order.Ascending }); // Used as ordering
+		var customerOrders = connection.Query<Order>(o => o.CustomerId == 1, OrderField.Parse(new { Id = Order.Ascending })); // Used as ordering
 	}

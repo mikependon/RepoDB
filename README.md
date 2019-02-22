@@ -53,7 +53,7 @@ Let us say you have a customer class named `Customer` that has an equivalent tab
 
 **Query**
 
-There are 3 ways of doing this (dynamics, expression and object-based approach).
+There are 2 ways of doing this (dynamics and expression-based approach).
 
 Via PrimaryKey:
 
@@ -69,7 +69,7 @@ Via Expression:
 		var customer = connection.Query<Customer>(c => c.Id == 1005);
 	}
 
-Via Object-Based:
+Via Object:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
@@ -120,14 +120,14 @@ Then you can create this command text.
 	WHERE (C.Id = @CustomerId)
 		AND (O.OrderDate BETWEEN @OrderDate AND DATEADD(DAY, 1, @OrderDate));";
 
-Dynamics:
+Via Dynamic:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date });
 	}
 
-Object-Based:
+Via Object:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
@@ -175,7 +175,7 @@ Using the complex type above. If you have a stored procedure like below.
 
 Then it can be called as below.
 
-Dynamics:
+Via Dynamic:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
@@ -184,7 +184,7 @@ Dynamics:
 			commandType: CommandType.StoredProcedure);
 	}
 
-Object-Based:
+Via Object:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
