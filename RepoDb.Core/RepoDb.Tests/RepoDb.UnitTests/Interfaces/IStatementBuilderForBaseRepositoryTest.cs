@@ -263,7 +263,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<int>()));
+                    It.IsAny<int>(),
+                    It.IsAny<string>()));
 
             // Act
             repository.Object.Query(new StatementBuilderEntity { Id = 1, Name = "Name" });
@@ -274,7 +275,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder<StatementBuilderEntity>>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
-                    It.IsAny<int>()), Times.Once);
+                    It.IsAny<int>(),
+                    It.IsAny<string>()), Times.Once);
         }
 
         // CreateTruncate

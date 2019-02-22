@@ -2,18 +2,17 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.0-beta3</version>
+    <version>1.8.0-beta4</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
-    <owners>mikependon</owners>
+    <owners>mikependon, rdagumampan</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.8.0-beta3]
-    - Supported 'BulkInsert' for 'DbDataReader'.
-    - Removed the 'Operation.Any'.
-    - Removed the 'Operation.All'.
+    [Release 1.8.0-beta4]
+    - Introduced a 'hints' argument in the 'DbConnection.Query' operation.
+    - Added class 'SqlTableHints'.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

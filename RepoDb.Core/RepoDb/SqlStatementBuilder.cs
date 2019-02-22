@@ -648,11 +648,13 @@ namespace RepoDb
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
         /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for query operation.</returns>
         public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
-            int? top = null)
+            int? top = null,
+            string hints = null)
             where TEntity : class
         {
             var fields = PropertyCache.Get<TEntity>()?.Select(property => new Field(property.GetMappedName().AsQuoted(true)));
@@ -665,13 +667,25 @@ namespace RepoDb
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+
+            // Build the base
             queryBuilder
                 .Clear()
                 .Select()
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableName()
+                .TableName();
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // Build the filter and ordering
+            queryBuilder
                 .WhereFrom(where)
                 .OrderByFrom(orderBy)
                 .End();

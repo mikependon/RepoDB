@@ -3724,6 +3724,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3737,6 +3738,7 @@ namespace RepoDb
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3749,6 +3751,7 @@ namespace RepoDb
                 where: (QueryGroup)null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3765,6 +3768,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3779,6 +3783,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -3791,6 +3796,7 @@ namespace RepoDb
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3807,6 +3813,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3821,6 +3828,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -3833,6 +3841,7 @@ namespace RepoDb
                 where: where != null ? new QueryGroup(where) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3847,6 +3856,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3859,6 +3869,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             object primaryKey,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -3871,6 +3882,7 @@ namespace RepoDb
                 where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 orderBy: null,
                 top: 0,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3887,6 +3899,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3901,6 +3914,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3912,6 +3926,7 @@ namespace RepoDb
                 where: where != null ? QueryGroup.Parse<TEntity>(where) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3928,6 +3943,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3942,6 +3958,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3954,6 +3971,7 @@ namespace RepoDb
                 where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3970,6 +3988,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -3984,6 +4003,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -4009,6 +4029,7 @@ namespace RepoDb
                 where,
                 orderBy,
                 top,
+                hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();
@@ -4080,6 +4101,7 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4093,6 +4115,7 @@ namespace RepoDb
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -4104,6 +4127,7 @@ namespace RepoDb
                 where: (QueryGroup)null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4120,6 +4144,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4134,6 +4159,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -4146,6 +4172,7 @@ namespace RepoDb
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4162,6 +4189,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4176,6 +4204,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -4188,6 +4217,7 @@ namespace RepoDb
                 where: where != null ? new QueryGroup(where) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4202,6 +4232,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4214,6 +4245,7 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object primaryKey,
+            string hints = null,
             string cacheKey = null,
             ICache cache = null,
             int? commandTimeout = null,
@@ -4226,6 +4258,7 @@ namespace RepoDb
                 where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
                 orderBy: null,
                 top: 0,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4242,6 +4275,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4256,6 +4290,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -4267,6 +4302,7 @@ namespace RepoDb
                 where: where != null ? QueryGroup.Parse<TEntity>(where) : null,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4283,6 +4319,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4297,6 +4334,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -4309,6 +4347,7 @@ namespace RepoDb
                 where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -4325,6 +4364,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
@@ -4339,6 +4379,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -4364,6 +4405,7 @@ namespace RepoDb
                 where,
                 orderBy,
                 top,
+                hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
             var param = where?.AsObject();

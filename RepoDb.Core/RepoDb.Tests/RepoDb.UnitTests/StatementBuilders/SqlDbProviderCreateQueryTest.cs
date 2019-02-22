@@ -110,6 +110,49 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        private class TestWithTableHintClass
+        {
+            public int Field1 { get; set; }
+            public string Field2 { get; set; }
+            public DateTime Field3 { get; set; }
+        }
+
+        [TestMethod]
+        public void TestWithTableHint()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestWithTableHintClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act
+            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, "WITH (INDEX(ANYINDEX), NOLOCK)");
+            var expected = $"" +
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM [TestWithTableHintClass] WITH (INDEX(ANYINDEX), NOLOCK) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestWithTableHintViaSqlTableHints()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestWithTableHintClass>();
+            var queryGroup = (QueryGroup)null;
+
+            // Act
+            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, SqlTableHints.ReadUncommitted);
+            var expected = $"" +
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM [TestWithTableHintClass] {SqlTableHints.ReadUncommitted} ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         private class TestWithExpressionClass
         {
             public int Field1 { get; set; }

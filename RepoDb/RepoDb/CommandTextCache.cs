@@ -286,7 +286,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -301,7 +301,8 @@ namespace RepoDb
                 commandText = statementBuilder.CreateQuery(queryBuilder: new QueryBuilder<TEntity>(),
                     where: request.Where,
                     orderBy: request.OrderBy,
-                    top: request.Top);
+                    top: request.Top,
+                    hints: request.Hints);
                 m_cache.TryAdd(request, commandText);
             }
             return commandText;

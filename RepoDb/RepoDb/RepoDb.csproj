@@ -155,6 +155,7 @@
     <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapItem.cs" />
     <Compile Include="StatementBuilderMapper.cs" />
+    <Compile Include="SqlTableHints.cs" />
     <Compile Include="TraceLog.cs" />
     <Compile Include="TypeMapItem.cs" />
     <Compile Include="TypeMapper.cs" />

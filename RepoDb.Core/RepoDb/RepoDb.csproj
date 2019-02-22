@@ -4,17 +4,16 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.8.0-beta3</Version>
+    <Version>1.8.0-beta4</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.0-beta3]
-- Supported 'BulkInsert' for 'DbDataReader'.
-- Removed the 'Operation.Any'.
-- Removed the 'Operation.All'.</PackageReleaseNotes>
+    <PackageReleaseNotes>[Release 1.8.0-beta4]
+- Introduced a 'hints' argument in the 'DbConnection.Query' operation.
+- Added class 'SqlTableHints'.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -22,8 +21,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.0.3</AssemblyVersion>
-    <FileVersion>1.8.0.3</FileVersion>
+    <AssemblyVersion>1.8.0.4</AssemblyVersion>
+    <FileVersion>1.8.0.4</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

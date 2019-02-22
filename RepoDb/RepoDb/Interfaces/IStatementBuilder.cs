@@ -134,20 +134,22 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
-        /// <param name="orderBy">The list of fields  to be used for ordering in SQL Statement composition.</param>
+        /// <param name="orderBy">The list of fields to be used for ordering in SQL Statement composition.</param>
         /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for query operation.</returns>
         string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
-            int? top = null)
+            int? top = null,
+            string hints = null)
             where TEntity : class;
 
         /// <summary>

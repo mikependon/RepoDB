@@ -21,13 +21,16 @@ namespace RepoDb.Requests
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null, int? top = null, IStatementBuilder statementBuilder = null)
+        public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
+            int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Where = where;
             OrderBy = orderBy;
             Top = top;
+            Hints = hints;
         }
 
         /// <summary>
@@ -44,6 +47,11 @@ namespace RepoDb.Requests
         /// Gets the filter for the rows.
         /// </summary>
         public int? Top { get; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         // Equality and comparers
 
@@ -81,6 +89,12 @@ namespace RepoDb.Requests
             if (!ReferenceEquals(null, Top))
             {
                 hashCode += Top.GetHashCode();
+            }
+
+            // Add the hints
+            if (!ReferenceEquals(null, Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set back the hash code value

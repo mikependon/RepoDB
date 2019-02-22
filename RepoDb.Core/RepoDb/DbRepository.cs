@@ -1204,7 +1204,7 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            
+
             // Call the method
             var result = connection.DeleteAsync<TEntity>(where: where,
                 commandTimeout: CommandTimeout,
@@ -2076,7 +2076,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity, 
+        public Task<int> InlineUpdateAsync<TEntity>(object entity,
             QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2431,6 +2431,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2439,6 +2440,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2449,6 +2451,7 @@ namespace RepoDb
             // Call the method
             var result = connection.Query<TEntity>(orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2473,6 +2476,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2482,6 +2486,7 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2493,6 +2498,7 @@ namespace RepoDb
             var result = connection.Query<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2517,6 +2523,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2526,6 +2533,7 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null, IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -2536,6 +2544,7 @@ namespace RepoDb
             var result = connection.Query<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2560,6 +2569,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2569,6 +2579,7 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2580,6 +2591,7 @@ namespace RepoDb
             var result = connection.Query<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2602,6 +2614,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2609,6 +2622,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object primaryKey,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2618,6 +2632,7 @@ namespace RepoDb
 
             // Call the method
             var result = connection.Query<TEntity>(primaryKey: primaryKey,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2642,6 +2657,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2651,6 +2667,7 @@ namespace RepoDb
         public IEnumerable<TEntity> Query<TEntity>(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2662,6 +2679,7 @@ namespace RepoDb
             var result = connection.Query<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2689,6 +2707,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2697,6 +2716,7 @@ namespace RepoDb
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2707,6 +2727,7 @@ namespace RepoDb
             // Call the method
             var result = connection.QueryAsync<TEntity>(orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2731,6 +2752,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2740,6 +2762,7 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2751,6 +2774,7 @@ namespace RepoDb
             var result = connection.QueryAsync<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2775,6 +2799,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2784,6 +2809,7 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2795,6 +2821,7 @@ namespace RepoDb
             var result = connection.QueryAsync<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2819,6 +2846,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2828,6 +2856,7 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2839,6 +2868,7 @@ namespace RepoDb
             var result = connection.QueryAsync<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2861,6 +2891,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2868,15 +2899,17 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object primaryKey,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            
+
             // Call the method
             var result = connection.QueryAsync<TEntity>(primaryKey: primaryKey,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
@@ -2901,6 +2934,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of rows to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -2910,6 +2944,7 @@ namespace RepoDb
         public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
+            string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2921,6 +2956,7 @@ namespace RepoDb
             var result = connection.QueryAsync<TEntity>(where: where,
                 orderBy: orderBy,
                 top: top,
+                hints: hints,
                 cacheKey: cacheKey,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
