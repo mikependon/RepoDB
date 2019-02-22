@@ -191,14 +191,14 @@
         <span class="p">{</span>
 
                 <span class="c1">// Query the Customer Orders</span>
-                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 
                 <span class="c1">// Iterates the Orders</span>
                 <span class="n">orders</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span>
                 <span class="p">{</span>
 
                         <span class="c1">// Update the Order updated date</span>
-                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 
                 <span class="p">});</span>
 
@@ -231,14 +231,14 @@
         <span class="p">{</span>
 
                 <span class="c1">// Query the Customer Orders</span>
-                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 
                 <span class="c1">// Iterates the Orders</span>
                 <span class="n">orders</span><span class="p">.</span><span class="n">ToList</span><span class="p">().</span><span class="n">ForEach</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span>
                 <span class="p">{</span>
 
                         <span class="c1">// Update the Order updated date</span>
-                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+                        <span class="n">repository</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">UpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 
                 <span class="p">});</span>
 

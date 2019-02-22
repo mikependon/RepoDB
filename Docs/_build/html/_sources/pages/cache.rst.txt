@@ -37,7 +37,7 @@ The snippets below declared a variable named `cacheKey`. The value of this varia
 
 	var repository = new DbRepository<SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;");
 	var cacheKey = "CacheKey.Customers.StartsWith.Anna";
-	var result = repository.Query<Customer>(new { Name = new { Operation = Operation.Like, Value = "Anna%" } }, cacheKey: cacheKey);
+	var result = repository.Query<Customer>(c => c.Name.StartsWith("Anna"), cacheKey: cacheKey);
 
 First, it wil query the data from the database where the `Name` is started at `Anna`. Then, the operation will cache the result into the `Cache` object with the given key at the variable named `cacheKey` (valued `CacheKey.Customers.StartsWith.Anna`).
 

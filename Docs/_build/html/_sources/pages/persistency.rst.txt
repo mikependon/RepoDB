@@ -32,14 +32,14 @@ A new instance of a connection is being `Instantiated` and `Disposed` on every c
 		{
 
 			// Query the Customer Orders
-			var orders = repository.Query<Order>(new { CustomerId = customer.Id });
+			var orders = repository.Query<Order>(o => o.CustomerId == customer.Id);
 
 			// Iterates the Orders
 			orders.ToList().ForEach(order =>
 			{
 				
 				// Update the Order updated date
-				repository.InlineUpdate(new { UpdatedDate = DateTime.UtcNow }, new { Id = order.Id });
+				repository.InlineUpdate<Order>(new { UpdatedDate = DateTime.UtcNow }, order.Id);
 
 			});
 
@@ -77,14 +77,14 @@ A single connection object is being used until the lifetime of the repository. R
 		{
 
 			// Query the Customer Orders
-			var orders = repository.Query<Order>(new { CustomerId = customer.Id });
+			var orders = repository.Query<Order>(o => o.CustomerId == customer.Id);
 
 			// Iterates the Orders
 			orders.ToList().ForEach(order =>
 			{
 				
 				// Update the Order updated date
-				repository.InlineUpdate(new { UpdatedDate = DateTime.UtcNow }, new { Id = order.Id });
+				repository.InlineUpdate<Order>(new { UpdatedDate = DateTime.UtcNow }, order.Id);
 
 			});
 
