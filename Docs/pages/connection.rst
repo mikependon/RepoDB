@@ -388,6 +388,31 @@ The method `ExtractNext` is used to simply the extraction of the next result. By
 				});
         }
     }
+	
+The method `Scalar/ScalarNext` is used to extract the value of the first column of the first row of the `DbDataReader` object.
+
+.. highlight:: c#
+
+::
+
+    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+    {
+        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT COUNT(*) FROM [Order] WHERE CustomerId = @CustomerId;";
+        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+        {
+			// Extract the first result
+            var customers = result.Extract<Customer>();
+            customers?
+                .ToList()
+                .ForEach(c =>
+				{
+					// Do something here for the target Customer
+				});
+
+			// Extract the second result through 'ScalarNext' method
+            var ordersCount = (int)result.ScalarNext();
+        }
+    }
 
 ExecuteReader
 -------------

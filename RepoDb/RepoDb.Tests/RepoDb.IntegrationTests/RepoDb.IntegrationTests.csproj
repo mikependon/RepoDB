@@ -64,6 +64,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Models\Animal.cs" />
+    <Compile Include="QueryMultipleTest.cs" />
     <Compile Include="MillisecondsTest.cs" />
     <Compile Include="BasicCrudTest.cs" />
     <Compile Include="BlobDataTypeMappingTest.cs" />

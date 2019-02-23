@@ -6,141 +6,107 @@ GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'OrderDetail'))
+IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Customer'))
 BEGIN
-	DROP TABLE [dbo].[OrderDetail];
+
+	CREATE TABLE [dbo].[Customer](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[GlobalId] [uniqueidentifier] NOT NULL,
+		[FirstName] [nvarchar](128) NOT NULL,
+		[LastName] [nvarchar](256) NOT NULL,
+		[MiddleName] [nvarchar](256) NOT NULL,
+		[Address] [nvarchar](1024) NOT NULL,
+		[Email] [nvarchar](128) NOT NULL,
+		[IsActive] [bit] NOT NULL,
+		[DateInsertedUtc] [datetime2](7) NOT NULL,
+		[LastUpdatedUtc] [datetime2](7) NOT NULL,
+		[LastUserId] [nvarchar](32) NOT NULL,
+	 CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY];
+
+	ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc];
+
+	ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc];
+
+END
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------
+IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Order'))
+BEGIN
+	
+	CREATE TABLE [dbo].[Order](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[GlobalId] [uniqueidentifier] NOT NULL,
+		[OrderDateUtc] [datetime2](7) NOT NULL,
+		[CustomerId] [int] NOT NULL,
+		[SubTotal] [decimal](18, 4) NOT NULL,
+		[Freight] [decimal](18, 4) NOT NULL,
+		[Tax] [decimal](18, 4) NOT NULL,
+		[TotalDue] [decimal](18, 4) NOT NULL,
+		[DateInsertedUtc] [datetime2](7) NOT NULL,
+		[LastUpdatedUtc] [datetime2](7) NOT NULL,
+		[LastUserId] [nvarchar](32) NOT NULL,
+	 CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY];
+
+	ALTER TABLE [dbo].[Order] ADD  CONSTRAINT [DF_Order_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc];
+	
+	ALTER TABLE [dbo].[Order] ADD  CONSTRAINT [DF_Order_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc];
+	
+	ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Customer] FOREIGN KEY([CustomerId]) REFERENCES [dbo].[Customer] ([Id]);
+	
+	ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Customer];
+
+END
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+
+IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'OrderDetail'))
+BEGIN
+
+	CREATE TABLE [dbo].[OrderDetail](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[GlobalId] [uniqueidentifier] NOT NULL,
+		[OrderId] [int] NOT NULL,
+		[ProductCode] [nvarchar](32) NOT NULL,
+		[ProductName] [nvarchar](128) NOT NULL,
+		[UnitPrice] [decimal](18, 4) NOT NULL,
+		[Quantity] [int] NOT NULL,
+		[Discount] [decimal](18, 4) NOT NULL,
+		[LineTotal] [decimal](18, 4) NOT NULL,
+		[DateInsertedUtc] [datetime2](7) NOT NULL,
+		[LastUpdatedUtc] [datetime2](7) NOT NULL,
+		[LastUserId] [nvarchar](32) NOT NULL,
+	 CONSTRAINT [PK_OrderDetail] PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY];
+
+	ALTER TABLE [dbo].[OrderDetail] ADD  CONSTRAINT [DF_OrderDetail_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc];
+
+	ALTER TABLE [dbo].[OrderDetail] ADD  CONSTRAINT [DF_OrderDetail_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc];
+
+	ALTER TABLE [dbo].[OrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_OrderDetail_Order] FOREIGN KEY([OrderId]) REFERENCES [dbo].[Order] ([Id]);
+
+	ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_Order];
+
 END
 GO
 
 --------------------------------------------------------------------------------------------------------------------------------------
 
-IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Order'))
+IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TypeMap'))
 BEGIN
-	DROP TABLE [dbo].[Order];
-END
-GO
 
---------------------------------------------------------------------------------------------------------------------------------------
-
-IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Customer'))
-BEGIN
-	DROP TABLE [dbo].[Customer];
-END
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TypeMap'))
-BEGIN
-	DROP TABLE [dbo].[TypeMap];
-END
-GO
-
-IF (EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'TestTable'))
-BEGIN
-	DROP TABLE [dbo].[TestTable];
-END
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE [dbo].[Customer](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[GlobalId] [uniqueidentifier] NOT NULL,
-	[FirstName] [nvarchar](128) NOT NULL,
-	[LastName] [nvarchar](256) NOT NULL,
-	[MiddleName] [nvarchar](256) NOT NULL,
-	[Address] [nvarchar](1024) NOT NULL,
-	[Email] [nvarchar](128) NOT NULL,
-	[IsActive] [bit] NOT NULL,
-	[DateInsertedUtc] [datetime2](7) NOT NULL,
-	[LastUpdatedUtc] [datetime2](7) NOT NULL,
-	[LastUserId] [nvarchar](32) NOT NULL,
- CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc]
-GO
-
-ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc]
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE [dbo].[Order](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[GlobalId] [uniqueidentifier] NOT NULL,
-	[OrderDateUtc] [datetime2](7) NOT NULL,
-	[CustomerId] [int] NOT NULL,
-	[SubTotal] [decimal](18, 4) NOT NULL,
-	[Freight] [decimal](18, 4) NOT NULL,
-	[Tax] [decimal](18, 4) NOT NULL,
-	[TotalDue] [decimal](18, 4) NOT NULL,
-	[DateInsertedUtc] [datetime2](7) NOT NULL,
-	[LastUpdatedUtc] [datetime2](7) NOT NULL,
-	[LastUserId] [nvarchar](32) NOT NULL,
- CONSTRAINT [PK_Order] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[Order] ADD  CONSTRAINT [DF_Order_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc]
-GO
-
-ALTER TABLE [dbo].[Order] ADD  CONSTRAINT [DF_Order_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc]
-GO
-
-ALTER TABLE [dbo].[Order]  WITH CHECK ADD  CONSTRAINT [FK_Order_Customer] FOREIGN KEY([CustomerId])
-REFERENCES [dbo].[Customer] ([Id])
-GO
-
-ALTER TABLE [dbo].[Order] CHECK CONSTRAINT [FK_Order_Customer]
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE [dbo].[OrderDetail](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[GlobalId] [uniqueidentifier] NOT NULL,
-	[OrderId] [int] NOT NULL,
-	[ProductCode] [nvarchar](32) NOT NULL,
-	[ProductName] [nvarchar](128) NOT NULL,
-	[UnitPrice] [decimal](18, 4) NOT NULL,
-	[Quantity] [int] NOT NULL,
-	[Discount] [decimal](18, 4) NOT NULL,
-	[LineTotal] [decimal](18, 4) NOT NULL,
-	[DateInsertedUtc] [datetime2](7) NOT NULL,
-	[LastUpdatedUtc] [datetime2](7) NOT NULL,
-	[LastUserId] [nvarchar](32) NOT NULL,
- CONSTRAINT [PK_OrderDetail] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[OrderDetail] ADD  CONSTRAINT [DF_OrderDetail_DateInsertedUtc]  DEFAULT (getutcdate()) FOR [DateInsertedUtc]
-GO
-
-ALTER TABLE [dbo].[OrderDetail] ADD  CONSTRAINT [DF_OrderDetail_LastUpdatedUtc]  DEFAULT (getutcdate()) FOR [LastUpdatedUtc]
-GO
-
-ALTER TABLE [dbo].[OrderDetail]  WITH CHECK ADD  CONSTRAINT [FK_OrderDetail_Order] FOREIGN KEY([OrderId])
-REFERENCES [dbo].[Order] ([Id])
-GO
-
-ALTER TABLE [dbo].[OrderDetail] CHECK CONSTRAINT [FK_OrderDetail_Order]
-GO
-
---------------------------------------------------------------------------------------------------------------------------------------
-
-CREATE TABLE [dbo].[TypeMap](
+	CREATE TABLE [dbo].[TypeMap](
 	[SessionId] [uniqueidentifier] NOT NULL,
 	[bigint_column] [bigint] NULL,
 	[binary_column] [binary](4000) NULL,
@@ -178,13 +144,28 @@ CREATE TABLE [dbo].[TypeMap](
 	[varchar_column] [varchar](255) NULL,
 	[varcharmax_column] [varchar](max) NULL,
 	[xml_column] [xml] NULL,
- CONSTRAINT [PK_TypeMap] PRIMARY KEY CLUSTERED 
-(
-	[SessionId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	 CONSTRAINT [PK_TypeMap] PRIMARY KEY CLUSTERED 
+	(
+		[SessionId] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+
+	ALTER TABLE [dbo].[TypeMap] ADD  CONSTRAINT [DF_TypeMap_SessionId]  DEFAULT (newid()) FOR [SessionId];
+
+END
 GO
 
-ALTER TABLE [dbo].[TypeMap] ADD  CONSTRAINT [DF_TypeMap_SessionId]  DEFAULT (newid()) FOR [SessionId]
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Animal'))
+BEGIN
+
+	CREATE TABLE [dbo].[Animal](
+		[Id] [uniqueidentifier] NOT NULL,
+		[Name] [nvarchar](256) NOT NULL
+	) ON [PRIMARY];
+
+END
 GO
 

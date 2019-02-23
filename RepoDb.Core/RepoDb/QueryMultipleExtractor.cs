@@ -64,6 +64,43 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Converts the first column of the first row of the data reader to an object.
+        /// </summary>
+        /// <returns>An instance of extracted object as value result.</returns>
+        public object Scalar()
+        {
+            if (m_reader.Read())
+            {
+                return ObjectConverter.DbNullToNull(m_reader[0]);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Advances the pointer of the data reader to the next resultset and converts the first column of the first row of the data reader to an object.
+        /// </summary>
+        /// <param name="throwException">A value that indicates whether to throw an exception if there is no next resultset. Default is <see cref="bool"/>.</param>
+        /// <returns>An instance of extracted object as value result.</returns>
+        public object ScalarNext(bool throwException = true)
+        {
+            if (NextResult())
+            {
+                if (m_reader.Read())
+                {
+                    return ObjectConverter.DbNullToNull(m_reader[0]);
+                }
+            }
+            else
+            {
+                if (throwException)
+                {
+                    throw new InvalidOperationException("The current data reader does not contain further resultset.");
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Gets the current position of the data reader based on the multiple query result.
         /// </summary>
         public int Position { get; private set; }
