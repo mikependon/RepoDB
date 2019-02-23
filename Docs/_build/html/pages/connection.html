@@ -468,33 +468,33 @@
 <p>Executes a multiple query statement from the database and allows the user to extract the result to a target data entity.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-    <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">;</span>
-    <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQueryMultiple</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}))</span>
-    <span class="p">{</span>
-                    <span class="c1">// Extract the first result</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">;</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQueryMultiple</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}))</span>
+        <span class="p">{</span>
+                <span class="c1">// Extract the first result</span>
+                <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
 
-                    <span class="c1">// Advance to the next result</span>
-        <span class="n">result</span><span class="p">.</span><span class="n">NextResult</span><span class="p">();</span>
+                <span class="c1">// Advance to the next result</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">NextResult</span><span class="p">();</span>
 
-                    <span class="c1">// Extract the second result</span>
-        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-    <span class="p">}</span>
+                <span class="c1">// Extract the second result</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+        <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The method <cite>ExtractNext</cite> is used to simplify the extraction of the next result. By default, this throws an <cite>InvalidOperationException</cite> if there is no next resultset in the <cite>DbDataReader</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-    <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">;</span>
-    <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQueryMultiple</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}))</span>
-    <span class="p">{</span>
-                    <span class="c1">// Extract the first result</span>
-                    <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
+        <span class="kt">var</span> <span class="n">commandText</span> <span class="p">=</span> <span class="s">&quot;SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">;</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQueryMultiple</span><span class="p">(</span><span class="n">commandText</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">1</span> <span class="p">}))</span>
+        <span class="p">{</span>
+                <span class="c1">// Extract the first result</span>
+                <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Extract</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;();</span>
 
-                    <span class="c1">// Extract the second result through &#39;ExtractNext&#39; method</span>
-                    <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">ExtractNext</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
-    <span class="p">}</span>
+                <span class="c1">// Extract the second result through &#39;ExtractNext&#39; method</span>
+                <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">ExtractNext</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;();</span>
+        <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>

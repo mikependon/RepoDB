@@ -332,21 +332,21 @@ Executes a multiple query statement from the database and allows the user to ext
 
 ::
 
-    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-    {
-        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
-        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
-        {
+	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+		{
 			// Extract the first result
-            var customers = result.Extract<Customer>();
+			var customers = result.Extract<Customer>();
 
 			// Advance to the next result
-            result.NextResult();
+			result.NextResult();
 
 			// Extract the second result
-            var orders = result.Extract<Order>();
-        }
-    }
+			var orders = result.Extract<Order>();
+		}
+	}
 
 The method `ExtractNext` is used to simplify the extraction of the next result. By default, this throws an `InvalidOperationException` if there is no next resultset in the `DbDataReader`.
 
@@ -354,18 +354,18 @@ The method `ExtractNext` is used to simplify the extraction of the next result. 
 
 ::
 
-    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-    {
-        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
-        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
-        {
+	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+		{
 			// Extract the first result
 			var customers = result.Extract<Customer>();
 
 			// Extract the second result through 'ExtractNext' method
 			var orders = result.ExtractNext<Order>();
-        }
-    }
+		}
+	}
 	
 The method `Scalar/ScalarNext` is used to extract the value of the first column of the first row of the `DbDataReader` object.
 
