@@ -5427,6 +5427,36 @@ namespace RepoDb
             return new QueryMultipleExtractor((DbDataReader)reader);
         }
 
+        /// <summary>
+        /// Executes a multiple query statement from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public static async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            var reader = await ExecuteReaderInternalAsync(connection,
+                commandText,
+                param,
+                commandType,
+                commandTimeout,
+                transaction,
+                entityType: null);
+            return new QueryMultipleExtractor((DbDataReader)reader);
+        }
+
         #endregion
 
         #region ExecuteReader
