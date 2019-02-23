@@ -339,27 +339,16 @@ Executes a multiple query statement from the database and allows the user to ext
         {
 			// Extract the first result
             var customers = result.Extract<Customer>();
-            customers?
-                .ToList()
-                .ForEach(c =>
-				{
-					// Do something here for the target Customer
-				});
 
 			// Advance to the next result
             result.NextResult();
 
 			// Extract the second result
             var orders = result.Extract<Order>();
-            orders?
-                .ToList().ForEach(o =>
-				{
-					// Do something here for Orders
-				});
         }
     }
 
-The method `ExtractNext` is used to simply the extraction of the next result. By default, this throws an `InvalidOperationException` if there is no next resultset in the `DbDataReader`.
+The method `ExtractNext` is used to simplify the extraction of the next result. By default, this throws an `InvalidOperationException` if there is no next resultset in the `DbDataReader`.
 
 .. highlight:: c#
 
@@ -371,21 +360,10 @@ The method `ExtractNext` is used to simply the extraction of the next result. By
         using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
         {
 			// Extract the first result
-            var customers = result.Extract<Customer>();
-            customers?
-                .ToList()
-                .ForEach(c =>
-				{
-					// Do something here for the target Customer
-				});
+			var customers = result.Extract<Customer>();
 
 			// Extract the second result through 'ExtractNext' method
-            var orders = result.ExtractNext<Order>();
-            orders?
-                .ToList().ForEach(o =>
-				{
-					// Do something here for Orders
-				});
+			var orders = result.ExtractNext<Order>();
         }
     }
 	
@@ -401,16 +379,10 @@ The method `Scalar/ScalarNext` is used to extract the value of the first column 
         using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
         {
 			// Extract the first result
-            var customers = result.Extract<Customer>();
-            customers?
-                .ToList()
-                .ForEach(c =>
-				{
-					// Do something here for the target Customer
-				});
+			var customers = result.Extract<Customer>();
 
 			// Extract the second result through 'ScalarNext' method
-            var ordersCount = (int)result.ScalarNext();
+			var ordersCount = (int)result.ScalarNext();
         }
     }
 
