@@ -468,7 +468,7 @@ Below is the code on how to execute a stored procedure mentioned above:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var maxId = connection.ExecuteReader("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
+		var maxId = connection.ExecuteScalar("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
 	}
 
 InlineInsert

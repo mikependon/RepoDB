@@ -7,7 +7,7 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A base class used to extract the multiple result of the query operation.
+    /// A class used to extract the multiple result of the query operation.
     /// </summary>
     public class QueryMultipleExtractor : IDisposable
     {
@@ -37,7 +37,7 @@ namespace RepoDb
         /// <returns>An enumerable of target data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
-            return DataReaderConverter.ToEnumerable<TEntity>(m_reader).ToList();
+            return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
         }
 
         /// <summary>

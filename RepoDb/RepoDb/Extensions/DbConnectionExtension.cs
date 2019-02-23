@@ -4463,6 +4463,3352 @@ namespace RepoDb
 
         #endregion
 
+        #region QueryMultiple
+
+        #region T1, T2
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 2 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            int? top2 = 0,
+            IEnumerable<OrderField> orderBy2 = null,
+            string hints2 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+        {
+            return QueryMultipleInternal<T1, T2>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                top2: top2,
+                orderBy2: orderBy2,
+                hints2: hints2,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 2 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<T1, T2>(this IDbConnection connection,
+        QueryGroup where1,
+        QueryGroup where2,
+        IEnumerable<OrderField> orderBy1 = null,
+        int? top1 = 0,
+        string hints1 = null,
+        int? top2 = 0,
+        IEnumerable<OrderField> orderBy2 = null,
+        string hints2 = null,
+        int? commandTimeout = null,
+        IDbTransaction transaction = null,
+        ITrace trace = null,
+        IStatementBuilder statementBuilder = null)
+        where T1 : class
+        where T2 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+        {
+            return QueryMultipleInternal<T1, T2, T3>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultipleInternal<T1, T2, T3>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 4 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
+            QueryMultiple<T1, T2, T3, T4>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+        {
+            return QueryMultipleInternal<T1, T2, T3, T4>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
+            QueryMultipleInternal<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 5 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
+            QueryMultiple<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+        {
+            return QueryMultipleInternal<T1, T2, T3, T4, T5>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 5 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
+            QueryMultipleInternal<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5, T6
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 6 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
+            QueryMultiple<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            Expression<Func<T6, bool>> where6,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+        {
+            return QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                where6: QueryGroup.Parse<T6>(where6),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                orderBy6: orderBy6,
+                top6: top6,
+                hints6: hints6,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 6 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
+            QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            QueryGroup where6,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // T6 Variables
+            var request6 = new QueryRequest(typeof(T6),
+                connection,
+                where6,
+                orderBy6,
+                top6,
+                hints6,
+                statementBuilder);
+            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Extract the sixth result
+                reader.NextResult();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
+                    item1, item2, item3, item4, item5, item6);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5, T6, T7
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 7 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <typeparam name="T7">The seventh target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="where7">The query expression to be used by this operation for T7.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
+        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        public static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
+            QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            Expression<Func<T6, bool>> where6,
+            Expression<Func<T7, bool>> where7,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            IEnumerable<OrderField> orderBy7 = null,
+            int? top7 = 0,
+            string hints7 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+            where T7 : class
+        {
+            return QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                where6: QueryGroup.Parse<T6>(where6),
+                where7: QueryGroup.Parse<T7>(where7),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                orderBy6: orderBy6,
+                top6: top6,
+                hints6: hints6,
+                orderBy7: orderBy7,
+                top7: top7,
+                hints7: hints7,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 7 target types.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <typeparam name="T7">The seventh target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="where7">The query expression to be used by this operation for T7.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
+        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        internal static Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
+            QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            QueryGroup where6,
+            QueryGroup where7,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            IEnumerable<OrderField> orderBy7 = null,
+            int? top7 = 0,
+            string hints7 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+            where T7 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // T6 Variables
+            var request6 = new QueryRequest(typeof(T6),
+                connection,
+                where6,
+                orderBy6,
+                top6,
+                hints6,
+                statementBuilder);
+            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+
+            // T7 Variables
+            var request7 = new QueryRequest(typeof(T7),
+                connection,
+                where7,
+                orderBy7,
+                top7,
+                hints7,
+                statementBuilder);
+            var commandText7 = CommandTextCache.GetQueryText<T7>(request7);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
+            using (var reader = ExecuteReaderInternal(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Extract the sixth result
+                reader.NextResult();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+
+                // Extract the seventh result
+                reader.NextResult();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
+                    item1, item2, item3, item4, item5, item6, item7);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region QueryMultipleAsync
+
+        #region T1, T2
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 2 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            int? top2 = 0,
+            IEnumerable<OrderField> orderBy2 = null,
+            string hints2 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                top2: top2,
+                orderBy2: orderBy2,
+                hints2: hints2,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 2 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 2 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleInternalAsync<T1, T2>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            int? top2 = 0,
+            IEnumerable<OrderField> orderBy2 = null,
+            string hints2 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2, T3>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 3 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleInternalAsync<T1, T2, T3>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 4 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
+            QueryMultipleAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2, T3, T4>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 4 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
+            QueryMultipleInternalAsync<T1, T2, T3, T4>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 5 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
+            QueryMultipleAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 5 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 5 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
+            QueryMultipleInternalAsync<T1, T2, T3, T4, T5>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5, T6
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 6 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
+            QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            Expression<Func<T6, bool>> where6,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                where6: QueryGroup.Parse<T6>(where6),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                orderBy6: orderBy6,
+                top6: top6,
+                hints6: hints6,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 6 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 6 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
+            QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            QueryGroup where6,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // T6 Variables
+            var request6 = new QueryRequest(typeof(T6),
+                connection,
+                where6,
+                orderBy6,
+                top6,
+                hints6,
+                statementBuilder);
+            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Extract the sixth result
+                reader.NextResult();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
+                    item1, item2, item3, item4, item5, item6);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #region T1, T2, T3, T4, T5, T6, T7
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 7 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <typeparam name="T7">The seventh target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="where7">The query expression to be used by this operation for T7.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
+        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
+            QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            Expression<Func<T1, bool>> where1,
+            Expression<Func<T2, bool>> where2,
+            Expression<Func<T3, bool>> where3,
+            Expression<Func<T4, bool>> where4,
+            Expression<Func<T5, bool>> where5,
+            Expression<Func<T6, bool>> where6,
+            Expression<Func<T7, bool>> where7,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            IEnumerable<OrderField> orderBy7 = null,
+            int? top7 = 0,
+            string hints7 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+            where T7 : class
+        {
+            return QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
+                where1: QueryGroup.Parse<T1>(where1),
+                where2: QueryGroup.Parse<T2>(where2),
+                where3: QueryGroup.Parse<T3>(where3),
+                where4: QueryGroup.Parse<T4>(where4),
+                where5: QueryGroup.Parse<T5>(where5),
+                where6: QueryGroup.Parse<T6>(where6),
+                where7: QueryGroup.Parse<T7>(where7),
+                orderBy1: orderBy1,
+                top1: top1,
+                hints1: hints1,
+                orderBy2: orderBy2,
+                top2: top2,
+                hints2: hints2,
+                orderBy3: orderBy3,
+                top3: top3,
+                hints3: hints3,
+                orderBy4: orderBy4,
+                top4: top4,
+                hints4: hints4,
+                orderBy5: orderBy5,
+                top5: top5,
+                hints5: hints5,
+                orderBy6: orderBy6,
+                top6: top6,
+                hints6: hints6,
+                orderBy7: orderBy7,
+                top7: top7,
+                hints7: hints7,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Query a multiple resultset from the database based on the given 7 target types in an asychronous way.
+        /// </summary>
+        /// <typeparam name="T1">The first target type.</typeparam>
+        /// <typeparam name="T2">The second target type.</typeparam>
+        /// <typeparam name="T3">The third target type.</typeparam>
+        /// <typeparam name="T4">The fourth target type.</typeparam>
+        /// <typeparam name="T5">The fifth target type.</typeparam>
+        /// <typeparam name="T6">The sixth target type.</typeparam>
+        /// <typeparam name="T7">The seventh target type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where1">The query expression to be used by this operation for T1.</param>
+        /// <param name="where2">The query expression to be used by this operation for T2.</param>
+        /// <param name="where3">The query expression to be used by this operation for T3.</param>
+        /// <param name="where4">The query expression to be used by this operation for T4.</param>
+        /// <param name="where5">The query expression to be used by this operation for T5.</param>
+        /// <param name="where6">The query expression to be used by this operation for T6.</param>
+        /// <param name="where7">The query expression to be used by this operation for T7.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
+        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
+        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
+        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
+        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
+        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
+        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
+        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>A tuple of 7 enumerable target data entity types.</returns>
+        internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
+            QueryMultipleInternalAsync<T1, T2, T3, T4, T5, T6, T7>(this IDbConnection connection,
+            QueryGroup where1,
+            QueryGroup where2,
+            QueryGroup where3,
+            QueryGroup where4,
+            QueryGroup where5,
+            QueryGroup where6,
+            QueryGroup where7,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            IEnumerable<OrderField> orderBy2 = null,
+            int? top2 = 0,
+            string hints2 = null,
+            IEnumerable<OrderField> orderBy3 = null,
+            int? top3 = 0,
+            string hints3 = null,
+            IEnumerable<OrderField> orderBy4 = null,
+            int? top4 = 0,
+            string hints4 = null,
+            IEnumerable<OrderField> orderBy5 = null,
+            int? top5 = 0,
+            string hints5 = null,
+            IEnumerable<OrderField> orderBy6 = null,
+            int? top6 = 0,
+            string hints6 = null,
+            IEnumerable<OrderField> orderBy7 = null,
+            int? top7 = 0,
+            string hints7 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
+            where T3 : class
+            where T4 : class
+            where T5 : class
+            where T6 : class
+            where T7 : class
+        {
+            // Variables
+            var commandType = CommandType.Text;
+
+            // Add fix to the cross-collision of the variables for all the QueryGroup(s)
+            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+
+            // T1 Variables
+            var request1 = new QueryRequest(typeof(T1),
+                connection,
+                where1,
+                orderBy1,
+                top1,
+                hints1,
+                statementBuilder);
+            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+
+            // T2 Variables
+            var request2 = new QueryRequest(typeof(T2),
+                connection,
+                where2,
+                orderBy2,
+                top2,
+                hints2,
+                statementBuilder);
+            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+
+            // T3 Variables
+            var request3 = new QueryRequest(typeof(T3),
+                connection,
+                where3,
+                orderBy3,
+                top3,
+                hints3,
+                statementBuilder);
+            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+
+            // T4 Variables
+            var request4 = new QueryRequest(typeof(T4),
+                connection,
+                where4,
+                orderBy4,
+                top4,
+                hints4,
+                statementBuilder);
+            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+
+            // T5 Variables
+            var request5 = new QueryRequest(typeof(T5),
+                connection,
+                where5,
+                orderBy5,
+                top5,
+                hints5,
+                statementBuilder);
+            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+
+            // T6 Variables
+            var request6 = new QueryRequest(typeof(T6),
+                connection,
+                where6,
+                orderBy6,
+                top6,
+                hints6,
+                statementBuilder);
+            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+
+            // T7 Variables
+            var request7 = new QueryRequest(typeof(T7),
+                connection,
+                where7,
+                orderBy7,
+                top7,
+                hints7,
+                statementBuilder);
+            var commandText7 = CommandTextCache.GetQueryText<T7>(request7);
+
+            // Database pre-touch for field definitions
+            if (connection.IsForProvider(Provider.Sql))
+            {
+                FieldDefinitionCache.Get<T1>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T2>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T3>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T4>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T5>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T6>(connection.ConnectionString);
+                FieldDefinitionCache.Get<T7>(connection.ConnectionString);
+            }
+
+            // Shared objects for all types
+            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
+            var param = combinedWhere?.AsObject(false);
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(commandText, param, null);
+                trace.BeforeQueryMultiple(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return null;
+                }
+                commandText = (cancellableTraceLog?.Statement ?? commandText);
+                param = (cancellableTraceLog?.Parameter ?? param);
+            }
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
+            using (var reader = await ExecuteReaderInternalAsync(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
+                entityType: null))
+            {
+                // Extract the first result
+                var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
+
+                // Extract the second result
+                reader.NextResult();
+                var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
+
+                // Extract the third result
+                reader.NextResult();
+                var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
+
+                // Extract the fourth result
+                reader.NextResult();
+                var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
+
+                // Extract the fifth result
+                reader.NextResult();
+                var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
+
+                // Extract the sixth result
+                reader.NextResult();
+                var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
+
+                // Extract the seventh result
+                reader.NextResult();
+                var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
+
+                // Set the result instance
+                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
+                    item1, item2, item3, item4, item5, item6, item7);
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterQueryMultiple(new TraceLog(commandText, param, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
         #region Truncate
 
         /// <summary>

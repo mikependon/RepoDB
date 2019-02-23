@@ -104,6 +104,12 @@ namespace RepoDb.Interfaces
         void BeforeQuery(CancellableTraceLog log);
 
         /// <summary>
+        /// A method being raised before the actual query-multiple operation execution.
+        /// </summary>
+        /// <param name="log">The cancellable log object referenced by the query execution.</param>
+        void BeforeQueryMultiple(CancellableTraceLog log);
+
+        /// <summary>
         /// A method being raised before the actual truncate operation execution.
         /// </summary>
         /// <param name="log">The cancellable log object referenced by the truncate execution.</param>
@@ -209,6 +215,12 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="log">The log object referenced by the query execution.</param>
         void AfterQuery(TraceLog log);
+
+        /// <summary>
+        /// A method being raised after the actual query-multiple operation execution.
+        /// </summary>
+        /// <param name="log">The log object referenced by the query execution.</param>
+        void AfterQueryMultiple(TraceLog log);
 
         /// <summary>
         /// A method being raised after the actual truncate operation execution.

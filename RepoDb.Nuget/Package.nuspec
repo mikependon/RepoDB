@@ -11,7 +11,8 @@
     <language>en-US</language>
     <releaseNotes>
     [Release 1.8.0-beta5]
-    - Introduced a support for 'ExecuteQueryMultiple'.
+    - (Major Update) Introduced the support for 'DbConnection.QueryMultiple'.
+    - (Major Update) Introduced the support for 'DbConnection.ExecuteQueryMultiple'.
     - Added class 'QueryMultipleExtractor'.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>

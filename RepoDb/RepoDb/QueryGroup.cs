@@ -18,6 +18,8 @@ namespace RepoDb
         private bool m_isFixed = false;
         private int? m_hashCode = null;
 
+        #region Constructors
+
         /// <summary>
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
@@ -110,6 +112,10 @@ namespace RepoDb
             IsNot = isNot;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// Gets the conjunction used by this object..
         /// </summary>
@@ -130,6 +136,9 @@ namespace RepoDb
         /// </summary>
         public bool IsNot { get; private set; }
 
+        #endregion
+
+        #region Methods (Internal)
         /// <summary>
         /// Force to append prefixes on the bound parameter objects.
         /// </summary>
@@ -148,6 +157,66 @@ namespace RepoDb
         {
             IsNot = value;
         }
+
+        /// <summary>
+        /// Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
+        /// Please note that every repository operation itself is calling this method before the actual execution.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        internal QueryGroup FixParameters()
+        {
+            if (m_isFixed)
+            {
+                return this;
+            }
+            var firstList = GetAllQueryFields()?
+                .OrderBy(queryField => queryField.Parameter.Name)
+                .ToList();
+            if (firstList != null && firstList.Any())
+            {
+                var secondList = new List<QueryField>(firstList);
+                for (var i = 0; i < firstList.Count; i++)
+                {
+                    var queryField = firstList[i];
+                    for (var c = 0; c < secondList.Count; c++)
+                    {
+                        var cQueryField = secondList[c];
+                        if (ReferenceEquals(queryField, cQueryField))
+                        {
+                            continue;
+                        }
+                        if (queryField.Field.Equals(cQueryField.Field))
+                        {
+                            var fieldValue = cQueryField.Parameter;
+                            fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
+                        }
+                    }
+                    secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
+                }
+            }
+            m_isFixed = true;
+            return this;
+        }
+
+        internal static QueryGroup CombineForQueryMultiple(QueryGroup[] queryGroups)
+        {
+            var queryFields = new List<QueryField>();
+            for (var i = 0; i < queryGroups.Length; i++)
+            {
+                var queryGroup = queryGroups[i];
+                var fields = queryGroup.GetAllQueryFields();
+                foreach (var field in fields)
+                {
+                    field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
+                    queryFields.Add(field);
+                }
+            }
+            return new QueryGroup(queryFields);
+        }
+
+        #endregion
+
+        #region Methods (Public)
 
         /// <summary>
         /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Conjunction"/> property value of this instance.
@@ -219,47 +288,7 @@ namespace RepoDb
             return queryFields;
         }
 
-        /// <summary>
-        /// Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-        /// Please note that every repository operation itself is calling this method before the actual execution.
-        /// </summary>
-        /// <returns>The current instance.</returns>
-        internal QueryGroup FixParameters()
-        {
-            if (m_isFixed)
-            {
-                return this;
-            }
-            var firstList = GetAllQueryFields()?
-                .OrderBy(queryField => queryField.Parameter.Name)
-                .ToList();
-            if (firstList != null && firstList.Any())
-            {
-                var secondList = new List<QueryField>(firstList);
-                for (var i = 0; i < firstList.Count; i++)
-                {
-                    var queryField = firstList[i];
-                    for (var c = 0; c < secondList.Count; c++)
-                    {
-                        var cQueryField = secondList[c];
-                        if (ReferenceEquals(queryField, cQueryField))
-                        {
-                            continue;
-                        }
-                        if (queryField.Field.Equals(cQueryField.Field))
-                        {
-                            var fieldValue = cQueryField.Parameter;
-                            fieldValue.Name = string.Concat(cQueryField.Parameter.Name, "_", c);
-                        }
-                    }
-                    secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
-                }
-            }
-            m_isFixed = true;
-            return this;
-        }
-
-        // Static Methods
+        #endregion
 
         #region Parse (Expression)
 
@@ -664,7 +693,7 @@ namespace RepoDb
 
         #endregion
 
-        // Equality and comparers
+        #region Equality and comparers
 
         /// <summary>
         /// Returns the hashcode for this <see cref="QueryGroup"/>.
@@ -754,5 +783,7 @@ namespace RepoDb
         {
             return (objA == objB) == false;
         }
+
+        #endregion
     }
 }

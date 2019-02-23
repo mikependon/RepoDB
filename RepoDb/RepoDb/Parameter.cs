@@ -36,7 +36,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the name of the parameter.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the value of the parameter.
@@ -52,6 +52,15 @@ namespace RepoDb
             {
                 Name = string.Concat("_", Name);
             }
+        }
+
+        /// <summary>
+        /// Set the name of the parameter.
+        /// </summary>
+        /// <param name="name">The new name.</param>
+        internal void SetName(string name)
+        {
+            Name = name;
         }
 
         /// <summary>

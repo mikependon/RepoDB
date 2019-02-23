@@ -11,9 +11,9 @@
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>
-[Release 1.8.0-beta5]
-- Introduced a support for 'ExecuteQueryMultiple'.
+    <PackageReleaseNotes>[Release 1.8.0-beta5]
+- (Major Update) Introduced the support for 'DbConnection.QueryMultiple'.
+- (Major Update) Introduced the support for 'DbConnection.ExecuteQueryMultiple'.
 - Added class 'QueryMultipleExtractor'.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
@@ -22,7 +22,7 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.0.4</AssemblyVersion>
+    <AssemblyVersion>1.8.0.5</AssemblyVersion>
     <FileVersion>1.8.0.5</FileVersion>
   </PropertyGroup>
 
