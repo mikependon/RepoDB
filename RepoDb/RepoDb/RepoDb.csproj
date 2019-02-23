@@ -103,6 +103,7 @@
     <Compile Include="Requests\DeleteRequest.cs" />
     <Compile Include="Requests\InsertRequest.cs" />
     <Compile Include="Requests\QueryRequest.cs" />
+    <Compile Include="QueryMultipleExtractor.cs" />
     <Compile Include="SqlHelper.cs" />
     <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
     <Compile Include="StringConstant.cs" />

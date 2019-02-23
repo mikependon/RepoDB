@@ -323,6 +323,72 @@ Below is the code on how to execute a stored procedure mentioned above:
 			commandType: CommandType.StoredProcedure);
 	}
 
+ExecuteQueryMultiple
+--------------------
+
+Executes a multiple query statement from the database and allows the user to extract the result to a target data entity.
+
+.. highlight:: c#
+
+::
+
+    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+    {
+        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+        {
+			// Extract the first result
+            var customers = result.Extract<Customer>();
+            customers?
+                .ToList()
+                .ForEach(c =>
+				{
+					// Do something here for the target Customer
+				});
+
+			// Advance to the next result
+            result.NextResult();
+
+			// Extract the second result
+            var orders = result.Extract<Order>();
+            orders?
+                .ToList().ForEach(o =>
+				{
+					// Do something here for Orders
+				});
+        }
+    }
+
+The method `ExtractNext` is used to simply the extraction of the next result. By default, this throws an `InvalidOperationException` if there is no next resultset in the `DbDataReader`.
+
+.. highlight:: c#
+
+::
+
+    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+    {
+        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+        {
+			// Extract the first result
+            var customers = result.Extract<Customer>();
+            customers?
+                .ToList()
+                .ForEach(c =>
+				{
+					// Do something here for the target Customer
+				});
+
+			// Extract the second result through 'ExtractNext' method
+            var orders = result.ExtractNext<Order>();
+            orders?
+                .ToList().ForEach(o =>
+				{
+					// Do something here for Orders
+				});
+        }
+    }
+
 ExecuteReader
 -------------
 

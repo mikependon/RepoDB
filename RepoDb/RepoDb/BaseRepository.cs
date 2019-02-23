@@ -1729,7 +1729,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Execute Methods
+        #region ExecuteQuery
 
         // ExecuteQuery
 
@@ -1758,8 +1758,6 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // ExecuteQueryAsync
-
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and 
         /// converts the result back to an enumerable list of data entity object.
@@ -1785,7 +1783,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // ExecuteNonQuery
+        #endregion
+
+        #region ExecuteNonQuery
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
@@ -1810,8 +1810,6 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // ExecuteNonQueryAsync
-
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/>
         /// and returns the number of affected rows during the execution.
@@ -1835,7 +1833,9 @@ namespace RepoDb
                 transaction: transaction);
         }
 
-        // ExecuteScalar
+        #endregion
+
+        #region ExecuteScalar
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
@@ -1859,8 +1859,6 @@ namespace RepoDb
                 commandType: commandType,
                 transaction: transaction);
         }
-
-        // ExecuteScalarAsync
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and

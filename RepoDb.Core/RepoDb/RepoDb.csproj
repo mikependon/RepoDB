@@ -4,16 +4,17 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.8.0-beta4</Version>
+    <Version>1.8.0-beta5</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.0-beta4]
-- Introduced a 'hints' argument in the 'DbConnection.Query' operation.
-- Added class 'SqlTableHints'.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+[Release 1.8.0-beta5]
+- Introduced a support for 'ExecuteQueryMultiple'.
+- Added class 'QueryMultipleExtractor'.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -22,7 +23,7 @@
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
     <AssemblyVersion>1.8.0.4</AssemblyVersion>
-    <FileVersion>1.8.0.4</FileVersion>
+    <FileVersion>1.8.0.5</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -3440,10 +3440,8 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteMethods
-
-        // ExecuteQuery
-
+        #region ExecuteQuery
+        
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
@@ -3484,9 +3482,7 @@ namespace RepoDb
             // Return the result
             return result;
         }
-
-        // ExecuteQueryAsync
-
+        
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and 
         /// converts the result back to an enumerable list of data entity object.
@@ -3528,7 +3524,9 @@ namespace RepoDb
             return result;
         }
 
-        // ExecuteNonQuery
+        #endregion
+
+        #region ExecuteNonQuery
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
@@ -3567,8 +3565,6 @@ namespace RepoDb
             return result;
         }
 
-        // ExecuteNonQueryAsync
-
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
@@ -3606,7 +3602,9 @@ namespace RepoDb
             return result;
         }
 
-        // ExecuteScalar
+        #endregion
+
+        #region ExecuteScalar
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
@@ -3644,8 +3642,6 @@ namespace RepoDb
             // Return the result
             return result;
         }
-
-        // ExecuteScalarAsync
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and

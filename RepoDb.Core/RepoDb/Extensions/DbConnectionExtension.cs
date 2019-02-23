@@ -5130,7 +5130,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Execute Commands
+        #region ExecuteQuery (dynamics)
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -5254,6 +5254,10 @@ namespace RepoDb
                 }
             }
         }
+
+        #endregion
+
+        #region ExecuteQuery
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -5389,6 +5393,44 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteQueryMultiple
+
+        /// <summary>
+        /// Executes a multiple query statement from the database.
+        /// </summary>
+        /// <param name="connection">The connection to be used during execution.</param>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            var reader = ExecuteReaderInternal(connection,
+                commandText,
+                param,
+                commandType,
+                commandTimeout,
+                transaction,
+                entityType: null);
+            return new QueryMultipleExtractor((DbDataReader)reader);
+        }
+
+        #endregion
+
+        #region ExecuteReader
+
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
@@ -5500,6 +5542,10 @@ namespace RepoDb
                 return await command.ExecuteReaderAsync();
             }
         }
+
+        #endregion
+
+        #region ExecuteNonQuery
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
@@ -5619,6 +5665,10 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteScalar
+
         /// <summary>
         /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
@@ -5737,6 +5787,10 @@ namespace RepoDb
                 return ObjectConverter.DbNullToNull(result);
             }
         }
+
+        #endregion
+
+        #region Other Methods
 
         /// <summary>
         /// Creates a new instance of <see cref="DbCommand"/> object that is to be used execution.

@@ -2923,6 +2923,43 @@
             <param name="objB">The second <see cref="T:RepoDb.Requests.QueryRequest"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
+        <member name="T:RepoDb.QueryMultipleExtractor">
+            <summary>
+            A base class used to extract the multiple result of the query operation.
+            </summary>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> class.
+            </summary>
+            <param name="reader">The data reader to be used for extraction.</param>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.Dispose">
+            <summary>
+            Disposes the current instance of <see cref="T:RepoDb.QueryMultipleExtractor"/>.
+            </summary>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.Extract``1">
+            <summary>
+            Extract the data reader to an enumerable of target data entity type.
+            </summary>
+            <typeparam name="TEntity">The target data entity to extract.</typeparam>
+            <returns>An enumerable of target data entity.</returns>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.ExtractNext``1">
+            <summary>
+            Advances the pointer of the data reader to the next result and extract to an enumerable of 
+            target data entity type.
+            </summary>
+            <typeparam name="TEntity">The target data entity to extract.</typeparam>
+            <returns>An enumerable of target data entity.</returns>
+        </member>
+        <member name="P:RepoDb.QueryMultipleExtractor.Position">
+            <summary>
+            Gets the current position of the data reader based on the multiple query result.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:RepoDb.QueryMultipleExtractor.NextResult" -->
         <member name="T:RepoDb.SqlHelper">
             <summary>
             A helper class for database specially for the direct access. This class is only meant for SQL Server.
@@ -7628,6 +7665,21 @@
             <returns>
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryMultiple(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Execute a multiple query in shot from the database.
+            </summary>
+            <param name="connection">The connection to be used during execution.</param>
+            <param name="commandText">The command text to be used on the execution.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used on the execution.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <returns>An instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> used to extract the results.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteReader(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
