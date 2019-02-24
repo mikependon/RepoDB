@@ -388,7 +388,7 @@ namespace RepoDb
                 orderBy,
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -423,8 +423,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity)))
+                transaction: transaction))
             {
                 result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
             }
@@ -654,7 +653,7 @@ namespace RepoDb
                 orderBy,
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -688,8 +687,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -1272,7 +1270,8 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
         internal static long CountInternal<TEntity>(this IDbConnection connection,
-            QueryGroup where, int? commandTimeout = null,
+            QueryGroup where,
+            int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1285,7 +1284,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Before Execution
             if (trace != null)
@@ -1313,8 +1312,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity)));
+                transaction: transaction));
 
             // After Execution
             if (trace != null)
@@ -1488,7 +1486,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Before Execution
             if (trace != null)
@@ -1516,8 +1514,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -1684,7 +1681,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetDeleteText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Before Execution
             if (trace != null)
@@ -1712,8 +1709,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -1890,7 +1886,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetDeleteText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Before Execution
             if (trace != null)
@@ -1918,8 +1914,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -2008,8 +2003,7 @@ namespace RepoDb
                 commandText: commandText,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -2098,8 +2092,7 @@ namespace RepoDb
                 commandText: commandText,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -2196,8 +2189,7 @@ namespace RepoDb
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // Set back result equals to PrimaryKey type
             result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
@@ -2297,8 +2289,7 @@ namespace RepoDb
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // Set back result equals to PrimaryKey type
             var primaryKey = DataEntityExtension.ValueToPrimaryType<TEntity>(result.Result);
@@ -2493,8 +2484,7 @@ namespace RepoDb
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -2686,8 +2676,7 @@ namespace RepoDb
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -2910,8 +2899,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -3134,8 +3122,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -3230,8 +3217,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // Set back result equals to PrimaryKey type
             result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
@@ -3329,8 +3315,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // Set back result equals to PrimaryKey type
             result = Task.FromResult<object>(DataEntityExtension.ValueToPrimaryType<TEntity>(result.Result));
@@ -3501,8 +3486,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -3699,8 +3683,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -4032,7 +4015,7 @@ namespace RepoDb
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -4067,8 +4050,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity)))
+                transaction: transaction))
             {
                 result = DataReaderConverter.ToEnumerable<TEntity>((DbDataReader)reader)?.ToList();
             }
@@ -4408,7 +4390,7 @@ namespace RepoDb
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
-            var param = where?.AsObject();
+            var param = where?.AsObject(typeof(TEntity));
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -4442,8 +4424,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -4588,7 +4569,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -4617,15 +4598,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -4802,7 +4781,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -4831,19 +4810,17 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5057,7 +5034,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -5086,23 +5063,21 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5351,7 +5326,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -5380,27 +5355,25 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5684,7 +5657,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -5713,31 +5686,29 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6057,7 +6028,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -6086,35 +6057,33 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Extract the seventh result
-                reader.NextResult();
+                reader?.NextResult();
                 var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6261,7 +6230,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -6290,15 +6259,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6475,7 +6442,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -6504,19 +6471,17 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6730,7 +6695,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -6759,23 +6724,21 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7024,7 +6987,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -7053,27 +7016,25 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7357,7 +7318,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -7386,31 +7347,29 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7730,7 +7689,7 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var param = combinedWhere?.AsObject(false);
+            var param = combinedWhere?.AsObject(null, false);
 
             // Before Execution
             if (trace != null)
@@ -7759,35 +7718,33 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                /* TODO: Which type to use for (TypeMap) here? Or else, use the (TypeMapper) global settings for now */
-                entityType: null))
+                transaction: transaction))
             {
                 // Extract the first result
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Extract the seventh result
-                reader.NextResult();
+                reader?.NextResult();
                 var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7873,8 +7830,7 @@ namespace RepoDb
                 commandText: commandText,
                 param: null,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
-                entityType: typeof(TEntity));
+                commandTimeout: commandTimeout);
 
             // After Execution
             if (trace != null)
@@ -7952,8 +7908,7 @@ namespace RepoDb
                 commandText: commandText,
                 param: null,
                 commandType: commandType,
-                commandTimeout: commandTimeout,
-                entityType: typeof(TEntity));
+                commandTimeout: commandTimeout);
 
             // After Execution
             if (trace != null)
@@ -8206,8 +8161,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -8460,8 +8414,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
 
             // After Execution
             if (trace != null)
@@ -8532,7 +8485,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, null))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return DataReaderConverter.ToEnumerable(command.ExecuteReader(), true).ToList();
             }
@@ -8592,7 +8545,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, null))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -8663,7 +8616,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, typeof(TEntity)))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return DataReaderConverter.ToEnumerable<TEntity>(command.ExecuteReader(), true).ToList();
             }
@@ -8699,8 +8652,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: typeof(TEntity));
+                transaction: transaction);
         }
 
         /// <summary>
@@ -8717,7 +8669,6 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8726,11 +8677,10 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
             where TEntity : class
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, typeof(TEntity)))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -8768,8 +8718,7 @@ namespace RepoDb
                 param,
                 commandType,
                 commandTimeout,
-                transaction,
-                entityType: null);
+                transaction);
             return new QueryMultipleExtractor((DbDataReader)reader);
         }
 
@@ -8798,8 +8747,7 @@ namespace RepoDb
                 param,
                 commandType,
                 commandTimeout,
-                transaction,
-                entityType: null);
+                transaction);
             return new QueryMultipleExtractor((DbDataReader)reader);
         }
 
@@ -8828,7 +8776,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteReaderInternal(connection, commandText, param, commandType, commandTimeout, transaction, null);
+            return ExecuteReaderInternal(connection, commandText, param, commandType, commandTimeout, transaction);
         }
 
         /// <summary>
@@ -8844,17 +8792,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An instance of the data reader object.</returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return command.ExecuteReader();
             }
@@ -8886,8 +8832,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null);
+                transaction: transaction);
         }
 
         /// <summary>
@@ -8903,17 +8848,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An instance of the data reader object.</returns>
         internal static async Task<IDataReader> ExecuteReaderInternalAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return await command.ExecuteReaderAsync();
             }
@@ -8949,8 +8892,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null);
+                transaction: transaction);
         }
 
         /// <summary>
@@ -8966,17 +8908,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return command.ExecuteNonQuery();
             }
@@ -9008,8 +8948,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null);
+                transaction: transaction);
         }
 
         /// <summary>
@@ -9025,17 +8964,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static async Task<int> ExecuteNonQueryInternalAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return await command.ExecuteNonQueryAsync();
             }
@@ -9071,8 +9008,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null);
+                transaction: transaction);
         }
 
         /// <summary>
@@ -9088,17 +9024,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static object ExecuteScalarInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
@@ -9130,8 +9064,7 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null);
+                transaction: transaction);
         }
 
         /// <summary>
@@ -9147,17 +9080,15 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <param name="entityType">The type of data entity where to map the current param types.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static async Task<object> ExecuteScalarInternalAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
-            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction, entityType))
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 var result = await command.ExecuteScalarAsync();
                 return ObjectConverter.DbNullToNull(result);
@@ -9171,21 +9102,19 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="DbCommand"/> object that is to be used execution.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="commandText"></param>
-        /// <param name="param"></param>
-        /// <param name="commandType"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="transaction"></param>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">The list of parameters.</param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="commandTimeout">The command timeout to be used.</param>
+        /// <param name="transaction">The transaction object to be used.</param>
+        /// <returns>An instance of <see cref="DbCommand"/> object.</returns>
         private static DbCommand CreateDbCommandForExecution(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            Type entityType = null)
+            IDbTransaction transaction = null)
         {
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
@@ -9212,7 +9141,7 @@ namespace RepoDb
             else
             {
                 // Add the parameters
-                command.CreateParameters(param, entityType);
+                command.CreateParameters(param);
             }
 
             // Execute the scalar

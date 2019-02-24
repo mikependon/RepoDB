@@ -19,22 +19,49 @@ namespace RepoDb.Extensions
         public static object Merge(this object obj, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            obj?.GetType()
-                .GetProperties()
-                .ToList()
-                .ForEach(property =>
-                {
-                    expandObject[property.Name] = property.GetValue(obj);
-                });
-            var dictionary = queryGroup?.AsObject() as ExpandoObject as IDictionary<string, object>;
-            if (dictionary != null)
+            foreach (var property in obj?.GetType().GetProperties())
             {
-                foreach (var kvp in dictionary)
-                {
-                    expandObject[kvp.Key] = kvp.Value;
-                }
+                expandObject[property.Name] = property.GetValue(obj);
+            }
+            foreach (var queryField in queryGroup?.FixParameters().GetAllQueryFields())
+            {
+                expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
             }
             return (ExpandoObject)expandObject;
+        }
+
+        /// <summary>
+        /// Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// </summary>
+        /// <param name="obj">The object to be converted.</param>
+        /// <param name="queryGroup">The query group to be merged.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
+        internal static object AsObject(this object obj, QueryGroup queryGroup)
+        {
+            var expandObject = new ExpandoObject() as IDictionary<string, object>;
+            var properties = DataEntityExtension.GetProperties(obj.GetType());
+            foreach (var property in properties)
+			{
+				expandObject[property.GetMappedName()] = property.PropertyInfo.GetValue(obj);
+            }
+			if (queryGroup != null)
+			{
+				foreach (var queryField in queryGroup.FixParameters().GetAllQueryFields())
+				{
+                    expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
+				}
+			}
+            return (ExpandoObject)expandObject;
+        }
+
+        /// <summary>
+        /// Converts the data entity object into a dynamic object.
+        /// </summary>
+        /// <param name="obj">The object to be converted.</param>
+        /// <returns>An instance of converted dynamic object.</returns>
+        internal static object AsObject(this object obj)
+        {
+            return AsObject(obj, null);
         }
 
         /// <summary>

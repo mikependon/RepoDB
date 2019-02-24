@@ -95,42 +95,5 @@ namespace RepoDb.Extensions
         {
             return GetMappedName(typeof(TEntity));
         }
-
-        /// <summary>
-        /// Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
-        /// </summary>
-        /// <param name="dataEntity">The data entity object to be converted.</param>
-        /// <param name="queryGroup">The query group to be merged.</param>
-        /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object dataEntity, QueryGroup queryGroup)
-        {
-            var expandObject = new ExpandoObject() as IDictionary<string, object>;
-            var properties = GetProperties(dataEntity.GetType());
-            properties?
-                .ToList()
-                .ForEach(property =>
-                {
-                    expandObject[property.GetMappedName()] = property.PropertyInfo.GetValue(dataEntity);
-                });
-            queryGroup?
-                .FixParameters()
-                .GetAllQueryFields()?
-                .ToList()
-                .ForEach(queryField =>
-                {
-                    expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
-                });
-            return (ExpandoObject)expandObject;
-        }
-
-        /// <summary>
-        /// Converts the data entity object into a dynamic object.
-        /// </summary>
-        /// <param name="dataEntity">The data entity object to be converted.</param>
-        /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object dataEntity)
-        {
-            return AsObject(dataEntity, null);
-        }
     }
 }

@@ -144,9 +144,14 @@ namespace RepoDb
         /// </summary>
         internal void AppendParametersPrefix()
         {
-            QueryFields?
-                .ToList()
-                .ForEach(queryField => queryField.AppendParameterPrefix());
+            if (ReferenceEquals(null, QueryFields))
+            {
+                return;
+            }
+            foreach (var queryField in QueryFields)
+            {
+                queryField.AppendParameterPrefix();
+            }
         }
 
         /// <summary>
@@ -170,14 +175,13 @@ namespace RepoDb
                 return this;
             }
             var firstList = GetAllQueryFields()?
-                .OrderBy(queryField => queryField.Parameter.Name)
-                .ToList();
-            if (firstList != null && firstList.Any())
+                .OrderBy(queryField => queryField.Parameter.Name);
+            if (firstList.Count() > 0)
             {
                 var secondList = new List<QueryField>(firstList);
-                for (var i = 0; i < firstList.Count; i++)
+                for (var i = 0; i < firstList.Count(); i++)
                 {
-                    var queryField = firstList[i];
+                    var queryField = firstList.ElementAt(i);
                     for (var c = 0; c < secondList.Count; c++)
                     {
                         var cQueryField = secondList[c];
@@ -198,6 +202,11 @@ namespace RepoDb
             return this;
         }
 
+        /// <summary>
+        /// Combines the list of <see cref="QueryField"/> objects of the target list of <see cref="QueryGroup"/>.
+        /// </summary>
+        /// <param name="queryGroups">The list of query groups.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object containing all the fields.</returns>
         internal static QueryGroup CombineForQueryMultiple(QueryGroup[] queryGroups)
         {
             var queryFields = new List<QueryField>();
@@ -241,22 +250,22 @@ namespace RepoDb
             var groupList = new List<string>();
             var conjunction = GetConjunctionText();
             var separator = string.Concat(" ", conjunction, " ");
-            if (QueryFields != null && QueryFields.Any())
+            if (QueryFields?.Count() > 0)
             {
                 var fieldList = new List<string>();
-                QueryFields.ToList().ForEach(queryField =>
+                foreach (var queryField in QueryFields)
                 {
                     fieldList.Add(queryField.AsFieldAndParameter());
-                });
+                }
                 groupList.Add(fieldList.Join(separator));
             }
-            if (QueryGroups != null && QueryGroups.Any())
+            if (QueryGroups?.Count() > 0)
             {
                 var fieldList = new List<string>();
-                QueryGroups.ToList().ForEach(queryGroup =>
+                foreach (var queryGroup in QueryGroups)
                 {
                     fieldList.Add(queryGroup.GetString());
-                });
+                }
                 groupList.Add(fieldList.Join(separator));
             }
             return IsNot ? string.Concat("NOT (", groupList.Join(conjunction), ")") : string.Concat("(", groupList.Join(separator), ")");
@@ -270,18 +279,18 @@ namespace RepoDb
         {
             var traverse = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
-            traverse = new Action<QueryGroup>((queryGroup) =>
+            traverse = new Action<QueryGroup>(queryGroup =>
             {
-                if (queryGroup.QueryFields != null && queryGroup.QueryFields.Any())
+                if (queryGroup.QueryFields?.Count() > 0)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
-                if (queryGroup.QueryGroups != null && queryGroup.QueryGroups.Any())
+                if (queryGroup.QueryGroups?.Count() > 0)
                 {
-                    queryGroup.QueryGroups.ToList().ForEach(qg =>
+                    foreach (var qg in queryGroup.QueryGroups)
                     {
                         traverse(qg);
-                    });
+                    }
                 }
             });
             traverse(this);
@@ -688,10 +697,10 @@ namespace RepoDb
 
             // Iterate every property
             var queryFields = new List<QueryField>();
-            obj.GetType().GetProperties().ToList().ForEach(property =>
+            foreach (var property in obj.GetType().GetProperties())
             {
                 queryFields.Add(new QueryField(property.Name, property.GetValue(obj)));
-            });
+            }
 
             // Return
             return new QueryGroup(queryFields).FixParameters();
@@ -719,19 +728,19 @@ namespace RepoDb
             // Iterates the child query field
             if (!ReferenceEquals(null, QueryFields))
             {
-                QueryFields.ToList().ForEach(queryField =>
+                foreach (var queryField in QueryFields)
                 {
                     hashCode += queryField.GetHashCode();
-                });
+                }
             }
 
             // Iterates the child query groups
             if (!ReferenceEquals(null, QueryGroups))
             {
-                QueryGroups.ToList().ForEach(queryGroup =>
+                foreach (var queryGroup in QueryGroups)
                 {
                     hashCode += queryGroup.GetHashCode();
-                });
+                }
             }
 
             // Set with conjunction

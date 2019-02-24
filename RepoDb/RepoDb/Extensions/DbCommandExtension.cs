@@ -49,31 +49,23 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Creates a parameter for a command object.
-        /// </summary>
-        /// <param name="command">The command object instance to be used.</param>
-        /// <param name="param">The object to be used when creating the parameters.</param>
-        public static void CreateParameters(this IDbCommand command, object param)
-        {
-            CreateParameters(command, param, null);
-        }
-
-        /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
         /// </summary>
         /// <param name="command">The command object to be used.</param>
         /// <param name="param">The object to be used when creating the parameters.</param>
-        /// <param name="mappedToEntityType">The target type where to map the parameters.</param>
-        internal static void CreateParameters(this IDbCommand command, object param, Type mappedToEntityType)
+        public static void CreateParameters(this IDbCommand command, object param)
         {
-            if (param is IEnumerable<PropertyValue>)
+            if (param == null)
             {
-                var propertyValues = (IEnumerable<PropertyValue>)param;
-                propertyValues.ToList().ForEach(propertyValue =>
+                return;
+            }
+            if (param is IEnumerable<PropertyValue> propertyValues)
+            {
+                foreach (var propertyValue in propertyValues)
                 {
                     var dbType = propertyValue.Property.GetDbType();
                     command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
-                });
+                }
             }
             else if (param is ExpandoObject)
             {
@@ -81,30 +73,30 @@ namespace RepoDb.Extensions
                 var dbType = (DbType?)null;
                 foreach (var item in dictionary)
                 {
-                    if (mappedToEntityType != null)
+                    var value = item.Value;
+                    if (item.Value is CommandParameter commandParameter)
                     {
-                        var property = mappedToEntityType.GetProperty(item.Key);
+                        var property = commandParameter.MappedToType.GetProperty(item.Key);
                         dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                             TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
+                        value = commandParameter.Value;
                     }
                     else
                     {
                         dbType = TypeMapper.Get(GetUnderlyingType(item.Value?.GetType()))?.DbType;
                     }
-                    command.Parameters.Add(command.CreateParameter(item.Key, item.Value, dbType));
+                    command.Parameters.Add(command.CreateParameter(item.Key, value, dbType));
                 }
             }
             else
             {
-                param?.GetType()
-                    .GetProperties()
-                    .ToList()
-                    .ForEach(property =>
-                    {
-                        var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                            TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
-                        command.Parameters.Add(command.CreateParameter(PropertyMappedNameCache.Get(property), property.GetValue(param), dbType));
-                    });
+                foreach (var property in param.GetType().GetProperties())
+                {
+                    var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                        TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
+                    command.Parameters.Add(command.CreateParameter(
+                        PropertyMappedNameCache.Get(property), property.GetValue(param), dbType));
+                }
             }
         }
 

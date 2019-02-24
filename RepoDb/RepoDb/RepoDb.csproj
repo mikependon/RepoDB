@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
+    <Compile Include="CommandParameter.cs" />
     <Compile Include="Enumerations\Provider.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />

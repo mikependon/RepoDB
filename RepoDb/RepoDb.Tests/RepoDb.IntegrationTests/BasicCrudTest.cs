@@ -49,6 +49,7 @@ namespace RepoDb.IntegrationTests
             // Act (Insert)
             repository.DeleteAll<Customer>();
             var customerId = repository.Insert(customer);
+
             var result = repository.Query<Customer>(customerId).FirstOrDefault();
 
             // Assert (Insert)
