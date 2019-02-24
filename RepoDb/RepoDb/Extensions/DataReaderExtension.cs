@@ -11,7 +11,13 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class DataReaderExtension
     {
-        internal static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
+        /// <summary>
+        /// Converts the <see cref="IDataReader"/> object into an enumerable list of data entity objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The target type of the data entity.</typeparam>
+        /// <param name="reader">The data reader object to be converted.</param>
+        /// <returns>An enumerable list of data entity objects.</returns>
+        public static IEnumerable<TEntity> AsEnumerable<TEntity>(this IDataReader reader)
             where TEntity : class
         {
             var properties = PropertyCache.Get<TEntity>()
@@ -25,7 +31,6 @@ namespace RepoDb.Extensions
                     dictionary.Add(i, property);
                 }
             }
-            var list = new List<TEntity>();
             while (reader.Read())
             {
                 var obj = Activator.CreateInstance<TEntity>();
@@ -34,14 +39,17 @@ namespace RepoDb.Extensions
                     var value = reader.IsDBNull(kvp.Key) ? null : reader.GetValue(kvp.Key);
                     kvp.Value.PropertyInfo.SetValue(obj, value);
                 }
-                list.Add(obj);
+                yield return obj;
             }
-            return list;
         }
 
-        internal static IEnumerable<object> AsEnumerable(this IDataReader reader)
+        /// <summary>
+        /// Converts the <see cref="IDataReader"/> object into an enumerable list of dynamic objects containing the schema of the reader.
+        /// </summary>
+        /// <param name="reader">The data reader object to be converted.</param>
+        /// <returns>An enumerable list of dynamic objects containing the schema of the reader.</returns>
+        public static IEnumerable<object> AsEnumerable(this IDataReader reader)
         {
-            var list = new List<object>();
             while (reader.Read())
             {
                 var obj = new ExpandoObject() as IDictionary<string, object>;
@@ -50,9 +58,8 @@ namespace RepoDb.Extensions
                     var value = reader.IsDBNull(i) ? null : reader[i];
                     obj.Add(reader.GetName(i), value);
                 }
-                list.Add(obj);
+                yield return obj;
             }
-            return list;
         }
     }
 }

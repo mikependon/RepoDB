@@ -15,7 +15,7 @@ namespace RepoDb.Extensions
         /// <returns>An <see cref="IEnumerable{T}"/> list of <see cref="Field"/> object.</returns>
         public static IEnumerable<Field> AsEnumerable(this Field field)
         {
-            return new[] { field };
+            yield return field;
         }
 
         // AsField

@@ -46,22 +46,24 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of query fields.</returns>
         public static IEnumerable<QueryField> AsQueryFields(this object obj)
         {
-            var list = new List<QueryField>();
             var expandoObject = obj as ExpandoObject;
             if (expandoObject != null)
             {
                 var dictionary = (IDictionary<string, object>)expandoObject;
-                list.AddRange(dictionary.Select(item => new QueryField(item.Key, item.Value)).Cast<QueryField>());
+                var fields = dictionary.Select(item => new QueryField(item.Key, item.Value)).Cast<QueryField>();
+                foreach (var field in fields)
+                {
+                    yield return field;
+                }
             }
             else
             {
-                var properties = obj.GetType().GetTypeInfo().GetProperties().ToList();
-                properties.ForEach(property =>
+                var properties = obj.GetType().GetProperties();
+                foreach (var property in properties)
                 {
-                    list.Add(new QueryField(property.Name, property.GetValue(obj)));
-                });
+                    yield return new QueryField(property.Name, property.GetValue(obj));
+                }
             }
-            return list;
         }
 
         /// <summary>

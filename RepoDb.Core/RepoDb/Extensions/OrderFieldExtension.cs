@@ -14,7 +14,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of order fields.</returns>
         public static IEnumerable<OrderField> AsEnumerable(this OrderField orderField)
         {
-            return new[] { orderField };
+            yield return orderField;
         }
 
         /// <summary>

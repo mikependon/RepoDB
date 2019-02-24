@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of query groups.</returns>
         public static IEnumerable<QueryGroup> AsEnumerable(this QueryGroup queryGroup)
         {
-            return new[] { queryGroup };
+            yield return queryGroup;
         }
 
         // AsObject

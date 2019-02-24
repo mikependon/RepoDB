@@ -6,19 +6,22 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="System.Array"/> object.
     /// </summary>
-    internal static class ArrayExtension
+    public static class ArrayExtension
     {
-        internal static IEnumerable<object> AsEnumerable(this Array array)
+        /// <summary>
+        /// Converts an <see cref="Array"/> object into an enumerable of objects.
+        /// </summary>
+        /// <param name="array">The array to be converted.</param>
+        /// <returns>An enumerable of objects.</returns>
+        public static IEnumerable<object> AsEnumerable(this Array array)
         {
-            var objects = new List<object>();
             if (array != null)
             {
                 foreach (var obj in array)
                 {
-                    objects.Add(obj);
+                    yield return obj;
                 }
             }
-            return objects;
         }
     }
 }

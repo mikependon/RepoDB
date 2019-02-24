@@ -73,7 +73,7 @@ namespace RepoDb.Extensions
         // AsEnumerable
         internal static IEnumerable<string> AsEnumerable(this string value)
         {
-            return value != null ? new[] { value } : null;
+            yield return value;
         }
 
         // AsJoinQualifier

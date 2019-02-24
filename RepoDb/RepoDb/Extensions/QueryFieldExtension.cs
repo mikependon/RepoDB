@@ -19,7 +19,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of query fields.</returns>
         public static IEnumerable<QueryField> AsEnumerable(this QueryField queryField)
         {
-            return new[] { queryField };
+            yield return queryField;
         }
 
         // AsField

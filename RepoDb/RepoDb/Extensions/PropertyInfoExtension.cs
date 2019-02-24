@@ -65,7 +65,7 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable list of property info.</returns>
         public static IEnumerable<PropertyInfo> AsEnumerable(this PropertyInfo property)
         {
-            return property != null ? new[] { property } : null;
+            yield return property;
         }
 
         /// <summary>

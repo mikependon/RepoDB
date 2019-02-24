@@ -5690,6 +5690,810 @@
             <param name="statementBuilder">The statement builder object to be used by this operation.</param>
             <returns>An enumerable list of data entity object.</returns>
         </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``2(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 2 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 2 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``2(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 2 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 2 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``3(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 3 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``3(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 3 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``4(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 4 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 4 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``4(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 4 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``5(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 5 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 5 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``5(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 5 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 5 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``6(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``5,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 6 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 6 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``6(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 6 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 6 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultiple``7(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``5,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``6,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 7 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <typeparam name="T7">The seventh target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="where7">The query expression to be used by this operation for T7.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+            <param name="top7">The top number of rows to be used by this operation for T7.</param>
+            <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 7 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternal``7(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 7 target types.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <typeparam name="T7">The seventh target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="where7">The query expression to be used by this operation for T7.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+            <param name="top7">The top number of rows to be used by this operation for T7.</param>
+            <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 7 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``2(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 2 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 2 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``2(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 2 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 2 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``3(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 3 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``3(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 3 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``4(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 4 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 4 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``4(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 3 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 4 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``5(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 5 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 5 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``5(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 5 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 5 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``6(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``5,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 6 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 6 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``6(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 6 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 6 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleAsync``7(System.Data.IDbConnection,System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``2,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``3,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``4,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``5,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``6,System.Boolean}},System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 7 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <typeparam name="T7">The seventh target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="where7">The query expression to be used by this operation for T7.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+            <param name="top7">The top number of rows to be used by this operation for T7.</param>
+            <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 7 enumerable target data entity types.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.QueryMultipleInternalAsync``7(System.Data.IDbConnection,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,RepoDb.QueryGroup,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Collections.Generic.IEnumerable{RepoDb.OrderField},System.Nullable{System.Int32},System.String,System.Nullable{System.Int32},System.Data.IDbTransaction,RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
+            <summary>
+            Query a multiple resultset from the database based on the given 7 target types in an asychronous way.
+            </summary>
+            <typeparam name="T1">The first target type.</typeparam>
+            <typeparam name="T2">The second target type.</typeparam>
+            <typeparam name="T3">The third target type.</typeparam>
+            <typeparam name="T4">The fourth target type.</typeparam>
+            <typeparam name="T5">The fifth target type.</typeparam>
+            <typeparam name="T6">The sixth target type.</typeparam>
+            <typeparam name="T7">The seventh target type.</typeparam>
+            <param name="connection">The connection object to be used by this operation.</param>
+            <param name="where1">The query expression to be used by this operation for T1.</param>
+            <param name="where2">The query expression to be used by this operation for T2.</param>
+            <param name="where3">The query expression to be used by this operation for T3.</param>
+            <param name="where4">The query expression to be used by this operation for T4.</param>
+            <param name="where5">The query expression to be used by this operation for T5.</param>
+            <param name="where6">The query expression to be used by this operation for T6.</param>
+            <param name="where7">The query expression to be used by this operation for T7.</param>
+            <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
+            <param name="top1">The top number of rows to be used by this operation for T1.</param>
+            <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
+            <param name="top2">The top number of rows to be used by this operation for T2.</param>
+            <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
+            <param name="top3">The top number of rows to be used by this operation for T3.</param>
+            <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
+            <param name="top4">The top number of rows to be used by this operation for T4.</param>
+            <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
+            <param name="top5">The top number of rows to be used by this operation for T5.</param>
+            <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
+            <param name="top6">The top number of rows to be used by this operation for T6.</param>
+            <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
+            <param name="top7">The top number of rows to be used by this operation for T7.</param>
+            <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="T:RepoDb.SqlTableHints"/> class.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used by this operation.</param>
+            <param name="trace">The trace object to be used by this operation.</param>
+            <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+            <returns>A tuple of 7 enumerable target data entity types.</returns>
+        </member>
         <member name="M:RepoDb.DbConnectionExtension.Truncate``1(System.Data.IDbConnection,System.Nullable{System.Int32},RepoDb.Interfaces.ITrace,RepoDb.Interfaces.IStatementBuilder)">
             <summary>
             Truncates a table from the database.
@@ -6075,7 +6879,22 @@
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryMultiple(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
-            Execute a multiple query in shot from the database.
+            Executes a multiple query statement from the database.
+            </summary>
+            <param name="connection">The connection to be used during execution.</param>
+            <param name="commandText">The command text to be used on the execution.</param>
+            <param name="param">
+            The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+            defined in the <see cref="P:System.Data.IDbCommand.CommandText"/> property.
+            </param>
+            <param name="commandType">The command type to be used on the execution.</param>
+            <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+            <param name="transaction">The transaction to be used on the execution (if present).</param>
+            <returns>An instance of <see cref="T:RepoDb.QueryMultipleExtractor"/> used to extract the results.</returns>
+        </member>
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryMultipleAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
+            <summary>
+            Executes a multiple query statement from the database in an asynchronous way.
             </summary>
             <param name="connection">The connection to be used during execution.</param>
             <param name="commandText">The command text to be used on the execution.</param>
@@ -6743,6 +7562,12 @@
             </summary>
             <param name="log">The cancellable log object referenced by the query execution.</param>
         </member>
+        <member name="M:RepoDb.Interfaces.ITrace.BeforeQueryMultiple(RepoDb.CancellableTraceLog)">
+            <summary>
+            A method being raised before the actual query-multiple operation execution.
+            </summary>
+            <param name="log">The cancellable log object referenced by the query execution.</param>
+        </member>
         <member name="M:RepoDb.Interfaces.ITrace.BeforeTruncate(RepoDb.CancellableTraceLog)">
             <summary>
             A method being raised before the actual truncate operation execution.
@@ -6842,6 +7667,12 @@
         <member name="M:RepoDb.Interfaces.ITrace.AfterQuery(RepoDb.TraceLog)">
             <summary>
             A method being raised after the actual query operation execution.
+            </summary>
+            <param name="log">The log object referenced by the query execution.</param>
+        </member>
+        <member name="M:RepoDb.Interfaces.ITrace.AfterQueryMultiple(RepoDb.TraceLog)">
+            <summary>
+            A method being raised after the actual query-multiple operation execution.
             </summary>
             <param name="log">The log object referenced by the query execution.</param>
         </member>
@@ -7089,6 +7920,12 @@
             <summary>
             Force to append prefix on the current parameter object.
             </summary>
+        </member>
+        <member name="M:RepoDb.Parameter.SetName(System.String)">
+            <summary>
+            Set the name of the parameter.
+            </summary>
+            <param name="name">The new name.</param>
         </member>
         <member name="M:RepoDb.Parameter.ToString">
             <summary>
@@ -7823,6 +8660,13 @@
             </summary>
             <param name="value">The <see cref="T:System.Boolean"/> value the defines the <see cref="P:RepoDb.QueryGroup.IsNot"/> property.</param>
         </member>
+        <member name="M:RepoDb.QueryGroup.FixParameters">
+            <summary>
+            Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
+            Please note that every repository operation itself is calling this method before the actual execution.
+            </summary>
+            <returns>The current instance.</returns>
+        </member>
         <member name="M:RepoDb.QueryGroup.GetConjunctionText">
             <summary>
             Gets the text value of <see cref="T:RepoDb.Attributes.TextAttribute"/> implemented at the <see cref="P:RepoDb.QueryGroup.Conjunction"/> property value of this instance.
@@ -7841,13 +8685,6 @@
             Gets all the child query groups associated on the current instance.
             </summary>
             <returns>An enumerable list of child query groups.</returns>
-        </member>
-        <member name="M:RepoDb.QueryGroup.FixParameters">
-            <summary>
-            Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-            Please note that every repository operation itself is calling this method before the actual execution.
-            </summary>
-            <returns>The current instance.</returns>
         </member>
         <member name="M:RepoDb.QueryGroup.Parse``1(System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
@@ -7903,7 +8740,7 @@
         </member>
         <member name="T:RepoDb.QueryMultipleExtractor">
             <summary>
-            A base class used to extract the multiple result of the query operation.
+            A class used to extract the multiple result of the query operation.
             </summary>
         </member>
         <member name="M:RepoDb.QueryMultipleExtractor.#ctor(System.Data.Common.DbDataReader)">
@@ -7924,20 +8761,39 @@
             <typeparam name="TEntity">The target data entity to extract.</typeparam>
             <returns>An enumerable of target data entity.</returns>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.ExtractNext``1">
+        <member name="M:RepoDb.QueryMultipleExtractor.ExtractNext``1(System.Boolean)">
             <summary>
-            Advances the pointer of the data reader to the next result and extract to an enumerable of 
+            Advances the pointer of the data reader to the next resultset and extract it to an enumerable of 
             target data entity type.
             </summary>
             <typeparam name="TEntity">The target data entity to extract.</typeparam>
+            <param name="throwException">A value that indicates whether to throw an exception if there is no next resultset. Default is <see cref="T:System.Boolean"/>.</param>
             <returns>An enumerable of target data entity.</returns>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.Scalar">
+            <summary>
+            Converts the first column of the first row of the data reader to an object.
+            </summary>
+            <returns>An instance of extracted object as value result.</returns>
+        </member>
+        <member name="M:RepoDb.QueryMultipleExtractor.ScalarNext(System.Boolean)">
+            <summary>
+            Advances the pointer of the data reader to the next resultset and converts the first column of the first row of the data reader to an object.
+            </summary>
+            <param name="throwException">A value that indicates whether to throw an exception if there is no next resultset. Default is <see cref="T:System.Boolean"/>.</param>
+            <returns>An instance of extracted object as value result.</returns>
         </member>
         <member name="P:RepoDb.QueryMultipleExtractor.Position">
             <summary>
             Gets the current position of the data reader based on the multiple query result.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:RepoDb.QueryMultipleExtractor.NextResult" -->
+        <member name="M:RepoDb.QueryMultipleExtractor.NextResult">
+            <summary>
+            Advances the current data reader object to the next result.
+            <returns>True if there are more result sets; otherwise false.</returns>
+            </summary>
+        </member>
         <member name="T:RepoDb.Reflection.DataReaderConverter">
             <summary>
             A static classed used to convert the <see cref="T:System.Data.Common.DbDataReader"/> into data entity object.
