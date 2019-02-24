@@ -91,6 +91,7 @@
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
+    <Compile Include="Interfaces\ITraceForDbConnection.cs" />
     <Compile Include="Interfaces\ITraceForDbRepositoryTest.cs" />
     <Compile Include="Caches\MemoryCacheTest.cs" />
     <Compile Include="Fields\OrderFieldTest.cs" />

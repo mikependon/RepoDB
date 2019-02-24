@@ -209,7 +209,7 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Setup(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()));
 
             // Act
-            repository.Object.InlineUpdate(new { Name = "Name" }, new { Id = 1 });
+            repository.Object.InlineUpdate(new { Name = "Name" }, te => te.Id == 1);
 
             // Assert
             trace.Verify(t => t.BeforeInlineUpdate(It.IsAny<CancellableTraceLog>()), Times.Once);
@@ -226,7 +226,7 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Setup(t => t.AfterInlineUpdate(It.IsAny<CancellableTraceLog>()));
 
             // Act
-            repository.Object.InlineUpdate(new { Name = "Name" }, new { Id = 1 });
+            repository.Object.InlineUpdate(new { Name = "Name" }, te => te.Id == 1);
 
             // Assert
             trace.Verify(t => t.AfterInlineUpdate(It.IsAny<TraceLog>()), Times.Once);
@@ -317,7 +317,7 @@ namespace RepoDb.UnitTests.Interfaces
             trace.Setup(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()));
 
             // Act
-            repository.Object.Query(new { Id = 1 });
+            repository.Object.Query(te => te.Id == 1);
 
             // Assert
             trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Once);

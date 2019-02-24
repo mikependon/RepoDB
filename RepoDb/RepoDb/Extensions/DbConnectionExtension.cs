@@ -4624,7 +4624,7 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -4838,11 +4838,11 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5093,15 +5093,15 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5387,19 +5387,19 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -5720,23 +5720,23 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6093,27 +6093,27 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Extract the seventh result
-                reader.NextResult();
+                reader?.NextResult();
                 var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6297,7 +6297,7 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6511,11 +6511,11 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -6766,15 +6766,15 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7060,19 +7060,19 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7393,23 +7393,23 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance
@@ -7766,27 +7766,27 @@ namespace RepoDb
                 var item1 = DataReaderConverter.ToEnumerable<T1>((DbDataReader)reader)?.ToList();
 
                 // Extract the second result
-                reader.NextResult();
+                reader?.NextResult();
                 var item2 = DataReaderConverter.ToEnumerable<T2>((DbDataReader)reader)?.ToList();
 
                 // Extract the third result
-                reader.NextResult();
+                reader?.NextResult();
                 var item3 = DataReaderConverter.ToEnumerable<T3>((DbDataReader)reader)?.ToList();
 
                 // Extract the fourth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item4 = DataReaderConverter.ToEnumerable<T4>((DbDataReader)reader)?.ToList();
 
                 // Extract the fifth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item5 = DataReaderConverter.ToEnumerable<T5>((DbDataReader)reader)?.ToList();
 
                 // Extract the sixth result
-                reader.NextResult();
+                reader?.NextResult();
                 var item6 = DataReaderConverter.ToEnumerable<T6>((DbDataReader)reader)?.ToList();
 
                 // Extract the seventh result
-                reader.NextResult();
+                reader?.NextResult();
                 var item7 = DataReaderConverter.ToEnumerable<T7>((DbDataReader)reader)?.ToList();
 
                 // Set the result instance

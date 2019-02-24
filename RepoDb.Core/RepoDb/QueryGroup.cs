@@ -302,6 +302,12 @@ namespace RepoDb
         /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed query expression.</returns>
         public static QueryGroup Parse<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : class
         {
+            // Guard the presense of the expression
+            if (expression == null)
+            {
+                throw new NullReferenceException("Expression cannot be null.");
+            }
+
             // Parse the expression base on type
             var parsed = Parse<TEntity>(expression.Body);
 
