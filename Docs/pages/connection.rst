@@ -801,6 +801,125 @@ Explicit way:
 		var customers = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
 	}
 
+QueryMultiple
+-------------
+
+Query a multiple resultsets from the database.
+
+Below is an example of how to query a customer where the `Id` field is equals to `10045`, and at the same time, querying all the orders connected to this customer since yesterday.
+The result is an instance of a `Tuple` object.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customerId = 10045;
+		var fromDate = DateTime.UtcNow.Date.AddDays(-1);
+		var result = connection.QueryMultiple<Customer, Order>(
+			c => c.Id == customerId,
+			o => o.CustomerId == customerId && o.CreatedDate >= fromDate);
+
+		// Read the customer
+		var customer = result.Item1.FirstOrDefault();
+
+		// Read the orders
+		var orders = result.Item2.ToList();
+		orders.ForEach(order =>
+		{
+			// Do the stuffs for the 'order' here
+		});
+	}
+
+This method has supported until the last tupled dynamic type of the `Tuple` class. The current maximum tupled dynamic type is 7.
+
+.. highlight:: c#
+
+::
+
+	DbConnection.Query<T1, T2, T3, T4, T5, T6, T7>(
+		where1: <Expression for T1>,
+		where2: <Expression for T2>,
+		where3: <Expression for T3>,
+		where4: <Expression for T4>,
+		where5: <Expression for T5>,
+		where6: <Expression for T6>,
+		where7: <Expression for T7>;
+
+Notice above, there were `where<T<Num>>` arguments. These arguments are targetting the specific index of the type on the 'QueryMultiple' operation. This method is not meant for joining the result of each type, but instead, it is used to execute the query execution at once.
+
+Below is an example of how to query the list of customers based on different US states.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.QueryMultiple<Customer, Customer, Customer, Customer, Customer, Customer, Customer>(
+			where1: c => c.State == "California",
+			where2: c => c.State == "Florida",
+			where3: c => c.State == "Texas",
+			where4: c => c.State == "Washington",
+			where5: c => c.State == "Michigan",
+			where6: c => c.State == "Arizona",
+			where7: c => c.State == "New York");
+
+		// Read the customers through its equivalent 'Item<N>' property
+		var californiaCustomers = result.Item1;
+		var floridaCustomers = result.Item2;
+		var texasCustomers = result.Item3;
+		var washingtonCustomers = result.Item4;
+		var michiganCustomers = result.Item5;
+		var arizonaCustomers = result.Item6;
+		var newYorkCustomers = result.Item7;
+	}
+
+Notice as well, there are other arguments defined like `orderBy<N>`, `top<N>` and `hints<N>`. These are the targetted arguments if the caller wants to define the behavior of the query for that target type based on the element-index provided.
+
+Below is the implementation of the the 2 target types tupled.
+
+.. highlight:: c#
+
+::
+
+	DbConnection.Query<T1, T2>(
+		where1: <Expression for T1>,
+		where2: <Expression for T2>,
+		orderBy1: <Optional OrderExpression for T1>,
+		top1: <Optional RowFilter for T1>,
+		hints1: <Optional QueryOptimizer for T1>,
+		orderBy2: <Optional OrderExpression for T2>,
+		top2: <Optional RowFilter for T2>,
+		hints2: <Optional QueryOptimizer for T2>);
+
+Below is a example of how to do a query that returns a 100 customers from `California` ordered by their `SSID` optimized by `NOLOCK` keyword, and also, a list of 1000 customers from `Florida` with `READPAST` query optimizer ordered by their `LastName` followed by `FirstName`.
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var result = connection.QueryMultiple<Customer, Customer>(
+			where1: c => c.State == "California",
+			orderBy: OrderField.Parse(new { SsId = Order.Ascending }), /* At RepoDb.Enumerations */
+			top1: 100,
+			hints1: SqlTableHints.NoLock, /* Can write WITH (NOLOCK) */,
+			where2: c => c.State == "Florida",
+			orderBy2: OrderField.Parse(new { LastName = Order.Ascending, FirstName Order.Ascending }), /* At RepoDb.Enumerations */
+			top2: 1000,
+			hints2: "WITH (READPAST) /* Can use SqlTableHints.ReadPast */
+		);
+
+		// Read the customers through its equivalent 'Item<N>' property
+		var californiaCustomers = result.Item1;
+		var floridaCustomers = result.Item2;
+	}
+
+**Note**: This method does not support the `Object-Based` query tree expression.
+
 Truncate
 --------
 

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ExecuteQuery (Dynamic)" href="executequery.html" />
+    <link rel="next" title="Transaction" href="transaction.html" />
     <link rel="prev" title="OrderField" href="orderfield.html" /> 
 </head>
 
@@ -107,11 +107,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#isforprovider">IsForProvider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#merge">Merge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#query">Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querymultiple">QueryMultiple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#truncate">Truncate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#update">Update</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="executequery.html">ExecuteQuery (Dynamic)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="transaction.html">Transaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="querygroup.html">QueryGroup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -462,6 +462,101 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>An <cite>ExecuteQuery</cite> method can directly return an enumerable list of data entity object. No need to use the <cite>ExecuteReader</cite> method.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The class property accessibility is very dynamic through this method. Let us say the order table schema is below.</p>
+<div class="highlight-sql notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">DROP</span> <span class="k">TABLE</span> <span class="k">IF</span> <span class="k">EXISTS</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="k">Order</span><span class="p">];</span>
+<span class="k">GO</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="k">Order</span><span class="p">]</span>
+<span class="p">(</span>
+        <span class="n">Id</span> <span class="nb">INT</span>
+        <span class="p">,</span> <span class="n">CustomerId</span> <span class="nb">INT</span>
+        <span class="p">,</span> <span class="n">OrderDate</span> <span class="n">DATETIME2</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+        <span class="p">,</span> <span class="n">Quantity</span> <span class="nb">INT</span>
+        <span class="p">,</span> <span class="n">CreatedDate</span> <span class="n">DATETIME2</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+        <span class="p">,</span> <span class="n">UpdatedDate</span> <span class="n">DATETIME2</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">);</span>
+<span class="k">GO</span>
+</pre></div>
+</td></tr></table></div>
+<p>No need for the class to have the exact match of the properties (also applicable in <cite>BatchQuery</cite> and <cite>Query</cite> operation).</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="na">[Map(&quot;[dbo]</span><span class="p">.[</span><span class="n">Order</span><span class="p">]</span><span class="s">&quot;)]</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ComplexOrder</span>
+<span class="p">{</span>
+        <span class="c1">// Match properties</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">CustomerId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Quantity</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">OrderDate</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="c1">// Unmatch properties</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ProductId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">OrderItemId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Price</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">double</span> <span class="n">Total</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="c1">// Note: The CreatedDate and UpdatedDate is not defined on this class</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then call the records with the code below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">ComplexOrder</span><span class="p">&gt;(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or, if a complex stored procedure is present.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">&lt;</span><span class="n">ComplexOrder</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_name]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <cite>ExecuteQuery</cite> method can also return a list of dynamic objects.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="c1">// Did not passed the &lt;TEntity&gt;</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="s">&quot;SELECT * FROM [dbo].[Order] WHERE CustomerId = @CustomerId;&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">});</span>
+
+        <span class="c1">// Iterate the orders</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">order</span> <span class="k">in</span> <span class="n">orders</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// The &#39;order&#39; is dynamic</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="c1">// Did not passed the &lt;TEntity&gt;</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteQuery</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_name]&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="p">{</span> <span class="n">CustomerId</span> <span class="p">=</span> <span class="m">10045</span> <span class="p">},</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">);</span>
+
+        <span class="c1">// Iterate the orders</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">order</span> <span class="k">in</span> <span class="n">orders</span><span class="p">)</span>
+        <span class="p">{</span>
+                <span class="c1">// The &#39;order&#39; is dynamic</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note: Calling the <cite>ExecuteQuery</cite> via dynamic is a bit slower compared to CLR types.</p>
 </div>
 <div class="section" id="executequerymultiple">
 <h2>ExecuteQueryMultiple<a class="headerlink" href="#executequerymultiple" title="Permalink to this headline">¶</a></h2>
@@ -773,6 +868,101 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="querymultiple">
+<h2>QueryMultiple<a class="headerlink" href="#querymultiple" title="Permalink to this headline">¶</a></h2>
+<p>Query a multiple resultsets from the database.</p>
+<p>Below is an example of how to query a customer where the <cite>Id</cite> field is equals to <cite>10045</cite>, and at the same time, querying all the orders connected to this customer since yesterday.
+The result is an instance of a <cite>Tuple</cite> object.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">customerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">fromDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddDays</span><span class="p">(-</span><span class="m">1</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryMultiple</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">Order</span><span class="p">&gt;(</span>
+                <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">customerId</span><span class="p">,</span>
+                <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="n">customerId</span> <span class="p">&amp;&amp;</span> <span class="n">o</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&gt;=</span> <span class="n">fromDate</span><span class="p">);</span>
+
+        <span class="c1">// Read the customer</span>
+        <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item1</span><span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span>
+
+        <span class="c1">// Read the orders</span>
+        <span class="kt">var</span> <span class="n">orders</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item2</span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
+        <span class="n">orders</span><span class="p">.</span><span class="n">ForEach</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+                <span class="c1">// Do the stuffs for the &#39;order&#39; here</span>
+        <span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This method has supported until the last tupled dynamic type of the <cite>Tuple</cite> class. The current maximum tupled dynamic type is 7.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbConnection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">,</span> <span class="n">T6</span><span class="p">,</span> <span class="n">T7</span><span class="p">&gt;(</span>
+        <span class="n">where1</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T1</span><span class="p">&gt;,</span>
+        <span class="n">where2</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T2</span><span class="p">&gt;,</span>
+        <span class="n">where3</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T3</span><span class="p">&gt;,</span>
+        <span class="n">where4</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T4</span><span class="p">&gt;,</span>
+        <span class="n">where5</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T5</span><span class="p">&gt;,</span>
+        <span class="n">where6</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T6</span><span class="p">&gt;,</span>
+        <span class="n">where7</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T7</span><span class="p">&gt;;</span>
+</pre></div>
+</div>
+<p>Notice above, there were <cite>where&lt;T&lt;Num&gt;&gt;</cite> arguments. These arguments are targetting the specific index of the type on the ‘QueryMultiple’ operation. This method is not meant for joining the result of each type, but instead, it is used to execute the query execution at once.</p>
+<p>Below is an example of how to query the list of customers based on different US states.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryMultiple</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">&gt;(</span>
+                <span class="n">where1</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;California&quot;</span><span class="p">,</span>
+                <span class="n">where2</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Florida&quot;</span><span class="p">,</span>
+                <span class="n">where3</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Texas&quot;</span><span class="p">,</span>
+                <span class="n">where4</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Washington&quot;</span><span class="p">,</span>
+                <span class="n">where5</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Michigan&quot;</span><span class="p">,</span>
+                <span class="n">where6</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Arizona&quot;</span><span class="p">,</span>
+                <span class="n">where7</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;New York&quot;</span><span class="p">);</span>
+
+        <span class="c1">// Read the customers through its equivalent &#39;Item&lt;N&gt;&#39; property</span>
+        <span class="kt">var</span> <span class="n">californiaCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item1</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">floridaCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item2</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">texasCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item3</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">washingtonCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item4</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">michiganCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item5</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">arizonaCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item6</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">newYorkCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item7</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Notice as well, there are other arguments defined like <cite>orderBy&lt;N&gt;</cite>, <cite>top&lt;N&gt;</cite> and <cite>hints&lt;N&gt;</cite>. These are the targetted arguments if the caller wants to define the behavior of the query for that target type based on the element-index provided.</p>
+<p>Below is the implementation of the the 2 target types tupled.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="n">DbConnection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">&gt;(</span>
+        <span class="n">where1</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T1</span><span class="p">&gt;,</span>
+        <span class="n">where2</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Expression</span> <span class="k">for</span> <span class="n">T2</span><span class="p">&gt;,</span>
+        <span class="n">orderBy1</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">OrderExpression</span> <span class="k">for</span> <span class="n">T1</span><span class="p">&gt;,</span>
+        <span class="n">top1</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">RowFilter</span> <span class="k">for</span> <span class="n">T1</span><span class="p">&gt;,</span>
+        <span class="n">hints1</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">QueryOptimizer</span> <span class="k">for</span> <span class="n">T1</span><span class="p">&gt;,</span>
+        <span class="n">orderBy2</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">OrderExpression</span> <span class="k">for</span> <span class="n">T2</span><span class="p">&gt;,</span>
+        <span class="n">top2</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">RowFilter</span> <span class="k">for</span> <span class="n">T2</span><span class="p">&gt;,</span>
+        <span class="n">hints2</span><span class="p">:</span> <span class="p">&lt;</span><span class="n">Optional</span> <span class="n">QueryOptimizer</span> <span class="k">for</span> <span class="n">T2</span><span class="p">&gt;);</span>
+</pre></div>
+</div>
+<p>Below is a example of how to do a query that returns a 100 customers from <cite>California</cite> ordered by their <cite>SSID</cite> optimized by <cite>NOLOCK</cite> keyword, and also, a list of 1000 customers from <cite>Florida</cite> with <cite>READPAST</cite> query optimizer ordered by their <cite>LastName</cite> followed by <cite>FirstName</cite>.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryMultiple</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">Customer</span><span class="p">&gt;(</span>
+                <span class="n">where1</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;California&quot;</span><span class="p">,</span>
+                <span class="n">orderBy</span><span class="p">:</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">SsId</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span> <span class="p">}),</span> <span class="cm">/* At RepoDb.Enumerations */</span>
+                <span class="n">top1</span><span class="p">:</span> <span class="m">100</span><span class="p">,</span>
+                <span class="n">hints1</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">,</span> <span class="cm">/* Can write WITH (NOLOCK) */</span><span class="p">,</span>
+                <span class="n">where2</span><span class="p">:</span> <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="s">&quot;Florida&quot;</span><span class="p">,</span>
+                <span class="n">orderBy2</span><span class="p">:</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">LastName</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">,</span> <span class="n">FirstName</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span> <span class="p">}),</span> <span class="cm">/* At RepoDb.Enumerations */</span>
+                <span class="n">top2</span><span class="p">:</span> <span class="m">1000</span><span class="p">,</span>
+                <span class="n">hints2</span><span class="p">:</span> <span class="s">&quot;WITH (READPAST) /* Can use SqlTableHints.ReadPast */</span>
+        <span class="p">);</span>
+
+        <span class="c1">// Read the customers through its equivalent &#39;Item&lt;N&gt;&#39; property</span>
+        <span class="kt">var</span> <span class="n">californiaCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item1</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">floridaCustomers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item2</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: This method does not support the <cite>Object-Based</cite> query tree expression.</p>
+</div>
 <div class="section" id="truncate">
 <h2>Truncate<a class="headerlink" href="#truncate" title="Permalink to this headline">¶</a></h2>
 <p>Truncates a table from the database.</p>
@@ -835,7 +1025,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="executequery.html" class="btn btn-neutral float-right" title="ExecuteQuery (Dynamic)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="transaction.html" class="btn btn-neutral float-right" title="Transaction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="orderfield.html" class="btn btn-neutral float-left" title="OrderField" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
