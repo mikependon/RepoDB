@@ -34,10 +34,18 @@ namespace RepoDb
         /// Extract the data reader to an enumerable of target data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The target data entity to extract.</typeparam>
+        /// <param name="yielded">Determines whether the extraction of data is being streamed directly from the data reader.</param>
         /// <returns>An enumerable of target data entity.</returns>
-        public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
+        public IEnumerable<TEntity> Extract<TEntity>(bool yielded = false) where TEntity : class
         {
-            return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+            if (yielded)
+            {
+                return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true);
+            }
+            else
+            {
+                return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+            }
         }
 
         /// <summary>
@@ -45,13 +53,21 @@ namespace RepoDb
         /// target data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The target data entity to extract.</typeparam>
+        /// <param name="yielded">Determines whether the extraction of data is being streamed directly from the data reader.</param>
         /// <param name="throwException">A value that indicates whether to throw an exception if there is no next resultset. Default is <see cref="bool"/>.</param>
         /// <returns>An enumerable of target data entity.</returns>
-        public IEnumerable<TEntity> ExtractNext<TEntity>(bool throwException = true) where TEntity : class
+        public IEnumerable<TEntity> ExtractNext<TEntity>(bool yielded = false, bool throwException = true) where TEntity : class
         {
             if (NextResult())
             {
-                return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+                if (yielded)
+                {
+                    return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true);
+                }
+                else
+                {
+                    return DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+                }
             }
             else
             {
