@@ -122,10 +122,10 @@ namespace RepoDb.Extensions
         internal static object AsObject(this IEnumerable<QueryField> queryFields)
         {
             var expandoObject = new ExpandoObject() as IDictionary<string, object>;
-            queryFields.ToList().ForEach(queryField =>
+            foreach (var queryField in queryFields)
             {
                 expandoObject.Add(queryField.Field.Name, queryField.Parameter.Value);
-            });
+            }
             return expandoObject;
         }
 

@@ -116,8 +116,8 @@ namespace RepoDb.Reflection
             if (propertyType != typeof(byte[]))
             {
                 // Get the proper convert method
-                var convertMethod = typeof(Convert).GetTypeInfo().GetMethod($"To{propertyType.Name}", new[] { typeof(object) }) ??
-                    typeof(Convert).GetTypeInfo().GetMethod($"ToString", new[] { typeof(object) });
+                var convertMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { typeof(object) }) ??
+                    typeof(Convert).GetTypeInfo().GetMethod("ToString", new[] { typeof(object) });
 
                 // Convert the value
                 ilGenerator.Emit(OpCodes.Call, convertMethod);

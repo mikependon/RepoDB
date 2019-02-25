@@ -137,7 +137,7 @@ namespace RepoDb
         public QueryBuilder<TEntity> FieldsFrom()
         {
             var fields = PropertyCache.Get<TEntity>()?.Select(property => property.GetMappedName().AsQuoted(true));
-            return Append(fields?.ToList().AsFields().Join(", "));
+            return Append(fields?.AsFields().Join(", "));
         }
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> WhereFrom(QueryGroup queryGroup)
         {
-            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.FixParameters().GetString())) : this;
+            return (queryGroup != null) ? Append(string.Concat("WHERE ", queryGroup.Fix().GetString())) : this;
         }
 
         /// <summary>

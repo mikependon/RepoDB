@@ -87,6 +87,7 @@
     <Compile Include="PropertyMappedNameCache.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyValue.cs" />
+    <Compile Include="QueryGroupTypeMap.cs" />
     <Compile Include="Reflection\FunctionCache.cs" />
     <Compile Include="Reflection\DelegateCache.cs" />
     <Compile Include="Reflection\Functions.cs" />

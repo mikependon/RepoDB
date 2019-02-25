@@ -58,19 +58,19 @@ namespace RepoDb.Requests
             // Gets the target fields
             if (Fields != null)
             {
-                Fields.ToList().ForEach(field =>
+                foreach (var field in Fields)
                 {
                     hashCode += field.GetHashCode();
-                });
+                }
             }
 
             // Gets the qualifier fields
             if (Qualifiers != null)
             {
-                Qualifiers.ToList().ForEach(field =>
+                foreach (var field in Qualifiers)
                 {
                     hashCode += field.GetHashCode();
-                });
+                }
             }
 
             // Set back the hash code value

@@ -51,10 +51,10 @@ namespace RepoDb.Requests
             // Get the qualifier fields
             if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>
             {
-                Qualifiers.ToList().ForEach(field =>
+                foreach (var field in Qualifiers)
                 {
                     hashCode += field.GetHashCode();
-                });
+                }
             }
 
             // Set back the hash code value

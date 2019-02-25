@@ -120,19 +120,15 @@ namespace RepoDb
                 throw new NullReferenceException("The 'obj' must not be null.");
             }
             var list = new List<OrderField>();
-            obj
-                .GetType()
-                .GetProperties()
-                .ToList()
-                .ForEach(property =>
+            foreach(var property in obj.GetType().GetProperties())
+            {
+                if (property.PropertyType != typeof(Order))
                 {
-                    if (property.PropertyType != typeof(Order))
-                    {
-                        throw new InvalidOperationException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
-                    }
-                    var order = (Order)property.GetValue(obj);
-                    list.Add(new OrderField(property.Name, order));
-                });
+                    throw new InvalidOperationException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
+                }
+                var order = (Order)property.GetValue(obj);
+                list.Add(new OrderField(property.Name, order));
+            }
             return list;
         }
 

@@ -251,10 +251,10 @@ namespace RepoDb.Extensions
         {
             var arrayType = expression.Type.GetElementType();
             var array = Array.CreateInstance(arrayType, (int)expression.Expressions?.Count);
-            expression
-                .Expressions?
-                .ToList()
-                .ForEach(item => array.SetValue(item.GetValue(), expression.Expressions.IndexOf(item)));
+            foreach (var item in expression.Expressions)
+            {
+                array.SetValue(item.GetValue(), expression.Expressions.IndexOf(item));
+            }
             return array;
         }
 
@@ -284,7 +284,10 @@ namespace RepoDb.Extensions
         public static object GetValue(this MemberInitExpression expression)
         {
             var instance = expression.NewExpression.GetValue();
-            expression.Bindings.ToList().ForEach(member => member.Member.SetValue(instance, member.GetValue()));
+            foreach (var binding in expression.Bindings)
+            {
+                binding.Member.SetValue(instance, binding.GetValue());
+            }
             return instance;
         }
 

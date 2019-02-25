@@ -90,10 +90,10 @@ namespace RepoDb.Requests
             // Add the order fields
             if (!ReferenceEquals(null, OrderBy))
             {
-                OrderBy.ToList().ForEach(order =>
+                foreach (var orderField in OrderBy)
                 {
-                    hashCode += order.GetHashCode();
-                });
+                    hashCode += orderField.GetHashCode();
+                }
             }
 
             // Set back the hash code value

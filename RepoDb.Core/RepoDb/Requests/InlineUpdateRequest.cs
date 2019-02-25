@@ -64,10 +64,10 @@ namespace RepoDb.Requests
             // Get the qualifier fields
             if (Fields != null)
             {
-                Fields.ToList().ForEach(field =>
+                foreach (var field in Fields)
                 {
                     hashCode += field.GetHashCode();
-                });
+                }
             }
 
             // Set back the hash code value

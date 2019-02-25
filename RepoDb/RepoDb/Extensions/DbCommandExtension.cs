@@ -40,11 +40,13 @@ namespace RepoDb.Extensions
         /// <param name="values">The array of the values.</param>
         internal static void CreateParametersFromArray(this IDbCommand command, string parameterName, IEnumerable<object> values)
         {
-            var list = values != null ? values.ToList() : null;
-            for (var i = 0; i < list?.Count; i++)
+            if (values != null)
             {
-                var parameter = command.CreateParameter(string.Concat(parameterName, i).AsParameter(), list[i]);
-                command.Parameters.Add(parameter);
+                for (var i = 0; i < values.Count(); i++)
+                {
+                    var parameter = command.CreateParameter(string.Concat(parameterName, i).AsParameter(), values.ElementAt(i));
+                    command.Parameters.Add(parameter);
+                }
             }
         }
 

@@ -387,7 +387,13 @@ namespace RepoDb
                 orderBy,
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -652,7 +658,13 @@ namespace RepoDb
                 orderBy,
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -722,7 +734,7 @@ namespace RepoDb
         {
             return BulkInsertInternal<TEntity>(connection: connection,
                 entities: entities,
-                mappings: mappings,
+                mapItems: mappings,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -746,7 +758,7 @@ namespace RepoDb
         {
             return BulkInsertInternal<TEntity>(connection: connection,
                 reader: reader,
-                mappings: mappings,
+                mapItems: mappings,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -757,13 +769,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
@@ -804,20 +816,20 @@ namespace RepoDb
                     {
                         sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                     }
-                    if (mappings == null)
+                    if (mapItems == null)
                     {
-                        reader.Properties.ToList().ForEach(property =>
+                        foreach (var property in reader.Properties)
                         {
                             var columnName = property.GetMappedName();
                             sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
-                        });
+                        }
                     }
                     else
                     {
-                        mappings.ToList().ForEach(mapItem =>
+                        foreach (var mapItem in mapItems)
                         {
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                        });
+                        }
                     }
                     connection.EnsureOpen();
                     sqlBulkCopy.WriteToServer(reader);
@@ -842,13 +854,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
@@ -887,12 +899,12 @@ namespace RepoDb
                 {
                     sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                 }
-                if (mappings != null)
+                if (mapItems != null)
                 {
-                    mappings.ToList().ForEach(mapItem =>
+                    foreach (var mapItem in mapItems)
                     {
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    });
+                    }
                 }
                 connection.EnsureOpen();
                 sqlBulkCopy.WriteToServer(reader);
@@ -933,7 +945,7 @@ namespace RepoDb
         {
             return BulkInsertInternalAsync<TEntity>(connection: connection,
                 entities: entities,
-                mappings: mappings,
+                mapItems: mappings,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -957,7 +969,7 @@ namespace RepoDb
         {
             return BulkInsertInternalAsync<TEntity>(connection: connection,
                 reader: reader,
-                mappings: mappings,
+                mapItems: mappings,
                 commandTimeout: commandTimeout,
                 trace: trace);
         }
@@ -968,13 +980,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
@@ -1015,20 +1027,20 @@ namespace RepoDb
                     {
                         sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                     }
-                    if (mappings == null)
+                    if (mapItems == null)
                     {
-                        reader.Properties.ToList().ForEach(property =>
+                        foreach (var property in reader.Properties)
                         {
                             var columnName = property.GetMappedName();
                             sqlBulkCopy.ColumnMappings.Add(columnName, columnName);
-                        });
+                        }
                     }
                     else
                     {
-                        mappings.ToList().ForEach(mapItem =>
+                        foreach (var mapItem in mapItems)
                         {
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                        });
+                        }
                     }
                     connection.EnsureOpen();
                     await sqlBulkCopy.WriteToServerAsync(reader);
@@ -1053,13 +1065,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
             int? commandTimeout = null,
             ITrace trace = null)
             where TEntity : class
@@ -1098,12 +1110,12 @@ namespace RepoDb
                 {
                     sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
                 }
-                if (mappings != null)
+                if (mapItems != null)
                 {
-                    mappings.ToList().ForEach(mapItem =>
+                    foreach (var mapItem in mapItems)
                     {
                         sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
-                    });
+                    }
                 }
                 connection.EnsureOpen();
                 await sqlBulkCopy.WriteToServerAsync(reader);
@@ -1283,7 +1295,13 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Before Execution
             if (trace != null)
@@ -1485,7 +1503,13 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetCountText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Before Execution
             if (trace != null)
@@ -1680,7 +1704,13 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetDeleteText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Before Execution
             if (trace != null)
@@ -1885,7 +1915,13 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetDeleteText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Before Execution
             if (trace != null)
@@ -4014,7 +4050,13 @@ namespace RepoDb
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -4389,7 +4431,13 @@ namespace RepoDb
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText<TEntity>(request);
-            var param = where?.AsObject(typeof(TEntity));
+            var param = (object)null;
+
+            // Converts to propery mapped object
+            if (where != null)
+            {
+                param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
+            }
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -4537,7 +4585,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -4568,7 +4616,12 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -4738,7 +4791,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -4780,7 +4833,13 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -4980,7 +5039,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -5033,7 +5092,14 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -5261,7 +5327,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -5325,7 +5391,15 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -5581,7 +5655,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -5656,7 +5730,16 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>(),
+                where6.MapTo<T6>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -5941,7 +6024,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -6027,7 +6110,17 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>(),
+                where6.MapTo<T6>(),
+                where7.MapTo<T7>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -6198,7 +6291,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -6229,7 +6322,12 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -6399,7 +6497,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -6441,7 +6539,13 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -6641,7 +6745,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -6694,7 +6798,14 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -6922,7 +7033,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -6986,7 +7097,15 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -7242,7 +7361,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -7317,7 +7436,16 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>(),
+                where6.MapTo<T6>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -7602,7 +7730,7 @@ namespace RepoDb
             var commandType = CommandType.Text;
 
             // Add fix to the cross-collision of the variables for all the QueryGroup(s)
-            var combinedWhere = QueryGroup.CombineForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
             // T1 Variables
             var request1 = new QueryRequest(typeof(T1),
@@ -7688,7 +7816,17 @@ namespace RepoDb
 
             // Shared objects for all types
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var param = combinedWhere?.AsObject(null, false);
+            var maps = new[]
+            {
+                where1.MapTo<T1>(),
+                where2.MapTo<T2>(),
+                where3.MapTo<T3>(),
+                where4.MapTo<T4>(),
+                where5.MapTo<T5>(),
+                where6.MapTo<T6>(),
+                where7.MapTo<T7>()
+            };
+            var param = QueryGroup.AsMappedObject(maps, false);
 
             // Before Execution
             if (trace != null)
@@ -8132,7 +8270,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetUpdateText<TEntity>(request);
-            var param = entity?.AsObject(where);
+            var param = entity?.AsMergedObject(where);
 
             // Before Execution
             if (trace != null)
@@ -8385,7 +8523,7 @@ namespace RepoDb
                 where,
                 statementBuilder);
             var commandText = CommandTextCache.GetUpdateText<TEntity>(request);
-            var param = entity?.AsObject(where);
+            var param = entity?.AsMergedObject(where);
 
             // Before Execution
             if (trace != null)

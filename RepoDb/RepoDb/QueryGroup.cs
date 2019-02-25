@@ -6,6 +6,7 @@ using RepoDb.Extensions;
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 namespace RepoDb
 {
@@ -139,6 +140,7 @@ namespace RepoDb
         #endregion
 
         #region Methods (Internal)
+
         /// <summary>
         /// Force to append prefixes on the bound parameter objects.
         /// </summary>
@@ -164,11 +166,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-        /// Please note that every repository operation itself is calling this method before the actual execution.
+        /// Fix the names of the <see cref="Parameter"/> on every <see cref="QueryField"/> of the current <see cref="QueryGroup"/>.
         /// </summary>
         /// <returns>The current instance.</returns>
-        internal QueryGroup FixParameters()
+        internal QueryGroup Fix()
         {
             if (m_isFixed)
             {
@@ -203,11 +204,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Combines the list of <see cref="QueryField"/> objects of the target list of <see cref="QueryGroup"/>.
+        /// Fix the names of the parameters in every <see cref="QueryField"/> object of the target list of <see cref="QueryGroup"/>s.
         /// </summary>
         /// <param name="queryGroups">The list of query groups.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object containing all the fields.</returns>
-        internal static QueryGroup CombineForQueryMultiple(QueryGroup[] queryGroups)
+        internal static void FixForQueryMultiple(QueryGroup[] queryGroups)
         {
             var queryFields = new List<QueryField>();
             for (var i = 0; i < queryGroups.Length; i++)
@@ -220,7 +221,139 @@ namespace RepoDb
                     queryFields.Add(field);
                 }
             }
-            return new QueryGroup(queryFields);
+        }
+
+        /// <summary>
+        /// Converts every <see cref="QueryGroup"/> object of the list of <see cref="QueryGroupTypeMap"/> into an <see cref="object"/> 
+        /// with all the child <see cref="QueryField"/>s as the property/value to that object. The value of every property of the created
+        /// object will be an instance of the <see cref="CommandParameter"/> with the proper type, name and value.
+        /// </summary>
+        /// <param name="queryGroupTypeMaps">The list of <see cref="QueryGroupTypeMap"/> objects to be converted.</param>
+        /// <param name="fixParameters">A boolean value whether to fix the parameter name before converting.</param>
+        /// <returns>An instance of an object that contains all the definition of the converted underlying <see cref="QueryFields"/>s.</returns>
+        internal static object AsMappedObject(QueryGroupTypeMap[] queryGroupTypeMaps, bool fixParameters = true)
+        {
+            // Create a new instance of ExpandObject
+            var expandObject = new ExpandoObject() as IDictionary<string, object>;
+
+            foreach (var queryGroupTypeMap in queryGroupTypeMaps)
+            {
+                var queryFields = queryGroupTypeMap.QueryGroup.GetAllQueryFields();
+
+                // Identify if there are fields to count
+                if (queryFields.Count() <= 0)
+                {
+                    return null;
+                }
+
+                // Fix the variables for the parameters
+                if (fixParameters)
+                {
+                    queryGroupTypeMap.QueryGroup.Fix();
+                }
+
+                // Iterate all the query fields
+                foreach (var queryField in queryFields)
+                {
+                    // Between/NotBetween
+                    if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
+                    {
+                        var left = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenLeft);
+                        var right = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenRight);
+                        var values = new List<object>();
+                        if (queryField.Parameter.Value != null)
+                        {
+                            if (queryField.Parameter.Value is Array)
+                            {
+                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                            }
+                            else
+                            {
+                                values.Add(queryField.Parameter.Value);
+                            }
+                        }
+                        if (!expandObject.ContainsKey(left))
+                        {
+                            var leftValue = values.Count > 0 ? values[0] : null;
+                            if (queryGroupTypeMap.MappedType != null)
+                            {
+                                expandObject.Add(left,
+                                    new CommandParameter(left, leftValue, queryGroupTypeMap.MappedType));
+                            }
+                            else
+                            {
+                                expandObject.Add(left, leftValue);
+                            }
+                        }
+                        if (!expandObject.ContainsKey(right))
+                        {
+                            var rightValue = values.Count > 1 ? values[1] : null;
+                            if (queryGroupTypeMap.MappedType != null)
+                            {
+                                expandObject.Add(right,
+                                    new CommandParameter(right, rightValue, queryGroupTypeMap.MappedType));
+                            }
+                            else
+                            {
+                                expandObject.Add(right, rightValue);
+                            }
+                        }
+                    }
+
+                    // In/NotIn
+                    else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
+                    {
+                        var values = new List<object>();
+                        if (queryField.Parameter.Value != null)
+                        {
+                            if (queryField.Parameter.Value is Array)
+                            {
+                                values.AddRange(((Array)queryField.Parameter.Value).AsEnumerable());
+                            }
+                            else
+                            {
+                                values.Add(queryField.Parameter.Value);
+                            }
+                        }
+                        for (var i = 0; i < values.Count; i++)
+                        {
+                            var parameterName = string.Concat(queryField.Parameter.Name, "_", StringConstant.In, "_", i);
+                            if (!expandObject.ContainsKey(parameterName))
+                            {
+                                if (queryGroupTypeMap.MappedType != null)
+                                {
+                                    expandObject.Add(parameterName,
+                                        new CommandParameter(parameterName, values[i], queryGroupTypeMap.MappedType));
+                                }
+                                else
+                                {
+                                    expandObject.Add(parameterName, values[i]);
+                                }
+                            }
+                        }
+                    }
+
+                    // Other
+                    else
+                    {
+                        if (!expandObject.ContainsKey(queryField.Parameter.Name))
+                        {
+                            if (queryGroupTypeMap.MappedType != null)
+                            {
+                                expandObject.Add(queryField.Parameter.Name,
+                                    new CommandParameter(queryField.Parameter.Name, queryField.Parameter.Value, queryGroupTypeMap.MappedType));
+                            }
+                            else
+                            {
+                                expandObject.Add(queryField.Parameter.Name, queryField.Parameter.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Return the extracted object
+            return (ExpandoObject)expandObject;
         }
 
         #endregion
@@ -325,7 +458,7 @@ namespace RepoDb
             }
 
             // Return the parsed values
-            return parsed.FixParameters();
+            return parsed.Fix();
         }
 
         private static QueryGroup Parse<TEntity>(Expression expression) where TEntity : class
@@ -703,7 +836,7 @@ namespace RepoDb
             }
 
             // Return
-            return new QueryGroup(queryFields).FixParameters();
+            return new QueryGroup(queryFields).Fix();
         }
 
         #endregion

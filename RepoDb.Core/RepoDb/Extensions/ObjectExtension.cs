@@ -24,7 +24,7 @@ namespace RepoDb.Extensions
             {
                 expandObject[property.Name] = property.GetValue(obj);
             }
-            foreach (var queryField in queryGroup?.FixParameters().GetAllQueryFields())
+            foreach (var queryField in queryGroup?.Fix().GetAllQueryFields())
             {
                 expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
             }
@@ -32,12 +32,12 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
+        /// Merges an object into an instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="obj">The object to be converted.</param>
-        /// <param name="queryGroup">The query group to be merged.</param>
+        /// <param name="obj">The object to be merged.</param>
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be merged.</param>
         /// <returns>An instance of converted dynamic object.</returns>
-        internal static object AsObject(this object obj, QueryGroup queryGroup)
+        internal static object AsMergedObject(this object obj, QueryGroup queryGroup)
         {
             var expandObject = new ExpandoObject() as IDictionary<string, object>;
             var properties = DataEntityExtension.GetProperties(obj.GetType());
@@ -47,7 +47,7 @@ namespace RepoDb.Extensions
             }
 			if (queryGroup != null)
 			{
-				foreach (var queryField in queryGroup.FixParameters().GetAllQueryFields())
+				foreach (var queryField in queryGroup.Fix().GetAllQueryFields())
 				{
                     expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
 				}
@@ -62,7 +62,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of converted dynamic object.</returns>
         internal static object AsObject(this object obj)
         {
-            return AsObject(obj, null);
+            return AsMergedObject(obj, null);
         }
 
         /// <summary>
