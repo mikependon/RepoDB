@@ -2,9 +2,12 @@
 
 A dynamic, lightweight, and very fast ORM .NET Library.
 
-![](https://ci.appveyor.com/api/projects/status/8sms05vy0ad9aao2?svg=true)
-[![RepoDb](https://img.shields.io/nuget/v/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
-[![RepoDb](https://img.shields.io/nuget/dt/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
+Name          | Status
+------------- | -------------
+NetFramework  | [![Build status](https://ci.appveyor.com/api/projects/status/c563cikul4c2a5vc?svg=true)](https://ci.appveyor.com/project/mikependon/repodb)
+NetStandard   | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
+Nuget         | [![RepoDb](https://img.shields.io/nuget/v/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
+Downloads     | [![RepoDb](https://img.shields.io/nuget/dt/RepoDb.svg)](https://www.nuget.org/packages/RepoDb/)
 
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
