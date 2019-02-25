@@ -81,7 +81,7 @@ namespace RepoDb.Extensions
                     if (item.Value is CommandParameter)
                     {
                         var commandParameter = (CommandParameter)item.Value;
-                        var property = commandParameter.MappedToType.GetProperty(item.Key);
+                        var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(item.Key);
                         dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                             TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
                         value = commandParameter.Value;
