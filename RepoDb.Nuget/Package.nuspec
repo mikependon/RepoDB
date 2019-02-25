@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.0-beta5</version>
+    <version>1.8.0</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -35,7 +35,7 @@
     - Removed the attribute 'Ignored'.
     [Optimizations]
     - Revisits the way on how to map the 'QueryGroup' list of 'QueryField' into the data entity type.
-    - Refactor the Linq (IEnumerable<T>.ToList()) into an old-school (foreach / for (var i..)) approach.
+    - Refactor the Linq (IEnumerable&lt;T&gt;.ToList()) into an old-school (foreach / for (var i..)) approach.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

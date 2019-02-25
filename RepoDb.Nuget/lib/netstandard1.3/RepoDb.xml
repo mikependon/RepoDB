@@ -1375,6 +1375,34 @@
             <param name="objB">The second <see cref="T:RepoDb.ClassProperty"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
+        <member name="T:RepoDb.CommandParameter">
+            <summary>
+            A class used to hold the definition of the <see cref="T:System.Data.Common.DbCommand"/> parameters.
+            </summary>
+        </member>
+        <member name="M:RepoDb.CommandParameter.#ctor(System.String,System.Object,System.Type)">
+            <summary>
+            Creates a new instance of <see cref="T:RepoDb.CommandParameter"/> class.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <param name="mappedToType">The parent type where this parameter is mapped.</param>
+        </member>
+        <member name="P:RepoDb.CommandParameter.Name">
+            <summary>
+            The name of the parameter.
+            </summary>
+        </member>
+        <member name="P:RepoDb.CommandParameter.Value">
+            <summary>
+            The value of the parameter.
+            </summary>
+        </member>
+        <member name="P:RepoDb.CommandParameter.MappedToType">
+            <summary>
+            The parent type where this parameter is mapped.
+            </summary>
+        </member>
         <member name="T:RepoDb.CommandTextCache">
             <summary>
             A class used to cache the composed command text used by the library.
@@ -3317,6 +3345,13 @@
             Contains the extension methods for <see cref="T:System.Array"/> object.
             </summary>
         </member>
+        <member name="M:RepoDb.Extensions.ArrayExtension.AsEnumerable(System.Array)">
+            <summary>
+            Converts an <see cref="T:System.Array"/> object into an enumerable of objects.
+            </summary>
+            <param name="array">The array to be converted.</param>
+            <returns>An enumerable of objects.</returns>
+        </member>
         <member name="T:RepoDb.Extensions.DataEntityExtension">
             <summary>
             Contains the extension methods for data entity object.
@@ -3345,25 +3380,25 @@
             <typeparam name="TEntity">The type of the data entity where to get the mapped name.</typeparam>
             <returns>A mapped name for the data entity.</returns>
         </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object,RepoDb.QueryGroup)">
-            <summary>
-            Converts the data entity object into a dynamic object. During the conversion, the passed query groups are being merged.
-            </summary>
-            <param name="dataEntity">The data entity object to be converted.</param>
-            <param name="queryGroup">The query group to be merged.</param>
-            <returns>An instance of converted dynamic object.</returns>
-        </member>
-        <member name="M:RepoDb.Extensions.DataEntityExtension.AsObject(System.Object)">
-            <summary>
-            Converts the data entity object into a dynamic object.
-            </summary>
-            <param name="dataEntity">The data entity object to be converted.</param>
-            <returns>An instance of converted dynamic object.</returns>
-        </member>
         <member name="T:RepoDb.Extensions.DataReaderExtension">
             <summary>
             Contains the extension methods for <see cref="T:System.Data.IDataReader"/> object.
             </summary>
+        </member>
+        <member name="M:RepoDb.Extensions.DataReaderExtension.AsEnumerable``1(System.Data.IDataReader)">
+            <summary>
+            Converts the <see cref="T:System.Data.IDataReader"/> object into an enumerable list of data entity objects.
+            </summary>
+            <typeparam name="TEntity">The target type of the data entity.</typeparam>
+            <param name="reader">The data reader object to be converted.</param>
+            <returns>An enumerable list of data entity objects.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.DataReaderExtension.AsEnumerable(System.Data.IDataReader)">
+            <summary>
+            Converts the <see cref="T:System.Data.IDataReader"/> object into an enumerable list of dynamic objects containing the schema of the reader.
+            </summary>
+            <param name="reader">The data reader object to be converted.</param>
+            <returns>An enumerable list of dynamic objects containing the schema of the reader.</returns>
         </member>
         <member name="T:RepoDb.Extensions.DbCommandExtension">
             <summary>
@@ -3390,18 +3425,10 @@
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Object)">
             <summary>
-            Creates a parameter for a command object.
-            </summary>
-            <param name="command">The command object instance to be used.</param>
-            <param name="param">The object to be used when creating the parameters.</param>
-        </member>
-        <member name="M:RepoDb.Extensions.DbCommandExtension.CreateParameters(System.Data.IDbCommand,System.Object,System.Type)">
-            <summary>
             Creates a parameter from object by mapping the property from the target entity type.
             </summary>
             <param name="command">The command object to be used.</param>
             <param name="param">The object to be used when creating the parameters.</param>
-            <param name="mappedToEntityType">The target type where to map the parameters.</param>
         </member>
         <member name="M:RepoDb.Extensions.DbCommandExtension.GetUnderlyingType(System.Type)">
             <summary>
@@ -3850,6 +3877,21 @@
             <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to merged.</param>
             <returns>The object instance itself with the merged values.</returns>
         </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.AsMergedObject(System.Object,RepoDb.QueryGroup)">
+            <summary>
+            Merges an object into an instance of <see cref="T:RepoDb.QueryGroup"/> object.
+            </summary>
+            <param name="obj">The object to be merged.</param>
+            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to be merged.</param>
+            <returns>An instance of converted dynamic object.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.ObjectExtension.AsObject(System.Object)">
+            <summary>
+            Converts the data entity object into a dynamic object.
+            </summary>
+            <param name="obj">The object to be converted.</param>
+            <returns>An instance of converted dynamic object.</returns>
+        </member>
         <member name="M:RepoDb.Extensions.ObjectExtension.AsQueryFields(System.Object)">
             <summary>
             Converts an instance of an object into an enumerable list of query fields.
@@ -4113,8 +4155,16 @@
             <summary>
             Convert an instance of query group into an enumerable list of query groups.
             </summary>
-            <param name="queryGroup">The query group to be converted.</param>
+            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to be converted.</param>
             <returns>An enumerable list of query groups.</returns>
+        </member>
+        <member name="M:RepoDb.Extensions.QueryGroupExtension.MapTo``1(RepoDb.QueryGroup)">
+            <summary>
+            Maps the current <see cref="T:RepoDb.QueryGroup"/> object to a type.
+            </summary>
+            <param name="queryGroup">The <see cref="T:RepoDb.QueryGroup"/> object to be mapped.</param>
+            <typeparam name="T">The target type where the current <see cref="T:RepoDb.QueryGroup"/> is to be mapped.</typeparam>
+            <returns>An instance of <see cref="T:RepoDb.QueryGroupTypeMap"/> object that holds the mapping.</returns>
         </member>
         <member name="T:RepoDb.Extensions.StringExtension">
             <summary>
@@ -4426,7 +4476,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4438,7 +4488,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4474,7 +4524,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="entities">The list of the data entities to be bulk-inserted.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -4486,7 +4536,7 @@
             <typeparam name="TEntity">The type of the data entity object.</typeparam>
             <param name="connection">The connection object to be used by this operation.</param>
             <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> object to be used in the bulk-insert operation.</param>
-            <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+            <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="trace">The trace object to be used by this operation.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
@@ -6857,7 +6907,7 @@
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternalAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteQueryInternalAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             converts the result back to an enumerable list of data entity object.
@@ -6872,7 +6922,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>
             An enumerable list of data entity object containing the converted results of the underlying <see cref="T:System.Data.IDataReader"/> object.
             </returns>
@@ -6923,7 +6972,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of the data reader object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             returns the instance of the data reader.
@@ -6937,7 +6986,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An instance of the data reader object.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -6956,7 +7004,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of the data reader object.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteReaderInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteReader(System.Data.CommandBehavior)"/> and
             returns the instance of the data reader.
@@ -6970,7 +7018,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An instance of the data reader object.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQuery(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -6989,7 +7036,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteNonQuery"/> and
             returns the number of affected rows during the execution.
@@ -7003,7 +7050,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -7022,7 +7068,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteNonQueryInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in asynchronous way. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteNonQuery"/> and
             returns the number of affected rows during the execution.
@@ -7036,7 +7082,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalar(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -7055,7 +7100,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternal(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -7069,7 +7114,6 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
@@ -7088,7 +7132,7 @@
             <param name="transaction">The transaction to be used on the execution (if present).</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.ExecuteScalarInternalAsync(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="M:System.Data.IDbCommand.ExecuteScalar"/> and
             returns the first occurence value (first column of first row) of the execution.
@@ -7102,21 +7146,19 @@
             <param name="commandType">The command type to be used on the execution.</param>
             <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
             <param name="transaction">The transaction to be used on the execution (if present).</param>
-            <param name="entityType">The type of data entity where to map the current param types.</param>
             <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         </member>
-        <member name="M:RepoDb.DbConnectionExtension.CreateDbCommandForExecution(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction,System.Type)">
+        <member name="M:RepoDb.DbConnectionExtension.CreateDbCommandForExecution(System.Data.IDbConnection,System.String,System.Object,System.Nullable{System.Data.CommandType},System.Nullable{System.Int32},System.Data.IDbTransaction)">
             <summary>
             Creates a new instance of <see cref="T:System.Data.Common.DbCommand"/> object that is to be used execution.
             </summary>
-            <param name="connection"></param>
-            <param name="commandText"></param>
-            <param name="param"></param>
-            <param name="commandType"></param>
-            <param name="commandTimeout"></param>
-            <param name="transaction"></param>
-            <param name="entityType"></param>
-            <returns></returns>
+            <param name="connection">The connection object.</param>
+            <param name="commandText">The command text to be used.</param>
+            <param name="param">The list of parameters.</param>
+            <param name="commandType">The command type to be used.</param>
+            <param name="commandTimeout">The command timeout to be used.</param>
+            <param name="transaction">The transaction object to be used.</param>
+            <returns>An instance of <see cref="T:System.Data.Common.DbCommand"/> object.</returns>
         </member>
         <member name="M:RepoDb.DbConnectionExtension.ToRawSqlWithArrayParams(System.String,System.String,System.Collections.Generic.IEnumerable{System.Object})">
             <summary>
@@ -8660,12 +8702,28 @@
             </summary>
             <param name="value">The <see cref="T:System.Boolean"/> value the defines the <see cref="P:RepoDb.QueryGroup.IsNot"/> property.</param>
         </member>
-        <member name="M:RepoDb.QueryGroup.FixParameters">
+        <member name="M:RepoDb.QueryGroup.Fix">
             <summary>
-            Fixes the parameter naming convention. This method must be called atleast once prior the actual operation execution.
-            Please note that every repository operation itself is calling this method before the actual execution.
+            Fix the names of the <see cref="T:RepoDb.Parameter"/> on every <see cref="T:RepoDb.QueryField"/> of the current <see cref="T:RepoDb.QueryGroup"/>.
             </summary>
             <returns>The current instance.</returns>
+        </member>
+        <member name="M:RepoDb.QueryGroup.FixForQueryMultiple(RepoDb.QueryGroup[])">
+            <summary>
+            Fix the names of the parameters in every <see cref="T:RepoDb.QueryField"/> object of the target list of <see cref="T:RepoDb.QueryGroup"/>s.
+            </summary>
+            <param name="queryGroups">The list of query groups.</param>
+            <returns>An instance of <see cref="T:RepoDb.QueryGroup"/> object containing all the fields.</returns>
+        </member>
+        <member name="M:RepoDb.QueryGroup.AsMappedObject(RepoDb.QueryGroupTypeMap[],System.Boolean)">
+            <summary>
+            Converts every <see cref="T:RepoDb.QueryGroup"/> object of the list of <see cref="T:RepoDb.QueryGroupTypeMap"/> into an <see cref="T:System.Object"/> 
+            with all the child <see cref="T:RepoDb.QueryField"/>s as the property/value to that object. The value of every property of the created
+            object will be an instance of the <see cref="T:RepoDb.CommandParameter"/> with the proper type, name and value.
+            </summary>
+            <param name="queryGroupTypeMaps">The list of <see cref="T:RepoDb.QueryGroupTypeMap"/> objects to be converted.</param>
+            <param name="fixParameters">A boolean value whether to fix the parameter name before converting.</param>
+            <returns>An instance of an object that contains all the definition of the converted underlying <see cref="P:RepoDb.QueryGroup.QueryFields"/>s.</returns>
         </member>
         <member name="M:RepoDb.QueryGroup.GetConjunctionText">
             <summary>
@@ -8738,6 +8796,29 @@
             <param name="objB">The second <see cref="T:RepoDb.QueryGroup"/> object.</param>
             <returns>True if the instances are not equal.</returns>
         </member>
+        <member name="T:RepoDb.QueryGroupTypeMap">
+            <summary>
+            A class used to hold the <see cref="P:RepoDb.QueryGroupTypeMap.QueryGroup"/> object type mapping. This class has been introduced
+            to support the needs of the multi-resultsets query operation.
+            </summary>
+        </member>
+        <member name="M:RepoDb.QueryGroupTypeMap.#ctor(RepoDb.QueryGroup,System.Type)">
+            <summary>
+            Creates an instance of <see cref="T:RepoDb.QueryGroupTypeMap"/> class.
+            </summary>
+            <param name="queryGroup">The <see cref="P:RepoDb.QueryGroupTypeMap.QueryGroup"/> object.</param>
+            <param name="type">The type where the <see cref="P:RepoDb.QueryGroupTypeMap.QueryGroup"/> object is mapped.</param>
+        </member>
+        <member name="P:RepoDb.QueryGroupTypeMap.QueryGroup">
+            <summary>
+            Gets the current <see cref="P:RepoDb.QueryGroupTypeMap.QueryGroup"/> object.
+            </summary>
+        </member>
+        <member name="P:RepoDb.QueryGroupTypeMap.MappedType">
+            <summary>
+            Gets the type where the current <see cref="P:RepoDb.QueryGroupTypeMap.QueryGroup"/> is mapped.
+            </summary>
+        </member>
         <member name="T:RepoDb.QueryMultipleExtractor">
             <summary>
             A class used to extract the multiple result of the query operation.
@@ -8754,19 +8835,21 @@
             Disposes the current instance of <see cref="T:RepoDb.QueryMultipleExtractor"/>.
             </summary>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.Extract``1">
+        <member name="M:RepoDb.QueryMultipleExtractor.Extract``1(System.Boolean)">
             <summary>
             Extract the data reader to an enumerable of target data entity type.
             </summary>
             <typeparam name="TEntity">The target data entity to extract.</typeparam>
+            <param name="yielded">Determines whether the extraction of data is being streamed directly from the data reader.</param>
             <returns>An enumerable of target data entity.</returns>
         </member>
-        <member name="M:RepoDb.QueryMultipleExtractor.ExtractNext``1(System.Boolean)">
+        <member name="M:RepoDb.QueryMultipleExtractor.ExtractNext``1(System.Boolean,System.Boolean)">
             <summary>
             Advances the pointer of the data reader to the next resultset and extract it to an enumerable of 
             target data entity type.
             </summary>
             <typeparam name="TEntity">The target data entity to extract.</typeparam>
+            <param name="yielded">Determines whether the extraction of data is being streamed directly from the data reader.</param>
             <param name="throwException">A value that indicates whether to throw an exception if there is no next resultset. Default is <see cref="T:System.Boolean"/>.</param>
             <returns>An enumerable of target data entity.</returns>
         </member>

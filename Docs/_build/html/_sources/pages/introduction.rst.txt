@@ -35,6 +35,8 @@ Features
 * Caching
 * Expression Trees (Expression-Based, Object-Based)
 * Field Mapping
+* Inline Hints
+* Multiple Query
 * Operations (Asynchronous)
 * SQL Statement Builder
 * Tracing
