@@ -10,10 +10,32 @@
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.8.0-beta5]
-    - (Major Update) Introduced the support for 'DbConnection.QueryMultiple'.
-    - (Major Update) Introduced the support for 'DbConnection.ExecuteQueryMultiple'.
-    - Added class 'QueryMultipleExtractor'.
+    [Release 1.8.0]
+    ------------------
+    [New Features]
+    - Introduced the support for 'DbConnection.QueryMultiple'.
+    - Introduced the support for 'DbConnection.ExecuteQueryMultiple'.
+    [Added]
+    - Added a class 'QueryMultipleExtractor' to manage the extraction of the result of 'DbConnection.ExecuteQueryMultiple' operation.
+    - Added a class named 'CommandParameter' to handle the value of the parameter mapping into the target Type.
+    - Added a class named 'QueryGroupTimeMap' to support the mapping of the QueryGroup into the Type.
+    - Introduced a 'hints' argument in the 'DbConnection.Query' operation.
+    - Added class 'SqlTableHints'.
+    - Supported 'BulkInsert' for 'DbDataReader'.
+    [Removed]
+    - Removed the 'Operation.Any'.
+    - Removed the 'Operation.All'.
+    - Removed the 'orderBy' and 'top' argument in the 'Query' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.BatchQuery' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.Count' method with 'primaryKey' argument.
+    - Removed the 'DbConnection.Delete' method without the 'where' parameter.
+    - Removed the support on 'dynamic' object query tree expressions.
+    [Discontinued]
+    - Removed the attribute 'Command'.
+    - Removed the attribute 'Ignored'.
+    [Optimizations]
+    - Revisits the way on how to map the 'QueryGroup' list of 'QueryField' into the data entity type.
+    - Refactor the Linq (IEnumerable<T>.ToList()) into an old-school (foreach / for (var i..)) approach.
     </releaseNotes>
     <copyright>Copyright © 2018</copyright>
     <tags>orm sql repo repodb repository</tags>

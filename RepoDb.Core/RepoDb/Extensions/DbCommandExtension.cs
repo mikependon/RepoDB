@@ -62,8 +62,9 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-            if (param is IEnumerable<PropertyValue> propertyValues)
+            if (param is IEnumerable<PropertyValue>)
             {
+                var propertyValues = (IEnumerable<PropertyValue>)param;
                 foreach (var propertyValue in propertyValues)
                 {
                     var dbType = propertyValue.Property.GetDbType();
@@ -77,9 +78,10 @@ namespace RepoDb.Extensions
                 foreach (var item in dictionary)
                 {
                     var value = item.Value;
-                    if (item.Value is CommandParameter commandParameter)
+                    if (item.Value is CommandParameter)
                     {
-                        var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(item.Key);
+                        var commandParameter = (CommandParameter)item.Value;
+                        var property = commandParameter.MappedToType.GetProperty(item.Key);
                         dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                             TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
                         value = commandParameter.Value;
