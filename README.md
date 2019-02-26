@@ -2,6 +2,8 @@
 
 A dynamic, lightweight, and very fast ORM .NET Library.
 
+### Build Result
+
 Target               | Status
 ---------------------|--------------------
 Net (Framework)      | [![Build status](https://ci.appveyor.com/api/projects/status/c563cikul4c2a5vc?svg=true)](https://ci.appveyor.com/project/mikependon/repodb)
@@ -11,6 +13,25 @@ Net (Standard Test)  | [![Build status](https://ci.appveyor.com/api/projects/sta
 
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
+
+### Performance Result
+
+FransBouma Bencher: [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher)
+
+#### Non-change tracking individual fetches (100 elements, 25 runs), no caching
+
+Library                                                              | In Milleseconds
+---------------------------------------------------------------------|--------------------------------
+Handcoded materializer using DbDataReader                            | 0.28ms (0.04ms) per individual fetch
+ServiceStack OrmLite v5.0.0.0 (v5.1.0.0)                             | 0.35ms (0.05ms) per individual fetch
+Tortuga Chain, Compiled v1.2.6553.39558                              | 0.36ms (0.04ms) per individual fetch
+RepoDb (Poco) v1.8.0.5                                               | 0.37ms (0.06ms) per individual fetch
+Dapper v1.50.5.0                                                     | 0.41ms (0.05ms) per individual fetch
+Handcoded materializer using DbDataReader (GetValues(array), boxing) | 0.43ms (0.02ms) per individual fetch
+RepoDb (RawSql) v1.8.0.5                                             | 0.43ms (0.03ms) per individual fetch
+Massive using dynamic class                                          | 0.44ms (0.07ms) per individual fetch
+LLBLGen Pro v5.4.0.0 (v5.4.1), Poco with Raw SQL                     | 0.47ms (0.02ms) per individual fetch
+Raw DbDataReader materializer using object arrays                    | 0.48ms (0.10ms) per individual fetch
 
 ### Goal
 
