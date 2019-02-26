@@ -46,8 +46,7 @@ To provide more flexibility and fast-switching development approach, whether to 
 
 ## Performance Result
 
-Bencher: [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher)
-**Benchmarks run on:** Monday, February 25, 2019 8:44:04 PM
+**Bencher:** [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) | **Benchmarks run on:** Monday, February 25, 2019 8:44:04 PM
 
 #### Non-change tracking individual fetches (100 elements, 25 runs), no caching
 
