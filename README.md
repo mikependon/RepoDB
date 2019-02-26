@@ -2,7 +2,7 @@
 
 A dynamic, lightweight, and very fast ORM .NET Library.
 
-### Build Result
+## Build Result
 
 Target               | Status
 ---------------------|--------------------
@@ -14,15 +14,15 @@ Net (Standard Test)  | [![Build status](https://ci.appveyor.com/api/projects/sta
 Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
 Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
 
-### Goal
+## Goal
 
 To be the fastest and easiest-to-use lightweight ORM .NET Library.
 
-### Vision
+## Vision
 
 To provide more flexibility and fast-switching development approach, whether to use the massive or lightweight ORM operations.
 
-### Principles
+## Principles
 
  - Keep it as simple as possible (KISS principle)
  - Help developers be more focused on the SOLID principle
@@ -44,10 +44,9 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Transactions
  - Type Mapping
 
-### Performance Result
+## Performance Result
 
 Bencher: [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher)
-
 **Benchmarks run on:** Monday, February 25, 2019 8:44:04 PM
 
 #### Non-change tracking individual fetches (100 elements, 25 runs), no caching
