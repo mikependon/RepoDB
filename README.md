@@ -2,6 +2,9 @@
 
 A dynamic, lightweight, and very fast ORM .NET Library.
 
+Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
+Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
+
 ## Build Result
 
 Target               | Status
@@ -10,9 +13,6 @@ Net (Framework)      | [![Build status](https://ci.appveyor.com/api/projects/sta
 Net (Standard)       | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw)
 Net (Framework Test) | [![Build status](https://ci.appveyor.com/api/projects/status/xtfp2urkxa29s7b9?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5)
 Net (Standard Test)  | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx)
-
-Package: [https://www.nuget.org/packages/RepoDb](https://www.nuget.org/packages/RepoDb)  
-Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthedocs.io/en/latest/)
 
 ## Goal
 
@@ -31,7 +31,7 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Never use try-catch inside the library
  - Never create complex implementations (especially for complex Join Queries)
 
-### Features
+## Features
 
  - Caching
  - Expression Trees (Expression-Based, Object-Based)
