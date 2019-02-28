@@ -3526,6 +3526,86 @@ namespace RepoDb
 
         #endregion
 
+        #region ExecuteQueryMultiple
+
+        /// <summary>
+        /// Executes a multiple query statement from the database.
+        /// </summary>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public QueryMultipleExtractor ExecuteQueryMultiple(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            // Call the method
+            var result = connection.ExecuteQueryMultiple(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: CommandTimeout,
+                transaction: transaction);
+
+            // Dispose the connection
+            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
+            {
+                connection.Dispose();
+            }
+
+            // Return the result
+            return result;
+        }
+
+        /// <summary>
+        /// Executes a multiple query statement from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            // Call the method
+            var result = connection.ExecuteQueryMultipleAsync(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: CommandTimeout,
+                transaction: transaction);
+
+            // Dispose the connection
+            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
+            {
+                connection.Dispose();
+            }
+
+            // Return the result
+            return result;
+        }
+
+        #endregion
+
         #region ExecuteNonQuery
 
         /// <summary>
