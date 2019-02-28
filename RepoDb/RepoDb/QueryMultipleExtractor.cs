@@ -12,7 +12,7 @@ namespace RepoDb
     public class QueryMultipleExtractor : IDisposable
     {
         private DbDataReader m_reader = null;
-        private bool m_isScalarForwarded = false;
+        private bool m_isReaderForwarded = false;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
@@ -86,7 +86,7 @@ namespace RepoDb
         /// <returns>An instance of extracted object as value result.</returns>
         public object Scalar()
         {
-            if (m_isScalarForwarded == true)
+            if (m_isReaderForwarded == true)
             {
                 return ObjectConverter.DbNullToNull(m_reader[0]);
             }
@@ -109,7 +109,7 @@ namespace RepoDb
         {
             if (NextResult())
             {
-                if (m_reader.Read())
+                if (m_isReaderForwarded == false && m_reader.Read())
                 {
                     return ObjectConverter.DbNullToNull(m_reader[0]);
                 }
@@ -139,7 +139,7 @@ namespace RepoDb
             if (result)
             {
                 Position++;
-                m_isScalarForwarded = true;
+                m_isReaderForwarded = false;
             }
             return result;
         }
