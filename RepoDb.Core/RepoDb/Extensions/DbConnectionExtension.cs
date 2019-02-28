@@ -765,6 +765,31 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static int BulkInsert(this IDbConnection connection,
+            DbDataReader reader,
+            string tableName,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+        {
+            return BulkInsertInternal(connection: connection,
+                reader: reader,
+                tableName: tableName,
+                mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
         /// Bulk-inserting the list of data entity objects in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
@@ -923,6 +948,80 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        internal static int BulkInsertInternal(this IDbConnection connection,
+            DbDataReader reader,
+            string tableName,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+        {
+            // Validate, only supports SqlConnection
+            if (connection.IsForProvider(Provider.Sql) == false)
+            {
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
+            }
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                trace.BeforeBulkInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("BulkInsert");
+                    }
+                    return 0;
+                }
+            }
+
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
+            {
+                sqlBulkCopy.DestinationTableName = tableName;
+                if (commandTimeout != null && commandTimeout.HasValue)
+                {
+                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
+                }
+                if (mapItems != null)
+                {
+                    foreach (var mapItem in mapItems)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
+                    }
+                }
+                connection.EnsureOpen();
+                sqlBulkCopy.WriteToServer(reader);
+                result = reader.RecordsAffected;
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
         #endregion
 
         #region BulkInsertAsync
@@ -970,6 +1069,31 @@ namespace RepoDb
         {
             return BulkInsertInternalAsync<TEntity>(connection: connection,
                 reader: reader,
+                mapItems: mappings,
+                commandTimeout: commandTimeout,
+                trace: trace);
+        }
+
+        /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public static Task<int> BulkInsertAsync(this IDbConnection connection,
+            DbDataReader reader,
+            string tableName,
+            IEnumerable<BulkInsertMapItem> mappings = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+        {
+            return BulkInsertInternalAsync(connection: connection,
+                reader: reader,
+                tableName: tableName,
                 mapItems: mappings,
                 commandTimeout: commandTimeout,
                 trace: trace);
@@ -1107,6 +1231,80 @@ namespace RepoDb
             using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
             {
                 sqlBulkCopy.DestinationTableName = ClassMappedNameCache.Get<TEntity>();
+                if (commandTimeout != null && commandTimeout.HasValue)
+                {
+                    sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
+                }
+                if (mapItems != null)
+                {
+                    foreach (var mapItem in mapItems)
+                    {
+                        sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn);
+                    }
+                }
+                connection.EnsureOpen();
+                await sqlBulkCopy.WriteToServerAsync(reader);
+                result = reader.RecordsAffected;
+            }
+
+            // After Execution
+            if (trace != null)
+            {
+                trace.AfterBulkInsert(new TraceLog("BulkInsert", reader, result,
+                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            }
+
+            // Result
+            return result;
+        }
+
+        /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The target table for bulk-insert operation.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        internal async static Task<int> BulkInsertInternalAsync(this IDbConnection connection,
+            DbDataReader reader,
+            string tableName,
+            IEnumerable<BulkInsertMapItem> mapItems = null,
+            int? commandTimeout = null,
+            ITrace trace = null)
+        {
+            // Validate, only supports SqlConnection
+            if (connection.IsForProvider(Provider.Sql) == false)
+            {
+                throw new NotSupportedException("The bulk-insert is only applicable for SQL Server database connection.");
+            }
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog("BulkInsert", reader, null);
+                trace.BeforeBulkInsert(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException("BulkInsert");
+                    }
+                    return 0;
+                }
+            }
+
+            var result = 0;
+
+            // Before Execution Time
+            var beforeExecutionTime = DateTime.UtcNow;
+
+            // Actual Execution
+            using (var sqlBulkCopy = new SqlBulkCopy((SqlConnection)connection))
+            {
+                sqlBulkCopy.DestinationTableName = tableName;
                 if (commandTimeout != null && commandTimeout.HasValue)
                 {
                     sqlBulkCopy.BulkCopyTimeout = commandTimeout.Value;
