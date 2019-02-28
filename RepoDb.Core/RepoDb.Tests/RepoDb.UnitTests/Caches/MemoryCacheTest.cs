@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.Caches
     public class MemoryCacheTest
     {
         [TestMethod]
-        public void TestAdd()
+        public void TestMemoryCacheAdd()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestCacheItem()
+        public void TestMemoryCacheCacheItem()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestClear()
+        public void TestMemoryCacheClear()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestContains()
+        public void TestMemoryCacheContains()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestGet()
+        public void TestMemoryCacheGet()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestGetExpired()
+        public void TestMemoryCacheGetExpired()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -96,7 +96,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod]
-        public void TestOverrideExpiredItem()
+        public void TestMemoryCacheOverrideExpiredItem()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnAddingNewItemWithTheSameKey()
+        public void ThrowExceptionOnAddingNewItemAtMemoryCacheWithTheSameKey()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -130,7 +130,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ThrowExceptionOnAddingACacheWithNegativeExpiration()
+        public void ThrowExceptionAtMemoryCacheOnAddingACacheWithNegativeExpiration()
         {
             // Prepare
             var cache = new MemoryCache();
@@ -140,7 +140,7 @@ namespace RepoDb.UnitTests.Caches
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnRemovingAKeyThatIsNotPresent()
+        public void ThrowExceptionAtMemoryCacheOnRemovingAKeyThatIsNotPresent()
         {
             // Prepare
             var cache = new MemoryCache();

@@ -20,7 +20,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestAnd()
+        public void TestConjunctionAndText()
         {
             // Prepare
             var operation = Conjunction.And;
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestOr()
+        public void TestConjunctionOrText()
         {
             // Prepare
             var operation = Conjunction.Or;

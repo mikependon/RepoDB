@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestAscending()
+        public void TestOrderAscendingText()
         {
             // Prepare
             var operation = Order.Ascending;
@@ -31,7 +31,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestDescending()
+        public void TestOrderDescendingText()
         {
             // Prepare
             var operation = Order.Descending;

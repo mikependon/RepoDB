@@ -20,7 +20,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestEqual()
+        public void TestOperationEqualText()
         {
             // Prepare
             var operation = Operation.Equal;
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestNotEqual()
+        public void TestOperationNotEqualText()
         {
             // Prepare
             var operation = Operation.NotEqual;
@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestLessThan()
+        public void TestOperationLessThanText()
         {
             // Prepare
             var operation = Operation.LessThan;
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestGreaterThan()
+        public void TestOperationGreaterThanText()
         {
             // Prepare
             var operation = Operation.GreaterThan;
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestLessThanOrEqual()
+        public void TestOperationLessThanOrEqualText()
         {
             // Prepare
             var operation = Operation.LessThanOrEqual;
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestGreaterThanOrEqual()
+        public void TestOperationGreaterThanOrEqualText()
         {
             // Prepare
             var operation = Operation.GreaterThanOrEqual;
@@ -98,7 +98,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestLike()
+        public void TestOperationLikeText()
         {
             // Prepare
             var operation = Operation.Like;
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestNotLike()
+        public void TestOperationNotLikeText()
         {
             // Prepare
             var operation = Operation.NotLike;
@@ -124,7 +124,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestBetween()
+        public void TestOperationBetweenText()
         {
             // Prepare
             var operation = Operation.Between;
@@ -137,7 +137,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestNotBetween()
+        public void TestOperationNotBetweenText()
         {
             // Prepare
             var operation = Operation.NotBetween;
@@ -150,7 +150,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestIn()
+        public void TestOperationInText()
         {
             // Prepare
             var operation = Operation.In;
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.Enumerations
         }
 
         [TestMethod]
-        public void TestNotIn()
+        public void TestOperationNotInText()
         {
             // Prepare
             var operation = Operation.NotIn;
