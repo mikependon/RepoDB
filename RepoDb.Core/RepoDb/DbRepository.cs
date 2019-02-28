@@ -682,6 +682,36 @@ namespace RepoDb
             return result;
         }
 
+        /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public int BulkInsert<TEntity>(DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mappings = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = CreateConnection();
+
+            // Call the method
+            var result = connection.BulkInsert<TEntity>(reader: reader,
+                mappings: mappings,
+                commandTimeout: CommandTimeout,
+                trace: Trace);
+
+            // Dispose the connection
+            if (ConnectionPersistency == ConnectionPersistency.PerCall)
+            {
+                connection.Dispose();
+            }
+
+            // Return the result
+            return result;
+        }
+
         #endregion
 
         #region BulkInsertAsync
@@ -702,6 +732,36 @@ namespace RepoDb
 
             // Call the method
             var result = connection.BulkInsertAsync<TEntity>(entities: entities,
+                mappings: mappings,
+                commandTimeout: CommandTimeout,
+                trace: Trace);
+
+            // Dispose the connection
+            if (ConnectionPersistency == ConnectionPersistency.PerCall)
+            {
+                connection.Dispose();
+            }
+
+            // Return the result
+            return result;
+        }
+
+        /// <summary>
+        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
+        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
+        /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
+        public Task<int> BulkInsertAsync<TEntity>(DbDataReader reader,
+            IEnumerable<BulkInsertMapItem> mappings = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = CreateConnection();
+
+            // Call the method
+            var result = connection.BulkInsertAsync<TEntity>(reader: reader,
                 mappings: mappings,
                 commandTimeout: CommandTimeout,
                 trace: Trace);
