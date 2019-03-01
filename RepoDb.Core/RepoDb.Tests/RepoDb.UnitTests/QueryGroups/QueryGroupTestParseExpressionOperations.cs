@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // Operations
 
         [TestMethod]
-        public void TestParseExpressionForEqual()
+        public void TestQueryGroupParseExpressionForEqual()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1).GetString();
@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForNotEqual()
+        public void TestQueryGroupParseExpressionForNotEqual()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt != 1).GetString();
@@ -30,7 +30,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForGreaterThan()
+        public void TestQueryGroupParseExpressionForGreaterThan()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt > 1).GetString();
@@ -41,7 +41,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForGreaterThanOrEqual()
+        public void TestQueryGroupParseExpressionForGreaterThanOrEqual()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt >= 1).GetString();
@@ -52,7 +52,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForLessThan()
+        public void TestQueryGroupParseExpressionForLessThan()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt < 1).GetString();
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForLessThanOrEqual()
+        public void TestQueryGroupParseExpressionForLessThanOrEqual()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt <= 1).GetString();
@@ -76,7 +76,7 @@ namespace RepoDb.UnitTests
         // Equals Boolean
 
         [TestMethod]
-        public void TestParseExpressionForEqualEqualsFalse()
+        public void TestQueryGroupParseExpressionForEqualEqualsFalse()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1) == false).GetString();
@@ -87,7 +87,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionForEqualEqualsTrue()
+        public void TestQueryGroupParseExpressionForEqualEqualsTrue()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1) == true).GetString();

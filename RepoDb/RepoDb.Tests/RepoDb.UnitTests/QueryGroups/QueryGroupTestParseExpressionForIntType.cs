@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // Int
 
         [TestMethod]
-        public void TestParseExpressionIntConstant()
+        public void TestQueryGroupParseExpressionIntConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1).GetString();
@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionIntVariable()
+        public void TestQueryGroupParseExpressionIntVariable()
         {
             // Setup
             var value = 1;
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionIntClassProperty()
+        public void TestQueryGroupParseExpressionIntClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -50,7 +50,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionIntMethodCall()
+        public void TestQueryGroupParseExpressionIntMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == GetIntValueForParseExpression()).GetString();
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionIntVariableMethodCall()
+        public void TestQueryGroupParseExpressionIntVariableMethodCall()
         {
             // Setup
             var value = GetIntValueForParseExpression();
@@ -77,7 +77,7 @@ namespace RepoDb.UnitTests
         // Others
 
         [TestMethod]
-        public void TestParseExpressionWithIntMathOperations()
+        public void TestQueryGroupParseExpressionWithIntMathOperations()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == (1 + 1)).GetString();
@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithIntNewClassInstance()
+        public void TestQueryGroupParseExpressionWithIntNewClassInstance()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == new Random().Next(int.MaxValue)).GetString();
@@ -99,7 +99,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithIntMethodClass()
+        public void TestQueryGroupParseExpressionWithIntMethodClass()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == Convert.ToInt32("1000")).GetString();
@@ -119,7 +119,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithIntArgumentParameter()
+        public void TestQueryGroupParseExpressionWithIntArgumentParameter()
         {
             // Act
             var actual = TestParseExpressionWithIntArgumentParameterMethod<QueryGroupTestExpressionClass>(1);

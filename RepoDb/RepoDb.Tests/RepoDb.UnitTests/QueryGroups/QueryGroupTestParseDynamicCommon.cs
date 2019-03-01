@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace RepoDb.UnitTests
 {
@@ -9,7 +8,7 @@ namespace RepoDb.UnitTests
         // No Operation
 
         [TestMethod]
-        public void TestParseDynamicNoOperation()
+        public void TestQueryGroupParseDynamicNoOperation()
         {
             // Setup
             var expression = new { Field1 = 1 };
@@ -25,7 +24,7 @@ namespace RepoDb.UnitTests
         // No Operation for IS NULL
 
         [TestMethod]
-        public void TestParseDynamicNoOperationForIsNull()
+        public void TestQueryGroupParseDynamicNoOperationForIsNull()
         {
             // Setup
             var expression = new { Field1 = (object)null };

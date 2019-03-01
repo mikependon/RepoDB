@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Linq;
 
 namespace RepoDb.UnitTests
@@ -9,7 +8,7 @@ namespace RepoDb.UnitTests
         // Any
 
         [TestMethod]
-        public void TestParseExpressionAny()
+        public void TestQueryGroupParseExpressionAny()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p == e.PropertyInt));
@@ -23,7 +22,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAny()
+        public void TestQueryGroupParseExpressionNotAny()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => new int[] { 1, 2 }.Any(p => p != e.PropertyInt));
@@ -37,7 +36,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyFromVariable()
+        public void TestQueryGroupParseExpressionAnyFromVariable()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -52,7 +51,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAnyFromVariable()
+        public void TestQueryGroupParseExpressionNotAnyFromVariable()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -67,7 +66,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyFromClassProperty()
+        public void TestQueryGroupParseExpressionAnyFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -85,7 +84,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAnyFromClassProperty()
+        public void TestQueryGroupParseExpressionNotAnyFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -103,7 +102,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyEqualsFalseFromClassProperty()
+        public void TestQueryGroupParseExpressionAnyEqualsFalseFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -121,7 +120,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyEqualsTrueFromClassProperty()
+        public void TestQueryGroupParseExpressionAnyEqualsTrueFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -139,7 +138,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyFromClassMethod()
+        public void TestQueryGroupParseExpressionAnyFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
@@ -153,7 +152,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAnyFromClassMethod()
+        public void TestQueryGroupParseExpressionNotAnyFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
@@ -167,7 +166,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyEqualsFalseFromClassMethod()
+        public void TestQueryGroupParseExpressionAnyEqualsFalseFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false);
@@ -181,7 +180,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionAnyEqualsTrueFromClassMethod()
+        public void TestQueryGroupParseExpressionAnyEqualsTrueFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));
@@ -195,7 +194,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAnyEqualsFalseFromClassMethod()
+        public void TestQueryGroupParseExpressionNotAnyEqualsFalseFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt) == false);
@@ -209,7 +208,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotAnyEqualsTrueFromClassMethod()
+        public void TestQueryGroupParseExpressionNotAnyEqualsTrueFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new[] { GetIntValueForParseExpression(), GetIntValueForParseExpression() }).Any(p => p == e.PropertyInt));

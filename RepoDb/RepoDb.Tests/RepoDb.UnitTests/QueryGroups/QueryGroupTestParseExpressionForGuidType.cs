@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // Guid
 
         [TestMethod]
-        public void TestParseExpressionGuidConstant()
+        public void TestQueryGroupParseExpressionGuidConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == Guid.NewGuid()).GetString();
@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionGuidVariable()
+        public void TestQueryGroupParseExpressionGuidVariable()
         {
             // Setup
             var value = Guid.NewGuid();
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionGuidClassProperty()
+        public void TestQueryGroupParseExpressionGuidClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -50,7 +50,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionGuidMethodCall()
+        public void TestQueryGroupParseExpressionGuidMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyGuid == GetGuidValueForParseExpression()).GetString();
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionGuidVariableMethodCall()
+        public void TestQueryGroupParseExpressionGuidVariableMethodCall()
         {
             // Setup
             var value = GetGuidValueForParseExpression();

@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // DateTime
 
         [TestMethod]
-        public void TestParseExpressionDateTimeConstant()
+        public void TestQueryGroupParseExpressionDateTimeConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == DateTime.UtcNow).GetString();
@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionDateTimeVariable()
+        public void TestQueryGroupParseExpressionDateTimeVariable()
         {
             // Setup
             var value = DateTime.UtcNow;
@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionDateTimeClassProperty()
+        public void TestQueryGroupParseExpressionDateTimeClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -50,7 +50,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionDateTimeMethodCall()
+        public void TestQueryGroupParseExpressionDateTimeMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyDateTime == GetDateTimeValueForParseExpression()).GetString();
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionDateTimeVariableMethodCall()
+        public void TestQueryGroupParseExpressionDateTimeVariableMethodCall()
         {
             // Setup
             var value = GetDateTimeValueForParseExpression();

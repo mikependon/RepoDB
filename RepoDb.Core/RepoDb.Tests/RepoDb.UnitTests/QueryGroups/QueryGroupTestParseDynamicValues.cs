@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // Equal
 
         [TestMethod]
-        public void TestParseDynamicValueForEqualOperation()
+        public void TestQueryGroupParseDynamicValueForEqualOperation()
         {
             // Setup
             var parsed = QueryGroup.Parse(new { Field1 = 1 });

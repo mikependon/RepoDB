@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests
         // Byte
 
         [TestMethod]
-        public void TestParseExpressionByteArray()
+        public void TestQueryGroupParseExpressionByteArray()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBytes == new[] { byte.Parse("0") }).GetString();
@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionPassedByteArray()
+        public void TestQueryGroupParseExpressionPassedByteArray()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBytes == Encoding.Unicode.GetBytes("Test")).GetString();
@@ -30,7 +30,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionByteVariable()
+        public void TestQueryGroupParseExpressionByteVariable()
         {
             // Setup
             var value = new[] { byte.Parse("0") };
@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionByteClassProperty()
+        public void TestQueryGroupParseExpressionByteClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionByteMethodCall()
+        public void TestQueryGroupParseExpressionByteMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBytes == GetBytesValueForParseExpression()).GetString();
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionByteVariableMethodCall()
+        public void TestQueryGroupParseExpressionByteVariableMethodCall()
         {
             // Setup
             var value = GetBytesValueForParseExpression();

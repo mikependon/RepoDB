@@ -7,7 +7,7 @@ namespace RepoDb.UnitTests
         // Boolean
 
         [TestMethod]
-        public void TestParseExpressionBooleanConstant()
+        public void TestQueryGroupParseExpressionBooleanConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == true).GetString();
@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionBooleanVariable()
+        public void TestQueryGroupParseExpressionBooleanVariable()
         {
             // Setup
             var value = true;
@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionBooleanClassProperty()
+        public void TestQueryGroupParseExpressionBooleanClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionBooleanMethodCall()
+        public void TestQueryGroupParseExpressionBooleanMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyBoolean == GetBooleanValueForParseExpression()).GetString();
@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionBooleanVariableMethodCall()
+        public void TestQueryGroupParseExpressionBooleanVariableMethodCall()
         {
             // Setup
             var value = GetBooleanValueForParseExpression();

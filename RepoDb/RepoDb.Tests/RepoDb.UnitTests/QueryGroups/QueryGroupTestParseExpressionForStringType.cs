@@ -7,7 +7,7 @@ namespace RepoDb.UnitTests
         // String
 
         [TestMethod]
-        public void TestParseExpressionStringConstant()
+        public void TestQueryGroupParseExpressionStringConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == "A").GetString();
@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionStringVariable()
+        public void TestQueryGroupParseExpressionStringVariable()
         {
             // Setup
             var value = "A";
@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionStringClassProperty()
+        public void TestQueryGroupParseExpressionStringClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionStringMethodCall()
+        public void TestQueryGroupParseExpressionStringMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString == GetStringValueForParseExpression()).GetString();
@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionStringVariableMethodCall()
+        public void TestQueryGroupParseExpressionStringVariableMethodCall()
         {
             // Setup
             var value = GetStringValueForParseExpression();

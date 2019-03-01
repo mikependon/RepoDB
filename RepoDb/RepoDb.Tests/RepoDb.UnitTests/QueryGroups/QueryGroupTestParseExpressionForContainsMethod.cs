@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests
         // Contains
 
         [TestMethod]
-        public void TestParseExpressionContains()
+        public void TestQueryGroupParseExpressionContains()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new int[] { 1, 2 }).Contains(e.PropertyInt));
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContains()
+        public void TestQueryGroupParseExpressionNotContains()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new int[] { 1, 2 }).Contains(e.PropertyInt));
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsEqualsTrue()
+        public void TestQueryGroupParseExpressionNotContainsEqualsTrue()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new int[] { 1, 2 }).Contains(e.PropertyInt) == true);
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsEqualsFalse()
+        public void TestQueryGroupParseExpressionNotContainsEqualsFalse()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !(new int[] { 1, 2 }).Contains(e.PropertyInt) == false);
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsFromVariable()
+        public void TestQueryGroupParseExpressionContainsFromVariable()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsFromVariable()
+        public void TestQueryGroupParseExpressionNotContainsFromVariable()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsTrue()
+        public void TestQueryGroupParseExpressionContainsEqualsTrue()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new int[] { 1, 2 }).Contains(e.PropertyInt) == true);
@@ -109,7 +109,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsFalse()
+        public void TestQueryGroupParseExpressionContainsEqualsFalse()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (new int[] { 1, 2 }).Contains(e.PropertyInt) == false);
@@ -123,7 +123,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsFromVariableEqualsTrue()
+        public void TestQueryGroupParseExpressionContainsFromVariableEqualsTrue()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsFromVariableEqualsFalse()
+        public void TestQueryGroupParseExpressionContainsFromVariableEqualsFalse()
         {
             // Setup
             var list = new int[] { 1, 2 };
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsAtProperty()
+        public void TestQueryGroupParseExpressionContainsAtProperty()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A"));
@@ -167,7 +167,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsAtProperty()
+        public void TestQueryGroupParseExpressionNotContainsAtProperty()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A"));
@@ -181,7 +181,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsTrueAtProperty()
+        public void TestQueryGroupParseExpressionContainsEqualsTrueAtProperty()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") == true);
@@ -195,7 +195,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsFalseAtProperty()
+        public void TestQueryGroupParseExpressionContainsEqualsFalseAtProperty()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") == false);
@@ -209,7 +209,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsFromClassProperty()
+        public void TestQueryGroupParseExpressionContainsFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -227,7 +227,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsFromClassProperty()
+        public void TestQueryGroupParseExpressionNotContainsFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -245,7 +245,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsFalseFromClassProperty()
+        public void TestQueryGroupParseExpressionContainsEqualsFalseFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -263,7 +263,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsTrueFromClassProperty()
+        public void TestQueryGroupParseExpressionContainsEqualsTrueFromClassProperty()
         {
             // Setup
             var @class = new QueryGroupTestExpressionClass
@@ -281,7 +281,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsFromClassMethod()
+        public void TestQueryGroupParseExpressionContainsFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains(GetStringValueForParseExpression()));
@@ -295,7 +295,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsFromClassMethod()
+        public void TestQueryGroupParseExpressionNotContainsFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains(GetStringValueForParseExpression()));
@@ -309,7 +309,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsFalseFromClassMethod()
+        public void TestQueryGroupParseExpressionContainsEqualsFalseFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains(GetStringValueForParseExpression()) == false);
@@ -323,7 +323,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsEqualsTrueFromClassMethod()
+        public void TestQueryGroupParseExpressionContainsEqualsTrueFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains(GetStringValueForParseExpression()) == true);
@@ -337,7 +337,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsEqualsTrueFromClassMethod()
+        public void TestQueryGroupParseExpressionNotContainsEqualsTrueFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains(GetStringValueForParseExpression()) == true);
@@ -351,7 +351,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsEqualsFalseFromClassMethod()
+        public void TestQueryGroupParseExpressionNotContainsEqualsFalseFromClassMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains(GetStringValueForParseExpression()) == false);
@@ -365,7 +365,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForOr()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForOr()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") || e.PropertyString.Contains("B"));
@@ -379,7 +379,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForAnd()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForAnd()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") && e.PropertyString.Contains("B"));
@@ -393,7 +393,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForOrEqualsFalse()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForOrEqualsFalse()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyString.Contains("A") || e.PropertyString.Contains("B")) == false);
@@ -407,7 +407,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForOrEqualsTrue()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForOrEqualsTrue()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyString.Contains("A") || e.PropertyString.Contains("B")) == true);
@@ -421,7 +421,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForAndEqualsFalse()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForAndEqualsFalse()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyString.Contains("A") && e.PropertyString.Contains("B")) == false);
@@ -435,7 +435,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsWithTwoConditionsForAndEqualsTrue()
+        public void TestQueryGroupParseExpressionContainsWithTwoConditionsForAndEqualsTrue()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyString.Contains("A") && e.PropertyString.Contains("B")) == true);
@@ -449,7 +449,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsAtLeftAndContainsAtRightForOr()
+        public void TestQueryGroupParseExpressionNotContainsAtLeftAndContainsAtRightForOr()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") || e.PropertyString.Contains("B"));
@@ -463,7 +463,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsAtLeftAndContainsAtRightForAnd()
+        public void TestQueryGroupParseExpressionNotContainsAtLeftAndContainsAtRightForAnd()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") && e.PropertyString.Contains("B"));
@@ -477,7 +477,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsAtLeftAndNotContainsAtRightForOr()
+        public void TestQueryGroupParseExpressionContainsAtLeftAndNotContainsAtRightForOr()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") || !e.PropertyString.Contains("B"));
@@ -491,7 +491,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionContainsAtLeftAndNotContainsAtRightForAnd()
+        public void TestQueryGroupParseExpressionContainsAtLeftAndNotContainsAtRightForAnd()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") && !e.PropertyString.Contains("B"));
@@ -505,7 +505,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsAtLeftAndNotContainsAtRightForOr()
+        public void TestQueryGroupParseExpressionNotContainsAtLeftAndNotContainsAtRightForOr()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") || !e.PropertyString.Contains("B"));
@@ -519,7 +519,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionNotContainsAtLeftAndNotContainsAtRightForAnd()
+        public void TestQueryGroupParseExpressionNotContainsAtLeftAndNotContainsAtRightForAnd()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => !e.PropertyString.Contains("A") && !e.PropertyString.Contains("B"));
@@ -533,7 +533,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionStringPropertyContainsAndArrayAnyMethod()
+        public void TestQueryGroupParseExpressionStringPropertyContainsAndArrayAnyMethod()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyString.Contains("A") && (new[] { "B", "C" }).Any(p => p != e.PropertyString));

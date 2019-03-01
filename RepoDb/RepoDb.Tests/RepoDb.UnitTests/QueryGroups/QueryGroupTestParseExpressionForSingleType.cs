@@ -7,7 +7,7 @@ namespace RepoDb.UnitTests
         // Single
 
         [TestMethod]
-        public void TestParseExpressionSingleConstant()
+        public void TestQueryGroupParseExpressionSingleConstant()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == 1).GetString();
@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionSingleVariable()
+        public void TestQueryGroupParseExpressionSingleVariable()
         {
             // Setup
             var value = 1;
@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionSingleClassProperty()
+        public void TestQueryGroupParseExpressionSingleClassProperty()
         {
             // Setup
             var value = new QueryGroupTestExpressionClass
@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionSingleMethodCall()
+        public void TestQueryGroupParseExpressionSingleMethodCall()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertySingle == GetSingleValueForParseExpression()).GetString();
@@ -60,7 +60,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionSingleVariableMethodCall()
+        public void TestQueryGroupParseExpressionSingleVariableMethodCall()
         {
             // Setup
             var value = GetSingleValueForParseExpression();

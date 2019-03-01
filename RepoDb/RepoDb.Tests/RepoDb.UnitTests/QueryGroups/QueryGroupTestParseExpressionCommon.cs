@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests
         // Name
 
         [TestMethod]
-        public void TestParseExpressionWithNameAtLeft()
+        public void TestQueryGroupParseExpressionWithNameAtLeft()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1);
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWhereNameHasMapping()
+        public void TestQueryGroupParseExpressionWhereNameHasMapping()
         {
             // Setup
             var parsed = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.OtherPropertyString == "ABC");
@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests
         // Properties
 
         [TestMethod]
-        public void TestParseExpressionWithDoubleSameFieldsForAnd()
+        public void TestQueryGroupParseExpressionWithDoubleSameFieldsForAnd()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyInt == 2).GetString();
@@ -57,7 +57,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithDoubleSameFieldsForOr()
+        public void TestQueryGroupParseExpressionWithDoubleSameFieldsForOr()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyInt == 2).GetString();
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests
         // Groupings
 
         [TestMethod]
-        public void TestParseExpressionWithSingleGroupForAnd()
+        public void TestQueryGroupParseExpressionWithSingleGroupForAnd()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 && e.PropertyString == "A").GetString();
@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithSingleGroupForOr()
+        public void TestQueryGroupParseExpressionWithSingleGroupForOr()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => e.PropertyInt == 1 || e.PropertyString == "A").GetString();
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithSingleGroupForOrAndSingleFieldForAnd()
+        public void TestQueryGroupParseExpressionWithSingleGroupForOrAndSingleFieldForAnd()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) && e.PropertyString == "A").GetString();
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithSingleGroupForAndAndSingleFieldForOr()
+        public void TestQueryGroupParseExpressionWithSingleGroupForAndAndSingleFieldForOr()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) || e.PropertyString == "A").GetString();
@@ -114,7 +114,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithDoubleGroupForAnd()
+        public void TestQueryGroupParseExpressionWithDoubleGroupForAnd()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 && e.PropertyDouble == 2) && (e.PropertyString == "A" && e.PropertySingle == 1)).GetString();
@@ -125,7 +125,7 @@ namespace RepoDb.UnitTests
         }
 
         [TestMethod]
-        public void TestParseExpressionWithDoubleGroupForOr()
+        public void TestQueryGroupParseExpressionWithDoubleGroupForOr()
         {
             // Act
             var actual = QueryGroup.Parse<QueryGroupTestExpressionClass>(e => (e.PropertyInt == 1 || e.PropertyDouble == 2) || (e.PropertyString == "A" || e.PropertySingle == 1)).GetString();
