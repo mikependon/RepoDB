@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlDbProviderCreateQueryTest
     {
-        private class TestWithoutMappingsClass
+        private class TestSqlDbProviderCreateQueryWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -16,25 +16,25 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithoutMappings()
+        public void TestSqlDbProviderCreateQueryWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithoutMappingsClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithoutMappingsClass] ;";
+                $"FROM [TestSqlDbProviderCreateQueryWithoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass
+        private class TestSqlDbProviderCreateQueryWithClassMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -42,11 +42,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithClassMapping()
+        public void TestSqlDbProviderCreateQueryWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithClassMappingClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingClass
+        private class TestSqlDbProviderCreateQueryWithFieldMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -68,24 +68,24 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithFieldMapping()
+        public void TestSqlDbProviderCreateQueryWithFieldMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithFieldMappingClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithFieldMappingClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field4] " +
-                $"FROM [TestWithFieldMappingClass] ;";
+                $"FROM [TestSqlDbProviderCreateQueryWithFieldMappingClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithTopClass
+        private class TestSqlDbProviderCreateQueryWithTopClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -93,24 +93,24 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithTop()
+        public void TestSqlDbProviderCreateQueryWithTop()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithTopClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTopClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, top: 10);
             var expected = $"" +
                 $"SELECT TOP (10) [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithTopClass] ;";
+                $"FROM [TestSqlDbProviderCreateQueryWithTopClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithTableHintClass
+        private class TestSqlDbProviderCreateQueryWithTableHintClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -118,42 +118,42 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithTableHint()
+        public void TestSqlDbProviderCreateQueryWithTableHint()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithTableHintClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTableHintClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, "WITH (INDEX(ANYINDEX), NOLOCK)");
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithTableHintClass] WITH (INDEX(ANYINDEX), NOLOCK) ;";
+                $"FROM [TestSqlDbProviderCreateQueryWithTableHintClass] WITH (INDEX(ANYINDEX), NOLOCK) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestWithTableHintViaSqlTableHints()
+        public void TestSqlDbProviderCreateQueryWithTableHintViaSqlTableHints()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithTableHintClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTableHintClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, SqlTableHints.ReadUncommitted);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithTableHintClass] {SqlTableHints.ReadUncommitted} ;";
+                $"FROM [TestSqlDbProviderCreateQueryWithTableHintClass] {SqlTableHints.ReadUncommitted} ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionClass
+        private class TestSqlDbProviderCreateQueryWithExpressionClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -161,11 +161,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithExpression()
+        public void TestSqlDbProviderCreateQueryWithExpression()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithExpressionClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithExpressionClass>();
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithExpressionClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithExpressionClass] " +
                 $"WHERE ([Field1] = @Field1) ;";
 
             // Assert
@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.StatementBuilders
          * missing fields, then, simply show the exception
          */
 
-        private class TestWithAscendingOrderFieldsClass
+        private class TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -197,11 +197,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithAscendingOrderFields()
+        public void TestSqlDbProviderCreateQueryWithAscendingOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithAscendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Ascending });
 
@@ -209,14 +209,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithAscendingOrderFieldsClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass] " +
                 $"ORDER BY [OrderField] ASC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithDescendingOrderFieldsClass
+        private class TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -224,11 +224,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithDescendingOrderFields()
+        public void TestSqlDbProviderCreateQueryWithDescendingOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithDescendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Descending });
 
@@ -236,14 +236,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithDescendingOrderFieldsClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass] " +
                 $"ORDER BY [OrderField] DESC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithAscendingAndDescendingOrderFieldsClass
+        private class TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -251,11 +251,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithAscendingAndDescendingOrderFields()
+        public void TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithAscendingAndDescendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
             {
@@ -267,14 +267,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithAscendingAndDescendingOrderFieldsClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass] " +
                 $"ORDER BY [AscendingField] ASC, [DescendingField] DESC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithDescendingAndAscendingOrderFieldsClass
+        private class TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -282,11 +282,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithDescendingAndAscendingOrderFields()
+        public void TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithDescendingAndAscendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass>();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
             {
@@ -298,14 +298,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithDescendingAndAscendingOrderFieldsClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass] " +
                 $"ORDER BY [DescendingField] DESC, [AscendingField] ASC ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithAnyFieldsAtExpressionClass
+        private class TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -313,11 +313,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithAnyFieldsAtExpression()
+        public void TestSqlDbProviderCreateQueryWithAnyFieldsAtExpression()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithAnyFieldsAtExpressionClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass>();
             var expression = new { AnyField = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
@@ -325,7 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestWithAnyFieldsAtExpressionClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass] " +
                 $"WHERE ([AnyField] = @AnyField) ;";
 
             // Assert
@@ -334,16 +334,16 @@ namespace RepoDb.UnitTests.StatementBuilders
 
         /*******************************/
 
-        private class ThrowExceptionIfThereAreNoQueryableFieldsClass
+        private class ThrowExceptionOnSqlDbProviderCreateQueryIfThereAreNoQueryableFieldsClass
         {
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfThereAreNoQueryableFields()
+        public void ThrowExceptionOnSqlDbProviderCreateQueryIfThereAreNoQueryableFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateQueryIfThereAreNoQueryableFieldsClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert

@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.Equalities
     public class ParameterEqualityTest
     {
         [TestMethod]
-        public void TestEqualsToString()
+        public void TestParameterEqualityFromString()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestNotEqualsToImproperString()
+        public void TestParameterEqualityToImproperString()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEquality()
+        public void TestParameterHashCodeEquality()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityFromString()
+        public void TestParameterHashCodeEqualityFromString()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityFromImproperString()
+        public void TestParameterHashCodeEqualityFromImproperString()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -74,7 +74,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperator()
+        public void TestParameterObjectEquality()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethod()
+        public void TestParameterObjectEqualityFromEqualsMethod()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContains()
+        public void TestParameterArrayListContainability()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());
@@ -118,7 +118,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContains()
+        public void TestParameterGenericListContainability()
         {
             // Prepare
             var objA = new Parameter("ParameterName", new object());

@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.Equalities
     public class FieldEqualityTest
     {
         [TestMethod]
-        public void TestEqualsToString()
+        public void TestFieldEqualityFromString()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -21,7 +21,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestNotEqualsToImproperString()
+        public void TestFieldNameCaseSensitivity()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEquality()
+        public void TestFieldHashCodeEquality()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityFromString()
+        public void TestFieldHashCodeEqualityFromLiteralString()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityFromImproperString()
+        public void TestFieldHashCodeEqualityFromImproperString()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -74,7 +74,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperator()
+        public void TestFieldObjectEquality()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -88,7 +88,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethod()
+        public void TestFieldObjectEqualityFromEqualsMethod()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContains()
+        public void TestFieldFromArrayListContainability()
         {
             // Prepare
             var objA = new Field("FieldName");
@@ -118,15 +118,14 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContains()
+        public void TestFieldGenericListContainability()
         {
             // Prepare
             var objA = new Field("FieldName");
             var objB = new Field("FieldName");
-            var list = new List<Field>();
+            var list = new List<Field>() { objA };
 
             // Act
-            list.Add(objA);
             var equal = list.Contains(objB);
 
             // Assert

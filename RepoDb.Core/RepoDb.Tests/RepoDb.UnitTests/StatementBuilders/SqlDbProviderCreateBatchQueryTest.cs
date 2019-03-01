@@ -9,18 +9,18 @@ namespace RepoDb.UnitTests.StatementBuilders
     public class SqlDbProviderCreateBatchQueryTest
     {
 
-        private class TestWithoutMappingsClass
+        private class TestSqlDbProviderCreateBatchQueryWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithoutMappings()
+        public void TestSqlDbProviderCreateBatchQueryWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithoutMappingsClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -32,7 +32,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestWithoutMappingsClass] " +
+                $"FROM [TestSqlDbProviderCreateBatchQueryWithoutMappingsClass] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -43,18 +43,18 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionsClass
+        private class TestSqlDbProviderCreateBatchQueryWithExpressionsClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithExpressions()
+        public void TestSqlDbProviderCreateBatchQueryWithExpressions()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithExpressionsClass>();
             var where = QueryGroup.Parse(new
             {
                 Field1 = "Test"
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestWithExpressionsClass] " +
+                $"FROM [TestSqlDbProviderCreateBatchQueryWithExpressionsClass] " +
                 $"WHERE ([Field1] = @Field1) " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
@@ -82,18 +82,18 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithMultipleOrderedColumnsAndWithoutAttributesClass
+        private class TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithMultipleOrderedColumnsAndWithoutAttributes()
+        public void TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributes()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithMultipleOrderedColumnsAndWithoutAttributesClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Descending,
@@ -106,7 +106,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] DESC, [Field2] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [TestWithMultipleOrderedColumnsAndWithoutAttributesClass] " +
+                $"FROM [TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass] " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
                 $"FROM CTE " +
@@ -118,18 +118,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass
+        private class TestSqlDbProviderCreateBatchQueryWithClassMappingClass
         {
             public int Field1 { get; set; }
             public int Field2 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithClassMapping()
+        public void TestSqlDbProviderCreateBatchQueryWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithClassMappingClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsClass
+        private class TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass
         {
             public int Field1 { get; set; }
             [Map("Field3")]
@@ -161,11 +161,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithFieldMappings()
+        public void TestSqlDbProviderCreateBatchQueryWithFieldMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass>();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
@@ -188,16 +188,16 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfThereAreNoQueryableFieldsClass
+        private class ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass
         {
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfThereAreNoQueryableFields()
+        public void ThrowExceptionOnSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFields()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfThereAreNoQueryableFieldsClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass>();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert

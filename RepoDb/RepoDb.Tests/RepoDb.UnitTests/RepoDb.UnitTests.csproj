@@ -69,6 +69,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Attributes\MapAttributeTest.cs" />
     <Compile Include="Equalities\OrderFieldEqualityTest.cs" />
     <Compile Include="Equalities\ParameterEqualityTest.cs" />
     <Compile Include="Equalities\FieldEqualityTest.cs" />
@@ -119,7 +120,7 @@
     <Compile Include="QueryGroups\QueryGroupTestParseExpressionCommon.cs" />
     <Compile Include="QueryGroups\QueryGroupTestParseExpressionClasses.cs" />
     <Compile Include="StatementBuilders\SqlDbProviderCreateBatchQueryTest.cs" />
-    <Compile Include="StatementBuilders\SqlDbProviderCreateCountTestFor.cs" />
+    <Compile Include="StatementBuilders\SqlDbProviderCreateCountTest.cs" />
     <Compile Include="StatementBuilders\SqlDbProviderCreateDeleteAllTest.cs" />
     <Compile Include="StatementBuilders\SqlDbProviderCreateDeleteTest.cs" />
     <Compile Include="StatementBuilders\SqlDbProviderCreateInlineInsertTest.cs" />

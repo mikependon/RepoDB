@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests.Fields
         // From
 
         [TestMethod]
-        public void TestFromMethod()
+        public void TestTestFromMethodParsing()
         {
             // Prepare
             var fields = new[] { "Field1", "Field2", "Field3" };
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterIsNull()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsNull()
         {
             // Prepare
             var fields = (string)null;
@@ -35,7 +35,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterIsEmpty()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsEmpty()
         {
             // Prepare
             var fields = new[] { "" };
@@ -45,7 +45,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterIsWhitespace()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterIsWhitespace()
         {
             // Prepare
             var fields = new[] { " " };
@@ -55,7 +55,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterHasNull()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasNull()
         {
             // Prepare
             var fields = new[] { "Field1", null, "Field3" };
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterHasEmpty()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasEmpty()
         {
             // Prepare
             var fields = new[] { "Field1", "", "Field3" };
@@ -75,7 +75,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfFromMethodFieldsParameterHasWhitespace()
+        public void ThrowExceptionOnFieldIfTheFromMethodFieldsParameterHasWhitespace()
         {
             // Prepare
             var fields = new[] { "Field1", " ", "Field3" };
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseExpressionMethod()
+        public void TestFieldParseMethodForLinqExpression()
         {
             // Act
             var parsed = Field.Parse<FieldTestClass>(p => p.Id);
@@ -102,7 +102,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseDynamicMethod()
+        public void TestFieldParseMethodForDynamicObject()
         {
             // Prepare
             var obj = new { Field1 = "Field1", Field2 = "Field2" };
@@ -118,14 +118,14 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionIfParseExpressionMethodHasNoPropertyName()
+        public void ThrowExceptionOnFieldIfTheParseForLinqExpressionMethodHasNoPropertyName()
         {
             // Act/Assert
             Field.Parse<FieldTestClass>(p => 1);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfParseDynamicMethodObjParameterIsNull()
+        public void ThrowExceptionOnFieldIfTheParseForDynamicObjectMethodParameterIsNull()
         {
             // Prepare
             var obj = (object)null;
@@ -135,7 +135,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfParseDynamicMethodObjParameterIsNotDynamic()
+        public void ThrowExceptionOnFieldIfTheParseForDynamicMethodObjParameterIsNotADynamic()
         {
             // Prepare
             var obj = "NotADynamic";
@@ -145,7 +145,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfParseDynamicMethodObjParameterHasNoProperty()
+        public void ThrowExceptionOnFieldIfTheParseForDynamicMethodObjParameterHasNoProperty()
         {
             // Prepare
             var obj = new { };

@@ -3087,8 +3087,8 @@ namespace RepoDb
                 hints2: hints2,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3165,8 +3165,8 @@ namespace RepoDb
                 hints3: hints3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3258,8 +3258,8 @@ namespace RepoDb
                 hints4: hints4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3365,8 +3365,8 @@ namespace RepoDb
                 hints5: hints5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3486,8 +3486,8 @@ namespace RepoDb
                 hints6: hints6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3621,8 +3621,8 @@ namespace RepoDb
                 hints7: hints7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3657,8 +3657,6 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -3669,9 +3667,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -3689,8 +3685,8 @@ namespace RepoDb
                 hints2: hints2,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3726,8 +3722,6 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -3742,9 +3736,7 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3767,8 +3759,8 @@ namespace RepoDb
                 hints3: hints3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3809,8 +3801,6 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
             QueryMultipleAsync<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
@@ -3830,9 +3820,7 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3860,8 +3848,8 @@ namespace RepoDb
                 hints4: hints4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -3907,8 +3895,6 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
@@ -3932,9 +3918,7 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3967,8 +3951,8 @@ namespace RepoDb
                 hints5: hints5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -4019,8 +4003,6 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
@@ -4048,9 +4030,7 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4088,8 +4068,8 @@ namespace RepoDb
                 hints6: hints6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
@@ -4145,8 +4125,6 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
@@ -4178,9 +4156,7 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -4223,8 +4199,8 @@ namespace RepoDb
                 hints7: hints7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+                trace: Trace,
+                statementBuilder: StatementBuilder);
 
             // Dispose the connection
             if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)

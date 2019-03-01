@@ -6,37 +6,37 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlDbProviderCreateTruncateTest
     {
-        private class TestWithhoutMappingsClass
+        private class TestSqlDbProviderCreateTruncateWithhoutMappingsClass
         {
         }
 
         [TestMethod]
-        public void TestWithhoutMappings()
+        public void TestSqlDbProviderCreateTruncateWithhoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithhoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateTruncateWithhoutMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateTruncate(queryBuilder);
             var expected = $"" +
-                $"TRUNCATE TABLE [TestWithhoutMappingsClass] ;";
+                $"TRUNCATE TABLE [TestSqlDbProviderCreateTruncateWithhoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingsClass
+        private class TestSqlDbProviderCreateTruncateWithClassMappingsClass
         {
         }
 
         [TestMethod]
-        public void TestWithClassMappings()
+        public void TestSqlDbProviderCreateTruncateWithClassMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateTruncateWithClassMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateTruncate(queryBuilder);

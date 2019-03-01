@@ -6,37 +6,37 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlDbProviderCreateDeleteTest
     {
-        private class TestWithoutMappingsClass
+        private class TestSqlDbProviderCreateDeleteWithoutMappingsClass
         {
         }
 
         [TestMethod]
-        public void TestWithoutMappings()
+        public void TestSqlDbProviderCreateDeleteWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithoutMappingsClass>();
 
             // Act
             var actual = statementBuilder.CreateDelete(queryBuilder, null);
             var expected = $"" +
                 $"DELETE " +
-                $"FROM [TestWithoutMappingsClass] ;";
+                $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsClass] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithoutMappingsAndWithExpressionsClass
+        private class TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass
         {
         }
 
         [TestMethod]
-        public void TestWithExpressions()
+        public void TestSqlDbProviderCreateDeleteWithExpressions()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsAndWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass>();
             var expression = new { Field1 = 1 };
 
             // Act
@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateDelete(queryBuilder, queryGroup);
             var expected = $"" +
                 $"DELETE " +
-                $"FROM [TestWithoutMappingsAndWithExpressionsClass] " +
+                $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass] " +
                 $"WHERE ([Field1] = @Field1) ;";
 
             // Assert
@@ -52,16 +52,16 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithMappingsClass
+        private class TestSqlDbProviderCreateDeleteWithMappingsClass
         {
         }
 
         [TestMethod]
-        public void TestWithMappings()
+        public void TestSqlDbProviderCreateDeleteWithMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithMappingsClass>();
             var expression = new { Field1 = 1 };
 
             // Act

@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestQueryCacheKey()
+        public void TestBaseRepositoryQueryCacheKey()
         {
             // Prepare
             var cache = new Mock<ICache>();

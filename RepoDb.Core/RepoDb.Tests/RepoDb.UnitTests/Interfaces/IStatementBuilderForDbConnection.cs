@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestClass]
-    public class IStatementBuilderForDbRepositoryTest
+    public class IStatementBuilderForDbConnection
     {
         public class DataEntity
         {
@@ -69,11 +69,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateBatchQuery
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForBatchQuery()
+        public void TestDbConnectionStatementBuilderForBatchQuery()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<OrderField>>()));
 
             // Act
-            repository.Object.BatchQuery<DataEntity>(0, 10, null, null);
+            connection.BatchQuery<DataEntity>(0, 10, null, null, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -100,11 +100,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateCount
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForCount()
+        public void TestDbConnectionStatementBuilderForCount()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -113,7 +113,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()));
 
             // Act
-            repository.Object.Count<DataEntity>();
+            connection.Count<DataEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -125,11 +125,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateDelete
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForDelete()
+        public void TestDbConnectionStatementBuilderForDelete()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()));
 
             // Act
-            repository.Object.Delete<DataEntity>(e => e.Id == 1);
+            connection.Delete<DataEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -150,11 +150,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateDeleteAll
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForDeleteAll()
+        public void TestDbConnectionStatementBuilderForDeleteAll()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -162,7 +162,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder<DataEntity>>()));
 
             // Act
-            repository.Object.DeleteAll<DataEntity>();
+            connection.DeleteAll<DataEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -173,11 +173,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateInlineInsert
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInlineInsert()
+        public void TestDbConnectionStatementBuilderForInlineInsert()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            repository.Object.InlineInsert<DataEntity>(new { Id = 1, Name = "Name" });
+            connection.InlineInsert<DataEntity>(new { Id = 1, Name = "Name" }, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -198,11 +198,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateInlineMerge
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInlineMerge()
+        public void TestDbConnectionStatementBuilderForInlineMerge()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -212,7 +212,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            repository.Object.InlineMerge<DataEntity>(new { Name = "Name" }, e => e.Id == 1);
+            connection.InlineMerge<DataEntity>(new { Name = "Name" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -225,11 +225,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateInlineUpdate
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInlineUpdate()
+        public void TestDbConnectionStatementBuilderForInlineUpdate()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -239,7 +239,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()));
 
             // Act
-            repository.Object.InlineUpdate<DataEntity>(new { Name = "Name" }, e => e.Id == 1);
+            connection.InlineUpdate<DataEntity>(new { Name = "Name" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -252,11 +252,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateInsert
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForInsert()
+        public void TestDbConnectionStatementBuilderForInsert()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder<DataEntity>>()));
 
             // Act
-            repository.Object.Insert<DataEntity>(new DataEntity { Name = "Name" });
+            connection.Insert<DataEntity>(new DataEntity { Name = "Name" }, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -275,11 +275,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateMerge
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForMerge()
+        public void TestDbConnectionStatementBuilderForMerge()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -288,7 +288,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            repository.Object.Merge<DataEntity>(new DataEntity { Name = "Name" }, e => e.Id == 1);
+            connection.Merge<DataEntity>(new DataEntity { Name = "Name" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -300,11 +300,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateQuery
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForQuery()
+        public void TestDbConnectionStatementBuilderForQuery()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -316,7 +316,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()));
 
             // Act
-            repository.Object.Query<DataEntity>(e => e.Id == 1);
+            connection.Query<DataEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -331,11 +331,11 @@ namespace RepoDb.UnitTests.Interfaces
         // QueryMultple
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForQueryMultiple()
+        public void TestDbConnectionStatementBuilderForQueryMultiple()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -389,7 +389,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<string>()));
 
             // Act
-            repository.Object.QueryMultiple<DataEntityT1,
+            connection.QueryMultiple<DataEntityT1,
                 DataEntityT2,
                 DataEntityT3,
                 DataEntityT4,
@@ -401,7 +401,7 @@ namespace RepoDb.UnitTests.Interfaces
                 e => e.Id == 1,
                 e => e.Id == 1,
                 e => e.Id == 1,
-                e => e.Id == 1);
+                e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -458,11 +458,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateTruncate
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForTruncate()
+        public void TestDbConnectionStatementBuilderForTruncate()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -470,7 +470,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryBuilder<DataEntity>>()));
 
             // Act
-            repository.Object.Truncate<DataEntity>();
+            connection.Truncate<DataEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -481,11 +481,11 @@ namespace RepoDb.UnitTests.Interfaces
         // CreateUpdate
 
         [TestMethod]
-        public void TestDbRepositoryStatementBuilderForUpdate()
+        public void TestDbConnectionStatementBuilderForUpdate()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", statementBuilder.Object);
+            var connection = new CustomDbConnection();
 
             // Setup
             statementBuilder.Setup(builder =>
@@ -494,7 +494,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>()));
 
             // Act
-            repository.Object.Update<DataEntity>(new DataEntity { Name = "Update" }, e => e.Id == 1);
+            connection.Update<DataEntity>(new DataEntity { Name = "Update" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>

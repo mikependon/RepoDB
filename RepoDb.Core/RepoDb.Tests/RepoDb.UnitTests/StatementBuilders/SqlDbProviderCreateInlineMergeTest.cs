@@ -8,7 +8,7 @@ namespace RepoDb.UnitTests.StatementBuilders
     [TestClass]
     public class SqlDbProviderCreateInlineMergeTest
     {
-        private class TestWithoutMappingsClass
+        private class TestSqlDbProviderCreateInlineMergeWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -16,18 +16,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithoutMappings()
+        public void TestSqlDbProviderCreateInlineMergeWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithoutMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From(new[] { "Field1" });
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithoutMappingsClass] AS T " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithoutMappingsClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -41,7 +41,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass
+        private class TestSqlDbProviderCreateInlineMergeWithMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -49,11 +49,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithClassMapping()
+        public void TestSqlDbProviderCreateInlineMergeWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithMappingClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From(new[] { "Field1" });
 
@@ -73,7 +73,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithAttributeMappingsClass
+        private class TestSqlDbProviderCreateInlineMergeWithAttributeMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -82,18 +82,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithAttributeMappings()
+        public void TestSqlDbProviderCreateInlineMergeWithAttributeMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithAttributeMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithAttributeMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
             var qualifiers = Field.From(new[] { "Field1" });
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithAttributeMappingsClass] AS T " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithAttributeMappingsClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field4 AS [Field4] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -106,7 +106,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIdFieldClass
+        private class TestSqlDbProviderCreateInlineMergeWithIdFieldClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -114,18 +114,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithIdField()
+        public void TestSqlDbProviderCreateInlineMergeWithIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithIdFieldClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithIdFieldClass>();
             var fields = Field.From(new[] { "Id", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithIdFieldClass] AS T " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithIdFieldClass] AS T " +
                 $"USING ( SELECT @Id AS [Id], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Id] = T.[Id] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithPrimaryKeyFieldClass
+        private class TestSqlDbProviderCreateInlineMergeWithPrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -147,18 +147,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithPrimaryKeyField()
+        public void TestSqlDbProviderCreateInlineMergeWithPrimaryKeyField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithPrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithPrimaryKeyFieldClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithPrimaryKeyFieldClass] AS T " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithPrimaryKeyFieldClass] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Field1] = T.[Field1] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -171,31 +171,31 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithClassIdFieldClass
+        private class TestSqlDbProviderCreateInlineMergeWithClassIdFieldClass
         {
-            public int TestWithClassIdFieldClassId { get; set; }
+            public int TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithClassIdField()
+        public void TestSqlDbProviderCreateInlineMergeWithClassIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassIdFieldClass>();
-            var fields = Field.From(new[] { "TestWithClassIdFieldClassId", "Field2", "Field3" });
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithClassIdFieldClass>();
+            var fields = Field.From(new[] { "TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithClassIdFieldClass] AS T " +
-                $"USING ( SELECT @TestWithClassIdFieldClassId AS [TestWithClassIdFieldClassId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[TestWithClassIdFieldClassId] = T.[TestWithClassIdFieldClassId] ) " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithClassIdFieldClass] AS T " +
+                $"USING ( SELECT @TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId AS [TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId] = T.[TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId] ) " +
                 $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [TestWithClassIdFieldClassId], [Field2], [Field3] ) " +
-                $"VALUES ( S.[TestWithClassIdFieldClassId], S.[Field2], S.[Field3] ) " +
+                $"INSERT ( [TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId], [Field2], [Field3] ) " +
+                $"VALUES ( S.[TestSqlDbProviderCreateInlineMergeWithClassIdFieldClassId], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
 
@@ -203,7 +203,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithIdClass
+        private class TestSqlDbProviderCreateInlineMergeWithIdClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -211,18 +211,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithId()
+        public void TestSqlDbProviderCreateInlineMergeWithId()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithIdClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithIdClass>();
             var fields = Field.From(new[] { "Id", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithIdClass] AS T " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithIdClass] AS T " +
                 $"USING ( SELECT @Id AS [Id], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
                 $"AS S ON ( S.[Id] = T.[Id] ) " +
                 $"WHEN NOT MATCHED THEN " +
@@ -235,31 +235,31 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithClassIdClass
+        private class TestSqlDbProviderCreateInlineMergeWithClassIdClass
         {
-            public int TestWithClassIdClassId { get; set; }
+            public int TestSqlDbProviderCreateInlineMergeWithClassIdClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [TestMethod]
-        public void TestWithClassId()
+        public void TestSqlDbProviderCreateInlineMergeWithClassId()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassIdClass>();
-            var fields = Field.From(new[] { "TestWithClassIdClassId", "Field2", "Field3" });
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithClassIdClass>();
+            var fields = Field.From(new[] { "TestSqlDbProviderCreateInlineMergeWithClassIdClassId", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
             // Act
             var actual = statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
             var expected = $"" +
-                $"MERGE [TestWithClassIdClass] AS T " +
-                $"USING ( SELECT @TestWithClassIdClassId AS [TestWithClassIdClassId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[TestWithClassIdClassId] = T.[TestWithClassIdClassId] ) " +
+                $"MERGE [TestSqlDbProviderCreateInlineMergeWithClassIdClass] AS T " +
+                $"USING ( SELECT @TestSqlDbProviderCreateInlineMergeWithClassIdClassId AS [TestSqlDbProviderCreateInlineMergeWithClassIdClassId], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( S.[TestSqlDbProviderCreateInlineMergeWithClassIdClassId] = T.[TestSqlDbProviderCreateInlineMergeWithClassIdClassId] ) " +
                 $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [TestWithClassIdClassId], [Field2], [Field3] ) " +
-                $"VALUES ( S.[TestWithClassIdClassId], S.[Field2], S.[Field3] ) " +
+                $"INSERT ( [TestSqlDbProviderCreateInlineMergeWithClassIdClassId], [Field2], [Field3] ) " +
+                $"VALUES ( S.[TestSqlDbProviderCreateInlineMergeWithClassIdClassId], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
 
@@ -268,7 +268,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingIdClass
+        private class TestSqlDbProviderCreateInlineMergeWithClassMappingIdClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -276,11 +276,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithClassMappingId()
+        public void TestSqlDbProviderCreateInlineMergeWithClassMappingId()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingIdClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithClassMappingIdClass>();
             var fields = Field.From(new[] { "ClassNameId", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
@@ -301,7 +301,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingIdFieldClass
+        private class TestSqlDbProviderCreateInlineMergeWithClassMappingIdFieldClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -309,11 +309,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithClassMappingIdField()
+        public void TestSqlDbProviderCreateInlineMergeWithClassMappingIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingIdFieldClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineMergeWithClassMappingIdFieldClass>();
             var fields = Field.From(new[] { "ClassNameId", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
@@ -333,7 +333,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class ThrowExceptionIfNoQualifiersAndNoPrimaryFieldDefinedClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfNoQualifiersAndNoPrimaryFieldDefinedClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -341,11 +341,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfNoQualifiersAndNoPrimaryFieldDefined()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfNoQualifiersAndNoPrimaryFieldDefined()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfNoQualifiersAndNoPrimaryFieldDefinedClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfNoQualifiersAndNoPrimaryFieldDefinedClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = (IEnumerable<Field>)null;
 
@@ -353,7 +353,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfAnIdentityFieldIsNotAPrimaryFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAnIdentityFieldIsNotAPrimaryFieldClass
         {
             [Identity]
             public int Field1 { get; set; }
@@ -362,11 +362,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfAnIdentityFieldIsNotAPrimaryField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAnIdentityFieldIsNotAPrimaryField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfAnIdentityFieldIsNotAPrimaryFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAnIdentityFieldIsNotAPrimaryFieldClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From(new[] { "Field1" });
 
@@ -374,17 +374,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfTheFieldsAreNullClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheFieldsAreNullClass
         {
             public int Field1 { get; set; }
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfTheFieldsAreNull()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheFieldsAreNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheFieldsAreNullClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheFieldsAreNullClass>();
             var fields = (IEnumerable<Field>)null;
             var qualifiers = Field.From(new[] { "Field1" });
 
@@ -392,17 +392,17 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfTheQualifiersAreNullWithoutPrimaryKeyClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheQualifiersAreNullWithoutPrimaryKeyClass
         {
             public int Field1 { get; set; }
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfTheQualifiersAreNullWithoutPrimaryKey()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheQualifiersAreNullWithoutPrimaryKey()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheQualifiersAreNullWithoutPrimaryKeyClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheQualifiersAreNullWithoutPrimaryKeyClass>();
             var fields = Field.From(new[] { "Field1" });
             var qualifiers = (IEnumerable<Field>)null;
 
@@ -410,7 +410,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntityClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -418,11 +418,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntity()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntityClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From(new[] { "Field1", "Field4" });
 
@@ -430,7 +430,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntityFieldMappingClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntityFieldMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -439,11 +439,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntityFieldMapping()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntityFieldMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfAQualifierFieldIsNotPresentAtDataEntityFieldMappingClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfAQualifierFieldIsNotPresentAtDataEntityFieldMappingClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
             var qualifiers = Field.From(new[] { "Field1", "Field3" });
 
@@ -451,7 +451,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             statementBuilder.CreateInlineMerge(queryBuilder, fields, qualifiers);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotThePrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -461,36 +461,36 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotThePrimaryKeyField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
 
             // Act/Assert
             statementBuilder.CreateInsert(queryBuilder);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassIdFieldClass
         {
-            public int ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
+            public int ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassIdFieldClassId { get; set; }
             [Identity]
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheIdentityFieldIsNotTheClassIdField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassIdFieldClass>();
 
             // Act/Assert
             statementBuilder.CreateInsert(queryBuilder);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheIdFieldClass
         {
             public int Id { get; set; }
             [Identity]
@@ -499,18 +499,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheIdentityFieldIsNotTheIdField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheIdFieldClass>();
 
             // Act/Assert
             statementBuilder.CreateInsert(queryBuilder);
         }
 
         [Map("ClassName")]
-        private class ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassMappingIdFieldClass
         {
             public int ClassNameId { get; set; }
             [Identity]
@@ -519,11 +519,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassMappingIdField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineMergeIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
 
             // Act/Assert
             statementBuilder.CreateInsert(queryBuilder);

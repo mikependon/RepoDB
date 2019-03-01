@@ -19,7 +19,7 @@ namespace RepoDb.UnitTests.Interfaces
         // BatchQuery
 
         [TestMethod]
-        public void TestBeforeBatchQuery()
+        public void TestDbConnectionTraceForBeforeBatchQuery()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterBatchQuery()
+        public void TestDbConnectionTraceForAfterBatchQuery()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -55,7 +55,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Count
 
         [TestMethod]
-        public void TestBeforeBulkInsert()
+        public void TestDbConnectionTraceForBeforeBulkInsert()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterCount()
+        public void TestDbConnectionTraceForAfterCount()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Delete
 
         [TestMethod]
-        public void TestBeforeDelete()
+        public void TestDbConnectionTraceForBeforeDelete()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -108,7 +108,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterDelete()
+        public void TestDbConnectionTraceForAfterDelete()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -127,7 +127,7 @@ namespace RepoDb.UnitTests.Interfaces
         // InlineInsert
 
         [TestMethod]
-        public void TestBeforeInlineInsert()
+        public void TestDbConnectionTraceForBeforeInlineInsert()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -144,7 +144,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterInlineInsert()
+        public void TestDbConnectionTraceForAfterInlineInsert()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -163,7 +163,7 @@ namespace RepoDb.UnitTests.Interfaces
         // InlineMerge
 
         [TestMethod]
-        public void TestBeforeInlineMerge()
+        public void TestDbConnectionTraceForBeforeInlineMerge()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -180,7 +180,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterInlineMerge()
+        public void TestDbConnectionTraceForAfterInlineMerge()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -199,7 +199,7 @@ namespace RepoDb.UnitTests.Interfaces
         // InlineUpdate
 
         [TestMethod]
-        public void TestBeforeInlineUpdate()
+        public void TestDbConnectionTraceForBeforeInlineUpdate()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -216,7 +216,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterInlineUpdate()
+        public void TestDbConnectionTraceForAfterInlineUpdate()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -235,7 +235,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Insert
 
         [TestMethod]
-        public void TestBeforeInsert()
+        public void TestDbConnectionTraceForBeforeInsert()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -252,7 +252,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterInsert()
+        public void TestDbConnectionTraceForAfterInsert()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -271,7 +271,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Merge
 
         [TestMethod]
-        public void TestBeforeMerge()
+        public void TestDbConnectionTraceForBeforeMerge()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -288,7 +288,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterMerge()
+        public void TestDbConnectionTraceForAfterMerge()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -307,7 +307,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Query
 
         [TestMethod]
-        public void TestBeforeQuery()
+        public void TestDbConnectionTraceForBeforeQuery()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -324,7 +324,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterQuery()
+        public void TestDbConnectionTraceForAfterQuery()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -343,7 +343,7 @@ namespace RepoDb.UnitTests.Interfaces
         // QueryMultiple
 
         [TestMethod]
-        public void TestBeforeQueryMultiple()
+        public void TestDbConnectionTraceForBeforeQueryMultiple()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -360,7 +360,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterQueryMultiple()
+        public void TestDbConnectionTraceForAfterQueryMultiple()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -379,7 +379,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Truncate
 
         [TestMethod]
-        public void TestBeforeTruncate()
+        public void TestDbConnectionTraceForBeforeTruncate()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -396,7 +396,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterTruncate()
+        public void TestDbConnectionTraceForAfterTruncate()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -415,7 +415,7 @@ namespace RepoDb.UnitTests.Interfaces
         // Update
 
         [TestMethod]
-        public void TestBeforeUpdate()
+        public void TestDbConnectionTraceForBeforeUpdate()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -432,7 +432,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestAfterUpdate()
+        public void TestDbConnectionTraceForAfterUpdate()
         {
             // Prepare
             var trace = new Mock<ITrace>();

@@ -5,9 +5,9 @@ using System;
 namespace RepoDb.UnitTests.StatementBuilders
 {
     [TestClass]
-    public class CreateInlineUpdate
+    public class SqlDbProviderCreateInlineUpdateTest
     {
-        private class TestWithoutMappingsClass
+        private class TestSqlDbProviderCreateInlineUpdateWithoutMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -15,17 +15,17 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithoutMappings()
+        public void TestSqlDbProviderCreateInlineUpdateWithoutMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineUpdateWithoutMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
             var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
             var expected = $"" +
-                $"UPDATE [TestWithoutMappingsClass] " +
+                $"UPDATE [TestSqlDbProviderCreateInlineUpdateWithoutMappingsClass] " +
                 $"SET [Field1] = @Field1, " +
                 $"[Field2] = @Field2, " +
                 $"[Field3] = @Field3 ;";
@@ -35,7 +35,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithClassMappingClass
+        private class TestSqlDbProviderCreateInlineUpdateWithClassMappingClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -43,11 +43,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithClassMapping()
+        public void TestSqlDbProviderCreateInlineUpdateWithClassMapping()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineUpdateWithClassMappingClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [Map("ClassName")]
-        private class TestWithFieldMappingsClass
+        private class TestSqlDbProviderCreateInlineUpdateWithFieldMappingsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -72,11 +72,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithFieldMappings()
+        public void TestSqlDbProviderCreateInlineUpdateWithFieldMappings()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithFieldMappingsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineUpdateWithFieldMappingsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
 
             // Act
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithExpressionsClass
+        private class TestSqlDbProviderCreateInlineUpdateWithExpressionsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -99,11 +99,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithExpressions()
+        public void TestSqlDbProviderCreateInlineUpdateWithExpressions()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineUpdateWithExpressionsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
             var expected = $"" +
-                $"UPDATE [TestWithExpressionsClass] " +
+                $"UPDATE [TestSqlDbProviderCreateInlineUpdateWithExpressionsClass] " +
                 $"SET [Field1] = @Field1, " +
                 $"[Field2] = @Field2, " +
                 $"[Field3] = @Field3 " +
@@ -121,7 +121,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestWithFieldMappingsAndExpressionsClass
+        private class TestSqlDbProviderCreateInlineUpdateWithFieldMappingsAndExpressionsClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -130,11 +130,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestWithFieldMappingsAndExpressions()
+        public void TestSqlDbProviderCreateInlineUpdateWithFieldMappingsAndExpressions()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithFieldMappingsAndExpressionsClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInlineUpdateWithFieldMappingsAndExpressionsClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
@@ -142,7 +142,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act
             var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
             var expected = $"" +
-                $"UPDATE [TestWithFieldMappingsAndExpressionsClass] " +
+                $"UPDATE [TestSqlDbProviderCreateInlineUpdateWithFieldMappingsAndExpressionsClass] " +
                 $"SET [Field1] = @Field1, " +
                 $"[Field2] = @Field2, " +
                 $"[Field4] = @Field4 " +
@@ -151,83 +151,23 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Assert
             Assert.AreEqual(expected, actual);
         }
-
-        private class TestOverrideIgnoreForInlineUpdateClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestOverrideIgnoreForInlineUpdate()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestOverrideIgnoreForInlineUpdateClass>();
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var expression = new { Field1 = 1 };
-            var queryGroup = QueryGroup.Parse(expression);
-
-            // Act
-            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
-            var expected = $"" +
-                $"UPDATE [TestOverrideIgnoreForInlineUpdateClass] " +
-                $"SET [Field1] = @Field1, " +
-                $"[Field2] = @Field2, " +
-                $"[Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class TestOverrideIgnoreForUpdateClass
-        {
-            public int Field1 { get; set; }
-            public string Field2 { get; set; }
-            public DateTime Field3 { get; set; }
-        }
-
-        [TestMethod]
-        public void TestOverrideIgnoreForUpdate()
-        {
-            // Setup
-            var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestOverrideIgnoreForUpdateClass>();
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var expression = new { Field1 = 1 };
-            var queryGroup = QueryGroup.Parse(expression);
-
-            // Act
-            var actual = statementBuilder.CreateInlineUpdate(queryBuilder, fields, queryGroup);
-            var expected = $"" +
-                $"UPDATE [TestOverrideIgnoreForUpdateClass] " +
-                $"SET [Field1] = @Field1, " +
-                $"[Field2] = @Field2, " +
-                $"[Field3] = @Field3 " +
-                $"WHERE ([Field1] = @_Field1) ;";
-
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        private class ThrowExceptionIfTheTargetFieldsAreNullClass
+        
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldsAreNullClass
         {
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionIfTheTargetFieldsAreNull()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldsAreNull()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldsAreNullClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldsAreNullClass>();
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, null, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsMissingAtDataEntityClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsMissingAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -235,18 +175,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsMissingAtDataEntity()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsMissingAtDataEntity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsMissingAtDataEntityClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsMissingAtDataEntityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field4" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldMappingIsDifferentAtDataEntityClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldMappingIsDifferentAtDataEntityClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -255,18 +195,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldMappingIsDifferentAtDataEntity()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldMappingIsDifferentAtDataEntity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldMappingIsDifferentAtDataEntityClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldMappingIsDifferentAtDataEntityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsThePrimaryKeyFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsThePrimaryKeyFieldClass
         {
             [Primary]
             public int Field1 { get; set; }
@@ -275,38 +215,38 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsThePrimaryKeyField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsThePrimaryKeyField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsThePrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsThePrimaryKeyFieldClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsTheClassIdClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheClassIdClass
         {
-            public int ThrowExceptionIfTheTargetFieldIsTheClassIdClassId { get; set; }
+            public int ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheClassIdClassId { get; set; }
             public string Field2 { get; set; }
             public DateTime Field3 { get; set; }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsTheClassId()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheClassId()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsTheClassIdClass>();
-            var fields = Field.From(new[] { "ThrowExceptionIfTheTargetFieldIsTheClassIdClassId", "Field2", "Field3" });
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheClassIdClass>();
+            var fields = Field.From(new[] { "ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheClassIdClassId", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
         [Map("ClassName")]
-        private class ThrowExceptionIfTheTargetFieldIsAClassMappingIdClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAClassMappingIdClass
         {
             public int ClassNameId { get; set; }
             public string Field2 { get; set; }
@@ -314,18 +254,18 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsAClassMappingId()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAClassMappingId()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsAClassMappingIdClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAClassMappingIdClass>();
             var fields = Field.From(new[] { "ClassNameId", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsTheIdClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheIdClass
         {
             public int Id { get; set; }
             public string Field2 { get; set; }
@@ -337,14 +277,14 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsTheIdClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsTheIdClass>();
             var fields = Field.From(new[] { "Id", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheTargetFieldIsAnIdentityClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAnIdentityClass
         {
             [Primary, Identity]
             public int Field1 { get; set; }
@@ -353,29 +293,29 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheTargetFieldIsAnIdentity()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAnIdentity()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheTargetFieldIsAnIdentityClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheTargetFieldIsAnIdentityClass>();
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act/Assert
             statementBuilder.CreateInlineUpdate(queryBuilder, fields, null);
         }
 
-        private class ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass
+        private class ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheIdentityFieldIsNotThePrimaryFieldClass
         {
             [Identity]
             public int Field1 { get; set; }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionIfTheIdentityFieldIsNotThePrimaryField()
+        public void ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheIdentityFieldIsNotThePrimaryField()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionIfTheIdentityFieldIsNotThePrimaryFieldClass>();
+            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInlineUpdateIfTheIdentityFieldIsNotThePrimaryFieldClass>();
             var fields = Field.From(new[] { "Field1" });
 
             // Act/Assert
