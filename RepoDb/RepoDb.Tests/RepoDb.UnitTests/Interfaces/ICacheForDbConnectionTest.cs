@@ -7,7 +7,7 @@ using RepoDb.UnitTests.CustomObjects;
 namespace RepoDb.UnitTests.Interfaces
 {
     [TestClass]
-    public class ICacheForDbRepositoryTest
+    public class ICacheForDbConnectionTest
     {
         public class CacheEntity
         {
@@ -17,17 +17,18 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryCacheKey()
+        public void TestDbConnectionQueryCacheKey()
         {
             // Prepare
+            var trace = new Mock<ITrace>();
             var cache = new Mock<ICache>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", 0, cache.Object, null, new SqlStatementBuilder());
+            var connection = new CustomDbConnection();
 
             // Setup
             cache.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<bool>()));
 
             // Act
-            repository.Object.Query<CacheEntity>(cacheKey: "MemoryCacheKey");
+            connection.Query<CacheEntity>(cacheKey: "MemoryCacheKey", cache: cache.Object, trace: trace.Object, statementBuilder: new SqlStatementBuilder());
 
             // Assert
             cache.Verify(c => c.Get(It.IsAny<string>(), It.IsAny<bool>()), Times.Once);

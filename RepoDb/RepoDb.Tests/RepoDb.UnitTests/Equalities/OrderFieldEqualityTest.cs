@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.Equalities
     public class OrderFieldEqualityTest
     {
         [TestMethod]
-        public void TestGetHashCodeEquality()
+        public void TestOrderFieldHashCodeEquality()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityFromImproperString()
+        public void TestOrderFieldHashCodeEqualityFromImproperString()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -36,7 +36,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperator()
+        public void TestOrderFieldObjectEquality()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -50,7 +50,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethod()
+        public void TestOrderFieldObjectEqualityFromEqualsMethod()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContains()
+        public void TestOrderFieldArrayListContainability()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -80,7 +80,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContains()
+        public void TestOrderFieldGenericListContainability()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -96,7 +96,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperatorInequalityByOrder()
+        public void TestOrderFieldIneqaulityByOrder()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -110,7 +110,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethodInequalityByOrder()
+        public void TestOrderFieldEqualityByOrderFromEqualsMethod()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -124,7 +124,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContainsInequalityByOrder()
+        public void TestOrderFieldArrayListInequalityByOrder()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);
@@ -140,7 +140,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContainsInequalityByOrder()
+        public void TestOrderFieldGenericListInequalityByOrder()
         {
             // Prepare
             var objA = new OrderField("OrderFieldName", Order.Ascending);

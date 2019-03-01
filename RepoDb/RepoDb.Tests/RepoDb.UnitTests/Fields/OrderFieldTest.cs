@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseExpressionAscending()
+        public void TestOrderFieldParseExpressionForAscending()
         {
             // Act
             var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Ascending);
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseExpressionDescending()
+        public void TestOrderFieldParseExpressionForDescending()
         {
             // Act
             var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Descending);
@@ -35,7 +35,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseDynamicAscending()
+        public void TestOrderFieldParseForDynamicObjectWithAscendingOrder()
         {
             // Prepare
             var orderBy = new { Id = Order.Ascending };
@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseDynamicDescending()
+        public void TestOrderFieldParseForDynamicObjectWithDescendingOrder()
         {
             // Prepare
             var orderBy = new { Id = Order.Descending };
@@ -61,7 +61,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod]
-        public void TestParseDynamicAscendingAndDescending()
+        public void TestOrderFieldParseForDynamicObjectWithAscendingAndDescendingOrders()
         {
             // Prepare
             var orderBy = new { Id = Order.Ascending, Value = Order.Descending };
@@ -75,14 +75,14 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(InvalidQueryExpressionException))]
-        public void ThrowExceptionOnParseExpressionIfThereIsNoDefinedProperty()
+        public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
         {
             // Act/Assert
             OrderField.Parse<OrderFieldTestClass>(p => "A", Order.Ascending);
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnParseDynamicIfTheFieldValueIsNotAnOrderType()
+        public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectFieldValueIsNotAnOrderType()
         {
             // Prepare
             var orderBy = new { Id = "NotAnOrderType" };
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.Fields
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnParseDynamicIfTheObjectIsNull()
+        public void ThrowExceptionOnOrderFieldIfTheParseDynamicObjectIsNull()
         {
             // Prepare
             var orderBy = (object)null;

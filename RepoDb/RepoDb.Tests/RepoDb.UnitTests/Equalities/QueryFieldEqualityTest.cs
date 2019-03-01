@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.Equalities
     public class QueryFieldEqualityTest
     {
         [TestMethod]
-        public void TestGetHashCodeEquality()
+        public void TestQueryFieldHashCodeEquality()
         {
             // Prepare
             var objA = new QueryField("FieldName", "Value1");
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityWithOperation()
+        public void TestQueryFieldWithOperationHashCodeEquality()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityWithDifferentOperation()
+        public void TestQueryFieldWithDifferentOperationHashCodeEquality()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperator()
+        public void TestQueryFieldObjectEquality()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethod()
+        public void TestQueryFieldObjectEqualityFromEqualsMethod()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");
@@ -79,7 +79,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContains()
+        public void TestQueryFieldArrayListContainability()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");
@@ -95,7 +95,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContains()
+        public void TestQueryFieldGenericListContainability()
         {
             // Prepare
             var objA = new QueryField("FieldName", Operation.Equal, "Value1");

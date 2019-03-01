@@ -87,8 +87,10 @@
     <Compile Include="Enumerations\OrderTextTest.cs" />
     <Compile Include="Fields\FieldTest.cs" />
     <Compile Include="Interfaces\ICacheForBaseRepositoryTest.cs" />
+    <Compile Include="Interfaces\ICacheForDbConnectionTest.cs" />
     <Compile Include="Interfaces\ICacheForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
+    <Compile Include="Interfaces\IStatementBuilderForDbConnection.cs" />
     <Compile Include="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForBaseRepositoryTest.cs" />
     <Compile Include="Interfaces\ITraceForDbConnection.cs" />

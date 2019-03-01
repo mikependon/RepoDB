@@ -9,7 +9,7 @@ namespace RepoDb.UnitTests.Equalities
     public class QueryGroupEqualityTest
     {
         [TestMethod]
-        public void TestGetHashCodeEquality()
+        public void TestQueryGroupHashCodeEquality()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1 });
@@ -23,7 +23,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityWithMultipleFields()
+        public void TestQueryGroupWithMultipleFieldsHashCodeEquality()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
@@ -37,7 +37,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityWithConjunction()
+        public void TestQueryGroupWithConjunctionHashCodeEquality()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1", Conjunction = Conjunction.And });
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeInequalityWithDifferentConjunction()
+        public void TestQueryGroupGetWithDifferentConjunctionHashCodeEquality()
         {
             // Prepare
             var objA = new QueryGroup(new[] { new QueryField("Name1", "Value1") }, Conjunction.And);
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGetHashCodeEqualityWithChildQueryGroups()
+        public void TestQueryGroupWithChildQueryGroupsHashCodeEquality()
         {
             // Prepare
             var objA = QueryGroup.Parse(
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualOperator()
+        public void TestQueryGroupObjectEquality()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
@@ -103,7 +103,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestEqualsMethod()
+        public void TestQueryGroupObjectEqualityFromEquals()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
@@ -117,7 +117,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestArrayListContains()
+        public void TestQueryGroupArrayListContainability()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
@@ -133,7 +133,7 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
-        public void TestGenericListContains()
+        public void TestQueryGroupGenericListContainability()
         {
             // Prepare
             var objA = QueryGroup.Parse(new { Id = 1, Name = "Name1" });
