@@ -1,5 +1,4 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
