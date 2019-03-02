@@ -3452,9 +3452,6 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction);
 
-            // Set back result equals to PrimaryKey type
-            result = DataEntityExtension.ValueToPrimaryType<TEntity>(result);
-
             // After Execution
             if (trace != null)
             {
@@ -3549,10 +3546,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
-
-            // Set back result equals to PrimaryKey type
-            result = Task.FromResult<object>(DataEntityExtension.ValueToPrimaryType<TEntity>(result.Result));
-
+            
             // After Execution
             if (trace != null)
             {
@@ -9369,7 +9363,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return ObjectConverter.DbNullToNull(command.ExecuteScalar());
+                return command.ExecuteScalar();
             }
         }
 
@@ -9425,8 +9419,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                var result = await command.ExecuteScalarAsync();
-                return ObjectConverter.DbNullToNull(result);
+                return await command.ExecuteScalarAsync();
             }
         }
 

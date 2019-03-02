@@ -5,7 +5,6 @@ using System.Data.Common;
 using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
-using RepoDb.Attributes;
 using System.Linq.Expressions;
 
 namespace RepoDb
@@ -461,7 +460,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IDbTransaction transaction = null)
@@ -479,14 +478,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -499,7 +493,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IDbTransaction transaction = null)
@@ -518,14 +512,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -538,7 +527,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryField where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryField where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -558,14 +547,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -578,7 +562,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -598,14 +582,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -618,7 +597,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryGroup where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -638,14 +617,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -723,7 +697,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
+        public Task<AsyncResultExtractor<int>> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
@@ -736,14 +710,8 @@ namespace RepoDb
                 commandTimeout: CommandTimeout,
                 trace: Trace);
 
-            // Dispose the connection
-            if (ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result, connection));
         }
 
         /// <summary>
@@ -753,7 +721,7 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> BulkInsertAsync<TEntity>(DbDataReader reader,
+        public Task<AsyncResultExtractor<int>> BulkInsertAsync<TEntity>(DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
@@ -766,14 +734,8 @@ namespace RepoDb
                 commandTimeout: CommandTimeout,
                 trace: Trace);
 
-            // Dispose the connection
-            if (ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result, connection));
         }
 
         #endregion
@@ -942,7 +904,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database.</returns>
-        public Task<long> CountAsync<TEntity>(IDbTransaction transaction = null)
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -954,14 +916,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<long>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -971,7 +928,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -985,14 +942,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<long>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1002,7 +954,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(QueryField where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1016,14 +968,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<long>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1033,7 +980,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1047,14 +994,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<long>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1064,7 +1006,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of rows counted from the database based on the given query expression.</returns>
-        public Task<long> CountAsync<TEntity>(QueryGroup where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1078,14 +1020,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<long>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -1258,7 +1195,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1272,14 +1209,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1289,7 +1221,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(QueryField where,
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1303,14 +1235,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1320,7 +1247,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1334,14 +1261,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1351,7 +1273,7 @@ namespace RepoDb
         /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(object primaryKey,
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1365,14 +1287,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1382,7 +1299,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAsync<TEntity>(QueryGroup where,
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1396,14 +1313,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -1448,7 +1360,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
+        public Task<AsyncResultExtractor<int>> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -1460,14 +1372,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -1516,7 +1423,7 @@ namespace RepoDb
         /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        public Task<object> InlineInsertAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<object>> InlineInsertAsync<TEntity>(object entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1530,14 +1437,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<object>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -1688,7 +1590,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1702,14 +1604,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1720,7 +1617,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
             Expression<Func<TEntity, object>> qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1736,14 +1633,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1754,7 +1646,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1770,14 +1662,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -1788,7 +1675,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineMergeAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1804,14 +1691,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -2000,7 +1882,7 @@ namespace RepoDb
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
             object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2016,14 +1898,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2034,7 +1911,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2050,14 +1927,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2068,7 +1940,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
             QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2084,14 +1956,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2102,7 +1969,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2118,14 +1985,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2136,7 +1998,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> InlineUpdateAsync<TEntity>(object entity,
+        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
             QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2152,14 +2014,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -2214,7 +2071,7 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public Task<AsyncResultExtractor<object>> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -2227,14 +2084,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<object>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -2370,13 +2222,24 @@ namespace RepoDb
         /// <param name="entity">The entity to be merged.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
-            return MergeAsync<TEntity>(entity: entity,
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            // Call the method
+            var result = connection.MergeAsync<TEntity>(entity: entity,
                 qualifiers: null,
-                    transaction: transaction);
+                commandTimeout: CommandTimeout,
+                transaction: transaction,
+                trace: Trace,
+                statementBuilder: StatementBuilder);
+
+            // Return the result
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2387,7 +2250,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, object>> qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2403,14 +2266,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2421,7 +2279,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2437,14 +2295,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2455,7 +2308,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> MergeAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2471,14 +2324,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -2774,7 +2622,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
             string cacheKey = null,
@@ -2795,14 +2643,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2819,7 +2662,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -2842,14 +2685,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2866,7 +2704,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -2889,14 +2727,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2913,7 +2746,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -2936,14 +2769,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -2958,7 +2786,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object primaryKey,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(object primaryKey,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
@@ -2977,14 +2805,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -3001,7 +2824,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
-        public Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -3024,14 +2847,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -3658,7 +3476,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
@@ -3688,14 +3506,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -3723,7 +3536,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             IEnumerable<OrderField> orderBy1 = null,
@@ -3762,14 +3575,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -3802,7 +3610,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>>
             QueryMultipleAsync<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -3851,14 +3659,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -3896,7 +3699,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -3954,14 +3757,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4004,7 +3802,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4071,14 +3869,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4126,7 +3919,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
-        public Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
+        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4202,14 +3995,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4485,7 +4273,7 @@ namespace RepoDb
         /// <param name="entity">The instance of data entity object to be updated.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
@@ -4498,14 +4286,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -4516,7 +4299,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -4532,14 +4315,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -4550,7 +4328,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -4566,14 +4344,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -4584,7 +4357,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -4600,14 +4373,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -4618,7 +4386,7 @@ namespace RepoDb
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
             object primaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -4634,14 +4402,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         /// <summary>
@@ -4652,7 +4415,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> UpdateAsync<TEntity>(TEntity entity,
+        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -4668,14 +4431,9 @@ namespace RepoDb
                 trace: Trace,
                 statementBuilder: StatementBuilder);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4723,6 +4481,10 @@ namespace RepoDb
             return result;
         }
 
+        #endregion
+
+        #region ExecuteQueryAsync
+
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and 
         /// converts the result back to an enumerable list of data entity object.
@@ -4738,7 +4500,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> ExecuteQueryAsync<TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -4754,14 +4516,9 @@ namespace RepoDb
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<IEnumerable<TEntity>>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4805,6 +4562,10 @@ namespace RepoDb
             return result;
         }
 
+        #endregion
+
+        #region ExecuteNonQueryAsync
+
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
@@ -4817,7 +4578,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public Task<int> ExecuteNonQueryAsync(string commandText,
+        public Task<AsyncResultExtractor<int>> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -4832,14 +4593,9 @@ namespace RepoDb
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<int>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion
@@ -4883,6 +4639,10 @@ namespace RepoDb
             return result;
         }
 
+        #endregion
+
+        #region ExecuteScalarAsync
+
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
@@ -4895,7 +4655,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used on the execution.</param>
         /// <param name="transaction">The transaction to be used on the execution (if present).</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<object> ExecuteScalarAsync(string commandText,
+        public Task<AsyncResultExtractor<object>> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -4910,14 +4670,9 @@ namespace RepoDb
                 commandTimeout: CommandTimeout,
                 transaction: transaction);
 
-            // Dispose the connection
-            if (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall)
-            {
-                connection.Dispose();
-            }
-
             // Return the result
-            return result;
+            return Task.FromResult(new AsyncResultExtractor<object>(result,
+                (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall) ? connection : null));
         }
 
         #endregion

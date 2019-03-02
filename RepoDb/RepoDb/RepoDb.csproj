@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncResultExtractor.cs" />
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandParameter.cs" />
