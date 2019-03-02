@@ -4,20 +4,21 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
-namespace RepoDb.IntegrationTests.Types.BigInt
+namespace RepoDb.IntegrationTests.Types.Bytes
 {
     [TestClass]
-    public class BaseRepositoryBigIntTest
+    public class BaseRepositoryBytesTest
     {
-        private class BigIntClassRepository : BaseRepository<BigIntClass, SqlConnection>
+        private class BytesClassRepository : BaseRepository<BytesClass, SqlConnection>
         {
-            public BigIntClassRepository(string connectionString) : base(connectionString, (int?)0) { }
+            public BytesClassRepository(string connectionString) : base(connectionString, (int?)0) { }
         }
 
-        private class BigIntMapClassRepository : BaseRepository<BigIntMapClass, SqlConnection>
+        private class BytesMapClassRepository : BaseRepository<BytesMapClass, SqlConnection>
         {
-            public BigIntMapClassRepository(string connectionString) : base(connectionString, (int?)0) { }
+            public BytesMapClassRepository(string connectionString) : base(connectionString, (int?)0) { }
         }
 
         [TestInitialize]
@@ -32,32 +33,35 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.DeleteAll<BigIntClass>();
-                connection.DeleteAll<BigIntMapClass>();
+                connection.DeleteAll<BytesClass>();
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntCrud()
+        public void TestBaseRepositoryBytesCrud()
         {
             // Setup
-            var entity = new BigIntClass
+            var text = "A dynamic, lightweight, and very fast ORM .NET Library.";
+            var bytes = Encoding.UTF8.GetBytes("ABCDE");
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigInt = Int64.MaxValue
+                ColumnBinary = bytes,
+                ColumnImage = bytes
             };
 
-            using (var repository = new BigIntClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(Int64.MaxValue, data.ColumnBigInt);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -72,16 +76,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntNullCrud()
+        public void TestBaseRepositoryBytesNullCrud()
         {
             // Setup
-            var entity = new BigIntClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigInt = null
+                ColumnBinary = null
             };
 
-            using (var repository = new BigIntClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -91,7 +95,7 @@ namespace RepoDb.IntegrationTests.Types.BigInt
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBigInt);
+                Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -106,26 +110,27 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntMappedCrud()
+        public void TestBaseRepositoryBytesMappedCrud()
         {
             // Setup
-            var entity = new BigIntMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigIntMapped = Int64.MaxValue
+                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BigIntMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(Int64.MaxValue, data.ColumnBigIntMapped);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -140,16 +145,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntMappedNullCrud()
+        public void TestBaseRepositoryBytesMappedNullCrud()
         {
             // Setup
-            var entity = new BigIntMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigIntMapped = null
+                ColumnBinaryMapped = null
             };
 
-            using (var repository = new BigIntMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -159,7 +164,7 @@ namespace RepoDb.IntegrationTests.Types.BigInt
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBigIntMapped);
+                Assert.IsNull(null);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -174,16 +179,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntCrudAsync()
+        public void TestBaseRepositoryBytesCrudAsync()
         {
             // Setup
-            var entity = new BigIntClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigInt = Int64.MaxValue
+                ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BigIntClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -192,10 +197,11 @@ namespace RepoDb.IntegrationTests.Types.BigInt
                 // Act Query
                 var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(Int64.MaxValue, data.ColumnBigInt);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -212,16 +218,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntNullCrudAsync()
+        public void TestBaseRepositoryBytesNullCrudAsync()
         {
             // Setup
-            var entity = new BigIntClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigInt = null
+                ColumnBinary = null
             };
 
-            using (var repository = new BigIntClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -233,7 +239,7 @@ namespace RepoDb.IntegrationTests.Types.BigInt
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBigInt);
+                Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -250,16 +256,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntMappedCrudAsync()
+        public void TestBaseRepositoryBytesMappedCrudAsync()
         {
             // Setup
-            var entity = new BigIntMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigIntMapped = Int64.MaxValue
+                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BigIntMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -268,10 +274,11 @@ namespace RepoDb.IntegrationTests.Types.BigInt
                 // Act Query
                 var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(Int64.MaxValue, data.ColumnBigIntMapped);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -288,16 +295,16 @@ namespace RepoDb.IntegrationTests.Types.BigInt
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBigIntMappedNullCrudAsync()
+        public void TestBaseRepositoryBytesMappedNullCrudAsync()
         {
             // Setup
-            var entity = new BigIntMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBigIntMapped = null
+                ColumnBinaryMapped = null
             };
 
-            using (var repository = new BigIntMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -309,7 +316,7 @@ namespace RepoDb.IntegrationTests.Types.BigInt
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBigIntMapped);
+                Assert.IsNull(data.ColumnBinaryMapped);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);

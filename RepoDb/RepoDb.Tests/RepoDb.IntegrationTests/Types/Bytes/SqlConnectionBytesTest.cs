@@ -6,10 +6,10 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
-namespace RepoDb.IntegrationTests.Types.Binary
+namespace RepoDb.IntegrationTests.Types.Bytes
 {
     [TestClass]
-    public class SqlConnectionBinaryTest
+    public class SqlConnectionBytesTest
     {
         [TestInitialize]
         public void Initialize()
@@ -23,16 +23,15 @@ namespace RepoDb.IntegrationTests.Types.Binary
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.DeleteAll<BinaryClass>();
-                connection.DeleteAll<BinaryMapClass>();
+                connection.DeleteAll<BytesClass>();
             }
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryCrud()
+        public void TestSqlConnectionBytesCrud()
         {
             // Setup
-            var entity = new BinaryClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
@@ -44,7 +43,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<BinaryClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
                 var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
@@ -52,10 +51,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deletedRows = connection.Delete<BinaryClass>(e => e.SessionId == (Guid)id);
+                var deletedRows = connection.Delete<BytesClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = connection.Query<BinaryClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -64,10 +63,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryNullCrud()
+        public void TestSqlConnectionBytesNullCrud()
         {
             // Setup
-            var entity = new BinaryClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinary = null
@@ -79,17 +78,17 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<BinaryClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
-                var deletedRows = connection.Delete<BinaryClass>(e => e.SessionId == (Guid)id);
+                var deletedRows = connection.Delete<BytesClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = connection.Query<BinaryClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = connection.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -98,10 +97,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryMappedCrud()
+        public void TestSqlConnectionBytesMappedCrud()
         {
             // Setup
-            var entity = new BinaryMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
@@ -113,7 +112,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<BinaryMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
                 var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
@@ -121,10 +120,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deletedRows = connection.Delete<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var deletedRows = connection.Delete<BytesMapClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = connection.Query<BinaryMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -133,10 +132,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryMappedNullCrud()
+        public void TestSqlConnectionBytesMappedNullCrud()
         {
             // Setup
-            var entity = new BinaryMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinaryMapped = null
@@ -148,17 +147,17 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = connection.Insert(entity);
 
                 // Act Query
-                var data = connection.Query<BinaryMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnBinaryMapped);
 
                 // Act Delete
-                var deletedRows = connection.Delete<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var deletedRows = connection.Delete<BytesMapClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = connection.Query<BinaryMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = connection.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -167,10 +166,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryCrudAsync()
+        public void TestSqlConnectionBytesCrudAsync()
         {
             // Setup
-            var entity = new BinaryClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
@@ -183,7 +182,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                var queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.FirstOrDefault();
                 var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
@@ -192,11 +191,11 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = connection.DeleteAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result;
 
                 // Act Query
-                queryResult = connection.QueryAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -206,10 +205,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryNullCrudAsync()
+        public void TestSqlConnectionBytesNullCrudAsync()
         {
             // Setup
-            var entity = new BinaryClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinary = null
@@ -222,7 +221,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                var queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -230,11 +229,11 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = connection.DeleteAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result;
 
                 // Act Query
-                queryResult = connection.QueryAsync<BinaryClass>(e => e.SessionId == (Guid)id);
+                queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -244,10 +243,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryMappedCrudAsync()
+        public void TestSqlConnectionBytesMappedCrudAsync()
         {
             // Setup
-            var entity = new BinaryMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
@@ -260,7 +259,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.FirstOrDefault();
                 var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
@@ -269,11 +268,11 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = connection.DeleteAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result;
 
                 // Act Query
-                queryResult = connection.QueryAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -283,10 +282,10 @@ namespace RepoDb.IntegrationTests.Types.Binary
         }
 
         [TestMethod]
-        public void TestSqlConnectionBinaryMappedNullCrudAsync()
+        public void TestSqlConnectionBytesMappedNullCrudAsync()
         {
             // Setup
-            var entity = new BinaryMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinaryMapped = null
@@ -299,7 +298,7 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 var id = insertResult.Result;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
@@ -307,11 +306,11 @@ namespace RepoDb.IntegrationTests.Types.Binary
                 Assert.IsNull(data.ColumnBinaryMapped);
 
                 // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = connection.DeleteAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result;
 
                 // Act Query
-                queryResult = connection.QueryAsync<BinaryMapClass>(e => e.SessionId == (Guid)id);
+                queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.FirstOrDefault();
 
                 // Assert

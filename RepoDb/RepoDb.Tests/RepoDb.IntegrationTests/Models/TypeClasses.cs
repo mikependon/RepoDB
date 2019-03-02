@@ -7,194 +7,119 @@ namespace RepoDb.IntegrationTests.Models
     {
         [Primary]
         public Guid SessionId { get; set; }
+        // Numbers
         public long? ColumnBigInt { get; set; }
-        public byte[] ColumnBinary { get; set; }
         public bool? ColumnBit { get; set; }
+        public decimal? ColumnDecimal { get; set; }
+        public float? ColumnFloat { get; set; }
+        public int? ColumnInt { get; set; }
+        public decimal? ColumnMoney { get; set; }
+        public decimal? ColumnNumeric { get; set; }
+        public Single? ColumnReal { get; set; }
+        public short? ColumnSmallInt { get; set; }
+        public decimal? ColumnSmallMoney { get; set; }
+        // Bytes
+        public byte[] ColumnBinary { get; set; }
+        public byte[] ColumnImage { get; set; }
+        public byte[] ColumnVarBinary { get; set; }
+        public byte[] ColumnTimeStamp { get; set; }
+        public byte ColumnTinyInt { get; set; }
+        // Strings
         public string ColumnChar { get; set; }
+        public string ColumnNChar { get; set; }
+        public string ColumnNText { get; set; }
+        public string ColumnNVarChar { get; set; }
+        public string ColumnText { get; set; }
+        public string ColumnVarChar { get; set; }
+        // Dates
         public DateTime? ColumnDate { get; set; }
         public DateTime? ColumnDateTime { get; set; }
         public DateTime? ColumnDateTime2 { get; set; }
         public DateTimeOffset? ColumnDateTimeOffset { get; set; }
-        public decimal? ColumnDecimal { get; set; }
-        public float? ColumnFloat { get; set; }
+        public DateTime? ColumnSmallDateTime { get; set; }
+        public DateTime? ColumnTime { get; set; }
+        // Spatials
         public object ColumnGeography { get; set; }
         public object ColumnGeometry { get; set; }
+        // Others
+        public Guid ColumnUniqueIdentifier { get; set; }
+        //public Xml ColumnXml { get; set; }
+        public object ColumnSqlVariant { get; set; }
         public object ColumnHierarchyId { get; set; }
-        public byte[] ColumnImage { get; set; }
-        public int? ColumnInt { get; set; }
-        public decimal? ColumnMoney { get; set; }
-        public string ColumnNChar { get; set; }
-        public string ColumnNText { get; set; }
-        public decimal? ColumnNumeric { get; set; }
-        public string ColumnNVarChar { get; set; }
-        public Single? ColumnReal { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class BigIntClass
+    public class NumbersClass
     {
         [Primary]
         public Guid SessionId { get; set; }
         public long? ColumnBigInt { get; set; }
+        public bool? ColumnBit { get; set; }
+        public decimal? ColumnDecimal { get; set; }
+        public float? ColumnFloat { get; set; }
+        public int? ColumnInt { get; set; }
+        public decimal? ColumnMoney { get; set; }
+        public decimal? ColumnNumeric { get; set; }
+        public Single? ColumnReal { get; set; }
+        public short? ColumnSmallInt { get; set; }
+        public decimal? ColumnSmallMoney { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class BinaryClass
+    public class BytesClass
     {
         [Primary]
         public Guid SessionId { get; set; }
         public byte[] ColumnBinary { get; set; }
+        public byte[] ColumnImage { get; set; }
+        public byte[] ColumnVarBinary { get; set; }
+        public byte[] ColumnTimeStamp { get; set; }
+        public byte ColumnTinyInt { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class BitClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public bool? ColumnBit { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class CharClass
+    public class StringsClass
     {
         [Primary]
         public Guid SessionId { get; set; }
         public string ColumnChar { get; set; }
+        public string ColumnNChar { get; set; }
+        public string ColumnNText { get; set; }
+        public string ColumnNVarChar { get; set; }
+        public string ColumnText { get; set; }
+        public string ColumnVarChar { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class DateClass
+    public class DatesClass
     {
         [Primary]
         public Guid SessionId { get; set; }
         public DateTime? ColumnDate { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class DateTimeClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
         public DateTime? ColumnDateTime { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class DateTime2Class
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
         public DateTime? ColumnDateTime2 { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class DateTimeOffsetClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
         public DateTimeOffset? ColumnDateTimeOffset { get; set; }
+        public DateTime? ColumnSmallDateTime { get; set; }
+        public TimeSpan? ColumnTime { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class DecimalClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public decimal? ColumnDecimal { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class FloatClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public float? ColumnFloat { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class GeographyClass
+    public class SpatialsClass
     {
         [Primary]
         public Guid SessionId { get; set; }
         public object ColumnGeography { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class GeometryClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
         public object ColumnGeometry { get; set; }
     }
 
     [Map("CompleteTable")]
-    public class HierarchyIdClass
+    public class OthersClass
     {
         [Primary]
         public Guid SessionId { get; set; }
+        public Guid ColumnUniqueIdentifier { get; set; }
+        //public Xml ColumnXml { get; set; }
+        public object ColumnSqlVariant { get; set; }
         public object ColumnHierarchyId { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class ImageClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public byte[] ColumnImage { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class IntClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public int? ColumnInt { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class MoneyClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public decimal? ColumnMoney { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class NCharClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public string ColumnNChar { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class NTextClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public string ColumnNText { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class NumericClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public decimal? ColumnNumeric { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class NVarCharClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public string ColumnNVarChar { get; set; }
-    }
-
-    [Map("CompleteTable")]
-    public class RealClass
-    {
-        [Primary]
-        public Guid SessionId { get; set; }
-        public Single? ColumnReal { get; set; }
     }
 }

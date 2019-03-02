@@ -71,15 +71,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\Database.cs" />
     <Compile Include="SqlConnectionAllMethodsTest.cs" />
-    <Compile Include="Types\Bit\BaseRepositoryBitTest.cs" />
-    <Compile Include="Types\Bit\DbRepositoryBitTest.cs" />
-    <Compile Include="Types\Bit\SqlConnectionBitTest.cs" />
-    <Compile Include="Types\Binary\BaseRepositoryBinaryTest.cs" />
-    <Compile Include="Types\Binary\DbRepositoryBinaryTest.cs" />
-    <Compile Include="Types\Binary\SqlConnectionBinaryTest.cs" />
-    <Compile Include="Types\BigInt\SqlConnectionBigIntTest.cs" />
-    <Compile Include="Types\BigInt\DbRepositoryBigIntTest.cs" />
-    <Compile Include="Types\BigInt\BaseRepositoryBigIntTest.cs" />
+    <Compile Include="Types\Bytes\BaseRepositoryBytesTest.cs" />
+    <Compile Include="Types\Bytes\DbRepositoryBytesTest.cs" />
+    <Compile Include="Types\Bytes\SqlConnectionBytesTest.cs" />
+    <Compile Include="Types\Numbers\SqlConnectionNumbersTest.cs" />
+    <Compile Include="Types\Numbers\DbRepositoryNumbersTest.cs" />
+    <Compile Include="Types\Numbers\BaseRepositoryNumbersTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -92,6 +89,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Setup\repodb.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Types\Dates\" />
+    <Folder Include="Types\Spatials\" />
+    <Folder Include="Types\Strings\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

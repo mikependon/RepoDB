@@ -4,22 +4,13 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
-namespace RepoDb.IntegrationTests.Types.Bit
+namespace RepoDb.IntegrationTests.Types.Bytes
 {
     [TestClass]
-    public class BaseRepositoryBitTest
+    public class DbRepositoryBytesTest
     {
-        private class BitClassRepository : BaseRepository<BitClass, SqlConnection>
-        {
-            public BitClassRepository(string connectionString) : base(connectionString, (int?)0) { }
-        }
-
-        private class BitMapClassRepository : BaseRepository<BitMapClass, SqlConnection>
-        {
-            public BitMapClassRepository(string connectionString) : base(connectionString, (int?)0) { }
-        }
-
         [TestInitialize]
         public void Initialize()
         {
@@ -32,38 +23,38 @@ namespace RepoDb.IntegrationTests.Types.Bit
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.DeleteAll<BitClass>();
-                connection.DeleteAll<BitMapClass>();
+                connection.DeleteAll<BytesClass>();
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitCrud()
+        public void TestDbRepositoryBytesCrud()
         {
             // Setup
-            var entity = new BitClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBit = true
+                ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BitClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
-                var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = repository.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(true, data.ColumnBit);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
+                var deletedRows = repository.Delete<BytesClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = repository.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -72,32 +63,32 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitNullCrud()
+        public void TestDbRepositoryBytesNullCrud()
         {
             // Setup
-            var entity = new BitClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBit = null
+                ColumnBinary = null
             };
 
-            using (var repository = new BitClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
-                var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = repository.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBit);
+                Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
+                var deletedRows = repository.Delete<BytesClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = repository.Query<BytesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -106,32 +97,33 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitMappedCrud()
+        public void TestDbRepositoryBytesMappedCrud()
         {
             // Setup
-            var entity = new BitMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBitMapped = true
+                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BitMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
-                var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = repository.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(true, data.ColumnBitMapped);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
+                var deletedRows = repository.Delete<BytesMapClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = repository.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -140,32 +132,32 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitMappedNullCrud()
+        public void TestDbRepositoryBytesMappedNullCrud()
         {
             // Setup
-            var entity = new BitMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBitMapped = null
+                ColumnBinaryMapped = null
             };
 
-            using (var repository = new BitMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
 
                 // Act Query
-                var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = repository.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBitMapped);
+                Assert.IsNull(data.ColumnBinaryMapped);
 
                 // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
+                var deletedRows = repository.Delete<BytesMapClass>(e => e.SessionId == (Guid)id);
 
                 // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
+                data = repository.Query<BytesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, deletedRows);
@@ -174,35 +166,36 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitCrudAsync()
+        public void TestDbRepositoryBytesCrudAsync()
         {
             // Setup
-            var entity = new BitClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBit = true
+                ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BitClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
                 var id = insertResult.Result.Extract();
 
                 // Act Query
-                var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                var queryResult = repository.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(true, data.ColumnBit);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = repository.DeleteAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result.Extract();
 
                 // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                queryResult = repository.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
@@ -212,35 +205,35 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitNullCrudAsync()
+        public void TestDbRepositoryBytesNullCrudAsync()
         {
             // Setup
-            var entity = new BitClass
+            var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBit = null
+                ColumnBinary = null
             };
 
-            using (var repository = new BitClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
                 var id = insertResult.Result.Extract();
 
                 // Act Query
-                var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                var queryResult = repository.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBit);
+                Assert.IsNull(data.ColumnBinary);
 
                 // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = repository.DeleteAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result.Extract();
 
                 // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                queryResult = repository.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
@@ -250,35 +243,36 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitMappedCrudAsync()
+        public void TestDbRepositoryBytesMappedCrudAsync()
         {
             // Setup
-            var entity = new BitMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBitMapped = true
+                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
             };
 
-            using (var repository = new BitMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
                 var id = insertResult.Result.Extract();
 
                 // Act Query
-                var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                var queryResult = repository.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
+                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(true, data.ColumnBitMapped);
+                Assert.AreEqual("ABCDE", result);
 
                 // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = repository.DeleteAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result.Extract();
 
                 // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                queryResult = repository.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
@@ -288,35 +282,35 @@ namespace RepoDb.IntegrationTests.Types.Bit
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBitMappedNullCrudAsync()
+        public void TestDbRepositoryBytesMappedNullCrudAsync()
         {
             // Setup
-            var entity = new BitMapClass
+            var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBitMapped = null
+                ColumnBinaryMapped = null
             };
 
-            using (var repository = new BitMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
                 var id = insertResult.Result.Extract();
 
                 // Act Query
-                var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                var queryResult = repository.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBitMapped);
+                Assert.IsNull(data.ColumnBinaryMapped);
 
                 // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
+                var deleteAsyncResult = repository.DeleteAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 var count = deleteAsyncResult.Result.Extract();
 
                 // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
+                queryResult = repository.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
                 data = queryResult.Result.Extract().FirstOrDefault();
 
                 // Assert
