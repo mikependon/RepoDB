@@ -64,40 +64,34 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Models\Animal.cs" />
-    <Compile Include="QueryMultipleTest.cs" />
-    <Compile Include="MillisecondsTest.cs" />
-    <Compile Include="BasicCrudTest.cs" />
-    <Compile Include="BlobDataTypeMappingTest.cs" />
-    <Compile Include="BulkOpsTest.cs" />
-    <Compile Include="InlineCrudTest.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\TypeMap.cs" />
+    <Compile Include="BaseRepositoryAllMethodsTest.cs" />
+    <Compile Include="DbRepositoryAllMethodsTest.cs" />
+    <Compile Include="Models\TypeMappableClasses.cs" />
+    <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryCacheTest.cs" />
-    <Compile Include="RawSqlTest.cs" />
-    <Compile Include="Setup\Constants.cs" />
-    <Compile Include="Setup\SetupHelper.cs" />
-    <Compile Include="SpatialDataTypeMappingTest.cs" />
-    <Compile Include="StandardDataTypeMappingTest.cs" />
-    <Compile Include="TestFixtureAttribute.cs" />
+    <Compile Include="Setup\Database.cs" />
+    <Compile Include="SqlConnectionAllMethodsTest.cs" />
+    <Compile Include="Types\Bit\BaseRepositoryBitTest.cs" />
+    <Compile Include="Types\Bit\DbRepositoryBitTest.cs" />
+    <Compile Include="Types\Bit\SqlConnectionBitTest.cs" />
+    <Compile Include="Types\Binary\BaseRepositoryBinaryTest.cs" />
+    <Compile Include="Types\Binary\DbRepositoryBinaryTest.cs" />
+    <Compile Include="Types\Binary\SqlConnectionBinaryTest.cs" />
+    <Compile Include="Types\BigInt\SqlConnectionBigIntTest.cs" />
+    <Compile Include="Types\BigInt\DbRepositoryBigIntTest.cs" />
+    <Compile Include="Types\BigInt\BaseRepositoryBigIntTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="ReadMe.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Setup\hello-world.png" />
-    <EmbeddedResource Include="Setup\RefreshDB.sql" />
-    <EmbeddedResource Include="Setup\SetupDB.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj">
       <Project>{a31a38c8-603e-4499-a5c1-4a6366864ea7}</Project>
       <Name>RepoDb</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Setup\repodb.jpg" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -7,9 +7,6 @@ namespace RepoDb.IntegrationTests.Setup
     /// </summary>
     public static class Database
     {
-        private static readonly string m_connectionStringForMaster = @"Server=.;Database=master;Integrated Security=True;";
-        private static readonly string m_connectionStringForRepoDb = @"Server=.;Database=RepoDbTestDb;Integrated Security=True;";
-
         /// <summary>
         /// Initialize the creation of the database.
         /// </summary>
@@ -17,18 +14,31 @@ namespace RepoDb.IntegrationTests.Setup
         {
             // Create the database first
             CreateDatabase();
+            
+            // Create the tables
+            CreateTables();
         }
+
+        /// <summary>
+        /// Gets the connection string for master.
+        /// </summary>
+        public static string ConnectionForMaster => @"Server=.;Database=master;Integrated Security=True;";
+
+        /// <summary>
+        /// Gets the connection string for RepoDb.
+        /// </summary>
+        public static string ConnectionStringForRepoDb => @"Server=.;Database=RepoDb;Integrated Security=True;";
 
         /// <summary>
         /// Creates a test database for RepoDb.
         /// </summary>
         public static void CreateDatabase()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDbTestDb'))
+            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
                 BEGIN
-	                CREATE DATABASE [RepoDbTestDb];
+	                CREATE DATABASE [RepoDb];
                 END";
-            using (var connection = new SqlConnection(m_connectionStringForMaster).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionForMaster).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -94,7 +104,7 @@ namespace RepoDb.IntegrationTests.Setup
 	                ) ON [PRIMARY];
 	                ALTER TABLE [dbo].[CompleteTable] ADD CONSTRAINT [DF_CompleteTable_SessionId] DEFAULT (NEWID()) FOR [SessionId];
                 END";
-            using (var connection = new SqlConnection(m_connectionStringForMaster).EnsureOpen())
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
