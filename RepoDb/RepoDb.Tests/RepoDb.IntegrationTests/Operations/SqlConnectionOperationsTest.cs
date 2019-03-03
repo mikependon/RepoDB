@@ -2,10 +2,10 @@
 using RepoDb.IntegrationTests.Setup;
 using System.Data.SqlClient;
 
-namespace RepoDb.IntegrationTests
+namespace RepoDb.IntegrationTests.Operations
 {
     [TestClass]
-    public class DbRepositoryAllMethodsTest
+    public class SqlConnectionOperationsTest
     {
         [TestInitialize]
         public void Initialize()
