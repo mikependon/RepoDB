@@ -11,7 +11,7 @@ namespace RepoDb.UnitTests.Fields
         // From
 
         [TestMethod]
-        public void TestTestFromMethodParsing()
+        public void TestFieldFromMethodParsing()
         {
             // Prepare
             var fields = new[] { "Field1", "Field2", "Field3" };

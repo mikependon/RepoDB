@@ -81,6 +81,9 @@
     <Compile Include="Types\Numbers\SqlConnectionNumbersTest.cs" />
     <Compile Include="Types\Numbers\DbRepositoryNumbersTest.cs" />
     <Compile Include="Types\Numbers\BaseRepositoryNumbersTest.cs" />
+    <Compile Include="Types\Spatials\BaseRepositorySpatialsTest.cs" />
+    <Compile Include="Types\Spatials\DbRepositorySpatialsTest.cs" />
+    <Compile Include="Types\Spatials\SqlConnectionSpatialsTest.cs" />
     <Compile Include="Types\Strings\BaseRepositoryStringsTest.cs" />
     <Compile Include="Types\Strings\DbRepositoryStringsTest.cs" />
     <Compile Include="Types\Strings\SqlConnectionStringsTest.cs" />
@@ -97,9 +100,7 @@
   <ItemGroup>
     <Content Include="Setup\repodb.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Types\Spatials\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
