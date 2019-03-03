@@ -7,24 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Setup\hello-world.png" />
-    <None Remove="Setup\RefreshDB.sql" />
-    <None Remove="Setup\SetupDB.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Setup\hello-world.png" />
-    <EmbeddedResource Include="Setup\RefreshDB.sql" />
-    <EmbeddedResource Include="Setup\SetupDB.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoFixture" Version="4.5.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
-    <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
   </ItemGroup>

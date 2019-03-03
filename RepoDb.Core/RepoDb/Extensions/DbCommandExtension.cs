@@ -68,6 +68,13 @@ namespace RepoDb.Extensions
                 foreach (var propertyValue in propertyValues)
                 {
                     var dbType = propertyValue.Property.GetDbType();
+                    if (dbType == null)
+                    {
+                        if (propertyValue.Value == null && propertyValue.Property.PropertyInfo.PropertyType == typeof(byte[]))
+                        {
+                            dbType = DbType.Binary;
+                        }
+                    }
                     command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
                 }
             }

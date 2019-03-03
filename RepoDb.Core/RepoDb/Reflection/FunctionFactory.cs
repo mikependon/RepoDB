@@ -71,12 +71,9 @@ namespace RepoDb.Reflection
             var memberAssignments = new List<MemberAssignment>();
             var dataReaderType = typeof(DbDataReader);
             var tableFields = FieldDefinitionCache.Get<TEntity>();
-            var properties = PropertyCache.Get<TEntity>()
-                .Where(property => property.PropertyInfo.CanWrite)
-                .ToList();
 
             // Iterate each properties
-            properties?.ForEach(property =>
+            foreach (var property in PropertyCache.Get<TEntity>().Where(property => property.PropertyInfo.CanWrite))
             {
                 // Gets the mapped name and the ordinal
                 var mappedName = property.GetMappedName().ToLower();
@@ -91,15 +88,32 @@ namespace RepoDb.Reflection
                     var isTableFieldNullable = tableField == null || tableField?.IsNullable == true;
                     var underlyingType = Nullable.GetUnderlyingType(property.PropertyInfo.PropertyType);
                     var propertyType = underlyingType ?? property.PropertyInfo.PropertyType;
-                    var isConversionNeeded = readerField?.Type != propertyType;
+                    var convertType = readerField.Type;
+                    var isConversionNeeded = readerField.Type != propertyType;
 
-                    // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{readerField?.Type?.Name}");
+                    // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue() method
+                    var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", readerField.Type.Name));
                     if (readerGetValueMethod == null)
                     {
-                        readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{propertyType.Name}") ??
-                            dataReaderType.GetTypeInfo().GetMethod("GetValue");
-                        isConversionNeeded = true; // Force
+                        // Single value is throwing an exception in GetString(), skip it and use the GetValue() instead
+                        if (readerField.Type != typeof(Single))
+                        {
+                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", propertyType.Name));
+                        }
+
+                        // If present, then use the property type, otherwise, use the object
+                        if (readerGetValueMethod != null)
+                        {
+                            convertType = propertyType;
+                        }
+                        else
+                        {
+                            readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
+                            convertType = typeof(object);
+                        }
+
+                        // Force the conversion flag
+                        isConversionNeeded = true;
                     }
 
                     // Expressions
@@ -124,9 +138,55 @@ namespace RepoDb.Reflection
 
                         // False expression
                         var falseExpression = (Expression)Expression.Call(readerParameterExpression, readerGetValueMethod, ordinalExpression);
+
+                        // Only if there are conversions, execute the logics inside
                         if (isConversionNeeded == true)
                         {
-                            falseExpression = Expression.Convert(falseExpression, propertyType);
+                            // Variables needed
+                            var targetInstance = (Expression)null;
+                            var targetMethod = (MethodInfo)null;
+                            var targetParameter = (Expression)null;
+
+                            // Identify if the target type is 'Guid'
+                            if (propertyType == typeof(Guid) && readerField.Type == typeof(string))
+                            {
+                                // This is Guid.Parse()
+                                targetMethod = typeof(Guid).GetTypeInfo().GetMethod("Parse", new[] { typeof(string) });
+                                targetInstance = null;
+                                targetParameter = falseExpression;
+                            }
+                            else if (propertyType == typeof(string) && readerField.Type == typeof(Guid))
+                            {
+                                // This is Guid.ToString()
+                                targetMethod = typeof(Guid).GetTypeInfo().GetMethod("ToString", new Type[0]);
+                                targetInstance = falseExpression;
+                                targetParameter = null;
+                            }
+                            else
+                            {
+                                // This System.Convert.To<Type>()
+                                targetMethod = typeof(Convert).GetTypeInfo().GetMethod(string.Concat("To", propertyType.Name), new[] { convertType });
+                                targetInstance = null;
+                                targetParameter = falseExpression;
+                            }
+
+                            // If there are methods found from System.Convert(), then use it, otherwise use the normal
+                            if (targetMethod != null)
+                            {
+                                if (targetParameter == null)
+                                {
+                                    falseExpression = Expression.Call(targetInstance, targetMethod);
+                                }
+                                else
+                                {
+                                    falseExpression = Expression.Call(targetInstance, targetMethod, targetParameter);
+                                }
+                            }
+                            else
+                            {
+                                // There are coersion problem on certain types (i.e: Guid-to-String (vice versa))
+                                falseExpression = Expression.Convert(falseExpression, propertyType);
+                            }
                         }
                         if (underlyingType != null && underlyingType.GetTypeInfo().IsValueType == true)
                         {
@@ -161,7 +221,7 @@ namespace RepoDb.Reflection
                     // Set the actual property value
                     memberAssignments.Add(Expression.Bind(property.PropertyInfo, valueExpression));
                 }
-            });
+            }
 
             // Return the result
             return memberAssignments;
@@ -227,7 +287,7 @@ namespace RepoDb.Reflection
                 var isConversionNeeded = false;
 
                 // Get the correct method info, if the reader.Get<Type> is not found, then use the default GetValue
-                var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod($"Get{field?.Type.Name}");
+                var readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod(string.Concat("Get", field?.Type.Name));
                 if (readerGetValueMethod == null)
                 {
                     readerGetValueMethod = dataReaderType.GetTypeInfo().GetMethod("GetValue");
