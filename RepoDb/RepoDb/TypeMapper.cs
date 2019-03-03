@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 
 namespace RepoDb
@@ -15,8 +17,15 @@ namespace RepoDb
 
         static TypeMapper()
         {
+            ConversionType = ConversionType.Default;
             new List<TypeMapItem>();
         }
+
+        /// <summary>
+        /// Gets or sets the conversion strictness when converting the instance of <see cref="DbDataReader"/> object into a class. The
+        /// default value is <see cref="ConversionType.Default"/>.
+        /// </summary>
+        public static ConversionType ConversionType { get; set; }
 
         /// <summary>
         /// Gets the list of type-mapping objects.
@@ -28,9 +37,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
-        public static void AddMap(Type type, DbType dbType)
+        public static void Map(Type type, DbType dbType)
         {
-            AddMap(type, dbType, false);
+            Map(type, dbType, false);
         }
 
         /// <summary>
@@ -39,18 +48,18 @@ namespace RepoDb
         /// <param name="type">The .NET CLR Type to be mapped.</param>
         /// <param name="dbType">The database type where to map the .NET CLR Type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void AddMap(Type type, DbType dbType, bool force = false)
+        public static void Map(Type type, DbType dbType, bool force = false)
         {
-            AddMap(new TypeMapItem(type, dbType), force);
+            Map(new TypeMapItem(type, dbType), force);
         }
 
         /// <summary>
         /// Adds a mapping between .NET CLR Type and database type.
         /// </summary>
         /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
-        public static void AddMap(TypeMapItem item)
+        public static void Map(TypeMapItem item)
         {
-            AddMap(item, false);
+            Map(item, false);
         }
 
         /// <summary>
@@ -58,7 +67,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void AddMap(TypeMapItem item, bool force = false)
+        public static void Map(TypeMapItem item, bool force = false)
         {
             var target = Get(item.Type);
             if (target == null)
@@ -102,7 +111,7 @@ namespace RepoDb
         /// Removes a mapping of targetted .NET CLR Type from the collection.
         /// </summary>
         /// <param name="type">The .NET CLR Type mapping to be removed.</param>
-        public static void RemoveMap(Type type)
+        public static void Unmap(Type type)
         {
             var item = Get(type);
             if (item == null)

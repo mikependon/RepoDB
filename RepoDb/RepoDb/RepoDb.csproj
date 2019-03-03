@@ -57,6 +57,7 @@
     <Compile Include="Attributes\IdentityAttribute.cs" />
     <Compile Include="BulkInsertMapItem.cs" />
     <Compile Include="CommandParameter.cs" />
+    <Compile Include="Enumerations\ConversionType.cs" />
     <Compile Include="Enumerations\Provider.cs" />
     <Compile Include="Attributes\TypeMapAttribute.cs" />
     <Compile Include="ClassExpressions\ClassPropertiesExpression.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="PropertyValue.cs" />
     <Compile Include="QueryGroupTypeMap.cs" />
     <Compile Include="Reflection\FunctionCache.cs" />
-    <Compile Include="Reflection\DelegateCache.cs" />
     <Compile Include="Reflection\Functions.cs" />
     <Compile Include="Reflection\FunctionFactory.cs" />
     <Compile Include="Requests\BaseRequest.cs" />
@@ -154,8 +154,6 @@
     <Compile Include="CancellableTraceLog.cs" />
     <Compile Include="ObjectConverter.cs" />
     <Compile Include="Reflection\DataReaderConverter.cs" />
-    <Compile Include="Reflection\DelegateFactory.cs" />
-    <Compile Include="Reflection\Delegates.cs" />
     <Compile Include="SqlStatementBuilder.cs" />
     <Compile Include="StatementBuilderMapItem.cs" />
     <Compile Include="StatementBuilderMapper.cs" />

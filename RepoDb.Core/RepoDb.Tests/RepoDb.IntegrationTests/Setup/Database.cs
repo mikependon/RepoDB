@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Enumerations;
+using System;
 using System.Data.SqlClient;
 
 namespace RepoDb.IntegrationTests.Setup
@@ -13,8 +14,9 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Init()
         {
-            // Set the proper mappings
-            TypeMapper.AddMap(typeof(DateTime), System.Data.DbType.DateTime2, true);
+            // Set the proper values for type mapper
+            TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
+            TypeMapper.ConversionType = ConversionType.Ample;
 
             // Create the database first
             CreateDatabase();

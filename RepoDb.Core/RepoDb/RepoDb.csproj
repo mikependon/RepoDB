@@ -17,6 +17,7 @@
 [New Features]
 - Introduced the 'ExecuteQueryMultiple' into the 'DbRepository'.
 - Introduced the 'QueryMultiple' into the 'DbRepository'.
+- Introduced the 'ConversionType' to let the users decide the strictness of the conversions. Accesible via 'TypeMapper.ConversionType' property.
 
 [Added]
 - In the 'Async' methods, introduced the 'AsyncResultExtractor' class to control the extraction of the result in the caller side.
@@ -83,6 +84,9 @@
   <ItemGroup>
     <Compile Remove="Class1.cs" />
     <Compile Remove="PerformanceMonitor.cs" />
+    <Compile Remove="Reflection\DelegateCache.cs" />
+    <Compile Remove="Reflection\DelegateFactory.cs" />
+    <Compile Remove="Reflection\Delegates.cs" />
   </ItemGroup>
 
   <ItemGroup>
