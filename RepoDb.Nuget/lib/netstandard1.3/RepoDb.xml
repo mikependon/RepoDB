@@ -3482,6 +3482,22 @@
             A single connection is being used until the lifetime of the repository.
             </summary>
         </member>
+        <member name="T:RepoDb.Enumerations.ConversionType">
+            <summary>
+            An enum used to define the conversion strictness when converting the instance of <see cref="T:System.Data.Common.DbDataReader"/> into a class.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConversionType.Default">
+            <summary>
+            The conversion is strict and there are no additional implied logics during the conversion.
+            </summary>
+        </member>
+        <member name="F:RepoDb.Enumerations.ConversionType.Ample">
+            <summary>
+            The data type conversion is not strict. An additional logic will be used to properly map the proper <see cref="T:System.Data.Common.DbDataReader"/> data type
+            into its destination class property type. The operation will only succeed if the data types are convertible.
+            </summary>
+        </member>
         <member name="T:RepoDb.Enumerations.Operation">
             <summary>
             An enumeration used to define an operation on the query expression.
@@ -9408,54 +9424,6 @@
             <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
             <returns>An array of <see cref="T:System.Dynamic.ExpandoObject"/> objects.</returns>
         </member>
-        <member name="T:RepoDb.Reflection.DelegateFactory">
-            <summary>
-            A static factory class used to create a custom delegate.
-            </summary>
-        </member>
-        <member name="M:RepoDb.Reflection.DelegateFactory.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader)">
-            <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
-            </summary>
-            <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.Reflection.DelegateFactory.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader)">
-            <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
-            </summary>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object.</returns>
-        </member>
-        <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityDelegate`1">
-            <summary>
-            A delegate used to map the <see cref="T:System.Data.Common.DbDataReader"/> into data entity object.
-            </summary>
-            <typeparam name="TEntity">The data entity object to map.</typeparam>
-            <param name="dataReader">An instance of <see cref="T:System.Data.Common.DbDataReader"/> to be mapped.</param>
-            <returns>An instance of data entity object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
-        </member>
-        <member name="T:RepoDb.Reflection.Delegates.DataReaderToExpandoObjectDelegate">
-            <summary>
-            A delegate used to map the <see cref="T:System.Data.Common.DbDataReader"/> into <see cref="T:System.Dynamic.ExpandoObject"/> object.
-            </summary>
-            <param name="dataReader">An instance of <see cref="T:System.Data.Common.DbDataReader"/> to be mapped.</param>
-            <returns>An instance of <see cref="T:System.Dynamic.ExpandoObject"/> object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
-        </member>
-        <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityFunction`1">
-            <summary>
-            A compiled function that is used to map the <see cref="T:System.Data.Common.DbDataReader"/> into data entity object.
-            </summary>
-            <typeparam name="TEntity">The data entity object to map.</typeparam>
-            <returns>An instance of data entity object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
-        </member>
-        <member name="T:RepoDb.Reflection.Delegates.DataReaderToExpandoObjectFunction">
-            <summary>
-            A compiled function that is used to map the <see cref="T:System.Data.Common.DbDataReader"/> into <see cref="T:System.Dynamic.ExpandoObject"/> object.
-            </summary>
-            <returns>An instance of <see cref="T:System.Dynamic.ExpandoObject"/> object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
-        </member>
         <member name="T:RepoDb.Reflection.FunctionFactory">
             <summary>
             A static factory class used to create a custom function.
@@ -9494,42 +9462,18 @@
             <param name="readerFields">The list of fields to be bound from the data reader.</param>
             <returns>The enumerable list of child elements initializations.</returns>
         </member>
-        <member name="T:RepoDb.DelegateCache">
+        <member name="T:RepoDb.Reflection.Delegates.DataReaderToDataEntityFunction`1">
             <summary>
-            A class used to cache the dynamic delegate.
+            A compiled function that is used to map the <see cref="T:System.Data.Common.DbDataReader"/> into data entity object.
             </summary>
+            <typeparam name="TEntity">The data entity object to map.</typeparam>
+            <returns>An instance of data entity object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
         </member>
-        <member name="M:RepoDb.DelegateCache.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader)">
+        <member name="T:RepoDb.Reflection.Delegates.DataReaderToExpandoObjectFunction">
             <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
+            A compiled function that is used to map the <see cref="T:System.Data.Common.DbDataReader"/> into <see cref="T:System.Dynamic.ExpandoObject"/> object.
             </summary>
-            <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DelegateCache.GetDataReaderToDataEntityDelegate``1(System.Data.Common.DbDataReader,System.Boolean)">
-            <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
-            </summary>
-            <typeparam name="TEntity">The data entity object to convert to.</typeparam>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-            <returns>An instance of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DelegateCache.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader)">
-            <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
-            </summary>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <returns>An instance of data entity object.</returns>
-        </member>
-        <member name="M:RepoDb.DelegateCache.GetDataReaderToExpandoObjectDelegate(System.Data.Common.DbDataReader,System.Boolean)">
-            <summary>
-            Gets a delegate that is used to convert the <see cref="T:System.Data.Common.DbDataReader"/> object into data entity object.
-            </summary>
-            <param name="reader">The <see cref="T:System.Data.Common.DbDataReader"/> to be converted.</param>
-            <param name="basedOnFields">Check whether to create a delegate based on the data reader fields.</param>
-            <returns>An instance of data entity object.</returns>
+            <returns>An instance of <see cref="T:System.Dynamic.ExpandoObject"/> object containing the values from the <see cref="T:System.Data.Common.DbDataReader"/> object.</returns>
         </member>
         <member name="T:RepoDb.FunctionCache">
             <summary>
@@ -10715,19 +10659,25 @@
             A static class used to map the .NET CLR Types into database types.
             </summary>
         </member>
+        <member name="P:RepoDb.TypeMapper.ConversionType">
+            <summary>
+            Gets or sets the conversion strictness when converting the instance of <see cref="T:System.Data.Common.DbDataReader"/> object into a class. The
+            default value is <see cref="F:RepoDb.Enumerations.ConversionType.Default"/>.
+            </summary>
+        </member>
         <member name="P:RepoDb.TypeMapper.TypeMaps">
             <summary>
             Gets the list of type-mapping objects.
             </summary>
         </member>
-        <member name="M:RepoDb.TypeMapper.AddMap(System.Type,System.Data.DbType)">
+        <member name="M:RepoDb.TypeMapper.Map(System.Type,System.Data.DbType)">
             <summary>
             Adds a mapping between .NET CLR Type and database type.
             </summary>
             <param name="type">The .NET CLR Type to be mapped.</param>
             <param name="dbType">The database type where to map the .NET CLR Type.</param>
         </member>
-        <member name="M:RepoDb.TypeMapper.AddMap(System.Type,System.Data.DbType,System.Boolean)">
+        <member name="M:RepoDb.TypeMapper.Map(System.Type,System.Data.DbType,System.Boolean)">
             <summary>
             Adds a mapping between .NET CLR Type and database type.
             </summary>
@@ -10735,13 +10685,13 @@
             <param name="dbType">The database type where to map the .NET CLR Type.</param>
             <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         </member>
-        <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.TypeMapItem)">
+        <member name="M:RepoDb.TypeMapper.Map(RepoDb.TypeMapItem)">
             <summary>
             Adds a mapping between .NET CLR Type and database type.
             </summary>
             <param name="item">The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</param>
         </member>
-        <member name="M:RepoDb.TypeMapper.AddMap(RepoDb.TypeMapItem,System.Boolean)">
+        <member name="M:RepoDb.TypeMapper.Map(RepoDb.TypeMapItem,System.Boolean)">
             <summary>
             Adds a mapping between .NET CLR Type and database type.
             </summary>
@@ -10762,7 +10712,7 @@
             <typeparam name="T">The dynamic .NET CLR Type used for mapping.</typeparam>
             <returns>The instance of type-mapping object that holds the mapping of .NET CLR Type and database type.</returns>
         </member>
-        <member name="M:RepoDb.TypeMapper.RemoveMap(System.Type)">
+        <member name="M:RepoDb.TypeMapper.Unmap(System.Type)">
             <summary>
             Removes a mapping of targetted .NET CLR Type from the collection.
             </summary>

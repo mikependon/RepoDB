@@ -11,7 +11,7 @@
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.1]
+    <PackageReleaseNotes>[Release 1.8.1-beta1]
 ------------------
 
 [New Features]
@@ -29,6 +29,10 @@
 [Optimizations]
 - Added a class-level checking when identifying the 'PrimaryKey' of a class.
 - Supported the type conversions(if convertible) when querying the data from the database.
+    
+[Todo for 1.8.1]
+- Complete sets of 'IntegrationTests' for DbConnection, DbRepository, BaseRepository operations.
+- The version 1.8.1 will be the highest production-grade release of the library.
 
 [Release 1.8.0]
 ------------------
@@ -60,7 +64,7 @@
 
 [Optimizations]
 - Revisits the way on how to map the 'QueryGroup' list of 'QueryField' into the data entity type.
-- Refactor the Linq (IEnumerable&lt;T&gt;.ToList()) into an old-school (foreach / for (var i..)) approach.</PackageReleaseNotes>
+- Refactor the Linq (IEnumerable&amp;lt;T&amp;gt;.ToList()) into an old-school (foreach / for (var i..)) approach.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
@@ -68,8 +72,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.1.0</AssemblyVersion>
-    <FileVersion>1.8.1.0</FileVersion>
+    <AssemblyVersion>1.8.1.1</AssemblyVersion>
+    <FileVersion>1.8.1.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

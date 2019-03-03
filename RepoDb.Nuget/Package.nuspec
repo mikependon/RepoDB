@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.1</version>
+    <version>1.8.1-beta1</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon, rdagumampan</owners>
@@ -10,7 +10,7 @@
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.8.1]
+    [Release 1.8.1-beta1]
     ------------------
 
     [New Features]
@@ -28,6 +28,10 @@
     [Optimizations]
     - Added a class-level checking when identifying the 'PrimaryKey' of a class.
     - Supported the type conversions(if convertible) when querying the data from the database.
+    
+    [Todo for 1.8.1]
+    - Complete sets of 'IntegrationTests' for DbConnection, DbRepository, BaseRepository operations.
+    - The version 1.8.1 will be the highest production-grade release of the library.
 
     [Release 1.8.0]
     ------------------
