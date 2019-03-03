@@ -101,9 +101,9 @@ namespace RepoDb.IntegrationTests.Models
         [Primary]
         public Guid SessionId { get; set; }
         [Map("ColumnUniqueIdentifier")]
-        public Guid ColumnUniqueIdentifierMapped { get; set; }
-        //[Map("ColumnXml")]
-        //public Xml ColumnXmlMapped { get; set; }
+        public Guid? ColumnUniqueIdentifierMapped { get; set; }
+        [Map("ColumnXml")]
+        public string ColumnXmlMapped { get; set; }
         [Map("ColumnSqlVariant")]
         public object ColumnSqlVariantMapped { get; set; }
         [Map("ColumnHierarchyId")]
@@ -116,7 +116,6 @@ namespace RepoDb.IntegrationTests.Models
         [Primary]
         public Guid SessionId { get; set; }
         /* Link: https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2005/ms182776(v=sql.90) */
-        public object ColumnSqlVariantMapped { get; set; }
         [Map("ColumnTimeStamp")]
         public byte[] ColumnTimeStampMapped { get; set; } // Cannot explicitly insert
     }

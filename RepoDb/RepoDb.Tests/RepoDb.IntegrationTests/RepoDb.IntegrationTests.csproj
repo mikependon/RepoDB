@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\Database.cs" />
     <Compile Include="Setup\Helper.cs" />
+    <Compile Include="TypeConversionsTest.cs" />
     <Compile Include="SqlConnectionAllMethodsTest.cs" />
     <Compile Include="Types\Bytes\BaseRepositoryBytesTest.cs" />
     <Compile Include="Types\Bytes\DbRepositoryBytesTest.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="Types\Numbers\SqlConnectionNumbersTest.cs" />
     <Compile Include="Types\Numbers\DbRepositoryNumbersTest.cs" />
     <Compile Include="Types\Numbers\BaseRepositoryNumbersTest.cs" />
+    <Compile Include="Types\Others\BaseRepositoryOthersTest.cs" />
+    <Compile Include="Types\Others\DbRepositoryOthersTest.cs" />
+    <Compile Include="Types\Others\SqlConnectionOthersTest.cs" />
     <Compile Include="Types\Spatials\BaseRepositorySpatialsTest.cs" />
     <Compile Include="Types\Spatials\DbRepositorySpatialsTest.cs" />
     <Compile Include="Types\Spatials\SqlConnectionSpatialsTest.cs" />
