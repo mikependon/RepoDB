@@ -700,6 +700,51 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region DateTimeToStringClass (Date, DateTime, DateTime2)
+
+        [Map("CompleteTable")]
+        private class DateTimeToStringClass
+        {
+            [Primary]
+            public Guid SessionId { get; set; }
+            public DateTime ColumnNVarChar { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionCrudConvertionFromDateTimeToStringClass()
+        {
+            // Setup
+            var entity = new DateTimeToStringClass
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = DateTime.UtcNow
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Insert
+                var id = connection.Insert(entity);
+
+                // Act Query
+                var data = connection.Query<DateTimeToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+
+                // Act Delete
+                var deletedRows = connection.Delete<DateTimeToStringClass>(e => e.SessionId == (Guid)id);
+
+                // Act Query
+                data = connection.Query<DateTimeToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, deletedRows);
+                Assert.IsNull(data);
+            }
+        }
+
+        #endregion
+
         #region IntToStringClass
 
         [Map("CompleteTable")]
@@ -2320,7 +2365,7 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        #region FloatToStringClass
+        #region FloatToStringClass (Real, Money, Float)
 
         [Map("CompleteTable")]
         private class FloatToStringClass
