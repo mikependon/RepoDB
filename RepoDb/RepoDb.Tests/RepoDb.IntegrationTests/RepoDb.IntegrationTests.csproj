@@ -74,6 +74,9 @@
     <Compile Include="Types\Bytes\BaseRepositoryBytesTest.cs" />
     <Compile Include="Types\Bytes\DbRepositoryBytesTest.cs" />
     <Compile Include="Types\Bytes\SqlConnectionBytesTest.cs" />
+    <Compile Include="Types\Dates\BaseRepositoryDatesTest.cs" />
+    <Compile Include="Types\Dates\DbRepositoryDatesTest.cs" />
+    <Compile Include="Types\Dates\SqlConnectionDatesTest.cs" />
     <Compile Include="Types\Numbers\SqlConnectionNumbersTest.cs" />
     <Compile Include="Types\Numbers\DbRepositoryNumbersTest.cs" />
     <Compile Include="Types\Numbers\BaseRepositoryNumbersTest.cs" />
@@ -91,7 +94,6 @@
     <Content Include="Setup\repodb.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Types\Dates\" />
     <Folder Include="Types\Spatials\" />
     <Folder Include="Types\Strings\" />
   </ItemGroup>

@@ -41,13 +41,15 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesCrud()
         {
             // Setup
-            var text = "A dynamic, lightweight, and very fast ORM .NET Library.";
-            var bytes = Encoding.UTF8.GetBytes("ABCDE");
+            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBinary = bytes,
-                ColumnImage = bytes
+                ColumnImage = bytes,
+                ColumnVarBinary = bytes,
+                ColumnTinyInt = 128
             };
 
             using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
@@ -57,11 +59,13 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual("ABCDE", result);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -82,7 +86,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = null
+                ColumnBinary = null,
+                ColumnImage = null,
+                ColumnTinyInt = null,
+                ColumnVarBinary = null
             };
 
             using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
@@ -96,6 +103,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 // Assert
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -113,10 +123,15 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesMappedCrud()
         {
             // Setup
+            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
+                ColumnBinaryMapped = bytes,
+                ColumnImageMapped = bytes,
+                ColumnVarBinaryMapped = bytes,
+                ColumnTinyIntMapped = 128
             };
 
             using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
@@ -126,11 +141,13 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Act Query
                 var data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual("ABCDE", result);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
+                Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -151,7 +168,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = null
+                ColumnBinaryMapped = null,
+                ColumnImageMapped = null,
+                ColumnTinyIntMapped = null,
+                ColumnVarBinaryMapped = null
             };
 
             using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
@@ -164,7 +184,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(null);
+                Assert.IsNull(data.ColumnBinaryMapped);
+                Assert.IsNull(data.ColumnImageMapped);
+                Assert.IsNull(data.ColumnTinyIntMapped);
+                Assert.IsNull(data.ColumnVarBinaryMapped);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -182,10 +205,15 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesCrudAsync()
         {
             // Setup
+            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = Encoding.UTF8.GetBytes("ABCDE")
+                ColumnBinary = bytes,
+                ColumnImage = bytes,
+                ColumnVarBinary = bytes,
+                ColumnTinyInt = 128
             };
 
             using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
@@ -197,11 +225,13 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 // Act Query
                 var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
-                var result = Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual("ABCDE", result);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
+                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -224,7 +254,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             var entity = new BytesClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = null
+                ColumnBinary = null,
+                ColumnImage = null,
+                ColumnTinyInt = null,
+                ColumnVarBinary = null
             };
 
             using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
@@ -240,6 +273,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 // Assert
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnBinary);
+                Assert.IsNull(data.ColumnImage);
+                Assert.IsNull(data.ColumnTinyInt);
+                Assert.IsNull(data.ColumnVarBinary);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -259,10 +295,15 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestBaseRepositoryBytesMappedCrudAsync()
         {
             // Setup
+            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = Encoding.UTF8.GetBytes("ABCDE")
+                ColumnBinaryMapped = bytes,
+                ColumnImageMapped = bytes,
+                ColumnVarBinaryMapped = bytes,
+                ColumnTinyIntMapped = 128
             };
 
             using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
@@ -274,11 +315,13 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 // Act Query
                 var queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
                 var data = queryResult.Result.Extract().FirstOrDefault();
-                var result = Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray());
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual("ABCDE", result);
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
+                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
+                Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -301,7 +344,10 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             var entity = new BytesMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = null
+                ColumnBinaryMapped = null,
+                ColumnImageMapped = null,
+                ColumnTinyIntMapped = null,
+                ColumnVarBinaryMapped = null
             };
 
             using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
@@ -317,6 +363,9 @@ namespace RepoDb.IntegrationTests.Types.Bytes
                 // Assert
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnBinaryMapped);
+                Assert.IsNull(data.ColumnImageMapped);
+                Assert.IsNull(data.ColumnTinyIntMapped);
+                Assert.IsNull(data.ColumnVarBinaryMapped);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);

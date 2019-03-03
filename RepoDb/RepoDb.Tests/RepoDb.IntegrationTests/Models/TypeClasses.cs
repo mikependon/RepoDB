@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using System;
+using System.Data;
 
 namespace RepoDb.IntegrationTests.Models
 {
@@ -22,8 +23,7 @@ namespace RepoDb.IntegrationTests.Models
         public byte[] ColumnBinary { get; set; }
         public byte[] ColumnImage { get; set; }
         public byte[] ColumnVarBinary { get; set; }
-        public byte[] ColumnTimeStamp { get; set; }
-        public byte ColumnTinyInt { get; set; }
+        public byte? ColumnTinyInt { get; set; }
         // Strings
         public string ColumnChar { get; set; }
         public string ColumnNChar { get; set; }
@@ -36,6 +36,7 @@ namespace RepoDb.IntegrationTests.Models
         public DateTime? ColumnDateTime { get; set; }
         public DateTime? ColumnDateTime2 { get; set; }
         public DateTimeOffset? ColumnDateTimeOffset { get; set; }
+        [TypeMap(DbType.DateTimeOffset)]
         public DateTime? ColumnSmallDateTime { get; set; }
         public DateTime? ColumnTime { get; set; }
         // Spatials
@@ -73,8 +74,7 @@ namespace RepoDb.IntegrationTests.Models
         public byte[] ColumnBinary { get; set; }
         public byte[] ColumnImage { get; set; }
         public byte[] ColumnVarBinary { get; set; }
-        public byte[] ColumnTimeStamp { get; set; }
-        public byte ColumnTinyInt { get; set; }
+        public byte? ColumnTinyInt { get; set; }
     }
 
     [Map("CompleteTable")]
@@ -121,5 +121,14 @@ namespace RepoDb.IntegrationTests.Models
         //public Xml ColumnXml { get; set; }
         public object ColumnSqlVariant { get; set; }
         public object ColumnHierarchyId { get; set; }
+    }
+
+    [Map("CompleteTable")]
+    public class TimestampClass
+    {
+        [Primary]
+        public Guid SessionId { get; set; }
+        /* Link: https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2005/ms182776(v=sql.90) */
+        public byte[] ColumnTimeStamp { get; set; } // Cannot explicitly insert
     }
 }

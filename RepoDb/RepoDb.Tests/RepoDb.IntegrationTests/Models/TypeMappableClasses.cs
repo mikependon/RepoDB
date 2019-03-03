@@ -42,10 +42,8 @@ namespace RepoDb.IntegrationTests.Models
         public byte[] ColumnImageMapped { get; set; }
         [Map("ColumnVarBinary")]
         public byte[] ColumnVarBinaryMapped { get; set; }
-        [Map("ColumnTimeStamp")]
-        public byte[] ColumnTimeStampMapped { get; set; }
         [Map("ColumnTinyInt")]
-        public byte ColumnTinyIntMapped { get; set; }
+        public byte? ColumnTinyIntMapped { get; set; }
     }
 
     [Map("CompleteTable")]
@@ -110,5 +108,16 @@ namespace RepoDb.IntegrationTests.Models
         public object ColumnSqlVariantMapped { get; set; }
         [Map("ColumnHierarchyId")]
         public object ColumnHierarchyIdMapped { get; set; }
+    }
+
+    [Map("CompleteTable")]
+    public class TimestampMapClass
+    {
+        [Primary]
+        public Guid SessionId { get; set; }
+        /* Link: https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2005/ms182776(v=sql.90) */
+        public object ColumnSqlVariantMapped { get; set; }
+        [Map("ColumnTimeStamp")]
+        public byte[] ColumnTimeStampMapped { get; set; } // Cannot explicitly insert
     }
 }
