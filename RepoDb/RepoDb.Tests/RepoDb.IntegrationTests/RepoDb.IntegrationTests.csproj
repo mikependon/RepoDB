@@ -64,11 +64,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Include="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />
     <Compile Include="Models\TypeClasses.cs" />
-    <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup\Database.cs" />
     <Compile Include="Setup\Helper.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -12,9 +13,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Init()
         {
+            // Set the proper mappings
+            TypeMapper.AddMap(typeof(DateTime), System.Data.DbType.DateTime2, true);
+
             // Create the database first
             CreateDatabase();
-            
+
             // Create the tables
             CreateTables();
         }
