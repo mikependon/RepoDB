@@ -4,18 +4,38 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.8.0</Version>
+    <Version>1.8.1</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.0]
+    <PackageReleaseNotes>[Release 1.8.1]
 ------------------
+
+[New Features]
+- Introduced the 'ExecuteQueryMultiple' into the 'DbRepository'.
+- Introduced the 'QueryMultiple' into the 'DbRepository'.
+
+[Added]
+- In the 'Async' methods, introduced the 'AsyncResultExtractor' class to control the extraction of the result in the caller side.
+- Supported 'BulkInsert' for 'DbRepository' with 'DbDataReader' as the parameter.
+- Added an 'IntegrationTests' for all the different data types of the database (SQL Server) (Numbers, Spatials, Strings, Dates, Bytes, Others).
+- Added an 'IntegrationTests' for the data types conversions(i.e: String-to-Numbers (vice versa), String-to-Dates (vice versa), etc).
+- Added an 'IntegrationTests' for the invalid casings.
+
+[Optimizations]
+- Added a class-level checking when identifying the 'PrimaryKey' of a class.
+- Supported the type conversions(if convertible) when querying the data from the database.
+
+[Release 1.8.0]
+------------------
+
 [New Features]
 - Introduced the support for 'DbConnection.QueryMultiple'.
 - Introduced the support for 'DbConnection.ExecuteQueryMultiple'.
+
 [Added]
 - Added a class 'QueryMultipleExtractor' to manage the extraction of the result of 'DbConnection.ExecuteQueryMultiple' operation.
 - Added a class named 'CommandParameter' to handle the value of the parameter mapping into the target Type.
@@ -23,6 +43,7 @@
 - Introduced a 'hints' argument in the 'DbConnection.Query' operation.
 - Added class 'SqlTableHints'.
 - Supported 'BulkInsert' for 'DbDataReader'.
+
 [Removed]
 - Removed the 'Operation.Any'.
 - Removed the 'Operation.All'.
@@ -31,9 +52,11 @@
 - Removed the 'DbConnection.Count' method with 'primaryKey' argument.
 - Removed the 'DbConnection.Delete' method without the 'where' parameter.
 - Removed the support on 'dynamic' object query tree expressions.
+
 [Discontinued]
 - Removed the attribute 'Command'.
 - Removed the attribute 'Ignored'.
+
 [Optimizations]
 - Revisits the way on how to map the 'QueryGroup' list of 'QueryField' into the data entity type.
 - Refactor the Linq (IEnumerable&lt;T&gt;.ToList()) into an old-school (foreach / for (var i..)) approach.</PackageReleaseNotes>
@@ -44,8 +67,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.0.6</AssemblyVersion>
-    <FileVersion>1.8.0.6</FileVersion>
+    <AssemblyVersion>1.8.1.0</AssemblyVersion>
+    <FileVersion>1.8.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
