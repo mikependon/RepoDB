@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace RepoDb.IntegrationTests.Types.Bytes
@@ -31,7 +32,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrud()
         {
             // Setup
-            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var text = Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -113,7 +114,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesMappedCrud()
         {
             // Setup
-            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var text = Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {
@@ -195,7 +196,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesCrudAsync()
         {
             // Setup
-            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var text = Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesClass
             {
@@ -285,7 +286,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         public void TestSqlConnectionBytesMappedCrudAsync()
         {
             // Setup
-            var text = "RepoDb: A dynamic, lightweight, and very fast ORM .NET Library.";
+            var text = Helper.GetAssemblyDescription();
             var bytes = Encoding.UTF8.GetBytes(text);
             var entity = new BytesMapClass
             {

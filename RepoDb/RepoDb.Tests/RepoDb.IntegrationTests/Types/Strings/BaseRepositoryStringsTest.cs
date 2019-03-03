@@ -4,22 +4,20 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
-namespace RepoDb.IntegrationTests.Types.Bytes
+namespace RepoDb.IntegrationTests.Types.Strings
 {
     [TestClass]
-    public class BaseRepositoryBytesTest
+    public class BaseRepositoryStringsTest
     {
-        private class BytesClassRepository : BaseRepository<BytesClass, SqlConnection>
+        private class StringsClassRepository : BaseRepository<StringsClass, SqlConnection>
         {
-            public BytesClassRepository(string connectionString) : base(connectionString, (int?)0) { }
+            public StringsClassRepository(string connectionString) : base(connectionString, (int?)0) { }
         }
 
-        private class BytesMapClassRepository : BaseRepository<BytesMapClass, SqlConnection>
+        private class StringsMapClassRepository : BaseRepository<StringsMapClass, SqlConnection>
         {
-            public BytesMapClassRepository(string connectionString) : base(connectionString, (int?)0) { }
+            public StringsMapClassRepository(string connectionString) : base(connectionString, (int?)0) { }
         }
 
         [TestInitialize]
@@ -34,26 +32,27 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.DeleteAll<BytesClass>();
+                connection.DeleteAll<StringsClass>();
             }
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesCrud()
+        public void TestBaseRepositoryStringsCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
-            var bytes = Encoding.UTF8.GetBytes(text);
-            var entity = new BytesClass
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = bytes,
-                ColumnImage = bytes,
-                ColumnVarBinary = bytes,
-                ColumnTinyInt = 128
+                ColumnChar = text,
+                ColumnNChar = text,
+                ColumnNText = text,
+                ColumnNVarChar = text,
+                ColumnText = text,
+                ColumnVarChar = text
             };
 
-            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -63,10 +62,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
-                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -81,19 +82,21 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesNullCrud()
+        public void TestBaseRepositoryStringsNullCrud()
         {
             // Setup
-            var entity = new BytesClass
+            var entity = new StringsClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = null,
-                ColumnImage = null,
-                ColumnTinyInt = null,
-                ColumnVarBinary = null
+                ColumnChar = null,
+                ColumnNChar = null,
+                ColumnNText = null,
+                ColumnNVarChar = null,
+                ColumnText = null,
+                ColumnVarChar = null
             };
 
-            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -103,10 +106,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBinary);
-                Assert.IsNull(data.ColumnImage);
-                Assert.IsNull(data.ColumnTinyInt);
-                Assert.IsNull(data.ColumnVarBinary);
+                Assert.IsNull(data.ColumnChar);
+                Assert.IsNull(data.ColumnNChar);
+                Assert.IsNull(data.ColumnNText);
+                Assert.IsNull(data.ColumnNVarChar);
+                Assert.IsNull(data.ColumnText);
+                Assert.IsNull(data.ColumnVarChar);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -121,21 +126,22 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesMappedCrud()
+        public void TestBaseRepositoryStringsMappedCrud()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
-            var bytes = Encoding.UTF8.GetBytes(text);
-            var entity = new BytesMapClass
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = bytes,
-                ColumnImageMapped = bytes,
-                ColumnVarBinaryMapped = bytes,
-                ColumnTinyIntMapped = 128
+                ColumnCharMapped = text,
+                ColumnNCharMapped = text,
+                ColumnNTextMapped = text,
+                ColumnNVarCharMapped = text,
+                ColumnTextMapped = text,
+                ColumnVarCharMapped = text
             };
 
-            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -145,10 +151,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
-                Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
+                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
+                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -163,19 +171,21 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesMappedNullCrud()
+        public void TestBaseRepositoryStringsMappedNullCrud()
         {
             // Setup
-            var entity = new BytesMapClass
+            var entity = new StringsMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = null,
-                ColumnImageMapped = null,
-                ColumnTinyIntMapped = null,
-                ColumnVarBinaryMapped = null
+                ColumnCharMapped = null,
+                ColumnNCharMapped = null,
+                ColumnNTextMapped = null,
+                ColumnNVarCharMapped = null,
+                ColumnTextMapped = null,
+                ColumnVarCharMapped = null
             };
 
-            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -185,10 +195,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBinaryMapped);
-                Assert.IsNull(data.ColumnImageMapped);
-                Assert.IsNull(data.ColumnTinyIntMapped);
-                Assert.IsNull(data.ColumnVarBinaryMapped);
+                Assert.IsNull(data.ColumnCharMapped);
+                Assert.IsNull(data.ColumnNCharMapped);
+                Assert.IsNull(data.ColumnNTextMapped);
+                Assert.IsNull(data.ColumnNVarCharMapped);
+                Assert.IsNull(data.ColumnTextMapped);
+                Assert.IsNull(data.ColumnVarCharMapped);
 
                 // Act Delete
                 var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
@@ -203,21 +215,22 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesCrudAsync()
+        public void TestBaseRepositoryStringsCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
-            var bytes = Encoding.UTF8.GetBytes(text);
-            var entity = new BytesClass
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = bytes,
-                ColumnImage = bytes,
-                ColumnVarBinary = bytes,
-                ColumnTinyInt = 128
+                ColumnChar = text,
+                ColumnNChar = text,
+                ColumnNText = text,
+                ColumnNVarChar = text,
+                ColumnText = text,
+                ColumnVarChar = text
             };
 
-            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -229,10 +242,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinary.Take(entity.ColumnBinary.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImage));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinary));
-                Assert.AreEqual(entity.ColumnTinyInt, data.ColumnTinyInt);
+                Assert.AreEqual(entity.ColumnChar, data.ColumnChar.Trim());
+                Assert.AreEqual(entity.ColumnNChar, data.ColumnNChar.Trim());
+                Assert.AreEqual(entity.ColumnNText, data.ColumnNText);
+                Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnText, data.ColumnText);
+                Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -249,19 +264,21 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesNullCrudAsync()
+        public void TestBaseRepositoryStringsNullCrudAsync()
         {
             // Setup
-            var entity = new BytesClass
+            var entity = new StringsClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinary = null,
-                ColumnImage = null,
-                ColumnTinyInt = null,
-                ColumnVarBinary = null
+                ColumnChar = null,
+                ColumnNChar = null,
+                ColumnNText = null,
+                ColumnNVarChar = null,
+                ColumnText = null,
+                ColumnVarChar = null
             };
 
-            using (var repository = new BytesClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -273,10 +290,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBinary);
-                Assert.IsNull(data.ColumnImage);
-                Assert.IsNull(data.ColumnTinyInt);
-                Assert.IsNull(data.ColumnVarBinary);
+                Assert.IsNull(data.ColumnChar);
+                Assert.IsNull(data.ColumnNChar);
+                Assert.IsNull(data.ColumnNText);
+                Assert.IsNull(data.ColumnNVarChar);
+                Assert.IsNull(data.ColumnText);
+                Assert.IsNull(data.ColumnVarChar);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -293,21 +312,22 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesMappedCrudAsync()
+        public void TestBaseRepositoryStringsMappedCrudAsync()
         {
             // Setup
-            var text = Helper.GetAssemblyDescription();
-            var bytes = Encoding.UTF8.GetBytes(text);
-            var entity = new BytesMapClass
+            var text = Helper.GetUnicodeString();
+            var entity = new StringsMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = bytes,
-                ColumnImageMapped = bytes,
-                ColumnVarBinaryMapped = bytes,
-                ColumnTinyIntMapped = 128
+                ColumnCharMapped = text,
+                ColumnNCharMapped = text,
+                ColumnNTextMapped = text,
+                ColumnNVarCharMapped = text,
+                ColumnTextMapped = text,
+                ColumnVarCharMapped = text
             };
 
-            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -319,10 +339,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnBinaryMapped.Take(entity.ColumnBinaryMapped.Length).ToArray()));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnImageMapped));
-                Assert.AreEqual(text, Encoding.UTF8.GetString(data.ColumnVarBinaryMapped));
-                Assert.AreEqual(entity.ColumnTinyIntMapped, data.ColumnTinyIntMapped);
+                Assert.AreEqual(entity.ColumnCharMapped, data.ColumnCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNCharMapped, data.ColumnNCharMapped.Trim());
+                Assert.AreEqual(entity.ColumnNTextMapped, data.ColumnNTextMapped);
+                Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
+                Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
+                Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
@@ -339,19 +361,21 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestBaseRepositoryBytesMappedNullCrudAsync()
+        public void TestBaseRepositoryStringsMappedNullCrudAsync()
         {
             // Setup
-            var entity = new BytesMapClass
+            var entity = new StringsMapClass
             {
                 SessionId = Guid.NewGuid(),
-                ColumnBinaryMapped = null,
-                ColumnImageMapped = null,
-                ColumnTinyIntMapped = null,
-                ColumnVarBinaryMapped = null
+                ColumnCharMapped = null,
+                ColumnNCharMapped = null,
+                ColumnNTextMapped = null,
+                ColumnNVarCharMapped = null,
+                ColumnTextMapped = null,
+                ColumnVarCharMapped = null
             };
 
-            using (var repository = new BytesMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -363,10 +387,12 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.IsNull(data.ColumnBinaryMapped);
-                Assert.IsNull(data.ColumnImageMapped);
-                Assert.IsNull(data.ColumnTinyIntMapped);
-                Assert.IsNull(data.ColumnVarBinaryMapped);
+                Assert.IsNull(data.ColumnCharMapped);
+                Assert.IsNull(data.ColumnNCharMapped);
+                Assert.IsNull(data.ColumnNTextMapped);
+                Assert.IsNull(data.ColumnNVarCharMapped);
+                Assert.IsNull(data.ColumnTextMapped);
+                Assert.IsNull(data.ColumnVarCharMapped);
 
                 // Act Delete
                 var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
