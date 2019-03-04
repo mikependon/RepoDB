@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 namespace RepoDb.IntegrationTests.Setup
 {
     /// <summary>
-    /// A class used to setup test database for RepoDb.
+    /// A class used as a startup setup for for RepoDb test database.
     /// </summary>
     public static class Database
     {
@@ -16,7 +16,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
-            TypeMapper.ConversionType = ConversionType.Ample;
+            TypeMapper.ConversionType = ConversionType.Automatic;
 
             // Create the database first
             CreateDatabase();

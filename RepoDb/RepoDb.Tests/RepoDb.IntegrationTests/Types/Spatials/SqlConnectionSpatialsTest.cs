@@ -13,14 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 connection.DeleteAll<SpatialsClass>();
             }
@@ -37,7 +37,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -73,7 +73,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -109,7 +109,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -145,7 +145,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -181,7 +181,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -221,7 +221,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometry = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -261,7 +261,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = "LINESTRING (-122.36 47.656, -122.343 47.656)"
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -301,7 +301,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 ColumnGeometryMapped = null
             };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);

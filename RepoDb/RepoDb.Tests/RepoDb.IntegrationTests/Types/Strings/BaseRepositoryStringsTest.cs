@@ -23,14 +23,14 @@ namespace RepoDb.IntegrationTests.Types.Strings
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 connection.DeleteAll<StringsClass>();
             }
@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -96,7 +96,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -141,7 +141,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -185,7 +185,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -230,7 +230,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -278,7 +278,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var repository = new StringsClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -327,7 +327,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -375,7 +375,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var repository = new StringsMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new StringsMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);

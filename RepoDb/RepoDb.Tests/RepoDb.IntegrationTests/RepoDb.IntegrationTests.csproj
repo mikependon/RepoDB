@@ -59,7 +59,7 @@
     <Compile Include="Models\TypeMappableClasses.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setup\Database.cs" />
+    <Compile Include="Setup\Startup.cs" />
     <Compile Include="Setup\Helper.cs" />
     <Compile Include="TypeConversionsTest.cs" />
     <Compile Include="Operations\SqlConnectionOperationsTest.cs" />

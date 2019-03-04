@@ -10,14 +10,14 @@ namespace RepoDb.IntegrationTests.Operations
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
             }
         }

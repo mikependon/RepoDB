@@ -13,14 +13,14 @@ namespace RepoDb.IntegrationTests
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
             }
         }
@@ -54,7 +54,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -121,7 +121,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);

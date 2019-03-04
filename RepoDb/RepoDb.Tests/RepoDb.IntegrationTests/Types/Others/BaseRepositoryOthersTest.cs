@@ -23,14 +23,14 @@ namespace RepoDb.IntegrationTests.Types.Others
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 connection.DeleteAll<OthersClass>();
             }
@@ -49,7 +49,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -89,7 +89,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -129,7 +129,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -169,7 +169,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -209,7 +209,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -253,7 +253,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var repository = new OthersClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -297,7 +297,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -341,7 +341,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var repository = new OthersMapClassRepository(Database.ConnectionStringForRepoDb))
+            using (var repository = new OthersMapClassRepository(Startup.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
