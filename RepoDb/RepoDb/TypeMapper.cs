@@ -22,8 +22,8 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets or sets the conversion strictness when converting the instance of <see cref="DbDataReader"/> object into a class. The
-        /// default value is <see cref="ConversionType.Default"/>.
+        /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR types.
+        /// The default value is <see cref="ConversionType.Default"/>.
         /// </summary>
         public static ConversionType ConversionType { get; set; }
 
