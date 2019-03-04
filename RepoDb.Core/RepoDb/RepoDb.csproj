@@ -87,6 +87,18 @@
 
   <ItemGroup>
     <Compile Remove="Class1.cs" />
+    <Compile Remove="Exceptions\EntityNotBatchQueryableException.cs" />
+    <Compile Remove="Exceptions\EntityNotBigCountableException.cs" />
+    <Compile Remove="Exceptions\EntityNotBulkInsertableException.cs" />
+    <Compile Remove="Exceptions\EntityNotCountableException.cs" />
+    <Compile Remove="Exceptions\EntityNotDeletableException.cs" />
+    <Compile Remove="Exceptions\EntityNotInlineInsertableException.cs" />
+    <Compile Remove="Exceptions\EntityNotInlineMergeableException.cs" />
+    <Compile Remove="Exceptions\EntityNotInlineUpdateableException.cs" />
+    <Compile Remove="Exceptions\EntityNotInsertableException.cs" />
+    <Compile Remove="Exceptions\EntityNotMergeableException.cs" />
+    <Compile Remove="Exceptions\EntityNotQueryableException.cs" />
+    <Compile Remove="Exceptions\EntityNotUpdateableException.cs" />
     <Compile Remove="PerformanceMonitor.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
     <Compile Remove="Reflection\DelegateFactory.cs" />

@@ -78,12 +78,6 @@
     <Compile Include="Exceptions\InvalidQueryExpressionException.cs" />
     <Compile Include="PrimaryKeyIdentityCache.cs" />
     <Compile Include="DataEntityDataReader.cs" />
-    <Compile Include="Exceptions\EntityNotBigCountableException.cs" />
-    <Compile Include="Exceptions\EntityNotCountableException.cs" />
-    <Compile Include="Exceptions\EntityNotBatchQueryableException.cs" />
-    <Compile Include="Exceptions\EntityNotInlineInsertableException.cs" />
-    <Compile Include="Exceptions\EntityNotInlineMergeableException.cs" />
-    <Compile Include="Exceptions\EntityNotInlineUpdateableException.cs" />
     <Compile Include="Extensions\MemberInfoExtension.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="PropertyMappedNameCache.cs" />
@@ -129,12 +123,6 @@
     <Compile Include="Enumerations\Order.cs" />
     <Compile Include="Enumerations\Operation.cs" />
     <Compile Include="Exceptions\DuplicateTypeMapException.cs" />
-    <Compile Include="Exceptions\EntityNotBulkInsertableException.cs" />
-    <Compile Include="Exceptions\EntityNotInsertableException.cs" />
-    <Compile Include="Exceptions\EntityNotMergeableException.cs" />
-    <Compile Include="Exceptions\EntityNotUpdateableException.cs" />
-    <Compile Include="Exceptions\EntityNotDeletableException.cs" />
-    <Compile Include="Exceptions\EntityNotQueryableException.cs" />
     <Compile Include="Extensions\DataEntityExtension.cs" />
     <Compile Include="Extensions\DataReaderExtension.cs" />
     <Compile Include="Extensions\DbCommandExtension.cs" />
