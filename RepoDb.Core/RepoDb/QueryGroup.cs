@@ -119,7 +119,7 @@ namespace RepoDb
         #region Properties
 
         /// <summary>
-        /// Gets the conjunction used by this object..
+        /// Gets the conjunction used by this object.
         /// </summary>
         public Conjunction Conjunction { get; }
 

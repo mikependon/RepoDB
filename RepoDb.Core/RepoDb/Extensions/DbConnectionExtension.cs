@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="connection">The connection to be identified.</param>
         /// <param name="provider">The target provider for comparisson.</param>
         /// <returns>Returns true if the <see cref="IDbConnection"/> object corresponds to the target provider.</returns>
-        public static bool IsForProvider(this IDbConnection connection, Provider provider)
+        internal static bool IsForProvider(this IDbConnection connection, Provider provider)
         {
             switch (provider)
             {
@@ -55,7 +55,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection">The target connection object.</param>
         /// <returns>The provider of the target <see cref="IDbConnection"/> object.</returns>
-        public static Provider GetProvider(this IDbConnection connection)
+        internal static Provider GetProvider(this IDbConnection connection)
         {
             switch (connection.GetType().FullName)
             {
@@ -179,14 +179,14 @@ namespace RepoDb
         #region BatchQuery
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -211,7 +211,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -219,7 +219,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -246,7 +246,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -254,7 +254,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -282,7 +282,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -290,7 +290,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -318,7 +318,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -326,7 +326,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -354,7 +354,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch.
+        /// Query a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -362,7 +362,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -450,14 +450,14 @@ namespace RepoDb
         #region BatchQueryAsync
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -482,7 +482,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -490,7 +490,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -517,7 +517,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -525,7 +525,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -553,7 +553,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -561,7 +561,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -589,7 +589,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -597,7 +597,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -625,7 +625,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query the data from the database by batch in an asynchronous way.
+        /// Query a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -633,7 +633,7 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation.</param>
         /// <param name="rowsPerBatch">The number of rows per batch to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -717,13 +717,13 @@ namespace RepoDb
         #region BulkInsert
 
         /// <summary>
-        /// Bulk-inserting the list of data entity objects in the database.
+        /// Bulk insert a list of data entity objects into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
@@ -741,13 +741,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this IDbConnection connection,
@@ -765,13 +765,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int BulkInsert(this IDbConnection connection,
@@ -790,13 +790,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting the list of data entity objects in the database.
+        /// Bulk insert a list of data entity objects into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
@@ -875,13 +875,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal<TEntity>(this IDbConnection connection,
@@ -949,13 +949,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
         /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int BulkInsertInternal(this IDbConnection connection,
@@ -1027,13 +1027,13 @@ namespace RepoDb
         #region BulkInsertAsync
 
         /// <summary>
-        /// Bulk-inserting the list of data entity objects in the database in an asynchronous way.
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
@@ -1051,13 +1051,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this IDbConnection connection,
@@ -1075,13 +1075,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync(this IDbConnection connection,
@@ -1100,13 +1100,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting the list of data entity objects in the database in an asynchronous way.
+        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
@@ -1185,13 +1185,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal async static Task<int> BulkInsertInternalAsync<TEntity>(this IDbConnection connection,
@@ -1259,13 +1259,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Bulk-inserting a <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
         /// </summary>
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mapItems">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal async static Task<int> BulkInsertInternalAsync(this IDbConnection connection,
@@ -1337,11 +1337,11 @@ namespace RepoDb
         #region Count
 
         /// <summary>
-        /// Counts the number of rows from the database.
+        /// Count the number of table rows from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1362,12 +1362,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
+        /// Count the number of table rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1389,12 +1389,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
+        /// Count the number of table rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1416,12 +1416,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
+        /// Count the number of table rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1443,12 +1443,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
+        /// Count the number of table rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1469,12 +1469,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression.
+        /// Count the number of table rows from the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1546,11 +1546,11 @@ namespace RepoDb
         #region CountAsync
 
         /// <summary>
-        /// Counts the number of rows from the database in an asynchronous way.
+        /// Count the number of table rows from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1571,12 +1571,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// Count the number of table rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1598,12 +1598,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// Count the number of table rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1625,12 +1625,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// Count the number of table rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1652,12 +1652,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// Count the number of table rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1678,12 +1678,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of rows from the database based on the given query expression in an asynchronous way.
+        /// Count the number of table rows from the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1754,18 +1754,22 @@ namespace RepoDb
         #region Delete
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, Expression<Func<TEntity, bool>> where, int? commandTimeout = null,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Delete<TEntity>(this IDbConnection connection,
+            Expression<Func<TEntity, bool>> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
@@ -1777,18 +1781,21 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, QueryField where, int? commandTimeout = null,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Delete<TEntity>(this IDbConnection connection,
+            QueryField where, int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
@@ -1800,18 +1807,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
-        public static int Delete<TEntity>(this IDbConnection connection, IEnumerable<QueryField> where, int? commandTimeout = null,
-            IDbTransaction transaction = null, ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static int Delete<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
@@ -1823,12 +1834,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1851,12 +1862,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1878,12 +1889,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression.
+        /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1955,12 +1966,12 @@ namespace RepoDb
         #region DeleteAsync
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -1982,12 +1993,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2009,12 +2020,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2036,12 +2047,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2062,12 +2073,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2089,12 +2100,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes a data in the database based on the given query expression in an asynchronous way.
+        /// Delete a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2166,11 +2177,11 @@ namespace RepoDb
         #region DeleteAll
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity.
+        /// Deletes all the data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2190,11 +2201,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity.
+        /// Deletes all the data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2255,11 +2266,11 @@ namespace RepoDb
         #region DeleteAllAsync
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity in an asynchronous way.
+        /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2279,11 +2290,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Deletes all data in the database based on the target data entity in an asynchronous way.
+        /// Deletes all the data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2344,12 +2355,12 @@ namespace RepoDb
         #region InlineInsert
 
         /// <summary>
-        /// Inserts a data in the database by targetting certain fields only.
+        /// Inserts a data in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2371,12 +2382,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data in the database by targetting certain fields only.
+        /// Inserts a data in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2444,12 +2455,12 @@ namespace RepoDb
         #region InlineInsertAsync
 
         /// <summary>
-        /// Inserts a data in the database by targetting certain fields only in an asynchronous way.
+        /// Inserts a data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2471,12 +2482,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Inserts a data in the database by targetting certain fields only in an asynchronous way.
+        /// Inserts a data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object that contains the targetted columns to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2544,12 +2555,12 @@ namespace RepoDb
         #region InlineMerge
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only.
+        /// Merges an object into an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2572,13 +2583,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only.
+        /// Merges an object into an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2602,13 +2613,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only.
+        /// Merges an object into an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2632,13 +2643,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only.
+        /// Merges an object into an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2662,13 +2673,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only.
+        /// Merges an object into an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2736,12 +2747,12 @@ namespace RepoDb
         #region InlineMergeAsync
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an aynchronous way.
+        /// Merges an object into an existing rows in the database (certain fields only) in an aynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2764,13 +2775,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an aynchronous way.
+        /// Merges an object into an existing rows in the database (certain fields only) in an aynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2794,13 +2805,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an aynchronous way.
+        /// Merges an object into an existing rows in the database (certain fields only) in an aynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifier">The qualifier field to be used by the inline merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2824,13 +2835,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an aynchronous way.
+        /// Merges an object into an existing rows in the database (certain fields only) in an aynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2854,13 +2865,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data in the database by targetting certain fields only in an aynchronous way.
+        /// Merges an object into an existing rows in the database (certain fields only) in an aynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be merged.</param>
-        /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
+        /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2928,13 +2939,13 @@ namespace RepoDb
         #region InlineUpdate
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2958,13 +2969,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -2988,13 +2999,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3017,13 +3028,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3047,13 +3058,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3077,13 +3088,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only.
+        /// Updates an existing rows in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3151,13 +3162,13 @@ namespace RepoDb
         #region InlineUpdateAsync
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3181,13 +3192,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3211,13 +3222,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3240,13 +3251,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3270,13 +3281,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3300,13 +3311,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database by targetting certain fields only in an asynchronous way.
+        /// Updates an existing rows in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be updated.</param>
+        /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3378,8 +3389,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3387,8 +3398,12 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public static object Insert<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        public static object Insert<TEntity>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return InsertInternal(connection: connection,
@@ -3404,8 +3419,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3413,8 +3428,12 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static object InsertInternal<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
-            ITrace trace = null, IStatementBuilder statementBuilder = null)
+        internal static object InsertInternal<TEntity>(this IDbConnection connection,
+            TEntity entity, int?
+            commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             // Variables
@@ -3473,8 +3492,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3499,8 +3518,8 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The data entity object to be inserted.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3547,7 +3566,7 @@ namespace RepoDb
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
-            
+
             // After Execution
             if (trace != null)
             {
@@ -3564,13 +3583,12 @@ namespace RepoDb
         #region Merge
 
         /// <summary>
-        /// Merges an existing data entity object in the database. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3593,14 +3611,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3624,14 +3641,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3655,14 +3671,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3732,13 +3747,12 @@ namespace RepoDb
         #region MergeAsync
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asychronous way. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3761,14 +3775,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asychronous way. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3792,14 +3805,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asychronous way. By default, this operation uses the primary key property as
-        /// the qualifier.
+        /// Merges a data entity object into an existing rows in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifier">The field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3823,13 +3835,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asychronous way.
+        /// Merges a data entity object into an existing rows in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3853,13 +3865,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges an existing data entity object in the database in an asychronous way.
+        /// Merges a data entity object into an existing rows in the database in an asychronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The entity to be merged.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -3940,7 +3952,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3972,7 +3984,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -3984,7 +3996,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4017,7 +4029,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4029,7 +4041,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4062,7 +4074,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4072,7 +4084,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4103,7 +4115,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4115,7 +4127,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4147,7 +4159,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4159,7 +4171,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4192,7 +4204,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression.
+        /// Query a data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4204,7 +4216,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4322,7 +4334,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4353,7 +4365,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4365,7 +4377,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4398,7 +4410,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4410,7 +4422,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4443,7 +4455,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4453,7 +4465,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4484,7 +4496,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4496,7 +4508,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4528,7 +4540,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4540,7 +4552,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4573,7 +4585,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Query a data from the database based on the given query expression in an asynchronous way.
+        /// Query a data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -4585,7 +4597,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -4695,15 +4707,15 @@ namespace RepoDb
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -4745,15 +4757,15 @@ namespace RepoDb
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -4878,19 +4890,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -4942,19 +4954,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5101,23 +5113,23 @@ namespace RepoDb
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5180,23 +5192,23 @@ namespace RepoDb
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5366,27 +5378,27 @@ namespace RepoDb
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5459,27 +5471,27 @@ namespace RepoDb
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5671,31 +5683,31 @@ namespace RepoDb
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -5778,31 +5790,31 @@ namespace RepoDb
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6017,35 +6029,35 @@ namespace RepoDb
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <typeparam name="T7">The seventh target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="where7">The query expression to be used by this operation for T7.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
-        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
-        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="where7">The query expression to be used (at T7) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used (at T7) by this operation.</param>
+        /// <param name="top7">The top number of rows to be used (at T7) by this operation.</param>
+        /// <param name="hints7">The table hints to be used (at T7) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6138,35 +6150,35 @@ namespace RepoDb
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <typeparam name="T7">The seventh target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="where7">The query expression to be used by this operation for T7.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
-        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
-        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="where7">The query expression to be used (at T7) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used (at T7) by this operation.</param>
+        /// <param name="top7">The top number of rows to be used (at T7) by this operation.</param>
+        /// <param name="hints7">The table hints to be used (at T7) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6401,15 +6413,15 @@ namespace RepoDb
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6451,15 +6463,15 @@ namespace RepoDb
         /// <typeparam name="T1">The first target type.</typeparam>
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6584,19 +6596,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6648,19 +6660,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6807,23 +6819,23 @@ namespace RepoDb
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -6886,23 +6898,23 @@ namespace RepoDb
         /// <typeparam name="T3">The third target type.</typeparam>
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7072,27 +7084,27 @@ namespace RepoDb
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7165,27 +7177,27 @@ namespace RepoDb
         /// <typeparam name="T4">The fourth target type.</typeparam>
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7377,31 +7389,31 @@ namespace RepoDb
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7484,31 +7496,31 @@ namespace RepoDb
         /// <typeparam name="T5">The fifth target type.</typeparam>
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7723,35 +7735,35 @@ namespace RepoDb
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <typeparam name="T7">The seventh target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="where7">The query expression to be used by this operation for T7.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
-        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
-        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="where7">The query expression to be used (at T7) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used (at T7) by this operation.</param>
+        /// <param name="top7">The top number of rows to be used (at T7) by this operation.</param>
+        /// <param name="hints7">The table hints to be used (at T7) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -7844,35 +7856,35 @@ namespace RepoDb
         /// <typeparam name="T6">The sixth target type.</typeparam>
         /// <typeparam name="T7">The seventh target type.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where1">The query expression to be used by this operation for T1.</param>
-        /// <param name="where2">The query expression to be used by this operation for T2.</param>
-        /// <param name="where3">The query expression to be used by this operation for T3.</param>
-        /// <param name="where4">The query expression to be used by this operation for T4.</param>
-        /// <param name="where5">The query expression to be used by this operation for T5.</param>
-        /// <param name="where6">The query expression to be used by this operation for T6.</param>
-        /// <param name="where7">The query expression to be used by this operation for T7.</param>
-        /// <param name="orderBy1">The order definition of the fields to be used by this operation for T1.</param>
-        /// <param name="top1">The top number of rows to be used by this operation for T1.</param>
-        /// <param name="hints1">The table hints to be used when querying the records for T1. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy2">The order definition of the fields to be used by this operation for T2.</param>
-        /// <param name="top2">The top number of rows to be used by this operation for T2.</param>
-        /// <param name="hints2">The table hints to be used when querying the records for T2. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy3">The order definition of the fields to be used by this operation for T3.</param>
-        /// <param name="top3">The top number of rows to be used by this operation for T3.</param>
-        /// <param name="hints3">The table hints to be used when querying the records for T3. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy4">The order definition of the fields to be used by this operation for T4.</param>
-        /// <param name="top4">The top number of rows to be used by this operation for T4.</param>
-        /// <param name="hints4">The table hints to be used when querying the records for T4. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy5">The order definition of the fields to be used by this operation for T5.</param>
-        /// <param name="top5">The top number of rows to be used by this operation for T5.</param>
-        /// <param name="hints5">The table hints to be used when querying the records for T5. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy6">The order definition of the fields to be used by this operation for T6.</param>
-        /// <param name="top6">The top number of rows to be used by this operation for T6.</param>
-        /// <param name="hints6">The table hints to be used when querying the records for T6. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="orderBy7">The order definition of the fields to be used by this operation for T7.</param>
-        /// <param name="top7">The top number of rows to be used by this operation for T7.</param>
-        /// <param name="hints7">The table hints to be used when querying the records for T7. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="where1">The query expression to be used (at T1) by this operation.</param>
+        /// <param name="where2">The query expression to be used (at T2) by this operation.</param>
+        /// <param name="where3">The query expression to be used (at T3) by this operation.</param>
+        /// <param name="where4">The query expression to be used (at T4) by this operation.</param>
+        /// <param name="where5">The query expression to be used (at T5) by this operation.</param>
+        /// <param name="where6">The query expression to be used (at T6) by this operation.</param>
+        /// <param name="where7">The query expression to be used (at T7) by this operation.</param>
+        /// <param name="orderBy1">The order definition of the fields to be used (at T1) by this operation.</param>
+        /// <param name="top1">The top number of rows to be used (at T1) by this operation.</param>
+        /// <param name="hints1">The table hints to be used (at T1) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy2">The order definition of the fields to be used (at T2) by this operation.</param>
+        /// <param name="top2">The top number of rows to be used (at T2) by this operation.</param>
+        /// <param name="hints2">The table hints to be used (at T2) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy3">The order definition of the fields to be used (at T3) by this operation.</param>
+        /// <param name="top3">The top number of rows to be used (at T3) by this operation.</param>
+        /// <param name="hints3">The table hints to be used (at T3) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy4">The order definition of the fields to be used (at T4) by this operation.</param>
+        /// <param name="top4">The top number of rows to be used (at T4) by this operation.</param>
+        /// <param name="hints4">The table hints to be used (at T4) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy5">The order definition of the fields to be used (at T5) by this operation.</param>
+        /// <param name="top5">The top number of rows to be used (at T5) by this operation.</param>
+        /// <param name="hints5">The table hints to be used (at T5) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy6">The order definition of the fields to be used (at T6) by this operation.</param>
+        /// <param name="top6">The top number of rows to be used (at T6) by this operation.</param>
+        /// <param name="hints6">The table hints to be used (at T6) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="orderBy7">The order definition of the fields to be used (at T7) by this operation.</param>
+        /// <param name="top7">The top number of rows to be used (at T7) by this operation.</param>
+        /// <param name="hints7">The table hints to be used (at T7) by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8100,11 +8112,11 @@ namespace RepoDb
         #region Truncate
 
         /// <summary>
-        /// Truncates a table from the database.
+        /// Truncate a table from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static void Truncate<TEntity>(this IDbConnection connection,
@@ -8117,11 +8129,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Truncates a table from the database.
+        /// Truncate a table from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         internal static void TruncateInternal<TEntity>(this IDbConnection connection,
@@ -8175,11 +8187,11 @@ namespace RepoDb
         #region TruncateAsync
 
         /// <summary>
-        /// Truncates a table from the database in an asynchronous way.
+        /// Truncate a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         public static Task TruncateAsync<TEntity>(this IDbConnection connection,
@@ -8195,11 +8207,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Truncates a table from the database in an asynchronous way.
+        /// Truncate a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         internal static Task TruncateInternalAsync<TEntity>(this IDbConnection connection,
@@ -8256,12 +8268,12 @@ namespace RepoDb
         #region Update
 
         /// <summary>
-        /// Updates a data in the database.
+        /// Update an existing data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8285,13 +8297,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8315,13 +8327,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8345,13 +8357,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8375,13 +8387,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8406,13 +8418,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8436,13 +8448,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8509,12 +8521,12 @@ namespace RepoDb
         #region  UpdateAsync
 
         /// <summary>
-        /// Updates a data in the database in an asynchronous way.
+        /// Update an existing data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8537,13 +8549,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8567,13 +8579,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8597,13 +8609,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8627,13 +8639,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression in an asynchronous way.
+        /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8659,13 +8671,13 @@ namespace RepoDb
 
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8689,13 +8701,13 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Updates a data in the database based on the given query expression.
+        /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The instance of data entity object to be updated.</param>
+        /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
@@ -8762,18 +8774,18 @@ namespace RepoDb
         #region ExecuteQuery (dynamics)
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8793,18 +8805,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8822,18 +8834,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8853,18 +8865,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of dynamic objects.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8889,19 +8901,19 @@ namespace RepoDb
         #region ExecuteQuery
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8922,19 +8934,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8952,20 +8964,24 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteQueryAsync
+
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -8986,19 +9002,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// converts the result back to an enumerable list of data entity object.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity to convert to.</typeparam>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -9026,15 +9042,15 @@ namespace RepoDb
         /// <summary>
         /// Executes a multiple query statement from the database.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
             string commandText,
@@ -9055,15 +9071,15 @@ namespace RepoDb
         /// <summary>
         /// Executes a multiple query statement from the database in an asynchronous way.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
             string commandText,
@@ -9086,19 +9102,19 @@ namespace RepoDb
         #region ExecuteReader
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <returns>An instance of the data reader object.</returns>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -9110,19 +9126,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <returns>An instance of the data reader object.</returns>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -9136,20 +9152,24 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteReaderAsync
+
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <returns>An instance of the data reader object.</returns>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -9166,19 +9186,19 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
         /// returns the instance of the data reader.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
-        /// <returns>An instance of the data reader object.</returns>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
         internal static async Task<IDataReader> ExecuteReaderInternalAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -9197,18 +9217,18 @@ namespace RepoDb
         #region ExecuteNonQuery
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
@@ -9226,18 +9246,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static int ExecuteNonQueryInternal(this IDbConnection connection,
             string commandText,
@@ -9252,19 +9272,23 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteNonQueryAsync
+
         /// <summary>
-        /// Executes a query from the database in asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database in asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
@@ -9282,18 +9306,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteNonQuery"/> and
+        /// Executes a query from the database in asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteNonQuery"/> and
         /// returns the number of affected rows during the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of rows affected by the execution.</returns>
         internal static async Task<int> ExecuteNonQueryInternalAsync(this IDbConnection connection,
             string commandText,
@@ -9313,18 +9337,18 @@ namespace RepoDb
         #region ExecuteScalar
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
@@ -9342,18 +9366,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static object ExecuteScalarInternal(this IDbConnection connection,
             string commandText,
@@ -9368,19 +9392,23 @@ namespace RepoDb
             }
         }
 
+        #endregion
+
+        #region ExecuteScalarAsync
+
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
@@ -9398,18 +9426,18 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Executes a query from the database in an asynchronous way. It uses the underlying method <see cref="IDbCommand.ExecuteScalar"/> and
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
         /// returns the first occurence value (first column of first row) of the execution.
         /// </summary>
-        /// <param name="connection">The connection to be used during execution.</param>
-        /// <param name="commandText">The command text to be used on the execution.</param>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
         /// <param name="param">
         /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
         /// defined in the <see cref="IDbCommand.CommandText"/> property.
         /// </param>
-        /// <param name="commandType">The command type to be used on the execution.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on the execution.</param>
-        /// <param name="transaction">The transaction to be used on the execution (if present).</param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         internal static async Task<object> ExecuteScalarInternalAsync(this IDbConnection connection,
             string commandText,
@@ -9429,7 +9457,7 @@ namespace RepoDb
         #region Other Methods
 
         /// <summary>
-        /// Creates a new instance of <see cref="DbCommand"/> object that is to be used execution.
+        /// Create a new instance of <see cref="DbCommand"/> object to be used for execution.
         /// </summary>
         /// <param name="connection">The connection object.</param>
         /// <param name="commandText">The command text to be used.</param>

@@ -28,7 +28,6 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Help developers be more focused on the SOLID principle
  - Make it as fast as possible
  - Make it more flexible
- - Never use try-catch inside the library
  - Never create complex implementations (especially for complex Join Queries)
 
 ## Features

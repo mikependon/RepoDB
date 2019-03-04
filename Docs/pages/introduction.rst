@@ -22,12 +22,11 @@ Links
 Principles
 ----------
 
-* We will keep it simple as possible (KISS principle)
-* We will help developers to be more focus on SOLID principle
-* We will make it fast as possible
-* We will make it more dynamic and flexible
-* We will never ever do try-catch inside the library
-* We will never make complex implementations (specially for complex Join Queries)
+* Keep it as simple as possible (KISS principle)
+* Help developers be more focused on the SOLID principle
+* Make it as fast as possible
+* Make it more flexible
+* Never create complex implementations (especially for complex Join Queries)
 
 Features
 --------

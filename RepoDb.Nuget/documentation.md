@@ -1,6 +1,6 @@
 ### Note
 
- - RepoDb v1.8.1 will the production-grade release with complete set of tests. The beta v1.8.1-beta1 is the mirror of that release until the complete sets of 'IntegrationTests' are completed.
+ - The v1.8.1 will be the production-grade release of RepoDb (with complete set of tests). The version v1.8.1-beta1 is the mirror of that release until the complete sets of 'IntegrationTests' are completed.
 
 ### Why RepoDb
 

@@ -698,7 +698,7 @@ Explicit way:
 Insert
 ------
 
-Inserts a data in the database.
+Insert a data into the database.
 
 .. highlight:: c#
 
@@ -714,20 +714,6 @@ Inserts a data in the database.
 			CreatedDate = DateTime.UtcNow
 		};
 		connection.Insert(order);
-	}
-
-IsForProvider
--------------
-
-Checks whether the current used connection object is targetting a specific DB provider.
-
-.. highlight:: c#
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var isSql = connection.IsForProvider(Provider.Sql);
 	}
 
 Merge
