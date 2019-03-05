@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data.SqlClient;
@@ -17,6 +18,7 @@ namespace RepoDb.IntegrationTests
         {
             Startup.Init();
             Cleanup();
+            TypeMapper.ConversionType = ConversionType.Automatic;
         }
 
         [TestCleanup]
@@ -26,6 +28,7 @@ namespace RepoDb.IntegrationTests
             {
                 connection.DeleteAll<CompleteTable>();
             }
+            TypeMapper.ConversionType = ConversionType.Default;
         }
 
         #region StringToBigIntClass

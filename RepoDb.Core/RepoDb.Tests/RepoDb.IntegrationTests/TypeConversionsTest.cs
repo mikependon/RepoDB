@@ -15,17 +15,19 @@ namespace RepoDb.IntegrationTests
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Startup.Init();
             Cleanup();
+            TypeMapper.ConversionType = ConversionType.Automatic;
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
             {
                 connection.DeleteAll<CompleteTable>();
             }
+            TypeMapper.ConversionType = ConversionType.Default;
         }
 
         #region StringToBigIntClass

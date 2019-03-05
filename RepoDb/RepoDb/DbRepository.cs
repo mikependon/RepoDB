@@ -285,7 +285,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -327,7 +327,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -370,7 +370,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -414,7 +414,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -458,7 +458,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -505,7 +505,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -554,7 +554,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -604,7 +604,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -655,7 +655,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
@@ -706,7 +706,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation.</param>
-        /// <param name="rowsPerBatch">The number of data per batch to be used by this operation.</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
