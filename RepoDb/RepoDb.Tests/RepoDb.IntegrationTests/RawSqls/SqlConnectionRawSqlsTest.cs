@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Setup;
-using System.Data.SqlClient;
 
 namespace RepoDb.IntegrationTests.RawSqls
 {
@@ -10,16 +9,14 @@ namespace RepoDb.IntegrationTests.RawSqls
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-            }
+            Database.Cleanup();
         }
     }
 }

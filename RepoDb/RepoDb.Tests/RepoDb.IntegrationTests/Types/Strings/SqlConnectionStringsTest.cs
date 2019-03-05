@@ -13,17 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Strings
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<StringsClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -42,7 +39,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -58,16 +55,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
                 Assert.AreEqual(entity.ColumnText, data.ColumnText);
                 Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -86,7 +73,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -102,16 +89,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarChar);
                 Assert.IsNull(data.ColumnText);
                 Assert.IsNull(data.ColumnVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -131,7 +108,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -147,16 +124,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
                 Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
                 Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -175,7 +142,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -191,16 +158,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarCharMapped);
                 Assert.IsNull(data.ColumnTextMapped);
                 Assert.IsNull(data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -220,7 +177,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = text
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -238,18 +195,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
                 Assert.AreEqual(entity.ColumnText, data.ColumnText);
                 Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -268,7 +213,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarChar = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -286,18 +231,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarChar);
                 Assert.IsNull(data.ColumnText);
                 Assert.IsNull(data.ColumnVarChar);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -317,7 +250,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = text
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -335,18 +268,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
                 Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
                 Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -365,7 +286,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 ColumnVarCharMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -383,18 +304,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarCharMapped);
                 Assert.IsNull(data.ColumnTextMapped);
                 Assert.IsNull(data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

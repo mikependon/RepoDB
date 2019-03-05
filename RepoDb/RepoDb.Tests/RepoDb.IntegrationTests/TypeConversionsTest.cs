@@ -16,7 +16,7 @@ namespace RepoDb.IntegrationTests
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
             TypeMapper.ConversionType = ConversionType.Automatic;
         }
@@ -24,10 +24,7 @@ namespace RepoDb.IntegrationTests
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<CompleteTable>();
-            }
+            Database.Cleanup();
             TypeMapper.ConversionType = ConversionType.Default;
         }
 
@@ -51,7 +48,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.ToString()
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -96,7 +93,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = bool.TrueString
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -106,16 +103,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -141,7 +128,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = "12345.55"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -151,16 +138,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -186,7 +163,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = "12345.55"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -196,16 +173,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -231,7 +198,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = "12345"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -241,16 +208,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -276,7 +233,7 @@ namespace RepoDb.IntegrationTests
                 ColumnMoney = "12345.6789"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -286,16 +243,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnMoney, data.ColumnMoney);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToMoneyClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToMoneyClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -321,7 +268,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNumeric = "12345.67"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -331,16 +278,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNumeric, data.ColumnNumeric);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToNumericClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToNumericClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -366,7 +303,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = "12345.67"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -376,16 +313,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -411,7 +338,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = "12345"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -421,16 +348,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -456,7 +373,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallMoney = "12345.6700"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -466,16 +383,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToSmallMoneyClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -501,7 +408,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDate = "1970-01-01"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -511,16 +418,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("1/1/1970 12:00:00 AM", data.ColumnDate);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToDateClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -546,7 +443,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDateTime = "1970-01-01 11:30 AM"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -556,16 +453,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("1/1/1970 11:30:00 AM", data.ColumnDateTime);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToDateTimeClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -591,7 +478,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDateTime2 = "2019-03-03 15:22:10.0500000"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -601,16 +488,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual("3/3/2019 3:22:10 PM", data.ColumnDateTime2);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToDateTime2Class>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -636,7 +513,7 @@ namespace RepoDb.IntegrationTests
                 ColumnUniqueIdentifier = Guid.NewGuid().ToString()
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -646,16 +523,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
-
-                // Act Delete
-                var deletedRows = connection.Delete<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<StringToUniqueIdentifierClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -681,7 +548,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = Guid.NewGuid()
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -691,16 +558,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<UniqueIdentifierToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<UniqueIdentifierToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -726,7 +583,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = DateTime.UtcNow
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -736,16 +593,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DateTimeToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DateTimeToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -771,7 +618,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -781,16 +628,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -816,7 +653,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -826,16 +663,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToBigIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -861,7 +688,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = (int)short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -871,16 +698,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -906,7 +723,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -916,16 +733,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -951,7 +758,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -961,16 +768,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -996,7 +793,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1006,16 +803,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1041,7 +828,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1051,16 +838,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<IntToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<IntToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1086,7 +863,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = long.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1096,16 +873,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1131,7 +898,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = int.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1141,16 +908,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1176,7 +933,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1186,16 +943,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1221,7 +968,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1231,16 +978,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1266,7 +1003,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1276,16 +1013,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1311,7 +1038,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1321,16 +1048,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1356,7 +1073,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1366,16 +1083,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBit, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<BigIntToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<BigIntToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1401,7 +1108,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1411,16 +1118,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1446,7 +1143,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1456,16 +1153,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnInt, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1491,7 +1178,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = short.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1501,16 +1188,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnBigInt, data.ColumnBigInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToBigIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1536,7 +1213,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1546,16 +1223,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1581,7 +1248,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1591,16 +1258,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1626,7 +1283,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1636,16 +1293,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1671,7 +1318,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1681,16 +1328,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<SmallIntToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1716,7 +1353,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = decimal.MaxValue
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1726,16 +1363,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1761,7 +1388,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1771,16 +1398,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1806,7 +1423,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1816,16 +1433,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnBigInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToBigIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1851,7 +1458,7 @@ namespace RepoDb.IntegrationTests
                 ColumnSmallInt = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1861,16 +1468,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnSmallInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1896,7 +1493,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67M
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1906,16 +1503,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToFloatIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToFloatIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1941,7 +1528,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67M
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1951,16 +1538,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -1986,7 +1563,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 1
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -1996,16 +1573,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DecimalToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DecimalToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2031,7 +1598,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = 12345
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2041,16 +1608,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2076,7 +1633,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2086,16 +1643,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2121,7 +1668,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2131,16 +1678,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnBigInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToBigIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2166,7 +1703,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2176,16 +1713,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2211,7 +1738,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2221,16 +1748,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2256,7 +1773,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2266,16 +1783,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2301,7 +1808,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2311,16 +1818,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal, 2));
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2346,7 +1843,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2356,16 +1853,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DoubleToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DoubleToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2391,7 +1878,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarChar = 12345.7F
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2401,16 +1888,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
-
-                // Act Delete
-                var deletedRows = connection.Delete<SmallIntToStringClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToStringClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2436,7 +1913,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDecimal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2446,16 +1923,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnDecimal, data.ColumnDecimal);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToDecimalClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToDecimalClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2481,7 +1948,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBigInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2491,16 +1958,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnBigInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToBigIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToBigIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2526,7 +1983,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2536,16 +1993,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2571,7 +2018,7 @@ namespace RepoDb.IntegrationTests
                 ColumnInt = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2581,16 +2028,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(12345, data.ColumnInt);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToSmallIntClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToSmallIntClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2616,7 +2053,7 @@ namespace RepoDb.IntegrationTests
                 ColumnFloat = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2626,16 +2063,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnFloat, data.ColumnFloat);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToFloatClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToFloatClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2661,7 +2088,7 @@ namespace RepoDb.IntegrationTests
                 ColumnReal = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2671,16 +2098,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entity.ColumnReal, Math.Round(data.ColumnReal, 2));
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToRealClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToRealClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -2706,7 +2123,7 @@ namespace RepoDb.IntegrationTests
                 ColumnBit = 12345.67
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -2716,16 +2133,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(1, data.ColumnBit);
-
-                // Act Delete
-                var deletedRows = connection.Delete<FloatToBitClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<FloatToBitClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 

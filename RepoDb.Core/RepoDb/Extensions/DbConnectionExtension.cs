@@ -183,7 +183,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -217,7 +217,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -253,7 +253,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -289,7 +289,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -325,7 +325,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -361,7 +361,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -456,7 +456,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -489,7 +489,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -524,7 +524,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -560,7 +560,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -596,7 +596,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -632,7 +632,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>

@@ -13,17 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Others
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<OthersClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -39,7 +36,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -53,16 +50,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.AreEqual(entity.ColumnSqlVariant, data.ColumnSqlVariant);
                 Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
                 Assert.AreEqual(entity.ColumnXml, data.ColumnXml);
-
-                // Act Delete
-                var deletedRows = connection.Delete<OthersClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<OthersClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -79,7 +66,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -93,16 +80,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.IsNull(data.ColumnSqlVariant);
                 Assert.IsNull(data.ColumnUniqueIdentifier);
                 Assert.IsNull(data.ColumnXml);
-
-                // Act Delete
-                var deletedRows = connection.Delete<OthersClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<OthersClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -119,7 +96,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -133,16 +110,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.AreEqual(entity.ColumnSqlVariantMapped, data.ColumnSqlVariantMapped);
                 Assert.AreEqual(entity.ColumnUniqueIdentifierMapped, data.ColumnUniqueIdentifierMapped);
                 Assert.AreEqual(entity.ColumnXmlMapped, data.ColumnXmlMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<OthersMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<OthersMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -159,7 +126,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -173,16 +140,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.IsNull(data.ColumnSqlVariantMapped);
                 Assert.IsNull(data.ColumnUniqueIdentifierMapped);
                 Assert.IsNull(data.ColumnXmlMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<OthersMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<OthersMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -199,7 +156,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -215,18 +172,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.AreEqual(entity.ColumnSqlVariant, data.ColumnSqlVariant);
                 Assert.AreEqual(entity.ColumnUniqueIdentifier, data.ColumnUniqueIdentifier);
                 Assert.AreEqual(entity.ColumnXml, data.ColumnXml);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<OthersClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -243,7 +188,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXml = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -259,18 +204,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.IsNull(data.ColumnSqlVariant);
                 Assert.IsNull(data.ColumnUniqueIdentifier);
                 Assert.IsNull(data.ColumnXml);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<OthersClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -287,7 +220,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = "<xml><person><id>1</id><name>Michael</name></person><person><id>2</id><name>RepoDb</name></person></xml>"
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -303,18 +236,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.AreEqual(entity.ColumnSqlVariantMapped, data.ColumnSqlVariantMapped);
                 Assert.AreEqual(entity.ColumnUniqueIdentifierMapped, data.ColumnUniqueIdentifierMapped);
                 Assert.AreEqual(entity.ColumnXmlMapped, data.ColumnXmlMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -331,7 +252,7 @@ namespace RepoDb.IntegrationTests.Types.Others
                 ColumnXmlMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -347,18 +268,6 @@ namespace RepoDb.IntegrationTests.Types.Others
                 Assert.IsNull(data.ColumnSqlVariantMapped);
                 Assert.IsNull(data.ColumnUniqueIdentifierMapped);
                 Assert.IsNull(data.ColumnXmlMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

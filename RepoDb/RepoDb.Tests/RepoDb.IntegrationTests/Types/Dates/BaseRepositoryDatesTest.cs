@@ -23,17 +23,14 @@ namespace RepoDb.IntegrationTests.Types.Dates
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<DatesClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -53,7 +50,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DatesClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -69,16 +66,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
                 Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -97,7 +84,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var repository = new DatesClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -113,16 +100,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTime);
                 Assert.IsNull(data.ColumnDateTimeOffset);
                 Assert.IsNull(data.ColumnTime);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -143,7 +120,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var repository = new DatesMapClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -159,16 +136,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTimeMapped); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffsetMapped, data.ColumnDateTimeOffsetMapped);
                 Assert.AreEqual(entity.ColumnTimeMapped, data.ColumnTimeMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -187,7 +154,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var repository = new DatesMapClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -203,16 +170,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTimeMapped);
                 Assert.IsNull(data.ColumnDateTimeOffsetMapped);
                 Assert.IsNull(data.ColumnTimeMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -233,7 +190,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var repository = new DatesClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -251,18 +208,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
                 Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -281,7 +226,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var repository = new DatesClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -299,18 +244,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTime);
                 Assert.IsNull(data.ColumnDateTimeOffset);
                 Assert.IsNull(data.ColumnTime);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -331,7 +264,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var repository = new DatesMapClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -348,18 +281,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTimeMapped); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffsetMapped, data.ColumnDateTimeOffsetMapped);
                 Assert.AreEqual(entity.ColumnTimeMapped, data.ColumnTimeMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -378,7 +299,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var repository = new DatesMapClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DatesMapClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -396,18 +317,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTimeMapped);
                 Assert.IsNull(data.ColumnDateTimeOffsetMapped);
                 Assert.IsNull(data.ColumnTimeMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

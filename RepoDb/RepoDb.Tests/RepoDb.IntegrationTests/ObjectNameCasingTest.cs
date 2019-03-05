@@ -13,16 +13,14 @@ namespace RepoDb.IntegrationTests
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-            }
+            Database.Cleanup();
         }
 
         #region CorrectClassNameButWithImproperCasingForClassAndFields
@@ -54,7 +52,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -70,16 +68,6 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.COLUMNDATETIME, data.COLUMNDATETIME);
                 Assert.AreEqual(entity.COLUMNINT, data.COLUMNINT);
                 Assert.AreEqual(entity.COLUMNNVARCHAR, data.COLUMNNVARCHAR);
-
-                // Act Delete
-                var deletedRows = repository.Delete<COMPLETETABLE>(e => e.SESSIONID == (Guid)id);
-
-                // Act Query
-                data = repository.Query<COMPLETETABLE>(e => e.SESSIONID == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -121,7 +109,7 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Startup.ConnectionStringForRepoDb))
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -137,16 +125,6 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.ColumnDateTimeMapped, data.ColumnDateTimeMapped);
                 Assert.AreEqual(entity.ColumnIntMapped, data.ColumnIntMapped);
                 Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 

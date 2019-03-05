@@ -13,17 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<SpatialsClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -49,16 +46,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.AreEqual(entity.ColumnGeography.ToString(), data.ColumnGeography?.ToString());
                 Assert.AreEqual(entity.ColumnGeometry.ToString(), data.ColumnGeometry?.ToString());
-
-                // Act Delete
-                var deletedRows = repository.Delete<SpatialsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<SpatialsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -85,16 +72,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnGeography);
                 Assert.IsNull(data.ColumnGeometry);
-
-                // Act Delete
-                var deletedRows = repository.Delete<SpatialsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<SpatialsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -121,16 +98,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.AreEqual(entity.ColumnGeographyMapped.ToString(), data.ColumnGeographyMapped?.ToString());
                 Assert.AreEqual(entity.ColumnGeometryMapped.ToString(), data.ColumnGeometryMapped?.ToString());
-
-                // Act Delete
-                var deletedRows = repository.Delete<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<SpatialsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -157,16 +124,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnGeographyMapped);
                 Assert.IsNull(data.ColumnGeometryMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<SpatialsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -195,18 +152,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.AreEqual(entity.ColumnGeography.ToString(), data.ColumnGeography?.ToString());
                 Assert.AreEqual(entity.ColumnGeometry.ToString(), data.ColumnGeometry?.ToString());
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -235,18 +180,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnGeography);
                 Assert.IsNull(data.ColumnGeometry);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -275,18 +208,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.AreEqual(entity.ColumnGeographyMapped.ToString(), data.ColumnGeographyMapped?.ToString());
                 Assert.AreEqual(entity.ColumnGeometryMapped.ToString(), data.ColumnGeometryMapped?.ToString());
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -315,18 +236,6 @@ namespace RepoDb.IntegrationTests.Types.Spatials
                 Assert.IsNotNull(data);
                 Assert.IsNull(data.ColumnGeographyMapped);
                 Assert.IsNull(data.ColumnGeometryMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

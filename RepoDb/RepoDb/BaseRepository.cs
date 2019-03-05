@@ -227,7 +227,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -247,7 +247,7 @@ namespace RepoDb
         /// Queries a data from the database by batch.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -269,7 +269,7 @@ namespace RepoDb
         /// Queries a data from the database by batch.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -294,7 +294,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -315,7 +315,7 @@ namespace RepoDb
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -338,7 +338,7 @@ namespace RepoDb
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -361,7 +361,7 @@ namespace RepoDb
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -384,7 +384,7 @@ namespace RepoDb
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="page">The page of the batch to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>

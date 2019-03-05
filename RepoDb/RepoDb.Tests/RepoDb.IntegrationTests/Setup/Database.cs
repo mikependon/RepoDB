@@ -6,12 +6,12 @@ namespace RepoDb.IntegrationTests.Setup
     /// <summary>
     /// A class used as a startup setup for for RepoDb test database.
     /// </summary>
-    public static class Startup
+    public static class Database
     {
         /// <summary>
         /// Initialize the creation of the database.
         /// </summary>
-        public static void Init()
+        public static void Initialize()
         {
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
@@ -54,9 +54,51 @@ namespace RepoDb.IntegrationTests.Setup
         public static void CreateTables()
         {
             CreateCompleteTable();
+            CreateSimpleTable();
+        }
+
+        /// <summary>
+        /// Clean up the target table.
+        /// </summary>
+        public static void Cleanup()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb))
+            {
+                var commandText = "DELETE FROM [dbo].[CompleteTable]; DELETE FROM [dbo].[SimpleTable];";
+                connection.ExecuteNonQuery(commandText);
+            }
         }
 
         #region CreateTables
+
+        /// <summary>
+        /// Creates a simple table that has some important fields. All fields are nullable.
+        /// </summary>
+        public static void CreateSimpleTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'SimpleTable'))
+                BEGIN
+	                CREATE TABLE [dbo].[SimpleTable]
+	                (
+		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+		                [ColumnBit] BIT NULL,
+		                [ColumnDateTime] DATETIME NULL,
+		                [ColumnDateTime2] DATETIME2(7) NULL,
+		                [ColumnDecimal] DECIMAL(18, 2) NULL,
+		                [ColumnFloat] FLOAT NULL,
+		                [ColumnInt] INT NULL,
+		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
+		                CONSTRAINT [Id] PRIMARY KEY 
+		                (
+			                [Id] ASC
+		                )
+	                ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
 
         /// <summary>
         /// Creates a table that has a complete fields. All fields are nullable.

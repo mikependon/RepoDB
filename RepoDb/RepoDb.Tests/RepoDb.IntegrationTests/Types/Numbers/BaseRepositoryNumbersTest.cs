@@ -23,17 +23,14 @@ namespace RepoDb.IntegrationTests.Types.Numbers
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<NumbersClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -55,7 +52,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new NumbersClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -75,16 +72,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
                 Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -107,7 +94,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var repository = new NumbersClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -127,16 +114,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnReal);
                 Assert.IsNull(data.ColumnSmallInt);
                 Assert.IsNull(data.ColumnSmallMoney);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -159,7 +136,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var repository = new NumbersMappedClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersMappedClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -179,16 +156,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.AreEqual(entity.ColumnRealMapped, data.ColumnRealMapped);
                 Assert.AreEqual(entity.ColumnSmallIntMapped, data.ColumnSmallIntMapped);
                 Assert.AreEqual(entity.ColumnSmallMoneyMapped, data.ColumnSmallMoneyMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -211,7 +178,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var repository = new NumbersMappedClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersMappedClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -231,16 +198,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnRealMapped);
                 Assert.IsNull(data.ColumnSmallIntMapped);
                 Assert.IsNull(data.ColumnSmallMoneyMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -263,7 +220,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = 12345
             };
 
-            using (var repository = new NumbersClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -285,18 +242,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.AreEqual(entity.ColumnReal, data.ColumnReal);
                 Assert.AreEqual(entity.ColumnSmallInt, data.ColumnSmallInt);
                 Assert.AreEqual(entity.ColumnSmallMoney, data.ColumnSmallMoney);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -319,7 +264,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoney = null
             };
 
-            using (var repository = new NumbersClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -341,18 +286,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnReal);
                 Assert.IsNull(data.ColumnSmallInt);
                 Assert.IsNull(data.ColumnSmallMoney);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -375,7 +308,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = 13456
             };
 
-            using (var repository = new NumbersMappedClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersMappedClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -397,18 +330,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.AreEqual(entity.ColumnRealMapped, data.ColumnRealMapped);
                 Assert.AreEqual(entity.ColumnSmallIntMapped, data.ColumnSmallIntMapped);
                 Assert.AreEqual(entity.ColumnSmallMoneyMapped, data.ColumnSmallMoneyMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -431,7 +352,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 ColumnSmallMoneyMapped = null
             };
 
-            using (var repository = new NumbersMappedClassRepository(Startup.ConnectionStringForRepoDb))
+            using (var repository = new NumbersMappedClassRepository(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
@@ -453,18 +374,6 @@ namespace RepoDb.IntegrationTests.Types.Numbers
                 Assert.IsNull(data.ColumnRealMapped);
                 Assert.IsNull(data.ColumnSmallIntMapped);
                 Assert.IsNull(data.ColumnSmallMoneyMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

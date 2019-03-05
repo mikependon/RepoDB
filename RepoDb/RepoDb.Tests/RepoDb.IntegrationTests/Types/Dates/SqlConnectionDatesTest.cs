@@ -13,17 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Dates
         [TestInitialize]
         public void Initialize()
         {
-            Startup.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<DatesClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -43,7 +40,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -58,16 +55,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(entity.ColumnDateTime2, data.ColumnDateTime2); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
                 Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DatesClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DatesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -86,7 +73,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -102,16 +89,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTime);
                 Assert.IsNull(data.ColumnDateTimeOffset);
                 Assert.IsNull(data.ColumnTime);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DatesClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DatesClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -132,7 +109,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -147,16 +124,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTimeMapped); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffsetMapped, data.ColumnDateTimeOffsetMapped);
                 Assert.AreEqual(entity.ColumnTimeMapped, data.ColumnTimeMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DatesMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DatesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -175,7 +142,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = connection.Insert(entity);
@@ -191,16 +158,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTimeMapped);
                 Assert.IsNull(data.ColumnDateTimeOffsetMapped);
                 Assert.IsNull(data.ColumnTimeMapped);
-
-                // Act Delete
-                var deletedRows = connection.Delete<DatesMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = connection.Query<DatesMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -221,7 +178,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -238,18 +195,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(entity.ColumnDateTime2, data.ColumnDateTime2); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTime); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffset, data.ColumnDateTimeOffset);
                 Assert.AreEqual(entity.ColumnTime, data.ColumnTime);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<DatesClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<DatesClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -268,7 +213,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTime = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -286,18 +231,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTime);
                 Assert.IsNull(data.ColumnDateTimeOffset);
                 Assert.IsNull(data.ColumnTime);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<DatesClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<DatesClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -318,7 +251,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = dateTime.TimeOfDay
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -335,18 +268,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.AreEqual(entity.ColumnDateTime2Mapped, data.ColumnDateTime2Mapped); Assert.AreEqual(dateTime.AddSeconds(30), data.ColumnSmallDateTimeMapped); // Always in a fraction of minutes, round (off/up)
                 Assert.AreEqual(entity.ColumnDateTimeOffsetMapped, data.ColumnDateTimeOffsetMapped);
                 Assert.AreEqual(entity.ColumnTimeMapped, data.ColumnTimeMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<DatesMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<DatesMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -365,7 +286,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 ColumnTimeMapped = null
             };
 
-            using (var connection = new SqlConnection(Startup.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
@@ -383,18 +304,6 @@ namespace RepoDb.IntegrationTests.Types.Dates
                 Assert.IsNull(data.ColumnSmallDateTimeMapped);
                 Assert.IsNull(data.ColumnDateTimeOffsetMapped);
                 Assert.IsNull(data.ColumnTimeMapped);
-
-                // Act Delete
-                var deleteAsyncResult = connection.DeleteAsync<DatesMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result;
-
-                // Act Query
-                queryResult = connection.QueryAsync<DatesMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

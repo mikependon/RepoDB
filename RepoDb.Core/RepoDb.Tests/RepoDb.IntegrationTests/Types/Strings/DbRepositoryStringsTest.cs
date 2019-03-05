@@ -13,17 +13,14 @@ namespace RepoDb.IntegrationTests.Types.Strings
         [TestInitialize]
         public void Initialize()
         {
-            Database.Init();
+            Database.Initialize();
             Cleanup();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.DeleteAll<StringsClass>();
-            }
+            Database.Cleanup();
         }
 
         [TestMethod]
@@ -58,16 +55,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
                 Assert.AreEqual(entity.ColumnText, data.ColumnText);
                 Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
-
-                // Act Delete
-                var deletedRows = repository.Delete<StringsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<StringsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -102,16 +89,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarChar);
                 Assert.IsNull(data.ColumnText);
                 Assert.IsNull(data.ColumnVarChar);
-
-                // Act Delete
-                var deletedRows = repository.Delete<StringsClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<StringsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -147,16 +124,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
                 Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
                 Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete<StringsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<StringsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -191,16 +158,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarCharMapped);
                 Assert.IsNull(data.ColumnTextMapped);
                 Assert.IsNull(data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deletedRows = repository.Delete<StringsMapClass>(e => e.SessionId == (Guid)id);
-
-                // Act Query
-                data = repository.Query<StringsMapClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, deletedRows);
-                Assert.IsNull(data);
             }
         }
 
@@ -238,18 +195,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarChar, data.ColumnNVarChar);
                 Assert.AreEqual(entity.ColumnText, data.ColumnText);
                 Assert.AreEqual(entity.ColumnVarChar, data.ColumnVarChar);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -286,18 +231,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarChar);
                 Assert.IsNull(data.ColumnText);
                 Assert.IsNull(data.ColumnVarChar);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -335,18 +268,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.AreEqual(entity.ColumnNVarCharMapped, data.ColumnNVarCharMapped);
                 Assert.AreEqual(entity.ColumnTextMapped, data.ColumnTextMapped);
                 Assert.AreEqual(entity.ColumnVarCharMapped, data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
 
@@ -383,18 +304,6 @@ namespace RepoDb.IntegrationTests.Types.Strings
                 Assert.IsNull(data.ColumnNVarCharMapped);
                 Assert.IsNull(data.ColumnTextMapped);
                 Assert.IsNull(data.ColumnVarCharMapped);
-
-                // Act Delete
-                var deleteAsyncResult = repository.DeleteAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var count = deleteAsyncResult.Result.Extract();
-
-                // Act Query
-                queryResult = repository.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                data = queryResult.Result.Extract().FirstOrDefault();
-
-                // Assert
-                Assert.AreEqual(1, count);
-                Assert.IsNull(data);
             }
         }
     }

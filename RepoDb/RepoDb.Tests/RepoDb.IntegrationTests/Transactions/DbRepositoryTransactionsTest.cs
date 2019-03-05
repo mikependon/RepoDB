@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Setup;
 
-namespace RepoDb.IntegrationTests.Operations
+namespace RepoDb.IntegrationTests.Transactions
 {
     [TestClass]
-    public class BaseRepositoryOperationsTest
+    public class DbRepositoryTransactionsTest
     {
         [TestInitialize]
         public void Initialize()
