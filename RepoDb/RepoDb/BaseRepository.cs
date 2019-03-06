@@ -699,7 +699,7 @@ namespace RepoDb
         #region InlineInsert
 
         /// <summary>
-        /// Inserts a new data into the database.
+        /// Inserts a new data into the database (certain fields only).
         /// </summary>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -716,7 +716,7 @@ namespace RepoDb
         #region InlineInsertAsync
 
         /// <summary>
-        /// Inserts a new data into the database.
+        /// Inserts a new data into the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>

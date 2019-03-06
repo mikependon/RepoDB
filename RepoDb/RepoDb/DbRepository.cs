@@ -1740,7 +1740,7 @@ namespace RepoDb
         #region InlineInsert
 
         /// <summary>
-        /// Inserts a new data into the database.
+        /// Inserts a new data into the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
@@ -1779,7 +1779,7 @@ namespace RepoDb
         #region InlineInsertAsync
 
         /// <summary>
-        /// Inserts a new data into the database in an asynchronous way.
+        /// Inserts a new data into the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
