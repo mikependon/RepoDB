@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-using System.Linq.Expressions;
 using RepoDb.Extensions;
-using RepoDb.Exceptions;
 
 namespace RepoDb
 {
@@ -54,58 +52,17 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result to <see cref="Field"/> object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity that contains the property to be parsed.</typeparam>
-        /// <param name="expression">The expression to be parsed.</param>
-        /// <returns>An instance of <see cref="Field"/> object.</returns>
-        public static Field Parse<TEntity>(Expression<Func<TEntity, object>> expression) where TEntity : class
-        {
-            if (expression.Body.IsUnary())
-            {
-                var unary = expression.Body.ToUnary();
-                if (unary.Operand.IsMember())
-                {
-                    return new Field(unary.Operand.ToMember().Member.Name);
-                }
-                else if (unary.Operand.IsBinary())
-                {
-                    return new Field(unary.Operand.ToBinary().GetName());
-                }
-            }
-            if (expression.Body.IsMember())
-            {
-                return new Field(expression.Body.ToMember().Member.Name);
-            }
-            if (expression.Body.IsBinary())
-            {
-                return new Field(expression.Body.ToBinary().GetName());
-            }
-            throw new InvalidQueryExpressionException($"Expression '{expression.ToString()}' is invalid.");
-        }
-
-        /// <summary>
         /// Parse an object and creates an enumerable of <see cref="Field"/> objects. Each field is equivalent
         /// to each property of the given object. The parse operation uses a reflection operation.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(object obj)
+        internal static IEnumerable<Field> Parse(object obj)
         {
-            if (obj == null)
+            foreach (var property in obj.GetType().GetProperties())
             {
-                throw new NullReferenceException("Parameter 'obj' cannot be null.");
+                yield return new Field(PropertyMappedNameCache.Get(property));
             }
-            if (obj.GetType().IsGenericType == false)
-            {
-                throw new InvalidOperationException("Parameter 'obj' must be dynamic type.");
-            }
-            var properties = obj.GetType().GetProperties();
-            if (properties?.Any() == false)
-            {
-                throw new InvalidOperationException("Parameter 'obj' must have atleast one property.");
-            }
-            return properties.Select(property => new Field(PropertyMappedNameCache.Get(property)));
         }
 
         // Equality and comparers

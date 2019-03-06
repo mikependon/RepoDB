@@ -41,5 +41,14 @@ namespace RepoDb.IntegrationTests.Setup
         {
             return "ÀÆÇÈËÌÏÐÑÒØÙÜÝÞß";
         }
+
+        /// <summary>
+        /// Gets the value of epoc date.
+        /// </summary>
+        /// <returns>An instance of date time value.</returns>
+        public static DateTime GetEpocDate()
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0);
+        }
     }
 }

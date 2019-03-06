@@ -239,7 +239,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            repository.Object.Merge(new DataEntity { Name = "Name" }, e => e.Id == 1);
+            repository.Object.Merge(new DataEntity { Name = "Name" }, new Field(nameof(DataEntity.Id)));
 
             // Assert
             statementBuilder.Verify(builder =>

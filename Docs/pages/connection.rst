@@ -600,8 +600,8 @@ Merges a data in the database by targetting certain fields only.
 		// Call the operation and define which object you are targetting
 		var id = connection.InlineMerge<Order>(entity, new []
 		{
-			Field.Parse<Order>(o => o.Id),
-			Field.Parse<Order>(o => o.CustomerId)
+			new Field(nameof(Order.Id)),
+			new Field(nameof(Order.CustomerId))
 		});
 	}
 
@@ -610,18 +610,6 @@ In the second parameter, the `Field.From` method can also be used.
 ::
 	
 	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id), nameof(Order.CustomerId)));
-
-Or, via a literal array of string.
-
-::
-
-	var id = connection.InlineMerge<Order>(entity, Field.From("Id", "CustomerId"));
-
-Or, via a single field expression can be used as well.
-
-::
-
-	var id = connection.InlineMerge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
 
 **Note**: The second parameter can be omitted if the data entity has a primary key.
 

@@ -1447,7 +1447,7 @@ namespace RepoDb
         #region DeleteAsync
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1489,7 +1489,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1531,7 +1531,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1573,7 +1573,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
@@ -1615,7 +1615,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used  by this operation.</param>
@@ -1740,7 +1740,7 @@ namespace RepoDb
         #region InlineInsert
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only).
+        /// Inserts a new data into the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
@@ -1779,7 +1779,7 @@ namespace RepoDb
         #region InlineInsertAsync
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// Inserts a new data into the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
@@ -1842,44 +1842,6 @@ namespace RepoDb
             {
                 // Call the method
                 return connection.InlineMerge<TEntity>(entity: entity,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only).
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int InlineMerge<TEntity>(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.InlineMerge<TEntity>(entity: entity,
-                    qualifier: qualifier,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -1978,7 +1940,7 @@ namespace RepoDb
         #region InlineMergeAsync
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
@@ -2020,52 +1982,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
-
-            try
-            {
-                // Call the method
-                var result = connection.InlineMergeAsync<TEntity>(entity: entity,
-                    qualifier: qualifier,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
-            }
-            catch
-            {
-                hasError = true;
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
@@ -2110,7 +2027,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
@@ -2714,44 +2631,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge<TEntity>(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Merge<TEntity>(entity: entity,
-                    qualifier: qualifier,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge<TEntity>(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -2847,51 +2726,6 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
-            }
-            catch
-            {
-                hasError = true;
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
-
-            try
-            {
-                // Call the method
-                var result = connection.MergeAsync<TEntity>(entity: entity,
-                qualifier: qualifier,
-                commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
 
                 // Return the result
                 return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
@@ -4919,7 +4753,7 @@ namespace RepoDb
         #region Truncate
 
         /// <summary>
-        /// Truncate a table from the database.
+        /// Truncates a table from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         public void Truncate<TEntity>()
@@ -4940,7 +4774,7 @@ namespace RepoDb
         #region TruncateAsync
 
         /// <summary>
-        /// Truncate a table from the database in an asynchronous way.
+        /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         public Task TruncateAsync<TEntity>()

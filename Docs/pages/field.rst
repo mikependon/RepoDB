@@ -48,49 +48,6 @@ By class property:
 
 	var fields = Field.Parse(nameof(Customer.Id), nameof(Customer.Name));
 
-Parse (via Expression)
-----------------------
-
-Parses a property from the data entity object based on the given `Expression` and converts the result to `Field` object.
-
-.. highlight:: c#
-
-::
-
-	var field = Field.Parse<Customer>(c => c.Id);
-
-Then call the `AsEnumerable()` extension method to convert it to enumerable (if necessary);
-
-::
-
-	var fields = Field.Parse<Customer>(c => c.Id).AsEnumerable();
-
-Parse (via Object)
-----------------------
-
-Parse an object and creates an enumerable of `Field` objects. Each field is equivalent to each property of the given object. The parse operation uses a reflection operation.
-
-.. highlight:: c#
-
-Let us say an `Order` record was queried from the database.
-
-::
-
-	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		// Order variables
-		var order = (Order)null;
-		
-		// Query from the database
-		connection.Query<Order>(1002);
-	}
-
-Then, the object propery can then be used for parsing.
-
-::
-
-	var field = Field.Parse<Order>(new { order.Id });
-
 Usage of Field
 --------------
 
@@ -126,5 +83,5 @@ Being the qualifers in `Merge` operation:
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		},
-		Field.Parse<Order>(o => o.Id).AsEnumerable()); // Field is being used as qualifier
+		Field.From(nameof(Order.Id))); // Field is being used as qualifier
 	}

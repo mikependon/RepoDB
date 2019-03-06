@@ -33,7 +33,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -223,12 +223,17 @@ namespace RepoDb.UnitTests.StatementBuilders
                 $"INSERT ( [Field1], [Field2], [Field4] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field4] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET [Field2] = S.[Field2], [Field4] = S.[Field4] ;";
+                $"UPDATE SET [Field1] = S.[Field1], [Field2] = S.[Field2], [Field4] = S.[Field4] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
+        /* Michael: March 6, 2019 10:17 PM (UTC + 1)
+         * Changed made when writing an extensive RegressionTest, we handled the scenario of this problem
+         * inside the actual 'CreateMerge' method by assigning the primary key as the default qualifier */
+        
+        /*
         private class ThrowExceptionOnSqlDbProviderCreateMergeIfQualifierFieldsAreNullClass
         {
         }
@@ -244,6 +249,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Act/Assert
             statementBuilder.CreateMerge(queryBuilder, qualifiers);
         }
+        */
 
         private class ThrowExceptionOnSqlDbProviderCreateMergeIfAtleastOneQualifierFieldIsMissingFromDataEntityClass
         {

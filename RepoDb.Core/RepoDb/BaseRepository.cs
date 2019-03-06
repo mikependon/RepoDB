@@ -5,7 +5,6 @@ using RepoDb.Interfaces;
 using System.Threading.Tasks;
 using RepoDb.Enumerations;
 using System;
-using RepoDb.Attributes;
 using System.Linq.Expressions;
 
 namespace RepoDb
@@ -616,7 +615,7 @@ namespace RepoDb
         #region DeleteAsync
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -629,7 +628,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -642,7 +641,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -655,7 +654,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Delete a data from the database in an asynchronous way.
+        /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
         /// <param name="where">The query expression to be used  by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -700,7 +699,7 @@ namespace RepoDb
         #region InlineInsert
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only).
+        /// Inserts a new data into the database.
         /// </summary>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -717,7 +716,7 @@ namespace RepoDb
         #region InlineInsertAsync
 
         /// <summary>
-        /// Inserts a new data in the database (certain fields only).
+        /// Inserts a new data into the database.
         /// </summary>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -743,22 +742,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineMerge<TEntity>(entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only).
-        /// </summary>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int InlineMerge(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.InlineMerge<TEntity>(entity,
-                qualifier: qualifier,
                 transaction: transaction);
         }
 
@@ -799,7 +782,7 @@ namespace RepoDb
         #region InlineMergeAsync
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -812,23 +795,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
-        /// </summary>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.InlineMergeAsync<TEntity>(entity: entity,
-                qualifier: qualifier,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
         /// <param name="qualifier">The qualifier field to be used by this operation.</param>
@@ -844,7 +811,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Merges a data entity object into an existing data in the database (certain fields only) in an asynchronous way.
+        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
         /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
@@ -1092,22 +1059,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.Merge<TEntity>(entity: entity,
-                qualifier: qualifier,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database.
-        /// </summary>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -1146,22 +1097,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
-        /// </summary>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.MergeAsync<TEntity>(entity: entity,
-                qualifier: qualifier,
                 transaction: transaction);
         }
 
@@ -1528,7 +1463,7 @@ namespace RepoDb
         #region Truncate
 
         /// <summary>
-        /// Truncate a table from the database.
+        /// Truncates a table from the database.
         /// </summary>
         public void Truncate()
         {
@@ -1540,7 +1475,7 @@ namespace RepoDb
         #region TruncateAsync
 
         /// <summary>
-        /// Truncate a table from the database in an asynchronous way.
+        /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         public Task TruncateAsync()
         {

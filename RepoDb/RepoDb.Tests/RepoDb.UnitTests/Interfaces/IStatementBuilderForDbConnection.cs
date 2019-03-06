@@ -212,7 +212,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            connection.InlineMerge<DataEntity>(new { Name = "Name" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
+            connection.InlineMerge<DataEntity>(new { Name = "Name" }, new Field(nameof(DataEntity.Id)), statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -288,7 +288,7 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
-            connection.Merge<DataEntity>(new DataEntity { Name = "Name" }, e => e.Id == 1, statementBuilder: statementBuilder.Object);
+            connection.Merge<DataEntity>(new DataEntity { Name = "Name" }, new Field(nameof(DataEntity.Id)), statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>

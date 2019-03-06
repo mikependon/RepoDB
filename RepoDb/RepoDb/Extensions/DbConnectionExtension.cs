@@ -2597,36 +2597,6 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int InlineMerge<TEntity>(this IDbConnection connection,
             object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return InlineMerge<TEntity>(connection: connection,
-                entity: entity,
-                qualifiers: Field.Parse(qualifier)?.AsEnumerable(),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only).
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int InlineMerge<TEntity>(this IDbConnection connection,
-            object entity,
             Field qualifier,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2769,36 +2739,6 @@ namespace RepoDb
             return InlineMergeAsync<TEntity>(connection: connection,
                 entity: entity,
                 qualifiers: null,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only) in an aynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> InlineMergeAsync<TEntity>(this IDbConnection connection,
-            object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return InlineMergeAsync<TEntity>(connection: connection,
-                entity: entity,
-                qualifiers: Field.Parse(qualifier)?.AsEnumerable(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3617,36 +3557,6 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static int Merge<TEntity>(this IDbConnection connection,
-            TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Merge(connection: connection,
-                entity: entity,
-                qualifiers: Field.Parse(qualifier).AsEnumerable(),
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -3769,36 +3679,6 @@ namespace RepoDb
             return MergeAsync(connection: connection,
                 entity: entity,
                 qualifiers: null,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asychronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public static Task<int> MergeAsync<TEntity>(this IDbConnection connection,
-            TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return MergeAsync(connection: connection,
-                entity: entity,
-                qualifiers: Field.Parse(qualifier).AsEnumerable(),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,

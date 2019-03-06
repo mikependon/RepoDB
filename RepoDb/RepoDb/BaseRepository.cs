@@ -753,22 +753,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineMerge(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.InlineMerge<TEntity>(entity,
-                qualifier: qualifier,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only).
-        /// </summary>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int InlineMerge(object entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -807,22 +791,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineMergeAsync<TEntity>(entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges an object into an existing data in the database (certain fields only) in an asynchronous way.
-        /// </summary>
-        /// <param name="entity">The key-value pair object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifier field to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync(object entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.InlineMergeAsync<TEntity>(entity: entity,
-                qualifier: qualifier,
                 transaction: transaction);
         }
 
@@ -1091,22 +1059,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Merge(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.Merge<TEntity>(entity: entity,
-                qualifier: qualifier,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database.
-        /// </summary>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Merge(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -1145,22 +1097,6 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Merges a data entity object into an existing data in the database in an asynchronous way.
-        /// </summary>
-        /// <param name="entity">The object to be merged by this operation.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync(TEntity entity,
-            Expression<Func<TEntity, object>> qualifier,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.MergeAsync<TEntity>(entity: entity,
-                qualifier: qualifier,
                 transaction: transaction);
         }
 

@@ -302,7 +302,7 @@ namespace RepoDb
                 throw new NullReferenceException("The qualifiers must be present.");
             }
 
-            // Check for all the fields
+            // Check for all the fields (must be present from the database table)
             var properties = PropertyCache.Get<TEntity>()?
                 .Select(property => property.GetMappedName());
             var unmatchesFields = fields?.Where(field =>
@@ -314,25 +314,50 @@ namespace RepoDb
                     $"present at type '{typeof(TEntity).FullName}'.");
             }
 
-            // Check for all the qualifiers
-            var unmatchesQualifiers = qualifiers?.Where(field =>
-                properties?.FirstOrDefault(property =>
-                    field.Name.ToLower() == property.ToLower()) == null);
-            if (unmatchesQualifiers?.Count() > 0)
+            // Check for all the qualifiers (from the database table)
+            if (qualifiers != null)
             {
-                throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                    $"present at type '{typeof(TEntity).FullName}'.");
+                var unmatchesQualifiers = qualifiers.Where(field =>
+                    properties?.FirstOrDefault(property =>
+                        field.Name.ToLower() == property.ToLower()) == null);
+                if (unmatchesQualifiers?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at type '{typeof(TEntity).FullName}'.");
+                }
+
+                // Check for all the qualifiers (from the passed entity)
+                unmatchesQualifiers = qualifiers.Where(field =>
+                   fields?.FirstOrDefault(f =>
+                       field.Name.ToLower() == f.Name.ToLower()) == null);
+                if (unmatchesQualifiers?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at the properties of the passed object.");
+                }
+            }
+            else
+            {
+                // The primary key must be in the passed object if the qualifiers are null
+                if (fields?.FirstOrDefault(f => f.Name.ToLower() == primary.GetMappedName().ToLower()) == null)
+                {
+                    throw new InvalidOperationException($"The primary key '{primary.GetMappedName()}' must be preset at the " +
+                        $"object properties if the qualifiers are not defined.");
+                }
+
+                // Use the primary for qualifiers if there is no any
+                if (primary != null)
+                {
+                    qualifiers = Field.From(primary.GetMappedName());
+                }
             }
 
-            // Use the primary for qualifiers if there is no any
-            if (qualifiers == null && primary != null)
-            {
-                qualifiers = Field.From(primary.GetMappedName());
-            }
-
-            // Get the updateable fields
+            // Get the insertable and updateable fields
+            var targetFields = fields.ToList();
+            var insertableFields = fields
+                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower() && isPrimaryIdentity.Value) == false);
             var updateableFields = fields
-                .Where(field => qualifiers.Any(f => f == field) == false);
+                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false && qualifiers?.Any(f => f == field) == false);
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -345,7 +370,7 @@ namespace RepoDb
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom(fields)
+                .ParametersAsFieldsFrom(targetFields)
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -363,11 +388,11 @@ namespace RepoDb
                 .Then()
                 .Insert()
                 .OpenParen()
-                .FieldsFrom(fields)
+                .FieldsFrom(insertableFields)
                 .CloseParen()
                 .Values()
                 .OpenParen()
-                .AsAliasFieldsFrom(fields, "S")
+                .AsAliasFieldsFrom(insertableFields, "S")
                 .CloseParen()
                 // WHEN MATCHED THEN UPDATE SET
                 .When()
@@ -554,41 +579,42 @@ namespace RepoDb
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
         internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder,
             IEnumerable<Field> qualifiers,
-            bool isPrimaryIdentity)
+            bool? isPrimaryIdentity = false)
             where TEntity : class
         {
-            // Check for all the fields
-            var fields = PropertyCache.Get<TEntity>()?
-                .Select(property => new Field(property.GetMappedName()));
-            var unmatchesQualifiers = qualifiers?.Where(field =>
-                fields?.FirstOrDefault(f =>
-                    field == f) == null);
-            if (unmatchesQualifiers?.Count() > 0)
-            {
-                throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
-                    $"present at type '{typeof(TEntity).FullName}'.");
-            }
-
             // Variables
             var primary = PrimaryKeyCache.Get<TEntity>();
 
-            // Add the primary key as the default qualifier
-            if (qualifiers == null && primary != null)
+            // Check for all the fields
+            var fields = PropertyCache.Get<TEntity>()?
+                .Select(property => new Field(property.GetMappedName()));
+
+            // Check for all the qualifier (from the entity table)
+            if (qualifiers != null)
             {
-                qualifiers = Field.From(primary.GetMappedName());
+                var unmatchesQualifiers = qualifiers?.Where(field =>
+                    fields?.FirstOrDefault(f =>
+                        field == f) == null);
+                if (unmatchesQualifiers?.Count() > 0)
+                {
+                    throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
+                        $"present at type '{typeof(TEntity).FullName}'.");
+                }
+            }
+            else
+            {
+                // Use the primary for qualifiers if there is no any
+                if (primary != null)
+                {
+                    qualifiers = Field.From(primary.GetMappedName());
+                }
             }
 
-            // Throw an exception if there is no qualifiers defined
-            if (qualifiers == null || qualifiers == null)
-            {
-                throw new InvalidOperationException("There are no qualifier fields defined.");
-            }
-
-            // Get the target properties
+            // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field => !(primary?.GetMappedName().ToLower() == field.Name.ToLower() && primary?.IsIdentity() == true));
+                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower() && isPrimaryIdentity.Value) == false);
             var updateableFields = fields
-                .Where(field => field.Name.ToLower() != primary?.GetMappedName().ToLower() && qualifiers.Any(f => f == field) == false);
+                .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false);
 
             // Build the SQL Statement
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
