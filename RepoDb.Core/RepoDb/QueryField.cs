@@ -84,6 +84,14 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Resets the <see cref="QueryField"/> back to its default state (as is newly instantiated).
+        /// </summary>
+        public void Reset()
+        {
+            Parameter?.SetName(Field.Name);
+        }
+
+        /// <summary>
         /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Operation"/> property value of this instance.
         /// </summary>
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>

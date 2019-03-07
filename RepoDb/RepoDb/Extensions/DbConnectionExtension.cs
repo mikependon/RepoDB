@@ -4674,24 +4674,26 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -4880,34 +4882,37 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -5128,44 +5133,48 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -5416,54 +5425,59 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -5744,64 +5758,70 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // T6 Variables
-            var request6 = new QueryRequest(typeof(T6),
+            var request6 = new QueryMultipleRequest(6,
+                typeof(T6),
                 connection,
                 where6,
                 orderBy6,
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -6113,74 +6133,81 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // T6 Variables
-            var request6 = new QueryRequest(typeof(T6),
+            var request6 = new QueryMultipleRequest(6,
+                typeof(T6),
                 connection,
                 where6,
                 orderBy6,
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // T7 Variables
-            var request7 = new QueryRequest(typeof(T7),
+            var request7 = new QueryMultipleRequest(7,
+                typeof(T7),
                 connection,
                 where7,
                 orderBy7,
                 top7,
                 hints7,
                 statementBuilder);
-            var commandText7 = CommandTextCache.GetQueryText<T7>(request7);
+            var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -6380,24 +6407,26 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -6586,34 +6615,37 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -6834,44 +6866,48 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -7122,54 +7158,59 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -7450,64 +7491,70 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // T6 Variables
-            var request6 = new QueryRequest(typeof(T6),
+            var request6 = new QueryMultipleRequest(6,
+                typeof(T6),
                 connection,
                 where6,
                 orderBy6,
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -7819,74 +7866,81 @@ namespace RepoDb
             QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
 
             // T1 Variables
-            var request1 = new QueryRequest(typeof(T1),
+            var request1 = new QueryMultipleRequest(1,
+                typeof(T1),
                 connection,
                 where1,
                 orderBy1,
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryText<T1>(request1);
+            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
 
             // T2 Variables
-            var request2 = new QueryRequest(typeof(T2),
+            var request2 = new QueryMultipleRequest(2,
+                typeof(T2),
                 connection,
                 where2,
                 orderBy2,
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryText<T2>(request2);
+            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
 
             // T3 Variables
-            var request3 = new QueryRequest(typeof(T3),
+            var request3 = new QueryMultipleRequest(3,
+                typeof(T3),
                 connection,
                 where3,
                 orderBy3,
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryText<T3>(request3);
+            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
 
             // T4 Variables
-            var request4 = new QueryRequest(typeof(T4),
+            var request4 = new QueryMultipleRequest(4,
+                typeof(T4),
                 connection,
                 where4,
                 orderBy4,
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryText<T4>(request4);
+            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
 
             // T5 Variables
-            var request5 = new QueryRequest(typeof(T5),
+            var request5 = new QueryMultipleRequest(5,
+                typeof(T5),
                 connection,
                 where5,
                 orderBy5,
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryText<T5>(request5);
+            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
 
             // T6 Variables
-            var request6 = new QueryRequest(typeof(T6),
+            var request6 = new QueryMultipleRequest(6,
+                typeof(T6),
                 connection,
                 where6,
                 orderBy6,
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryText<T6>(request6);
+            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
 
             // T7 Variables
-            var request7 = new QueryRequest(typeof(T7),
+            var request7 = new QueryMultipleRequest(7,
+                typeof(T7),
                 connection,
                 where7,
                 orderBy7,
                 top7,
                 hints7,
                 statementBuilder);
-            var commandText7 = CommandTextCache.GetQueryText<T7>(request7);
+            var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
 
             // Database pre-touch for field definitions
             if (connection.IsForProvider(Provider.Sql))
@@ -9335,7 +9389,7 @@ namespace RepoDb
 
         #endregion
 
-        #region Other Methods
+        #region Helper Methods
 
         /// <summary>
         /// Create a new instance of <see cref="DbCommand"/> object to be used for execution.

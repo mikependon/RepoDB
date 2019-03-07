@@ -21,6 +21,9 @@ namespace RepoDb.IntegrationTests.Setup
 
             // Create the tables
             CreateTables();
+
+            // Create the stored procedures
+            CreateStoredProcedures();
         }
 
         /// <summary>
@@ -55,6 +58,17 @@ namespace RepoDb.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateSimpleTable();
+        }
+
+        /// <summary>
+        /// Create the necessary stored procedure for testing.
+        /// </summary>
+        public static void CreateStoredProcedures()
+        {
+            CreateGetSimpleTablesStoredProcedure();
+            CreateGetSimpleTableByIdStoredProcedure();
+            CreateMultiplyStoredProcedure();
+            CreateGetDatabaseDateTimeStoredProcedure();
         }
 
         /// <summary>
@@ -156,6 +170,97 @@ namespace RepoDb.IntegrationTests.Setup
             }
         }
 
+        #endregion
+
+        #region CreateStoredProcedures
+
+        /// <summary>
+        /// Create a stored procedure that is used to return all records from SimpleTable.
+        /// </summary>
+        public static void CreateGetSimpleTablesStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_simple_tables';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_simple_tables]
+	                    AS
+                        BEGIN
+                            SELECT * FROM [dbo].[SimpleTable];
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a stored procedure that is used to return a SimpleTable record by id.
+        /// </summary>
+        public static void CreateGetSimpleTableByIdStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_simple_table_by_id';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_simple_table_by_id]
+                        (
+                            @Id INT
+                        )
+	                    AS
+                        BEGIN
+                            SELECT * FROM [dbo].[SimpleTable] WHERE Id = @Id;
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a stored procedure that will return a scalar value of date time.
+        /// </summary>
+        public static void CreateGetDatabaseDateTimeStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_database_date_time';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_database_date_time]
+	                    AS
+                        BEGIN
+                            SELECT GETUTCDATE() AS [Value];
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a stored procedure that is used for multiplication.
+        /// </summary>
+        public static void CreateMultiplyStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_multiply';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_multiply]
+                        (
+                            @Value1 INT,
+                            @Value2 INT
+                        )
+	                    AS
+                        BEGIN
+                            SELECT @Value1 * @Value2 AS [Value];
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+        
         #endregion
     }
 }

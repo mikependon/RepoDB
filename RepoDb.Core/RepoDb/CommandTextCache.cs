@@ -38,7 +38,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Count{TEntity}(IDbConnection, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the count operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -58,7 +58,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the delete operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -78,7 +78,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.DeleteAll{TEntity}(IDbConnection, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the delete-all operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -97,7 +97,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineInsert{TEntity}(IDbConnection, object, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the inline-insert operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -138,7 +138,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineMerge{TEntity}(IDbConnection, object, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the inline-merge operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -181,7 +181,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.InlineUpdate{TEntity}(IDbConnection, object, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the inline-update operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -206,7 +206,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Insert{TEntity}(IDbConnection, TEntity, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the insert operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -245,7 +245,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Merge{TEntity}(IDbConnection, TEntity, IEnumerable{Field}, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the merge operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -286,7 +286,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the query operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -309,7 +309,30 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Truncate{TEntity}(IDbConnection, int?, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the query-multiple operation.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the target entity.</typeparam>
+        /// <param name="request">The request object.</param>
+        /// <returns>The cached command text.</returns>
+        public static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
+            where TEntity : class
+        {
+            var commandText = (string)null;
+            if (m_cache.TryGetValue(request, out commandText) == false)
+            {
+                var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+                commandText = statementBuilder.CreateQuery(queryBuilder: new QueryBuilder<TEntity>(),
+                    where: request.Where,
+                    orderBy: request.OrderBy,
+                    top: request.Top,
+                    hints: request.Hints);
+                m_cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        /// Gets a command text from the cache for the truncate operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>
@@ -328,7 +351,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets a command text from the cache for the <see cref="DbConnectionExtension.Update{TEntity}(IDbConnection, TEntity, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Gets a command text from the cache for the update operation.
         /// </summary>
         /// <typeparam name="TEntity">The type of the target entity.</typeparam>
         /// <param name="request">The request object.</param>

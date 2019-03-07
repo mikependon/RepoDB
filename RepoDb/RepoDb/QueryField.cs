@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to define the query expression for all repository operations. It holds the instances of field (<see cref="Field"/>),
+    /// A class used to define the a expression for all operations. It holds the instances of field (<see cref="Field"/>),
     /// parameter (<see cref="QueryField"/>) and the target operation (<see cref="Operation"/>) of the query expression.
     /// </summary>
     public class QueryField : IEquatable<QueryField>
@@ -80,6 +80,14 @@ namespace RepoDb
         internal void AppendParameterPrefix()
         {
             Parameter?.AppendPrefix();
+        }
+
+        /// <summary>
+        /// Resets the <see cref="QueryField"/> back to its default state (as is newly instantiated).
+        /// </summary>
+        public void Reset()
+        {
+            Parameter?.SetName(Field.Name);
         }
 
         /// <summary>

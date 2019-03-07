@@ -94,6 +94,7 @@
     <Compile Include="Requests\InlineMergeRequest.cs" />
     <Compile Include="Requests\InlineInsertRequest.cs" />
     <Compile Include="Requests\MergeRequest.cs" />
+    <Compile Include="Requests\QueryMultipleRequest.cs" />
     <Compile Include="Requests\TruncateRequest.cs" />
     <Compile Include="Requests\DeleteAllRequest.cs" />
     <Compile Include="Requests\UpdateRequest.cs" />
