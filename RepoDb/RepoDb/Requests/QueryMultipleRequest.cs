@@ -6,31 +6,38 @@ using System.Data;
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the query operation arguments.
+    /// A class that holds the value of the query multiple operation arguments.
     /// </summary>
-    internal class QueryRequest : BaseRequest, IEquatable<QueryRequest>
+    internal class QueryMultipleRequest : BaseRequest, IEquatable<QueryMultipleRequest>
     {
         private int? m_hashCode = null;
 
         /// <summary>
-        /// Creates a new instance of <see cref="QueryRequest"/> object.
+        /// Creates a new instance of <see cref="QueryMultipleRequest"/> object.
         /// </summary>
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
+        /// <param name="index">The index value.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="orderBy">The list of order fields.</param>
         /// <param name="top">The filter for the rows.</param>
         /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public QueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
+        public QueryMultipleRequest(int? index, Type entityType, IDbConnection connection, QueryGroup where = null, IEnumerable<OrderField> orderBy = null,
             int? top = null, string hints = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
+            Index = index;
             Where = where;
             OrderBy = orderBy;
             Top = top;
             Hints = hints;
         }
+
+        /// <summary>
+        /// Gets the index used.
+        /// </summary>
+        public int? Index { get; }
 
         /// <summary>
         /// Gets the query expression used.
@@ -55,7 +62,7 @@ namespace RepoDb.Requests
         // Equality and comparers
 
         /// <summary>
-        /// Returns the hashcode for this <see cref="QueryRequest"/>.
+        /// Returns the hashcode for this <see cref="QueryMultipleRequest"/>.
         /// </summary>
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
@@ -68,6 +75,12 @@ namespace RepoDb.Requests
 
             // Get first the entity hash code
             var hashCode = string.Concat(EntityType.FullName, ".Query").GetHashCode();
+
+            // Add the index
+            if (!ReferenceEquals(null, Index))
+            {
+                hashCode += Index.GetHashCode();
+            }
 
             // Add the expression
             if (!ReferenceEquals(null, Where))
@@ -104,7 +117,7 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="QueryRequest"/> object equality against the given target object.
+        /// Compares the <see cref="QueryMultipleRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="obj">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equals.</returns>
@@ -114,22 +127,22 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the <see cref="QueryRequest"/> object equality against the given target object.
+        /// Compares the <see cref="QueryMultipleRequest"/> object equality against the given target object.
         /// </summary>
         /// <param name="other">The object to be compared to the current object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryRequest other)
+        public bool Equals(QueryMultipleRequest other)
         {
             return GetHashCode() == other?.GetHashCode();
         }
 
         /// <summary>
-        /// Compares the equality of the two <see cref="QueryRequest"/> objects.
+        /// Compares the equality of the two <see cref="QueryMultipleRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="QueryRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="QueryMultipleRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryMultipleRequest"/> object.</param>
         /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryRequest objA, QueryRequest objB)
+        public static bool operator ==(QueryMultipleRequest objA, QueryMultipleRequest objB)
         {
             if (ReferenceEquals(null, objA))
             {
@@ -139,12 +152,12 @@ namespace RepoDb.Requests
         }
 
         /// <summary>
-        /// Compares the inequality of the two <see cref="QueryRequest"/> objects.
+        /// Compares the inequality of the two <see cref="QueryMultipleRequest"/> objects.
         /// </summary>
-        /// <param name="objA">The first <see cref="QueryRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryRequest"/> object.</param>
+        /// <param name="objA">The first <see cref="QueryMultipleRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="QueryMultipleRequest"/> object.</param>
         /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryRequest objA, QueryRequest objB)
+        public static bool operator !=(QueryMultipleRequest objA, QueryMultipleRequest objB)
         {
             return (objA == objB) == false;
         }
