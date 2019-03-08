@@ -20,6 +20,7 @@ namespace RepoDb
         internal QueryMultipleExtractor(DbDataReader reader)
         {
             m_reader = reader;
+            Position = 0;
         }
 
         /// <summary>
@@ -38,7 +39,11 @@ namespace RepoDb
         public IEnumerable<TEntity> Extract<TEntity>() where TEntity : class
         {
             var result = DataReaderConverter.ToEnumerable<TEntity>(m_reader, true).ToList();
+
+            // Move to next result
             NextResult();
+
+            // Return the result
             return result;
         }
 
@@ -49,11 +54,17 @@ namespace RepoDb
         public object Scalar()
         {
             var value = (object)null;
+
+            // Only if there are record
             if (m_reader.Read())
             {
                 value = ObjectConverter.DbNullToNull(m_reader[0]);
             }
+
+            // Move to next result
             NextResult();
+
+            // Return the result
             return value;
         }
 
@@ -68,12 +79,7 @@ namespace RepoDb
         /// </summary>
         public bool NextResult()
         {
-            var result = m_reader.NextResult();
-            if (result)
-            {
-                Position++;
-            }
-            return result;
+            return (Position = m_reader.NextResult() ? Position + 1 : -1) >= 0;
         }
     }
 }

@@ -4974,7 +4974,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryForDynamicsWithParameter()
+        public void TestSqlConnectionExecuteQueryForDynamicsWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4987,6 +4987,74 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act (Query)
                 var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 });
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(kvpItem =>
+                {
+                    var kvp = kvpItem as IDictionary<string, object>;
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+
+                    // Assert
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryForDynamicsWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } });
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(kvpItem =>
+                {
+                    var kvp = kvpItem as IDictionary<string, object>;
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+
+                    // Assert
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryForDynamicsWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                    new { Top = 2 });
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5091,11 +5159,31 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.ExecuteQuery("[dbo].[sp_multiply]",
                     param: new { Value1 = 100, Value2 = 200 },
                     commandType: CommandType.StoredProcedure).FirstOrDefault();
-                
+
                 // Assert
                 var kvp = result as IDictionary<string, object>;
                 Assert.IsNotNull(result);
                 Assert.AreEqual(20000, kvp.First().Value);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryForDynamicsIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryForDynamicsIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
             }
         }
 
@@ -5137,7 +5225,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithParameter()
+        public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -5150,6 +5238,74 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act (Query)
                 var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
                     new { From = 3, To = 4 }).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(kvpItem =>
+                {
+                    var kvp = kvpItem as IDictionary<string, object>;
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+
+                    // Assert
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } }).Result;
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(kvpItem =>
+                {
+                    var kvp = kvpItem as IDictionary<string, object>;
+                    var item = tables.First(t => t.Id == Convert.ToInt32(kvp[nameof(SimpleTable.Id)]));
+
+                    // Assert
+                    Assert.AreEqual(item.ColumnBit, kvp[nameof(SimpleTable.ColumnBit)]);
+                    Assert.AreEqual(item.ColumnDateTime, kvp[nameof(SimpleTable.ColumnDateTime)]);
+                    Assert.AreEqual(item.ColumnDateTime2, kvp[nameof(SimpleTable.ColumnDateTime2)]);
+                    Assert.AreEqual(item.ColumnDecimal, kvp[nameof(SimpleTable.ColumnDecimal)]);
+                    Assert.AreEqual(item.ColumnFloat, Convert.ToSingle(kvp[nameof(SimpleTable.ColumnFloat)]));
+                    Assert.AreEqual(item.ColumnInt, kvp[nameof(SimpleTable.ColumnInt)]);
+                    Assert.AreEqual(item.ColumnNVarChar, kvp[nameof(SimpleTable.ColumnNVarChar)]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncForDynamicsWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                    new { Top = 2 }).Result;
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -5262,6 +5418,1267 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncForDynamicsIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncForDynamicsIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
         #endregion
+
+        #region ExecuteQuery
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQuery()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable]");
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                    new { From = 3, To = 4 });
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } });
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                    new { Top = 2 });
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithStoredProcedure()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithStoredProcedureWithParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQuery<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryAsync
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsync()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable]").Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                    new { From = 3, To = 4 }).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } }).Result;
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];",
+                    new { Top = 2 }).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithStoredProcedure()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_tables]",
+                    commandType: CommandType.StoredProcedure).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithStoredProcedureWithParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultiple (Extract)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractWithoutParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP 1 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 2 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 3 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 4 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 5 * FROM [dbo].[SimpleTable];"))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractWithMultipleTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable];",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractWithMultipleArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForExtractWithNormalStatementFollowedByStoredProcedures()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    EXEC [dbo].[sp_get_simple_tables];
+                    EXEC [dbo].[sp_get_simple_table_by_id] @Id",
+                    new { Top1 = 1, tables.Last().Id }, CommandType.Text))
+                {
+                    // Act (Extract)
+                    var value1 = result.Extract<SimpleTable>();
+
+                    // Assert (Count)
+                    Assert.AreEqual(1, value1.Count());
+                    AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
+
+                    // Act (Extract)
+                    var value2 = result.Extract<SimpleTable>();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, value2.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
+
+                    // Act (Extract)
+                    var value3 = result.Extract<SimpleTable>();
+
+                    // Assert (Count)
+                    Assert.AreEqual(1, value3.Count());
+                    AssertPropertiesEquality(tables.Where(t => t.Id == value3.First().Id).First(), value3.First());
+
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryMultipleForExtractIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQueryMultiple("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionQueryMultipleForExtractIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQueryMultiple("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultipleAsync (Extract)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractWithoutParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 2 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 3 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 4 * FROM [dbo].[SimpleTable];
+                    SELECT TOP 5 * FROM [dbo].[SimpleTable];").Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable];",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithMultipleArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top2) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top3) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top4) * FROM [dbo].[SimpleTable];
+                    SELECT TOP (@Top5) * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
+                {
+                    while (result.Position >= 0)
+                    {
+                        // Index
+                        var index = result.Position + 1;
+
+                        // Act (Extract)
+                        var items = result.Extract<SimpleTable>();
+
+                        // Assert (Count)
+                        Assert.AreEqual(index, items.Count());
+
+                        // Assert (Entities)
+                        for (var c = 0; c < index; c++)
+                        {
+                            AssertPropertiesEquality(tables.ElementAt(c), items.ElementAt(c));
+                        }
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractWithNormalStatementFollowedByStoredProcedures()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [dbo].[SimpleTable];
+                    EXEC [dbo].[sp_get_simple_tables];
+                    EXEC [dbo].[sp_get_simple_table_by_id] @Id",
+                    new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
+                {
+                    // Act (Extract)
+                    var value1 = result.Extract<SimpleTable>();
+
+                    // Assert (Count)
+                    Assert.AreEqual(1, value1.Count());
+                    AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
+
+                    // Act (Extract)
+                    var value2 = result.Extract<SimpleTable>();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, value2.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
+
+                    // Act (Extract)
+                    var value3 = result.Extract<SimpleTable>();
+
+                    // Assert (Count)
+                    Assert.AreEqual(1, value3.Count());
+                    AssertPropertiesEquality(tables.Where(t => t.Id == value3.First().Id).First(), value3.First());
+
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryMultipleAsyncForExtractIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryMultipleAsync("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionQueryMultipleAsyncForExtractIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryMultipleAsync("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultiple (Scalar)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';"))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert (Int)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert (Int)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert (DateTime.Type)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultipleAsync (Scalar)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';").Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert (Int)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert (Int)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert (DateTime)
+                    var value1 = result.Scalar();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert (DateTime.Type)
+                    var value2 = result.Scalar();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert (String)
+                    var value3 = result.Scalar();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
+        #region ExecuteReader
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReader()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable]"))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderWithParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                    new { From = 3, To = 4 }))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } }))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(3, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];", new { Top = 2 }))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderWithStoredProcedure()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("[dbo].[sp_get_simple_tables]", commandType: CommandType.StoredProcedure))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderWithStoredProcedureWithParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReader("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure))
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(1, result.Count());
+                    AssertPropertiesEquality(tables.Last(), result.First());
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteReaderIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteReaderIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                connection.ExecuteQuery<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        #endregion
+
+        #region ExecuteReaderAsync
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsync()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable]").Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsyncWithParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                    new { From = 3, To = 4 }).Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsyncWithArrayParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } }).Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(3, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsyncWithTopParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [dbo].[SimpleTable];", new { Top = 2 }).Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(2, result.Count());
+                    result.ToList().ForEach(item => AssertPropertiesEquality(tables.Where(r => r.Id == item.Id).First(), item));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedure()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_simple_tables]", commandType: CommandType.StoredProcedure).Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(tables.Count, result.Count());
+                    tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedureWithParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Insert)
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act (Query)
+                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure).Result)
+                {
+                    // Act (Extract)
+                    var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
+
+                    // Assert
+                    Assert.AreEqual(1, result.Count());
+                    AssertPropertiesEquality(tables.Last(), result.First());
+                }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act (Query)
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        #endregion
+
     }
 }

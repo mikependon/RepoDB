@@ -60,14 +60,8 @@
     <Compile Include="Models\TypeMappableClasses.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawSqls\BaseRepositoryRawSqlsTest.cs" />
-    <Compile Include="RawSqls\DbRepositoryRawSqlsTest.cs" />
-    <Compile Include="RawSqls\SqlConnectionRawSqlsTest.cs" />
     <Compile Include="Setup\Database.cs" />
     <Compile Include="Setup\Helper.cs" />
-    <Compile Include="Transactions\BaseRepositoryTransactionsTest.cs" />
-    <Compile Include="Transactions\DbRepositoryTransactionsTest.cs" />
-    <Compile Include="Transactions\SqlConnectionTransactionsTest.cs" />
     <Compile Include="TypeConversionsTest.cs" />
     <Compile Include="Operations\SqlConnectionOperationsTest.cs" />
     <Compile Include="Types\Bytes\BaseRepositoryBytesTest.cs" />

@@ -36,16 +36,21 @@ namespace RepoDb.Extensions
         /// Creates a parameter for a command object.
         /// </summary>
         /// <param name="command">The command object instance to be used.</param>
-        /// <param name="parameterName">The name of the parameter to be replaced.</param>
-        /// <param name="values">The array of the values.</param>
-        internal static void CreateParametersFromArray(this IDbCommand command, string parameterName, IEnumerable<object> values)
+        /// <param name="commandArrayParameters">The list of <see cref="CommandArrayParameter"/> to be used for replacement.</param>
+        internal static void CreateParametersFromArray(this IDbCommand command, IEnumerable<CommandArrayParameter> commandArrayParameters)
         {
-            if (values != null)
+            if (commandArrayParameters == null)
             {
-                for (var i = 0; i < values.Count(); i++)
+                return;
+            }
+            for (var i = 0; i < commandArrayParameters.Count(); i++)
+            {
+                var commandArrayParameter = commandArrayParameters.ElementAt(i);
+                for (var c = 0; c < commandArrayParameter.Values.Count(); c++)
                 {
-                    var parameter = command.CreateParameter(string.Concat(parameterName, i).AsParameter(), values.ElementAt(i));
-                    command.Parameters.Add(parameter);
+                    var name = string.Concat(commandArrayParameter.ParameterName, c).AsParameter();
+                    var value = commandArrayParameter.Values.ElementAt(c);
+                    command.Parameters.Add(command.CreateParameter(name, value));
                 }
             }
         }
@@ -103,6 +108,10 @@ namespace RepoDb.Extensions
             {
                 foreach (var property in param.GetType().GetProperties())
                 {
+                    if (property.PropertyType.IsArray)
+                    {
+                        continue;
+                    }
                     var dbType = property.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
                         TypeMapper.Get(GetUnderlyingType(property.PropertyType))?.DbType;
                     command.Parameters.Add(command.CreateParameter(

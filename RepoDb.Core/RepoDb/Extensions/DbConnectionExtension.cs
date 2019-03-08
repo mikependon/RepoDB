@@ -8707,7 +8707,7 @@ namespace RepoDb
 
         #endregion
 
-        #region ExecuteQuery (dynamics)
+        #region ExecuteQuery (Dynamics)
 
         /// <summary>
         /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and
@@ -9412,33 +9412,72 @@ namespace RepoDb
             // Check Transaction
             ValidateTransactionConnectionObject(connection, transaction);
 
-            // Identify target statement, for now, only support the param with single parameter that is an array
-            var property = param?.GetType().GetTypeInfo().GetProperties().FirstOrDefault();
-            var arrayValues = (IEnumerable<object>)null;
-
-            // Get the values for the arrays
-            if (property != null && property.PropertyType.IsArray)
-            {
-                arrayValues = ((Array)property.GetValue(param)).AsEnumerable();
-                commandText = ToRawSqlWithArrayParams(commandText, property.Name, arrayValues);
-            }
+            // Process the array parameters
+            var commandArrayParameters = ExtractAndReplace(param, ref commandText);
 
             // Command object initialization
             var command = connection.EnsureOpen().CreateCommand(commandText, commandType, commandTimeout, transaction);
 
+            // Add the parameters
+            command.CreateParameters(param);
+
             // Identify target statement, for now, only support array with single parameters
-            if (arrayValues != null)
+            if (commandArrayParameters != null)
             {
-                command.CreateParametersFromArray(property.Name, arrayValues);
-            }
-            else
-            {
-                // Add the parameters
-                command.CreateParameters(param);
+                command.CreateParametersFromArray(commandArrayParameters);
             }
 
             // Execute the scalar
             return (DbCommand)command;
+        }
+
+        /// <summary>
+        /// Replaces the array parameter command texts and return the list of <see cref="CommandArrayParameter"/> objects.
+        /// </summary>
+        /// <param name="param">The parameter passed.</param>
+        /// <param name="commandText">The command text to be replaced.</param>
+        /// <returns>A list of <see cref="CommandArrayParameter"/> objects.</returns>
+        private static IList<CommandArrayParameter> ExtractAndReplace(object param, ref string commandText)
+        {
+            if (param == null)
+            {
+                return null;
+            }
+
+            // Declare return values
+            var commandArrayParameters = (IList<CommandArrayParameter>)null;
+
+            // Iterate the properties
+            foreach (var property in param.GetType().GetTypeInfo().GetProperties())
+            {
+                // Skip if null
+                if (property == null)
+                {
+                    continue;
+                }
+
+                // Skip if it is not an array
+                if (property.PropertyType.IsArray == false)
+                {
+                    continue;
+                }
+
+                // Initialize the array if it not yet initialized
+                if (commandArrayParameters == null)
+                {
+                    commandArrayParameters = new List<CommandArrayParameter>();
+                }
+
+                // Replace the target parameters
+                var values = ((Array)property.GetValue(param)).AsEnumerable();
+                commandText = ToRawSqlWithArrayParams(commandText, property.Name, values);
+
+                // Add to the list
+                commandArrayParameters.Add(new CommandArrayParameter(property.Name, values));
+            }
+
+            // Return the values
+            return commandArrayParameters;
         }
 
         /// <summary>
@@ -9451,24 +9490,23 @@ namespace RepoDb
         private static string ToRawSqlWithArrayParams(string commandText, string parameterName, IEnumerable<object> values)
         {
             // Check for the defined parameter
-            if (commandText.IndexOf(parameterName) >= 0)
+            if (commandText.IndexOf(parameterName) < 0)
             {
-                // Get the variables needed
-                var length = values != null ? values.Count() : 0;
-                var parameters = new string[length];
-
-                // Iterate and set the parameter values
-                for (var i = 0; i < length; i++)
-                {
-                    parameters[i] = string.Concat(parameterName, i).AsParameter();
-                }
-
-                // Replace the target parameter
-                commandText = commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
+                return commandText;
             }
 
-            // Return the newly composed command text
-            return commandText;
+            // Get the variables needed
+            var length = values != null ? values.Count() : 0;
+            var parameters = new string[length];
+
+            // Iterate and set the parameter values
+            for (var i = 0; i < length; i++)
+            {
+                parameters[i] = string.Concat(parameterName, i).AsParameter();
+            }
+
+            // Replace the target parameter
+            return commandText.Replace(parameterName.AsParameter(), parameters.Join(", "));
         }
 
         #endregion
