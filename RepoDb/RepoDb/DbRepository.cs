@@ -848,26 +848,14 @@ namespace RepoDb
             // Create a connection
             var connection = CreateConnection();
 
-            try
-            {
-                // Call the method
-                var result = connection.BulkInsertAsync<TEntity>(entities: entities,
-                    mappings: mappings,
-                    commandTimeout: CommandTimeout,
-                    trace: Trace);
+            // Call the method
+            var result = connection.BulkInsertAsync<TEntity>(entities: entities,
+                mappings: mappings,
+                commandTimeout: CommandTimeout,
+                trace: Trace);
 
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection);
-            }
+            // Return the result
+            return ConvertToAsyncResultExtractorForPerCall(result, connection);
         }
 
         /// <summary>
@@ -884,26 +872,14 @@ namespace RepoDb
             // Create a connection
             var connection = CreateConnection();
 
-            try
-            {
-                // Call the method
-                var result = connection.BulkInsertAsync<TEntity>(reader: reader,
-                    mappings: mappings,
-                    commandTimeout: CommandTimeout,
-                    trace: Trace);
+            // Call the method
+            var result = connection.BulkInsertAsync<TEntity>(reader: reader,
+                mappings: mappings,
+                commandTimeout: CommandTimeout,
+                trace: Trace);
 
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection);
-            }
+            // Return the result
+            return ConvertToAsyncResultExtractorForPerCall(result, connection);
         }
 
         #endregion
@@ -4816,16 +4792,17 @@ namespace RepoDb
         /// Truncates a table from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        public void Truncate<TEntity>()
+        /// <returns>The number of rows affected by this operation.</returns>
+        public int Truncate<TEntity>()
             where TEntity : class
         {
             // Create a connection
             using (var connection = CreateConnection())
             {
                 // Call the method
-                connection.Truncate<TEntity>(commandTimeout: CommandTimeout,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
+                return connection.Truncate<TEntity>(commandTimeout: CommandTimeout,
+                     trace: Trace,
+                     statementBuilder: StatementBuilder);
             }
         }
 
@@ -4837,28 +4814,20 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        public Task TruncateAsync<TEntity>()
+        /// <returns>The number of rows affected by this operation.</returns>
+        public Task<AsyncResultExtractor<int>> TruncateAsync<TEntity>()
             where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
 
-            try
-            {
-                // Call the method
-                return connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection);
-            }
+            // Call the method
+            var result = connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
+                trace: Trace,
+                statementBuilder: StatementBuilder);
+
+            // Return the result
+            return ConvertToAsyncResultExtractorForPerCall(result, connection);
         }
 
         #endregion

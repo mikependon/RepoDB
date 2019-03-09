@@ -95,7 +95,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (0, 3)
                 AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(3));
             }
@@ -316,7 +316,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (3, 6)
                 AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(3));
             }
@@ -349,7 +349,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (10, 13)
                 AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (10, 13)
                 AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
             }
@@ -414,7 +414,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (0, 3)
                 AssertPropertiesEquality(tables.ElementAt(0), result.Result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(3), result.Result.ElementAt(3));
             }
@@ -635,7 +635,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (3, 6)
                 AssertPropertiesEquality(tables.ElementAt(3), result.Result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(6), result.Result.ElementAt(3));
             }
@@ -668,7 +668,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (10, 13)
                 AssertPropertiesEquality(tables.ElementAt(10), result.Result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(13), result.Result.ElementAt(3));
             }
@@ -702,7 +702,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (0, 4)
+                // Assert (10, 13)
                 AssertPropertiesEquality(tables.ElementAt(10), result.Result.ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(13), result.Result.ElementAt(3));
             }
@@ -726,7 +726,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var queryResult = connection.Query<SimpleTable>();
 
-                // Assert (0, 4)
+                // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>
@@ -1106,7 +1106,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var queryResult = connection.Query<SimpleTable>();
 
-                // Assert (0, 4)
+                // Assert
                 Assert.AreEqual(tables.Count, bulkInsertResult.Result);
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ToList().ForEach(t =>

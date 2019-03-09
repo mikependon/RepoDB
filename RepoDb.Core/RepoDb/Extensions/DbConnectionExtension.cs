@@ -8125,13 +8125,14 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        public static void Truncate<TEntity>(this IDbConnection connection,
+        /// <returns>The number of rows affected by this operation.</returns>
+        public static int Truncate<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            TruncateInternal<TEntity>(connection, commandTimeout, trace, statementBuilder);
+            return TruncateInternal<TEntity>(connection, commandTimeout, trace, statementBuilder);
         }
 
         /// <summary>
@@ -8142,7 +8143,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        internal static void TruncateInternal<TEntity>(this IDbConnection connection,
+        /// <returns>The number of rows affected by this operation.</returns>
+        internal static int TruncateInternal<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -8186,6 +8188,9 @@ namespace RepoDb
                 trace.AfterTruncate(new TraceLog(commandText, null, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
+
+            // Return the result
+            return result;
         }
 
         #endregion
@@ -8200,7 +8205,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        public static Task TruncateAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The number of rows affected by this operation.</returns>
+        public static Task<int> TruncateAsync<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -8220,7 +8226,8 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        internal static Task TruncateInternalAsync<TEntity>(this IDbConnection connection,
+        /// <returns>The number of rows affected by this operation.</returns>
+        internal static Task<int> TruncateInternalAsync<TEntity>(this IDbConnection connection,
             int? commandTimeout = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
