@@ -72,9 +72,9 @@
 [Optimizations]
 - Revisits the way on how to map the 'QueryGroup' list of 'QueryField' into the data entity type.
 - Refactor the Linq (IEnumerable&amp;lt;T&amp;gt;.ToList()) into an old-school (foreach / for (var i..)) approach.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/RepoDb/RepoDb</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/RepoDb/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/RepoDb/RepoDb</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/mikependon/RepoDb</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/mikependon/RepoDb/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>

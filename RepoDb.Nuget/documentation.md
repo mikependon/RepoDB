@@ -1,6 +1,6 @@
 ### Note
 
- - The v1.8.1 will be the production-grade release of RepoDb (with complete set of tests). The version v1.8.1-beta1 is the mirror of that release until the complete sets of 'IntegrationTests' are completed.
+ - The v1.8.1 is the production-grade release of RepoDb (with complete set of Integration/Unit Tests).
 
 ### Why RepoDb
 
@@ -14,4 +14,4 @@
  - [https://repodb.readthedocs.io/en/latest/index.html](https://repodb.readthedocs.io/en/latest/index.html)
 
 ### Project
- - [https://github.com/RepoDb/RepoDb](https://github.com/RepoDb/RepoDb)
+ - [https://github.com/mikependon/RepoDb](https://github.com/mikependon/RepoDb)
