@@ -224,8 +224,7 @@ namespace RepoDb
         /// <summary>
         /// Reset the <see cref="QueryGroup"/> back to its default state (as is newly instantiated).
         /// </summary>
-        /// <returns>The current instance.</returns>
-        public QueryGroup Reset()
+        public void Reset()
         {
             // Rest all fields
             foreach (var field in GetAllQueryFields())
@@ -235,9 +234,6 @@ namespace RepoDb
 
             // Reset the hash code
             m_hashCode = null;
-
-            // Return the fixed one
-            return Fix();
         }
 
         /// <summary>

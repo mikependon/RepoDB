@@ -57,7 +57,6 @@
     <Compile Include="Models\SimpleTable.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
-    <Compile Include="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />
     <Compile Include="Models\TypeClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

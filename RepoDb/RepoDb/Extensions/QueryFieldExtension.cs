@@ -129,5 +129,18 @@ namespace RepoDb.Extensions
             return expandoObject;
         }
 
+        // ResetAll
+
+        /// <summary>
+        /// Resets all the instances of <see cref="QueryField"/>.
+        /// </summary>
+        /// <param name="queryFields">The list of <see cref="QueryField"/> objects.</param>
+        public static void ResetAll(this IEnumerable<QueryField> queryFields)
+        {
+            foreach (var queryField in queryFields)
+            {
+                queryField.Reset();
+            }
+        }
     }
 }

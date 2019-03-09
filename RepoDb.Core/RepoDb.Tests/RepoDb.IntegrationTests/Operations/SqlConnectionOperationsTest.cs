@@ -30,7 +30,7 @@ namespace RepoDb.IntegrationTests.Operations
 
         #region Helper
 
-        private DateTime EpocDate => DateTime.Parse("1970-01-01 00:00:00");
+        private DateTime EpocDate => Helper.GetEpocDate();
 
         private List<SimpleTable> CreateSimpleTables(int count)
         {
@@ -1639,7 +1639,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
-
+                
                 // Assert
                 AssertPropertiesEquality(7, result.Result);
             }
@@ -2521,6 +2521,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
+                fields.ResetAll();
                 var queryResult = connection.Query<SimpleTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
@@ -2565,6 +2566,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
+                queryGroup.Reset();
                 var queryResult = connection.Query<SimpleTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
@@ -2750,6 +2752,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
+                fields.ResetAll();
                 var queryResult = connection.Query<SimpleTable>(fields);
                 var first = queryResult.FirstOrDefault();
 
@@ -2794,6 +2797,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
+                queryGroup.Reset();
                 var queryResult = connection.Query<SimpleTable>(queryGroup);
                 var first = queryResult.FirstOrDefault();
 
@@ -4702,6 +4706,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
+                fields.ResetAll();
                 var result = connection.Query<SimpleTable>(fields);
 
                 // Assert
@@ -4740,6 +4745,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
+                queryGroup.Reset();
                 var result = connection.Query<SimpleTable>(queryGroup);
 
                 // Assert
@@ -4884,6 +4890,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
+                fields.ResetAll();
                 var result = connection.Query<SimpleTable>(fields);
 
                 // Assert
@@ -4922,6 +4929,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, affectedRows);
 
                 // Act
+                queryGroup.Reset();
                 var result = connection.Query<SimpleTable>(queryGroup);
 
                 // Assert
