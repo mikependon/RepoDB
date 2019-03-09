@@ -973,10 +973,10 @@ namespace RepoDb.IntegrationTests.Operations
                         bulkInsertResult.Result.Extract();
 
                         // Act
-                        var queryResult = repository.QueryAsync<SimpleTable>();
+                        var queryResult = repository.Query<SimpleTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Extract().Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }
@@ -1018,10 +1018,10 @@ namespace RepoDb.IntegrationTests.Operations
                         bulkInsertResult.Wait();
 
                         // Act
-                        var queryResult = repository.QueryAsync<SimpleTable>();
+                        var queryResult = repository.Query<SimpleTable>();
 
                         // Assert
-                        Assert.AreEqual(tables.Count * 2, queryResult.Result.Extract().Count());
+                        Assert.AreEqual(tables.Count * 2, queryResult.Count());
                     }
                 }
             }

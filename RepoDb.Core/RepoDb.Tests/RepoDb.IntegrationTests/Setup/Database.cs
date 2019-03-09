@@ -30,11 +30,13 @@ namespace RepoDb.IntegrationTests.Setup
         /// Gets the connection string for master.
         /// </summary>
         public static string ConnectionForMaster => @"Server=(local)\SQL2017;Database=master;User ID=sa;Password=Password12!;Persist Security Info=True;";
+        //public static string ConnectionForMaster => @"Server=(local);Database=master;Integrated Security=True;";
 
         /// <summary>
         /// Gets the connection string for RepoDb.
         /// </summary>
         public static string ConnectionStringForRepoDb => @"Server=(local)\SQL2017;Database=RepoDb;User ID=sa;Password=Password12!;Persist Security Info=True;";
+        //public static string ConnectionStringForRepoDb => @"Server=(local);Database=RepoDb;Integrated Security=True;";
 
         /// <summary>
         /// Creates a test database for RepoDb.

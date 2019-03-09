@@ -93,6 +93,9 @@
   <ItemGroup>
     <Content Include="Setup\repodb.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="appveyor.yml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
