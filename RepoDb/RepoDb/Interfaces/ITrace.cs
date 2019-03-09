@@ -14,9 +14,9 @@ namespace RepoDb.Interfaces
          */
 
         /// <summary>
-        /// A method being raised before the actual batch-query operation execution.
+        /// A method being raised before the actual batch query operation execution.
         /// </summary>
-        /// <param name="log">The cancellable log object referenced by the batch-query execution.</param>
+        /// <param name="log">The cancellable log object referenced by the batch query execution.</param>
         void BeforeBatchQuery(CancellableTraceLog log);
 
         /// <summary>
@@ -126,9 +126,9 @@ namespace RepoDb.Interfaces
          */
 
         /// <summary>
-        /// A method being raised after the actual batch-query operation execution.
+        /// A method being raised after the actual batch query operation execution.
         /// </summary>
-        /// <param name="log">The log object referenced by the batch-query execution.</param>
+        /// <param name="log">The log object referenced by the batch query execution.</param>
 
         void AfterBatchQuery(TraceLog log);
 

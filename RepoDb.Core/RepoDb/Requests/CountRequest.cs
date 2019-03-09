@@ -17,17 +17,24 @@ namespace RepoDb.Requests
         /// <param name="entityType">The entity type.</param>
         /// <param name="connection">The connection object.</param>
         /// <param name="where">The query expression.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public CountRequest(Type entityType, IDbConnection connection, QueryGroup where = null, IStatementBuilder statementBuilder = null)
+        public CountRequest(Type entityType, IDbConnection connection, QueryGroup where = null, string hints = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Where = where;
+            Hints = hints;
         }
 
         /// <summary>
         /// Gets the query expression used.
         /// </summary>
         public QueryGroup Where { get; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         // Equality and comparers
 
@@ -50,6 +57,12 @@ namespace RepoDb.Requests
             if (Where != null)
             {
                 hashCode += Where.GetHashCode();
+            }
+
+            // Add the hints
+            if (!ReferenceEquals(null, Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set back the hash code value

@@ -33,7 +33,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
-                    It.IsAny<IEnumerable<OrderField>>()));
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()));
 
             // Act
             repository.Object.BatchQuery(0, 10, null, null);
@@ -45,7 +46,8 @@ namespace RepoDb.UnitTests.Interfaces
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
-                    It.IsAny<IEnumerable<OrderField>>()), Times.Once);
+                    It.IsAny<IEnumerable<OrderField>>(),
+                    It.IsAny<string>()), Times.Once);
         }
 
         // CreateCount
@@ -61,7 +63,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Setup(builder =>
                 builder.CreateCount<DataEntity>(
                     It.IsAny<QueryBuilder<DataEntity>>(),
-                    It.IsAny<QueryGroup>()));
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()));
 
             // Act
             repository.Object.Count();
@@ -70,7 +73,8 @@ namespace RepoDb.UnitTests.Interfaces
             statementBuilder.Verify(builder =>
                 builder.CreateCount<DataEntity>(
                     It.IsAny<QueryBuilder<DataEntity>>(),
-                    It.IsAny<QueryGroup>()), Times.Once);
+                    It.IsAny<QueryGroup>(),
+                    It.IsAny<string>()), Times.Once);
         }
 
         // CreateDelete

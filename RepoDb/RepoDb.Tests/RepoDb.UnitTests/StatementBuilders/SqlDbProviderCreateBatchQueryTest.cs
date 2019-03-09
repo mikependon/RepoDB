@@ -188,6 +188,41 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
+        [Map("ClassName")]
+        private class TestSqlDbProviderCreateBatchQueryWithTableHintsClass
+        {
+            public int Field1 { get; set; }
+            public int Field2 { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateBatchQueryWithTableHints()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithTableHintsClass>();
+            var orderBy = OrderField.Parse(new
+            {
+                Field1 = Order.Ascending
+            });
+
+            // Act
+            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy, SqlTableHints.NoLock);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [ClassName] WITH (NOLOCK) " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) " +
+                $"ORDER BY [Field1] ASC ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
         private class ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass
         {
         }

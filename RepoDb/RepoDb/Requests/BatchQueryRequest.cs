@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace RepoDb.Requests
 {
     /// <summary>
-    /// A class that holds the value of the batch-query operation arguments.
+    /// A class that holds the value of the batch query operation arguments.
     /// </summary>
     internal class BatchQueryRequest : BaseRequest, IEquatable<BatchQueryRequest>
     {
@@ -22,14 +21,17 @@ namespace RepoDb.Requests
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of order fields.</param>
+        /// <param name="hints">The hints for the table.</param>
         /// <param name="statementBuilder">The statement builder.</param>
-        public BatchQueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, int? page = null, int? rowsPerBatch = null, IEnumerable<OrderField> orderBy = null, IStatementBuilder statementBuilder = null)
+        public BatchQueryRequest(Type entityType, IDbConnection connection, QueryGroup where = null, int? page = null, int? rowsPerBatch = null,
+            IEnumerable<OrderField> orderBy = null, string hints = null, IStatementBuilder statementBuilder = null)
             : base(entityType, connection, statementBuilder)
         {
             Where = where;
             Page = page;
             RowsPerBatch = rowsPerBatch;
             OrderBy = orderBy;
+            Hints = hints;
         }
 
         /// <summary>
@@ -51,6 +53,11 @@ namespace RepoDb.Requests
         /// Gets the list of the order fields.
         /// </summary>
         public IEnumerable<OrderField> OrderBy { get; }
+
+        /// <summary>
+        /// Gets the hints for the table.
+        /// </summary>
+        public string Hints { get; }
 
         // Equality and comparers
 
@@ -94,6 +101,12 @@ namespace RepoDb.Requests
                 {
                     hashCode += orderField.GetHashCode();
                 }
+            }
+
+            // Add the hints
+            if (!ReferenceEquals(null, Hints))
+            {
+                hashCode += Hints.GetHashCode();
             }
 
             // Set back the hash code value

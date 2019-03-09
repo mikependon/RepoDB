@@ -17,7 +17,7 @@ namespace RepoDb
         public SqlStatementBuilder() { }
 
         /// <summary>
-        /// Creates a SQL Statement for repository batch-query operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository batch query operation that is meant for SQL Server.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -27,12 +27,14 @@ namespace RepoDb
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
-        /// <returns>A string containing the composed SQL Statement for batch-query operation.</returns>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
+        /// <returns>A string containing the composed SQL Statement for batch query operation.</returns>
         public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
             QueryGroup where = null,
             int? page = null,
             int? rowsPerBatch = null,
-            IEnumerable<OrderField> orderBy = null)
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null)
             where TEntity : class
         {
             var fields = PropertyCache.Get<TEntity>().Select(property => new Field(property.GetMappedName()));
@@ -60,7 +62,17 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableName()
+                .TableName();
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // Build the filter and ordering
+            queryBuilder
                 .WhereFrom(where)
                 .CloseParen()
                 .Select()
@@ -83,9 +95,11 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for count operation.</returns>
         public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder,
-            QueryGroup where = null)
+            QueryGroup where = null,
+            string hints = null)
             where TEntity : class
         {
             queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
@@ -95,9 +109,22 @@ namespace RepoDb
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableName()
+                .TableName();
+
+
+            // Build the query optimizers
+            if (hints != null)
+            {
+                queryBuilder
+                    .WriteText(hints);
+            }
+
+            // Build the filter and ordering
+            queryBuilder
                 .WhereFrom(where)
                 .End();
+
+            // Return the query
             return queryBuilder.GetString();
         }
 

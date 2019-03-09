@@ -11,7 +11,7 @@ namespace RepoDb.Interfaces
     public interface IStatementBuilder
     {
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.BatchQuery{TEntity}(IDbConnection, QueryGroup, int, int, IEnumerable{OrderField}, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository batch query operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -21,29 +21,33 @@ namespace RepoDb.Interfaces
         /// <param name="page">The page of the batch.</param>
         /// <param name="rowsPerBatch">The number of rows per batch.</param>
         /// <param name="orderBy">The list of fields used for ordering.</param>
-        /// <returns>A string containing the composed SQL Statement for batch-query operation.</returns>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
+        /// <returns>A string containing the composed SQL Statement for batch query operation.</returns>
         string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
             QueryGroup where = null,
             int? page = null,
             int? rowsPerBatch = null,
-            IEnumerable<OrderField> orderBy = null)
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null)
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Count{TEntity}(IDbConnection, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository count operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
+        /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for count operation.</returns>
         string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder,
-            QueryGroup where = null)
+            QueryGroup where = null,
+            string hints = null)
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Delete{TEntity}(IDbConnection, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository delete operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -56,7 +60,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.DeleteAll{TEntity}(IDbConnection, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository delete-all operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -67,7 +71,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.InlineInsert{TEntity}(IDbConnection, object, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository inline-insert operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -80,7 +84,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.InlineMerge{TEntity}(IDbConnection, object, IEnumerable{Field}, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository inline-merge operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -95,7 +99,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.InlineUpdate{TEntity}(IDbConnection, object, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository inline-update operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -110,7 +114,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Insert{TEntity}(IDbConnection, TEntity, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository insert operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -121,7 +125,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Merge{TEntity}(IDbConnection, TEntity, IEnumerable{Field}, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository merge operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -134,7 +138,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Query{TEntity}(IDbConnection, QueryGroup, IEnumerable{OrderField}, int?, string, string, int?, IDbTransaction, ICache, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository query operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -153,7 +157,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Truncate{TEntity}(IDbConnection, int?, ITrace, IStatementBuilder)"/> operation that is meant for SQL Server.
+        /// Creates a SQL Statement for repository truncate operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.
@@ -164,7 +168,7 @@ namespace RepoDb.Interfaces
             where TEntity : class;
 
         /// <summary>
-        /// Creates a SQL Statement for repository <see cref="DbConnectionExtension.Update{TEntity}(IDbConnection, TEntity, QueryGroup, int?, IDbTransaction, ITrace, IStatementBuilder)"/> operation.
+        /// Creates a SQL Statement for repository update operation.
         /// </summary>
         /// <typeparam name="TEntity">
         /// The data entity object bound for the SQL Statement to be created.

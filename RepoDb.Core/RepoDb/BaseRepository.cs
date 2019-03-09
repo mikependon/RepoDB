@@ -230,31 +230,37 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(IEnumerable<QueryField> where,
-            int page, int rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
@@ -262,21 +268,25 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery(QueryGroup where,
-            int page, int rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(
@@ -284,6 +294,7 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
@@ -297,33 +308,38 @@ namespace RepoDb
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(Expression<Func<TEntity, bool>> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
@@ -331,22 +347,25 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(QueryField where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
@@ -354,22 +373,25 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(IEnumerable<QueryField> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
@@ -377,22 +399,25 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(QueryGroup where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.BatchQueryAsync<TEntity>(
@@ -400,6 +425,7 @@ namespace RepoDb
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
+                hints: hints,
                 transaction: transaction);
         }
 
@@ -442,36 +468,45 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of table data from the database.
         /// </summary>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public long Count(IDbTransaction transaction = null)
-        {
-            return DbRepository.Count<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public long Count(IEnumerable<QueryField> where,
+        public long Count(string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Count<TEntity>(where: where,
+            return DbRepository.Count<TEntity>(hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Counts the number of table data from the database based on the given query expression.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public long Count(QueryGroup where,
+        public long Count(IEnumerable<QueryField> where,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.Count<TEntity>(where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database based on the given query expression.
+        /// </summary>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public long Count(QueryGroup where,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(where: where,
+                hints: hints,
                 transaction: transaction);
         }
 
@@ -482,62 +517,77 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(IDbTransaction transaction = null)
-        {
-            return DbRepository.CountAsync<TEntity>(transaction: transaction);
-        }
-
-        /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<object>> CountAsync(string hints = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.CountAsync<TEntity>(where: where,
+            return DbRepository.CountAsync<TEntity>(hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(QueryField where,
+        public Task<AsyncResultExtractor<object>> CountAsync(Expression<Func<TEntity, bool>> where,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<object>> CountAsync(QueryField where,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
+                hints: hints,
                 transaction: transaction);
         }
 
         /// <summary>
         /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(QueryGroup where,
+        public Task<AsyncResultExtractor<object>> CountAsync(IEnumerable<QueryField> where,
+            string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public Task<AsyncResultExtractor<object>> CountAsync(QueryGroup where,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(where: where,
+                hints: hints,
                 transaction: transaction);
         }
 
@@ -561,7 +611,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(Expression<Func<TEntity, bool>> where,
@@ -574,7 +624,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(QueryField where,
@@ -587,7 +637,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(IEnumerable<QueryField> where,
@@ -600,7 +650,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Delete(QueryGroup where,
@@ -630,7 +680,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> DeleteAsync(Expression<Func<TEntity, bool>> where,
@@ -643,7 +693,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> DeleteAsync(IEnumerable<QueryField> where,
@@ -656,7 +706,7 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> DeleteAsync(QueryGroup where,
@@ -850,7 +900,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only).
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineUpdate(object entity,
@@ -866,7 +916,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only).
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineUpdate(object entity,
@@ -882,7 +932,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only).
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineUpdate(object entity,
@@ -898,7 +948,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only).
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineUpdate(object entity,
@@ -934,7 +984,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
@@ -950,7 +1000,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
@@ -966,7 +1016,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
@@ -982,7 +1032,7 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
@@ -1141,7 +1191,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1165,7 +1215,7 @@ namespace RepoDb
         /// Queries a data from the database.
         /// </summary>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1186,10 +1236,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1214,10 +1264,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1242,10 +1292,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1270,10 +1320,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1304,7 +1354,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1328,7 +1378,7 @@ namespace RepoDb
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
         /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1349,10 +1399,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1377,10 +1427,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1405,10 +1455,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1433,10 +1483,10 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used when querying the records. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force the repository to query from the database.
@@ -1519,7 +1569,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -1535,7 +1585,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -1551,7 +1601,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(TEntity entity,
@@ -1567,7 +1617,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(TEntity entity, QueryGroup where,
@@ -1615,7 +1665,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
@@ -1631,7 +1681,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
@@ -1647,7 +1697,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
@@ -1663,7 +1713,7 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="where">The query expression to be used  by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,

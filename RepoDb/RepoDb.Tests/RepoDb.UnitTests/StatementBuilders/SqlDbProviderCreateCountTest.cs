@@ -72,5 +72,29 @@ namespace RepoDb.UnitTests.StatementBuilders
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        private class TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass
+        {
+        }
+
+        [TestMethod]
+        public void TestSqlDbProviderCreateCountWithExpressionsAndWithTableHints()
+        {
+            // Setup
+            var statementBuilder = new SqlStatementBuilder();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass>();
+            var expression = new { Field1 = 1 };
+
+            // Act
+            var queryGroup = QueryGroup.Parse(expression);
+            var actual = statementBuilder.CreateCount(queryBuilder, queryGroup, SqlTableHints.NoLock);
+            var expected = $"" +
+                $"SELECT COUNT_BIG (1) AS [Counted] " +
+                $"FROM [TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass] WITH (NOLOCK) " +
+                $"WHERE ([Field1] = @Field1) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
