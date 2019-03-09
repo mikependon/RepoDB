@@ -89,8 +89,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#creating-a-new-instance">Creating a new Instance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#asenumerable">AsEnumerable</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#from">From</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parse-via-expression">Parse (via Expression)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parse-via-object">Parse (via Object)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-of-field">Usage of Field</a></li>
 </ul>
 </li>
@@ -178,7 +176,12 @@
 <div class="section" id="creating-a-new-instance">
 <h2>Creating a new Instance<a class="headerlink" href="#creating-a-new-instance" title="Permalink to this headline">¶</a></h2>
 <p>Constructor only accepts a single string parameter.</p>
+<p>By literal string:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>By class property:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 </pre></div>
 </div>
 </div>
@@ -186,7 +189,7 @@
 <h2>AsEnumerable<a class="headerlink" href="#asenumerable" title="Permalink to this headline">¶</a></h2>
 <p>Converts an instance of a <cite>Field</cite> into an <cite>IEnumerable&lt;Field&gt;</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize a field</span>
-<span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Field</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 
 <span class="c1">// Convert to enumerable</span>
 <span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">field</span><span class="p">.</span><span class="n">AsEnumerable</span><span class="p">();</span>
@@ -195,50 +198,20 @@
 </div>
 <div class="section" id="from">
 <h2>From<a class="headerlink" href="#from" title="Permalink to this headline">¶</a></h2>
-<p>Use the <cite>From</cite> method to parse an array of string together.</p>
+<p>Is used to parse an array of strings and convert it back as an enumerable.</p>
 <p>By literal strings:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">);</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>By class property:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="parse-via-expression">
-<h2>Parse (via Expression)<a class="headerlink" href="#parse-via-expression" title="Permalink to this headline">¶</a></h2>
-<p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to <cite>Field</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>Then call the <cite>AsEnumerable()</cite> extension method to convert it to enumerable (if necessary);</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">).</span><span class="n">AsEnumerable</span><span class="p">();</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="parse-via-object">
-<h2>Parse (via Object)<a class="headerlink" href="#parse-via-object" title="Permalink to this headline">¶</a></h2>
-<p>Parse an object and creates an enumerable of <cite>Field</cite> objects. Each field is equivalent to each property of the given object. The parse operation uses a reflection operation.</p>
-<p>Let us say an <cite>Order</cite> record was queried from the database.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
-<span class="p">{</span>
-        <span class="c1">// Order variables</span>
-        <span class="kt">var</span> <span class="n">order</span> <span class="p">=</span> <span class="p">(</span><span class="n">Order</span><span class="p">)</span><span class="k">null</span><span class="p">;</span>
-
-        <span class="c1">// Query from the database</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="m">1002</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Then, the object propery can then be used for parsing.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span> <span class="p">});</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Name</span><span class="p">));</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="usage-of-field">
 <h2>Usage of Field<a class="headerlink" href="#usage-of-field" title="Permalink to this headline">¶</a></h2>
 <p>The field object is useful on certain operations.</p>
-<p>Being the qualifers in <cite>InlineMerge</cite> Operation:</p>
+<p>Being the qualifers in the <cite>InlineMerge</cite> Operation:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">InlineMerge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span>
@@ -248,11 +221,11 @@
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">},</span>
-        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">ProductId</span><span class="p">));</span> <span class="c1">// Field is being used as qualifier</span>
+        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">ProductId</span><span class="p">));</span> <span class="c1">// If CustomerId and ProductId is unique</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Being the qualifers in <cite>Merge</cite> operation:</p>
+<p>Being the qualifers in the <cite>Merge</cite> operation:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
         <span class="n">connection</span><span class="p">.</span><span class="n">Merge</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">Order</span>
@@ -263,7 +236,7 @@
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
                 <span class="n">LastUpdatedUtc</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">},</span>
-        <span class="n">Field</span><span class="p">.</span><span class="n">Parse</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">Id</span><span class="p">).</span><span class="n">AsEnumerable</span><span class="p">());</span> <span class="c1">// Field is being used as qualifier</span>
+        <span class="n">Field</span><span class="p">.</span><span class="n">From</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">Id</span><span class="p">)));</span>
 <span class="p">}</span>
 </pre></div>
 </div>

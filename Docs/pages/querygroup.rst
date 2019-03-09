@@ -285,3 +285,48 @@ Explicit way:
 ::
 
 	var result = connection.Query<Customer>(new QueryField("Id", Operation.NotIn, new [] { 10045, 10046, 10047, 10048 } });
+
+Reusability
+-----------
+
+The instance of `QueryGroup` and `QueryField` is reusable with certain conditions.
+
+.. highlight:: c#
+
+::
+
+	// Initialize the field
+	var field = new QueryField(nameof(Customer.Id), 10045);
+
+	// Use first at inline-update
+	var affectedRows = connection.InlineUpdate(new { LastUpdatedDate = DateTime.UtcNow }, field);
+
+	// Reset before reuse
+	field.Reset();
+
+	// Use again in query
+	var customer = connection.Query<Customer>(field).First();
+
+Behind the scene, the library is modifying the state of the `QueryField` object before using it to actual operation.
+
+By calling the `Reset` method, the state of the `QueryField` will be reset back to normal (as it was as newly instantiated). This condition also applies to the `QueryGroup` object.
+
+Below is a code to reset an `IEnumerable<QueryField>` objects.
+
+::
+
+	// Initialize the fields
+	var fields = new []
+	{
+		new QueryField(nameof(Order.CustomerId), 10045),
+		new QueryField(nameof(Order.ProductId), 12)
+	};
+
+	// Do updates first using the fields variable
+	...
+
+	// Reset all before reuse
+	fields.ResetAll();
+
+	// Do query using the same fields
+	...

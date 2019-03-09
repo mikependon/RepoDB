@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#notbetween">NotBetween</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#in">In</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#notin">NotIn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reusability">Reusability</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="repository.html">Repository</a></li>
@@ -366,6 +367,43 @@
 </div>
 <p>Explicit way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">NotIn</span><span class="p">,</span> <span class="k">new</span> <span class="p">[]</span> <span class="p">{</span> <span class="m">10045</span><span class="p">,</span> <span class="m">10046</span><span class="p">,</span> <span class="m">10047</span><span class="p">,</span> <span class="m">10048</span> <span class="p">}</span> <span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="reusability">
+<h2>Reusability<a class="headerlink" href="#reusability" title="Permalink to this headline">¶</a></h2>
+<p>The instance of <cite>QueryGroup</cite> and <cite>QueryField</cite> is reusable with certain conditions.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize the field</span>
+<span class="kt">var</span> <span class="n">field</span> <span class="p">=</span> <span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="m">10045</span><span class="p">);</span>
+
+<span class="c1">// Use first at inline-update</span>
+<span class="kt">var</span> <span class="n">affectedRows</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineUpdate</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">LastUpdatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span> <span class="p">},</span> <span class="n">field</span><span class="p">);</span>
+
+<span class="c1">// Reset before reuse</span>
+<span class="n">field</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+
+<span class="c1">// Use again in query</span>
+<span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">field</span><span class="p">).</span><span class="n">First</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Behind the scene, the library is modifying the state of the <cite>QueryField</cite> object before using it to actual operation.</p>
+<p>By calling the <cite>Reset</cite> method, the state of the <cite>QueryField</cite> will be reset back to normal (as it was as newly instantiated). This condition also applies to the <cite>QueryGroup</cite> object.</p>
+<p>Below is a code to reset an <cite>IEnumerable&lt;QueryField&gt;</cite> objects.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize the fields</span>
+<span class="kt">var</span> <span class="n">fields</span> <span class="p">=</span> <span class="k">new</span> <span class="p">[]</span>
+<span class="p">{</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">CustomerId</span><span class="p">),</span> <span class="m">10045</span><span class="p">),</span>
+        <span class="k">new</span> <span class="nf">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Order</span><span class="p">.</span><span class="n">ProductId</span><span class="p">),</span> <span class="m">12</span><span class="p">)</span>
+<span class="p">};</span>
+
+<span class="c1">// Do updates first using the fields variable</span>
+<span class="p">...</span>
+
+<span class="c1">// Reset all before reuse</span>
+<span class="n">fields</span><span class="p">.</span><span class="n">ResetAll</span><span class="p">();</span>
+
+<span class="c1">// Do query using the same fields</span>
+<span class="p">...</span>
 </pre></div>
 </div>
 </div>

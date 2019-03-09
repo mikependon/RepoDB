@@ -17,7 +17,7 @@ Links
 --------
 
 * Package: `https://www.nuget.org/packages/RepoDb <https://www.nuget.org/packages/RepoDb>`_
-* Repository: `https://github.com/RepoDb/RepoDb <https://github.com/RepoDb/RepoDb>`_
+* Repository: `https://github.com/mikependon/RepoDb <https://github.com/mikependon/RepoDb>`_
 
 Principles
 ----------

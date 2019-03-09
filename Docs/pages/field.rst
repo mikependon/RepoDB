@@ -10,9 +10,17 @@ Constructor only accepts a single string parameter.
 
 .. highlight:: c#
 
+By literal string:
+
 ::
 
 	var field = new Field("Id");
+
+By class property:
+
+::
+
+	var field = new Field(nameof(Customer.Id));
 
 AsEnumerable
 ------------
@@ -24,7 +32,7 @@ Converts an instance of a `Field` into an `IEnumerable<Field>` object.
 ::
 
 	// Initialize a field
-	var field = new Field("Id");
+	var field = new Field(nameof(Customer.Id));
 
 	// Convert to enumerable
 	var fields = field.AsEnumerable();
@@ -32,7 +40,7 @@ Converts an instance of a `Field` into an `IEnumerable<Field>` object.
 From
 ----
 
-Use the `From` method to parse an array of string together.
+Is used to parse an array of strings and convert it back as an enumerable.
 
 .. highlight:: c#
 
@@ -40,20 +48,20 @@ By literal strings:
 
 ::
 
-	var fields = Field.Parse("Id", "Name");
+	var fields = Field.From("Id", "Name");
 
 By class property:
 
 ::
 
-	var fields = Field.Parse(nameof(Customer.Id), nameof(Customer.Name));
+	var fields = Field.From(nameof(Customer.Id), nameof(Customer.Name));
 
 Usage of Field
 --------------
 
 The field object is useful on certain operations.
 
-Being the qualifers in `InlineMerge` Operation:
+Being the qualifers in the `InlineMerge` Operation:
 
 ::
 
@@ -66,10 +74,10 @@ Being the qualifers in `InlineMerge` Operation:
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		},
-		Field.From(nameof(Order.CustomerId), nameof(Order.ProductId)); // Field is being used as qualifier
+		Field.From(nameof(Order.CustomerId), nameof(Order.ProductId)); // If CustomerId and ProductId is unique
 	}
 
-Being the qualifers in `Merge` operation:
+Being the qualifers in the `Merge` operation:
 
 ::
 
@@ -83,5 +91,5 @@ Being the qualifers in `Merge` operation:
 			Quantity = 5,
 			LastUpdatedUtc = DateTime.UtcNow
 		},
-		Field.From(nameof(Order.Id))); // Field is being used as qualifier
+		Field.From(nameof(Order.Id)));
 	}

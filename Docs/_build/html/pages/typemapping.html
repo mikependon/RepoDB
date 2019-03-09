@@ -84,7 +84,13 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attributes.html">Attributes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Mapping</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Type Mapping</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#typemapper">TypeMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#map">Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unmap">Unmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conversiontype">ConversionType</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="field.html">Field</a></li>
 <li class="toctree-l1"><a class="reference internal" href="orderfield.html">OrderField</a></li>
 <li class="toctree-l1"><a class="reference internal" href="connection.html">Connection</a></li>
@@ -167,15 +173,63 @@
   <div class="section" id="type-mapping">
 <h1>Type Mapping<a class="headerlink" href="#type-mapping" title="Permalink to this headline">¶</a></h1>
 <p>It is a feature used to map the <cite>.NET CLR Types</cite> into its equivalent <cite>System.Data.DbType</cite> database types.</p>
+<div class="section" id="typemapper">
+<h2>TypeMapper<a class="headerlink" href="#typemapper" title="Permalink to this headline">¶</a></h2>
+<p>A static class used to map the .NET CLR Types into database types.</p>
+</div>
+<div class="section" id="map">
+<h2>Map<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h2>
+<p>Is used to add a mapping between .NET CLR Type and database type.</p>
 <p>Code below shows how to map the <cite>System.DateTime</cite> type to a <cite>System.Data.DbType.DateTime2</cite> database type.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">DateTime2</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>and a <cite>System.Decimal</cite> type into <cite>System.Data.DbType.Double</cite> database type.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">AddMap</span><span class="p">(</span><span class="n">new</span> <span class="n">TypeMapItem</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">Double</span><span class="p">));</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">Decimal</span><span class="p">),</span> <span class="n">DbType</span><span class="o">.</span><span class="n">Double</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The <cite>TypeMapper</cite> class is callable anywhere in the application as it was implemented as a static class.</p>
+</div>
+<div class="section" id="unmap">
+<h2>Unmap<a class="headerlink" href="#unmap" title="Permalink to this headline">¶</a></h2>
+<p>Is used remove a mapping of targetted .NET CLR Type from the collection.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">Unmap</span><span class="p">(</span><span class="n">typeof</span><span class="p">(</span><span class="n">DateTime</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conversiontype">
+<h2>ConversionType<a class="headerlink" href="#conversiontype" title="Permalink to this headline">¶</a></h2>
+<p>A property that is used to set the conversion type when converting the instance of <cite>DbDataReader</cite> object into its destination .NET CLR types.</p>
+<p>The default value is <cite>RepoDb.Enumerations.ConversionType.Default</cite>, which means that the conversion is strict and there is no additional implied logic during the conversion.</p>
+<p>Given with the class named <cite>Customer</cite> as defined below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Customer</span>
+<span class="p">{</span>
+        <span class="n">public</span> <span class="nb">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="n">get</span><span class="p">;</span> <span class="nb">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">public</span> <span class="n">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="n">get</span><span class="p">;</span> <span class="nb">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">public</span> <span class="nb">int</span> <span class="n">Age</span> <span class="p">{</span> <span class="n">get</span><span class="p">;</span> <span class="nb">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will <cite>succeed</cite> if the table is defined like below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">]</span><span class="o">.</span><span class="p">[</span><span class="n">Customer</span><span class="p">]</span>
+<span class="p">{</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="n">INT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">Age</span><span class="p">]</span> <span class="n">INT</span> <span class="n">NOT</span> <span class="n">NULL</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will <cite>fail</cite> if the table is defined like below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">]</span><span class="o">.</span><span class="p">[</span><span class="n">Customer</span><span class="p">]</span>
+<span class="p">{</span>
+        <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="n">INT</span> <span class="n">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">Age</span><span class="p">]</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span> <span class="o">--</span> <span class="n">There</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">explicit</span> <span class="n">converter</span> <span class="n">between</span> <span class="n">STRING</span> <span class="ow">and</span> <span class="n">INT</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Setting the value to <cite>RepoDb.Enumerations.ConversionType.Automatic</cite> will address the mapping issue defined above, as long as the value of the <cite>[Age]</cite> column is convertible to an int.</p>
+<p><strong>Note</strong>: Using the <cite>Automatic</cite> conversion would affect the performance of the library.</p>
+</div>
 </div>
 
 

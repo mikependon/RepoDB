@@ -73,6 +73,27 @@ Since the repository is only for single entity, then it can only be used the tar
 	// Getting a customer record where Id = 10045
 	var customer = repository.Query<Customer>(c => c.Id == 10045);
 
+Async
+-----
+
+The call to `Async` methods of `BaseRepository` and `DbRepository` objects are a bit different when compared to calling the `Async` method of `DbConnection` object.
+
+::
+
+	// Call the async method
+	var result = repository.QueryAsync();
+
+	// Do your other logics here
+
+	// Get the result
+	var customers = result.Result.Extract();
+
+The result is not an `IEnumerable<T>` object, instead it is an instance of `ActionResultExtractor<IEnumerable<T>>` object.
+
+It is necessary to call the `Extract` method to extract the result and close the underlying `DbConnection` object used.
+
+**Note**: Always call the `Extract` method after calling the `Async` method via repository to close the underlying `DbConnection` object used during the operation.
+
 Operations
 ----------
 

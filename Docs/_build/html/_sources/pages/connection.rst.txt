@@ -6,7 +6,7 @@ The library has abstracted everything from `ADO.NET` when it comes to the connec
 BatchQuery
 ----------
 
-Query the data from the database by batch.
+Queries a data from the database by batch.
 
 .. highlight:: c#
 
@@ -31,17 +31,17 @@ Explicit way:
 BulkInsert
 ----------
 
-Bulk-inserting the list of data entity objects in the database.
+Bulk insert a list of data entity objects into the database.
 
 .. highlight:: c#
 
-Let us say a variable named `orders` is present, which is an enumerable of data entity.
+Create a list to hold the data entities.
 
 ::
 
 	var orders = new List<Order>();
 
-From there, a data entity record can be added.
+Add each item to be bulk-inserted.
 
 ::
 
@@ -53,22 +53,22 @@ From there, a data entity record can be added.
 		UpdatedDate = DateTime.UtcNow
 	});
 
-Then simply call the `BulkInsert` operation, passing the enumerable object of the data entity.
+Call the `BulkInsert` operation to insert the data.
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.BulkInsert<Order>(entities);
+		var affectedRows = connection.BulkInsert<Order>(orders);
 	}
 
 The result would be the number of rows affected by the `BulkInsert` in the database.
 
-This operation also support the `DbDataReader` object.
+This operation also support the `DbDataReader` object. However, by using this, the result would always be `-1`.
 
 .. highlight:: c#
 
-Let us say a data reader object named `reader` has been initiated from the source connection.
+Initiate a `DbDataReader` object from the source connection.
 
 ::
 
@@ -80,19 +80,23 @@ Let us say a data reader object named `reader` has been initiated from the sourc
 		}
 	}
 
-Then simply call the `BulkInsert` operation by simply passing the data reader object as the parameter.
+Call the `BulkInsert` operation by passing the `DbDataReader` object as the parameter.
 
 ::
 
 	using (var destinationConnection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// Via entity type
 		var affectedRows = connection.BulkInsert<Order>(reader);
+
+		// Via table name
+		var affectedRows = connection.BulkInsert(reader, nameof(Order));
 	}
 
 Count
 -----
 
-Counts the number of rows from the database.
+Counts the number of table data from the database.
 
 .. highlight:: c#
 
@@ -143,7 +147,7 @@ Creates a command object.
 Delete
 ------
 
-Deletes a data in the database based on the given query expression.
+Deletes an existing data from the database.
 
 .. highlight:: c#
 
@@ -168,7 +172,7 @@ Via PrimaryKey:
 	
 Deleting a data entity without a primary key will throw a `PrimaryFieldNotFoundException` exception.
 
-**Note**: By leaving the `WHERE` parameter to blank would delete all records. Exactly the same as `DeleteAll` operation.
+**Note**: By setting the `where` argument to blank would delete all the records. Exactly the same as `DeleteAll` operation.
 
 Expression way:
 
@@ -191,7 +195,7 @@ Explicit way:
 DeleteAll
 ---------
 
-Deletes all records from the database.
+Deletes all the data from the database.
 
 .. highlight:: c#
 
@@ -207,7 +211,7 @@ EnsureOpen
 
 .. highlight:: c#
 
-Ensure that the connection object is on open state.
+Ensures the connection object is open.
 
 ::
 
@@ -443,34 +447,12 @@ Executes a multiple query statement from the database and allows the user to ext
 			// Extract the first result
 			var customers = result.Extract<Customer>();
 
-			// Advance to the next result
-			result.NextResult();
-
 			// Extract the second result
 			var orders = result.Extract<Order>();
 		}
 	}
 
-The method `ExtractNext` is used to simplify the extraction of the next result. By default, this throws an `InvalidOperationException` if there is no next resultset in the `DbDataReader`.
-
-.. highlight:: c#
-
-::
-
-	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
-		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
-		{
-			// Extract the first result
-			var customers = result.Extract<Customer>();
-
-			// Extract the second result through 'ExtractNext' method
-			var orders = result.ExtractNext<Order>();
-		}
-	}
-	
-The method `Scalar/ScalarNext` is used to extract the value of the first column of the first row of the `DbDataReader` object.
+The method `Scalar` is used to extract the value of the first column of the first row of the `DbDataReader` object.
 
 .. highlight:: c#
 
@@ -484,8 +466,8 @@ The method `Scalar/ScalarNext` is used to extract the value of the first column 
 			// Extract the first result
 			var customers = result.Extract<Customer>();
 
-			// Extract the second result through 'ScalarNext' method
-			var ordersCount = (int)result.ScalarNext();
+			// Extract the second result
+			var ordersCount = (int)result.Scalar();
         }
     }
 
@@ -577,7 +559,7 @@ Below is the code on how to execute a stored procedure mentioned above:
 InlineInsert
 ------------
 
-Inserts a data in the database by targetting certain fields only.
+Inserts a new data in the database (certain fields only).
 
 .. highlight:: c#
 
@@ -601,7 +583,7 @@ Inserts a data in the database by targetting certain fields only.
 InlineMerge
 -----------
 
-Merges a data in the database by targetting certain fields only.
+Merges an object into an existing data in the database (certain fields only).
 
 .. highlight:: c#
 
@@ -622,8 +604,8 @@ Merges a data in the database by targetting certain fields only.
 		// Call the operation and define which object you are targetting
 		var id = connection.InlineMerge<Order>(entity, new []
 		{
-			Field.Parse<Order>(o => o.Id),
-			Field.Parse<Order>(o => o.CustomerId)
+			new Field(nameof(Order.Id)),
+			new Field(nameof(Order.CustomerId))
 		});
 	}
 
@@ -633,24 +615,12 @@ In the second parameter, the `Field.From` method can also be used.
 	
 	var id = connection.InlineMerge<Order>(entity, Field.From(nameof(Order.Id), nameof(Order.CustomerId)));
 
-Or, via a literal array of string.
-
-::
-
-	var id = connection.InlineMerge<Order>(entity, Field.From("Id", "CustomerId"));
-
-Or, via a single field expression can be used as well.
-
-::
-
-	var id = connection.InlineMerge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
-
 **Note**: The second parameter can be omitted if the data entity has a primary key.
 
 InlineUpdate
 ------------
 
-Updates a data in the database by targetting certain fields only.
+Updates an existing data in the database (certain fields only).
 
 .. highlight:: c#
 
@@ -658,7 +628,7 @@ Let us say a dynamic entity is defined.
 
 ::
 
-	// Not really an Customer object, instead, it is a dynamic object
+	// Not really a Customer object, instead, it is a dynamic object
 	var entity = new
 	{
 		Name = "Anna Fullerton",
@@ -698,7 +668,7 @@ Explicit way:
 Insert
 ------
 
-Inserts a data in the database.
+Inserts a new data in the database.
 
 .. highlight:: c#
 
@@ -716,24 +686,10 @@ Inserts a data in the database.
 		connection.Insert(order);
 	}
 
-IsForProvider
--------------
-
-Checks whether the current used connection object is targetting a specific DB provider.
-
-.. highlight:: c#
-
-::
-
-	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-	{
-		var isSql = connection.IsForProvider(Provider.Sql);
-	}
-
 Merge
 -----
 
-Merges an existing data entity object in the database. By default, this operation uses the primary key property as the qualifier.
+Merges a data entity object into an existing data in the database.
 
 .. highlight:: c#
 
@@ -759,18 +715,12 @@ Or, via a literal array of string.
 
 	var id = connection.Merge<Order>(entity, Field.From("Id"));
 
-Or, via a single field expression can be used as well.
-
-::
-
-	var id = connection.Merge<Order>(entity, o => o.CustomerId); // Only works for single qualifier
-
 **Note**: The second parameter can be omitted if the data entity has a primary key.
 
 Query
 -----
 
-Query a data from the database.
+Queries a data from the database.
 
 .. highlight:: c#
 
@@ -937,7 +887,7 @@ Truncates a table from the database.
 Update
 ------
 
-Updates a data in the database based on the given query expression.
+Update an existing data in the database.
 
 .. highlight:: c#
 
@@ -958,7 +908,7 @@ Via DataEntity:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update(order);
+		var affectedRows = connection.Update<Order>(order);
 	}
 
 Note: This call will throw an exception if the data entity does not have a primary key.
@@ -969,7 +919,7 @@ Via PrimaryKey:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update(order, 1002);
+		var affectedRows = connection.Update<Order>(order, 1002);
 	}
 
 Expression way:
@@ -978,7 +928,7 @@ Expression way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Update(order, o => o.Id == 1002);
+		var affectedRows = connection.Update<Order>(order, o => o.Id == 1002);
 	}
 
 Explicit way:

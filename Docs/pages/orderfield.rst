@@ -10,6 +10,8 @@ Constructor accepts 2 parameters, a Name and an Order type.
 
 .. highlight:: c#
 
+By literal string:
+
 ::
 
 	// Ascending
@@ -18,17 +20,27 @@ Constructor accepts 2 parameters, a Name and an Order type.
 	// Descending
 	var orderField = new OrderField("Id", Order.Descending);
 
+By class property:
+
+::
+
+	// Ascending
+	var orderField = new OrderField(nameof(Customer.Id), Order.Ascending);
+	
+	// Descending
+	var orderField = new OrderField(nameof(Customer.Id), Order.Descending);
+
 AsEnumerable
 ------------
 
-Converts an instance of a `OrderField` into an `IEnumerable<OrderField>` object.
+Converts an instance of an `OrderField` into an `IEnumerable<OrderField>` object.
 
 .. highlight:: c#
 
 ::
 
 	// Initialize an order field
-	var orderField = new OrderField("Id", Order.Ascending);
+	var orderField = new OrderField(nameof(Customer.Id), Order.Ascending);
 
 	// Convert to enumerable
 	var orderFields = orderField.AsEnumerable();
@@ -92,7 +104,7 @@ Parses an object properties to be used for ordering. The object can have multipl
 Usage of OrderField
 -------------------
 
-The field object is useful on certain operations.
+The order field object is useful on certain operations.
 
 Being the order fields in `BatchQuery` Operation:
 
@@ -105,7 +117,9 @@ Being the order fields in `BatchQuery` Operation:
 			UpdatedDate = Order.Descending,
 			FirstName = Order.Ascending
 		};
-		var customers = connection.BatchQuery<Customer>(0, 100, OrderField.Parse(orderBy)); // Used as ordering
+		var customers = connection.BatchQuery<Customer>(page: 0,
+			rowsPerBatch: 100,
+			orderBy: OrderField.Parse(orderBy));
 	}
 
 Being the order fields in `Query` operation:
@@ -114,5 +128,6 @@ Being the order fields in `Query` operation:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customerOrders = connection.Query<Order>(o => o.CustomerId == 1, OrderField.Parse(new { Id = Order.Ascending })); // Used as ordering
+		var customerOrders = connection.Query<Order>(o => o.CustomerId == 1,
+			orderby: OrderField.Parse(new { Id = Order.Ascending }));
 	}
