@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.1-beta1</version>
+    <version>1.8.1</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -10,28 +10,35 @@
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
-    [Release 1.8.1-beta1]
+    [Release 1.8.1]
     ------------------
 
     [New Features]
-    - Introduced the 'ExecuteQueryMultiple' into the 'DbRepository'.
-    - Introduced the 'QueryMultiple' into the 'DbRepository'.
-    - Introduced the 'ConversionType' to let the users decide the strictness of the conversions. Accesible via 'TypeMapper.ConversionType' property.
-
-    [Added]
-    - In the 'Async' methods, introduced the 'AsyncResultExtractor' class to control the extraction of the result in the caller side.
-    - Supported 'BulkInsert' for 'DbRepository' with 'DbDataReader' as the parameter.
-    - Added an 'IntegrationTests' for all the different data types of the database (SQL Server) (Numbers, Spatials, Strings, Dates, Bytes, Others).
-    - Added an 'IntegrationTests' for the data types conversions(i.e: String-to-Numbers (vice versa), String-to-Dates (vice versa), etc).
-    - Added an 'IntegrationTests' for the invalid casings.
+    - New: Introduced the 'ExecuteQueryMultiple' into the 'DbRepository'.
+    - New: Introduced the 'QueryMultiple' into the 'DbRepository'.
+    - New: Introduced the 'ConversionType' to let the users decide the type of the conversions. Accessible via 'TypeMapper.ConversionType' property.
 
     [Optimizations]
-    - Added a class-level checking when identifying the 'PrimaryKey' of a class.
-    - Supported the type conversions(if convertible) when querying the data from the database.
-    
-    [Todo for 1.8.1]
-    - Complete sets of 'IntegrationTests' for DbConnection, DbRepository, BaseRepository operations.
-    - The version 1.8.1 will be the highest production-grade release of the library.
+    - Optimization: Added a class-level checking when identifying the 'PrimaryKey' of a class.
+    - Optimization: Supported the type conversions(if convertible) when querying the data from the database.
+    - Optimization: Simplified the extraction of the result of the 'ExecuteQueryMultiple' via 'Extract' method.
+
+    [Added]
+    - Added: A class named 'AsyncResultExtractor' to control the extraction of the result in the caller side for all 'Async' methods of the 'BaseRepository/DbRepository'.
+    - Added: A class named 'QueryMultipleRequest' to handle the request when calling the 'QueryMultiple' operation.
+    - Added: A class named 'CommandArrayParameter' to hold the array parameters for Raw SQL Statements.
+    - Added: A method named 'Reset' for both 'QueryField' and 'QueryGroup' objects  allow the user to reinstate the instance of that object.
+    - Added: An operation named 'BulkInsert' at  'DbRepository' with 'DbDataReader' as the parameter.
+    - Added: An argument named 'hints' for both the 'BatchQuery' and 'Count' operation.
+    - Added: An intensive 'IntegrationTests' for all the different data types of the database (SQL Server) (Numbers, Spatials, Strings, Dates, Bytes, Others).
+    - Added: An intensive 'IntegrationTests' for the data types conversions(i.e: String-to-Numbers (vice versa), String-to-Dates (vice versa), etc).
+    - Added: An intensive 'IntegrationTests' for the invalid casings.
+    - Added: An intensive 'IntegrationTests' for all the operations of the 'DbConnection', 'DbRepository' and 'BaseRepository' objects.
+
+    [Fixes]
+    - Fixed: An issue in the 'InlineMerge' if the primary key is not defined in the dynamic object.
+    - Fixed: An issue in the 'Merge' if the primary key is an identity.
+    - Fixed: An issue in the 'QueryMultiple' if the same expression is are used multiple times.
 
     [Release 1.8.0]
     ------------------
