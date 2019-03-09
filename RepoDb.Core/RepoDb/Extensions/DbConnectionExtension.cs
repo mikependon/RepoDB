@@ -1368,7 +1368,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1398,7 +1398,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1428,7 +1428,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1458,7 +1458,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1488,7 +1488,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1596,7 +1596,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1626,7 +1626,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1656,7 +1656,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1686,7 +1686,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
@@ -1716,7 +1716,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>

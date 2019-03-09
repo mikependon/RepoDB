@@ -289,7 +289,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -334,7 +334,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(Expression<Func<TEntity, bool>> where,
             int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -380,7 +380,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(QueryField where,
             int page,
             int rowsPerBatch,
@@ -427,7 +427,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(IEnumerable<QueryField> where,
             int page,
             int rowsPerBatch,
@@ -474,7 +474,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(QueryGroup where,
             int page,
             int rowsPerBatch,
@@ -524,7 +524,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -576,7 +576,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -629,7 +629,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryField where,
             int page,
             int rowsPerBatch,
@@ -683,7 +683,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where,
             int page,
             int rowsPerBatch,
@@ -737,7 +737,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryGroup where,
             int page,
             int rowsPerBatch,
@@ -922,7 +922,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -960,7 +960,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -998,7 +998,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -1036,7 +1036,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression.
+        /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -1120,7 +1120,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -1165,7 +1165,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -1210,7 +1210,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -1255,7 +1255,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Counts the number of table data from the database based on the given query expression in an asynchronous way.
+        /// Counts the number of table data from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -2887,7 +2887,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -2936,7 +2936,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -2987,7 +2987,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3037,7 +3037,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3086,7 +3086,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(object primaryKey,
             string hints = null,
             string cacheKey = null,
@@ -3133,7 +3133,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query<TEntity>(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3187,7 +3187,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -3243,7 +3243,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3301,7 +3301,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3359,7 +3359,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
@@ -3415,7 +3415,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(object primaryKey,
             string hints = null,
             string cacheKey = null,
@@ -3469,7 +3469,7 @@ namespace RepoDb
         /// to null would force the repository to query from the database.
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of An enumerable list of data entity object.</returns>
+        /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,

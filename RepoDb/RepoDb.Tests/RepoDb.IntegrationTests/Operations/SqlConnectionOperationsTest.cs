@@ -2582,7 +2582,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExcpetionAtSqlConnectionInlineUpdateIfTheValuesAreInvalid()
+        public void ThrowExcpetionAtDbRepositoryInlineUpdateIfTheValuesAreInvalid()
         {
             // Setup
             var entity = new
@@ -2813,7 +2813,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExcpetionAtSqlConnectionInlineUpdateAsyncIfTheValuesAreInvalid()
+        public void ThrowExcpetionAtDbRepositoryInlineUpdateAsyncIfTheValuesAreInvalid()
         {
             // Setup
             var entity = new
