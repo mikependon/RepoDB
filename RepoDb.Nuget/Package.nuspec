@@ -5,7 +5,7 @@
     <version>1.8.1-beta1</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
-    <owners>mikependon, rdagumampan</owners>
+    <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
