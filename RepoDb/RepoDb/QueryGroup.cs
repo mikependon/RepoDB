@@ -175,32 +175,68 @@ namespace RepoDb
             {
                 return this;
             }
-            var firstList = GetAllQueryFields()?
-                .OrderBy(queryField => queryField.Parameter.Name);
-            if (firstList.Count() > 0)
+
+            // Check the presence
+            var fields = GetAllQueryFields();
+            if (fields == null)
             {
-                var secondList = new List<QueryField>(firstList);
-                for (var i = 0; i < firstList.Count(); i++)
-                {
-                    var queryField = firstList.ElementAt(i);
-                    for (var c = 0; c < secondList.Count; c++)
-                    {
-                        var cQueryField = secondList[c];
-                        if (ReferenceEquals(queryField, cQueryField))
-                        {
-                            continue;
-                        }
-                        if (queryField.Field.Equals(cQueryField.Field))
-                        {
-                            var fieldValue = cQueryField.Parameter;
-                            fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
-                        }
-                    }
-                    secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
-                }
+                return this;
             }
+
+            // Check any item
+            if (fields.Any() == false)
+            {
+                return this;
+            }
+
+            // Filter the items
+            var firstList = fields.OrderBy(queryField => queryField.Parameter.Name);
+            var secondList = new List<QueryField>(firstList);
+
+            // Iterate and fix the names
+            for (var i = 0; i < firstList.Count(); i++)
+            {
+                var queryField = firstList.ElementAt(i);
+                for (var c = 0; c < secondList.Count; c++)
+                {
+                    var cQueryField = secondList[c];
+                    if (ReferenceEquals(queryField, cQueryField))
+                    {
+                        continue;
+                    }
+                    if (queryField.Field.Equals(cQueryField.Field))
+                    {
+                        var fieldValue = cQueryField.Parameter;
+                        fieldValue.SetName(string.Concat(cQueryField.Parameter.Name, "_", c));
+                    }
+                }
+                secondList.RemoveAll(qf => qf.Field.Equals(qf.Field));
+            }
+
+            // Set the flag
             m_isFixed = true;
+
+            // Return the current instance
             return this;
+        }
+
+        /// <summary>
+        /// Reset the <see cref="QueryGroup"/> back to its default state (as is newly instantiated).
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryGroup Reset()
+        {
+            // Rest all fields
+            foreach (var field in GetAllQueryFields())
+            {
+                field.Reset();
+            }
+
+            // Reset the hash code
+            m_hashCode = null;
+
+            // Return the fixed one
+            return Fix();
         }
 
         /// <summary>

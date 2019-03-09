@@ -121,41 +121,6 @@ namespace RepoDb
             return connection;
         }
 
-        /// <summary>
-        /// Validates whether the transaction object connection is object is equals to the connection object.
-        /// </summary>
-        /// <param name="connection">The connection object to be validated.</param>
-        /// <param name="transaction">The transaction object to compare.</param>
-        private static void ValidateTransactionConnectionObject(this IDbConnection connection, IDbTransaction transaction)
-        {
-            if (transaction != null && transaction.Connection != connection)
-            {
-                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
-            }
-        }
-
-        /// <summary>
-        /// Converts the primary key to <see cref="QueryGroup"/> object.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
-        /// <returns></returns>
-        private static QueryGroup PrimaryKeyToQueryGroup<TEntity>(object primaryKey)
-            where TEntity : class
-        {
-            if (primaryKey == null)
-            {
-                return null;
-            }
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            if (primary == null)
-            {
-                throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
-            }
-            var queryField = new QueryField(primary.GetMappedName(), primaryKey);
-            return new QueryGroup(queryField.AsEnumerable());
-        }
-
         #endregion
 
         #region Guards
@@ -272,7 +237,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -308,7 +273,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQuery<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -543,7 +508,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -579,7 +544,7 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -1409,7 +1374,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1436,7 +1401,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Count<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1618,7 +1583,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1645,7 +1610,7 @@ namespace RepoDb
             where TEntity : class
         {
             return CountAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1800,7 +1765,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1827,7 +1792,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Delete<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1855,7 +1820,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return Delete<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2013,7 +1978,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2040,7 +2005,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2068,7 +2033,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return DeleteAsync<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
@@ -2902,7 +2867,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2961,7 +2926,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2991,7 +2956,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3125,7 +3090,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -3184,7 +3149,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3214,7 +3179,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3602,6 +3567,36 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
+            return MergeInternal<TEntity>(connection: connection,
+                entity: entity,
+                qualifiers: qualifiers,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Merges a data entity object into an existing data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The object to be merged by this operation.</param>
+        /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public static int MergeInternal<TEntity>(this IDbConnection connection,
+        TEntity entity,
+        IEnumerable<Field> qualifiers,
+        int? commandTimeout = null,
+        IDbTransaction transaction = null,
+        ITrace trace = null,
+        IStatementBuilder statementBuilder = null)
+        where TEntity : class
+        {
             // Check
             GetAndGuardPrimaryKey<TEntity>();
 
@@ -3897,7 +3892,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -3942,7 +3937,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -3983,7 +3978,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -4278,7 +4273,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
+                where: ToQueryGroup<TEntity>(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4323,7 +4318,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -4364,7 +4359,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -8224,7 +8219,7 @@ namespace RepoDb
             var property = GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: new QueryGroup(property.PropertyInfo.AsQueryField(entity, true).AsEnumerable()),
+                where: ToQueryGroup(property, entity),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8314,7 +8309,7 @@ namespace RepoDb
         {
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8345,7 +8340,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8566,7 +8561,7 @@ namespace RepoDb
         {
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: where != null ? new QueryGroup(where) : null,
+                where: ToQueryGroup<TEntity>(where),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8597,7 +8592,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: PrimaryKeyToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(primaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -9390,6 +9385,89 @@ namespace RepoDb
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Validates whether the transaction object connection is object is equals to the connection object.
+        /// </summary>
+        /// <param name="connection">The connection object to be validated.</param>
+        /// <param name="transaction">The transaction object to compare.</param>
+        private static void ValidateTransactionConnectionObject(this IDbConnection connection, IDbTransaction transaction)
+        {
+            if (transaction != null && transaction.Connection != connection)
+            {
+                throw new InvalidOperationException("The transaction connection object is different from the current connection object.");
+            }
+        }
+
+        /// <summary>
+        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="primaryKey">The value of the primary key.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup ToQueryGroup<TEntity>(object primaryKey)
+            where TEntity : class
+        {
+            if (primaryKey == null)
+            {
+                return null;
+            }
+            var primary = PrimaryKeyCache.Get<TEntity>();
+            if (primary == null)
+            {
+                throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
+            }
+            return new QueryGroup(new QueryField(primary.GetMappedName(), primaryKey).AsEnumerable());
+        }
+
+        /// <summary>
+        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="property">The instance of <see cref="ClassProperty"/> to be converted.</param>
+        /// <param name="entity">The instance of the actual entity.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup ToQueryGroup<TEntity>(ClassProperty property, TEntity entity)
+            where TEntity : class
+        {
+            if (property == null)
+            {
+                return null;
+            }
+            return new QueryGroup(property.PropertyInfo.AsQueryField(entity).AsEnumerable());
+        }
+
+        /// <summary>
+        /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="field">The instance of <see cref="QueryField"/> to be converted.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup ToQueryGroup<TEntity>(QueryField field)
+            where TEntity : class
+        {
+            if (field == null)
+            {
+                return null;
+            }
+            return new QueryGroup(field.AsEnumerable());
+        }
+
+        /// <summary>
+        /// Converts the <see cref="QueryField"/> to become a <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="fields">The list of <see cref="QueryField"/> objects to be converted.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup ToQueryGroup<TEntity>(IEnumerable<QueryField> fields)
+            where TEntity : class
+        {
+            if (fields == null)
+            {
+                return null;
+            }
+            return new QueryGroup(fields);
+        }
 
         /// <summary>
         /// Create a new instance of <see cref="DbCommand"/> object to be used for execution.
