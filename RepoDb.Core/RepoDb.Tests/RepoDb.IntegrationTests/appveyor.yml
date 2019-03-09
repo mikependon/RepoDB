@@ -1,2 +1,10 @@
+version: 1.0.{build}
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: dotnet restore RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj
+build:
+  project: RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj
+  verbosity: normal
 services:
   - mssql2017
