@@ -1016,6 +1016,7 @@ namespace RepoDb.IntegrationTests.Operations
                         // Act
                         var bulkInsertResult = repository.BulkInsertAsync<SimpleTable>((DbDataReader)reader, mappings);
                         bulkInsertResult.Wait();
+                        bulkInsertResult.Result.Extract();
 
                         // Act
                         var queryResult = repository.Query<SimpleTable>();
