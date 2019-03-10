@@ -13,6 +13,19 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
+            // Check the connection string
+            var environment = Environment.GetEnvironmentVariable("REPODB_ENVIRONMENT", EnvironmentVariableTarget.User);
+
+            // Master connection
+            ConnectionForMaster = (environment == "DEVELOPMENT") ?
+                @"Server=(local);Database=master;Integrated Security=True;" :
+                @"Server=(local)\SQL2017;Database=master;User ID=sa;Password=Password12!;Persist Security Info=True;";
+
+            // RepoDb connection
+            ConnectionStringForRepoDb = (environment == "DEVELOPMENT") ?
+                @"Server=(local);Database=RepoDb;Integrated Security=True;" :
+                @"Server=(local)\SQL2017;Database=RepoDb;User ID=sa;Password=Password12!;Persist Security Info=True;";
+
             // Set the proper values for type mapper
             TypeMapper.Map(typeof(DateTime), System.Data.DbType.DateTime2, true);
 
@@ -29,14 +42,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Gets the connection string for master.
         /// </summary>
-        public static string ConnectionForMaster => @"Server=(local)\SQL2017;Database=master;User ID=sa;Password=Password12!;Persist Security Info=True;";
-        //public static string ConnectionForMaster => @"Server=(local);Database=master;Integrated Security=True;";
+        public static string ConnectionForMaster { get; private set; }
 
         /// <summary>
         /// Gets the connection string for RepoDb.
         /// </summary>
-        public static string ConnectionStringForRepoDb => @"Server=(local)\SQL2017;Database=RepoDb;User ID=sa;Password=Password12!;Persist Security Info=True;";
-        //public static string ConnectionStringForRepoDb => @"Server=(local);Database=RepoDb;Integrated Security=True;";
+        public static string ConnectionStringForRepoDb { get; private set; }
 
         /// <summary>
         /// Creates a test database for RepoDb.
