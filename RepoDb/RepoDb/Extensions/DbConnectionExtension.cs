@@ -183,6 +183,45 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection,
+            object where,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return BatchQuery<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
@@ -458,6 +497,44 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection, where: (QueryGroup)null,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection,
+            object where,
+            int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return BatchQueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,

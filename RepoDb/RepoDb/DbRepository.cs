@@ -328,6 +328,53 @@ namespace RepoDb
         /// Queries a data from the database by batch.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public IEnumerable<TEntity> BatchQuery<TEntity>(object where,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.BatchQuery<TEntity>(where: where,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
@@ -336,7 +383,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(Expression<Func<TEntity, bool>> where,
-            int page, int rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             string hints = null,
             IDbTransaction transaction = null)
@@ -570,6 +618,60 @@ namespace RepoDb
         /// Queries a data from the database by batch in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(object where,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var hasError = false;
+
+            try
+            {
+                // Call the method
+                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                    page: page,
+                    rowsPerBatch: rowsPerBatch,
+                    orderBy: orderBy,
+                    hints: hints,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+
+                // Return the result
+                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+            }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (hasError)
+                {
+                    DisposeConnectionForPerCall(connection, transaction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
@@ -578,7 +680,8 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
-            int page, int rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             string hints = null,
             IDbTransaction transaction = null)

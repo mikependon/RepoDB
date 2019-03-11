@@ -184,6 +184,45 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> BatchQuery<TEntity>(this IDbConnection connection,
+            object where,
+            int page,
+            int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return BatchQuery<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
         /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
@@ -459,6 +498,44 @@ namespace RepoDb
             where TEntity : class
         {
             return BatchQueryAsync<TEntity>(connection, where: (QueryGroup)null,
+                page: page,
+                rowsPerBatch: rowsPerBatch,
+                orderBy: orderBy,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database by batch in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="page">The page of the batch to be used by this operation. This is a zero-based index (the first page is 0).</param>
+        /// <param name="rowsPerBatch">The number of data per batch to be returned by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(this IDbConnection connection,
+            object where,
+            int page, int rowsPerBatch,
+            IEnumerable<OrderField> orderBy,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return BatchQueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
                 page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
@@ -1880,14 +1957,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Delete<TEntity>(this IDbConnection connection,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1896,7 +1973,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2093,14 +2170,14 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> DeleteAsync<TEntity>(this IDbConnection connection,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2109,7 +2186,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
@@ -2926,7 +3003,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -2934,7 +3011,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int InlineUpdate<TEntity>(this IDbConnection connection,
             object entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -2943,7 +3020,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -3149,7 +3226,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -3157,7 +3234,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> InlineUpdateAsync<TEntity>(this IDbConnection connection,
             object entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -3166,7 +3243,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -4030,7 +4107,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -4043,7 +4120,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            object primaryKey,
+            object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
             ICache cache = null,
@@ -4054,7 +4131,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -4411,7 +4488,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -4424,7 +4501,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            object primaryKey,
+            object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
             ICache cache = null,
@@ -4435,7 +4512,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -8405,7 +8482,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -8413,7 +8490,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static int Update<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -8423,7 +8500,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8657,7 +8734,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="trace">The trace object to be used by this operation.</param>
@@ -8665,7 +8742,7 @@ namespace RepoDb
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public static Task<int> UpdateAsync<TEntity>(this IDbConnection connection,
             TEntity entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -8675,7 +8752,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(primaryKey),
+                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
