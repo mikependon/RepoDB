@@ -526,7 +526,12 @@ namespace RepoDb
              */
 
             // Get the value in the right
-            if (expression.Right.Type == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            var rightType = Nullable.GetUnderlyingType(expression.Right.Type);
+            if (rightType == null)
+            {
+                rightType = expression.Right.Type;
+            }
+            if (rightType == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
                 isEqualsTo = value is bool && Equals(value, false) != true;
@@ -596,11 +601,27 @@ namespace RepoDb
 
         private static QueryGroup Parse<TEntity>(UnaryExpression expression, bool isEqualsTo = true) where TEntity : class
         {
-            if (expression.Operand?.IsMethodCall() == true)
+            if (expression.Operand?.IsMember() == true)
+            {
+                return Parse<TEntity>(expression.Operand.ToMember());
+            }
+            else if (expression.Operand?.IsMethodCall() == true)
             {
                 return Parse<TEntity>(expression.Operand.ToMethodCall(), (expression.NodeType == ExpressionType.Not), isEqualsTo);
             }
             return null;
+        }
+
+        private static QueryGroup Parse<TEntity>(MemberExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        {
+            var queryGroup = (QueryGroup)null;
+            var value = expression.GetValue();
+            if (value != null)
+            {
+                queryGroup = new QueryGroup(new QueryField(expression.Member.GetMappedName(), value).AsEnumerable());
+                queryGroup.SetIsNot(isEqualsTo == false);
+            }
+            return queryGroup;
         }
 
         private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
