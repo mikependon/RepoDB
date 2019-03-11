@@ -57,6 +57,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.UnitTests", "RepoDb.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{EECB6031-487B-4E8A-9034-71402FF2E5B2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Wiki", "RepoDb.Wiki", "{B28A3244-C010-41C4-9BBB-63C5141AD643}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Wiki\Features.md = ..\RepoDb.Wiki\Features.md
+		..\RepoDb.Wiki\Trivias.md = ..\RepoDb.Wiki\Trivias.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
