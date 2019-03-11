@@ -1611,9 +1611,10 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database.
         /// </summary>
-        public void Truncate()
+        /// <returns>The number of rows affected by this operation.</returns>
+        public int Truncate()
         {
-            DbRepository.Truncate<TEntity>();
+            return DbRepository.Truncate<TEntity>();
         }
 
         #endregion
@@ -1623,7 +1624,8 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
-        public Task TruncateAsync()
+        /// <returns>The number of rows affected by this operation.</returns>
+        public Task<AsyncResultExtractor<int>> TruncateAsync()
         {
             return DbRepository.TruncateAsync<TEntity>();
         }

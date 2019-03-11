@@ -4141,6 +4141,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var task = repository.TruncateAsync<SimpleTable>();
                 task.Wait();
+                task.Result.Extract();
 
                 // Act
                 var result = repository.Count<SimpleTable>();

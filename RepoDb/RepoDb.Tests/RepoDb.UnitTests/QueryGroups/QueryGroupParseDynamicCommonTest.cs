@@ -5,10 +5,22 @@ namespace RepoDb.UnitTests
     [TestClass]
     public partial class QueryGroupTest
     {
-        // No Operation
+        [TestMethod]
+        public void TestQueryGroupParseDynamicWithNullField()
+        {
+            // Setup
+            var expression = new { Field1 = (object)null };
+
+            // Act
+            var actual = QueryGroup.Parse(expression).GetString();
+            var expected = "([Field1] IS NULL)";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
 
         [TestMethod]
-        public void TestQueryGroupParseDynamicNoOperation()
+        public void TestQueryGroupParseDynamicWithSingleField()
         {
             // Setup
             var expression = new { Field1 = 1 };
@@ -21,17 +33,15 @@ namespace RepoDb.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        // No Operation for IS NULL
-
         [TestMethod]
-        public void TestQueryGroupParseDynamicNoOperationForIsNull()
+        public void TestQueryGroupParseDynamicWithMultipleFields()
         {
             // Setup
-            var expression = new { Field1 = (object)null };
+            var expression = new { Field1 = 1, Field2 = 2 };
 
             // Act
             var actual = QueryGroup.Parse(expression).GetString();
-            var expected = "([Field1] IS NULL)";
+            var expected = "([Field1] = @Field1 AND [Field2] = @Field2)";
 
             // Assert
             Assert.AreEqual(expected, actual);

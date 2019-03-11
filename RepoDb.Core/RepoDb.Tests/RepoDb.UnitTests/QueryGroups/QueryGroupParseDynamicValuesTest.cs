@@ -5,20 +5,45 @@ namespace RepoDb.UnitTests
 {
     public partial class QueryGroupTest
     {
-        // Equal
+        [TestMethod]
+        public void TestQueryGroupParseDynamicValueForNullField()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse(new { Field1 = (object)null });
+
+            // Act
+            var actual = parsed.QueryFields.First().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual((object)null, actual);
+        }
 
         [TestMethod]
-        public void TestQueryGroupParseDynamicValueForEqualOperation()
+        public void TestQueryGroupParseDynamicValueForSingleField()
         {
             // Setup
             var parsed = QueryGroup.Parse(new { Field1 = 1 });
 
             // Act
             var actual = parsed.QueryFields.First().Parameter.Value;
-            var expected = 1;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupParseDynamicValueForMultipleFields()
+        {
+            // Setup
+            var parsed = QueryGroup.Parse(new { Field1 = 1, Field2 = 2 });
+
+            // Act
+            var actual1 = parsed.QueryFields.First().Parameter.Value;
+            var actual2 = parsed.QueryFields.Last().Parameter.Value;
+
+            // Assert
+            Assert.AreEqual(1, actual1);
+            Assert.AreEqual(2, actual2);
         }
     }
 }
