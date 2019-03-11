@@ -860,15 +860,21 @@ namespace RepoDb
                 throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
 
+            // Declare variables
+            var fields = (IList<QueryField>)null;
+
             // Iterate every property
-            var queryFields = new List<QueryField>();
             foreach (var property in obj.GetType().GetProperties())
             {
-                queryFields.Add(new QueryField(property.Name, property.GetValue(obj)));
+                if (fields == null)
+                {
+                    fields = new List<QueryField>();
+                }
+                fields.Add(new QueryField(property.Name, property.GetValue(obj)));
             }
 
             // Return
-            return new QueryGroup(queryFields).Fix();
+            return fields != null ? new QueryGroup(fields).Fix() : null;
         }
 
         #endregion

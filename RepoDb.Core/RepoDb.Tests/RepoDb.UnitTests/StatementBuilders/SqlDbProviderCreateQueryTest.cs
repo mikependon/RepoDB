@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestSqlDbProviderCreateQueryWithExpressionClass
+        private class TestSqlDbProviderCreateQueryWithWhereForDynamicClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -161,11 +161,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateQueryWithExpression()
+        public void TestSqlDbProviderCreateQueryWithWhereForDynamic()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithExpressionClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithWhereForDynamicClass>();
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestSqlDbProviderCreateQueryWithExpressionClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithWhereForDynamicClass] " +
                 $"WHERE ([Field1] = @Field1) ;";
 
             // Assert
@@ -305,7 +305,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        private class TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass
+        private class TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass
         {
             public int Field1 { get; set; }
             public string Field2 { get; set; }
@@ -313,11 +313,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         }
 
         [TestMethod]
-        public void TestSqlDbProviderCreateQueryWithAnyFieldsAtExpression()
+        public void TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamic()
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass>();
+            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass>();
             var expression = new { AnyField = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
@@ -325,7 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
-                $"FROM [TestSqlDbProviderCreateQueryWithAnyFieldsAtExpressionClass] " +
+                $"FROM [TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass] " +
                 $"WHERE ([AnyField] = @AnyField) ;";
 
             // Assert

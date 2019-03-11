@@ -9486,21 +9486,28 @@ namespace RepoDb
         /// Converts the primary key to <see cref="QueryGroup"/> object.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="primaryKey">The value of the primary key.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(object primaryKey)
+        private static QueryGroup ToQueryGroup<TEntity>(object whereOrPrimaryKey)
             where TEntity : class
         {
-            if (primaryKey == null)
+            if (whereOrPrimaryKey == null)
             {
                 return null;
             }
-            var primary = PrimaryKeyCache.Get<TEntity>();
-            if (primary == null)
+            if (whereOrPrimaryKey.GetType().GetTypeInfo().IsGenericType)
             {
-                throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
+                return QueryGroup.Parse(whereOrPrimaryKey);
             }
-            return new QueryGroup(new QueryField(primary.GetMappedName(), primaryKey).AsEnumerable());
+            else
+            {
+                var primary = PrimaryKeyCache.Get<TEntity>();
+                if (primary == null)
+                {
+                    throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
+                }
+                return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey).AsEnumerable());
+            }
         }
 
         /// <summary>

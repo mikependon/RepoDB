@@ -681,13 +681,13 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete(object primaryKey,
+        public int Delete(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Delete<TEntity>(primaryKey: primaryKey,
+            return DbRepository.Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -750,13 +750,13 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation. When is set to null, it deletes all the data from the database.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(object primaryKey,
+        public Task<AsyncResultExtractor<int>> DeleteAsync(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
-            return DbRepository.DeleteAsync<TEntity>(primaryKey: primaryKey,
+            return DbRepository.DeleteAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -980,15 +980,15 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only).
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int InlineUpdate(object entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineUpdate<TEntity>(entity: entity,
-                primaryKey: primaryKey,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -1064,15 +1064,15 @@ namespace RepoDb
         /// Updates an existing data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <param name="entity">The key-value pair object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineUpdateAsync<TEntity>(entity: entity,
-                primaryKey: primaryKey,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -1310,7 +1310,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -1318,12 +1318,12 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query(object primaryKey,
+        public IEnumerable<TEntity> Query(object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.Query<TEntity>(primaryKey: primaryKey,
+            return DbRepository.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);
@@ -1473,7 +1473,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -1481,12 +1481,12 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(object primaryKey,
+        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
-            return DbRepository.QueryAsync<TEntity>(primaryKey: primaryKey,
+            return DbRepository.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);
@@ -1649,15 +1649,15 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int Update(TEntity entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             return DbRepository.Update<TEntity>(entity: entity,
-                primaryKey: primaryKey,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -1745,15 +1745,15 @@ namespace RepoDb
         /// Update an existing data in the database based on the given query expression in an asynchronous way.
         /// </summary>
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
-        /// <param name="primaryKey">The primary key value to be used by this operation.</param>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
-            object primaryKey,
+            object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
-                primaryKey: primaryKey,
+                whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 

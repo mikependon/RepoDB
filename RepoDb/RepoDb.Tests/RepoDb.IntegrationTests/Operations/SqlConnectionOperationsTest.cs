@@ -1639,7 +1639,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = connection.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
-                
+
                 // Assert
                 AssertPropertiesEquality(7, result.Result);
             }
