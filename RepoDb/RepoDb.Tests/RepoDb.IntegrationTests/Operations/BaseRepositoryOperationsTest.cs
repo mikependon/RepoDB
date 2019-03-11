@@ -85,7 +85,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQuery
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryFirstBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -109,7 +109,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryFirstBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -133,7 +133,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQuerySecondBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQuerySecondBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -157,7 +157,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQuerySecondBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQuerySecondBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -181,7 +181,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -206,7 +206,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForFirstBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -231,7 +231,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -256,7 +256,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryWithWhereForSecondBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -281,7 +281,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryField()
+        public void TestBaseRepositoryBatchQueryForQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -307,7 +307,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryFields()
+        public void TestBaseRepositoryBatchQueryForQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryForQueryGroup()
+        public void TestBaseRepositoryBatchQueryForQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -372,7 +372,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncFirstBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -387,16 +387,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (0, 3)
-                AssertPropertiesEquality(tables.ElementAt(0), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(3), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(0), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(3), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncFirstBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -411,16 +411,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(9), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncSecondBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -435,16 +435,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (4, 7)
-                AssertPropertiesEquality(tables.ElementAt(4), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(7), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(4), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(7), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncSecondBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -459,16 +459,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (5, 2)
-                AssertPropertiesEquality(tables.ElementAt(5), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(2), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(5), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(2), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -484,16 +484,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -509,16 +509,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(9), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -534,16 +534,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (14, 17)
-                AssertPropertiesEquality(tables.ElementAt(14), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(17), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(14), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(17), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
+        public void TestBaseRepositoryBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -559,16 +559,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (15, 12)
-                AssertPropertiesEquality(tables.ElementAt(15), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(12), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(15), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(12), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryField()
+        public void TestBaseRepositoryBatchQueryAsyncForQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -585,16 +585,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (3, 6)
-                AssertPropertiesEquality(tables.ElementAt(3), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(3), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryFields()
+        public void TestBaseRepositoryBatchQueryAsyncForQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -615,16 +615,16 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryBatchQueryAsyncForQueryGroup()
+        public void TestBaseRepositoryBatchQueryAsyncForQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(20);
@@ -646,11 +646,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
@@ -659,7 +659,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BulkInsert
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntities()
+        public void TestBaseRepositoryBulkInsertForEntities()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -683,7 +683,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertForEntitiesWithMappings()
+        public void TestBaseRepositoryBulkInsertForEntitiesWithMappings()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -746,7 +746,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BulkInsertAsync
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntities()
+        public void TestBaseRepositoryBulkInsertAsyncForEntities()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -773,7 +773,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryBulkInsertAsyncForEntitiesWithMappings()
+        public void TestBaseRepositoryBulkInsertAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -843,7 +843,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Count
 
         [TestMethod]
-        public void TestDbRepositoryCount()
+        public void TestBaseRepositoryCount()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -862,7 +862,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountViaExpression()
+        public void TestBaseRepositoryCountViaExpression()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -881,7 +881,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountViaQueryField()
+        public void TestBaseRepositoryCountViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -901,7 +901,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountViaQueryFields()
+        public void TestBaseRepositoryCountViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -925,7 +925,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountViaQueryGroup()
+        public void TestBaseRepositoryCountViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -954,7 +954,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAsync
 
         [TestMethod]
-        public void TestDbRepositoryCountAsync()
+        public void TestBaseRepositoryCountAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -965,15 +965,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync();
+                var result = repository.CountAsync().Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result.Result.Extract());
+                AssertPropertiesEquality(tables.Count, result.Extract());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAsyncViaExpression()
+        public void TestBaseRepositoryCountAsyncViaExpression()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -984,15 +984,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+                var result = repository.CountAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                AssertPropertiesEquality(7, result.Result.Extract());
+                AssertPropertiesEquality(7, result.Extract());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAsyncViaQueryField()
+        public void TestBaseRepositoryCountAsyncViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1004,15 +1004,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync(field);
+                var result = repository.CountAsync(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(5, result.Result.Extract());
+                AssertPropertiesEquality(5, result.Extract());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAsyncViaQueryFields()
+        public void TestBaseRepositoryCountAsyncViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1028,15 +1028,15 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync(fields);
+                var result = repository.CountAsync(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Result.Extract());
+                AssertPropertiesEquality(3, result.Extract());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryCountAsyncViaQueryGroup()
+        public void TestBaseRepositoryCountAsyncViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1053,10 +1053,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync(queryGroup);
+                var result = repository.CountAsync(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Result.Extract());
+                AssertPropertiesEquality(3, result.Extract());
             }
         }
 
@@ -1065,7 +1065,26 @@ namespace RepoDb.IntegrationTests.Operations
         #region Delete
 
         [TestMethod]
-        public void TestDbRepositoryDeleteViaPrimaryKey()
+        public void TestBaseRepositoryDeleteWithoutCondition()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete((object)null);
+
+                // Assert
+                Assert.AreEqual(0, repository.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1086,7 +1105,28 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteViaQueryField()
+        public void TestBaseRepositoryDeleteViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(c => c.ColumnInt == last.Id);
+
+                // Assert
+                AssertPropertiesEquality(1, result);
+                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1106,7 +1146,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteViaQueryFields()
+        public void TestBaseRepositoryDeleteViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1131,7 +1171,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteViaQueryGroup()
+        public void TestBaseRepositoryDeleteViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1161,7 +1201,26 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAsyncViaPrimaryKey()
+        public void TestBaseRepositoryDeleteAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync((object)null).Result;
+
+                // Assert
+                Assert.AreEqual(0, repository.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAsyncViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1173,16 +1232,37 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync(last.Id);
+                var result = repository.DeleteAsync(last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAsyncViaQueryField()
+        public void TestBaseRepositoryDeleteAsyncViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(c => c.ColumnInt == last.Id).Result;
+
+                // Assert
+                AssertPropertiesEquality(1, result.Extract());
+                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAsyncViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1194,16 +1274,16 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync(field);
+                var result = repository.DeleteAsync(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAsyncViaQueryFields()
+        public void TestBaseRepositoryDeleteAsyncViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1219,16 +1299,16 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync(fields);
+                var result = repository.DeleteAsync(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count());
             }
         }
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAsyncViaQueryGroup()
+        public void TestBaseRepositoryDeleteAsyncViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1245,10 +1325,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync(queryGroup);
+                var result = repository.DeleteAsync(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count());
             }
         }
@@ -1258,7 +1338,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAll
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAll()
+        public void TestBaseRepositoryDeleteAll()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1281,7 +1361,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbRepositoryDeleteAllAsync()
+        public void TestBaseRepositoryDeleteAllAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1292,10 +1372,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.DeleteAllAsync();
+                var result = repository.DeleteAllAsync().Result;
 
                 // Assert
-                AssertPropertiesEquality(0, result.Result.Extract());
+                AssertPropertiesEquality(0, result.Extract());
             }
         }
 
@@ -1304,7 +1384,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineInsert
 
         [TestMethod]
-        public void TestDbRepositoryInlineInsert()
+        public void TestBaseRepositoryInlineInsert()
         {
             // Setup
             var entity = new
@@ -1362,7 +1442,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineInsertAsync
 
         [TestMethod]
-        public void TestDbRepositoryInlineInsertAsync()
+        public void TestBaseRepositoryInlineInsertAsync()
         {
             // Setup
             var entity = new
@@ -1420,7 +1500,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineMerge
 
         [TestMethod]
-        public void TestDbRepositoryInlineMergeWithEmptyTables()
+        public void TestBaseRepositoryInlineMergeWithEmptyTables()
         {
             // Setup
             var entity = new
@@ -1459,7 +1539,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineMergeToExistingData()
+        public void TestBaseRepositoryInlineMergeToExistingData()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1571,7 +1651,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineMergeAsync
 
         [TestMethod]
-        public void TestDbRepositoryInlineMergeAsyncWithEmptyTables()
+        public void TestBaseRepositoryInlineMergeAsyncWithEmptyTables()
         {
             // Setup
             var entity = new
@@ -1610,7 +1690,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineMergeAsyncToExistingData()
+        public void TestBaseRepositoryInlineMergeAsyncToExistingData()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -1722,7 +1802,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineUpdate
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateViaPrimaryKey()
+        public void TestBaseRepositoryInlineUpdateViaPrimaryKey()
         {
             // Setup
             var entity = new
@@ -1761,7 +1841,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateViaExpression()
+        public void TestBaseRepositoryInlineUpdateViaExpression()
         {
             // Setup
             var entity = new
@@ -1800,7 +1880,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateViaQueryField()
+        public void TestBaseRepositoryInlineUpdateViaQueryField()
         {
             // Setup
             var entity = new
@@ -1839,7 +1919,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateViaQueryFields()
+        public void TestBaseRepositoryInlineUpdateViaQueryFields()
         {
             // Setup
             var entity = new
@@ -1883,7 +1963,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateViaQueryGroup()
+        public void TestBaseRepositoryInlineUpdateViaQueryGroup()
         {
             // Setup
             var entity = new
@@ -1953,7 +2033,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InlineUpdateAsync
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateAsyncViaPrimaryKey()
+        public void TestBaseRepositoryInlineUpdateAsyncViaPrimaryKey()
         {
             // Setup
             var entity = new
@@ -1992,7 +2072,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateAsyncViaExpression()
+        public void TestBaseRepositoryInlineUpdateAsyncViaExpression()
         {
             // Setup
             var entity = new
@@ -2031,7 +2111,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateAsyncViaQueryField()
+        public void TestBaseRepositoryInlineUpdateAsyncViaQueryField()
         {
             // Setup
             var entity = new
@@ -2070,7 +2150,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateAsyncViaQueryFields()
+        public void TestBaseRepositoryInlineUpdateAsyncViaQueryFields()
         {
             // Setup
             var entity = new
@@ -2114,7 +2194,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryInlineUpdateAsyncViaQueryGroup()
+        public void TestBaseRepositoryInlineUpdateAsyncViaQueryGroup()
         {
             // Setup
             var entity = new
@@ -2184,7 +2264,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Insert
 
         [TestMethod]
-        public void TestDbRepositoryInsert()
+        public void TestBaseRepositoryInsert()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2211,7 +2291,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAsync
 
         [TestMethod]
-        public void TestDbRepositoryInsertAsync()
+        public void TestBaseRepositoryInsertAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2238,7 +2318,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Merge
 
         [TestMethod]
-        public void TestDbRepositoryMerge()
+        public void TestBaseRepositoryMerge()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2282,7 +2362,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithPrimaryField()
+        public void TestBaseRepositoryMergeWithPrimaryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2326,7 +2406,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithNonPrimaryFieldViaInstantiation()
+        public void TestBaseRepositoryMergeWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2367,7 +2447,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithNonPrimaryFieldViaFromMethod()
+        public void TestBaseRepositoryMergeWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2408,7 +2488,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithMultipleFieldsViaInstantiation()
+        public void TestBaseRepositoryMergeWithMultipleFieldsViaInstantiation()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2451,7 +2531,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeWithMultipleFieldsViaFromMethod()
+        public void TestBaseRepositoryMergeWithMultipleFieldsViaFromMethod()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2494,7 +2574,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region MergeAsync
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsync()
+        public void TestBaseRepositoryMergeAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2538,7 +2618,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithPrimaryField()
+        public void TestBaseRepositoryMergeAsyncWithPrimaryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2582,7 +2662,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
+        public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaInstantiation()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2623,7 +2703,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
+        public void TestBaseRepositoryMergeAsyncWithNonPrimaryFieldViaFromMethod()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2664,7 +2744,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
+        public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaInstantiation()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2707,7 +2787,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
+        public void TestBaseRepositoryMergeAsyncWithMultipleFieldsViaFromMethod()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2750,7 +2830,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Query
 
         [TestMethod]
-        public void TestDbRepositoryQuery()
+        public void TestBaseRepositoryQuery()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2773,7 +2853,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryWithTop()
+        public void TestBaseRepositoryQueryWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2798,7 +2878,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryWithOrderBy()
+        public void TestBaseRepositoryQueryWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2819,7 +2899,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryWithOrderByAndTop()
+        public void TestBaseRepositoryQueryWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2842,7 +2922,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaPrimaryKey()
+        public void TestBaseRepositoryQueryViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2863,7 +2943,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryField()
+        public void TestBaseRepositoryQueryViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2884,7 +2964,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryFields()
+        public void TestBaseRepositoryQueryViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2913,7 +2993,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryFieldsWithTop()
+        public void TestBaseRepositoryQueryViaQueryFieldsWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2943,7 +3023,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryFieldsWithOrderBy()
+        public void TestBaseRepositoryQueryViaQueryFieldsWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2969,7 +3049,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryFieldsWithOrderByAndTop()
+        public void TestBaseRepositoryQueryViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -2997,7 +3077,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryGroup()
+        public void TestBaseRepositoryQueryViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3028,7 +3108,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryGroupWithTop()
+        public void TestBaseRepositoryQueryViaQueryGroupWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3059,7 +3139,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryGroupWithOrderBy()
+        public void TestBaseRepositoryQueryViaQueryGroupWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3086,7 +3166,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryViaQueryGroupWithOrderByAndTop()
+        public void TestBaseRepositoryQueryViaQueryGroupWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3119,7 +3199,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsync()
+        public void TestBaseRepositoryQueryAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3142,7 +3222,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncWithTop()
+        public void TestBaseRepositoryQueryAsyncWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3167,7 +3247,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncWithOrderBy()
+        public void TestBaseRepositoryQueryAsyncWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3188,7 +3268,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncWithOrderByAndTop()
+        public void TestBaseRepositoryQueryAsyncWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3211,7 +3291,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaPrimaryKey()
+        public void TestBaseRepositoryQueryAsyncViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3232,7 +3312,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryField()
+        public void TestBaseRepositoryQueryAsyncViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3253,7 +3333,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryFields()
+        public void TestBaseRepositoryQueryAsyncViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3282,7 +3362,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryFieldsWithTop()
+        public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3312,7 +3392,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryFieldsWithOrderBy()
+        public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3338,7 +3418,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryFieldsWithOrderByAndTop()
+        public void TestBaseRepositoryQueryAsyncViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3366,7 +3446,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryGroup()
+        public void TestBaseRepositoryQueryAsyncViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3397,7 +3477,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryGroupWithTop()
+        public void TestBaseRepositoryQueryAsyncViaQueryGroupWithTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3428,7 +3508,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryGroupWithOrderBy()
+        public void TestBaseRepositoryQueryAsyncViaQueryGroupWithOrderBy()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3455,7 +3535,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryQueryAsyncViaQueryGroupWithOrderByAndTop()
+        public void TestBaseRepositoryQueryAsyncViaQueryGroupWithOrderByAndTop()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3488,7 +3568,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Truncate
 
         [TestMethod]
-        public void TestDbRepositoryTruncate()
+        public void TestBaseRepositoryTruncate()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3514,7 +3594,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region TruncateAsync
 
         [TestMethod]
-        public void TestDbRepositoryTruncateAsync()
+        public void TestBaseRepositoryTruncateAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3527,6 +3607,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var task = repository.TruncateAsync();
                 task.Wait();
+                task.Result.Extract();
 
                 // Act
                 var result = repository.Count();
@@ -3541,7 +3622,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region Update
 
         [TestMethod]
-        public void TestDbRepositoryUpdateViaDataEntity()
+        public void TestBaseRepositoryUpdateViaDataEntity()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3576,7 +3657,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateViaPrimaryKey()
+        public void TestBaseRepositoryUpdateViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3611,7 +3692,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateViaQueryField()
+        public void TestBaseRepositoryUpdateViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3644,7 +3725,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateViaQueryFields()
+        public void TestBaseRepositoryUpdateViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3682,7 +3763,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateViaQueryGroup()
+        public void TestBaseRepositoryUpdateViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3725,7 +3806,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAsync
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAsyncViaDataEntity()
+        public void TestBaseRepositoryUpdateAsyncViaDataEntity()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3760,7 +3841,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAsyncViaPrimaryKey()
+        public void TestBaseRepositoryUpdateAsyncViaPrimaryKey()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3795,7 +3876,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAsyncViaQueryField()
+        public void TestBaseRepositoryUpdateAsyncViaQueryField()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3828,7 +3909,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAsyncViaQueryFields()
+        public void TestBaseRepositoryUpdateAsyncViaQueryFields()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3866,7 +3947,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryUpdateAsyncViaQueryGroup()
+        public void TestBaseRepositoryUpdateAsyncViaQueryGroup()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3909,7 +3990,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteQuery
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQuery()
+        public void TestBaseRepositoryExecuteQuery()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3929,7 +4010,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryWithParameters()
+        public void TestBaseRepositoryExecuteQueryWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3950,7 +4031,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryWithArrayParameters()
+        public void TestBaseRepositoryExecuteQueryWithArrayParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3971,7 +4052,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryWithTopParameters()
+        public void TestBaseRepositoryExecuteQueryWithTopParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -3992,7 +4073,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryWithStoredProcedure()
+        public void TestBaseRepositoryExecuteQueryWithStoredProcedure()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4013,7 +4094,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryWithStoredProcedureWithParameter()
+        public void TestBaseRepositoryExecuteQueryWithStoredProcedureWithParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4035,7 +4116,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4045,7 +4126,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4059,7 +4140,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteQueryAsync
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsync()
+        public void TestBaseRepositoryExecuteQueryAsync()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4079,7 +4160,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsyncWithParameters()
+        public void TestBaseRepositoryExecuteQueryAsyncWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4100,7 +4181,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsyncWithArrayParameters()
+        public void TestBaseRepositoryExecuteQueryAsyncWithArrayParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4121,7 +4202,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsyncWithTopParameters()
+        public void TestBaseRepositoryExecuteQueryAsyncWithTopParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4142,7 +4223,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsyncWithStoredProcedure()
+        public void TestBaseRepositoryExecuteQueryAsyncWithStoredProcedure()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4163,7 +4244,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteQueryAsyncWithStoredProcedureWithParameter()
+        public void TestBaseRepositoryExecuteQueryAsyncWithStoredProcedureWithParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4185,7 +4266,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4195,7 +4276,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteQueryAsyncIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4209,7 +4290,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteNonQuery
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryWithNoAffectedTableRows()
+        public void TestBaseRepositoryExecuteNonQueryWithNoAffectedTableRows()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4222,7 +4303,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryDeleteSingle()
+        public void TestBaseRepositoryExecuteNonQueryDeleteSingle()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4241,7 +4322,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryDeleteWithSingleParameter()
+        public void TestBaseRepositoryExecuteNonQueryDeleteWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4261,7 +4342,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryDeleteWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryDeleteWithMultipleParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4281,7 +4362,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryDeleteAll()
+        public void TestBaseRepositoryExecuteNonQueryDeleteAll()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4300,7 +4381,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryUpdateSingle()
+        public void TestBaseRepositoryExecuteNonQueryUpdateSingle()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4319,7 +4400,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryUpdateWithSigleParameter()
+        public void TestBaseRepositoryExecuteNonQueryUpdateWithSigleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4339,7 +4420,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryUpdateWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryUpdateWithMultipleParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4359,7 +4440,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryUpdateAll()
+        public void TestBaseRepositoryExecuteNonQueryUpdateAll()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4378,7 +4459,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryWithMultipleSqlStatementsWithoutParameter()
+        public void TestBaseRepositoryExecuteNonQueryWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4399,7 +4480,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryWithMultipleSqlStatementsWithParameters()
+        public void TestBaseRepositoryExecuteNonQueryWithMultipleSqlStatementsWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4421,7 +4502,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryByExecutingAStoredProcedureWithSingleParameter()
+        public void TestBaseRepositoryExecuteNonQueryByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4442,7 +4523,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryByExecutingAStoredProcedureWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryByExecutingAStoredProcedureWithMultipleParameters()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4457,7 +4538,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4467,7 +4548,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4481,7 +4562,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteNonQueryAsync
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncWithNoAffectedTableRows()
+        public void TestBaseRepositoryExecuteNonQueryAsyncWithNoAffectedTableRows()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4494,7 +4575,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncDeleteSingle()
+        public void TestBaseRepositoryExecuteNonQueryAsyncDeleteSingle()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4513,7 +4594,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncDeleteWithSingleParameter()
+        public void TestBaseRepositoryExecuteNonQueryAsyncDeleteWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4533,7 +4614,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncDeleteWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryAsyncDeleteWithMultipleParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4553,7 +4634,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncDeleteAll()
+        public void TestBaseRepositoryExecuteNonQueryAsyncDeleteAll()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4572,7 +4653,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncUpdateSingle()
+        public void TestBaseRepositoryExecuteNonQueryAsyncUpdateSingle()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4591,7 +4672,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncUpdateWithSigleParameter()
+        public void TestBaseRepositoryExecuteNonQueryAsyncUpdateWithSigleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4611,7 +4692,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncUpdateWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryAsyncUpdateWithMultipleParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4631,7 +4712,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncUpdateAll()
+        public void TestBaseRepositoryExecuteNonQueryAsyncUpdateAll()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4650,7 +4731,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
+        public void TestBaseRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4671,7 +4752,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
+        public void TestBaseRepositoryExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4693,7 +4774,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
+        public void TestBaseRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4714,7 +4795,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParameters()
+        public void TestBaseRepositoryExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4729,7 +4810,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4739,7 +4820,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4753,7 +4834,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteScalar
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithoutRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarWithoutRowsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4766,7 +4847,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarWithSingleRowAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4779,7 +4860,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithMultipleRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarWithMultipleRowsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4792,7 +4873,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithSingleRowAndWithMultipleColumnsAsResult()
+        public void TestBaseRepositoryExecuteScalarWithSingleRowAndWithMultipleColumnsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4805,7 +4886,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithSingleParameterAndWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarWithSingleParameterAndWithSingleRowAsResult()
         {
             // Setup
             var param = new
@@ -4824,7 +4905,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithMultipleParametersAndWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarWithMultipleParametersAndWithSingleRowAsResult()
         {
             // Setup
             var param = new
@@ -4844,7 +4925,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarWithMultipleParametersAndWithMultipleRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarWithMultipleParametersAndWithMultipleRowsAsResult()
         {
             // Setup
             var param = new
@@ -4864,7 +4945,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarByExecutingAStoredProcedureWithSingleParameter()
+        public void TestBaseRepositoryExecuteScalarByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -4885,7 +4966,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarByExecutingAStoredProcedureWithMultipleParameters()
+        public void TestBaseRepositoryExecuteScalarByExecutingAStoredProcedureWithMultipleParameters()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4900,7 +4981,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4910,7 +4991,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(SqlException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteScalarIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4924,7 +5005,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteScalarAsync
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithoutRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithoutRowsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4937,7 +5018,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithSingleRowAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4950,7 +5031,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithMultipleRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithMultipleRowsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4963,7 +5044,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithSingleRowAndWithMultipleColumnsAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithSingleRowAndWithMultipleColumnsAsResult()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -4976,7 +5057,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithSingleParameterAndWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithSingleParameterAndWithSingleRowAsResult()
         {
             // Setup
             var param = new
@@ -4995,7 +5076,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithMultipleParametersAndWithSingleRowAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithMultipleParametersAndWithSingleRowAsResult()
         {
             // Setup
             var param = new
@@ -5015,7 +5096,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncWithMultipleParametersAndWithMultipleRowsAsResult()
+        public void TestBaseRepositoryExecuteScalarAsyncWithMultipleParametersAndWithMultipleRowsAsResult()
         {
             // Setup
             var param = new
@@ -5035,7 +5116,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithSingleParameter()
+        public void TestBaseRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
             var tables = CreateSimpleTables(10);
@@ -5056,7 +5137,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestDbRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithMultipleParameters()
+        public void TestBaseRepositoryExecuteScalarAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -5071,7 +5152,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfTheParametersAreNotDefined()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarAsyncIfTheParametersAreNotDefined()
         {
             using (var repository = new SimpleTableRepository())
             {
@@ -5081,7 +5162,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestDbRepositoryExecuteScalarAsyncIfThereAreSqlStatementProblems()
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarAsyncIfThereAreSqlStatementProblems()
         {
             using (var repository = new SimpleTableRepository())
             {

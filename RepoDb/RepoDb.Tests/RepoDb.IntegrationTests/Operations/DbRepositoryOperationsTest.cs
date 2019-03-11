@@ -377,11 +377,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (0, 3)
-                AssertPropertiesEquality(tables.ElementAt(0), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(3), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(0), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(3), result.Extract().ElementAt(3));
             }
         }
 
@@ -401,11 +401,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(9), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
@@ -425,11 +425,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (4, 7)
-                AssertPropertiesEquality(tables.ElementAt(4), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(7), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(4), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(7), result.Extract().ElementAt(3));
             }
         }
 
@@ -449,11 +449,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (5, 2)
-                AssertPropertiesEquality(tables.ElementAt(5), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(2), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(5), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(2), result.Extract().ElementAt(3));
             }
         }
 
@@ -474,11 +474,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
@@ -499,11 +499,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (9, 6)
-                AssertPropertiesEquality(tables.ElementAt(9), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(9), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
@@ -524,11 +524,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (14, 17)
-                AssertPropertiesEquality(tables.ElementAt(14), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(17), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(14), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(17), result.Extract().ElementAt(3));
             }
         }
 
@@ -549,11 +549,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQuerySecondPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (15, 12)
-                AssertPropertiesEquality(tables.ElementAt(15), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(12), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(15), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(12), result.Extract().ElementAt(3));
             }
         }
 
@@ -575,11 +575,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (3, 6)
-                AssertPropertiesEquality(tables.ElementAt(3), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(6), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(3), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(6), result.Extract().ElementAt(3));
             }
         }
 
@@ -605,11 +605,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
@@ -636,11 +636,11 @@ namespace RepoDb.IntegrationTests.Operations
                     page: BatchQueryFirstPage,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
-                    transaction: null);
+                    transaction: null).Result;
 
                 // Assert (10, 13)
-                AssertPropertiesEquality(tables.ElementAt(10), result.Result.Extract().ElementAt(0));
-                AssertPropertiesEquality(tables.ElementAt(13), result.Result.Extract().ElementAt(3));
+                AssertPropertiesEquality(tables.ElementAt(10), result.Extract().ElementAt(0));
+                AssertPropertiesEquality(tables.ElementAt(13), result.Extract().ElementAt(3));
             }
         }
 
@@ -1199,10 +1199,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>();
+                var result = repository.CountAsync<SimpleTable>().Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result.Result.Extract());
+                AssertPropertiesEquality(tables.Count, result.Extract());
             }
         }
 
@@ -1218,10 +1218,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
+                var result = repository.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                AssertPropertiesEquality(7, result.Result.Extract());
+                AssertPropertiesEquality(7, result.Extract());
             }
         }
 
@@ -1238,10 +1238,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(field);
+                var result = repository.CountAsync<SimpleTable>(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(5, result.Result.Extract());
+                AssertPropertiesEquality(5, result.Extract());
             }
         }
 
@@ -1262,10 +1262,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(fields);
+                var result = repository.CountAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Result.Extract());
+                AssertPropertiesEquality(3, result.Extract());
             }
         }
 
@@ -1287,16 +1287,35 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.CountAsync<SimpleTable>(queryGroup);
+                var result = repository.CountAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Result.Extract());
+                AssertPropertiesEquality(3, result.Extract());
             }
         }
 
         #endregion
 
         #region Delete
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteWithoutCondition()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete<SimpleTable>((object)null);
+
+                // Assert
+                Assert.AreEqual(0, repository.Count<SimpleTable>());
+            }
+        }
 
         [TestMethod]
         public void TestDbRepositoryDeleteViaPrimaryKey()
@@ -1312,6 +1331,27 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.Delete<SimpleTable>(last.Id);
+
+                // Assert
+                AssertPropertiesEquality(1, result);
+                AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete<SimpleTable>(c => c.ColumnInt == last.Id);
 
                 // Assert
                 AssertPropertiesEquality(1, result);
@@ -1395,6 +1435,25 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAsync
 
         [TestMethod]
+        public void TestDbRepositoryDeleteAsyncWithoutCondition()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync<SimpleTable>((object)null).Result;
+
+                // Assert
+                Assert.AreEqual(0, repository.Count<SimpleTable>());
+            }
+        }
+
+        [TestMethod]
         public void TestDbRepositoryDeleteAsyncViaPrimaryKey()
         {
             // Setup
@@ -1407,10 +1466,31 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(last.Id);
+                var result = repository.DeleteAsync<SimpleTable>(last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
+                AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestDbRepositoryDeleteAsyncViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync<SimpleTable>(c => c.ColumnInt == last.Id).Result;
+
+                // Assert
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
             }
         }
@@ -1428,10 +1508,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(field);
+                var result = repository.DeleteAsync<SimpleTable>(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
             }
         }
@@ -1453,10 +1533,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(fields);
+                var result = repository.DeleteAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
             }
         }
@@ -1479,10 +1559,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
 
                 // Act
-                var result = repository.DeleteAsync<SimpleTable>(queryGroup);
+                var result = repository.DeleteAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Result.Extract());
+                AssertPropertiesEquality(1, result.Extract());
                 AssertPropertiesEquality(tables.Count - 1, repository.Count<SimpleTable>());
             }
         }
@@ -1526,10 +1606,10 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(entity => repository.Insert(entity));
 
                 // Act
-                var result = repository.DeleteAllAsync<SimpleTable>();
+                var result = repository.DeleteAllAsync<SimpleTable>().Result;
 
                 // Assert
-                AssertPropertiesEquality(0, result.Result.Extract());
+                AssertPropertiesEquality(0, result.Extract());
             }
         }
 
@@ -4141,6 +4221,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var task = repository.TruncateAsync<SimpleTable>();
                 task.Wait();
+                task.Result.Extract();
 
                 // Act
                 var result = repository.Count<SimpleTable>();
@@ -4819,7 +4900,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
-        
+
         #region ExecuteNonQuery
 
         [TestMethod]
