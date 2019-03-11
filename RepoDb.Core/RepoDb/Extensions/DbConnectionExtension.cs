@@ -1449,6 +1449,36 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public static long Count<TEntity>(this IDbConnection connection,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Count<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -1665,6 +1695,36 @@ namespace RepoDb
         {
             return CountAsync<TEntity>(connection: connection,
                 where: (QueryGroup)null,
+                hints: hints,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+            object where,
+            string hints = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return CountAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -1973,7 +2033,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return Delete<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2186,7 +2246,7 @@ namespace RepoDb
         {
             GetAndGuardPrimaryKey<TEntity>();
             return DeleteAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction);
         }
@@ -3020,7 +3080,7 @@ namespace RepoDb
         {
             return InlineUpdate<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -3243,7 +3303,7 @@ namespace RepoDb
         {
             return InlineUpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -4131,7 +4191,7 @@ namespace RepoDb
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -4512,7 +4572,7 @@ namespace RepoDb
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 orderBy: null,
                 top: 0,
                 hints: hints,
@@ -8500,7 +8560,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return Update<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -8752,7 +8812,7 @@ namespace RepoDb
             GetAndGuardPrimaryKey<TEntity>();
             return UpdateAsync<TEntity>(connection: connection,
                 entity: entity,
-                where: ToQueryGroup<TEntity>(whereOrPrimaryKey),
+                where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -9565,7 +9625,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the actual value of the primary key.</param>
         /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
-        private static QueryGroup ToQueryGroup<TEntity>(object whereOrPrimaryKey)
+        private static QueryGroup WhereOrPrimaryKeyToQueryGroup<TEntity>(object whereOrPrimaryKey)
             where TEntity : class
         {
             if (whereOrPrimaryKey == null)
@@ -9583,7 +9643,33 @@ namespace RepoDb
                 {
                     throw new PrimaryFieldNotFoundException(string.Format("Primary key not found for '{0}' entity.", typeof(TEntity).Name));
                 }
-                return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey).AsEnumerable());
+                else
+                {
+                    return new QueryGroup(new QueryField(primary.GetMappedName(), whereOrPrimaryKey).AsEnumerable());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts the primary key to <see cref="QueryGroup"/> object.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The dynamic expression.</param>
+        /// <returns>An instance of <see cref="QueryGroup"/> object.</returns>
+        private static QueryGroup ToQueryGroup<TEntity>(object where)
+            where TEntity : class
+        {
+            if (where == null)
+            {
+                return null;
+            }
+            if (where.GetType().GetTypeInfo().IsGenericType)
+            {
+                return QueryGroup.Parse(where);
+            }
+            else
+            {
+                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
             }
         }
 

@@ -583,6 +583,22 @@ namespace RepoDb
         /// <summary>
         /// Counts the number of table data from the database.
         /// </summary>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public long Count(object where,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Count<TEntity>(where: where,
+                hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database.
+        /// </summary>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -658,6 +674,22 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(hints: hints,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public Task<AsyncResultExtractor<object>> CountAsync(object where,
+            string hints = null,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.CountAsync<TEntity>(where: where,
+                hints: hints,
                 transaction: transaction);
         }
 

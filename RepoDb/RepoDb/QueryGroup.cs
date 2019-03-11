@@ -847,11 +847,10 @@ namespace RepoDb
         #region Parse (Dynamics)
 
         /// <summary>
-        /// This method is used to parse the customized query tree expression. This method expects a dynamic object and converts it to the actual
-        /// <see cref="QueryGroup"/> that defines the query tree expression.
+        /// Parses a dynamic object and convert back the result to an instance of <see cref="QueryGroup"/> object.
         /// </summary>
-        /// <param name="obj">A dynamic query tree expression to be parsed.</param>
-        /// <returns>An instance of the <see cref="QueryGroup"/> object that contains the parsed dynamic query expression.</returns>
+        /// <param name="obj">The dynamic object to be parsed.</param>
+        /// <returns>An instance of the <see cref="QueryGroup"/> with parsed properties and values.</returns>
         public static QueryGroup Parse(object obj)
         {
             // Check for value
@@ -860,16 +859,22 @@ namespace RepoDb
                 throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
             }
 
+            // Type of the object
+            var type = obj.GetType();
+
+            // Check if it is a generic type
+
+            if (type.IsGenericType == false)
+            {
+                throw new InvalidOperationException("Only dynamic object is supported in the 'where' expression.");
+            }
+
             // Declare variables
-            var fields = (IList<QueryField>)null;
+            var fields = new List<QueryField>();
 
             // Iterate every property
-            foreach (var property in obj.GetType().GetProperties())
+            foreach (var property in type.GetProperties())
             {
-                if (fields == null)
-                {
-                    fields = new List<QueryField>();
-                }
                 fields.Add(new QueryField(property.Name, property.GetValue(obj)));
             }
 

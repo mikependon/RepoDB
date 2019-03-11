@@ -1028,6 +1028,44 @@ namespace RepoDb
         /// Counts the number of table data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public long Count<TEntity>(object where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Count<TEntity>(where: where,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    hints: hints,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -1199,6 +1237,51 @@ namespace RepoDb
             {
                 // Call the method
                 var result = connection.CountAsync<TEntity>(commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    hints: hints,
+                    statementBuilder: StatementBuilder);
+
+                // Return the result
+                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+            }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (hasError)
+                {
+                    DisposeConnectionForPerCall(connection, transaction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Counts the number of table data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The dynamic expression to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
+        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(object where,
+            string hints = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var hasError = false;
+
+            try
+            {
+                // Call the method
+                var result = connection.CountAsync<TEntity>(where: where,
+                    commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
