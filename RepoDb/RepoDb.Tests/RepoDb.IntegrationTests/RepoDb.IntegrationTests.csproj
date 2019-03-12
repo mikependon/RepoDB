@@ -55,6 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\SimpleTable.cs" />
+    <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
     <Compile Include="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Include="Models\TypeMappableClasses.cs" />

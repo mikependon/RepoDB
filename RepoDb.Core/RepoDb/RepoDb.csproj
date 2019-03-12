@@ -4,14 +4,26 @@
     <TargetFramework>netstandard1.5</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Version>1.8.1</Version>
+    <Version>1.8.2</Version>
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
     <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
-    <PackageReleaseNotes>[Release 1.8.1]
+    <PackageReleaseNotes>[RepoDb v1.8.2]
+------------------
+
+[Updates]
+- Updated to again support the 'BatchQuery' dynamic expression (first-level properties).
+- Updated to again support the 'Count' dynamic expression (first-level properties).
+- Updated to again support the 'whereOrPrimaryKey' argument rather than 'primaryKey' (first-level properties).
+
+[Added]
+- Additional Integration Tests for class/object mappings (CRUD).
+- Additional Integration Tests for the 'Dynamics' and 'Expressions' query expression for 'DbConnection', 'DbRepository' and 'BaseRepository'.
+
+[Release 1.8.1]
 ------------------
 
 [New Features]
@@ -79,8 +91,8 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <PostBuildEvent></PostBuildEvent>
     <PreBuildEvent></PreBuildEvent>
-    <AssemblyVersion>1.8.1.2</AssemblyVersion>
-    <FileVersion>1.8.1.2</FileVersion>
+    <AssemblyVersion>1.8.2.0</AssemblyVersion>
+    <FileVersion>1.8.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
