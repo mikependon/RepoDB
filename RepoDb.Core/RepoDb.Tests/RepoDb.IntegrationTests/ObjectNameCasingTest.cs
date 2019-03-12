@@ -52,7 +52,7 @@ namespace RepoDb.IntegrationTests
                 COLUMNNVARCHAR = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var repository = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
                 var id = repository.Insert(entity);
@@ -109,13 +109,13 @@ namespace RepoDb.IntegrationTests
                 ColumnNVarCharMapped = Helper.GetAssemblyDescription()
             };
 
-            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act Insert
-                var id = repository.Insert(entity);
+                var id = connection.Insert(entity);
 
                 // Act Query
-                var data = repository.Query<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                var data = connection.Query<MappedTableAndWithImproperCasingForClassAndFieldsClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

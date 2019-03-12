@@ -158,12 +158,11 @@ namespace RepoDb
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 if (statementBuilder is SqlStatementBuilder)
                 {
-                    var sqlStatementBuilder = (SqlStatementBuilder)statementBuilder;
                     if (isPrimaryIdentity == false)
                     {
                         isPrimaryIdentity = PrimaryKeyIdentityCache.Get<TEntity>(request.Connection.ConnectionString);
                     }
-                    commandText = sqlStatementBuilder.CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
+                    commandText = ((SqlStatementBuilder)statementBuilder).CreateInlineMerge(queryBuilder: new QueryBuilder<TEntity>(),
                         fields: request.Fields,
                         qualifiers: request.Qualifiers,
                         isPrimaryIdentity: isPrimaryIdentity);

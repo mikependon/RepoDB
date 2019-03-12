@@ -621,7 +621,7 @@ namespace RepoDb
             {
                 var unmatchesQualifiers = qualifiers?.Where(field =>
                     fields?.FirstOrDefault(f =>
-                        field == f) == null);
+                        field.Name.ToLower() == f.Name.ToLower()) == null);
                 if (unmatchesQualifiers?.Count() > 0)
                 {
                     throw new InvalidOperationException($"The qualifiers '{unmatchesQualifiers.Select(field => field.AsField()).Join(", ")}' are not " +
