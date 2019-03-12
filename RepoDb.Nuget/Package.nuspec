@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>RepoDb</id>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
     <title>RepoDb</title>
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
@@ -10,6 +10,18 @@
     <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
     <language>en-US</language>
     <releaseNotes>
+    [RepoDb v1.8.2]
+    ------------------
+
+    [Updates]
+    - Updated to again support the 'BatchQuery' dynamic expression (first-level properties).
+    - Updated to again support the 'Count' dynamic expression (first-level properties).
+    - Updated to again support the 'whereOrPrimaryKey' argument rather than 'primaryKey' (first-level properties).
+
+    [Added]
+    - Additional Integration Tests for class/object mappings (CRUD).
+    - Additional Integration Tests for the 'Dynamics' and 'Expressions' query expression for 'DbConnection', 'DbRepository' and 'BaseRepository'.
+
     [Release 1.8.1]
     ------------------
 
