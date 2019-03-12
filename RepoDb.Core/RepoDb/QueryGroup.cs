@@ -507,7 +507,7 @@ namespace RepoDb
             }
             else if (expression.IsUnary())
             {
-                return Parse<TEntity>(expression.ToUnary());
+                return Parse<TEntity>(expression.ToUnary(), expression.NodeType);
             }
             else if (expression.IsMethodCall())
             {
@@ -528,12 +528,7 @@ namespace RepoDb
              */
 
             // Get the value in the right
-            var rightType = Nullable.GetUnderlyingType(expression.Right.Type);
-            if (rightType == null)
-            {
-                rightType = expression.Right.Type;
-            }
-            if (rightType == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
+            if ((Nullable.GetUnderlyingType(expression.Right.Type) ?? expression.Right.Type) == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
                 isEqualsTo = value is bool && Equals(value, false) != true;
@@ -549,7 +544,7 @@ namespace RepoDb
             // Unary
             else if (expression.Left.IsUnary() == true)
             {
-                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), isEqualsTo: isEqualsTo);
+                leftQueryGroup = Parse<TEntity>(expression.Left.ToUnary(), expression.NodeType, isEqualsTo: isEqualsTo);
             }
             // MethodCall
             else if (expression.Left.IsMethodCall())
@@ -580,8 +575,7 @@ namespace RepoDb
                 // Unary
                 if (expression.Right.IsUnary() == true)
                 {
-                    var unary = expression.Right.ToUnary();
-                    rightQueryGroup = Parse<TEntity>(unary);
+                    rightQueryGroup = Parse<TEntity>(expression.Right.ToUnary(), expression.NodeType);
                 }
                 // MethodCall
                 else if (expression.Right.IsMethodCall())
@@ -601,11 +595,11 @@ namespace RepoDb
             return leftQueryGroup ?? rightQueryGroup;
         }
 
-        private static QueryGroup Parse<TEntity>(UnaryExpression expression, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup Parse<TEntity>(UnaryExpression expression, ExpressionType expressionType, bool isEqualsTo = true) where TEntity : class
         {
             if (expression.Operand?.IsMember() == true)
             {
-                return Parse<TEntity>(expression.Operand.ToMember());
+                return Parse<TEntity>(expression.Operand.ToMember(), expressionType);
             }
             else if (expression.Operand?.IsMethodCall() == true)
             {
@@ -614,13 +608,14 @@ namespace RepoDb
             return null;
         }
 
-        private static QueryGroup Parse<TEntity>(MemberExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
+        private static QueryGroup Parse<TEntity>(MemberExpression expression, ExpressionType expressionType, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             var queryGroup = (QueryGroup)null;
             var value = expression.GetValue();
             if (value != null)
             {
-                queryGroup = new QueryGroup(new QueryField(expression.Member.GetMappedName(), value).AsEnumerable());
+                var field = new QueryField(expression.Member.GetMappedName(), QueryField.GetOperation(expressionType), value);
+                queryGroup = new QueryGroup(field.AsEnumerable());
                 queryGroup.SetIsNot(isEqualsTo == false);
             }
             return queryGroup;

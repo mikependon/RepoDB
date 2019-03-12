@@ -315,7 +315,7 @@ namespace RepoDb.IntegrationTests.Operations
                     trace: null,
                     statementBuilder: null);
 
-                // Assert (3, 6)
+                // Assert (2)
                 AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
             }
         }
@@ -1565,7 +1565,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>();
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result);
+                Assert.AreEqual((long)tables.Count, result);
             }
         }
 
@@ -1584,7 +1584,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
-                AssertPropertiesEquality(7, result);
+                Assert.AreEqual((long)7, result);
             }
         }
 
@@ -1603,7 +1603,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(new { ColumnInt = 1 });
 
                 // Assert
-                AssertPropertiesEquality(1, result);
+                Assert.AreEqual((long)1, result);
             }
         }
 
@@ -1623,7 +1623,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(field);
 
                 // Assert
-                AssertPropertiesEquality(5, result);
+                Assert.AreEqual((long)5, result);
             }
         }
 
@@ -1647,7 +1647,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(fields);
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -1672,7 +1672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(queryGroup);
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -1695,7 +1695,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>().Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result);
+                Assert.AreEqual((long)tables.Count, result);
             }
         }
 
@@ -1714,7 +1714,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                AssertPropertiesEquality(7, result);
+                Assert.AreEqual((long)7, result);
             }
         }
 
@@ -1733,7 +1733,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(new { ColumnInt = 1 }).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
+                Assert.AreEqual((long)1, result);
             }
         }
 
@@ -1753,7 +1753,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(5, result);
+                Assert.AreEqual((long)5, result);
             }
         }
 
@@ -1777,7 +1777,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -1802,7 +1802,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -1825,7 +1825,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>((object)null);
 
                 // Assert
-                Assert.AreEqual(0, connection.Count<SimpleTable>());
+                Assert.AreEqual(10, result);
+                Assert.AreEqual((long)0, connection.Count<SimpleTable>());
             }
         }
 
@@ -1845,8 +1846,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>(last.Id);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -1865,8 +1866,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>(new { ColumnInt = 6 });
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -1883,11 +1884,11 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.Delete<SimpleTable>(c => c.ColumnInt == last.Id);
+                var result = connection.Delete<SimpleTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -1906,8 +1907,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>(new QueryField(nameof(SimpleTable.ColumnInt), 6));
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -1931,8 +1932,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>(fields);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
             }
         }
 
@@ -1957,8 +1958,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>(queryGroup);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
             }
         }
 
@@ -1981,7 +1982,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Delete<SimpleTable>((object)null);
 
                 // Assert
-                Assert.AreEqual(0, connection.Count<SimpleTable>());
+                Assert.AreEqual(10, result);
+                Assert.AreEqual((long)0, connection.Count<SimpleTable>());
             }
         }
 
@@ -2001,8 +2003,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -2021,8 +2023,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(new { ColumnInt = 6 }).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -2042,8 +2044,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(c => c.ColumnInt == last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -2063,8 +2065,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -2088,8 +2090,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
             }
         }
 
@@ -2114,8 +2116,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, connection.Count<SimpleTable>());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
             }
         }
 
@@ -2138,13 +2140,13 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAll<SimpleTable>();
 
                 // Assert
-                AssertPropertiesEquality(0, result);
+                Assert.AreEqual(10, result);
             }
         }
 
         #endregion
 
-        #region DeleteAsync
+        #region DeleteAllAsync
 
         [TestMethod]
         public void TestSqlConnectionDeleteAllAsync()
@@ -2161,7 +2163,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.DeleteAllAsync<SimpleTable>().Result;
 
                 // Assert
-                AssertPropertiesEquality(0, result);
+                Assert.AreEqual(10, result);
             }
         }
 

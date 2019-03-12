@@ -281,6 +281,30 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryBatchQueryForDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.BatchQuery(
+                    where: new { ColumnInt = 3 },
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    transaction: null);
+
+                // Assert (2)
+                AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryBatchQueryForQueryField()
         {
             // Setup
@@ -564,6 +588,30 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert (15, 12)
                 AssertPropertiesEquality(tables.ElementAt(15), result.Extract().ElementAt(0));
                 AssertPropertiesEquality(tables.ElementAt(12), result.Extract().ElementAt(3));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryBatchQueryAsyncForDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.BatchQueryAsync(
+                    where: new { ColumnInt = 3 },
+                    page: BatchQueryFirstPage,
+                    rowsPerBatch: 4,
+                    orderBy: OrderField.Parse(new { Id = Order.Ascending }),
+                    transaction: null).Result;
+
+                // Assert (2)
+                AssertPropertiesEquality(tables.ElementAt(2), result.Extract().ElementAt(0));
             }
         }
 
@@ -857,7 +905,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Count();
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result);
+                Assert.AreEqual((long)tables.Count, result);
             }
         }
 
@@ -876,7 +924,26 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Count(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
-                AssertPropertiesEquality(7, result);
+                Assert.AreEqual((long)7, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryCountViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.Count(new { ColumnInt = 1 });
+
+                // Assert
+                Assert.AreEqual((long)1, result);
             }
         }
 
@@ -896,7 +963,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Count(field);
 
                 // Assert
-                AssertPropertiesEquality(5, result);
+                Assert.AreEqual((long)5, result);
             }
         }
 
@@ -920,7 +987,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Count(fields);
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -945,7 +1012,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Count(queryGroup);
 
                 // Assert
-                AssertPropertiesEquality(3, result);
+                Assert.AreEqual((long)3, result);
             }
         }
 
@@ -968,7 +1035,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync().Result;
 
                 // Assert
-                AssertPropertiesEquality(tables.Count, result.Extract());
+                Assert.AreEqual((long)tables.Count, result.Extract());
             }
         }
 
@@ -987,7 +1054,26 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                AssertPropertiesEquality(7, result.Extract());
+                Assert.AreEqual((long)7, result.Extract());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryCountAsyncViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(entity => repository.Insert(entity));
+
+                // Act
+                var result = repository.CountAsync(new { ColumnInt = 1 }).Result;
+
+                // Assert
+                Assert.AreEqual((long)1, result.Extract());
             }
         }
 
@@ -1007,7 +1093,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(5, result.Extract());
+                Assert.AreEqual((long)5, result.Extract());
             }
         }
 
@@ -1031,7 +1117,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Extract());
+                Assert.AreEqual((long)3, result.Extract());
             }
         }
 
@@ -1056,7 +1142,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(3, result.Extract());
+                Assert.AreEqual((long)3, result.Extract());
             }
         }
 
@@ -1079,7 +1165,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete((object)null);
 
                 // Assert
-                Assert.AreEqual(0, repository.Count());
+                Assert.AreEqual(10, result);
+                Assert.AreEqual((long)0, repository.Count());
             }
         }
 
@@ -1099,8 +1186,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete(last.Id);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1120,8 +1207,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete(c => c.ColumnInt == last.Id);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1140,8 +1227,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete(new QueryField(nameof(SimpleTable.ColumnInt), 6));
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result);
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1165,8 +1252,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete(fields);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, repository.Count());
             }
         }
 
@@ -1191,8 +1278,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.Delete(queryGroup);
 
                 // Assert
-                AssertPropertiesEquality(1, result);
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(4, result);
+                Assert.AreEqual((long)6, repository.Count());
             }
         }
 
@@ -1215,7 +1302,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync((object)null).Result;
 
                 // Assert
-                Assert.AreEqual(0, repository.Count());
+                Assert.AreEqual(tables.Count, result.Extract());
+                Assert.AreEqual((long)0, repository.Count());
             }
         }
 
@@ -1235,8 +1323,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync(last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Extract());
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result.Extract());
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1256,8 +1344,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync(c => c.ColumnInt == last.Id).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Extract());
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result.Extract());
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1277,8 +1365,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync(field).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Extract());
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(1, result.Extract());
+                Assert.AreEqual((long)tables.Count - 1, repository.Count());
             }
         }
 
@@ -1302,8 +1390,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync(fields).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Extract());
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(4, result.Extract());
+                Assert.AreEqual((long)6, repository.Count());
             }
         }
 
@@ -1328,8 +1416,8 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAsync(queryGroup).Result;
 
                 // Assert
-                AssertPropertiesEquality(1, result.Extract());
-                AssertPropertiesEquality(tables.Count - 1, repository.Count());
+                Assert.AreEqual(4, result.Extract());
+                Assert.AreEqual((long)6, repository.Count());
             }
         }
 
@@ -1352,13 +1440,13 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAll();
 
                 // Assert
-                AssertPropertiesEquality(0, result);
+                Assert.AreEqual((long)tables.Count, result);
             }
         }
 
         #endregion
 
-        #region DeleteAsync
+        #region DeleteAllAsync
 
         [TestMethod]
         public void TestBaseRepositoryDeleteAllAsync()
@@ -1375,7 +1463,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.DeleteAllAsync().Result;
 
                 // Assert
-                AssertPropertiesEquality(0, result.Extract());
+                Assert.AreEqual((long)tables.Count, result.Extract());
             }
         }
 
@@ -1841,6 +1929,45 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryInlineUpdateViaDynamic()
+        {
+            // Setup
+            var entity = new
+            {
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = Convert.ToInt32(repository.InlineUpdate(entity, new { last.Id }));
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = repository.Query(item => item.Id == last.Id);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryInlineUpdateViaExpression()
         {
             // Setup
@@ -2052,6 +2179,45 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, last.Id).Result.Extract());
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = repository.Query(item => item.Id == last.Id);
+                var first = queryResult.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Count());
+                Assert.IsNotNull(first.ColumnInt);
+                Assert.IsNotNull(first.ColumnDateTime2);
+                Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
+                Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
+                Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryInlineUpdateAsyncViaDynamic()
+        {
+            // Setup
+            var entity = new
+            {
+                ColumnInt = 100,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnNVarChar = Helper.GetUnicodeString()
+            };
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = Convert.ToInt32(repository.InlineUpdateAsync(entity, new { last.Id }).Result.Extract());
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -2943,6 +3109,48 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryQueryViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(new { last.Id });
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.Id == last.Id);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryQueryViaQueryField()
         {
             // Setup
@@ -3304,6 +3512,48 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var result = repository.QueryAsync(last.Id).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(new { last.Id }).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.Id == last.Id).Result.Extract();
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3692,6 +3942,76 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBaseRepositoryUpdateViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(item, new { item.Id });
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.Query();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryUpdateViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.Update(item, c => c.Id == item.Id);
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.Query();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
         public void TestBaseRepositoryUpdateViaQueryField()
         {
             // Setup
@@ -3864,6 +4184,76 @@ namespace RepoDb.IntegrationTests.Operations
 
                     // Assert
                     Assert.AreEqual(1, affectedRows);
+                });
+
+                // Act
+                var result = repository.Query();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryUpdateAsyncViaDynamic()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(item, new { item.Id }).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows.Extract());
+                });
+
+                // Act
+                var result = repository.Query();
+
+                // Assert
+                Assert.AreEqual(tables.Count, result.Count());
+                tables.ForEach(item => AssertPropertiesEquality(item, result.ElementAt(tables.IndexOf(item))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryUpdateAsyncViaExpression()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                tables.ForEach(item =>
+                {
+                    // Set Values
+                    item.ColumnBit = false;
+                    item.ColumnInt = item.ColumnInt * 100;
+                    item.ColumnDecimal = item.ColumnDecimal * 100;
+
+                    // Update each
+                    var affectedRows = repository.UpdateAsync(item, c => c.Id == item.Id).Result;
+
+                    // Assert
+                    Assert.AreEqual(1, affectedRows.Extract());
                 });
 
                 // Act

@@ -273,7 +273,7 @@ namespace RepoDb.IntegrationTests.Setup
                 }
             }
         }
-        
+
         #endregion
     }
 }
