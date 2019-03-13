@@ -9110,7 +9110,10 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return DataReaderConverter.ToEnumerable<TEntity>(command.ExecuteReader(), true).ToList();
+                using (var reader = command.ExecuteReader())
+                {
+                    return DataReaderConverter.ToEnumerable<TEntity>(reader, true).ToList();
+                }
             }
         }
 
