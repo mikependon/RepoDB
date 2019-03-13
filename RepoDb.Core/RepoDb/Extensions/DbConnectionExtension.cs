@@ -8979,9 +8979,16 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return DataReaderConverter.ToEnumerable(command.ExecuteReader(), true).ToList();
+                using (var reader = command.ExecuteReader())
+                {
+                    return DataReaderConverter.ToEnumerable(reader, true).ToList();
+                }
             }
         }
+
+        #endregion
+
+        #region ExecuteQueryAsync (Dynamics)
 
         /// <summary>
         /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteReader(CommandBehavior)"/> and

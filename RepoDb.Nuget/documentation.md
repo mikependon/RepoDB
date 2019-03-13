@@ -1,6 +1,6 @@
 ### Note
 
- - The v1.8.3 is the stable Spring release of RepoDb (with complete set of Integration/Unit Tests).
+ - The v1.8.4 is the stable Spring release of RepoDb (with complete set of Integration/Unit Tests).
 
 ### Why RepoDb
 
