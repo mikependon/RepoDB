@@ -3,7 +3,7 @@ Persistency
 
 .. highlight:: c#
 
-A connection persistency is flag that is being used by the repository object when it comes to the database connection object persistency. When creating a repository, the value can be passed in the constructor.
+A connection persistency is used ensure that only single connection object is used all throughout the lifetime of the repository object.
 
 ::
 
@@ -17,7 +17,7 @@ PerCall
 
 .. highlight:: c#
 
-A new instance of a connection is being `Instantiated` and `Disposed` on every call of the repository operation. This is the default persistency value of the repository.
+A new instance of a connection is being instantiated and disposed on every call of the repository operation. This is the default persistency value of the repository.
 
 ::
 

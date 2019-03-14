@@ -166,22 +166,18 @@
             
   <div class="section" id="hints">
 <h1>Hints<a class="headerlink" href="#hints" title="Permalink to this headline">¶</a></h1>
-<p>This feature is to allow the caller to further optimize the execution of the query when the <cite>Query</cite> and <cite>QueryMultiple</cite> operation has been called.</p>
+<p>This feature is to allow the caller to further optimize the execution of the query when the <cite>Query</cite> operation has been called.</p>
 <p>Below is an example of how to do a query (dirty-read) of customers where name starts with <cite>Joh</cite>.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span>
-                <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span>
-                <span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="n">SqlTableHints</span><span class="p">.</span><span class="n">NoLock</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The <cite>hints</cite> argument is used define a query-optimizer in the SQL Statement query. It is equivalent to the SQL Server query hints. The caller can also write its own hints via literal string. See below.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span>
-                <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span>
-                <span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (NOLOCK)&quot;</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;Joh&quot;</span><span class="p">),</span> <span class="n">hints</span><span class="p">:</span> <span class="s">&quot;WITH (NOLOCK)&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>

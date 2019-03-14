@@ -4,9 +4,10 @@ Extensibility
 RepoDb is highly extensible for RDBMS only. Below are the objects that can be extended.
 
 - Cache
-- Trace
-- Statement Builder
+- Inline Hints
 - Repository
+- Statement Builder
+- Trace
 
 RepoDb can be extended to support various data providers like Oracle, MySql, PostgreSQL and OleDb Databases.
 

@@ -39,6 +39,12 @@ Equal
 
 Part of the expression tree used to determine the `equality` of the field and data.
 
+Dynamic way:
+
+::
+
+	var result = connection.Query<Customer>(new { Id == 10045 });
+
 Expression way:
 
 ::
@@ -49,7 +55,7 @@ Explicit way:
 
 ::
 
-	var result = connection.Query<Customer>(new QueryField("Id", Operation.Equal, 10045 ));
+	var result = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045 ));
 
 NotEqual
 --------

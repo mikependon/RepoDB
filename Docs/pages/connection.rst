@@ -10,6 +10,15 @@ Queries a data from the database by batch.
 
 .. highlight:: c#
 
+Dynamic way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		connection.BatchQuery<Order>(new { CustomerId = 10045 }, 0, 24);
+	}
+
 Expression way:
 
 ::
@@ -106,7 +115,16 @@ Expression way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		connection.Count<Order>(o => o.Id >= 1000 && o.CreatedDate >= DateTime.UtcNow.Date.AddMonths(-1) });
+		var noOfRows = connection.Count<Order>(new { CustomerId = 10045 });
+	}
+
+Expression way:
+
+::
+
+	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var noOfRows = connection.Count<Order>(o => o.CustomerId == 10045);
 	}
 
 Explicit way:
@@ -115,12 +133,8 @@ Explicit way:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var queryGroup = new QueryGroup(new []
-		{
-			new QueryField(nameof(Order.Id), Operation.GreaterThan, 1000),
-			new QueryField(nameof(Order.CreatedDate), Operation.GreaterThan, DateTime.UtcNow.Date.AddMonths(-1)),
-		});
-		connection.Count<Order>(queryGroup);
+		var field = new QueryField(nameof(Order.CustomerId), 10045);
+		var noOfRows = connection.Count<Order>(field);
 	}
 
 CreateCommand
@@ -142,6 +156,7 @@ Creates a command object.
 		var command = connection.CreateCommand("SELECT TOP 100 * FROM [dbo].[Customer];", CommandType.Text, 500, null);
 
 		// Use the command object here
+		...
 	}
 
 Delete
@@ -157,7 +172,7 @@ Via DataEntity:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customer = GetCustomer(1005);
+		var customer = connection.Query<Customer>(10045);
 		var affectedRows = connection.Delete<Customer>(customer);
 	}
 
@@ -167,20 +182,29 @@ Via PrimaryKey:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(1005);
+		var affectedRows = connection.Delete<Customer>(10045);
 	}
 	
 Deleting a data entity without a primary key will throw a `PrimaryFieldNotFoundException` exception.
 
 **Note**: By setting the `where` argument to blank would delete all the records. Exactly the same as `DeleteAll` operation.
 
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Delete<Customer>(new { Id = 10045 });
+	}
+	
 Expression way:
 
 ::
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(c => c.Id == 1005);
+		var affectedRows = connection.Delete<Customer>(c => c.Id == 10045);
 	}
 	
 Explicit way:
@@ -189,7 +213,7 @@ Explicit way:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var affectedRows = connection.Delete<Customer>(new QueryField(nameof(Customer.Id), 1005));
+		var affectedRows = connection.Delete<Customer>(new QueryField(nameof(Order.CustomerId), 10045));
 	}
 
 DeleteAll
@@ -441,8 +465,9 @@ Executes a multiple query statement from the database and allows the user to ext
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
-		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
+		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+			SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
+		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
 			// Extract the first result
 			var customers = result.Extract<Customer>();
@@ -458,18 +483,53 @@ The method `Scalar` is used to extract the value of the first column of the firs
 
 ::
 
-    using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
-    {
-        var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId; SELECT COUNT(*) FROM [Order] WHERE CustomerId = @CustomerId;";
-        using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 1 }))
-        {
+	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+			SELECT COUNT(*) FROM [Order] WHERE CustomerId = @CustomerId;";
+		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
+		{
 			// Extract the first result
 			var customers = result.Extract<Customer>();
 
 			// Extract the second result
 			var ordersCount = (int)result.Scalar();
-        }
-    }
+		}
+	}
+
+This method can also be used to combine the calls with Stored Procedure.
+
+.. code-block:: sql
+	:linenos:
+
+	CREATE PROCEDURE [dbo].[sp_get_customer_orders]
+	(
+		@CustomerId INT
+	)
+	AS
+	BEGIN
+		SELECT *
+		FROM [dbo].[Order]
+		WHERE (CustomerId = @CustomerId);
+	END
+
+.. highlight:: c#
+
+::
+
+	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+			EXEC [dbo].[sp_get_customer_orders] @CustomerId;";
+		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
+		{
+			// Extract the first result
+			var customers = result.Extract<Customer>();
+
+			// Extract the second result
+			var ordersCount = result.Extract<Order>();
+		}
+	}
 
 ExecuteReader
 -------------
@@ -644,6 +704,16 @@ Via PrimaryKey:
 		// Call the operation and define which object you are targetting
 		var id = connection.InlineUpdate<Customer>(entity, 10045);
 	}
+	
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Call the operation and define which object you are targetting
+		var id = connection.InlineUpdate<Customer>(entity, new { Id = 10045 });
+	}
 
 Expression way:
 
@@ -731,6 +801,15 @@ Via PrimaryKey:
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var customer = connection.Query<Customer>(10045).FirstOrDefault();
+	}
+	
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var customer = connection.Query<Customer>(new { Id = 10045 }).FirstOrDefault();
 	}
 
 Expression way:
@@ -920,6 +999,15 @@ Via PrimaryKey:
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
 		var affectedRows = connection.Update<Order>(order, 1002);
+	}
+	
+Via Dynamic:
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var affectedRows = connection.Update<Order>(order, new { Id = 1002 });
 	}
 
 Expression way:

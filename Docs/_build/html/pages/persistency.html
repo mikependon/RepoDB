@@ -170,7 +170,7 @@
             
   <div class="section" id="persistency">
 <h1>Persistency<a class="headerlink" href="#persistency" title="Permalink to this headline">¶</a></h1>
-<p>A connection persistency is flag that is being used by the repository object when it comes to the database connection object persistency. When creating a repository, the value can be passed in the constructor.</p>
+<p>A connection persistency is used ensure that only single connection object is used all throughout the lifetime of the repository object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">ConnectionPersistency</span><span class="p">.</span><span class="n">Instance</span><span class="p">))</span>
 <span class="p">{</span>
         <span class="c1">// Call the operations here</span>
@@ -179,7 +179,7 @@
 </div>
 <div class="section" id="percall">
 <h2>PerCall<a class="headerlink" href="#percall" title="Permalink to this headline">¶</a></h2>
-<p>A new instance of a connection is being <cite>Instantiated</cite> and <cite>Disposed</cite> on every call of the repository operation. This is the default persistency value of the repository.</p>
+<p>A new instance of a connection is being instantiated and disposed on every call of the repository operation. This is the default persistency value of the repository.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">))</span>
 <span class="p">{</span>
 

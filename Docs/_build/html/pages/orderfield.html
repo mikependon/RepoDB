@@ -178,7 +178,7 @@
 <p>An object that holds a field for ordering purposes.</p>
 <div class="section" id="creating-a-new-instance">
 <h2>Creating a new Instance<a class="headerlink" href="#creating-a-new-instance" title="Permalink to this headline">¶</a></h2>
-<p>Constructor accepts 2 parameters, a Name and an Order type.</p>
+<p>Constructor accepts 2 parameters, a <cite>Name</cite> and an <cite>Order</cite> type.</p>
 <p>By literal string:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
@@ -209,14 +209,14 @@
 </div>
 <div class="section" id="ascending">
 <h2>Ascending<a class="headerlink" href="#ascending" title="Permalink to this headline">¶</a></h2>
-<p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to <cite>OrderField</cite> object with <cite>Order.Ascending</cite> value.</p>
+<p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to an <cite>OrderField</cite> object with <cite>Order.Ascending</cite> value.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Ascending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="descending">
 <h2>Descending<a class="headerlink" href="#descending" title="Permalink to this headline">¶</a></h2>
-<p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to <cite>OrderField</cite> object with <cite>Order.Descending</cite> value.</p>
+<p>Parses a property from the data entity object based on the given <cite>Expression</cite> and converts the result to an <cite>OrderField</cite> object with <cite>Order.Descending</cite> value.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Descending</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -264,7 +264,7 @@
 <p>Being the order fields in <cite>Query</cite> operation:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">customerOrders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">1</span><span class="p">,</span>
+        <span class="kt">var</span> <span class="n">customerOrders</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="m">10045</span><span class="p">,</span>
                 <span class="k">orderby</span><span class="p">:</span> <span class="n">OrderField</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">=</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span> <span class="p">}));</span>
 <span class="p">}</span>
 </pre></div>

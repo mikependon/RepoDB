@@ -1,7 +1,7 @@
 Hints
 =====
 
-This feature is to allow the caller to further optimize the execution of the query when the `Query` and `QueryMultiple` operation has been called.
+This feature is to allow the caller to further optimize the execution of the query when the `Query` operation has been called.
 
 Below is an example of how to do a query (dirty-read) of customers where name starts with `Joh`.
 
@@ -11,9 +11,7 @@ Below is an example of how to do a query (dirty-read) of customers where name st
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.Query<Customer>(
-			c => c.Name.StartsWith("Joh"),
-			hints: SqlTableHints.NoLock);
+		var customers = connection.Query<Customer>(c => c.Name.StartsWith("Joh"), hints: SqlTableHints.NoLock);
 	}
 
 The `hints` argument is used define a query-optimizer in the SQL Statement query. It is equivalent to the SQL Server query hints. The caller can also write its own hints via literal string. See below.
@@ -24,9 +22,7 @@ The `hints` argument is used define a query-optimizer in the SQL Statement query
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customers = connection.Query<Customer>(
-			c => c.Name.StartsWith("Joh"),
-			hints: "WITH (NOLOCK)");
+		var customers = connection.Query<Customer>(c => c.Name.StartsWith("Joh"), hints: "WITH (NOLOCK)");
 	}
 
 Below is a scenario to query all the customers from the database that ignores all the data that are under different transactions and with maximizing the index named `NCIX_Customer$FirstName$LastName`.
@@ -41,7 +37,6 @@ Below is a scenario to query all the customers from the database that ignores al
 	}
 
 A default class named `SqlTableHints` is provided to simplify the passing of the parameters. This class only contains the table hints for SQL Server.
-
 
 .. highlight:: c#
 

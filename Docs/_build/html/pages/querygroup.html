@@ -207,12 +207,16 @@
 <div class="section" id="equal">
 <h2>Equal<a class="headerlink" href="#equal" title="Permalink to this headline">¶</a></h2>
 <p>Part of the expression tree used to determine the <cite>equality</cite> of the field and data.</p>
+<p>Dynamic way:</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="p">{</span> <span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span> <span class="p">});</span>
+</pre></div>
+</div>
 <p>Expression way:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>Explicit way:</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">.</span><span class="n">Equal</span><span class="p">,</span> <span class="m">10045</span> <span class="p">));</span>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">Query</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">&gt;(</span><span class="k">new</span> <span class="n">QueryField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="m">10045</span> <span class="p">));</span>
 </pre></div>
 </div>
 </div>

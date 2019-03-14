@@ -173,25 +173,18 @@
             
   <div class="section" id="trace">
 <h1>Trace<a class="headerlink" href="#trace" title="Permalink to this headline">¶</a></h1>
-<p>One of the unique built-in feature of the library is <cite>Tracing</cite>. It allows developers to do <cite>Debugging</cite> or <cite>Tracing</cite> on the operations while executing it against the database.</p>
-<p>With <cite>Tracing</cite>, the developers can able to create its own <cite>Trace</cite> object and inject in the repository.</p>
+<p>Allow the developers to do <cite>Debugging</cite> or <cite>Tracing</cite> on the operations while executing it against the database</p>
 <div class="section" id="itrace">
 <h2>ITrace<a class="headerlink" href="#itrace" title="Permalink to this headline">¶</a></h2>
-<p>This interface is used to mark the custom class to become a qualified <cite>Trace</cite> object.</p>
+<p>Is an interface used to create a custom <cite>Trace</cite> class object.</p>
 </div>
 <div class="section" id="tracelog">
 <h2>TraceLog<a class="headerlink" href="#tracelog" title="Permalink to this headline">¶</a></h2>
-<p>This object is the one that holds the value of the repository operations if the <cite>Tracing</cite> is enabled.</p>
+<p>An object that holds the value of the operations if the <cite>Tracing</cite> is enabled.</p>
 </div>
 <div class="section" id="cancellabletracelog">
 <h2>CancellableTraceLog<a class="headerlink" href="#cancellabletracelog" title="Permalink to this headline">¶</a></h2>
-<p>This object is a deriving object from the <cite>TraceLog</cite> object, the only different is that, this object is being extended to support the cancellation of the executing operation. It is located at <cite>RepoDb</cite> namespace.</p>
-<p>In the screenshot below, you can see a highlighted query expression.</p>
-<img alt="../_images/trace_code.png" src="../_images/trace_code.png" />
-<p>If the trace is enabled, it would create a statement in the background. This statement can be modified during debugging.</p>
-<img alt="../_images/trace_watch_statement.png" src="../_images/trace_watch_statement.png" />
-<p>And also, the parameters can be modified as well.</p>
-<img alt="../_images/trace_watch_parameter.png" src="../_images/trace_watch_parameter.png" />
+<p>An object that holds the value of the operations with extended members to support the cancellation of the operations.</p>
 </div>
 <div class="section" id="custom-trace">
 <h2>Custom Trace<a class="headerlink" href="#custom-trace" title="Permalink to this headline">¶</a></h2>
@@ -207,16 +200,15 @@
 <span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DbRepository</span><span class="p">&lt;</span><span class="n">SqlConnection</span><span class="p">&gt;(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">,</span> <span class="n">trace</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>Once the customized Trace object has been injected, a breakpoint can be placed in any of the methods of the custom Trace class, it is debug-gable once the debugger hits the breakpoint.</p>
+<p>A breakpoint can be placed in any of the methods of the custom <cite>Trace</cite> class, the debugger will hit the breakpoint once the operation has been called.</p>
 </div>
 <div class="section" id="cancel">
 <h2>Cancel<a class="headerlink" href="#cancel" title="Permalink to this headline">¶</a></h2>
 <p>To cancel an operation, simply call the <cite>Cancel</cite> method of type <cite>CancelableTraceLog</cite> in any <cite>Before</cite> operation.</p>
-<p>Below is a sample code that calls the <cite>Cancel</cite> method of the <cite>BeforeQuery</cite> operation if any of the specified keywords from the variable named <cite>keywords</cite> is found from the statement.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">public</span> <span class="k">void</span> <span class="nf">BeforeQuery</span><span class="p">(</span><span class="n">CancellableTraceLog</span> <span class="n">log</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">keywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;INSERT&quot;</span><span class="p">,</span> <span class="s">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s">&quot;UPDATE&quot;</span><span class="p">,</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;MERGE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">keywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>
+        <span class="kt">var</span> <span class="n">filteredKeywords</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">&quot;DROP&quot;</span><span class="p">,</span> <span class="s">&quot;TRUNCATE&quot;</span><span class="p">,</span> <span class="s">&quot;CREATE&quot;</span><span class="p">,</span> <span class="s">&quot;ALTER&quot;</span> <span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">filteredKeywords</span><span class="p">.</span><span class="n">Any</span><span class="p">(</span><span class="n">keyword</span> <span class="p">=&gt;</span> <span class="n">log</span><span class="p">.</span><span class="n">Statement</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">keyword</span><span class="p">)))</span>
         <span class="p">{</span>
                 <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&quot;A suspicious statement has been injected on the Query operations.&quot;</span><span class="p">);</span>
                 <span class="n">log</span><span class="p">.</span><span class="n">Cancel</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>

@@ -6,7 +6,7 @@ An object that holds a field for ordering purposes.
 Creating a new Instance
 -----------------------
 
-Constructor accepts 2 parameters, a Name and an Order type.
+Constructor accepts 2 parameters, a `Name` and an `Order` type.
 
 .. highlight:: c#
 
@@ -48,7 +48,7 @@ Converts an instance of an `OrderField` into an `IEnumerable<OrderField>` object
 Ascending
 ---------
 
-Parses a property from the data entity object based on the given `Expression` and converts the result to `OrderField` object with `Order.Ascending` value.
+Parses a property from the data entity object based on the given `Expression` and converts the result to an `OrderField` object with `Order.Ascending` value.
 
 .. highlight:: c#
 
@@ -59,7 +59,7 @@ Parses a property from the data entity object based on the given `Expression` an
 Descending
 ----------
 
-Parses a property from the data entity object based on the given `Expression` and converts the result to `OrderField` object with `Order.Descending` value.
+Parses a property from the data entity object based on the given `Expression` and converts the result to an `OrderField` object with `Order.Descending` value.
 
 .. highlight:: c#
 
@@ -128,6 +128,6 @@ Being the order fields in `Query` operation:
 
 	using (var connection = new SqlConnection>(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var customerOrders = connection.Query<Order>(o => o.CustomerId == 1,
+		var customerOrders = connection.Query<Order>(o => o.CustomerId == 10045,
 			orderby: OrderField.Parse(new { Id = Order.Ascending }));
 	}
