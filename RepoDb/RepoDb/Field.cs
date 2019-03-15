@@ -52,8 +52,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Parse an object and creates an enumerable of <see cref="Field"/> objects. Each field is equivalent
-        /// to each property of the given object. The parse operation uses a reflection operation.
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>

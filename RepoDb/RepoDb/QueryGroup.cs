@@ -468,7 +468,7 @@ namespace RepoDb
         #region Parse (Expression)
 
         /// <summary>
-        /// This method is used to parse the customized expression.
+        /// Parses a customized query expression.
         /// </summary>
         /// <typeparam name="TEntity">The target entity type</typeparam>
         /// <param name="expression">The expression to be converted to a <see cref="QueryGroup"/> object.</param>
