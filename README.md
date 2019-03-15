@@ -29,16 +29,18 @@ To provide more flexibility and fast-switching development approach, whether to 
  - Never create complex implementations (especially for complex Join Queries)
 
 ## Features
-
+ 
+ - Asynchronous Operations
  - Caching
- - Expression Trees (Expression-Based, Object-Based)
+ - Connection Persistency
+ - Expression Trees
  - Field Mapping
  - Inline Hints
- - Multiple Query
- - Operations (Asynchronous)
- - SQL Statement Builder
+ - Multi-Resultset Query
+ - Operations (native ORM)
+ - Statement Building
  - Tracing
- - Transactions
+ - Transaction
  - Type Mapping
 
 ## Performance Result
@@ -135,21 +137,28 @@ Via PrimaryKey:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(1005);
+		var customer = connection.Query<Customer>(10045);
+	}
+
+Via Dynamic:
+
+	using (var connection = new SqlConnection(ConnectionString))
+	{
+		var customer = connection.Query<Customer>(new { Id = 10045 });
 	}
 
 Via Expression:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(c => c.Id == 1005);
+		var customer = connection.Query<Customer>(c => c.Id == 10045);
 	}
 
 Via Object:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 1005));
+		var customer = connection.Query<Customer>(new QueryField(nameof(Customer.Id), 10045));
 	}
 
 The expressions can also be used on the following operations:
@@ -200,7 +209,7 @@ Via Dynamic:
 
 	using (var connection = new SqlConnection(ConnectionString))
 	{
-		var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date });
+		var customer = connection.ExecuteQuery<ComplexClass>(commandText, new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date });
 	}
 
 Via Object:
@@ -209,7 +218,7 @@ Via Object:
 	{
 		var queryGroup = new QueryGroup(new []
 		{
-			new QueryField("CustomerId", 1005),
+			new QueryField("CustomerId", 10045),
 			new QueryField("OrderDate", DateTime.UtcNow.Date)
 		});
 		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup);
@@ -256,7 +265,7 @@ Via Dynamic:
 	using (var connection = new SqlConnection(ConnectionString))
 	{
 		var customer = connection.ExecuteQuery<ComplexClass>("[dbo].[sp_get_customer_orders_by_date]",
-			new { CustomerId = 1005, OrderDate = DateTime.UtcNow.Date },
+			param: new { CustomerId = 10045, OrderDate = DateTime.UtcNow.Date },
 			commandType: CommandType.StoredProcedure);
 	}
 
@@ -266,7 +275,7 @@ Via Object:
 	{
 		var queryGroup = new QueryGroup(new []
 		{
-			new QueryField("CustomerId", 1005),
+			new QueryField("CustomerId", 10045),
 			new QueryField("OrderDate", DateTime.UtcNow.Date)
 		});
 		var customer = connection.ExecuteQuery<Customer>(commandText, queryGroup,
