@@ -465,7 +465,7 @@ Executes a multiple query statement from the database and allows the user to ext
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+		var commandText = @"SELECT * FROM Customer WHERE Id = @CustomerId;
 			SELECT * FROM [Order] WHERE CustomerId = @CustomerId;";
 		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
@@ -485,7 +485,7 @@ The method `Scalar` is used to extract the value of the first column of the firs
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+		var commandText = @"SELECT * FROM Customer WHERE Id = @CustomerId;
 			SELECT COUNT(*) FROM [Order] WHERE CustomerId = @CustomerId;";
 		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
@@ -519,7 +519,7 @@ This method can also be used to combine the calls with Stored Procedure.
 
 	using (var connection = new SqlConnection("Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var commandText = "SELECT * FROM Customer WHERE Id = @CustomerId;
+		var commandText = @"SELECT * FROM Customer WHERE Id = @CustomerId;
 			EXEC [dbo].[sp_get_customer_orders] @CustomerId;";
 		using (var result = connection.ExecuteQueryMultiple(commandText, new { CustomerId = 10045 }))
 		{
@@ -527,7 +527,7 @@ This method can also be used to combine the calls with Stored Procedure.
 			var customers = result.Extract<Customer>();
 
 			// Extract the second result
-			var ordersCount = result.Extract<Order>();
+			var orders = result.Extract<Order>();
 		}
 	}
 

@@ -31,13 +31,15 @@ Principles
 Features
 --------
 
+* Asynchronous Operations
 * Caching
-* Expression Trees (Expression-Based, Object-Based)
+* Connection Persistency
+* Expression Trees
 * Field Mapping
 * Inline Hints
-* Multiple Query
-* Operations (Asynchronous)
-* SQL Statement Builder
+* Multi-Resultset Query
+* Operations (native ORM)
+* Statement Building
 * Tracing
-* Transactions
+* Transaction
 * Type Mapping
