@@ -938,6 +938,9 @@ namespace RepoDb
             // Set with conjunction
             hashCode += Conjunction.GetHashCode();
 
+            // Set the IsNot
+            hashCode += IsNot.GetHashCode();
+
             // Set back the hashcode value
             m_hashCode = hashCode;
 
