@@ -3402,6 +3402,517 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9"));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("NVAR"));
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.EndsWith("9"));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAndStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) == true);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) == false);
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => values.Contains(c.ColumnNVarChar) != false);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithArrayContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => !values.Contains(c.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAndStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAndEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9") == true);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9") == false);
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.Contains("9") != false);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => !c.ColumnNVarChar.Contains("9"));
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringStartsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => !c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.EndsWith("9") == true);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.EndsWith("9") == false);
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => c.ColumnNVarChar.EndsWith("9") != false);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryViaExpressionWithStringEndsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Query(c => !c.ColumnNVarChar.EndsWith("9"));
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region QueryAsync
@@ -3812,6 +4323,517 @@ namespace RepoDb.IntegrationTests.Operations
                 AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
+
+        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar)).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("NVAR")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.EndsWith("9")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) == true).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) == false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => values.Contains(c.ColumnNVarChar) != false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => !values.Contains(c.ColumnNVarChar)).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAndStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAndEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9") == true).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9") == false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.Contains("9") != false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => !c.ColumnNVarChar.Contains("9")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.EndsWith("9") == true).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.EndsWith("9") == false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => c.ColumnNVarChar.EndsWith("9") != false).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.QueryAsync(c => !c.ColumnNVarChar.EndsWith("9")).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        #endregion
 
         #endregion
 

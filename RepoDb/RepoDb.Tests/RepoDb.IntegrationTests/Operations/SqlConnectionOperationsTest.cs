@@ -4102,6 +4102,517 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9"));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR"));
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9"));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAndStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false);
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false);
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithArrayContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => !values.Contains(c.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAndStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAndEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false);
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.Contains("9"));
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringStartsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWithStringEndsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Query<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9"));
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region QueryAsync
@@ -4512,6 +5023,517 @@ namespace RepoDb.IntegrationTests.Operations
                 AssertPropertiesEquality(tables.ElementAt(5), result.Last());
             }
         }
+
+        #region Array.Contains, String.Contains, String.StartsWith, String.EndsWith
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9")).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.ElementAt(8), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringContains()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
+
+                // Assert
+                Assert.AreEqual(3, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var values = new[] { "NVARCHAR1", "NVARCHAR2" };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(8, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndStartsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndEndsWith()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
+
+                // Assert
+                Assert.AreEqual(2, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count(), result.Count());
+                tables.ForEach(table => AssertPropertiesEquality(table, result.ElementAt(tables.IndexOf(table))));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(tables.First(t => t.Id == result.First().Id), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.QueryAsync<SimpleTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
+
+                // Assert
+                Assert.AreEqual(9, result.Count());
+                result.ToList().ForEach(table => AssertPropertiesEquality(tables.First(t => t.Id == table.Id), table));
+            }
+        }
+
+        #endregion
 
         #endregion
 

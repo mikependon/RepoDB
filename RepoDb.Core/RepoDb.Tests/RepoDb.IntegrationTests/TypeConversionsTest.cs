@@ -39,7 +39,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromStringToBigInt()
         {
             // Setup
             var entity = new StringToBigIntClass
@@ -84,7 +84,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToBitClass()
+        public void TestSqlConnectionCrudConvertionFromStringToBit()
         {
             // Setup
             var entity = new StringToBitClass
@@ -119,7 +119,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromStringToDecimal()
         {
             // Setup
             var entity = new StringToDecimalClass
@@ -154,7 +154,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromStringToFloat()
         {
             // Setup
             var entity = new StringToFloatClass
@@ -189,7 +189,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToIntClass()
+        public void TestSqlConnectionCrudConvertionFromStringToInt()
         {
             // Setup
             var entity = new StringToIntClass
@@ -224,7 +224,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToMoneyClass()
+        public void TestSqlConnectionCrudConvertionFromStringToMoney()
         {
             // Setup
             var entity = new StringToMoneyClass
@@ -259,7 +259,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToNumericClass()
+        public void TestSqlConnectionCrudConvertionFromStringToNumeric()
         {
             // Setup
             var entity = new StringToNumericClass
@@ -294,7 +294,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToRealClass()
+        public void TestSqlConnectionCrudConvertionFromStringToReal()
         {
             // Setup
             var entity = new StringToRealClass
@@ -329,7 +329,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromStringToSmallInt()
         {
             // Setup
             var entity = new StringToSmallIntClass
@@ -364,7 +364,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToSmallMoneyClass()
+        public void TestSqlConnectionCrudConvertionFromStringToSmallMoney()
         {
             // Setup
             var entity = new StringToSmallMoneyClass
@@ -399,7 +399,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateClass()
+        public void TestSqlConnectionCrudConvertionFromStringToDate()
         {
             // Setup
             var entity = new StringToDateClass
@@ -434,7 +434,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTimeClass()
+        public void TestSqlConnectionCrudConvertionFromStringToDateTime()
         {
             // Setup
             var entity = new StringToDateTimeClass
@@ -469,7 +469,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToDateTime2Class()
+        public void TestSqlConnectionCrudConvertionFromStringToDateTime2()
         {
             // Setup
             var entity = new StringToDateTime2Class
@@ -504,7 +504,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromStringToUniqueIdentifierClass()
+        public void TestSqlConnectionCrudConvertionFromStringToUniqueIdentifier()
         {
             // Setup
             var entity = new StringToUniqueIdentifierClass
@@ -539,7 +539,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromUniqueIdentifierToStringClass()
+        public void TestSqlConnectionCrudConvertionFromUniqueIdentifierToString()
         {
             // Setup
             var entity = new UniqueIdentifierToStringClass
@@ -574,7 +574,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDateTimeToStringClass()
+        public void TestSqlConnectionCrudConvertionFromDateTimeToString()
         {
             // Setup
             var entity = new DateTimeToStringClass
@@ -609,7 +609,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToStringClass()
+        public void TestSqlConnectionCrudConvertionFromIntToString()
         {
             // Setup
             var entity = new IntToStringClass
@@ -644,7 +644,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromIntToBigInt()
         {
             // Setup
             var entity = new IntToBigIntClass
@@ -679,7 +679,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromIntToSmallInt()
         {
             // Setup
             var entity = new IntToSmallIntClass
@@ -714,7 +714,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromIntToDecimal()
         {
             // Setup
             var entity = new IntToDecimalClass
@@ -749,7 +749,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromIntToFloat()
         {
             // Setup
             var entity = new IntToFloatClass
@@ -784,7 +784,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToRealClass()
+        public void TestSqlConnectionCrudConvertionFromIntToReal()
         {
             // Setup
             var entity = new IntToRealClass
@@ -819,7 +819,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromIntToBitClass()
+        public void TestSqlConnectionCrudConvertionFromIntToBit()
         {
             // Setup
             var entity = new IntToBitClass
@@ -854,7 +854,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToStringClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToString()
         {
             // Setup
             var entity = new BigIntToStringClass
@@ -889,7 +889,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToIntClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToInt()
         {
             // Setup
             var entity = new BigIntToIntClass
@@ -924,7 +924,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToSmallInt()
         {
             // Setup
             var entity = new BigIntToSmallIntClass
@@ -959,7 +959,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToDecimal()
         {
             // Setup
             var entity = new BigIntToDecimalClass
@@ -994,7 +994,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToFloat()
         {
             // Setup
             var entity = new BigIntToFloatClass
@@ -1029,7 +1029,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToRealClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToReal()
         {
             // Setup
             var entity = new BigIntToRealClass
@@ -1064,7 +1064,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromBigIntToBitClass()
+        public void TestSqlConnectionCrudConvertionFromBigIntToBit()
         {
             // Setup
             var entity = new BigIntToBitClass
@@ -1099,7 +1099,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToStringClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToString()
         {
             // Setup
             var entity = new SmallIntToStringClass
@@ -1134,7 +1134,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToIntClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToInt()
         {
             // Setup
             var entity = new SmallIntToIntClass
@@ -1169,7 +1169,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToBigInt()
         {
             // Setup
             var entity = new SmallIntToBigIntClass
@@ -1204,7 +1204,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToDecimal()
         {
             // Setup
             var entity = new SmallIntToDecimalClass
@@ -1239,7 +1239,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToFloat()
         {
             // Setup
             var entity = new SmallIntToFloatClass
@@ -1274,7 +1274,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToRealClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToReal()
         {
             // Setup
             var entity = new SmallIntToRealClass
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromSmallIntToBitClass()
+        public void TestSqlConnectionCrudConvertionFromSmallIntToBit()
         {
             // Setup
             var entity = new SmallIntToBitClass
@@ -1344,7 +1344,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToStringClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToString()
         {
             // Setup
             var entity = new DecimalToStringClass
@@ -1379,7 +1379,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToIntClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToInt()
         {
             // Setup
             var entity = new DecimalToIntClass
@@ -1414,7 +1414,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToBigInt()
         {
             // Setup
             var entity = new DecimalToBigIntClass
@@ -1449,7 +1449,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToSmallInt()
         {
             // Setup
             var entity = new DecimalToSmallIntClass
@@ -1484,7 +1484,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToFloatIntClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToFloatInt()
         {
             // Setup
             var entity = new DecimalToFloatIntClass
@@ -1519,7 +1519,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToRealClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToReal()
         {
             // Setup
             var entity = new DecimalToRealClass
@@ -1554,7 +1554,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDecimalToBitClass()
+        public void TestSqlConnectionCrudConvertionFromDecimalToBit()
         {
             // Setup
             var entity = new DecimalToBitClass
@@ -1589,7 +1589,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToStringClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToString()
         {
             // Setup
             var entity = new DoubleToStringClass
@@ -1624,7 +1624,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToDecimal()
         {
             // Setup
             var entity = new DoubleToDecimalClass
@@ -1659,7 +1659,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToBigInt()
         {
             // Setup
             var entity = new DoubleToBigIntClass
@@ -1694,7 +1694,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToIntClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToInt()
         {
             // Setup
             var entity = new DoubleToIntClass
@@ -1729,7 +1729,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToSmallInt()
         {
             // Setup
             var entity = new DoubleToSmallIntClass
@@ -1764,7 +1764,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToFloat()
         {
             // Setup
             var entity = new DoubleToFloatClass
@@ -1799,7 +1799,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToRealClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToReal()
         {
             // Setup
             var entity = new DoubleToRealClass
@@ -1834,7 +1834,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromDoubleToBitClass()
+        public void TestSqlConnectionCrudConvertionFromDoubleToBit()
         {
             // Setup
             var entity = new DoubleToBitClass
@@ -1869,7 +1869,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToStringClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToString()
         {
             // Setup
             var entity = new FloatToStringClass
@@ -1904,7 +1904,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToDecimalClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToDecimal()
         {
             // Setup
             var entity = new FloatToDecimalClass
@@ -1939,7 +1939,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToBigIntClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToBigInt()
         {
             // Setup
             var entity = new FloatToBigIntClass
@@ -1974,7 +1974,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToIntClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToInt()
         {
             // Setup
             var entity = new FloatToIntClass
@@ -2009,7 +2009,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToSmallIntClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToSmallInt()
         {
             // Setup
             var entity = new FloatToSmallIntClass
@@ -2044,7 +2044,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToFloatClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToFloat()
         {
             // Setup
             var entity = new FloatToFloatClass
@@ -2079,7 +2079,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToRealClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToReal()
         {
             // Setup
             var entity = new FloatToRealClass
@@ -2114,7 +2114,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionCrudConvertionFromFloatToBitClass()
+        public void TestSqlConnectionCrudConvertionFromFloatToBit()
         {
             // Setup
             var entity = new FloatToBitClass
