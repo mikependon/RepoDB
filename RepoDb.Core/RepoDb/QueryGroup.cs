@@ -178,7 +178,7 @@ namespace RepoDb
             }
 
             // Check the presence
-            var fields = GetAllQueryFields();
+            var fields = GetFields();
             if (fields == null)
             {
                 return this;
@@ -227,7 +227,7 @@ namespace RepoDb
         public void Reset()
         {
             // Rest all fields
-            foreach (var field in GetAllQueryFields())
+            foreach (var field in GetFields())
             {
                 field.Reset();
             }
@@ -247,7 +247,7 @@ namespace RepoDb
             for (var i = 0; i < queryGroups.Length; i++)
             {
                 var queryGroup = queryGroups[i];
-                var fields = queryGroup.GetAllQueryFields();
+                var fields = queryGroup.GetFields();
                 foreach (var field in fields)
                 {
                     field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
@@ -271,7 +271,7 @@ namespace RepoDb
 
             foreach (var queryGroupTypeMap in queryGroupTypeMaps)
             {
-                var queryFields = queryGroupTypeMap.QueryGroup.GetAllQueryFields();
+                var queryFields = queryGroupTypeMap.QueryGroup.GetFields();
 
                 // Identify if there are fields to count
                 if (queryFields.Count() <= 0)
@@ -439,28 +439,29 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets all the child query groups associated on the current instance.
+        /// Gets all the child <see cref="QueryField"/> objects associated on the current instance.
         /// </summary>
-        /// <returns>An enumerable list of child query groups.</returns>
-        public IEnumerable<QueryField> GetAllQueryFields()
+        /// <param name="traverse">Identify whether to explore all the children of the child <see cref="QueryGroup"/> objects.</param>
+        /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
+        public IEnumerable<QueryField> GetFields(bool traverse = true)
         {
-            var traverse = (Action<QueryGroup>)null;
+            var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
-            traverse = new Action<QueryGroup>(queryGroup =>
+            explore = new Action<QueryGroup>(queryGroup =>
             {
                 if (queryGroup.QueryFields?.Count() > 0)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
-                if (queryGroup.QueryGroups?.Count() > 0)
+                if (traverse == true && queryGroup.QueryGroups?.Count() > 0)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
                     {
-                        traverse(qg);
+                        explore(qg);
                     }
                 }
             });
-            traverse(this);
+            explore(this);
             return queryFields;
         }
 
@@ -531,7 +532,7 @@ namespace RepoDb
             if ((Nullable.GetUnderlyingType(expression.Right.Type) ?? expression.Right.Type) == typeof(bool) && (expression.Right.IsConstant() || expression.Right.IsMember()))
             {
                 var value = expression.Right.GetValue();
-                isEqualsTo = value is bool && Equals(value, false) != true;
+                isEqualsTo = value is bool && Equals(value, false) == false;
                 skipRight = true;
             }
 
@@ -559,6 +560,12 @@ namespace RepoDb
                     leftQueryGroup = new QueryGroup(QueryField.Parse<TEntity>(expression).AsEnumerable());
                     skipRight = true;
                 }
+            }
+
+            // Identify the node type
+            if (expression.NodeType == ExpressionType.NotEqual)
+            {
+                leftQueryGroup.SetIsNot(leftQueryGroup.IsNot == isEqualsTo);
             }
 
             /*

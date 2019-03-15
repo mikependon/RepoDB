@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,6 +46,62 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.Or);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupHashCodeEqualityForExpressions()
         {
             // Prepare
@@ -56,6 +113,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"));
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         [TestMethod]
@@ -95,6 +180,94 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.And);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.Or);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, true);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, false);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressions()
         {
             // Prepare
@@ -106,6 +279,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2"));
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupHashCodeEqualityWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == false);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name2") == true);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         #endregion
@@ -141,6 +342,62 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupObjectEqualityForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupObjectEqualityForExpressions()
         {
             // Prepare
@@ -152,6 +409,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => !e.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2"));
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Name.Contains("Name2") == false);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         [TestMethod]
@@ -191,6 +476,94 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.And);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.Or);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, true);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, false);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressions()
         {
             // Prepare
@@ -202,6 +575,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"));
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         #endregion
@@ -237,6 +638,62 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithSameConjuntion()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithDifferentConjuntion()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupObjectEqualityViaEqualMethodForExpressions()
         {
             // Prepare
@@ -248,6 +705,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         [TestMethod]
@@ -287,6 +772,94 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.And);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.Or);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, true);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, false);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressions()
         {
             // Prepare
@@ -298,6 +871,34 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && !e.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2"));
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupObjectEqualityViaEqualMethodWithMultipleFieldsForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(e => e.Id == 1 && e.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(e => e.Id == 2 && e.Name.Contains("Name2") == false);
+
+            // Act
+            var equal = Equals(objA, objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         #endregion
@@ -337,6 +938,70 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupArrayListContainabilityForExpressions()
         {
             // Prepare
@@ -350,6 +1015,38 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         [TestMethod]
@@ -393,6 +1090,102 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.And);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.Or);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, true);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, false);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressions()
         {
             // Prepare
@@ -406,6 +1199,38 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"));
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupArrayListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false);
+            var list = new ArrayList();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         #endregion
@@ -445,6 +1270,70 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.And);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), Conjunction.And);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), Conjunction.Or);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), true);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new QueryField("Id", 1).AsEnumerable(), true);
+            var objB = new QueryGroup(new QueryField("Id", 2).AsEnumerable(), false);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupGenericListContainabilityForExpressions()
         {
             // Prepare
@@ -458,6 +1347,38 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => !c.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2"));
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Name.Contains("Name2") == false);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         [TestMethod]
@@ -501,6 +1422,102 @@ namespace RepoDb.UnitTests.Equalities
         }
 
         [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithSameConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.And);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithDifferentConjunction()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, Conjunction.And);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, Conjunction.Or);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithSameIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, true);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForQueryFieldsWithDifferentIsNot()
+        {
+            // Prepare
+            var objA = new QueryGroup(new[]
+            {
+                new QueryField("Id", 1),
+                new QueryField("Name", "Name1")
+            }, true);
+            var objB = new QueryGroup(new[]
+            {
+                new QueryField("Id", 2),
+                new QueryField("Name", "Name2")
+            }, false);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
         public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressions()
         {
             // Prepare
@@ -514,6 +1531,38 @@ namespace RepoDb.UnitTests.Equalities
 
             // Assert
             Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentUnaryValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && !c.Name.Contains("Name1"));
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2"));
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryGroupGenericListContainabilityWithMultipleMultipleFieldsForExpressionsWithDifferentBooleanValue()
+        {
+            // Prepare
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Name.Contains("Name1") == true);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id == 2 && c.Name.Contains("Name2") == false);
+            var list = new List<QueryGroup>();
+
+            // Act
+            list.Add(objA);
+            var equal = list.Contains(objB);
+
+            // Assert
+            Assert.IsFalse(equal);
         }
 
         #endregion

@@ -24,7 +24,7 @@ namespace RepoDb.Extensions
             {
                 expandObject[property.Name] = property.GetValue(obj);
             }
-            foreach (var queryField in queryGroup?.Fix().GetAllQueryFields())
+            foreach (var queryField in queryGroup?.Fix().GetFields())
             {
                 expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
             }
@@ -47,7 +47,7 @@ namespace RepoDb.Extensions
             }
 			if (queryGroup != null)
 			{
-				foreach (var queryField in queryGroup.Fix().GetAllQueryFields())
+				foreach (var queryField in queryGroup.Fix().GetFields())
 				{
                     expandObject[queryField.Parameter.Name] = queryField.Parameter.Value;
 				}
