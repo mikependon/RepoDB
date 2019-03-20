@@ -2,6 +2,10 @@
 
  - The v1.8.4 is the stable Spring release of RepoDb (with complete set of Integration/Unit Tests).
 
+### Highlight
+
+RepoDb is the fastest and the most efficient .NET ORM Library as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) (just right behind no-logic HandCodedMaterializer).
+
 ### Why RepoDb
 
  - Fast and dynamic micro-ORM.
