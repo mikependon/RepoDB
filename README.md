@@ -16,21 +16,25 @@ Target               | Build																																			 | Unit Test					
 Net (Framework)      | [![Build status](https://ci.appveyor.com/api/projects/status/c563cikul4c2a5vc?svg=true)](https://ci.appveyor.com/project/mikependon/repodb)		 | [![Build status](https://ci.appveyor.com/api/projects/status/xtfp2urkxa29s7b9?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-g4ml5) | [![Build status](https://ci.appveyor.com/api/projects/status/qnvun61tyyy1vwlb?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-neg8t) |
 Net (Standard)       | [![Build status](https://ci.appveyor.com/api/projects/status/0ix2khcfrv1ub6ba?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-ek0nw) | [![Build status](https://ci.appveyor.com/api/projects/status/78nch60yyoj6wiok?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-yf1cx) | [![Build status](https://ci.appveyor.com/api/projects/status/3fsp38vaqchmec7y?svg=true)](https://ci.appveyor.com/project/mikependon/repodb-qksas) |
 
-## Goal
+## Why RepoDb?
 
-To be the fastest and easiest-to-use lightweight ORM .NET Library.
-
-## Vision
-
-To provide more flexibility and fast-switching development approach, whether to use the massive or lightweight ORM operations.
-
-## Principles
-
- - Keep it as simple as possible (KISS principle)
- - Help developers be more focused on the SOLID principle
- - Make it as fast as possible
- - Make it more flexible
- - Never create complex implementations (especially for complex Join Queries)
+ - It is very fast in fetching data.
+ - It is very efficient in memory usage.
+ - It is extensible.
+ - It is easy to switch between lightweight and massive operations.
+ - It is fluent and clean.
+ - It supports multi-resultset query.
+ - It has massive ORM operations.
+ - It support Async operations.
+ - It is easy to write RawSql syntax.
+ - It has Linq Expressions.
+ - It supports dynamic variable passing.
+ - It has tracing capability.
+ - It is easy to cache the data.
+ - It has dynamic type mapping.
+ - It support query hints.
+ - It abstracted ADO.Net transaction.
+ - It is always free!
 
 ## Features
  
