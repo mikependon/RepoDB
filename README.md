@@ -92,7 +92,7 @@ LLBLGen Pro v5.5.0.0 (v5.5.2), DataTable based TypedView              | 55.353 K
 #### Non-change tracking individual fetches (100 elements, 25 runs), no caching
 
 Library                                                               | In Milliseconds
--------------------------------------------------------------- -------|--------------------------------
+----------------------------------------------------------------------|--------------------------------
 Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 0,10ms (0,00ms) per individual fetch
 Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 0,10ms (0,00ms) per individual fetch
 Handcoded materializer using DbDataReader                             | 0,10ms (0,00ms) per individual fetch
@@ -113,7 +113,7 @@ LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with Linq              | 0,79ms (
 #### Memory usage, per individual element
 
 Library                                                               | In Bytes
--------------------------------------------------------------- -------|--------------------------------
+----------------------------------------------------------------------|--------------------------------
 Handcoded materializer using DbDataReader                             | 14 KB (15.296 bytes)
 Dapper v1.60.0.0                                                      | 15 KB (15.896 bytes)
 Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 15 KB (16.048 bytes)
