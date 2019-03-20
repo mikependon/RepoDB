@@ -45,75 +45,91 @@ To provide more flexibility and fast-switching development approach, whether to 
 
 ## Performance Result
 
-**Bencher:** [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) | **Benchmarks run on:** Saturday, March 9, 2019 6:01:00 PM
+**Bencher:** [https://github.com/FransBouma/RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) | **Benchmarks run on:** Thursday, 7 March 2019 15:54:14
 
 #### Non-change tracking fetches, set fetches (25 runs), no caching
 
-Library                                                              | In Milliseconds
----------------------------------------------------------------------|--------------------------------
-Handcoded materializer using DbDataReader                            | 170.70ms (9.04ms)        Enum: 1.33ms (0.15ms)
-Handcoded materializer using DbDataReader (GetValues(array), boxing) | 179.41ms (15.38ms)       Enum: 1.44ms (0.16ms)
-Tortuga Chain, Compiled v1.2.6553.39558                              | 183.60ms (18.03ms)       Enum: 1.17ms (0.08ms)
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco typed view with QuerySpec        | 187.07ms (8.16ms)        Enum: 1.18ms (0.08ms)
-Raw DbDataReader materializer using object arrays                    | 191.46ms (20.27ms)       Enum: 2.28ms (0.12ms)
-RepoDb (RawSql) v1.8.1.2                                             | 195.56ms (14.16ms)       Enum: 1.21ms (0.08ms)
-LINQ to DB v2.0.0.0 (v2.0.0) (normal)                                | 198.53ms (8.79ms)        Enum: 1.10ms (0.08ms)
-LINQ to DB v2.0.0.0 (v2.0.0) (compiled)                              | 201.30ms (14.27ms)       Enum: 1.06ms (0.05ms)
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco typed view with Linq             | 201.48ms (17.06ms)       Enum: 1.15ms (0.06ms)
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco with Raw SQL                     | 202.49ms (20.88ms)       Enum: 1.11ms (0.04ms)
-PetaPoco Fast v4.0.3                                                 | 211.88ms (18.23ms)       Enum: 1.18ms (0.07ms)
-RepoDb (Poco) v1.8.1.2                                               | 214.64ms (17.32ms)       Enum: 1.19ms (0.08ms)
+Library                                                               | In Milliseconds
+----------------------------------------------------------------------|--------------------------------
+Handcoded materializer using DbDataReader                             | 115,02ms (2,81ms)	Enum| 1,07ms (0,03ms)
+RepoDb (RawSql) v1.8.0.6                                              | 125,95ms (1,31ms)	Enum| 1,05ms (0,01ms)
+LINQ to DB v2.6.4.0 (v2.6.4) (compiled)                               | 126,02ms (4,21ms)	Enum| 0,93ms (0,10ms)
+LINQ to DB v2.6.4.0 (v2.6.4) (normal)                                 | 126,09ms (3,62ms)	Enum| 0,93ms (0,12ms)
+Entity Framework Core v2.2.2.0 (v2.2.2.19024)                         | 130,29ms (3,31ms)	Enum| 0,96ms (0,14ms)
+Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 131,68ms (1,53ms)	Enum| 1,71ms (0,10ms)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco with Raw SQL                      | 132,02ms (2,02ms)	Enum| 0,92ms (0,02ms)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with QuerySpec         | 143,30ms (4,81ms)	Enum| 1,60ms (0,00ms)
+Raw DbDataReader materializer using object arrays                     | 144,11ms (0,74ms)	Enum| 4,20ms (0,05ms)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with Linq              | 146,38ms (1,00ms)	Enum| 1,40ms (0,02ms)
+Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 147,32ms (1,24ms)	Enum| 1,79ms (0,15ms)
+Dapper v1.60.0.0                                                      | 153,23ms (0,99ms)	Enum| 1,64ms (0,08ms)
+ServiceStack OrmLite v5.0.0.0 (v5.4.0.0)                              | 170,57ms (2,60ms)	Enum| 1,63ms (0,08ms)
+NPoco v3.9.4.0 (v3.9.4.0)                                             | 181,33ms (5,91ms)	Enum| 1,70ms (0,10ms)
+LLBLGen Pro v5.5.0.0 (v5.5.2), DataTable based TypedView              | 234,47ms (7,27ms)	Enum| 4,06ms (0,14ms)
+Tortuga Chain v2.1.0.0                                                | 287,25ms (4,86ms)	Enum| 1,66ms (0,07ms)
 
 #### Memory usage, per iteration
 
-Library                                                              | In KB
----------------------------------------------------------------------|--------------------------------
-Handcoded materializer using DbDataReader                            | 15,163 KB (15,527,336 bytes)
-RepoDb (Poco) v1.8.1.2                                               | 15,166 KB (15,530,536 bytes)
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco with Raw SQL                     | 15,167 KB (15,531,392 bytes)
-RepoDb (RawSql) v1.8.1.2                                             | 15,169 KB (15,533,736 bytes)
-PetaPoco Fast v4.0.3                                                 | 15,205 KB (15,570,024 bytes)
-LINQ to DB v2.0.0.0 (v2.0.0) (normal)                                | 15,973 KB (16,357,312 bytes)
-LINQ to DB v2.0.0.0 (v2.0.0) (compiled)                              | 15,976 KB (16,359,872 bytes)
-Tortuga Chain, Compiled v1.2.6553.39558                              | 16,164 KB (16,552,936 bytes)
-PetaPoco v4.0.3                                                      | 21,108 KB (21,614,784 bytes)
-Handcoded materializer using DbDataReader (GetValues(array), boxing) | 30,798 KB (31,537,368 bytes)
-Dapper v1.60.0.0                                                     | 30,808 KB (31,547,912 bytes)
-Raw DbDataReader materializer using object arrays                    | 31,015 KB (31,759,432 bytes)
+Library                                                               | In KB
+----------------------------------------------------------------------|--------------------------------
+Handcoded materializer using DbDataReader                             | 15.202 KB (15.567.648 bytes)
+RepoDb (RawSql) v1.8.0.6                                              | 15.205 KB (15.570.280 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco with Raw SQL                      | 15.206 KB (15.571.696 bytes)
+LINQ to DB v2.6.4.0 (v2.6.4) (normal)                                 | 15.986 KB (16.370.632 bytes)
+LINQ to DB v2.6.4.0 (v2.6.4) (compiled)                               | 15.993 KB (16.377.728 bytes)
+Entity Framework Core v2.2.2.0 (v2.2.2.19024)                         | 20.153 KB (20.637.528 bytes)
+Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 30.834 KB (31.574.144 bytes)
+Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 30.834 KB (31.574.144 bytes)
+Dapper v1.60.0.0                                                      | 30.834 KB (31.574.216 bytes)
+Raw DbDataReader materializer using object arrays                     | 31.048 KB (31.793.456 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with QuerySpec         | 31.861 KB (32.626.336 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with Linq              | 32.469 KB (33.248.608 bytes)
+ServiceStack OrmLite v5.0.0.0 (v5.4.0.0)                              | 33.784 KB (34.595.352 bytes)
+NPoco v3.9.4.0 (v3.9.4.0)                                             | 41.031 KB (42.016.352 bytes)
+Tortuga Chain v2.1.0.0                                                | 43.685 KB (44.734.112 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), DataTable based TypedView              | 55.353 KB (56.681.880 bytes)
 
 #### Non-change tracking individual fetches (100 elements, 25 runs), no caching
 
-Library                                                              | In Milliseconds
----------------------------------------------------------------------|--------------------------------
-Handcoded materializer using DbDataReader                            | 0.45ms (0.05ms) per individual fetch
-Handcoded materializer using DbDataReader (GetValues(array), boxing) | 0.58ms (0.13ms) per individual fetch
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco with Raw SQL                     | 0.59ms (0.17ms) per individual fetch
-RepoDb (RawSql) v1.8.1.2                                             | 0.59ms (0.15ms) per individual fetch
-Dapper v1.60.0.0                                                     | 0.60ms (0.14ms) per individual fetch
-ServiceStack OrmLite v5.0.0.0 (v5.1.0.0)                             | 0.61ms (0.16ms) per individual fetch
-RepoDb (Poco) v1.8.1.2                                               | 0.63ms (0.15ms) per individual fetch
-Tortuga Chain v1.2.6553.39558                                        | 0.65ms (0.22ms) per individual fetch
-Tortuga Chain, Compiled v1.2.6553.39558                              | 0.67ms (0.17ms) per individual fetch
-Massive using dynamic class                                          | 0.72ms (0.17ms) per individual fetch
-LINQ to DB v2.0.0.0 (v2.0.0) (normal)                                | 0.77ms (0.17ms) per individual fetch
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco typed view with QuerySpec        | 0.78ms (0.20ms) per individual fetch
+Library                                                               | In Milliseconds
+-------------------------------------------------------------- -------|--------------------------------
+Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 0,10ms (0,00ms) per individual fetch
+Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 0,10ms (0,00ms) per individual fetch
+Handcoded materializer using DbDataReader                             | 0,10ms (0,00ms) per individual fetch
+RepoDb (RawSql) v1.8.0.6                                              | 0,12ms (0,00ms) per individual fetch
+Dapper v1.60.0.0                                                      | 0,12ms (0,03ms) per individual fetch
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco with Raw SQL                      | 0,13ms (0,00ms) per individual fetch
+ServiceStack OrmLite v5.0.0.0 (v5.4.0.0)                              | 0,13ms (0,00ms) per individual fetch
+Raw DbDataReader materializer using object arrays                     | 0,18ms (0,00ms) per individual fetch
+Tortuga Chain v2.1.0.0                                                | 0,18ms (0,00ms) per individual fetch
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with QuerySpec         | 0,22ms (0,00ms) per individual fetch
+Entity Framework Core v2.2.2.0 (v2.2.2.19024)                         | 0,29ms (0,00ms) per individual fetch
+LINQ to DB v2.6.4.0 (v2.6.4) (compiled)                               | 0,36ms (0,03ms) per individual fetch
+LLBLGen Pro v5.5.0.0 (v5.5.2), DataTable based TypedView              | 0,37ms (0,03ms) per individual fetch
+LINQ to DB v2.6.4.0 (v2.6.4) (normal)                                 | 0,39ms (0,00ms) per individual fetch
+NPoco v3.9.4.0 (v3.9.4.0)                                             | 0,49ms (0,03ms) per individual fetch
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with Linq              | 0,79ms (0,00ms) per individual fetch
 
 #### Memory usage, per individual element
 
-Library                                                              | In Bytes
----------------------------------------------------------------------|--------------------------------
-Handcoded materializer using DbDataReader                            | 08 KB (8,192 bytes)
-Handcoded materializer using DbDataReader (GetValues(array), boxing) | 16 KB (16,384 bytes)
-LLBLGen Pro v5.4.0.0 (v5.4.1), Poco with Raw SQL                     | 16 KB (16,384 bytes)
-RepoDb (RawSql) v1.8.1.2                                             | 16 KB (16,384 bytes)
-Dapper v1.60.0.0                                                     | 16 KB (16,384 bytes)
-ServiceStack OrmLite v5.0.0.0 (v5.1.0.0)                             | 16 KB (16,384 bytes)
-RepoDb (Poco) v1.8.1.2                                               | 24 KB (24,576 bytes)
-Tortuga Chain, Compiled v1.2.6553.39558                              | 24 KB (24,576 bytes)
-Massive using dynamic class                                          | 24 KB (24,576 bytes)
-Tortuga Chain v1.2.6553.39558                                        | 32 KB (32,768 bytes)
-Entity Framework Core v2.0.1.0 (v2.0.1.17303)                        | 48 KB (49,152 bytes)
-PetaPoco Fast v4.0.3                                                 | 56 KB (57,344 bytes)
+Library                                                               | In Bytes
+-------------------------------------------------------------- -------|--------------------------------
+Handcoded materializer using DbDataReader                             | 14 KB (15.296 bytes)
+Dapper v1.60.0.0                                                      | 15 KB (15.896 bytes)
+Handcoded materializer using DbDataReader (GetValues(array), boxing)  | 15 KB (16.048 bytes)
+Handcoded materializer using DbDataReader (GetValue(Ordinal), boxing) | 15 KB (16.048 bytes)
+ServiceStack OrmLite v5.0.0.0 (v5.4.0.0)                              | 16 KB (17.336 bytes)
+RepoDb (RawSql) v1.8.0.6                                              | 17 KB (18.368 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco with Raw SQL                      | 20 KB (20.544 bytes)
+Tortuga Chain v2.1.0.0                                                | 30 KB (31.416 bytes)
+Entity Framework Core v2.2.2.0 (v2.2.2.19024)                         | 57 KB (59.048 bytes)
+LINQ to DB v2.6.4.0 (v2.6.4) (compiled)                               | 61 KB (62.664 bytes)
+LINQ to DB v2.6.4.0 (v2.6.4) (normal)                                 | 64 KB (66.176 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with QuerySpec         | 65 KB (67.008 bytes)
+NPoco v3.9.4.0 (v3.9.4.0)                                             | 138 KB (141.336 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), DataTable based TypedView              | 142 KB (146.408 bytes)
+LLBLGen Pro v5.5.0.0 (v5.5.2), Poco typed view with Linq              | 248 KB (254.528 bytes)
+Raw DbDataReader materializer using object arrays                     | 257 KB (264.016 bytes)
 
 ## Code Samples
 
