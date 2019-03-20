@@ -26,14 +26,14 @@ Net (Standard)       | [![Build status](https://ci.appveyor.com/api/projects/sta
  - It supports multi-resultset query.
  - It has massive ORM operations.
  - It support Async operations.
- - It is easy to write RawSql syntax.
+ - It is easy to write RawSql statements.
  - It has Linq Expressions.
  - It supports dynamic variable passing.
- - It has tracing capability.
+ - It has a tracing capability.
  - It is easy to cache the data.
- - It has dynamic type mapping.
+ - It has a dynamic type mapping.
  - It support query hints.
- - It abstracted ADO.Net transaction.
+ - It has abstracted the ADO.Net transaction.
  - It is always free!
 
 ## Features
