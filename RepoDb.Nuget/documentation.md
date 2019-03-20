@@ -4,7 +4,8 @@
 
 ### Highlight
 
-RepoDb is the fastest and the most efficient .NET ORM Library as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) (just right behind no-logic HandCodedMaterializer).
+ - RepoDb is the fastest and the most efficient .NET ORM Library as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) (just right behind no-logic HandCodedMaterializer).
+ - Covered by 1700+ Integration/Unit Tests.
 
 ### Why RepoDb
 
