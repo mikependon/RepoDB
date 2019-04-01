@@ -13,15 +13,7 @@ namespace RepoDb
     public class QueryBuilder<TEntity>
         where TEntity : class
     {
-        // A StringBuilder's capacity grows dynamically as required (e.g. during append operations), but there's a 
-        // perfomance penalty to be paid every time this happens (memory allocation + copy). The initial capacity
-        // of a StringBuilder buffer is only 16 characters by default - too small to hold any meaningful query string,
-        // so let's increase this to somthing more sensible. This should improve overall performance at the expense
-        // of higher memory usage for short queries.
-
-        //TODO: Tune this value
-        private const int INITIAL_STRINGBUILDER_CAPACITY = 2048;
-        private readonly StringBuilder m_stringBuilder = new StringBuilder(INITIAL_STRINGBUILDER_CAPACITY);
+        private readonly StringBuilder m_stringBuilder = new StringBuilder();
 
         /// <summary>
         /// Stringify the current object.
@@ -39,12 +31,11 @@ namespace RepoDb
 
         /// <summary>
         /// Gets the string that corresponds to the composed SQL Query Statement.
-        /// Starts at index 1 to drop the leading space.
         /// </summary>
         /// <returns>The current instance.</returns>
         public string GetString()
         {
-            return m_stringBuilder.ToString(1, m_stringBuilder.Length - 1);
+            return m_stringBuilder.ToString();
         }
 
         /// <summary>
@@ -67,13 +58,12 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Appends a line terminator to the SQL Query Statement.
+        /// Appends a new-line to the SQL Query Statement.
         /// </summary>
         /// <returns>The current instance.</returns>
         public QueryBuilder<TEntity> NewLine()
         {
-            m_stringBuilder.AppendLine();
-            return this;
+            return Append("\n");
         }
 
         /// <summary>
@@ -88,7 +78,7 @@ namespace RepoDb
 
         private QueryBuilder<TEntity> Append(string value)
         {
-            m_stringBuilder.Append(string.Concat(" ", value));
+            m_stringBuilder.Append(m_stringBuilder.Length > 0 ? string.Concat(" ", value) : value);
             return this;
         }
 

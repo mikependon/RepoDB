@@ -5,15 +5,15 @@ namespace RepoDb.Enumerations
     /// <summary>
     /// An enumeration used to define a conjuction for the query grouping. This enumeration is used at <see cref="QueryGroup"/> object.
     /// </summary>
-    public enum Conjunction
+    public enum Conjunction : short
     {
         /// <summary>
         /// The (AND) conjunction.
         /// </summary>
-        [Text("AND")] And = 446274343,
+        [Text("AND")] And = 1,
         /// <summary>
         /// The (OR) conjunction.
         /// </summary>
-        [Text("OR")] Or = 1382346125
+        [Text("OR")] Or = 2
     }
 }

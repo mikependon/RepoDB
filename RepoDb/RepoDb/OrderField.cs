@@ -140,7 +140,7 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Name.GetHashCode() + (int)Order;
+            return Name.GetHashCode() + Order.GetHashCode();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            return obj?.GetHashCode() == GetHashCode();
+            return GetHashCode() == obj?.GetHashCode();
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace RepoDb
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(OrderField other)
         {
-            return other?.GetHashCode() == GetHashCode();
+            return GetHashCode() == other?.GetHashCode();
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace RepoDb
             {
                 return ReferenceEquals(null, objB);
             }
-            return objB?.GetHashCode() == objA.GetHashCode();
+            return objA?.GetHashCode() == objB?.GetHashCode();
         }
 
         /// <summary>

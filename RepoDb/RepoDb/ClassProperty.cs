@@ -272,7 +272,7 @@ namespace RepoDb
             {
                 return ReferenceEquals(null, objB);
             }
-            return objB?.GetHashCode() == objA.GetHashCode();
+            return objA?.GetHashCode() == objB?.GetHashCode();
         }
 
         /// <summary>

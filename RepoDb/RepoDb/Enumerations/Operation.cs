@@ -5,55 +5,55 @@ namespace RepoDb.Enumerations
     /// <summary>
     /// An enumeration used to define an operation on the query expression.
     /// </summary>
-    public enum Operation
+    public enum Operation : short
     {
         /// <summary>
         /// An equal operation.
         /// </summary>
-        [Text("=")] Equal = 1968935258,
+        [Text("=")] Equal,
         /// <summary>
         /// A not-equal operation.
         /// </summary>
-        [Text("<>")] NotEqual = 1861928312,
+        [Text("<>")] NotEqual,
         /// <summary>
         /// A less-than operation.
         /// </summary>
-        [Text("<")] LessThan = 1185489222,
+        [Text("<")] LessThan,
         /// <summary>
         /// A greater-than operation.
         /// </summary>
-        [Text(">")] GreaterThan = 1904766133,
+        [Text(">")] GreaterThan,
         /// <summary>
         /// A less-than-or-equal operation.
         /// </summary>
-        [Text("<=")] LessThanOrEqual = 1969886037,
+        [Text("<=")] LessThanOrEqual,
         /// <summary>
         /// A greater-than-or-equal operation.
         /// </summary>
-        [Text(">=")] GreaterThanOrEqual = 1388583607,
+        [Text(">=")] GreaterThanOrEqual,
         /// <summary>
         /// A like operation. Defines the (LIKE) keyword in SQL Statement.
         /// </summary>
-        [Text("LIKE")] Like = 761684150,
+        [Text("LIKE")] Like,
         /// <summary>
         /// A not-like operation. Defines the (NOT LIKE) keyword in SQL Statement.
         /// </summary>
-        [Text("NOT LIKE")] NotLike = 9672391,
+        [Text("NOT LIKE")] NotLike,
         /// <summary>
         /// A between operation. Defines the (BETWEEN) keyword in SQL Statement.
         /// </summary>
-        [Text("BETWEEN")] Between = 1639933206,
+        [Text("BETWEEN")] Between,
         /// <summary>
         /// A not-between operation. Defines the (NOT BETWEEN) keyword in SQL Statement.
         /// </summary>
-        [Text("NOT BETWEEN")] NotBetween = 729234306,
+        [Text("NOT BETWEEN")] NotBetween,
         /// <summary>
         /// An in operation. Defines the (IN) keyword in SQL Statement.
         /// </summary>
-        [Text("IN")] In = 1986985380,
+        [Text("IN")] In,
         /// <summary>
         /// A non-in operation. Defines the (NOT IN) keyword in SQL Statement.
         /// </summary>
-        [Text("NOT IN")] NotIn = 277789918
+        [Text("NOT IN")] NotIn
     }
 }
