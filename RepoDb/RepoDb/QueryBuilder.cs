@@ -20,7 +20,7 @@ namespace RepoDb
         // of higher memory usage for short queries.
 
         //TODO: Tune this value
-        private const int INITIAL_STRINGBUILDER_CAPACITY = 2048;
+        private const int INITIAL_STRINGBUILDER_CAPACITY = 256;
         private readonly StringBuilder m_stringBuilder = new StringBuilder(INITIAL_STRINGBUILDER_CAPACITY);
 
         /// <summary>
