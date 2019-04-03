@@ -87,7 +87,7 @@ namespace RepoDb.Requests
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj?.GetHashCode();
+            return obj?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace RepoDb.Requests
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(InlineMergeRequest other)
         {
-            return GetHashCode() == other?.GetHashCode();
+            return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace RepoDb.Requests
             {
                 return ReferenceEquals(null, objB);
             }
-            return objA?.GetHashCode() == objB?.GetHashCode();
+            return objB?.GetHashCode() == objA.GetHashCode();
         }
 
         /// <summary>
