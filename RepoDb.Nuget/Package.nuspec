@@ -7,7 +7,7 @@
     <authors>Michael Camara Pendon</authors>
     <owners>mikependon</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A dynamic, lightweight, and very fast ORM .NET Library.</description>
+    <description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET.</description>
     <language>en-US</language>
     <releaseNotes>
     Stable Spring Release of RepoDb. Enjoy!

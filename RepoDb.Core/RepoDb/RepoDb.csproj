@@ -8,7 +8,7 @@
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
-    <Description>A dynamic, lightweight, and very fast ORM .NET Library.</Description>
+    <Description>A dynamic, lightweight, efficient and very fast Hybrid ORM library for .NET</Description>
     <Copyright>Copyright © 2018</Copyright>
     <PackageTags>orm sql repo repodb repository</PackageTags>
     <PackageReleaseNotes>Stable Spring Release of RepoDb. Enjoy!</PackageReleaseNotes>
