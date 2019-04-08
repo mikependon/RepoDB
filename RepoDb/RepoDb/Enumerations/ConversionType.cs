@@ -6,7 +6,7 @@ namespace RepoDb.Enumerations
     /// <summary>
     /// An enum used to define the conversion logic when converting an instance of <see cref="DbDataReader"/> into a .NET CLR class.
     /// </summary>
-    public enum ConversionType : short
+    public enum ConversionType
     {
         /// <summary>
         /// The conversion is strict and there is no additional implied logic during the conversion of <see cref="DbDataReader"/> object into its
