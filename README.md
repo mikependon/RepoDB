@@ -9,7 +9,7 @@ Documentation: [https://repodb.readthedocs.io/en/latest/](https://repodb.readthe
 
 RepoDb is the fastest and the most efficient .NET ORM Library (in set-fetches) as per the result of [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher).
 
-Click [here](https://github.com/FransBouma/RawDataAccessBencher) to see the official run result.
+Click [here](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20190307_netcore.txt) to see the official run result.
 
 ## Build Result
 
