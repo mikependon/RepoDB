@@ -3,7 +3,7 @@
     /// <summary>
     /// An enumeration used to define the connection provider.
     /// </summary>
-    public enum Provider : short
+    public enum Provider
     {
         /// <summary>
         /// A data provider for Sql Server.

@@ -19,10 +19,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithoutMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [TestSqlDbProviderCreateInsertWithoutMappingsClass] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -47,10 +47,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithClassMappingClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -75,10 +75,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithFieldMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithFieldMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [TestSqlDbProviderCreateInsertWithFieldMappingsClass] " +
                 $"( [Field1], [Field2], [Field4] ) " +
@@ -102,10 +102,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithIdClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithIdClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [TestSqlDbProviderCreateInsertWithIdClass] " +
                 $"( [Id], [Field2], [Field3] ) " +
@@ -129,10 +129,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithClassIdFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithClassIdFieldClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [TestSqlDbProviderCreateInsertWithClassIdFieldClass] " +
                 $"( [TestSqlDbProviderCreateInsertWithClassIdFieldClassId], [Field2], [Field3] ) " +
@@ -157,10 +157,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateInsertWithPrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestSqlDbProviderCreateInsertWithPrimaryKeyFieldClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [TestSqlDbProviderCreateInsertWithPrimaryKeyFieldClass] " +
                 $"( [Field1], [Field2], [Field3] ) " +
@@ -185,10 +185,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithSqlDbProviderCreateInsertClassMappingIdClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder);
+            var actual = statementBuilder.CreateInsert<TestWithSqlDbProviderCreateInsertClassMappingIdClass>(queryBuilder);
             var expected = $"" +
                 $"INSERT INTO [ClassName] " +
                 $"( [ClassNameId], [Field2], [Field3] ) " +
@@ -214,10 +214,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act/Assert
-            statementBuilder.CreateInsert(queryBuilder);
+            statementBuilder.CreateInsert<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotThePrimaryKeyFieldClass>(queryBuilder);
         }
 
         private class ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheClassIdFieldClass
@@ -233,10 +233,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheClassIdFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act/Assert
-            statementBuilder.CreateInsert(queryBuilder);
+            statementBuilder.CreateInsert<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheClassIdFieldClass>(queryBuilder);
         }
 
         private class ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheIdFieldClass
@@ -252,10 +252,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheIdFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act/Assert
-            statementBuilder.CreateInsert(queryBuilder);
+            statementBuilder.CreateInsert<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheIdFieldClass>(queryBuilder);
         }
 
         [Map("ClassName")]
@@ -272,10 +272,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act/Assert
-            statementBuilder.CreateInsert(queryBuilder);
+            statementBuilder.CreateInsert<ThrowExceptionOnSqlDbProviderCreateInsertIfTheIdentityFieldIsNotTheClassMappingIdFieldClass>(queryBuilder);
         }
     }
 }

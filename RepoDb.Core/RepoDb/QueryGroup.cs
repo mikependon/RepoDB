@@ -945,7 +945,7 @@ namespace RepoDb
             }
 
             // Set with conjunction
-            hashCode += Conjunction.GetHashCode();
+            hashCode += (int)Conjunction;
 
             // Set the IsNot
             hashCode += IsNot.GetHashCode();
@@ -964,7 +964,7 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj?.GetHashCode();
+            return obj?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -974,7 +974,7 @@ namespace RepoDb
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(QueryGroup other)
         {
-            return GetHashCode() == other?.GetHashCode();
+            return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -989,7 +989,7 @@ namespace RepoDb
             {
                 return ReferenceEquals(null, objB);
             }
-            return objA?.GetHashCode() == objB?.GetHashCode();
+            return objB?.GetHashCode() == objA.GetHashCode();
         }
 
         /// <summary>

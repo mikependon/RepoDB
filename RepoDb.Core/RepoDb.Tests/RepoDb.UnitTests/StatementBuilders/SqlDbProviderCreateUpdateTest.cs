@@ -19,11 +19,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithoutMappingsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithoutMappingsClass] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -45,11 +45,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithClassMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithClassMappingsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [ClassName] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -71,11 +71,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithFieldMappingClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithFieldMappingClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithFieldMappingClass] " +
                 $"SET [Field1] = @Field1, [Field2] = @Field2, [Field4] = @Field4 ;";
@@ -97,11 +97,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithPrimaryKeyFieldClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithPrimaryKeyFieldClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithPrimaryKeyFieldClass] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -122,11 +122,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithIdClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithIdClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithIdClass] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -147,11 +147,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithClassIdClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithClassIdClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithClassIdClass] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -173,11 +173,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithClassMappingIdClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithClassMappingIdClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [ClassName] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -199,11 +199,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateUpdateWithIdentityFieldClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateUpdate<TestSqlDbProviderCreateUpdateWithIdentityFieldClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"UPDATE [TestSqlDbProviderCreateUpdateWithIdentityFieldClass] " +
                 $"SET [Field2] = @Field2, [Field3] = @Field3 ;";
@@ -223,11 +223,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateUpdateIfTheIdentityFieldIsNotThePrimaryFieldClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert
-            statementBuilder.CreateUpdate(queryBuilder, queryGroup);
+            statementBuilder.CreateUpdate<ThrowExceptionOnSqlDbProviderCreateUpdateIfTheIdentityFieldIsNotThePrimaryFieldClass>(queryBuilder, queryGroup);
         }
     }
 }

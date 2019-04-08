@@ -191,7 +191,7 @@ namespace RepoDb
             var hashCode = 0;
 
             // Set in the combination of the properties
-            hashCode += (Field.GetHashCode() + Operation.GetHashCode() + Parameter.GetHashCode());
+            hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
 
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
@@ -224,7 +224,7 @@ namespace RepoDb
         /// <returns>True if the instances are equals.</returns>
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj?.GetHashCode();
+            return obj?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace RepoDb
         /// <returns>True if the instances are equal.</returns>
         public bool Equals(QueryField other)
         {
-            return GetHashCode() == other?.GetHashCode();
+            return other?.GetHashCode() == GetHashCode();
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace RepoDb
             {
                 return ReferenceEquals(null, objB);
             }
-            return objA?.GetHashCode() == objB?.GetHashCode();
+            return objB?.GetHashCode() == objA.GetHashCode();
         }
 
         /// <summary>

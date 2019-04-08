@@ -15,10 +15,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestWithhoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder, null);
+            var actual = statementBuilder.CreateCount<TestWithhoutMappingsClass>(queryBuilder, null);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
                 $"FROM [TestWithhoutMappingsClass] ;";
@@ -37,10 +37,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateCountWithClassMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateCount(queryBuilder, null);
+            var actual = statementBuilder.CreateCount<TestSqlDbProviderCreateCountWithClassMappingsClass>(queryBuilder, null);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
                 $"FROM [ClassName] ;";
@@ -58,12 +58,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateCountWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { Field1 = 1 };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateCount(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateCount<TestSqlDbProviderCreateCountWithExpressionsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
                 $"FROM [TestSqlDbProviderCreateCountWithExpressionsClass] " +
@@ -82,12 +82,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { Field1 = 1 };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateCount(queryBuilder, queryGroup, SqlTableHints.NoLock);
+            var actual = statementBuilder.CreateCount<TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass>(queryBuilder, queryGroup, SqlTableHints.NoLock);
             var expected = $"" +
                 $"SELECT COUNT_BIG (1) AS [Counted] " +
                 $"FROM [TestSqlDbProviderCreateCountWithExpressionsAndWithTableHintsClass] WITH (NOLOCK) " +
