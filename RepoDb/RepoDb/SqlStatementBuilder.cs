@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of fields used for ordering.</param>
         /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for batch query operation.</returns>
-        public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateBatchQuery<TEntity>(QueryBuilder queryBuilder,
             QueryGroup where = null,
             int? page = null,
             int? rowsPerBatch = null,
@@ -46,7 +46,7 @@ namespace RepoDb
             }
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .With()
@@ -62,7 +62,7 @@ namespace RepoDb
                 .As("[RowNumber],")
                 .FieldsFrom(fields)
                 .From()
-                .TableName();
+                .TableNameFrom<TEntity>();
 
             // Build the query optimizers
             if (hints != null)
@@ -97,19 +97,19 @@ namespace RepoDb
         /// <param name="where">The query expression for SQL statement.</param>
         /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for count operation.</returns>
-        public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateCount<TEntity>(QueryBuilder queryBuilder,
             QueryGroup where = null,
             string hints = null)
             where TEntity : class
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Select()
                 .CountBig()
                 .WriteText("(1) AS [Counted]")
                 .From()
-                .TableName();
+                .TableNameFrom<TEntity>();
 
 
             // Build the query optimizers
@@ -137,16 +137,16 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for delete operation.</returns>
-        public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateDelete<TEntity>(QueryBuilder queryBuilder,
             QueryGroup where = null)
             where TEntity : class
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Delete()
                 .From()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .WhereFrom(where)
                 .End();
             return queryBuilder.GetString();
@@ -160,15 +160,15 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for delete-all operation.</returns>
-        public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder)
+        public string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
             where TEntity : class
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Delete()
                 .From()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .End();
             return queryBuilder.GetString();
         }
@@ -182,7 +182,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> fields = null)
             where TEntity : class
         {
@@ -206,7 +206,7 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of the inline insert operation in SQL Statement composition.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for inline-insert operation.</returns>
-        internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        internal string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> fields = null,
             bool isPrimaryIdentity = false)
             where TEntity : class
@@ -247,12 +247,12 @@ namespace RepoDb
             }
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Insert()
                 .Into()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .OpenParen()
                 .FieldsFrom(fields)
                 .CloseParen()
@@ -282,7 +282,7 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of the inline merge operation in SQL Statement composition.</param>
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class
@@ -308,7 +308,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of the qualifier fields to be used by the inline merge operation on a SQL Statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for inline-merge operation.</returns>
-        internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        internal string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> fields = null,
             IEnumerable<Field> qualifiers = null,
             bool? isPrimaryIdentity = false)
@@ -387,12 +387,12 @@ namespace RepoDb
                 .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false && qualifiers?.Any(f => f == field) == false);
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .As("T")
                 .Using()
                 .OpenParen()
@@ -444,7 +444,7 @@ namespace RepoDb
         /// <param name="fields">The list of the fields to be a part of inline update operation in SQL Statement composition.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for inline-update operation.</returns>
-        public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateInlineUpdate<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> fields = null,
             QueryGroup where = null)
             where TEntity : class
@@ -492,11 +492,11 @@ namespace RepoDb
             where?.AppendParametersPrefix();
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Update()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .Set()
                 .FieldsAndParametersFrom(fields)
                 .WhereFrom(where)
@@ -514,7 +514,7 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
+        public string CreateInsert<TEntity>(QueryBuilder queryBuilder)
             where TEntity : class
         {
             var primary = PrimaryKeyCache.Get<TEntity>();
@@ -524,7 +524,7 @@ namespace RepoDb
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
             }
             var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateInsert(queryBuilder, isPrimaryIdentity);
+            return CreateInsert<TEntity>(queryBuilder, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -536,7 +536,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for insert operation.</returns>
-        internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        internal string CreateInsert<TEntity>(QueryBuilder queryBuilder,
             bool? isPrimaryIdentity = null)
             where TEntity : class
         {
@@ -546,12 +546,12 @@ namespace RepoDb
                 .Select(property => new Field(property.GetMappedName()));
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Insert()
                 .Into()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .OpenParen()
                 .FieldsFrom(fields)
                 .CloseParen()
@@ -580,7 +580,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
-        public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateMerge<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> qualifiers = null)
             where TEntity : class
         {
@@ -591,7 +591,7 @@ namespace RepoDb
                 throw new InvalidOperationException($"Identity property must be the primary property for type '{typeof(TEntity).FullName}'.");
             }
             var isPrimaryIdentity = (identity != null) && identity == primary;
-            return CreateMerge(queryBuilder, qualifiers, isPrimaryIdentity);
+            return CreateMerge<TEntity>(queryBuilder, qualifiers, isPrimaryIdentity);
         }
 
         /// <summary>
@@ -604,7 +604,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifier fields to be used for the merge operation in SQL Statement composition.</param>
         /// <param name="isPrimaryIdentity">A boolean value indicates whether the primary key is identity in the database.</param>
         /// <returns>A string containing the composed SQL Statement for merge operation.</returns>
-        internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        internal string CreateMerge<TEntity>(QueryBuilder queryBuilder,
             IEnumerable<Field> qualifiers,
             bool? isPrimaryIdentity = false)
             where TEntity : class
@@ -644,17 +644,17 @@ namespace RepoDb
                 .Where(field => (field.Name.ToLower() == primary?.GetMappedName().ToLower()) == false);
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 // MERGE T USING S
                 .Merge()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
-                .ParametersAsFieldsFrom()
+                .ParametersAsFieldsFrom<TEntity>()
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -703,7 +703,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned by the query operation in SQL Statement composition.</param>
         /// <param name="hints">The hints to be used to optimze the query operation.</param>
         /// <returns>A string containing the composed SQL Statement for query operation.</returns>
-        public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
             int? top = null,
@@ -719,7 +719,7 @@ namespace RepoDb
             }
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
 
             // Build the base
             queryBuilder
@@ -728,7 +728,7 @@ namespace RepoDb
                 .TopFrom(top)
                 .FieldsFrom(fields)
                 .From()
-                .TableName();
+                .TableNameFrom<TEntity>();
 
             // Build the query optimizers
             if (hints != null)
@@ -755,17 +755,17 @@ namespace RepoDb
         /// </typeparam>
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for truncate operation.</returns>
-        public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder)
+        public string CreateTruncate<TEntity>(QueryBuilder queryBuilder)
             where TEntity : class
         {
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
 
             // Build the SQL Statement
             queryBuilder
                 .Clear()
                 .Truncate()
                 .Table()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .End();
 
             // Return the query
@@ -781,7 +781,7 @@ namespace RepoDb
         /// <param name="queryBuilder">An instance of query builder used to build the SQL statement.</param>
         /// <param name="where">The query expression for SQL statement.</param>
         /// <returns>A string containing the composed SQL Statement for update operation.</returns>
-        public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder,
+        public string CreateUpdate<TEntity>(QueryBuilder queryBuilder,
             QueryGroup where = null)
             where TEntity : class
         {
@@ -798,11 +798,11 @@ namespace RepoDb
             where?.AppendParametersPrefix();
 
             // Build the SQL Statement
-            queryBuilder = queryBuilder ?? new QueryBuilder<TEntity>();
+            queryBuilder = queryBuilder ?? new QueryBuilder();
             queryBuilder
                 .Clear()
                 .Update()
-                .TableName()
+                .TableNameFrom<TEntity>()
                 .Set()
                 .FieldsAndParametersFrom(fields)
                 .WhereFrom(where)

@@ -15,10 +15,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder, null);
+            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithoutMappingsClass>(queryBuilder, null);
             var expected = $"" +
                 $"DELETE " +
                 $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsClass] ;";
@@ -36,12 +36,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { Field1 = 1 };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateDelete(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"DELETE " +
                 $"FROM [TestSqlDbProviderCreateDeleteWithoutMappingsAndWithExpressionsClass] " +
@@ -61,12 +61,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteWithMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { Field1 = 1 };
 
             // Act
             var queryGroup = QueryGroup.Parse(expression);
-            var actual = statementBuilder.CreateDelete(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateDelete<TestSqlDbProviderCreateDeleteWithMappingsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"DELETE " +
                 $"FROM [ClassName] " +

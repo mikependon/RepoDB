@@ -15,10 +15,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateTruncateWithhoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateTruncate(queryBuilder);
+            var actual = statementBuilder.CreateTruncate<TestSqlDbProviderCreateTruncateWithhoutMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"TRUNCATE TABLE [TestSqlDbProviderCreateTruncateWithhoutMappingsClass] ;";
 
@@ -36,10 +36,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateTruncateWithClassMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateTruncate(queryBuilder);
+            var actual = statementBuilder.CreateTruncate<TestSqlDbProviderCreateTruncateWithClassMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"TRUNCATE TABLE [ClassName] ;";
 

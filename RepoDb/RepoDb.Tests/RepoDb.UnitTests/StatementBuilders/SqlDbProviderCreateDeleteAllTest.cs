@@ -15,10 +15,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteAllWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder);
+            var actual = statementBuilder.CreateDeleteAll<TestSqlDbProviderCreateDeleteAllWithoutMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"DELETE " +
                 $"FROM [TestSqlDbProviderCreateDeleteAllWithoutMappingsClass] ;";
@@ -37,10 +37,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateDeleteAllWithMappingsClass>();
+            var queryBuilder = new QueryBuilder();
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder);
+            var actual = statementBuilder.CreateDeleteAll<TestSqlDbProviderCreateDeleteAllWithMappingsClass>(queryBuilder);
             var expected = $"" +
                 $"DELETE " +
                 $"FROM [ClassName] ;";

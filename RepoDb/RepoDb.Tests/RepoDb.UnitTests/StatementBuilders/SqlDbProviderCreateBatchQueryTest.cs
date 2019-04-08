@@ -20,14 +20,14 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithoutMappingsClass>(queryBuilder, null, 0, 10, orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -54,7 +54,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithExpressionsClass>();
+            var queryBuilder = new QueryBuilder();
             var where = QueryGroup.Parse(new
             {
                 Field1 = "Test"
@@ -65,7 +65,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, where, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithExpressionsClass>(queryBuilder, where, 0, 10, orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -93,7 +93,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass>();
+            var queryBuilder = new QueryBuilder();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Descending,
@@ -101,7 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithMultipleOrderedColumnsAndWithoutAttributesClass>(queryBuilder, null, 0, 10, orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -129,14 +129,14 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithClassMappingClass>(queryBuilder, null, 0, 10, orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -165,14 +165,14 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithFieldMappingsClass>(queryBuilder, null, 0, 10, orderBy);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -200,14 +200,14 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateBatchQueryWithTableHintsClass>();
+            var queryBuilder = new QueryBuilder();
             var orderBy = OrderField.Parse(new
             {
                 Field1 = Order.Ascending
             });
 
             // Act
-            var actual = statementBuilder.CreateBatchQuery(queryBuilder, null, 0, 10, orderBy, SqlTableHints.NoLock);
+            var actual = statementBuilder.CreateBatchQuery<TestSqlDbProviderCreateBatchQueryWithTableHintsClass>(queryBuilder, null, 0, 10, orderBy, SqlTableHints.NoLock);
             var expected = $"" +
                 $"WITH CTE AS " +
                 $"( " +
@@ -232,11 +232,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert
-            statementBuilder.CreateBatchQuery(queryBuilder, queryGroup, 0, 10, null);
+            statementBuilder.CreateBatchQuery<ThrowExceptionSqlDbProviderCreateBatchQueryIfThereAreNoQueryableFieldsClass>(queryBuilder, queryGroup, 0, 10, null);
         }
     }
 }

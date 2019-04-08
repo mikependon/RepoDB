@@ -29,7 +29,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateBatchQuery<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -42,7 +42,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateBatchQuery<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -62,7 +62,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateCount<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()));
 
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateCount<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<string>()), Times.Once);
         }
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateDelete<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()));
 
             // Act
@@ -98,7 +98,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateDelete<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()), Times.Once);
         }
 
@@ -114,7 +114,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateDeleteAll<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()));
+                    It.IsAny<QueryBuilder>()));
 
             // Act
             repository.Object.DeleteAll();
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateDeleteAll<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()), Times.Once);
+                    It.IsAny<QueryBuilder>()), Times.Once);
         }
 
         // CreateInlineInsert
@@ -137,7 +137,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateInlineInsert<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
@@ -146,7 +146,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateInlineInsert<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
         }
 
@@ -162,7 +162,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateInlineMerge<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()));
 
@@ -172,7 +172,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateInlineMerge<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
         }
@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateInlineUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()));
 
@@ -199,7 +199,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateInlineUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>(),
                     It.IsAny<QueryGroup>()), Times.Once);
         }
@@ -216,7 +216,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateInsert<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()));
+                    It.IsAny<QueryBuilder>()));
 
             // Act
             repository.Object.Insert(new DataEntity { Name = "Name" });
@@ -224,7 +224,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateInsert<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()), Times.Once);
+                    It.IsAny<QueryBuilder>()), Times.Once);
         }
 
         // CreateMerge
@@ -239,7 +239,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateMerge<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>()));
 
             // Act
@@ -248,7 +248,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateMerge<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<IEnumerable<Field>>()), Times.Once);
         }
 
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateQuery<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<int>(),
@@ -276,7 +276,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateQuery<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>(),
                     It.IsAny<IEnumerable<OrderField>>(),
                     It.IsAny<int>(),
@@ -295,7 +295,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateTruncate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()));
+                    It.IsAny<QueryBuilder>()));
 
             // Act
             repository.Object.Truncate();
@@ -303,7 +303,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateTruncate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>()), Times.Once);
+                    It.IsAny<QueryBuilder>()), Times.Once);
         }
 
         // CreateUpdate
@@ -318,7 +318,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Setup
             statementBuilder.Setup(builder =>
                 builder.CreateUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()));
 
             // Act
@@ -327,7 +327,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Assert
             statementBuilder.Verify(builder =>
                 builder.CreateUpdate<DataEntity>(
-                    It.IsAny<QueryBuilder<DataEntity>>(),
+                    It.IsAny<QueryBuilder>(),
                     It.IsAny<QueryGroup>()), Times.Once);
         }
     }

@@ -20,11 +20,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithoutMappingsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithoutMappingsClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithoutMappingsClass] ;";
@@ -46,11 +46,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithClassMappingClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithClassMappingClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [ClassName] ;";
@@ -72,11 +72,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithFieldMappingClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithFieldMappingClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field4] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithFieldMappingClass] ;";
@@ -97,11 +97,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTopClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, top: 10);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithTopClass>(queryBuilder, queryGroup, top: 10);
             var expected = $"" +
                 $"SELECT TOP (10) [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithTopClass] ;";
@@ -122,11 +122,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTableHintClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, "WITH (INDEX(ANYINDEX), NOLOCK)");
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithTableHintClass>(queryBuilder, queryGroup, null, null, "WITH (INDEX(ANYINDEX), NOLOCK)");
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithTableHintClass] WITH (INDEX(ANYINDEX), NOLOCK) ;";
@@ -140,11 +140,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithTableHintClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, null, null, SqlTableHints.ReadUncommitted);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithTableHintClass>(queryBuilder, queryGroup, null, null, SqlTableHints.ReadUncommitted);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithTableHintClass] {SqlTableHints.ReadUncommitted} ;";
@@ -165,12 +165,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithWhereForDynamicClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { Field1 = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithWhereForDynamicClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithWhereForDynamicClass] " +
@@ -201,12 +201,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Ascending });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass>(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithAscendingOrderFieldsClass] " +
@@ -228,12 +228,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new { OrderField = Order.Descending });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass>(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithDescendingOrderFieldsClass] " +
@@ -255,7 +255,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
             {
@@ -264,7 +264,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass>(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithAscendingAndDescendingOrderFieldsClass] " +
@@ -286,7 +286,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
             var orderBy = OrderField.Parse(new
             {
@@ -295,7 +295,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup, orderBy);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass>(queryBuilder, queryGroup, orderBy);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithDescendingAndAscendingOrderFieldsClass] " +
@@ -317,12 +317,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass>();
+            var queryBuilder = new QueryBuilder();
             var expression = new { AnyField = 1 };
             var queryGroup = QueryGroup.Parse(expression);
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            var actual = statementBuilder.CreateQuery<TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass>(queryBuilder, queryGroup);
             var expected = $"" +
                 $"SELECT [Field1], [Field2], [Field3] " +
                 $"FROM [TestSqlDbProviderCreateQueryWithUnknownFieldAsPartOfWhereForDynamicClass] " +
@@ -343,11 +343,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = new SqlStatementBuilder();
-            var queryBuilder = new QueryBuilder<ThrowExceptionOnSqlDbProviderCreateQueryIfThereAreNoQueryableFieldsClass>();
+            var queryBuilder = new QueryBuilder();
             var queryGroup = (QueryGroup)null;
 
             // Act/Assert
-            statementBuilder.CreateQuery(queryBuilder, queryGroup);
+            statementBuilder.CreateQuery<ThrowExceptionOnSqlDbProviderCreateQueryIfThereAreNoQueryableFieldsClass>(queryBuilder, queryGroup);
         }
     }
 }
