@@ -1528,6 +1528,41 @@ namespace RepoDb
         /// Deletes an existing data from the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entity">The actual instance of the data entity.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public int Delete<TEntity>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Delete<TEntity>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -1687,6 +1722,48 @@ namespace RepoDb
             {
                 // Call the method
                 var result = connection.DeleteAsync<TEntity>(where: where,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+
+                // Return the result
+                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+            }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (hasError)
+                {
+                    DisposeConnectionForPerCall(connection, transaction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entity">The actual instance of the data entity.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var hasError = false;
+
+            try
+            {
+                // Call the method
+                var result = connection.DeleteAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,

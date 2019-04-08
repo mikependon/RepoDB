@@ -764,19 +764,6 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database.
         /// </summary>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public int Delete(object whereOrPrimaryKey,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database.
-        /// </summary>
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -784,6 +771,32 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.Delete<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="entity">The actual instance of the data entity.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public int Delete(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database.
+        /// </summary>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public int Delete(object whereOrPrimaryKey,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Delete<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                 transaction: transaction);
         }
 
@@ -833,6 +846,32 @@ namespace RepoDb
         /// <summary>
         /// Deletes an existing data from the database in an asynchronous way.
         /// </summary>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public Task<AsyncResultExtractor<int>> DeleteAsync(Expression<Func<TEntity, bool>> where,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(where: where,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="entity">The actual instance of the data entity.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
+        public Task<AsyncResultExtractor<int>> DeleteAsync(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.DeleteAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Deletes an existing data from the database in an asynchronous way.
+        /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
@@ -850,19 +889,6 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public Task<AsyncResultExtractor<int>> DeleteAsync(QueryField where,
-            IDbTransaction transaction = null)
-        {
-            return DbRepository.DeleteAsync<TEntity>(where: where,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Deletes an existing data from the database in an asynchronous way.
-        /// </summary>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
