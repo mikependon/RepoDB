@@ -1963,6 +1963,27 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionDeleteViaDataEntity()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.Delete<SimpleTable>(last);
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
+            }
+        }
+
         #endregion
 
         #region DeleteAsync
@@ -2118,6 +2139,27 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(4, result);
                 Assert.AreEqual((long)6, connection.Count<SimpleTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.DeleteAsync<SimpleTable>(last).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, connection.Count<SimpleTable>());
             }
         }
 
@@ -7108,6 +7150,32 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQuery<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.Where(t => t.Id == item.Id).First();
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                });
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParametersAreNotDefined()
         {
@@ -7255,6 +7323,32 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteQueryAsync<LiteSimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
+
+                // Assert
+                Assert.AreEqual(10, result.Count());
+                result.ToList().ForEach(item =>
+                {
+                    var target = tables.Where(t => t.Id == item.Id).First();
+                    Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                    Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                    Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                });
             }
         }
 

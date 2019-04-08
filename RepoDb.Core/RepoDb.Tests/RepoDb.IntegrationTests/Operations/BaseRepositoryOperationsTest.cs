@@ -36,6 +36,13 @@ namespace RepoDb.IntegrationTests.Operations
             { }
         }
 
+        private class LiteSimpleTableRepository : BaseRepository<LiteSimpleTable, SqlConnection>
+        {
+            public LiteSimpleTableRepository() :
+                base(Database.ConnectionStringForRepoDb)
+            { }
+        }
+
         #endregion
 
         #region Helper
@@ -1283,6 +1290,27 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestBaseRepositoryDeleteViaDataEntity()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.Delete(last);
+
+                // Assert
+                Assert.AreEqual(1, result);
+                Assert.AreEqual(tables.Count - 1, repository.Count());
+            }
+        }
+
         #endregion
 
         #region DeleteAsync
@@ -1418,6 +1446,27 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(4, result.Extract());
                 Assert.AreEqual((long)6, repository.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryDeleteAsyncViaDataEntity()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.DeleteAsync(last).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Extract());
+                Assert.AreEqual(tables.Count - 1, repository.Count());
             }
         }
 
@@ -5527,6 +5576,35 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var simpleTableRepository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(simpleTableRepository.Insert(item)));
+
+                using (var liteSimpleTableRepository = new SimpleTableRepository())
+                {
+                    // Act
+                    var result = liteSimpleTableRepository.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable];");
+
+                    // Assert
+                    Assert.AreEqual(10, result.Count());
+                    result.ToList().ForEach(item =>
+                    {
+                        var target = tables.Where(t => t.Id == item.Id).First();
+                        Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                        Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                        Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                    });
+                }
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestBaseRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
@@ -5674,6 +5752,35 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 AssertPropertiesEquality(tables.Last(), result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWhereTheDataReaderColumnsAreMoreThanClassProperties()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var simpleTableRepository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(simpleTableRepository.Insert(item)));
+
+                using (var liteSimpleTableRepository = new SimpleTableRepository())
+                {
+                    // Act
+                    var result = liteSimpleTableRepository.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable];").Result.Extract();
+
+                    // Assert
+                    Assert.AreEqual(10, result.Count());
+                    result.ToList().ForEach(item =>
+                    {
+                        var target = tables.Where(t => t.Id == item.Id).First();
+                        Assert.AreEqual(target.ColumnBit, item.ColumnBit);
+                        Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
+                        Assert.AreEqual(target.ColumnInt, item.ColumnInt);
+                    });
+                }
             }
         }
 
