@@ -13,4 +13,12 @@ namespace RepoDb.IntegrationTests.Models
         public int? ColumnInt { get; set; }
         public string ColumnNVarChar { get; set; }
     }
+
+    public class LiteSimpleTable
+    {
+        public long Id { get; set; }
+        public bool? ColumnBit { get; set; }
+        public DateTime? ColumnDateTime { get; set; }
+        public int? ColumnInt { get; set; }
+    }
 }
