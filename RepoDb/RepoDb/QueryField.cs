@@ -189,23 +189,25 @@ namespace RepoDb
             var hashCode = 0;
 
             // Set in the combination of the properties
-            hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
+            hashCode ^= Field.GetHashCode();
+            hashCode ^= (int)Operation;
+            hashCode ^= Parameter.GetHashCode();
 
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal && ReferenceEquals(null, Parameter.Value))
             {
-                hashCode += HASHCODE_ISNULL;
+                hashCode ^= HASHCODE_ISNULL;
             }
             // The (IS NOT NULL) affects the uniqueness of the object
             else if (Operation == Operation.NotEqual && ReferenceEquals(null, Parameter.Value))
             {
-                hashCode += HASHCODE_ISNOTNULL;
+                hashCode ^= HASHCODE_ISNOTNULL;
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
                 !ReferenceEquals(null, Parameter.Value) && Parameter.Value is Array)
             {
-                hashCode += ((Array)Parameter.Value).Length.GetHashCode();
+                hashCode ^= ((Array)Parameter.Value).Length.GetHashCode();
             }
 
             // Set back the value

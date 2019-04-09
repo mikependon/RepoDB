@@ -60,7 +60,7 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 
@@ -69,7 +69,7 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode ^= field.GetHashCode();
                 }
             }
 

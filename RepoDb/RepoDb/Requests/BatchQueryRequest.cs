@@ -79,19 +79,19 @@ namespace RepoDb.Requests
             // Add the expression
             if (!ReferenceEquals(null, Where))
             {
-                hashCode += Where.GetHashCode();
+                hashCode ^= Where.GetHashCode();
             }
 
             // Add the filter
             if (!ReferenceEquals(null, Page))
             {
-                hashCode += Page.GetHashCode();
+                hashCode ^= Page.GetHashCode();
             }
 
             // Add the filter
             if (!ReferenceEquals(null, RowsPerBatch))
             {
-                hashCode += RowsPerBatch.GetHashCode();
+                hashCode ^= RowsPerBatch.GetHashCode();
             }
 
             // Add the order fields
@@ -99,14 +99,14 @@ namespace RepoDb.Requests
             {
                 foreach (var orderField in OrderBy)
                 {
-                    hashCode += orderField.GetHashCode();
+                    hashCode ^= orderField.GetHashCode();
                 }
             }
 
             // Add the hints
             if (!ReferenceEquals(null, Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode ^= Hints.GetHashCode();
             }
 
             // Set back the hash code value
