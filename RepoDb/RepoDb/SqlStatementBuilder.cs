@@ -406,7 +406,7 @@ namespace RepoDb
                 .WriteText(qualifiers?
                     .Select(
                         field => field.AsJoinQualifier("S", "T"))
-                            .Join($" {StringConstant.And.ToUpper()} "))
+                            .Join($" AND "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
                 .When()

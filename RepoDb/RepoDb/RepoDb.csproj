@@ -105,7 +105,6 @@
     <Compile Include="QueryMultipleExtractor.cs" />
     <Compile Include="SqlHelper.cs" />
     <Compile Include="ClassExpressions\ClassPropertyValuesExpression.cs" />
-    <Compile Include="StringConstant.cs" />
     <Compile Include="CacheItem.cs" />
     <Compile Include="Exceptions\PrimaryFieldNotFoundException.cs" />
     <Compile Include="Extensions\ArrayExtension.cs" />

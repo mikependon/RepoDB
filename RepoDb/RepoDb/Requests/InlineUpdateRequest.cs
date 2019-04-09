@@ -58,7 +58,7 @@ namespace RepoDb.Requests
             // Get the expression hashcode
             if (Where != null)
             {
-                hashCode ^= Where.GetHashCode();
+                hashCode += Where.GetHashCode();
             }
 
             // Get the qualifier fields
@@ -66,7 +66,7 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Fields)
                 {
-                    hashCode ^= field.GetHashCode();
+                    hashCode += field.GetHashCode();
                 }
             }
 

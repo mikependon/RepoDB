@@ -39,7 +39,7 @@ namespace RepoDb.Extensions
         // AsParameterAsField
         internal static string AsParameterAsField(this Field field)
         {
-            return string.Concat(AsParameter(field), " ", StringConstant.As.ToUpper(), " ", AsField(field));
+            return string.Concat(AsParameter(field), " AS ", AsField(field));
         }
 
         // AsFieldAndParameter

@@ -122,21 +122,21 @@ namespace RepoDb
             if (DeclaringTypeHasForcedPrimaryKey() == false)
             {
                 // Id Property
-                m_isPrimary = (PropertyInfo.Name.ToLower() == StringConstant.Id.ToLower());
+                m_isPrimary = (PropertyInfo.Name.ToLower() == "id");
                 if (m_isPrimary == true)
                 {
                     return m_isPrimary;
                 }
 
                 // Type.Name + Id
-                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(PropertyInfo.DeclaringType.Name, StringConstant.Id).ToLower());
+                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(PropertyInfo.DeclaringType.Name.ToLower(), "id"));
                 if (m_isPrimary == true)
                 {
                     return m_isPrimary;
                 }
 
                 // Mapping.Name + Id
-                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType), StringConstant.Id).ToLower());
+                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType).ToLower(), "id"));
                 if (m_isPrimary == true)
                 {
                     return m_isPrimary;

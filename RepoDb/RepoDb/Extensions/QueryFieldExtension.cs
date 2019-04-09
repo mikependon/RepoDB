@@ -31,7 +31,7 @@ namespace RepoDb.Extensions
         // AsParameter
         internal static string AsParameter(this QueryField queryField)
         {
-            return string.Concat("@", queryField.Parameter.Name);
+            return queryField.Parameter.Name.AsParameter();
         }
 
         // AsParameterAsField
@@ -43,7 +43,7 @@ namespace RepoDb.Extensions
         // AsBetweenParameter
         internal static string AsBetweenParameter(this QueryField queryField)
         {
-            return string.Concat("@", queryField.Parameter.Name, "_", StringConstant.BetweenLeft, " AND @", queryField.Parameter.Name, "_", StringConstant.BetweenRight);
+            return string.Format(queryField.Parameter.Name.AsParameter(), "_Left AND ", queryField.Parameter.Name.AsParameter(), "_Right");
         }
 
         // AsInParameter
@@ -52,7 +52,7 @@ namespace RepoDb.Extensions
             var array = ((Array)queryField.Parameter.Value);
             var value = array
                 .OfType<object>()
-                .Select((qf, i) => string.Concat("@", queryField.Parameter.Name, "_", StringConstant.In, "_", i))
+                .Select((qf, i) => string.Concat(queryField.Parameter.Name.AsParameter(), "_In_", i))
                 .Join(", ");
             return string.Concat("(", value, ")");
         }
