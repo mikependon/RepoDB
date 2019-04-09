@@ -929,7 +929,7 @@ namespace RepoDb
             {
                 foreach (var queryField in QueryFields)
                 {
-                    hashCode += queryField.GetHashCode();
+                    hashCode ^= queryField.GetHashCode();
                 }
             }
 
@@ -938,15 +938,15 @@ namespace RepoDb
             {
                 foreach (var queryGroup in QueryGroups)
                 {
-                    hashCode += queryGroup.GetHashCode();
+                    hashCode ^= queryGroup.GetHashCode();
                 }
             }
 
             // Set with conjunction
-            hashCode += (int)Conjunction;
+            hashCode ^= (int)Conjunction;
 
             // Set the IsNot
-            hashCode += IsNot.GetHashCode();
+            hashCode ^= IsNot.GetHashCode();
 
             // Set back the hashcode value
             m_hashCode = hashCode;

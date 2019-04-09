@@ -56,13 +56,13 @@ namespace RepoDb.Requests
             // Get the properties hash codes
             if (Where != null)
             {
-                hashCode += Where.GetHashCode();
+                hashCode ^= Where.GetHashCode();
             }
 
             // Add the hints
             if (!ReferenceEquals(null, Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode ^= Hints.GetHashCode();
             }
 
             // Set back the hash code value
