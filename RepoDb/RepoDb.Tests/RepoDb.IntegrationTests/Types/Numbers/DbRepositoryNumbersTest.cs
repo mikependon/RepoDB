@@ -214,11 +214,11 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -258,11 +258,11 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<NumbersClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -302,11 +302,11 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -346,11 +346,11 @@ namespace RepoDb.IntegrationTests.Types.Numbers
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<NumbersMappedClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

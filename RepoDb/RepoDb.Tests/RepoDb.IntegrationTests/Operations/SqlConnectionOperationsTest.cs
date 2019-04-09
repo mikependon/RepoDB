@@ -6534,7 +6534,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable]");
+                var result = connection.ExecuteQuery("SELECT * FROM [dbo].[SimpleTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -6785,7 +6785,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable]").Result;
+                var result = connection.ExecuteQueryAsync("SELECT * FROM [dbo].[SimpleTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -7036,7 +7036,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable]");
+                var result = connection.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -7212,7 +7212,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable]").Result;
+                var result = connection.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable];").Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -7984,7 +7984,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable]"))
+                using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[SimpleTable];"))
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();
@@ -8156,7 +8156,7 @@ namespace RepoDb.IntegrationTests.Operations
                 tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable]").Result)
+                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [dbo].[SimpleTable];").Result)
                 {
                     // Act
                     var result = Reflection.DataReaderConverter.ToEnumerable<SimpleTable>((DbDataReader)reader).ToList();

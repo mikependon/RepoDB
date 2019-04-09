@@ -387,7 +387,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(int page,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             string hints = null,
@@ -411,7 +411,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(object where,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(object where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -437,7 +437,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(Expression<Func<TEntity, bool>> where,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(Expression<Func<TEntity, bool>> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -463,7 +463,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(QueryField where,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(QueryField where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -489,7 +489,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(IEnumerable<QueryField> where,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(IEnumerable<QueryField> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -515,7 +515,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync(QueryGroup where,
+        public Task<IEnumerable<TEntity>> BatchQueryAsync(QueryGroup where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -557,7 +557,7 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> BulkInsertAsync(IEnumerable<TEntity> entities,
+        public Task<int> BulkInsertAsync(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null)
         {
             return DbRepository.BulkInsertAsync<TEntity>(entities: entities, mappings: mappings);
@@ -670,7 +670,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(string hints = null,
+        public Task<long> CountAsync(string hints = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.CountAsync<TEntity>(hints: hints,
@@ -684,7 +684,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(object where,
+        public Task<long> CountAsync(object where,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -700,7 +700,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(Expression<Func<TEntity, bool>> where,
+        public Task<long> CountAsync(Expression<Func<TEntity, bool>> where,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -716,7 +716,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(QueryField where,
+        public Task<long> CountAsync(QueryField where,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -732,7 +732,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(IEnumerable<QueryField> where,
+        public Task<long> CountAsync(IEnumerable<QueryField> where,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -748,7 +748,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<long>> CountAsync(QueryGroup where,
+        public Task<long> CountAsync(QueryGroup where,
             string hints = null,
             IDbTransaction transaction = null)
         {
@@ -849,7 +849,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(Expression<Func<TEntity, bool>> where,
+        public Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -862,7 +862,7 @@ namespace RepoDb
         /// <param name="entity">The actual instance of the data entity.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(TEntity entity,
+        public Task<int> DeleteAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(entity: entity,
@@ -875,7 +875,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(object whereOrPrimaryKey,
+        public Task<int> DeleteAsync(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
@@ -888,7 +888,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(QueryField where,
+        public Task<int> DeleteAsync(QueryField where,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -901,7 +901,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(IEnumerable<QueryField> where,
+        public Task<int> DeleteAsync(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -914,7 +914,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync(QueryGroup where,
+        public Task<int> DeleteAsync(QueryGroup where,
             IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAsync<TEntity>(where: where,
@@ -944,7 +944,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAllAsync(IDbTransaction transaction = null)
+        public Task<int> DeleteAllAsync(IDbTransaction transaction = null)
         {
             return DbRepository.DeleteAllAsync<TEntity>();
         }
@@ -976,7 +976,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        public Task<AsyncResultExtractor<object>> InlineInsertAsync(object entity,
+        public Task<object> InlineInsertAsync(object entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineInsertAsync<TEntity>(entity: entity,
@@ -1042,7 +1042,7 @@ namespace RepoDb
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync(object entity,
+        public Task<int> InlineMergeAsync(object entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineMergeAsync<TEntity>(entity,
@@ -1056,7 +1056,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync(object entity,
+        public Task<int> InlineMergeAsync(object entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -1072,7 +1072,7 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync(object entity,
+        public Task<int> InlineMergeAsync(object entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
         {
@@ -1176,7 +1176,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
+        public Task<int> InlineUpdateAsync(object entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
@@ -1192,7 +1192,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
+        public Task<int> InlineUpdateAsync(object entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
@@ -1208,7 +1208,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
+        public Task<int> InlineUpdateAsync(object entity,
             QueryField where,
             IDbTransaction transaction = null)
         {
@@ -1224,7 +1224,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
+        public Task<int> InlineUpdateAsync(object entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
@@ -1240,7 +1240,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync(object entity,
+        public Task<int> InlineUpdateAsync(object entity,
             QueryGroup where,
             IDbTransaction transaction = null)
         {
@@ -1282,7 +1282,7 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public Task<AsyncResultExtractor<object>> InsertAsync(TEntity entity,
+        public Task<object> InsertAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.InsertAsync<TEntity>(entity: entity,
@@ -1348,7 +1348,7 @@ namespace RepoDb
         /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync(TEntity entity,
+        public Task<int> MergeAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.MergeAsync<TEntity>(entity: entity,
@@ -1362,7 +1362,7 @@ namespace RepoDb
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync(TEntity entity,
+        public Task<int> MergeAsync(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
         {
@@ -1378,7 +1378,7 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync(TEntity entity,
+        public Task<int> MergeAsync(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
         {
@@ -1566,7 +1566,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(IEnumerable<OrderField> orderBy = null,
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
             string cacheKey = null,
@@ -1590,7 +1590,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(object whereOrPrimaryKey,
+        public Task<IEnumerable<TEntity>> QueryAsync(object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
@@ -1614,7 +1614,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(Expression<Func<TEntity, bool>> where,
+        public Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1642,7 +1642,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(QueryField where,
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryField where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1670,7 +1670,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(IEnumerable<QueryField> where,
+        public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1698,7 +1698,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync(QueryGroup where,
+        public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -1734,7 +1734,7 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <returns>The number of rows affected by this operation.</returns>
-        public Task<AsyncResultExtractor<int>> TruncateAsync()
+        public Task<int> TruncateAsync()
         {
             return DbRepository.TruncateAsync<TEntity>();
         }
@@ -1845,7 +1845,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             IDbTransaction transaction = null)
         {
             return DbRepository.UpdateAsync<TEntity>(entity: entity,
@@ -1859,7 +1859,7 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
         {
@@ -1875,7 +1875,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
         {
@@ -1891,7 +1891,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             QueryField where,
             IDbTransaction transaction = null)
         {
@@ -1907,7 +1907,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
         {
@@ -1923,7 +1923,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync(TEntity entity,
+        public Task<int> UpdateAsync(TEntity entity,
             QueryGroup where,
             IDbTransaction transaction = null)
         {
@@ -1981,7 +1981,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> ExecuteQueryAsync(string commandText,
+        public Task<IEnumerable<TEntity>> ExecuteQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -2035,7 +2035,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> ExecuteNonQueryAsync(string commandText,
+        public Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -2089,7 +2089,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<AsyncResultExtractor<object>> ExecuteScalarAsync(string commandText,
+        public Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -2143,7 +2143,7 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
-        public Task<AsyncResultExtractor<T>> ExecuteScalarAsync<T>(string commandText,
+        public Task<T> ExecuteScalarAsync<T>(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
