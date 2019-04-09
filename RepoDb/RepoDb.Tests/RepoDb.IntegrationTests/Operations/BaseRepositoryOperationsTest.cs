@@ -6691,5 +6691,347 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
+
+        #region ExecuteScalar<T>
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithoutRowsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithSingleRowAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<int>("SELECT 1;");
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithMultipleRowsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<int>("SELECT 2 UNION ALL SELECT 1;");
+
+                // Assert
+                Assert.AreEqual(2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithSingleRowAndWithMultipleColumnsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<int>("SELECT 1 AS Value1, 2 AS Value2;");
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithSingleParameterAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<DateTime>("SELECT @Value1;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithMultipleParametersAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 1
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<DateTime>("SELECT @Value1, @Value2;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTWithMultipleParametersAndWithMultipleRowsAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = DateTime.UtcNow.AddDays(1)
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTByExecutingAStoredProcedureWithSingleParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalar<long>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(tables.Last().Id, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTByExecutingAStoredProcedureWithMultipleParameters()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalar<int>("[dbo].[sp_multiply]",
+                    param: new { Value1 = 100, Value2 = 200 },
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(20000, result);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTIfTheParametersAreNotDefined()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                repository.ExecuteScalar<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTIfThereAreSqlStatementProblems()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                repository.ExecuteScalar<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync<T>
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithoutRowsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").Result.Extract();
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithSingleRowAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("SELECT 1;").Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithMultipleRowsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("SELECT 2 UNION ALL SELECT 1;").Result.Extract();
+
+                // Assert
+                Assert.AreEqual(2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithSingleRowAndWithMultipleColumnsAsResult()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("SELECT 1 AS Value1, 2 AS Value2;").Result.Extract();
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithSingleParameterAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1;", param).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithMultipleParametersAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 1
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1, @Value2;", param).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncWithMultipleParametersAndWithMultipleRowsAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = DateTime.UtcNow.AddDays(1)
+            };
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncByExecutingAStoredProcedureWithSingleParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteScalarAsync<long>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(tables.Last().Id, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBaseRepositoryExecuteScalarTAsyncByExecutingAStoredProcedureWithMultipleParameters()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<int>("[dbo].[sp_multiply]",
+                    param: new { Value1 = 100, Value2 = 200 },
+                    commandType: CommandType.StoredProcedure).Result.Extract();
+
+                // Assert
+                Assert.AreEqual(20000, result);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTAsyncIfTheParametersAreNotDefined()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result.Extract();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestBaseRepositoryExecuteScalarTAsyncIfThereAreSqlStatementProblems()
+        {
+            using (var repository = new SimpleTableRepository())
+            {
+                // Act
+                var result = repository.ExecuteScalarAsync<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result.Extract();
+            }
+        }
+
+        #endregion
     }
 }

@@ -9199,5 +9199,348 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         #endregion
+
+        #region ExecuteScalar<T>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithoutRowsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;");
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithSingleRowAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<int>("SELECT 1;");
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithMultipleRowsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<int>("SELECT 2 UNION ALL SELECT 1;");
+
+                // Assert
+                Assert.AreEqual(2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithSingleRowAndWithMultipleColumnsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<int>("SELECT 1 AS Value1, 2 AS Value2;");
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithSingleParameterAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<DateTime>("SELECT @Value1;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithMultipleParametersAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 1
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<DateTime>("SELECT @Value1, @Value2;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTWithMultipleParametersAndWithMultipleRowsAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = DateTime.UtcNow.AddDays(1)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param);
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTByExecutingAStoredProcedureWithSingleParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteScalar<long>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(tables.Last().Id, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTByExecutingAStoredProcedureWithMultipleParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalar<int>("[dbo].[sp_multiply]",
+                    param: new { Value1 = 100, Value2 = 200 },
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(20000, result);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteScalarTIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.ExecuteScalar<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteScalarTIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.ExecuteScalar<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);");
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync<T>
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithoutRowsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM (SELECT 1 AS Column1) TMP WHERE 1 = 0;").Result;
+
+                // Assert
+                Assert.IsNull(result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithSingleRowAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<int>("SELECT 1;").Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithMultipleRowsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<int>("SELECT 2 UNION ALL SELECT 1;").Result;
+
+                // Assert
+                Assert.AreEqual(2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithSingleRowAndWithMultipleColumnsAsResult()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<int>("SELECT 1 AS Value1, 2 AS Value2;").Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithSingleParameterAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<DateTime>("SELECT @Value1;", param).Result;
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithMultipleParametersAndWithSingleRowAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 1
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<DateTime>("SELECT @Value1, @Value2;", param).Result;
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncWithMultipleParametersAndWithMultipleRowsAsResult()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = DateTime.UtcNow.AddDays(1)
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<DateTime>("SELECT @Value1 AS Value1 UNION ALL SELECT @Value2;", param).Result;
+
+                // Assert
+                Assert.AreEqual(param.Value1, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncByExecutingAStoredProcedureWithSingleParameter()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(connection.Insert(item)));
+
+                // Act
+                var result = connection.ExecuteScalarAsync<long>("[dbo].[sp_get_simple_table_by_id]",
+                    param: new { tables.Last().Id },
+                    commandType: CommandType.StoredProcedure).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Last().Id, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarTAsyncByExecutingAStoredProcedureWithMultipleParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<int>("[dbo].[sp_multiply]",
+                    param: new { Value1 = 100, Value2 = 200 },
+                    commandType: CommandType.StoredProcedure).Result;
+
+                // Assert
+                Assert.AreEqual(20000, result);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteScalarTAsyncIfTheParametersAreNotDefined()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<object>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteScalarTAsyncIfThereAreSqlStatementProblems()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteScalarAsync<object>("SELECT FROM [dbo].[SimpleTable] WHERE (Id = @Id);").Result;
+            }
+        }
+
+        #endregion
+
     }
 }

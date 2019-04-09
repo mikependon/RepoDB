@@ -5892,5 +5892,104 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region ExecuteScalar<T>
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public T ExecuteScalar<T>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.ExecuteScalar<T>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync<T>
+
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public Task<AsyncResultExtractor<T>> ExecuteScalarAsync<T>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var hasError = false;
+
+            try
+            {
+                // Call the method
+                var result = connection.ExecuteScalarAsync<T>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+
+                // Return the result
+                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+            }
+            catch
+            {
+                hasError = true;
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                if (hasError)
+                {
+                    DisposeConnectionForPerCall(connection, transaction);
+                }
+            }
+        }
+
+        #endregion
     }
 }
