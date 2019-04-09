@@ -1684,7 +1684,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1713,7 +1713,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             object where,
             string hints = null,
             int? commandTimeout = null,
@@ -1743,7 +1743,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -1773,7 +1773,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -1803,7 +1803,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -1833,7 +1833,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -1863,7 +1863,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        internal static Task<object> CountInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<long> CountInternalAsync<TEntity>(this IDbConnection connection,
             QueryGroup where, int? commandTimeout = null,
             string hints = null,
             IDbTransaction transaction = null,
@@ -1898,7 +1898,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult((object)0);
+                    return Task.FromResult(Convert.ToInt64(0));
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -1908,7 +1908,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = ExecuteScalarInternalAsync<long>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -9605,6 +9605,33 @@ namespace RepoDb
             }
         }
 
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        internal static T ExecuteScalarInternal<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            {
+                return (T)ObjectConverter.DbNullToNull(command.ExecuteScalar());
+            }
+        }
+
         #endregion
 
         #region ExecuteScalarAsync
@@ -9662,6 +9689,33 @@ namespace RepoDb
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
                 return await command.ExecuteScalarAsync();
+            }
+        }
+
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        internal static async Task<T> ExecuteScalarInternalAsync<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            {
+                return (T)await command.ExecuteScalarAsync();
             }
         }
 

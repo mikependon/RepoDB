@@ -1565,7 +1565,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>();
 
                 // Assert
-                Assert.AreEqual((long)tables.Count, result);
+                Assert.AreEqual(tables.Count, result);
             }
         }
 
@@ -1584,7 +1584,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
-                Assert.AreEqual((long)7, result);
+                Assert.AreEqual(7, result);
             }
         }
 
@@ -1603,7 +1603,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(new { ColumnInt = 1 });
 
                 // Assert
-                Assert.AreEqual((long)1, result);
+                Assert.AreEqual(1, result);
             }
         }
 
@@ -1623,7 +1623,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(field);
 
                 // Assert
-                Assert.AreEqual((long)5, result);
+                Assert.AreEqual(5, result);
             }
         }
 
@@ -1647,7 +1647,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(fields);
 
                 // Assert
-                Assert.AreEqual((long)3, result);
+                Assert.AreEqual(3, result);
             }
         }
 
@@ -1672,7 +1672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Count<SimpleTable>(queryGroup);
 
                 // Assert
-                Assert.AreEqual((long)3, result);
+                Assert.AreEqual(3, result);
             }
         }
 
@@ -1695,7 +1695,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>().Result;
 
                 // Assert
-                Assert.AreEqual((long)tables.Count, result);
+                Assert.AreEqual(tables.Count, result);
             }
         }
 
@@ -1714,7 +1714,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                Assert.AreEqual((long)7, result);
+                Assert.AreEqual(7, result);
             }
         }
 
@@ -1733,7 +1733,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(new { ColumnInt = 1 }).Result;
 
                 // Assert
-                Assert.AreEqual((long)1, result);
+                Assert.AreEqual(1, result);
             }
         }
 
@@ -1753,7 +1753,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(field).Result;
 
                 // Assert
-                Assert.AreEqual((long)5, result);
+                Assert.AreEqual(5, result);
             }
         }
 
@@ -1777,7 +1777,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                Assert.AreEqual((long)3, result);
+                Assert.AreEqual(3, result);
             }
         }
 
@@ -1802,7 +1802,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.CountAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual((long)3, result);
+                Assert.AreEqual(3, result);
             }
         }
 
@@ -1826,7 +1826,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual((long)0, connection.Count<SimpleTable>());
+                Assert.AreEqual(0, connection.Count<SimpleTable>());
             }
         }
 
@@ -1933,7 +1933,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<SimpleTable>());
             }
         }
 
@@ -1959,7 +1959,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<SimpleTable>());
             }
         }
 
@@ -2004,7 +2004,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual((long)0, connection.Count<SimpleTable>());
+                Assert.AreEqual(0, connection.Count<SimpleTable>());
             }
         }
 
@@ -2112,7 +2112,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<SimpleTable>());
             }
         }
 
@@ -2138,7 +2138,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, connection.Count<SimpleTable>());
+                Assert.AreEqual(6, connection.Count<SimpleTable>());
             }
         }
 

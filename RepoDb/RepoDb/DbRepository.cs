@@ -1225,7 +1225,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(string hints = null,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -1268,7 +1268,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(object where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(object where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1313,7 +1313,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1358,7 +1358,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(QueryField where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(QueryField where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1403,7 +1403,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(IEnumerable<QueryField> where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
@@ -1448,7 +1448,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(QueryGroup where,
+        public Task<AsyncResultExtractor<long>> CountAsync<TEntity>(QueryGroup where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class

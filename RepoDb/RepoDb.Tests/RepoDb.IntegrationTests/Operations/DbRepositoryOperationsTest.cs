@@ -1271,7 +1271,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>().Result;
 
                 // Assert
-                Assert.AreEqual((long)tables.Count, result.Extract());
+                Assert.AreEqual(tables.Count, result.Extract());
             }
         }
 
@@ -1290,7 +1290,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
 
                 // Assert
-                Assert.AreEqual((long)7, result.Extract());
+                Assert.AreEqual(7, result.Extract());
             }
         }
 
@@ -1309,7 +1309,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>(new { ColumnInt = 1 }).Result;
 
                 // Assert
-                Assert.AreEqual((long)1, result.Extract());
+                Assert.AreEqual(1, result.Extract());
             }
         }
 
@@ -1329,7 +1329,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>(field).Result;
 
                 // Assert
-                Assert.AreEqual((long)5, result.Extract());
+                Assert.AreEqual(5, result.Extract());
             }
         }
 
@@ -1353,7 +1353,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>(fields).Result;
 
                 // Assert
-                Assert.AreEqual((long)3, result.Extract());
+                Assert.AreEqual(3, result.Extract());
             }
         }
 
@@ -1378,7 +1378,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = repository.CountAsync<SimpleTable>(queryGroup).Result;
 
                 // Assert
-                Assert.AreEqual((long)3, result.Extract());
+                Assert.AreEqual(3, result.Extract());
             }
         }
 
@@ -1402,7 +1402,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result);
-                Assert.AreEqual((long)0, repository.Count<SimpleTable>());
+                Assert.AreEqual(0, repository.Count<SimpleTable>());
             }
         }
 
@@ -1510,7 +1510,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<SimpleTable>());
             }
         }
 
@@ -1536,7 +1536,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result);
-                Assert.AreEqual((long)6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<SimpleTable>());
             }
         }
 
@@ -1581,7 +1581,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(10, result.Extract());
-                Assert.AreEqual((long)0, repository.Count<SimpleTable>());
+                Assert.AreEqual(0, repository.Count<SimpleTable>());
             }
         }
 
@@ -1669,7 +1669,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Extract());
-                Assert.AreEqual((long)6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<SimpleTable>());
             }
         }
 
@@ -1695,7 +1695,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(4, result.Extract());
-                Assert.AreEqual((long)6, repository.Count<SimpleTable>());
+                Assert.AreEqual(6, repository.Count<SimpleTable>());
             }
         }
 
