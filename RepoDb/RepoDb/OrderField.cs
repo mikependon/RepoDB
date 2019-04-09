@@ -140,7 +140,7 @@ namespace RepoDb
         /// <returns>The hashcode value.</returns>
         public override int GetHashCode()
         {
-            return Name.GetHashCode() ^ (int)Order;
+            return Name.GetHashCode() + (int)Order;
         }
 
         /// <summary>
