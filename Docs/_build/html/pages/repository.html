@@ -94,7 +94,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Repository</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dbrepository">DbRepository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#baserepository">BaseRepository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#async">Async</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#operations">Operations</a></li>
 </ul>
 </li>
@@ -222,21 +221,6 @@
 <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">Query</span><span class="p">(</span><span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="m">10045</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="async">
-<h2>Async<a class="headerlink" href="#async" title="Permalink to this headline">¶</a></h2>
-<p>The call to <cite>Async</cite> methods of <cite>BaseRepository</cite> and <cite>DbRepository</cite> objects are a bit different when compared to calling the <cite>Async</cite> method of <cite>DbConnection</cite> object.</p>
-<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Call the async method</span>
-<span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">QueryAsync</span><span class="p">();</span>
-
-<span class="c1">// Do your other logics here</span>
-
-<span class="c1">// Get the result</span>
-<span class="kt">var</span> <span class="n">customers</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Result</span><span class="p">.</span><span class="n">Extract</span><span class="p">();</span>
-</pre></div>
-</div>
-<p>The result is an instance of <cite>ActionResultExtractor&lt;IEnumerable&lt;T&gt;&gt;</cite> The <cite>Extract</cite> method is used to extract the result of the operation.</p>
-<p><strong>Note</strong>: It is very important to call the <cite>Extract</cite> method after calling the repository <cite>Async</cite> methods. This is to ensure dispose the underlying <cite>DbConnection</cite> object used during the actual operation.</p>
 </div>
 <div class="section" id="operations">
 <h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>

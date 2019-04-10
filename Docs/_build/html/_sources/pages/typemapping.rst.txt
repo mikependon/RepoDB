@@ -41,6 +41,10 @@ ConversionType
 
 A property that is used to set the conversion type when converting the instance of `DbDataReader` object into its destination .NET CLR types.
 
+::
+
+	TypeMapper.ConversionType = ConversionType.Automatic;
+
 The default value is `RepoDb.Enumerations.ConversionType.Default`, which means that the conversion is strict and there is no additional implied logic during the conversion.
 
 Given with the class named `Customer` as defined below.

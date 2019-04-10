@@ -199,6 +199,9 @@
 <div class="section" id="conversiontype">
 <h2>ConversionType<a class="headerlink" href="#conversiontype" title="Permalink to this headline">¶</a></h2>
 <p>A property that is used to set the conversion type when converting the instance of <cite>DbDataReader</cite> object into its destination .NET CLR types.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TypeMapper</span><span class="o">.</span><span class="n">ConversionType</span> <span class="o">=</span> <span class="n">ConversionType</span><span class="o">.</span><span class="n">Automatic</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>The default value is <cite>RepoDb.Enumerations.ConversionType.Default</cite>, which means that the conversion is strict and there is no additional implied logic during the conversion.</p>
 <p>Given with the class named <cite>Customer</cite> as defined below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="k">class</span> <span class="nc">Customer</span>

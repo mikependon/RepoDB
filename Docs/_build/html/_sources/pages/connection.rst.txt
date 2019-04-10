@@ -306,6 +306,60 @@ Below is the code on how to execute a stored procedure mentioned above:
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
 
+The instance of ExpandoObject and IDictionary<string, object> can also be used as parameter.
+
+Via ExpandoObject as dynamic.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Create the parameters
+		var parameters = (dynamic)new ExpandoObject();
+		// Set each parameter
+		param.OrderId = 1002;
+		param.Quantity = 5;
+		param.LastUpdatedUtc = DateTime.UtcNow
+		// Create the parameters
+		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
+	}
+
+Via ExpandoObject as Dictionary<string, object>.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Create the parameters
+		var parameters = new ExpandoObject() as IDictionary<string, object>;
+		// Add each parameter
+		param.Add("OrderId", 1002);
+		param.Add("Quantity", 5);
+		param.Add("LastUpdatedUtc", DateTime.UtcNow);
+		// Pass the parameters
+		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
+	}
+
+
+Via Dictionary<string, object>.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		// Create the parameters
+		var parameters = new Dictionary<string, object>
+		{
+			{ "OrderId", 1002 },
+			{ "Quantity", 5 },
+			{ "LastUpdatedUtc", DateTime.UtcNow }
+		};
+		// Pass the parameters
+		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
+	}
+
+**Note**: The passing of the ExpandoObject and IDictionary<string, object> parameter is also supported in `ExecuteQuery`, `ExecuteScalar` and `ExecuteReader` methods.
+
 ExecuteQuery
 ------------
 
