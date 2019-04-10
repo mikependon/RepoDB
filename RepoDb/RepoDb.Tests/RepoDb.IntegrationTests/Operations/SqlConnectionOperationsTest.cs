@@ -7970,6 +7970,232 @@ namespace RepoDb.IntegrationTests.Operations
 
         #endregion
 
+        #region ExecuteQueryMultiple (Scalar<T>)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';"))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarTWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert
+                    var value3 = result.Scalar<int>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultipleAsync (Scalar<T>)
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithoutParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT GETUTCDATE();
+                    SELECT (2 * 7);
+                    SELECT 'USER';").Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(typeof(DateTime), value1.GetType());
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(14, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual("USER", value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithMultipleParameters()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = (2 * 7),
+                Value3 = "USER"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    SELECT @Value2;
+                    SELECT @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<int>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(param.Value2, value2);
+
+                    // Assert
+                    var value3 = result.Scalar<string>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(param.Value3, value3);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarTWithSimpleScalaredValueFollowedByMultipleStoredProcedures()
+        {
+            // Setup
+            var param = new
+            {
+                Value1 = DateTime.UtcNow,
+                Value2 = 2,
+                Value3 = 3
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply] @Value2, @Value3;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param.Value1, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+
+                    // Assert
+                    var value3 = result.Scalar<int>();
+                    Assert.IsNotNull(value3);
+                    Assert.AreEqual(6, value3);
+                }
+            }
+        }
+
+        #endregion
+
         #region ExecuteReader
 
         [TestMethod]
