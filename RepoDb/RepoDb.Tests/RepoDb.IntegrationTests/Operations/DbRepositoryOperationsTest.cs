@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -6229,6 +6230,97 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithDictionaryParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = new Dictionary<string, object>
+            {
+                { "ColumnFloat", last.ColumnFloat },
+                { "ColumnInt", last.ColumnInt }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithExpandoObjectAsIDictionaryParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Add the parameters
+            param.Add("ColumnFloat", last.ColumnFloat);
+            param.Add("ColumnInt", last.ColumnInt);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithExpandoObjectAsDynamicParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = (dynamic)new ExpandoObject();
+
+            // Add the parameters
+            param.ColumnFloat = last.ColumnFloat;
+            param.ColumnInt = last.ColumnInt;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param);
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryIfTheParameterAreInvalidTypeDictionaryObject()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new Dictionary<string, int>();
+
+                // Act
+                repository.ExecuteQuery<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestDbRepositoryExecuteQueryIfTheParametersAreNotDefined()
         {
@@ -6402,6 +6494,97 @@ namespace RepoDb.IntegrationTests.Operations
                     Assert.AreEqual(target.ColumnDateTime, item.ColumnDateTime);
                     Assert.AreEqual(target.ColumnInt, item.ColumnInt);
                 });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithDictionaryParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = new Dictionary<string, object>
+            {
+                { "ColumnFloat", last.ColumnFloat },
+                { "ColumnInt", last.ColumnInt }
+            };
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsIDictionaryParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = new ExpandoObject() as IDictionary<string, object>;
+
+            // Add the parameters
+            param.Add("ColumnFloat", last.ColumnFloat);
+            param.Add("ColumnInt", last.ColumnInt);
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncWithExpandoObjectAsDynamicParameters()
+        {
+            // Setup
+            var tables = CreateSimpleTables(10);
+            var last = tables.Last();
+            var param = (dynamic)new ExpandoObject();
+
+            // Add the parameters
+            param.ColumnFloat = last.ColumnFloat;
+            param.ColumnInt = last.ColumnInt;
+
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                tables.ForEach(item => item.Id = Convert.ToInt32(repository.Insert(item)));
+
+                // Act
+                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE ColumnFloat = @ColumnFloat AND ColumnInt = @ColumnInt;", (object)param).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+                AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnTestSqlConnectionExecuteQueryAsyncIfTheParameterAreInvalidTypeDictionaryObject()
+        {
+            using (var repository = new DbRepository<SqlConnection>(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new Dictionary<string, int>();
+
+                // Act
+                var result = repository.ExecuteQueryAsync<SimpleTable>("SELECT * FROM [dbo].[SimpleTable] WHERE (Id = @Id);", param).Result;
             }
         }
 
