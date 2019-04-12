@@ -23,7 +23,7 @@ namespace RepoDb
         /// <param name="key">The key of the cache item.</param>
         /// <param name="value">The value of the cache item.</param>
         /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
-        public CacheItem(string key, object value, int expirationInMinutes)
+        public CacheItem(string key, object value, int expirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes)
         {
             if (expirationInMinutes < 0)
             {

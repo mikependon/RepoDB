@@ -27,20 +27,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
-        /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        public void Add(string key, object value, bool throwException = true)
-        {
-            Add(key, value, Constant.DefaultCacheItemExpirationInMinutes, throwException);
-        }
-
-        /// <summary>
-        /// Adds a cache item value.
-        /// </summary>
-        /// <param name="key">The key to the cache.</param>
-        /// <param name="value">The value of the cache.</param>
         /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        public void Add(string key, object value, int expirationInMinutes, bool throwException = true)
+        public void Add(string key, object value, int expirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes, bool throwException = true)
         {
             Add(new CacheItem(key, value, expirationInMinutes), throwException);
         }

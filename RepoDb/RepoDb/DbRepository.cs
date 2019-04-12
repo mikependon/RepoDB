@@ -32,7 +32,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         public DbRepository(string connectionString)
-            : this(connectionString, null, null, null, null, ConnectionPersistency.PerCall)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -41,8 +47,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
-        public DbRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null, null, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            int? commandTimeout)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -51,8 +64,17 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public DbRepository(string connectionString, ICache cache)
-            : this(connectionString, null, cache, null, null, ConnectionPersistency.PerCall)
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        public DbRepository(string connectionString,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -61,8 +83,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, ITrace trace)
-            : this(connectionString, null, null, trace, null, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            ITrace trace)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  trace,
+                  null)
         {
         }
 
@@ -71,8 +100,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, IStatementBuilder statementBuilder)
-            : this(connectionString, null, null, null, statementBuilder, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            IStatementBuilder statementBuilder)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  statementBuilder)
         {
         }
 
@@ -84,69 +120,116 @@ namespace RepoDb
         /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
         /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
         /// </param>
-        public DbRepository(string connectionString, ConnectionPersistency connectionPersistency)
-            : this(connectionString, null, null, null, null, connectionPersistency)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null, null, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
-            : this(connectionString, commandTimeout, cache, trace, null, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
-            : this(connectionString, commandTimeout, cache, trace, statementBuilder, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        /// <param name="connectionPersistency">
-        /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
-        /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
-        /// </param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
+        public DbRepository(string connectionString,
             ConnectionPersistency connectionPersistency)
+            : this(connectionString,
+                  null,
+                  connectionPersistency,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  null,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  trace,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  trace,
+                  statementBuilder)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
+        /// </param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ConnectionPersistency connectionPersistency,
+            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
         {
             // Properties
             ConnectionString = connectionString;
             CommandTimeout = commandTimeout;
+            ConnectionPersistency = connectionPersistency;
             Cache = (cache ?? new MemoryCache());
+            CacheItemExpirationInMinutes = cacheItemExpirationInMinutes;
             Trace = trace;
             StatementBuilder = statementBuilder;
-            ConnectionPersistency = connectionPersistency;
         }
 
         #endregion
@@ -167,6 +250,11 @@ namespace RepoDb
         /// Gets the cache object that is being used by this repository.
         /// </summary>
         public ICache Cache { get; }
+
+        /// <summary>
+        /// Gets the expiration in minutes of the cache item.
+        /// </summary>
+        public int CacheItemExpirationInMinutes { get; }
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
@@ -2954,6 +3042,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3005,6 +3094,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3055,6 +3145,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3106,6 +3197,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3151,6 +3243,7 @@ where TEntity : class
                 return connection.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3202,6 +3295,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3254,6 +3348,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3305,6 +3400,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3356,6 +3452,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3407,6 +3504,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3452,6 +3550,7 @@ where TEntity : class
                 return await connection.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3503,6 +3602,7 @@ where TEntity : class
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpirationInMinutes: CacheItemExpirationInMinutes,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,

@@ -4094,6 +4094,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4105,6 +4106,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4118,6 +4120,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4138,6 +4141,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4150,9 +4154,10 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4163,6 +4168,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4183,6 +4189,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4195,9 +4202,10 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4208,6 +4216,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4226,6 +4235,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4236,9 +4246,10 @@ namespace RepoDb
             object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4249,6 +4260,7 @@ namespace RepoDb
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4269,6 +4281,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4281,6 +4294,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4293,6 +4307,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4313,6 +4328,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4325,6 +4341,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4338,6 +4355,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4358,6 +4376,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4370,6 +4389,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4453,7 +4473,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null && result?.Any() == true)
             {
-                cache?.Add(cacheKey, result);
+                cache?.Add(cacheKey, result, cacheItemExpirationInMinutes);
             }
 
             // Result
@@ -4476,6 +4496,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4487,6 +4508,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null, ITrace trace = null,
@@ -4499,6 +4521,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4519,6 +4542,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4531,9 +4555,10 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4544,6 +4569,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4564,6 +4590,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4576,9 +4603,10 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4589,6 +4617,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4607,6 +4636,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4617,9 +4647,10 @@ namespace RepoDb
             object whereOrPrimaryKey,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
@@ -4630,6 +4661,7 @@ namespace RepoDb
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4650,6 +4682,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4662,6 +4695,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4674,6 +4708,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4684,6 +4719,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -4706,6 +4742,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4719,6 +4756,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4739,6 +4777,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4751,6 +4790,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4830,7 +4870,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null && result.Result?.Any() == true)
             {
-                cache?.Add(cacheKey, result);
+                cache?.Add(cacheKey, result, cacheItemExpirationInMinutes);
             }
 
             // Result

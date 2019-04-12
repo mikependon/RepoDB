@@ -21,7 +21,12 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString", 0, cache.Object, null, new SqlStatementBuilder());
+            var repository = new Mock<DbRepository<CustomDbConnection>>("ConnectionString",
+                0,
+                cache.Object,
+                Constant.DefaultCacheItemExpirationInMinutes,
+                null,
+                new SqlStatementBuilder());
 
             // Setup
             cache.Setup(c => c.Get(It.IsAny<string>(), It.IsAny<bool>()));

@@ -26,7 +26,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         public BaseRepository(string connectionString)
-            : this(connectionString, null, null, null, null, ConnectionPersistency.PerCall)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -35,8 +41,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
-        public BaseRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null, null, ConnectionPersistency.PerCall)
+        public BaseRepository(string connectionString,
+            int? commandTimeout)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -45,8 +58,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public BaseRepository(string connectionString, ICache cache)
-            : this(connectionString, null, cache, null, null, ConnectionPersistency.PerCall)
+        public BaseRepository(string connectionString,
+            ICache cache)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -55,8 +75,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public BaseRepository(string connectionString, ITrace trace)
-            : this(connectionString, null, null, trace, null, ConnectionPersistency.PerCall)
+        public BaseRepository(string connectionString,
+            ITrace trace)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  trace,
+                  null)
         {
         }
 
@@ -65,8 +92,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        public BaseRepository(string connectionString, IStatementBuilder statementBuilder)
-            : this(connectionString, null, null, null, statementBuilder, ConnectionPersistency.PerCall)
+        public BaseRepository(string connectionString,
+            IStatementBuilder statementBuilder)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  statementBuilder)
         {
         }
 
@@ -78,8 +112,15 @@ namespace RepoDb
         /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
         /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
         /// </param>
-        public BaseRepository(string connectionString, ConnectionPersistency connectionPersistency)
-            : this(connectionString, null, null, null, null, connectionPersistency)
+        public BaseRepository(string connectionString,
+            ConnectionPersistency connectionPersistency)
+            : this(connectionString,
+                  null,
+                  connectionPersistency,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -89,8 +130,18 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public BaseRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null, null)
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        public BaseRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -100,9 +151,19 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
-            : this(connectionString, commandTimeout, cache, trace, null)
+        public BaseRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null)
+            : this(connectionString,
+                  commandTimeout,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  trace,
+                  null)
         {
         }
 
@@ -112,10 +173,22 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
-            : this(connectionString, commandTimeout, cache, trace, statementBuilder, ConnectionPersistency.PerCall)
+        public BaseRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpirationInMinutes,
+                  trace,
+                  statementBuilder)
         {
         }
 
@@ -125,21 +198,28 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="connectionPersistency">
         /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
         /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
         /// </param>
-        public BaseRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
-            ConnectionPersistency connectionPersistency)
+        public BaseRepository(string connectionString,
+            int? commandTimeout,
+            ConnectionPersistency connectionPersistency,
+            ICache cache,
+            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
         {
             DbRepository = new DbRepository<TDbConnection>(connectionString,
                 commandTimeout,
+                connectionPersistency,
                 cache,
+                cacheItemExpirationInMinutes,
                 trace,
-                statementBuilder,
-                connectionPersistency);
+                statementBuilder);
         }
 
         #endregion
@@ -165,6 +245,11 @@ namespace RepoDb
         /// Gets the cache object that is being used by this repository.
         /// </summary>
         public ICache Cache => DbRepository.Cache;
+
+        /// <summary>
+        /// Gets the expiration in minutes of the cache item.
+        /// </summary>
+        public int CacheItemExpirationInMinutes => DbRepository.CacheItemExpirationInMinutes;
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
