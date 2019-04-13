@@ -27,14 +27,14 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
             new CustomDbConnection().Query<CacheEntity>(orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -43,69 +43,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder());
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
-                It.IsAny<object>(),
-                It.Is<int>(i => i == cacheItemExpiration),
-                It.IsAny<bool>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionQueryCachingViaQueryField()
-        {
-            // Prepare
-            var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
-            var cacheItemExpiration = 60;
-
-            // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (QueryField)null,
-                orderBy: null,
-                top: 0,
-                hints: null,
-                cacheKey: cachKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: null,
-                transaction: null,
-                cache: cache.Object,
-                trace: null,
-                statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
-                It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
-                It.IsAny<object>(),
-                It.Is<int>(i => i == cacheItemExpiration),
-                It.IsAny<bool>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionQueryCachingViaQueryFields()
-        {
-            // Prepare
-            var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
-            var cacheItemExpiration = 60;
-
-            // Act
-            new CustomDbConnection().Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
-                orderBy: null,
-                top: 0,
-                hints: null,
-                cacheKey: cachKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: null,
-                transaction: null,
-                cache: cache.Object,
-                trace: null,
-                statementBuilder: new SqlStatementBuilder());
-
-            // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
-                It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -116,14 +56,14 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
             new CustomDbConnection().Query<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
                 (string)null, /* hints */
-                cachKey, /* cacheKey */
+                cacheKey, /* cacheKey */
                 cacheItemExpiration, /* cacheItemExpiration */
                 (int?)null, /* commandTimeout */
                 (IDbTransaction)null, /* transaction */
@@ -132,9 +72,69 @@ namespace RepoDb.UnitTests.Interfaces
                 new SqlStatementBuilder() /* statementBulder */);
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
+                It.IsAny<object>(),
+                It.Is<int>(i => i == cacheItemExpiration),
+                It.IsAny<bool>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbConnectionQueryCachingViaQueryField()
+        {
+            // Prepare
+            var cache = new Mock<ICache>();
+            var cacheKey = "MemoryCacheKey";
+            var cacheItemExpiration = 60;
+
+            // Act
+            new CustomDbConnection().Query<CacheEntity>(where: (QueryField)null,
+                orderBy: null,
+                top: 0,
+                hints: null,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: null,
+                transaction: null,
+                cache: cache.Object,
+                trace: null,
+                statementBuilder: new SqlStatementBuilder());
+
+            // Assert
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+                It.IsAny<bool>()), Times.Once);
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
+                It.IsAny<object>(),
+                It.Is<int>(i => i == cacheItemExpiration),
+                It.IsAny<bool>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbConnectionQueryCachingViaQueryFields()
+        {
+            // Prepare
+            var cache = new Mock<ICache>();
+            var cacheKey = "MemoryCacheKey";
+            var cacheItemExpiration = 60;
+
+            // Act
+            new CustomDbConnection().Query<CacheEntity>(where: (IEnumerable<QueryField>)null,
+                orderBy: null,
+                top: 0,
+                hints: null,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: null,
+                transaction: null,
+                cache: cache.Object,
+                trace: null,
+                statementBuilder: new SqlStatementBuilder());
+
+            // Assert
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+                It.IsAny<bool>()), Times.Once);
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -145,7 +145,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.Interfaces
                 orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -162,9 +162,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder());
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -175,7 +175,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
@@ -183,7 +183,7 @@ namespace RepoDb.UnitTests.Interfaces
                 orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -192,9 +192,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder());
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -209,14 +209,14 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
             var result = new CustomDbConnection().QueryAsync<CacheEntity>(orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -225,69 +225,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder()).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
-                It.IsAny<object>(),
-                It.Is<int>(i => i == cacheItemExpiration),
-                It.IsAny<bool>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaQueryField()
-        {
-            // Prepare
-            var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
-            var cacheItemExpiration = 60;
-
-            // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryField)null,
-                orderBy: null,
-                top: 0,
-                hints: null,
-                cacheKey: cachKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: null,
-                transaction: null,
-                cache: cache.Object,
-                trace: null,
-                statementBuilder: new SqlStatementBuilder()).Result;
-
-            // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
-                It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
-                It.IsAny<object>(),
-                It.Is<int>(i => i == cacheItemExpiration),
-                It.IsAny<bool>()), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaQueryFields()
-        {
-            // Prepare
-            var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
-            var cacheItemExpiration = 60;
-
-            // Act
-            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
-                orderBy: null,
-                top: 0,
-                hints: null,
-                cacheKey: cachKey,
-                cacheItemExpiration: cacheItemExpiration,
-                commandTimeout: null,
-                transaction: null,
-                cache: cache.Object,
-                trace: null,
-                statementBuilder: new SqlStatementBuilder()).Result;
-
-            // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
-                It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -298,14 +238,14 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
             var result = new CustomDbConnection().QueryAsync<CacheEntity>((object)null, /* whereOrPrimaryKey */
                 (IEnumerable<OrderField>)null, /* orderBy */
                 (string)null, /* hints */
-                cachKey, /* cacheKey */
+                cacheKey, /* cacheKey */
                 cacheItemExpiration, /* cacheItemExpiration */
                 (int?)null, /* commandTimeout */
                 (IDbTransaction)null, /* transaction */
@@ -314,9 +254,69 @@ namespace RepoDb.UnitTests.Interfaces
                 new SqlStatementBuilder() /* statementBulder */).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
+                It.IsAny<object>(),
+                It.Is<int>(i => i == cacheItemExpiration),
+                It.IsAny<bool>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbConnectionQueryAsyncCachingViaQueryField()
+        {
+            // Prepare
+            var cache = new Mock<ICache>();
+            var cacheKey = "MemoryCacheKey";
+            var cacheItemExpiration = 60;
+
+            // Act
+            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (QueryField)null,
+                orderBy: null,
+                top: 0,
+                hints: null,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: null,
+                transaction: null,
+                cache: cache.Object,
+                trace: null,
+                statementBuilder: new SqlStatementBuilder()).Result;
+
+            // Assert
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+                It.IsAny<bool>()), Times.Once);
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
+                It.IsAny<object>(),
+                It.Is<int>(i => i == cacheItemExpiration),
+                It.IsAny<bool>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDbConnectionQueryAsyncCachingViaQueryFields()
+        {
+            // Prepare
+            var cache = new Mock<ICache>();
+            var cacheKey = "MemoryCacheKey";
+            var cacheItemExpiration = 60;
+
+            // Act
+            var result = new CustomDbConnection().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
+                orderBy: null,
+                top: 0,
+                hints: null,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: null,
+                transaction: null,
+                cache: cache.Object,
+                trace: null,
+                statementBuilder: new SqlStatementBuilder()).Result;
+
+            // Assert
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
+                It.IsAny<bool>()), Times.Once);
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -327,7 +327,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
@@ -335,7 +335,7 @@ namespace RepoDb.UnitTests.Interfaces
                 orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -344,9 +344,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder()).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);
@@ -357,7 +357,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             // Prepare
             var cache = new Mock<ICache>();
-            var cachKey = "MemoryCacheKey";
+            var cacheKey = "MemoryCacheKey";
             var cacheItemExpiration = 60;
 
             // Act
@@ -365,7 +365,7 @@ namespace RepoDb.UnitTests.Interfaces
                 orderBy: null,
                 top: 0,
                 hints: null,
-                cacheKey: cachKey,
+                cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: null,
                 transaction: null,
@@ -374,9 +374,9 @@ namespace RepoDb.UnitTests.Interfaces
                 statementBuilder: new SqlStatementBuilder()).Result;
 
             // Assert
-            cache.Verify(c => c.Get(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Get(It.Is<string>(s => s == cacheKey),
                 It.IsAny<bool>()), Times.Once);
-            cache.Verify(c => c.Add(It.Is<string>(s => s == cachKey),
+            cache.Verify(c => c.Add(It.Is<string>(s => s == cacheKey),
                 It.IsAny<object>(),
                 It.Is<int>(i => i == cacheItemExpiration),
                 It.IsAny<bool>()), Times.Once);

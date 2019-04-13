@@ -54,6 +54,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Caches\BaseRepositoryCachesTest.cs" />
+    <Compile Include="Caches\DbRepositoryCachesTest.cs" />
+    <Compile Include="Caches\SqlConnectionCachesTest.cs" />
     <Compile Include="Models\SimpleTable.cs" />
     <Compile Include="ObjectMappingTest.cs" />
     <Compile Include="ObjectNameCasingTest.cs" />
