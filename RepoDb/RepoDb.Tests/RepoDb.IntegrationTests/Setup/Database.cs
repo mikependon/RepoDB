@@ -108,6 +108,7 @@ namespace RepoDb.IntegrationTests.Setup
 	                CREATE TABLE [dbo].[SimpleTable]
 	                (
 		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+                        [RowGuid] UNIQUEIDENTIFIER NOT NULL,
 		                [ColumnBit] BIT NULL,
 		                [ColumnDateTime] DATETIME NULL,
 		                [ColumnDateTime2] DATETIME2(7) NULL,

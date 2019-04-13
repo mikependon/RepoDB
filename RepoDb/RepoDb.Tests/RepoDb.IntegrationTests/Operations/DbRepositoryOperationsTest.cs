@@ -41,6 +41,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var index = i + 1;
                 tables.Add(new SimpleTable
                 {
+                    RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = EpocDate.AddDays(index),
@@ -824,6 +825,7 @@ namespace RepoDb.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
@@ -1040,6 +1042,7 @@ namespace RepoDb.IntegrationTests.Operations
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.RowGuid), nameof(SimpleTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnBit), nameof(SimpleTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime), nameof(SimpleTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(SimpleTable.ColumnDateTime2), nameof(SimpleTable.ColumnDateTime2)));
@@ -1775,6 +1778,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new
             {
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1798,9 +1802,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -1833,6 +1839,7 @@ namespace RepoDb.IntegrationTests.Operations
             // Setup
             var entity = new
             {
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1856,9 +1863,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -1892,6 +1901,7 @@ namespace RepoDb.IntegrationTests.Operations
             var entity = new
             {
                 Id = 100,
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1915,9 +1925,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -1931,6 +1943,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = CreateSimpleTables(10);
             var entity = new
             {
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -1957,9 +1970,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -2043,6 +2058,7 @@ namespace RepoDb.IntegrationTests.Operations
             var entity = new
             {
                 Id = 100,
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -2066,9 +2082,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);
@@ -2082,6 +2100,7 @@ namespace RepoDb.IntegrationTests.Operations
             var tables = CreateSimpleTables(10);
             var entity = new
             {
+                RowGuid = new Guid(),
                 ColumnInt = 100,
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnNVarChar = Helper.GetUnicodeString()
@@ -2108,9 +2127,11 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.IsNull(first.ColumnDateTime);
                 Assert.IsNull(first.ColumnDecimal);
                 Assert.IsNull(first.ColumnFloat);
+                Assert.IsNotNull(first.RowGuid);
                 Assert.IsNotNull(first.ColumnInt);
                 Assert.IsNotNull(first.ColumnDateTime2);
                 Assert.IsNotNull(first.ColumnNVarChar);
+                Assert.AreEqual(entity.RowGuid, first.RowGuid);
                 Assert.AreEqual(entity.ColumnInt, first.ColumnInt);
                 Assert.AreEqual(entity.ColumnDateTime2, first.ColumnDateTime2.Value);
                 Assert.AreEqual(entity.ColumnNVarChar, first.ColumnNVarChar);

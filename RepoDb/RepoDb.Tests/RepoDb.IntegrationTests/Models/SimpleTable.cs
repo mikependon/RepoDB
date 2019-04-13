@@ -5,6 +5,7 @@ namespace RepoDb.IntegrationTests.Models
     public class SimpleTable
     {
         public long Id { get; set; }
+        public Guid RowGuid { get; set; }
         public bool? ColumnBit { get; set; }
         public DateTime? ColumnDateTime { get; set; }
         public DateTime? ColumnDateTime2 { get; set; }
@@ -17,6 +18,7 @@ namespace RepoDb.IntegrationTests.Models
     public class LiteSimpleTable
     {
         public long Id { get; set; }
+        public Guid RowGuid { get; set; }
         public bool? ColumnBit { get; set; }
         public DateTime? ColumnDateTime { get; set; }
         public int? ColumnInt { get; set; }
