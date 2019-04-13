@@ -2605,7 +2605,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternal<TEntity>(connection: connection,
+            return InlineInsertInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2617,6 +2617,7 @@ namespace RepoDb
         /// Inserts a new data in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -2624,7 +2625,35 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static object InlineInsertInternal<TEntity>(this IDbConnection connection,
+        public static TResult InlineInsert<TEntity, TResult>(this IDbConnection connection,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InlineInsertInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternal<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2651,7 +2680,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return 0;
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 entity = (cancellableTraceLog?.Parameter ?? entity);
@@ -2678,8 +2707,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -2705,7 +2740,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity>(connection: connection,
+            return InlineInsertInternalAsync<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2717,6 +2752,7 @@ namespace RepoDb
         /// Inserts a new data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -2724,7 +2760,35 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static Task<object> InlineInsertInternalAsync<TEntity>(this IDbConnection connection,
+        public static Task<TResult> InlineInsertAsync<TEntity, TResult>(this IDbConnection connection,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InlineInsertInternalAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static async Task<TResult> InlineInsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2751,7 +2815,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult<object>(null);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 entity = (cancellableTraceLog?.Parameter ?? entity);
@@ -2761,25 +2825,28 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarInternalAsync(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
 
-            // Set back result equals to PrimaryKey type
-            var primaryKey = DataEntityExtension.ValueToPrimaryType<TEntity>(result.Result);
-
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineInsert(new TraceLog(commandText, entity, primaryKey,
+                trace.AfterInlineInsert(new TraceLog(commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return Task.FromResult<object>(primaryKey);
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -3578,7 +3645,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternal(connection: connection,
+            return InsertInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3590,6 +3657,7 @@ namespace RepoDb
         /// Inserts a new data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -3600,7 +3668,38 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static object InsertInternal<TEntity>(this IDbConnection connection,
+        public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity, int?
             commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3627,7 +3726,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return null;
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
@@ -3651,8 +3750,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -3677,7 +3782,7 @@ namespace RepoDb
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternalAsync(connection: connection,
+            return InsertInternalAsync<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3689,6 +3794,7 @@ namespace RepoDb
         /// Inserts a new data in the database in asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -3699,7 +3805,38 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static Task<object> InsertInternalAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
+        public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternalAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database in asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        internal static async Task<TResult> InsertInternalAsync<TEntity, TResult>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -3722,7 +3859,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult<object>(null);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
@@ -3732,7 +3869,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarInternalAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -3746,8 +3883,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion

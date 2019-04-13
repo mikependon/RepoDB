@@ -2038,6 +2038,42 @@ where TEntity : class
             }
         }
 
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public TResult InlineInsert<TEntity, TResult>(object entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.InlineInsert<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
         #endregion
 
         #region InlineInsertAsync
@@ -2060,6 +2096,42 @@ where TEntity : class
             {
                 // Call the method
                 return await connection.InlineInsertAsync<TEntity>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public async Task<TResult> InlineInsertAsync<TEntity, TResult>(object entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InlineInsertAsync<TEntity, TResult>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
@@ -2737,6 +2809,45 @@ where TEntity : class
             }
         }
 
+        /// <summary>
+        /// Inserts a new data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public TResult Insert<TEntity, TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Insert<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
         #endregion
 
         #region InsertAsync
@@ -2761,6 +2872,44 @@ where TEntity : class
             {
                 // Call the method
                 return await connection.InsertAsync<TEntity>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity, IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InsertAsync<TEntity, TResult>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,

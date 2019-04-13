@@ -1051,6 +1051,20 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public TResult InlineInsert<TResult>(object entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineInsert<TEntity, TResult>(entity: entity,
+                transaction: transaction);
+        }
+
         #endregion
 
         #region InlineInsertAsync
@@ -1065,6 +1079,20 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.InlineInsertAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public Task<TResult> InlineInsertAsync<TResult>(object entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.InlineInsertAsync<TEntity, TResult>(entity: entity,
                 transaction: transaction);
         }
 
@@ -1354,6 +1382,23 @@ namespace RepoDb
                 transaction: transaction);
         }
 
+        /// <summary>
+        /// Inserts a new data in the database.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public TResult Insert<TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.Insert<TEntity, TResult>(entity: entity,
+                transaction: transaction);
+        }
+
         #endregion
 
         #region InsertAsync
@@ -1371,6 +1416,23 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             return DbRepository.InsertAsync<TEntity>(entity: entity,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public Task<TResult> InsertAsync<TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+        {
+            return DbRepository.InsertAsync<TEntity, TResult>(entity: entity,
                 transaction: transaction);
         }
 
