@@ -2042,7 +2042,7 @@ where TEntity : class
         /// Inserts a new data into the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
@@ -2116,7 +2116,7 @@ where TEntity : class
         /// <summary>
         /// Inserts a new data into the database (certain fields only) in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
@@ -2813,7 +2813,7 @@ where TEntity : class
         /// Inserts a new data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
@@ -2893,7 +2893,7 @@ where TEntity : class
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>

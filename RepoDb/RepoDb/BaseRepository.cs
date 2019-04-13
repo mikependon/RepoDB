@@ -1054,7 +1054,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data into the database (certain fields only).
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
@@ -1085,7 +1085,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data into the database (certain fields only) in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The dynamic data entity object that contains the targetted columns to be inserted.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
@@ -1385,7 +1385,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
@@ -1422,7 +1422,7 @@ namespace RepoDb
         /// <summary>
         /// Inserts a new data in the database in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>
