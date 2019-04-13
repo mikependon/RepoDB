@@ -249,7 +249,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpirationInMinutes => DbRepository.CacheItemExpiration;
+        public int CacheItemExpiration => DbRepository.CacheItemExpiration;
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
