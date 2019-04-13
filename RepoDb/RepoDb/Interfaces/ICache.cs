@@ -12,9 +12,9 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <param name="key">The key to the cache.</param>
         /// <param name="value">The value of the cache.</param>
-        /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="expiration">The expiration in minutes of the cache item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to add an item.</param>
-        void Add(string key, object value, int expirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes, bool throwException = true);
+        void Add(string key, object value, int expiration = Constant.DefaultCacheItemExpirationInMinutes, bool throwException = true);
 
         /// <summary>
         /// Adds a cache item value.

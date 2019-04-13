@@ -130,16 +130,16 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes)
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
                   cache,
-                  cacheItemExpirationInMinutes,
+                  cacheItemExpiration,
                   null,
                   null)
         {
@@ -151,17 +151,17 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null)
             : this(connectionString,
                   commandTimeout,
                   cache,
-                  cacheItemExpirationInMinutes,
+                  cacheItemExpiration,
                   trace,
                   null)
         {
@@ -173,20 +173,20 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
         public BaseRepository(string connectionString,
             int? commandTimeout,
             ICache cache,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             : this(connectionString,
                   commandTimeout,
                   ConnectionPersistency.PerCall,
                   cache,
-                  cacheItemExpirationInMinutes,
+                  cacheItemExpiration,
                   trace,
                   statementBuilder)
         {
@@ -198,7 +198,7 @@ namespace RepoDb
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
         /// <param name="connectionPersistency">
@@ -209,7 +209,7 @@ namespace RepoDb
             int? commandTimeout,
             ConnectionPersistency connectionPersistency,
             ICache cache,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
         {
@@ -217,7 +217,7 @@ namespace RepoDb
                 commandTimeout,
                 connectionPersistency,
                 cache,
-                cacheItemExpirationInMinutes,
+                cacheItemExpiration,
                 trace,
                 statementBuilder);
         }
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the expiration in minutes of the cache item.
         /// </summary>
-        public int CacheItemExpirationInMinutes => DbRepository.CacheItemExpirationInMinutes;
+        public int CacheItemExpirationInMinutes => DbRepository.CacheItemExpiration;
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
@@ -1505,6 +1505,7 @@ namespace RepoDb
         /// Queries a data from the database.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -1513,11 +1514,13 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public IEnumerable<TEntity> Query(object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);
@@ -1668,6 +1671,7 @@ namespace RepoDb
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -1676,11 +1680,13 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                orderBy: orderBy,
                 hints: hints,
                 cacheKey: cacheKey,
                 transaction: transaction);

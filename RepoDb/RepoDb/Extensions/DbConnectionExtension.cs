@@ -4094,7 +4094,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4106,7 +4106,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4120,103 +4120,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            QueryField where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4230,12 +4134,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4244,9 +4149,10 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4256,11 +4162,11 @@ namespace RepoDb
         {
             return Query<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
-                orderBy: null,
+                orderBy: orderBy,
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4281,7 +4187,103 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            QueryField where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Query<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Query<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4294,7 +4296,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4307,7 +4309,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4328,7 +4330,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4341,7 +4343,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4355,7 +4357,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4376,7 +4378,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4389,7 +4391,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4471,9 +4473,9 @@ namespace RepoDb
             }
 
             // Set Cache
-            if (cacheKey != null && result?.Any() == true)
+            if (cacheKey != null /* && result?.Any() == true */)
             {
-                cache?.Add(cacheKey, result, cacheItemExpirationInMinutes);
+                cache?.Add(cacheKey, result, cacheItemExpiration);
             }
 
             // Result
@@ -4496,7 +4498,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4508,7 +4510,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null, ITrace trace = null,
@@ -4521,103 +4523,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            QueryField where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ICache cache = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4631,12 +4537,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4645,9 +4552,10 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4657,11 +4565,11 @@ namespace RepoDb
         {
             return QueryAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
-                orderBy: null,
+                orderBy: orderBy,
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4682,7 +4590,103 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+            QueryField where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4695,7 +4699,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4708,7 +4712,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4719,7 +4723,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -4742,7 +4746,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4756,7 +4760,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                cacheItemExpirationInMinutes: cacheItemExpirationInMinutes,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4777,7 +4781,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
-        /// <param name="cacheItemExpirationInMinutes">The expiration in minutes of the cache item.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4790,7 +4794,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            int cacheItemExpirationInMinutes = Constant.DefaultCacheItemExpirationInMinutes,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4868,9 +4872,9 @@ namespace RepoDb
             }
 
             // Set Cache
-            if (cacheKey != null && result.Result?.Any() == true)
+            if (cacheKey != null /* && result.Result?.Any() == true */)
             {
-                cache?.Add(cacheKey, result, cacheItemExpirationInMinutes);
+                cache?.Add(cacheKey, result, cacheItemExpiration);
             }
 
             // Result
