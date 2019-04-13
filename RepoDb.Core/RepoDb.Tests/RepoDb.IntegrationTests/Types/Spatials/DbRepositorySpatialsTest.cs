@@ -142,11 +142,11 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -170,11 +170,11 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<SpatialsClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -198,11 +198,11 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -226,11 +226,11 @@ namespace RepoDb.IntegrationTests.Types.Spatials
             {
                 // Act Insert
                 var insertResult = repository.InsertAsync(entity);
-                var id = insertResult.Result.Extract();
+                var id = insertResult.Result;
 
                 // Act Query
                 var queryResult = repository.QueryAsync<SpatialsMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.Extract().FirstOrDefault();
+                var data = queryResult.Result.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

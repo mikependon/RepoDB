@@ -22,17 +22,17 @@ namespace RepoDb
         /// </summary>
         /// <param name="key">The key of the cache item.</param>
         /// <param name="value">The value of the cache item.</param>
-        /// <param name="expirationInMinutes">The expiration in minutes of the cache item.</param>
-        public CacheItem(string key, object value, int expirationInMinutes)
+        /// <param name="expiration">The expiration in minutes of the cache item.</param>
+        public CacheItem(string key, object value, int expiration = Constant.DefaultCacheItemExpirationInMinutes)
         {
-            if (expirationInMinutes < 0)
+            if (expiration < 0)
             {
                 throw new ArgumentOutOfRangeException("Expiration in minutes must not be negative values.");
             }
             Key = key;
             Value = value;
             CreatedDate = DateTime.UtcNow;
-            Expiration = CreatedDate.AddMinutes(expirationInMinutes);
+            Expiration = CreatedDate.AddMinutes(expiration);
         }
 
         /// <summary>

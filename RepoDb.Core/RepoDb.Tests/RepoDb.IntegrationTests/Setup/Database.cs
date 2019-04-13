@@ -70,7 +70,8 @@ namespace RepoDb.IntegrationTests.Setup
         public static void CreateTables()
         {
             CreateCompleteTable();
-            CreateSimpleTable();
+            CreateIdentityTable();
+            CreateNonIdentityTable();
         }
 
         /// <summary>
@@ -78,8 +79,8 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateStoredProcedures()
         {
-            CreateGetSimpleTablesStoredProcedure();
-            CreateGetSimpleTableByIdStoredProcedure();
+            CreateGetIdentityTablesStoredProcedure();
+            CreateGetIdentityTableByIdStoredProcedure();
             CreateMultiplyStoredProcedure();
             CreateGetDatabaseDateTimeStoredProcedure();
         }
@@ -91,7 +92,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb))
             {
-                var commandText = "DELETE FROM [dbo].[CompleteTable]; DELETE FROM [dbo].[SimpleTable];";
+                var commandText = "DELETE FROM [dbo].[CompleteTable]; DELETE FROM [dbo].[IdentityTable]; DELETE FROM [dbo].[NonIdentityTable];";
                 connection.ExecuteNonQuery(commandText);
             }
         }
@@ -99,15 +100,16 @@ namespace RepoDb.IntegrationTests.Setup
         #region CreateTables
 
         /// <summary>
-        /// Creates a simple table that has some important fields. All fields are nullable.
+        /// Creates an identity table that has some important fields. All fields are nullable.
         /// </summary>
-        public static void CreateSimpleTable()
+        public static void CreateIdentityTable()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'SimpleTable'))
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'IdentityTable'))
                 BEGIN
-	                CREATE TABLE [dbo].[SimpleTable]
+	                CREATE TABLE [dbo].[IdentityTable]
 	                (
 		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
+                        [RowGuid] UNIQUEIDENTIFIER NOT NULL,
 		                [ColumnBit] BIT NULL,
 		                [ColumnDateTime] DATETIME NULL,
 		                [ColumnDateTime2] DATETIME2(7) NULL,
@@ -115,7 +117,36 @@ namespace RepoDb.IntegrationTests.Setup
 		                [ColumnFloat] FLOAT NULL,
 		                [ColumnInt] INT NULL,
 		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
-		                CONSTRAINT [Id] PRIMARY KEY 
+		                CONSTRAINT [IdentityTable_$Id] PRIMARY KEY 
+		                (
+			                [Id] ASC
+		                )
+	                ) ON [PRIMARY];
+                END";
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        /// <summary>
+        /// Creates an non-identity table that has some important fields. All fields are nullable.
+        /// </summary>
+        public static void CreateNonIdentityTable()
+        {
+            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'NonIdentityTable'))
+                BEGIN
+	                CREATE TABLE [dbo].[NonIdentityTable]
+	                (
+		                [Id] UNIQUEIDENTIFIER NOT NULL,
+		                [ColumnBit] BIT NULL,
+		                [ColumnDateTime] DATETIME NULL,
+		                [ColumnDateTime2] DATETIME2(7) NULL,
+		                [ColumnDecimal] DECIMAL(18, 2) NULL,
+		                [ColumnFloat] FLOAT NULL,
+		                [ColumnInt] INT NULL,
+		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
+		                CONSTRAINT [NonIdentityTable_$Id] PRIMARY KEY 
 		                (
 			                [Id] ASC
 		                )
@@ -188,19 +219,19 @@ namespace RepoDb.IntegrationTests.Setup
         #region CreateStoredProcedures
 
         /// <summary>
-        /// Create a stored procedure that is used to return all records from SimpleTable.
+        /// Create a stored procedure that is used to return all records from IdentityTable.
         /// </summary>
-        public static void CreateGetSimpleTablesStoredProcedure()
+        public static void CreateGetIdentityTablesStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
-                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_simple_tables';");
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_identity_tables';");
                 if (exists == null)
                 {
-                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_simple_tables]
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_identity_tables]
 	                    AS
                         BEGIN
-                            SELECT * FROM [dbo].[SimpleTable];
+                            SELECT * FROM [dbo].[IdentityTable];
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }
@@ -208,22 +239,22 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
-        /// Create a stored procedure that is used to return a SimpleTable record by id.
+        /// Create a stored procedure that is used to return a IdentityTable record by id.
         /// </summary>
-        public static void CreateGetSimpleTableByIdStoredProcedure()
+        public static void CreateGetIdentityTableByIdStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
-                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_simple_table_by_id';");
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_identity_table_by_id';");
                 if (exists == null)
                 {
-                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_simple_table_by_id]
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_identity_table_by_id]
                         (
                             @Id INT
                         )
 	                    AS
                         BEGIN
-                            SELECT * FROM [dbo].[SimpleTable] WHERE Id = @Id;
+                            SELECT * FROM [dbo].[IdentityTable] WHERE Id = @Id;
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }

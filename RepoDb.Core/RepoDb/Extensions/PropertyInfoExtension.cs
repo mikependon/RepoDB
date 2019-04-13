@@ -153,7 +153,7 @@ namespace RepoDb.Extensions
         /// <returns>A instance of string containing the value of a parameterized (as field) name.</returns>
         public static string AsParameterAsField(this PropertyInfo property)
         {
-            return string.Concat(AsParameter(property), " ", StringConstant.As.ToUpper(), " ", AsField(property));
+            return string.Concat(AsParameter(property), " AS ", AsField(property));
         }
 
         /// <summary>

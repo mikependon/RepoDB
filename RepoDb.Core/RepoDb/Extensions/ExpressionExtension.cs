@@ -110,7 +110,7 @@ namespace RepoDb.Extensions
             else
             {
                 // Contains
-                if (expression.Method.Name == StringConstant.Contains)
+                if (expression.Method.Name == "Contains")
                 {
                     var last = expression.Arguments?.Last();
                     if (last?.IsMember() == true)

@@ -118,6 +118,39 @@ namespace RepoDb.UnitTests.Caches
             Assert.IsNotNull(actual);
         }
 
+        [TestMethod]
+        public void TestMemoryCacheManualExpirationDate()
+        {
+            // Prepare
+            var cache = new MemoryCache();
+            var expirationInMinutes = 60;
+            cache.Add("Key", new object(), expirationInMinutes);
+
+            // Act
+            var actual = cache.Get("Key");
+
+            // Assert
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expirationInMinutes, (actual.Expiration - actual.CreatedDate).TotalMinutes);
+        }
+
+        [TestMethod]
+        public void TestMemoryCacheManualExpirationDateViaCacheItem()
+        {
+            // Prepare
+            var cache = new MemoryCache();
+            var expirationInMinutes = 60;
+            var cacheItem = new CacheItem("Key", new object(), expirationInMinutes);
+            cache.Add(cacheItem);
+
+            // Act
+            var actual = cache.Get("Key");
+
+            // Assert
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(expirationInMinutes, (actual.Expiration - actual.CreatedDate).TotalMinutes);
+        }
+
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void ThrowExceptionOnAddingNewItemAtMemoryCacheWithTheSameKey()
         {

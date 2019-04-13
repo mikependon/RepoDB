@@ -35,26 +35,6 @@ namespace RepoDb
 
         #region Methods
 
-        /// <summary>
-        /// Checks whether the declaring type of the <see cref="PropertyInfo"/> has forced primary key.
-        /// </summary>
-        /// <returns>Returns true if there are forced declared primary key.</returns>
-        private bool DeclaringTypeHasForcedPrimaryKey()
-        {
-            foreach (var property in PropertyInfo.DeclaringType.GetTypeInfo().GetProperties())
-            {
-                if (property == PropertyInfo)
-                {
-                    continue;
-                }
-                if (null != PropertyInfo.GetCustomAttribute(typeof(PrimaryAttribute)) as PrimaryAttribute)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         /*
          * GetPrimaryAttribute
          */
@@ -119,29 +99,25 @@ namespace RepoDb
                 return m_isPrimary;
             }
 
-            // Check if there are already primary keys defined except this class
-            if (DeclaringTypeHasForcedPrimaryKey() == false)
+            // Id Property
+            m_isPrimary = (PropertyInfo.Name.ToLower() == "id");
+            if (m_isPrimary == true)
             {
-                // Id Property
-                m_isPrimary = (PropertyInfo.Name.ToLower() == StringConstant.Id.ToLower());
-                if (m_isPrimary == true)
-                {
-                    return m_isPrimary;
-                }
+                return m_isPrimary;
+            }
 
-                // Type.Name + Id
-                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(PropertyInfo.DeclaringType.Name, StringConstant.Id).ToLower());
-                if (m_isPrimary == true)
-                {
-                    return m_isPrimary;
-                }
+            // Type.Name + Id
+            m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(PropertyInfo.DeclaringType.Name.ToLower(), "id"));
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
+            }
 
-                // Mapping.Name + Id
-                m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType), StringConstant.Id).ToLower());
-                if (m_isPrimary == true)
-                {
-                    return m_isPrimary;
-                }
+            // Mapping.Name + Id
+            m_isPrimary = (PropertyInfo.Name.ToLower() == string.Concat(ClassMappedNameCache.Get(PropertyInfo.DeclaringType).ToLower(), "id"));
+            if (m_isPrimary == true)
+            {
+                return m_isPrimary;
             }
 
             // Return false

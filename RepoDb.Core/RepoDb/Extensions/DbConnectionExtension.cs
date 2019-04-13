@@ -1685,7 +1685,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             string hints = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -1714,7 +1714,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             object where,
             string hints = null,
             int? commandTimeout = null,
@@ -1744,7 +1744,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
             string hints = null,
             int? commandTimeout = null,
@@ -1774,7 +1774,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryField where,
             string hints = null,
             int? commandTimeout = null,
@@ -1804,7 +1804,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
             string hints = null,
             int? commandTimeout = null,
@@ -1834,7 +1834,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public static Task<object> CountAsync<TEntity>(this IDbConnection connection,
+        public static Task<long> CountAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
             string hints = null,
             int? commandTimeout = null,
@@ -1864,7 +1864,7 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        internal static Task<object> CountInternalAsync<TEntity>(this IDbConnection connection,
+        internal static Task<long> CountInternalAsync<TEntity>(this IDbConnection connection,
             QueryGroup where, int? commandTimeout = null,
             string hints = null,
             IDbTransaction transaction = null,
@@ -1899,7 +1899,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult((object)0);
+                    return Task.FromResult(Convert.ToInt64(0));
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = (cancellableTraceLog?.Parameter ?? param);
@@ -1909,7 +1909,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = ExecuteScalarInternalAsync<long>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2606,7 +2606,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternal<TEntity>(connection: connection,
+            return InlineInsertInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2618,6 +2618,7 @@ namespace RepoDb
         /// Inserts a new data in the database (certain fields only).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -2625,7 +2626,35 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static object InlineInsertInternal<TEntity>(this IDbConnection connection,
+        public static TResult InlineInsert<TEntity, TResult>(this IDbConnection connection,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InlineInsertInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static TResult InlineInsertInternal<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2652,7 +2681,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return 0;
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 entity = (cancellableTraceLog?.Parameter ?? entity);
@@ -2679,8 +2708,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -2706,7 +2741,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InlineInsertInternalAsync<TEntity>(connection: connection,
+            return InlineInsertInternalAsync<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -2718,6 +2753,7 @@ namespace RepoDb
         /// Inserts a new data in the database (certain fields only) in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -2725,7 +2761,35 @@ namespace RepoDb
         /// <param name="trace">The trace object to be used by this operation.</param>
         /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        internal static Task<object> InlineInsertInternalAsync<TEntity>(this IDbConnection connection,
+        public static Task<TResult> InlineInsertAsync<TEntity, TResult>(this IDbConnection connection,
+            object entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InlineInsertInternalAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        internal static async Task<TResult> InlineInsertInternalAsync<TEntity, TResult>(this IDbConnection connection,
             object entity,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
@@ -2752,7 +2816,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult<object>(null);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 entity = (cancellableTraceLog?.Parameter ?? entity);
@@ -2762,25 +2826,28 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarInternalAsync(connection: connection,
                 commandText: commandText,
                 param: entity,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
                 transaction: transaction);
 
-            // Set back result equals to PrimaryKey type
-            var primaryKey = DataEntityExtension.ValueToPrimaryType<TEntity>(result.Result);
-
             // After Execution
             if (trace != null)
             {
-                trace.AfterInlineInsert(new TraceLog(commandText, entity, primaryKey,
+                trace.AfterInlineInsert(new TraceLog(commandText, entity, result,
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return Task.FromResult<object>(primaryKey);
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -3579,7 +3646,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternal(connection: connection,
+            return InsertInternal<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3591,6 +3658,7 @@ namespace RepoDb
         /// Inserts a new data in the database.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -3601,7 +3669,38 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static object InsertInternal<TEntity>(this IDbConnection connection,
+        public static TResult Insert<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternal<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        internal static TResult InsertInternal<TEntity, TResult>(this IDbConnection connection,
             TEntity entity, int?
             commandTimeout = null,
             IDbTransaction transaction = null,
@@ -3628,7 +3727,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return null;
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
@@ -3652,8 +3751,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -3678,7 +3783,7 @@ namespace RepoDb
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternalAsync(connection: connection,
+            return InsertInternalAsync<TEntity, object>(connection: connection,
                 entity: entity,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -3690,6 +3795,7 @@ namespace RepoDb
         /// Inserts a new data in the database in asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="entity">The data entity object to be inserted by this operation.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
@@ -3700,7 +3806,38 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        internal static Task<object> InsertInternalAsync<TEntity>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
+        public static Task<TResult> InsertAsync<TEntity, TResult>(this IDbConnection connection,
+            TEntity entity,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return InsertInternalAsync<TEntity, TResult>(connection: connection,
+                entity: entity,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database in asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        internal static async Task<TResult> InsertInternalAsync<TEntity, TResult>(this IDbConnection connection, TEntity entity, int? commandTimeout = null, IDbTransaction transaction = null,
             ITrace trace = null, IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
@@ -3723,7 +3860,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return Task.FromResult<object>(null);
+                    return default(TResult);
                 }
                 commandText = (cancellableTraceLog?.Statement ?? commandText);
                 param = ((IEnumerable<PropertyValue>)cancellableTraceLog?.Parameter ?? param);
@@ -3733,7 +3870,7 @@ namespace RepoDb
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = ExecuteScalarInternalAsync(connection: connection,
+            var result = await ExecuteScalarInternalAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -3747,8 +3884,14 @@ namespace RepoDb
                     DateTime.UtcNow.Subtract(beforeExecutionTime)));
             }
 
-            // Result
-            return result;
+            // Check type first
+            if (result is TResult)
+            {
+                return (TResult)result;
+            }
+
+            // Return with conversion
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         #endregion
@@ -4095,6 +4238,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4106,6 +4250,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4119,96 +4264,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            QueryField where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            ICache cache = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            ICache cache = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return Query<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4222,11 +4278,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4235,21 +4293,24 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return Query<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
-                orderBy: null,
+                orderBy: orderBy,
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4270,6 +4331,103 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            QueryField where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Query<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static IEnumerable<TEntity> Query<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return Query<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4282,6 +4440,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4294,6 +4453,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4314,6 +4474,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4326,6 +4487,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4339,6 +4501,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4359,6 +4522,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4371,6 +4535,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4452,9 +4617,9 @@ namespace RepoDb
             }
 
             // Set Cache
-            if (cacheKey != null && result?.Any() == true)
+            if (cacheKey != null /* && result?.Any() == true */)
             {
-                cache?.Add(cacheKey, result);
+                cache?.Add(cacheKey, result, cacheItemExpiration);
             }
 
             // Result
@@ -4477,6 +4642,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4488,6 +4654,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null, ITrace trace = null,
@@ -4500,96 +4667,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            QueryField where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            ICache cache = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cache: cache,
-                trace: trace,
-                statementBuilder: statementBuilder);
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used by this operation.</param>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force to query from the database.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <param name="cache">The cache object to be used by this operation.</param>
-        /// <param name="trace">The trace object to be used by this operation.</param>
-        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
-            IEnumerable<QueryField> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            ICache cache = null,
-            int? commandTimeout = null,
-            IDbTransaction transaction = null,
-            ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
-            where TEntity : class
-        {
-            return QueryAsync<TEntity>(connection: connection,
-                where: ToQueryGroup<TEntity>(where),
-                orderBy: orderBy,
-                top: top,
-                hints: hints,
-                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4603,11 +4681,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4616,21 +4696,24 @@ namespace RepoDb
         /// <returns>An enumerable list of data entity object.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
-            ICache cache = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
             return QueryAsync<TEntity>(connection: connection,
                 where: WhereOrPrimaryKeyToQueryGroup<TEntity>(whereOrPrimaryKey),
-                orderBy: null,
+                orderBy: orderBy,
                 top: 0,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4651,6 +4734,103 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+            QueryField where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <param name="cache">The cache object to be used by this operation.</param>
+        /// <param name="trace">The trace object to be used by this operation.</param>
+        /// <param name="statementBuilder">The statement builder object to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+            IEnumerable<QueryField> where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where TEntity : class
+        {
+            return QueryAsync<TEntity>(connection: connection,
+                where: ToQueryGroup<TEntity>(where),
+                orderBy: orderBy,
+                top: top,
+                hints: hints,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                cache: cache,
+                trace: trace,
+                statementBuilder: statementBuilder);
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force to query from the database.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4663,6 +4843,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4675,6 +4856,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4685,6 +4867,7 @@ namespace RepoDb
         /// <summary>
         /// Queries a data from the database in an asynchronous way.
         /// </summary>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="connection">The connection object to be used by this operation.</param>
         /// <param name="where">The query expression to be used by this operation.</param>
@@ -4707,6 +4890,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4720,6 +4904,7 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4740,6 +4925,7 @@ namespace RepoDb
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
         /// to null would force to query from the database.
         /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <param name="cache">The cache object to be used by this operation.</param>
@@ -4752,6 +4938,7 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4829,9 +5016,9 @@ namespace RepoDb
             }
 
             // Set Cache
-            if (cacheKey != null && result.Result?.Any() == true)
+            if (cacheKey != null /* && result.Result?.Any() == true */)
             {
-                cache?.Add(cacheKey, result);
+                cache?.Add(cacheKey, result, cacheItemExpiration);
             }
 
             // Result
@@ -9602,7 +9789,7 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return command.ExecuteScalar();
+                return ObjectConverter.DbNullToNull(command.ExecuteScalar());
             }
         }
 
@@ -9662,7 +9849,129 @@ namespace RepoDb
         {
             using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
             {
-                return await command.ExecuteScalarAsync();
+                return ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalar<T>
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public static T ExecuteScalar<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            return ExecuteScalarInternal<T>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        internal static T ExecuteScalarInternal<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            {
+                return (T)ObjectConverter.DbNullToNull(command.ExecuteScalar());
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync<T>
+
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public static Task<T> ExecuteScalarAsync<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            return ExecuteScalarInternalAsync<T>(connection: connection,
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <param name="connection">The connection object to be used by this operation.</param>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        internal static async Task<T> ExecuteScalarInternalAsync<T>(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            using (var command = CreateDbCommandForExecution(connection, commandText, param, commandType, commandTimeout, transaction))
+            {
+                return (T)ObjectConverter.DbNullToNull(await command.ExecuteScalarAsync());
             }
         }
 

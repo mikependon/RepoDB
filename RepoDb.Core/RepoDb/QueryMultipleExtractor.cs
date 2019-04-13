@@ -69,6 +69,28 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Converts the first column of the first row of the <see cref="DbDataReader"/> to an object.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <returns>An instance of extracted object as value result.</returns>
+        public T Scalar<T>()
+        {
+            var value = default(T);
+
+            // Only if there are record
+            if (m_reader.Read())
+            {
+                value = (T)ObjectConverter.DbNullToNull(m_reader[0]);
+            }
+
+            // Move to next result
+            NextResult();
+
+            // Return the result
+            return value;
+        }
+
+        /// <summary>
         /// Gets the position of the <see cref="DbDataReader"/>.
         /// </summary>
         public int Position { get; private set; }

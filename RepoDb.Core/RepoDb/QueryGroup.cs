@@ -291,8 +291,8 @@ namespace RepoDb
                     // Between/NotBetween
                     if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
                     {
-                        var left = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenLeft);
-                        var right = string.Concat(queryField.Parameter.Name, "_", StringConstant.BetweenRight);
+                        var left = string.Concat(queryField.Parameter.Name, "_Left");
+                        var right = string.Concat(queryField.Parameter.Name, "_Right");
                         var values = new List<object>();
                         if (queryField.Parameter.Value != null)
                         {
@@ -350,7 +350,7 @@ namespace RepoDb
                         }
                         for (var i = 0; i < values.Count; i++)
                         {
-                            var parameterName = string.Concat(queryField.Parameter.Name, "_", StringConstant.In, "_", i);
+                            var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i);
                             if (!expandObject.ContainsKey(parameterName))
                             {
                                 if (queryGroupTypeMap.MappedType != null)
@@ -631,13 +631,13 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(MethodCallExpression expression, bool isNot = false, bool isEqualsTo = true) where TEntity : class
         {
             // Check methods for the 'Like', both 'Array.<All|Any>()'
-            if (expression.Method.Name == StringConstant.All || expression.Method.Name == StringConstant.Any)
+            if (expression.Method.Name == "All" || expression.Method.Name == "Any")
             {
                 return ParseAllOrAnyForArray<TEntity>(expression, isNot, isEqualsTo);
             }
 
             // Check methods for the 'Like', both 'Array.Contains()' and 'StringProperty.Contains()'
-            else if (expression.Method.Name == StringConstant.Contains)
+            else if (expression.Method.Name == "Contains")
             {
                 // Check for the (p => p.Property.Contains("A")) for LIKE
                 if (expression.Object?.IsMember() == true)
@@ -655,8 +655,7 @@ namespace RepoDb
             }
 
             // Check methods for the 'Like', both 'StringProperty.StartsWith()' and 'StringProperty.EndsWith()'
-            else if (expression.Method.Name == StringConstant.StartsWith ||
-                expression.Method.Name == StringConstant.EndsWith)
+            else if (expression.Method.Name == "StartsWith" || expression.Method.Name == "EndsWith")
             {
                 if (expression.Object?.IsMember() == true)
                 {
@@ -723,11 +722,11 @@ namespace RepoDb
             var conjunction = Conjunction.And;
 
             // Support only various methods
-            if (expression.Method.Name == StringConstant.Any)
+            if (expression.Method.Name == "Any")
             {
                 conjunction = Conjunction.Or;
             }
-            else if (expression.Method.Name == StringConstant.All)
+            else if (expression.Method.Name == "All")
             {
                 conjunction = Conjunction.And;
             }
@@ -851,16 +850,16 @@ namespace RepoDb
 
         private static string ConvertToLikeableValue(string methodName, string value)
         {
-            if (methodName == StringConstant.Contains)
+            if (methodName == "Contains")
             {
                 value = value.StartsWith("%") ? value : string.Concat("%", value);
                 value = value.EndsWith("%") ? value : string.Concat(value, "%");
             }
-            else if (methodName == StringConstant.StartsWith)
+            else if (methodName == "StartsWith")
             {
                 value = value.EndsWith("%") ? value : string.Concat(value, "%");
             }
-            else if (methodName == StringConstant.EndsWith)
+            else if (methodName == "EndsWith")
             {
                 value = value.StartsWith("%") ? value : string.Concat("%", value);
             }
@@ -881,7 +880,7 @@ namespace RepoDb
             // Check for value
             if (obj == null)
             {
-                throw new ArgumentNullException($"Parameter '{StringConstant.Obj.ToLower()}' cannot be null.");
+                throw new ArgumentNullException($"Parameter 'obj' cannot be null.");
             }
 
             // Type of the object

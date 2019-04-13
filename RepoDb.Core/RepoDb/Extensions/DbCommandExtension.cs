@@ -67,47 +67,22 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-            if (param is IEnumerable<PropertyValue>)
+            if (param is ExpandoObject || param is IDictionary<string, object>)
             {
-                var propertyValues = (IEnumerable<PropertyValue>)param;
-                foreach (var propertyValue in propertyValues)
-                {
-                    var dbType = propertyValue.Property.GetDbType();
-                    if (dbType == null)
-                    {
-                        if (propertyValue.Value == null && propertyValue.Property.PropertyInfo.PropertyType == typeof(byte[]))
-                        {
-                            dbType = DbType.Binary;
-                        }
-                    }
-                    command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
-                }
+                CreateParameters(command, (IDictionary<string, object>)param);
             }
-            else if (param is ExpandoObject)
+            else if (param is IEnumerable<PropertyValue>)
             {
-                var dictionary = (IDictionary<string, object>)param;
-                var dbType = (DbType?)null;
-                foreach (var item in dictionary)
-                {
-                    var value = item.Value;
-                    if (item.Value is CommandParameter)
-                    {
-                        var commandParameter = (CommandParameter)item.Value;
-                        var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(item.Key);
-                        dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
-                            TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
-                        value = commandParameter.Value;
-                    }
-                    else
-                    {
-                        dbType = TypeMapper.Get(GetUnderlyingType(item.Value?.GetType()))?.DbType;
-                    }
-                    command.Parameters.Add(command.CreateParameter(item.Key, value, dbType));
-                }
+                CreateParameters(command, (IEnumerable<PropertyValue>)param);
             }
             else
             {
-                foreach (var property in param.GetType().GetTypeInfo().GetProperties())
+                var type = param.GetType().GetTypeInfo();
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    throw new InvalidOperationException("Invalid parameters passed. The supported type of dictionary object must be typeof(IDictionary<string, object>).");
+                }
+                foreach (var property in type.GetProperties())
                 {
                     if (property.PropertyType.IsArray)
                     {
@@ -118,6 +93,54 @@ namespace RepoDb.Extensions
                     command.Parameters.Add(command.CreateParameter(
                         PropertyMappedNameCache.Get(property), property.GetValue(param), dbType));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="dictionary">The parameters from the <see cref="Dictionary{TKey, TValue}"/> object.</param>
+        private static void CreateParameters(this IDbCommand command, IDictionary<string, object> dictionary)
+        {
+            var dbType = (DbType?)null;
+            foreach (var item in dictionary)
+            {
+                var value = item.Value;
+                if (item.Value is CommandParameter)
+                {
+                    var commandParameter = (CommandParameter)item.Value;
+                    var property = commandParameter.MappedToType.GetTypeInfo().GetProperty(item.Key);
+                    dbType = property?.GetCustomAttribute<TypeMapAttribute>()?.DbType ??
+                        TypeMapper.Get(GetUnderlyingType(property?.PropertyType))?.DbType;
+                    value = commandParameter.Value;
+                }
+                else
+                {
+                    dbType = TypeMapper.Get(GetUnderlyingType(item.Value?.GetType()))?.DbType;
+                }
+                command.Parameters.Add(command.CreateParameter(item.Key, value, dbType));
+            }
+        }
+
+        /// <summary>
+        /// Creates a parameter from object by mapping the property from the target entity type.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="propertyValues">The list <see cref="PropertyValue"/> to be added.</param>
+        private static void CreateParameters(this IDbCommand command, IEnumerable<PropertyValue> propertyValues)
+        {
+            foreach (var propertyValue in propertyValues)
+            {
+                var dbType = propertyValue.Property.GetDbType();
+                if (dbType == null)
+                {
+                    if (propertyValue.Value == null && propertyValue.Property.PropertyInfo.PropertyType == typeof(byte[]))
+                    {
+                        dbType = DbType.Binary;
+                    }
+                }
+                command.Parameters.Add(command.CreateParameter(propertyValue.Name, propertyValue.Value, dbType));
             }
         }
 

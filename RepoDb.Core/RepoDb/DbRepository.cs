@@ -32,7 +32,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         public DbRepository(string connectionString)
-            : this(connectionString, null, null, null, null, ConnectionPersistency.PerCall)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -41,8 +47,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used on every operations by this repository.</param>
-        public DbRepository(string connectionString, int? commandTimeout)
-            : this(connectionString, commandTimeout, null, null, null, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            int? commandTimeout)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
         {
         }
 
@@ -51,8 +64,17 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public DbRepository(string connectionString, ICache cache)
-            : this(connectionString, null, cache, null, null, ConnectionPersistency.PerCall)
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        public DbRepository(string connectionString,
+            ICache cache,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpiration,
+                  null,
+                  null)
         {
         }
 
@@ -61,8 +83,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, ITrace trace)
-            : this(connectionString, null, null, trace, null, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            ITrace trace)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  trace,
+                  null)
         {
         }
 
@@ -71,8 +100,15 @@ namespace RepoDb
         /// </summary>
         /// <param name="connectionString">The connection string to be used by this repository.</param>
         /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, IStatementBuilder statementBuilder)
-            : this(connectionString, null, null, null, statementBuilder, ConnectionPersistency.PerCall)
+        public DbRepository(string connectionString,
+            IStatementBuilder statementBuilder)
+            : this(connectionString,
+                  null,
+                  ConnectionPersistency.PerCall,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  statementBuilder)
         {
         }
 
@@ -84,69 +120,116 @@ namespace RepoDb
         /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
         /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
         /// </param>
-        public DbRepository(string connectionString, ConnectionPersistency connectionPersistency)
-            : this(connectionString, null, null, null, null, connectionPersistency)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache)
-            : this(connectionString, commandTimeout, cache, null, null, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace)
-            : this(connectionString, commandTimeout, cache, trace, null, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder)
-            : this(connectionString, commandTimeout, cache, trace, statementBuilder, ConnectionPersistency.PerCall)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
-        /// </summary>
-        /// <param name="connectionString">The connection string to be used by this repository.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
-        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
-        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
-        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
-        /// <param name="connectionPersistency">
-        /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
-        /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
-        /// </param>
-        public DbRepository(string connectionString, int? commandTimeout, ICache cache, ITrace trace, IStatementBuilder statementBuilder,
+        public DbRepository(string connectionString,
             ConnectionPersistency connectionPersistency)
+            : this(connectionString,
+                  null,
+                  connectionPersistency,
+                  null,
+                  Constant.DefaultCacheItemExpirationInMinutes,
+                  null,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpiration,
+                  null,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpiration,
+                  trace,
+                  null)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ICache cache,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            : this(connectionString,
+                  commandTimeout,
+                  ConnectionPersistency.PerCall,
+                  cache,
+                  cacheItemExpiration,
+                  trace,
+                  statementBuilder)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DbRepository{TDbConnection}"/> object.
+        /// </summary>
+        /// <param name="connectionString">The connection string to be used by this repository.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used on every operation by this repository.</param>
+        /// <param name="connectionPersistency">
+        /// The database connection persistency type. Setting to <see cref="ConnectionPersistency.Instance"/> will make the repository re-used a single connection all throughout its lifespan. Setting 
+        /// to <see cref="ConnectionPersistency.PerCall"/> will create a new connection object on every repository call.
+        /// </param>
+        /// <param name="cache">The cache object to be used by this repository. This object must implement the <see cref="ICache"/> interface.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="trace">The trace object to be used by this repository. This object must implement the <see cref="ITrace"/> interface.</param>
+        /// <param name="statementBuilder">The SQL statement builder object to be used by this repository. This object must implement the <see cref="IStatementBuilder"/> interface.</param>
+        public DbRepository(string connectionString,
+            int? commandTimeout,
+            ConnectionPersistency connectionPersistency,
+            ICache cache = null,
+            int cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
         {
             // Properties
             ConnectionString = connectionString;
             CommandTimeout = commandTimeout;
+            ConnectionPersistency = connectionPersistency;
             Cache = (cache ?? new MemoryCache());
+            CacheItemExpiration = cacheItemExpiration;
             Trace = trace;
             StatementBuilder = statementBuilder;
-            ConnectionPersistency = connectionPersistency;
         }
 
         #endregion
@@ -167,6 +250,11 @@ namespace RepoDb
         /// Gets the cache object that is being used by this repository.
         /// </summary>
         public ICache Cache { get; }
+
+        /// <summary>
+        /// Gets the expiration in minutes of the cache item.
+        /// </summary>
+        public int CacheItemExpiration { get; }
 
         /// <summary>
         /// Gets the trace object that is being used by this repository.
@@ -251,29 +339,14 @@ namespace RepoDb
         /// Disposes an <see cref="IDbConnection"/> object if there is no <see cref="IDbTransaction"/> object connected
         /// and if the current <see cref="ConnectionPersistency"/> value is <see cref="ConnectionPersistency.PerCall"/>.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="transaction"></param>
+        /// <param name="connection">The instance of <see cref="IDbConnection"/> object.</param>
+        /// <param name="transaction">The instance of <see cref="IDbTransaction"/> object.</param>
         private void DisposeConnectionForPerCall(IDbConnection connection, IDbTransaction transaction = null)
         {
             if (ConnectionPersistency == ConnectionPersistency.PerCall || transaction == null)
             {
                 connection.Dispose();
             }
-        }
-
-        /// <summary>
-        /// Wraps the result into an instance of <see cref="AsyncResultExtractor{T}"/> object with parameter values based on the given <see cref="IDbConnection"/> and <see cref="IDbTransaction"/> object,
-        /// only if the current <see cref="ConnectionPersistency"/> value is <see cref="ConnectionPersistency.PerCall"/>.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the result.</typeparam>
-        /// <param name="result">The result to be placed inside the <see cref="AsyncResultExtractor{T}"/> object.</param>
-        /// <param name="connection">The connection object that is being used on the operation.</param>
-        /// <param name="transaction">The transaction object that is being used on the operation.</param>
-        /// <returns></returns>
-        private Task<AsyncResultExtractor<TEntity>> ConvertToAsyncResultExtractorForPerCall<TEntity>(Task<TEntity> result, IDbConnection connection, IDbTransaction transaction = null)
-        {
-            var wrappable = ConnectionPersistency == ConnectionPersistency.PerCall || transaction == null;
-            return Task.FromResult(new AsyncResultExtractor<TEntity>(result, wrappable ? connection : null));
         }
 
         #endregion
@@ -573,7 +646,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(int page,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             string hints = null,
@@ -582,12 +655,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(page: page,
+                return await connection.BatchQueryAsync<TEntity>(page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
                     hints: hints,
@@ -595,22 +667,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -625,7 +691,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(object where,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(object where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -635,12 +701,12 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
+
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                return await connection.BatchQueryAsync<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -649,22 +715,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -679,7 +739,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -689,12 +749,12 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
+
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                return await connection.BatchQueryAsync<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -703,22 +763,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -733,7 +787,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryField where,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryField where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -743,12 +797,12 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
+
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                return await connection.BatchQueryAsync<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -757,22 +811,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -787,22 +835,22 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where,
-            int page,
-            int rowsPerBatch,
-            IEnumerable<OrderField> orderBy,
-            string hints = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(IEnumerable<QueryField> where,
+        int page,
+        int rowsPerBatch,
+        IEnumerable<OrderField> orderBy,
+        string hints = null,
+        IDbTransaction transaction = null)
+        where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
+
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                return await connection.BatchQueryAsync<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -811,22 +859,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -841,7 +883,7 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> BatchQueryAsync<TEntity>(QueryGroup where,
+        public async Task<IEnumerable<TEntity>> BatchQueryAsync<TEntity>(QueryGroup where,
             int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
@@ -851,12 +893,12 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
+
                 // Call the method
-                var result = connection.BatchQueryAsync<TEntity>(where: where,
+                return await connection.BatchQueryAsync<TEntity>(where: where,
                     page: page,
                     rowsPerBatch: rowsPerBatch,
                     orderBy: orderBy,
@@ -865,22 +907,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -896,8 +932,8 @@ namespace RepoDb
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
         public int BulkInsert<TEntity>(IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null)
-            where TEntity : class
+IEnumerable<BulkInsertMapItem> mappings = null)
+where TEntity : class
         {
             // Create a connection
             using (var connection = CreateConnection())
@@ -944,21 +980,31 @@ namespace RepoDb
         /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
+        public async Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null)
             where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
 
-            // Call the method
-            var result = connection.BulkInsertAsync<TEntity>(entities: entities,
-                mappings: mappings,
-                commandTimeout: CommandTimeout,
-                trace: Trace);
-
-            // Return the result
-            return ConvertToAsyncResultExtractorForPerCall(result, connection);
+            try
+            {
+                // Call the method
+                return await connection.BulkInsertAsync<TEntity>(entities: entities,
+                    mappings: mappings,
+                    commandTimeout: CommandTimeout,
+                    trace: Trace);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
+            }
         }
 
         /// <summary>
@@ -968,21 +1014,31 @@ namespace RepoDb
         /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> BulkInsertAsync<TEntity>(DbDataReader reader,
+        public async Task<int> BulkInsertAsync<TEntity>(DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null)
-            where TEntity : class
+                where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
 
-            // Call the method
-            var result = connection.BulkInsertAsync<TEntity>(reader: reader,
-                mappings: mappings,
-                commandTimeout: CommandTimeout,
-                trace: Trace);
-
-            // Return the result
-            return ConvertToAsyncResultExtractorForPerCall(result, connection);
+            try
+            {
+                // Call the method
+                return await connection.BulkInsertAsync<TEntity>(reader: reader,
+                    mappings: mappings,
+                    commandTimeout: CommandTimeout,
+                    trace: Trace);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
+            }
         }
 
         #endregion
@@ -1225,38 +1281,31 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(string hints = null,
+        public async Task<long> CountAsync<TEntity>(string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(commandTimeout: CommandTimeout,
+                return await connection.CountAsync<TEntity>(commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1268,40 +1317,33 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(object where,
+        public async Task<long> CountAsync<TEntity>(object where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(where: where,
+                return await connection.CountAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1313,40 +1355,33 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(where: where,
+                return await connection.CountAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1358,40 +1393,33 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(QueryField where,
+        public async Task<long> CountAsync<TEntity>(QueryField where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(where: where,
+                return await connection.CountAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1403,40 +1431,33 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(where: where,
+                return await connection.CountAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1448,40 +1469,33 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An integer value for the number of data counted from the database based on the given query expression.</returns>
-        public Task<AsyncResultExtractor<object>> CountAsync<TEntity>(QueryGroup where,
+        public async Task<long> CountAsync<TEntity>(QueryGroup where,
             string hints = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.CountAsync<TEntity>(where: where,
+                return await connection.CountAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     hints: hints,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1710,38 +1724,31 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
+        public async Task<int> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
-            where TEntity : class
+                    where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(where: where,
+                return await connection.DeleteAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1752,38 +1759,31 @@ namespace RepoDb
         /// <param name="entity">The actual instance of the data entity.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(TEntity entity,
+        public async Task<int> DeleteAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(entity: entity,
+                return await connection.DeleteAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1794,38 +1794,31 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(QueryField where,
+        public async Task<int> DeleteAsync<TEntity>(QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(where: where,
+                return await connection.DeleteAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1836,38 +1829,31 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
+        public async Task<int> DeleteAsync<TEntity>(IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(where: where,
+                return await connection.DeleteAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1878,38 +1864,31 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(object whereOrPrimaryKey,
+        public async Task<int> DeleteAsync<TEntity>(object whereOrPrimaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                return await connection.DeleteAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -1920,38 +1899,31 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAsync<TEntity>(QueryGroup where,
+        public async Task<int> DeleteAsync<TEntity>(QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAsync<TEntity>(where: where,
+                return await connection.DeleteAsync<TEntity>(where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2001,36 +1973,29 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
+        public async Task<int> DeleteAllAsync<TEntity>(IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.DeleteAllAsync<TEntity>(commandTimeout: CommandTimeout,
+                return await connection.DeleteAllAsync<TEntity>(commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2073,6 +2038,42 @@ namespace RepoDb
             }
         }
 
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public TResult InlineInsert<TEntity, TResult>(object entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.InlineInsert<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
         #endregion
 
         #region InlineInsertAsync
@@ -2084,38 +2085,67 @@ namespace RepoDb
         /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
-        public Task<AsyncResultExtractor<object>> InlineInsertAsync<TEntity>(object entity,
+        public async Task<object> InlineInsertAsync<TEntity>(object entity,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineInsertAsync<TEntity>(entity: entity,
+                return await connection.InlineInsertAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new data into the database (certain fields only) in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="entity">The key-value pair object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>The value of the primary key of the newly inserted data entity object.</returns>
+        public async Task<TResult> InlineInsertAsync<TEntity, TResult>(object entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InlineInsertAsync<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2245,38 +2275,31 @@ namespace RepoDb
         /// <param name="entity">The key-value pair object to be merged by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity,
             IDbTransaction transaction = null)
-            where TEntity : class
+                    where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineMergeAsync<TEntity>(entity: entity,
+                return await connection.InlineMergeAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2288,40 +2311,33 @@ namespace RepoDb
         /// <param name="qualifier">The qualifier field to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineMergeAsync<TEntity>(entity: entity,
+                return await connection.InlineMergeAsync<TEntity>(entity: entity,
                     qualifier: qualifier,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2333,40 +2349,33 @@ namespace RepoDb
         /// <param name="qualifiers">The qualifier fields to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineMergeAsync<TEntity>(object entity,
+        public async Task<int> InlineMergeAsync<TEntity>(object entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineMergeAsync<TEntity>(entity: entity,
-                qualifiers: qualifiers,
-                commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+                return await connection.InlineMergeAsync<TEntity>(entity: entity,
+                    qualifiers: qualifiers,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2576,40 +2585,33 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
-            where TEntity : class
+                    where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
+                return await connection.InlineUpdateAsync<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2621,40 +2623,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
+                return await connection.InlineUpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2666,40 +2661,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity,
             QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
+                return await connection.InlineUpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2711,40 +2699,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
+                return await connection.InlineUpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2756,40 +2737,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> InlineUpdateAsync<TEntity>(object entity,
+        public async Task<int> InlineUpdateAsync<TEntity>(object entity,
             QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InlineUpdateAsync<TEntity>(entity: entity,
-                where: where,
-                commandTimeout: CommandTimeout,
-                transaction: transaction,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+                return await connection.InlineUpdateAsync<TEntity>(entity: entity,
+                    where: where,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -2835,6 +2809,45 @@ namespace RepoDb
             }
         }
 
+        /// <summary>
+        /// Inserts a new data in the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public TResult Insert<TEntity, TResult>(TEntity entity,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Insert<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
         #endregion
 
         #region InsertAsync
@@ -2849,37 +2862,68 @@ namespace RepoDb
         /// The value of the primary key of the newly inserted data entity object. Returns null if the 
         /// primary key property is not present.
         /// </returns>
-        public Task<AsyncResultExtractor<object>> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+        public async Task<object> InsertAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.InsertAsync<TEntity>(entity: entity,
+                return await connection.InsertAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Inserts a new data in the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <typeparam name="TResult">The type of the primary key result.</typeparam>
+        /// <param name="entity">The data entity object to be inserted by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>
+        /// The value of the primary key of the newly inserted data entity object. Returns null if the 
+        /// primary key property is not present.
+        /// </returns>
+        public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity, IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.InsertAsync<TEntity, TResult>(entity: entity,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3008,39 +3052,32 @@ namespace RepoDb
         /// <param name="entity">The object to be merged by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
+        public async Task<int> MergeAsync<TEntity>(TEntity entity,
             IDbTransaction transaction = null)
-            where TEntity : class
+                    where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.MergeAsync<TEntity>(entity: entity,
+                return await connection.MergeAsync<TEntity>(entity: entity,
                     qualifiers: null,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3052,40 +3089,33 @@ namespace RepoDb
         /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
+        public async Task<int> MergeAsync<TEntity>(TEntity entity,
             Field qualifier,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.MergeAsync<TEntity>(entity: entity,
+                return await connection.MergeAsync<TEntity>(entity: entity,
                     qualifier: qualifier,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3097,40 +3127,33 @@ namespace RepoDb
         /// <param name="qualifiers">The list of qualifer fields to be used during merge operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> MergeAsync<TEntity>(TEntity entity,
+        public async Task<int> MergeAsync<TEntity>(TEntity entity,
             IEnumerable<Field> qualifiers,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.MergeAsync<TEntity>(entity: entity,
+                return await connection.MergeAsync<TEntity>(entity: entity,
                 qualifiers: qualifiers,
                 commandTimeout: CommandTimeout,
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3168,6 +3191,56 @@ namespace RepoDb
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                    orderBy: orderBy,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3219,6 +3292,7 @@ namespace RepoDb
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3269,6 +3343,7 @@ namespace RepoDb
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3320,51 +3395,7 @@ namespace RepoDb
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    cache: Cache,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                DisposeConnectionForPerCall(connection, transaction);
-            }
-        }
-
-        /// <summary>
-        /// Queries a data from the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force the repository to query from the database.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public IEnumerable<TEntity> Query<TEntity>(object whereOrPrimaryKey,
-            string hints = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-
-            try
-            {
-                // Call the method
-                return connection.Query<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
-                    hints: hints,
-                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3416,6 +3447,7 @@ namespace RepoDb
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -3451,7 +3483,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
             string cacheKey = null,
@@ -3460,210 +3492,30 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryAsync<TEntity>(orderBy: orderBy,
+                return await connection.QueryAsync<TEntity>(orderBy: orderBy,
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force the repository to query from the database.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
-
-            try
-            {
-                // Call the method
-                var result = connection.QueryAsync<TEntity>(where: where,
-                    orderBy: orderBy,
-                    top: top,
-                    hints: hints,
-                    cacheKey: cacheKey,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    cache: Cache,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
-            }
-            catch
-            {
-                hasError = true;
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force the repository to query from the database.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryField where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
-
-            try
-            {
-                // Call the method
-                var result = connection.QueryAsync<TEntity>(where: where,
-                    orderBy: orderBy,
-                    top: top,
-                    hints: hints,
-                    cacheKey: cacheKey,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    cache: Cache,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
-            }
-            catch
-            {
-                hasError = true;
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Queries a data from the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="where">The query expression to be used by this operation.</param>
-        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
-        /// <param name="top">The top number of data to be used by this operation.</param>
-        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
-        /// to null would force the repository to query from the database.
-        /// </param>
-        /// <param name="transaction">The transaction to be used by this operation.</param>
-        /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
-            IEnumerable<OrderField> orderBy = null,
-            int? top = 0,
-            string hints = null,
-            string cacheKey = null,
-            IDbTransaction transaction = null)
-            where TEntity : class
-        {
-            // Create a connection
-            var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
-
-            try
-            {
-                // Call the method
-                var result = connection.QueryAsync<TEntity>(where: where,
-                    orderBy: orderBy,
-                    top: top,
-                    hints: hints,
-                    cacheKey: cacheKey,
-                    commandTimeout: CommandTimeout,
-                    transaction: transaction,
-                    cache: Cache,
-                    trace: Trace,
-                    statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
-            }
-            catch
-            {
-                hasError = true;
-                throw;
-            }
-            finally
-            {
-                // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3672,6 +3524,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
         /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
         /// <param name="cacheKey">
         /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
@@ -3679,7 +3532,8 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(object whereOrPrimaryKey,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(object whereOrPrimaryKey,
+            IEnumerable<OrderField> orderBy = null,
             string hints = null,
             string cacheKey = null,
             IDbTransaction transaction = null)
@@ -3687,35 +3541,30 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                return await connection.QueryAsync<TEntity>(whereOrPrimaryKey: whereOrPrimaryKey,
+                    orderBy: orderBy,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -3733,7 +3582,7 @@ namespace RepoDb
         /// </param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An enumerable list of data entity object.</returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> QueryAsync<TEntity>(QueryGroup where,
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(Expression<Func<TEntity, bool>> where,
             IEnumerable<OrderField> orderBy = null,
             int? top = 0,
             string hints = null,
@@ -3743,37 +3592,187 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryAsync<TEntity>(where: where,
+                return await connection.QueryAsync<TEntity>(where: where,
                     orderBy: orderBy,
                     top: top,
                     hints: hints,
                     cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryField where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.QueryAsync<TEntity>(where: where,
+                    orderBy: orderBy,
+                    top: top,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(IEnumerable<QueryField> where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.QueryAsync<TEntity>(where: where,
+                    orderBy: orderBy,
+                    top: top,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        /// <summary>
+        /// Queries a data from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
+        /// <param name="where">The query expression to be used by this operation.</param>
+        /// <param name="orderBy">The order definition of the fields to be used by this operation.</param>
+        /// <param name="top">The top number of data to be used by this operation.</param>
+        /// <param name="hints">The table hints to be used by this operation. See <see cref="SqlTableHints"/> class.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache. If the cache key is present in the cache, then the item from the cache will be returned instead. Setting this
+        /// to null would force the repository to query from the database.
+        /// </param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>An enumerable list of data entity object.</returns>
+        public async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(QueryGroup where,
+            IEnumerable<OrderField> orderBy = null,
+            int? top = 0,
+            string hints = null,
+            string cacheKey = null,
+            IDbTransaction transaction = null)
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.QueryAsync<TEntity>(where: where,
+                    orderBy: orderBy,
+                    top: top,
+                    hints: hints,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction,
+                    cache: Cache,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4425,7 +4424,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
@@ -4440,12 +4439,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2>(where1: where1,
                     where2: where2,
                     orderBy1: orderBy1,
                     top1: top1,
@@ -4457,22 +4455,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4501,7 +4493,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             IEnumerable<OrderField> orderBy1 = null,
@@ -4521,12 +4513,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2, T3>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2, T3>(where1: where1,
                     where2: where2,
                     where3: where3,
                     orderBy1: orderBy1,
@@ -4542,22 +4533,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4591,7 +4576,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>>
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
             QueryMultipleAsync<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4617,12 +4602,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2, T3, T4>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2, T3, T4>(where1: where1,
                 where2: where2,
                 where3: where3,
                 where4: where4,
@@ -4642,22 +4626,16 @@ namespace RepoDb
                 transaction: transaction,
                 trace: Trace,
                 statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4696,7 +4674,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>>
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4727,12 +4705,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2, T3, T4, T5>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2, T3, T4, T5>(where1: where1,
                     where2: where2,
                     where3: where3,
                     where4: where4,
@@ -4756,22 +4733,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4815,7 +4786,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>>
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4851,12 +4822,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(where1: where1,
                     where2: where2,
                     where3: where3,
                     where4: where4,
@@ -4884,22 +4854,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -4948,7 +4912,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
-        public Task<AsyncResultExtractor<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>>
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
@@ -4989,12 +4953,11 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(where1: where1,
+                return await connection.QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(where1: where1,
                     where2: where2,
                     where3: where3,
                     where4: where4,
@@ -5026,22 +4989,16 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5078,19 +5035,29 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
         /// <returns>The number of rows affected by this operation.</returns>
-        public Task<AsyncResultExtractor<int>> TruncateAsync<TEntity>()
+        public async Task<int> TruncateAsync<TEntity>()
             where TEntity : class
         {
             // Create a connection
             var connection = CreateConnection();
 
-            // Call the method
-            var result = connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
-                trace: Trace,
-                statementBuilder: StatementBuilder);
-
-            // Return the result
-            return ConvertToAsyncResultExtractorForPerCall(result, connection);
+            try
+            {
+                // Call the method
+                return await connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
+            }
         }
 
         #endregion
@@ -5333,37 +5300,30 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be used for update by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
-            where TEntity : class
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity, IDbTransaction transaction = null)
+                    where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5375,40 +5335,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5420,40 +5373,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryField where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5465,40 +5411,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5510,40 +5449,33 @@ namespace RepoDb
         /// <param name="whereOrPrimaryKey">The dynamic expression or the primary key value to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             object whereOrPrimaryKey,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     whereOrPrimaryKey: whereOrPrimaryKey,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5555,40 +5487,33 @@ namespace RepoDb
         /// <param name="where">The query expression to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> UpdateAsync<TEntity>(TEntity entity,
+        public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             QueryGroup where,
             IDbTransaction transaction = null)
             where TEntity : class
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.UpdateAsync<TEntity>(entity: entity,
+                return await connection.UpdateAsync<TEntity>(entity: entity,
                     where: where,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5660,7 +5585,7 @@ namespace RepoDb
         /// <returns>
         /// An enumerable list of data entity object containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
-        public Task<AsyncResultExtractor<IEnumerable<TEntity>>> ExecuteQueryAsync<TEntity>(string commandText,
+        public async Task<IEnumerable<TEntity>> ExecuteQueryAsync<TEntity>(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
@@ -5668,32 +5593,25 @@ namespace RepoDb
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.ExecuteQueryAsync<TEntity>(commandText: commandText,
+                return await connection.ExecuteQueryAsync<TEntity>(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
                     transaction: transaction);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5758,39 +5676,32 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An instance of integer that holds the number of data affected by the execution.</returns>
-        public Task<AsyncResultExtractor<int>> ExecuteNonQueryAsync(string commandText,
+        public async Task<int> ExecuteNonQueryAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.ExecuteNonQueryAsync(commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: CommandTimeout,
-                transaction: transaction);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
+                return await connection.ExecuteNonQueryAsync(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
@@ -5855,39 +5766,124 @@ namespace RepoDb
         /// <param name="commandType">The command type to be used by this operation.</param>
         /// <param name="transaction">The transaction to be used by this operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
-        public Task<AsyncResultExtractor<object>> ExecuteScalarAsync(string commandText,
+        public async Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
-            var hasError = false;
 
             try
             {
                 // Call the method
-                var result = connection.ExecuteScalarAsync(commandText: commandText,
+                return await connection.ExecuteScalarAsync(commandText: commandText,
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
                     transaction: transaction);
-
-                // Return the result
-                return ConvertToAsyncResultExtractorForPerCall(result, connection, transaction);
             }
             catch
             {
-                hasError = true;
+                // Throw back the error
                 throw;
             }
             finally
             {
                 // Dispose the connection
-                if (hasError)
-                {
-                    DisposeConnectionForPerCall(connection, transaction);
-                }
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalar<T>
+
+        /// <summary>
+        /// Executes a query from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public T ExecuteScalar<T>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return connection.ExecuteScalar<T>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync<T>
+
+        /// <summary>
+        /// Executes a query from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
+        /// returns the first occurence value (first column of first row) of the execution.
+        /// </summary>
+        /// <typeparam name="T">The target return type.</typeparam>
+        /// <param name="commandText">The command text to be used by this operation.</param>
+        /// <param name="param">
+        /// The dynamic object to be used as parameter. This object must contain all the values for all the parameters
+        /// defined in the <see cref="IDbCommand.CommandText"/> property.
+        /// </param>
+        /// <param name="commandType">The command type to be used by this operation.</param>
+        /// <param name="transaction">The transaction to be used by this operation.</param>
+        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        public async Task<T> ExecuteScalarAsync<T>(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+
+            try
+            {
+                // Call the method
+                return await connection.ExecuteScalarAsync<T>(commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: CommandTimeout,
+                    transaction: transaction);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection, transaction);
             }
         }
 
