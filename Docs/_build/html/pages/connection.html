@@ -480,7 +480,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Note</strong>: The passing of the ExpandoObject and IDictionary&lt;string, object&gt; parameter is also supported in <cite>ExecuteQuery</cite>, <cite>ExecuteScalar</cite> and <cite>ExecuteReader</cite> methods.</p>
+<p><strong>Note</strong>: The passing of the <cite>ExpandoObject</cite> and <cite>IDictionary&lt;string, object&gt;</cite> parameter is also supported in <cite>ExecuteQuery</cite>, <cite>ExecuteScalar</cite> and <cite>ExecuteReader</cite> methods.</p>
 </div>
 <div class="section" id="executequery">
 <h2>ExecuteQuery<a class="headerlink" href="#executequery" title="Permalink to this headline">¶</a></h2>
@@ -623,7 +623,7 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Note: Calling the <cite>ExecuteQuery</cite> via dynamic is a bit slower compared to CLR types.</p>
+<p>Note: Calling the <cite>ExecuteQuery</cite> via dynamic is a bit slower compared to a .NET CLR Type-based calls.</p>
 </div>
 <div class="section" id="executequerymultiple">
 <h2>ExecuteQueryMultiple<a class="headerlink" href="#executequerymultiple" title="Permalink to this headline">¶</a></h2>
@@ -753,7 +753,7 @@
 <p>Executes a query from the database. It uses the underlying method <cite>IDbCommand.ExecuteScalar</cite> and returns the first occurence value (first column of first row) of the execution.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">maxId</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxId FROM [dbo].[Customer];&quot;</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">maxId</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt64</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;SELECT MAX([Id]) AS MaxId FROM [dbo].[Customer];&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -778,7 +778,14 @@
 <p>Below is the code on how to execute a stored procedure mentioned above:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">maxId</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_get_latest_customer_id]&quot;</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">));</span>
+        <span class="kt">var</span> <span class="n">maxId</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt64</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">(</span><span class="s">&quot;[dbo].[sp_get_latest_customer_id]&quot;</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">)));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A dynamic typed-based call is also provided, see below.</p>
+<div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
+<span class="p">{</span>
+        <span class="kt">var</span> <span class="n">maxId</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">ExecuteScalar</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;(</span><span class="s">&quot;[dbo].[sp_get_latest_customer_id]&quot;</span><span class="p">,</span> <span class="n">commandType</span><span class="p">:</span> <span class="n">CommandType</span><span class="p">.</span><span class="n">StoredProcedure</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -798,10 +805,16 @@
         <span class="p">};</span>
 
         <span class="c1">// Call the operation and define which object you are targetting</span>
-        <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">InlineInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt64</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">InlineInsert</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;(</span><span class="n">entity</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>A dynamic typed-based call is also provided when calling this method, see below.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>// The first type is the entity type, the second type is the result type
+var id = connection.InlineInsert&lt;Order, long&gt;(entity);</dd>
+</dl>
 </div>
 <div class="section" id="inlinemerge">
 <h2>InlineMerge<a class="headerlink" href="#inlinemerge" title="Permalink to this headline">¶</a></h2>
@@ -890,10 +903,16 @@
                 <span class="n">Quantity</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
                 <span class="n">CreatedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span>
         <span class="p">};</span>
-        <span class="n">connection</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">id</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="n">ToInt64</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>A dynamic typed-based call is also provided when calling this method, see below.</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>// The first type is the entity type, the second type is the result type
+var id = connection.Insert&lt;Order, long&gt;(order);</dd>
+</dl>
 </div>
 <div class="section" id="merge">
 <h2>Merge<a class="headerlink" href="#merge" title="Permalink to this headline">¶</a></h2>
@@ -956,11 +975,13 @@
 The result is an instance of a <cite>Tuple</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">connection</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SqlConnection</span><span class="p">(</span><span class="s">@&quot;Server=.;Database=Northwind;Integrated Security=SSPI;&quot;</span><span class="p">).</span><span class="n">EnsureOpen</span><span class="p">())</span>
 <span class="p">{</span>
+        <span class="c1">// The parent Id</span>
         <span class="kt">var</span> <span class="n">customerId</span> <span class="p">=</span> <span class="m">10045</span><span class="p">;</span>
-        <span class="kt">var</span> <span class="n">fromDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">Date</span><span class="p">.</span><span class="n">AddDays</span><span class="p">(-</span><span class="m">1</span><span class="p">);</span>
+
+        <span class="c1">// Get the parent customer, and the child objects</span>
         <span class="kt">var</span> <span class="n">result</span> <span class="p">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">QueryMultiple</span><span class="p">&lt;</span><span class="n">Customer</span><span class="p">,</span> <span class="n">Order</span><span class="p">&gt;(</span>
-                <span class="n">c</span> <span class="p">=&gt;</span> <span class="n">c</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">customerId</span><span class="p">,</span>
-                <span class="n">o</span> <span class="p">=&gt;</span> <span class="n">o</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="n">customerId</span> <span class="p">&amp;&amp;</span> <span class="n">o</span><span class="p">.</span><span class="n">CreatedDate</span> <span class="p">&gt;=</span> <span class="n">fromDate</span><span class="p">);</span>
+                <span class="n">customer</span> <span class="p">=&gt;</span> <span class="n">customer</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">customerId</span><span class="p">,</span>
+                <span class="n">order</span> <span class="p">=&gt;</span> <span class="n">order</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="n">customerId</span><span class="p">);</span>
 
         <span class="c1">// Read the customer</span>
         <span class="kt">var</span> <span class="n">customer</span> <span class="p">=</span> <span class="n">result</span><span class="p">.</span><span class="n">Item1</span><span class="p">.</span><span class="n">FirstOrDefault</span><span class="p">();</span>

@@ -189,30 +189,52 @@
 <p>A query builder is an helper object used when creating a query statement in the statement builders. It contains important methods that is very useful to fluently construct the statement.</p>
 <p>By default, the library is using the <cite>QueryBuilder&lt;TEntity&gt;</cite> object when composing the statement.</p>
 <p>Below is a sample code that creates a SQL Statement for the <cite>Query</cite> operation for <cite>Oracle</cite> data provider.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null,
+        IEnumerable&lt;OrderField&gt; orderBy = null,
+        int? top = null,
+        string hints = null)
+        where TEntity : class
 {
+        var fields = PropertyCache.Get&lt;TEntity&gt;();
+
         // Create an initial SELECT statement
         queryBuilder.Clear()
                 .Select()
-                .Fields(Command.Query)
+                .FieldsFrom(fields)
                 .From()
-                .Table(Command.Query);
+                .TableNameFrom&lt;TEntity&gt;();
+
+        // Build the query optimizers
+        if (hints != null)
+        {
+                // Write the hints here like: queryBuilder.WriteText(hints);
+        }
 
         // Add all fields for WHERE
         if (where != null)
         {
-                queryBuilder.Where(where);
+                queryBuilder.WhereFrom(where);
         }
 
         // Add the ROWNUM (TOP in SQL Server)
         if (top &gt; 0)
         {
                 // In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM &lt;=(Rows)
-                queryBuilder.WriteText($&quot;AND (ROWNUM &lt;= {top})&quot;);
+                if (where != null)
+                {
+                        queryBuilder.WriteText($&quot;AND (ROWNUM &lt;= {top})&quot;);
+                }
+                else
+                {
+                        queryBuilder.WriteText($&quot;(ROWNUM &lt;= {top})&quot;);
+                }
         }
 
         // End the builder
-        queryBuilder.End();
+        queryBuilder
+                .OrderBy(orderBy)
+                .End();
 
         // Return the Statement
         return queryBuilder.ToString();
@@ -223,7 +245,13 @@
 <div class="section" id="createbatchquery">
 <h2>CreateBatchQuery<a class="headerlink" href="#createbatchquery" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>BatchQuery</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable&lt;OrderField&gt; orderBy) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateBatchQuery&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null,
+        int? page = null,
+        int? rowsPerBatch = null,
+        IEnumerable&lt;OrderField&gt; orderBy = null,
+        string hints = null)
+        where TEntity : class
 {
         ...
 }
@@ -233,7 +261,10 @@
 <div class="section" id="createcount">
 <h2>CreateCount<a class="headerlink" href="#createcount" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Count</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCount&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateCount&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null,
+        string hints = null)
+        where TEntity : class
 {
         ...
 }
@@ -243,7 +274,9 @@
 <div class="section" id="createdelete">
 <h2>CreateDelete<a class="headerlink" href="#createdelete" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Delete</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDelete&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDelete&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null)
+        where TEntity : class
 {
         ...
 }
@@ -253,7 +286,8 @@
 <div class="section" id="createdeleteall">
 <h2>CreateDeleteAll<a class="headerlink" href="#createdeleteall" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>DeleteAll</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDeleteAll&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateDeleteAll&lt;TEntity&gt;(QueryBuilder queryBuilder)
+        where TEntity : class
 {
         ...
 }
@@ -263,14 +297,8 @@
 <div class="section" id="createinlineinsert">
 <h2>CreateInlineInsert<a class="headerlink" href="#createinlineinsert" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineInsert</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields, bool? overrideIgnore = false)
-        where TEntity : class
-{
-        return CreateInlineInsert&lt;TEntity&gt;(queryBuilder, fields, overrideIgnore, false);
-}
-
-internal string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields,
-        bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        IEnumerable&lt;Field&gt; fields = null)
         where TEntity : class
 {
         ...
@@ -281,14 +309,9 @@ internal string CreateInlineInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; qu
 <div class="section" id="createinlinemerge">
 <h2>CreateInlineMerge<a class="headerlink" href="#createinlinemerge" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineMerge</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields, IEnumerable&lt;Field&gt; qualifiers, bool? overrideIgnore = false)
-        where TEntity : class
-{
-        return CreateInlineMerge&lt;TEntity&gt;(queryBuilder, fields, qualifiers, overrideIgnore, false);
-}
-
-internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields, IEnumerable&lt;Field&gt; qualifiers,
-        bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        IEnumerable&lt;Field&gt; fields = null,
+        IEnumerable&lt;Field&gt; qualifiers = null)
         where TEntity : class
 {
         ...
@@ -299,8 +322,9 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
 <div class="section" id="createinlineupdate">
 <h2>CreateInlineUpdate<a class="headerlink" href="#createinlineupdate" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>InlineUpdate</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; fields,
-        QueryGroup where, bool? overrideIgnore = false)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInlineUpdate&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        IEnumerable&lt;Field&gt; fields = null,
+        QueryGroup where = null)
         where TEntity : class
 {
         ...
@@ -311,13 +335,7 @@ internal string CreateInlineMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; que
 <div class="section" id="createinsert">
 <h2>CreateInsert<a class="headerlink" href="#createinsert" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Insert</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder)
-        where TEntity : class
-{
-        return CreateInsert(queryBuilder, false);
-}
-
-internal string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, bool isPrimaryIdentity)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateInsert&lt;TEntity&gt;(QueryBuilder queryBuilder)
         where TEntity : class
 {
         ...
@@ -328,13 +346,8 @@ internal string CreateInsert&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBui
 <div class="section" id="createmerge">
 <h2>CreateMerge<a class="headerlink" href="#createmerge" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Merge</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers)
-        where TEntity : class
-{
-        return CreateMerge(queryBuilder, qualifiers);
-}
-
-internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, IEnumerable&lt;Field&gt; qualifiers, bool isPrimaryIdentity)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateMerge&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        IEnumerable&lt;Field&gt; qualifiers = null)
         where TEntity : class
 {
         ...
@@ -345,7 +358,11 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createquery">
 <h2>CreateQuery<a class="headerlink" href="#createquery" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Query</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where, int? top = 0, IEnumerable&lt;OrderField&gt; orderBy = null)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateQuery&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null,
+        IEnumerable&lt;OrderField&gt; orderBy = null,
+        int? top = null,
+        string hints = null)
         where TEntity : class
 {
         ...
@@ -356,7 +373,8 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createtruncate">
 <h2>CreateTruncate<a class="headerlink" href="#createtruncate" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Truncate</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateTruncate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateTruncate&lt;TEntity&gt;(QueryBuilder queryBuilder)
+        where TEntity : class
 {
         ...
 }
@@ -366,7 +384,9 @@ internal string CreateMerge&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuil
 <div class="section" id="createupdate">
 <h2>CreateUpdate<a class="headerlink" href="#createupdate" title="Permalink to this headline">¶</a></h2>
 <p>This method is being called when the <cite>Update</cite> operation of the repository is being called.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(QueryBuilder&lt;TEntity&gt; queryBuilder, QueryGroup where) where TEntity : class
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>public string CreateUpdate&lt;TEntity&gt;(QueryBuilder queryBuilder,
+        QueryGroup where = null)
+        where TEntity : class
 {
         ...
 }

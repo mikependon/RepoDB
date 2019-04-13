@@ -16,30 +16,52 @@ Below is a sample code that creates a SQL Statement for the `Query` operation fo
 
 ::
 
-	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null) where TEntity : class
+	public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null,
+		IEnumerable<OrderField> orderBy = null,
+		int? top = null,
+		string hints = null)
+		where TEntity : class
 	{
+		var fields = PropertyCache.Get<TEntity>();
+
 		// Create an initial SELECT statement
 		queryBuilder.Clear()
 			.Select()
-			.Fields(Command.Query)
+			.FieldsFrom(fields)
 			.From()
-			.Table(Command.Query);
-            
+			.TableNameFrom<TEntity>();
+
+		// Build the query optimizers
+		if (hints != null)
+		{
+			// Write the hints here like: queryBuilder.WriteText(hints);
+		}
+
 		// Add all fields for WHERE
 		if (where != null)
 		{
-			queryBuilder.Where(where);
+			queryBuilder.WhereFrom(where);
 		}
-            
+
 		// Add the ROWNUM (TOP in SQL Server)
 		if (top > 0)
 		{
 			// In Oracle, SELECT [Fields] FROM [Table] WHERE [Fields] AND ROWNUM <=(Rows)
-			queryBuilder.WriteText($"AND (ROWNUM <= {top})");
+			if (where != null)
+			{
+				queryBuilder.WriteText($"AND (ROWNUM <= {top})");
+			}
+			else
+			{
+				queryBuilder.WriteText($"(ROWNUM <= {top})");
+			}
 		}
-            
+
 		// End the builder
-		queryBuilder.End();
+		queryBuilder
+			.OrderBy(orderBy)
+			.End();
 
 		// Return the Statement
 		return queryBuilder.ToString();
@@ -54,7 +76,13 @@ This method is being called when the `BatchQuery` operation of the repository is
 
 ::
 
-	public string CreateBatchQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy) where TEntity : class
+	public string CreateBatchQuery<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null,
+		int? page = null,
+		int? rowsPerBatch = null,
+		IEnumerable<OrderField> orderBy = null,
+		string hints = null)
+		where TEntity : class
 	{
 		...
 	}
@@ -68,7 +96,10 @@ This method is being called when the `Count` operation of the repository is bein
 
 ::
 
-	public string CreateCount<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
+	public string CreateCount<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null,
+		string hints = null)
+		where TEntity : class
 	{
 		...
 	}
@@ -82,7 +113,9 @@ This method is being called when the `Delete` operation of the repository is bei
 
 ::
 
-	public string CreateDelete<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
+	public string CreateDelete<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null)
+		where TEntity : class
 	{
 		...
 	}
@@ -96,7 +129,8 @@ This method is being called when the `DeleteAll` operation of the repository is 
 
 ::
 
-	public string CreateDeleteAll<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : class
+	public string CreateDeleteAll<TEntity>(QueryBuilder queryBuilder)
+		where TEntity : class
 	{
 		...
 	}
@@ -110,14 +144,8 @@ This method is being called when the `InlineInsert` operation of the repository 
 
 ::
 
-	public string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, bool? overrideIgnore = false)
-		where TEntity : class
-	{
-		return CreateInlineInsert<TEntity>(queryBuilder, fields, overrideIgnore, false);
-	}
-
-	internal string CreateInlineInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
-		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+	public string CreateInlineInsert<TEntity>(QueryBuilder queryBuilder,
+		IEnumerable<Field> fields = null)
 		where TEntity : class
 	{
 		...
@@ -132,14 +160,9 @@ This method is being called when the `InlineMerge` operation of the repository i
 
 ::
 
-	public string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers, bool? overrideIgnore = false)
-		where TEntity : class
-	{
-		return CreateInlineMerge<TEntity>(queryBuilder, fields, qualifiers, overrideIgnore, false);
-	}
-
-	internal string CreateInlineMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields, IEnumerable<Field> qualifiers,
-		bool? overrideIgnore = false, bool isPrimaryIdentity = false)
+	public string CreateInlineMerge<TEntity>(QueryBuilder queryBuilder,
+		IEnumerable<Field> fields = null,
+		IEnumerable<Field> qualifiers = null)
 		where TEntity : class
 	{
 		...
@@ -154,8 +177,9 @@ This method is being called when the `InlineUpdate` operation of the repository 
 
 ::
 
-	public string CreateInlineUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> fields,
-		QueryGroup where, bool? overrideIgnore = false)
+	public string CreateInlineUpdate<TEntity>(QueryBuilder queryBuilder,
+		IEnumerable<Field> fields = null,
+		QueryGroup where = null)
 		where TEntity : class
 	{
 		...
@@ -170,13 +194,7 @@ This method is being called when the `Insert` operation of the repository is bei
 
 ::
 
-	public string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder)
-		where TEntity : class
-	{
-		return CreateInsert(queryBuilder, false);
-	}
-
-	internal string CreateInsert<TEntity>(QueryBuilder<TEntity> queryBuilder, bool isPrimaryIdentity)
+	public string CreateInsert<TEntity>(QueryBuilder queryBuilder)
 		where TEntity : class
 	{
 		...
@@ -191,13 +209,8 @@ This method is being called when the `Merge` operation of the repository is bein
 
 ::
 
-	public string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers)
-		where TEntity : class
-	{
-		return CreateMerge(queryBuilder, qualifiers);
-	}
-
-	internal string CreateMerge<TEntity>(QueryBuilder<TEntity> queryBuilder, IEnumerable<Field> qualifiers, bool isPrimaryIdentity)
+	public string CreateMerge<TEntity>(QueryBuilder queryBuilder,
+		IEnumerable<Field> qualifiers = null)
 		where TEntity : class
 	{
 		...
@@ -212,7 +225,11 @@ This method is being called when the `Query` operation of the repository is bein
 
 ::
 
-	public string CreateQuery<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where, int? top = 0, IEnumerable<OrderField> orderBy = null)
+	public string CreateQuery<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null,
+		IEnumerable<OrderField> orderBy = null,
+		int? top = null,
+		string hints = null)
 		where TEntity : class
 	{
 		...
@@ -227,7 +244,8 @@ This method is being called when the `Truncate` operation of the repository is b
 
 ::
 
-	public string CreateTruncate<TEntity>(QueryBuilder<TEntity> queryBuilder) where TEntity : class
+	public string CreateTruncate<TEntity>(QueryBuilder queryBuilder)
+		where TEntity : class
 	{
 		...
 	}
@@ -241,7 +259,9 @@ This method is being called when the `Update` operation of the repository is bei
 
 ::
 
-	public string CreateUpdate<TEntity>(QueryBuilder<TEntity> queryBuilder, QueryGroup where) where TEntity : class
+	public string CreateUpdate<TEntity>(QueryBuilder queryBuilder,
+		QueryGroup where = null)
+		where TEntity : class
 	{
 		...
 	}
@@ -256,7 +276,7 @@ The main reason why the library supports the statement builder is to allow the d
 To create a custom statement builder, simply create a class and implements the `Interfaces.IStatementBuilder` interface.
 
 ::
-	
+
 	public class OracleDbStatementBuilder : IStatementBuilder
 	{
 		// Implements the IStatementBuilder methods here

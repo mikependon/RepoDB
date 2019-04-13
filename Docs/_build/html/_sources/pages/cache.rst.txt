@@ -37,7 +37,9 @@ To cache a result, simply pass a value in the `cacheKey` argument of the `Query`
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;"))
 	{
-		var result = repository.Query<Customer>(c => c.Name.StartsWith("Anna"), cacheKey: "KeyToTheCache");
+		var result = repository.Query<Customer>(where: c => c.Name.StartsWith("Anna"),
+			cacheKey: "KeyToTheCache",
+			expiration: 1440 /* minutes in 1 day */);
 	}
 
 Codes below will return the same result as above assuming the same repository object is used.

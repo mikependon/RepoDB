@@ -6,7 +6,7 @@ An object that signifies as data field in the query statement.
 Creating a new Instance
 -----------------------
 
-Constructor only accepts a single string parameter.
+The constructor only accepts a single string parameter.
 
 .. highlight:: c#
 
@@ -25,7 +25,7 @@ By class property:
 AsEnumerable
 ------------
 
-Converts an instance of a `Field` into an `IEnumerable<Field>` object.
+Converts an instance of `Field` object into an `IEnumerable<Field>` object.
 
 .. highlight:: c#
 

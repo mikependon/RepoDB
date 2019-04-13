@@ -358,7 +358,7 @@ Via Dictionary<string, object>.
 		var result = connection.ExecuteNonQuery("[dbo].[sp_update_order_quantity]", parameters, commandType: CommandType.StoredProcedure);
 	}
 
-**Note**: The passing of the ExpandoObject and IDictionary<string, object> parameter is also supported in `ExecuteQuery`, `ExecuteScalar` and `ExecuteReader` methods.
+**Note**: The passing of the `ExpandoObject` and `IDictionary<string, object>` parameter is also supported in `ExecuteQuery`, `ExecuteScalar` and `ExecuteReader` methods.
 
 ExecuteQuery
 ------------
@@ -506,7 +506,7 @@ The `ExecuteQuery` method can also return a list of dynamic objects.
 		}
 	}
 
-Note: Calling the `ExecuteQuery` via dynamic is a bit slower compared to CLR types.
+Note: Calling the `ExecuteQuery` via dynamic is a bit slower compared to a .NET CLR Type-based calls.
 
 ExecuteQueryMultiple
 --------------------
@@ -644,7 +644,7 @@ Executes a query from the database. It uses the underlying method `IDbCommand.Ex
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var maxId = connection.ExecuteScalar("SELECT MAX([Id]) AS MaxId FROM [dbo].[Customer];");
+		var maxId = Convert.ToInt64(connection.ExecuteScalar("SELECT MAX([Id]) AS MaxId FROM [dbo].[Customer];"));
 	}
 	
 Let us say the stored procedure below exists.
@@ -667,7 +667,16 @@ Below is the code on how to execute a stored procedure mentioned above:
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
-		var maxId = connection.ExecuteScalar("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
+		var maxId = Convert.ToInt64(connection.ExecuteScalar("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure)));
+	}
+
+A dynamic typed-based call is also provided, see below.
+
+::
+
+	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
+	{
+		var maxId = connection.ExecuteScalar<long>("[dbo].[sp_get_latest_customer_id]", commandType: CommandType.StoredProcedure));
 	}
 
 InlineInsert
@@ -691,8 +700,14 @@ Inserts a new data in the database (certain fields only).
 		};
 
 		// Call the operation and define which object you are targetting
-		var id = connection.InlineInsert<Order>(entity);
+		var id = Convert.ToInt64(connection.InlineInsert<Order>(entity));
 	}
+
+A dynamic typed-based call is also provided when calling this method, see below.
+
+::
+	// The first type is the entity type, the second type is the result type
+	var id = connection.InlineInsert<Order, long>(entity);
 
 InlineMerge
 -----------
@@ -807,8 +822,14 @@ Inserts a new data in the database.
 			Quantity = 2,
 			CreatedDate = DateTime.UtcNow
 		};
-		connection.Insert(order);
+		var id = Convert.ToInt64(connection.Insert(order));
 	}
+
+A dynamic typed-based call is also provided when calling this method, see below.
+
+::
+	// The first type is the entity type, the second type is the result type
+	var id = connection.Insert<Order, long>(order);
 
 Merge
 -----
@@ -898,11 +919,13 @@ The result is an instance of a `Tuple` object.
 
 	using (var connection = new SqlConnection(@"Server=.;Database=Northwind;Integrated Security=SSPI;").EnsureOpen())
 	{
+		// The parent Id
 		var customerId = 10045;
-		var fromDate = DateTime.UtcNow.Date.AddDays(-1);
+
+		// Get the parent customer, and the child objects
 		var result = connection.QueryMultiple<Customer, Order>(
-			c => c.Id == customerId,
-			o => o.CustomerId == customerId && o.CreatedDate >= fromDate);
+			customer => customer.Id == customerId,
+			order => order.CustomerId == customerId);
 
 		// Read the customer
 		var customer = result.Item1.FirstOrDefault();

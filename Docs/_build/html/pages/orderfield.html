@@ -178,7 +178,7 @@
 <p>An object that holds a field for ordering purposes.</p>
 <div class="section" id="creating-a-new-instance">
 <h2>Creating a new Instance<a class="headerlink" href="#creating-a-new-instance" title="Permalink to this headline">¶</a></h2>
-<p>Constructor accepts 2 parameters, a <cite>Name</cite> and an <cite>Order</cite> type.</p>
+<p>The constructor accepts 2 parameters, a <cite>Name</cite> and an <cite>Order</cite> type.</p>
 <p>By literal string:</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Ascending</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
@@ -198,7 +198,7 @@
 </div>
 <div class="section" id="asenumerable">
 <h2>AsEnumerable<a class="headerlink" href="#asenumerable" title="Permalink to this headline">¶</a></h2>
-<p>Converts an instance of an <cite>OrderField</cite> into an <cite>IEnumerable&lt;OrderField&gt;</cite> object.</p>
+<p>Converts an instance of <cite>OrderField</cite> object into an <cite>IEnumerable&lt;OrderField&gt;</cite> object.</p>
 <div class="highlight-c# notranslate"><div class="highlight"><pre><span></span><span class="c1">// Initialize an order field</span>
 <span class="kt">var</span> <span class="n">orderField</span> <span class="p">=</span> <span class="k">new</span> <span class="n">OrderField</span><span class="p">(</span><span class="n">nameof</span><span class="p">(</span><span class="n">Customer</span><span class="p">.</span><span class="n">Id</span><span class="p">),</span> <span class="n">Order</span><span class="p">.</span><span class="n">Ascending</span><span class="p">);</span>
 

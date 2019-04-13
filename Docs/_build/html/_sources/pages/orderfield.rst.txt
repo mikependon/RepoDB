@@ -6,7 +6,7 @@ An object that holds a field for ordering purposes.
 Creating a new Instance
 -----------------------
 
-Constructor accepts 2 parameters, a `Name` and an `Order` type.
+The constructor accepts 2 parameters, a `Name` and an `Order` type.
 
 .. highlight:: c#
 
@@ -33,7 +33,7 @@ By class property:
 AsEnumerable
 ------------
 
-Converts an instance of an `OrderField` into an `IEnumerable<OrderField>` object.
+Converts an instance of `OrderField` object into an `IEnumerable<OrderField>` object.
 
 .. highlight:: c#
 
